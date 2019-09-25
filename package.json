@@ -11,18 +11,18 @@
 	],
 	"activationEvents": [
 		"onView:dynamicsConnectionsView",
-		"onCommand:cloudsmith.tellThemHowWeFeelCommand",
-		"onCommand:cloudsmith.tellTimeCommand"
+		"onCommand:cloudSmith.tellThemHowWeFeelCommand",
+		"onCommand:cloudSmith.tellTimeCommand"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "cloudsmith.tellThemHowWeFeelCommand",
+				"command": "cloudSmith.tellThemHowWeFeelCommand",
 				"title": "CloudSmith: Tell Them How We Feel"
 			},
 			{
-				"command": "cloudsmith.tellTimeCommand",
+				"command": "cloudSmith.tellTimeCommand",
 				"title": "CloudSmith: Tell Time"
 			}
 		],
