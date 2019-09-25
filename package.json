@@ -1,7 +1,7 @@
 {
 	"name": "dynamics-crm-toolkit",
 	"displayName": "dynamics-crm-toolkit",
-	"description": "A toolkit for working with Dynamics CRM within VSCode",
+	"description": "A toolkit for working with Dynamics CRM within VSCode by CloudSmith Consulting LLC.",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.34.0"
@@ -10,16 +10,39 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.helloWorld"
+		"onView:dynamicsConnections",
+		"onCommand:extension.cloudSmith",
+		"onCommand:extension.tellTime"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
+				"command": "extension.cloudSmith",
+				"title": "CloudSmith: CloudSmith VSCode"
+			},
+			{
+				"command": "extension.tellTime",
+				"title": "CloudSmith: Tell Time"
 			}
-		]
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "dynamics-explorer",
+					"title": "CloudSmith",
+					"icon": "media/dynamics2.png"
+				}
+			]
+		},
+		"views": {
+			"dynamics-explorer": [
+				{
+					"id": "dynamicsConnections",
+					"name": "Dynamics Connections"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
