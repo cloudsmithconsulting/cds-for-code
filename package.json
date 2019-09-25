@@ -1,7 +1,7 @@
 {
-	"name": "dynamics-crm-toolkit",
-	"displayName": "dynamics-crm-toolkit",
-	"description": "A toolkit for working with Dynamics CRM within VSCode by CloudSmith Consulting LLC.",
+	"name": "dynamics-365-toolkit",
+	"displayName": "dynamics-365-toolkit",
+	"description": "A toolkit for working with Dynamics 365 within VSCode by CloudSmith Consulting LLC.",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.34.0"
@@ -29,14 +29,14 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "dynamics-explorer",
+					"id": "view-container",
 					"title": "CloudSmith",
 					"icon": "media/dynamics2.png"
 				}
 			]
 		},
 		"views": {
-			"dynamics-explorer": [
+			"view-container": [
 				{
 					"id": "dynamicsConnectionsView",
 					"name": "Dynamics Connections"
