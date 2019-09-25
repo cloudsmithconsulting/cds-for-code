@@ -19,8 +19,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// They will all get pushed into these subscriptions using an ...items spread
 	context.subscriptions.push(
-
-		//vscode.commands.registerCommand('extension.')
 		
 		// CloudSmith VSCode Command
 		vscode.commands.registerCommand('cloudsmith.tellThemHowWeFeelCommand', () => { // Match name of command to package.json command
