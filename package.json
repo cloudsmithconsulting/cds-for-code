@@ -29,6 +29,30 @@
 		},
 		"commands": [
 			{
+				"command": "cloudSmith.refreshEntry",
+				"title": "Refresh",
+				"icon": {
+					"light": "resources/light/refresh.svg",
+					"dark": "resources/dark/refresh.svg"
+				}
+			},
+			{
+				"command": "cloudSmith.addEntry",
+				"title": "Add"
+			},
+			{
+				"command": "cloudSmith.editEntry",
+				"title": "Edit",
+				"icon": {
+					"light": "resources/light/edit.svg",
+					"dark": "resources/dark/edit.svg"
+				}
+			},
+			{
+				"command": "cloudSmith.deleteEntry",
+				"title": "Delete"
+			},
+			{
 				"command": "cloudSmith.unpackDynamicsSolutionCommand",
 				"title": "CloudSmith: Unpack Solution From Dynamics Server"
 			},
@@ -55,6 +79,26 @@
 				{
 					"id": "dynamicsConnectionsView",
 					"name": "Dynamics Connections"
+				}
+			]
+		},
+		"menus": {
+			"view/title": [
+				{
+					"command": "cloudSmith.refreshEntry",
+					"group": "navigation"
+				},
+				{
+					"command": "cloudSmith.addEntry"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "cloudSmith.editEntry",
+					"group": "inline"
+				},
+				{
+					"command": "cloudSmith.deleteEntry"
 				}
 			]
 		}

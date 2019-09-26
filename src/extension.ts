@@ -23,7 +23,35 @@ export function activate(context: vscode.ExtensionContext) {
 	// They will all get pushed into these subscriptions using an ...items spread
 	context.subscriptions.push(
 
-		vscode.commands.registerCommand('cloudSmith.unpackDynamicsSolutionCommand', () => { // Match name of command to package.json command
+		vscode.commands.registerCommand('cloudSmith.addEntry', () => { // Match name of command to package.json command
+			// Run command code
+			vscode.window.showInformationMessage(
+				'cloudSmith.addEntry'
+			);
+		}) // <-- no semi-colon, comma starts next command registration
+
+		, vscode.commands.registerCommand('cloudSmith.deleteEntry', () => { // Match name of command to package.json command
+			// Run command code
+			vscode.window.showInformationMessage(
+				'cloudSmith.deleteEntry'
+			);
+		}) // <-- no semi-colon, comma starts next command registration
+
+		, vscode.commands.registerCommand('cloudSmith.editEntry', () => { // Match name of command to package.json command
+			// Run command code
+			vscode.window.showInformationMessage(
+				'cloudSmith.editEntry'
+			);
+		}) // <-- no semi-colon, comma starts next command registration
+
+		, vscode.commands.registerCommand('cloudSmith.refreshEntry', () => { // Match name of command to package.json command
+			// Run command code
+			vscode.window.showInformationMessage(
+				'cloudSmith.refreshEntry'
+			);
+		}) // <-- no semi-colon, comma starts next command registration
+
+		, vscode.commands.registerCommand('cloudSmith.unpackDynamicsSolutionCommand', () => { // Match name of command to package.json command
 			// Run command code
 			vscode.window.showInformationMessage(
 				'cloudSmith.unpackDynamicsSolutionCommand'
