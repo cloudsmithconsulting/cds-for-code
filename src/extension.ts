@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as shelljs from 'shelljs';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -13,13 +14,16 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('[CloudSmith]: extension:activate');
 
+	// load extension configuration
+	const config = vscode.workspace.getConfiguration('cloudSmith');
+
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
 
 	// They will all get pushed into these subscriptions using an ...items spread
 	context.subscriptions.push(
-		
+
 		// CloudSmith VSCode Command
 		vscode.commands.registerCommand('cloudSmith.unpackDynamicsSolutionCommand', () => { // Match name of command to package.json command
 			// Run command code
@@ -29,26 +33,57 @@ export function activate(context: vscode.ExtensionContext) {
 		}) // <-- no semi-colon, comma starts next command registration
 
 		// Tell Time Command
-		,vscode.commands.registerCommand('cloudSmith.deployDynamicsSolutionCommand', () => { // Match name of command to package.json command
+		, vscode.commands.registerCommand('cloudSmith.deployDynamicsSolutionCommand', () => { // Match name of command to package.json command
 			// Run command code
-			vscode.window.showWarningMessage(
+			vscode.window.showInformationMessage(
 				'cloudSmith.deployDynamicsSolutionCommand'
 			);
 		}) // <-- no semi-colon, comma starts next command registration
 
 		// Tell Time Command
-		,vscode.commands.registerCommand('cloudSmith.generateDynamicsEntitiesCommand', () => { // Match name of command to package.json command
-			// Run command code
-			vscode.window.showWarningMessage(
-				'cloudSmith.generateDynamicsEntitiesCommand'
-			);
+		, vscode.commands.registerCommand('cloudSmith.generateDynamicsEntitiesCommand', () => { // Match name of command to package.json command
+			// get the svcutil path from configuration
+			const svcUtilPath = config.get('crmSvcUtilPath');
+			// get root path of vscode workspace
+			const rootPath = vscode.workspace.rootPath;
+
+			if (rootPath !== undefined) { //if this is null, no folder is open
+
+				// setup the code file path to be generated
+				const codeFilePath = `${rootPath}\\XrmEntities.cs`;
+
+				// setup the command text
+				const commandToExecute = `${svcUtilPath} `
+					+ `/url:http://crmserver/test/XRMServices/2011/Organization.svc `
+					+ `/username:missioncommand `
+					+ `/password:$mokingTir33 `
+					+ `/domain:CONTOSO `
+					+ `/namespace:CloudSmith.Dynamics365.SampleTests `
+					+ `/out:${codeFilePath}`;
+
+				// execute the command
+				const cmd = shelljs.exec(commandToExecute);
+
+				if (cmd.code === 0) { // check status (zero is no errors)
+					vscode.window.showInformationMessage(
+						`Success! Your entites were generated to ${codeFilePath}`
+					);
+				} else {
+					// write error to console
+					console.error(cmd.stdout);
+					// show error message
+					vscode.window.showErrorMessage(
+						`Error generating your entites to ${codeFilePath}`
+					);
+				}
+			}
 		}) // <-- no semi-colon, comma starts next command registration
 
 	);
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
 
 // TreeViewDataProvider
 // function aNodeWithIdTreeDataProvider(): vscode.TreeDataProvider<{ key: string }> {
