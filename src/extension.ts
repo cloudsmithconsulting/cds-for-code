@@ -23,7 +23,6 @@ export function activate(context: vscode.ExtensionContext) {
 	// They will all get pushed into these subscriptions using an ...items spread
 	context.subscriptions.push(
 
-		// CloudSmith VSCode Command
 		vscode.commands.registerCommand('cloudSmith.unpackDynamicsSolutionCommand', () => { // Match name of command to package.json command
 			// Run command code
 			vscode.window.showInformationMessage(
@@ -31,7 +30,6 @@ export function activate(context: vscode.ExtensionContext) {
 			);
 		}) // <-- no semi-colon, comma starts next command registration
 
-		// Tell Time Command
 		, vscode.commands.registerCommand('cloudSmith.deployDynamicsSolutionCommand', () => { // Match name of command to package.json command
 			// Run command code
 			vscode.window.showInformationMessage(
@@ -39,7 +37,6 @@ export function activate(context: vscode.ExtensionContext) {
 			);
 		}) // <-- no semi-colon, comma starts next command registration
 
-		// Tell Time Command
 		, vscode.commands.registerCommand('cloudSmith.generateDynamicsEntitiesCommand', () => { // Match name of command to package.json command
 			// get the svcutil path from configuration
 			const svcUtilPath = config.get('crmSvcUtilPath');
