@@ -22,7 +22,7 @@
 			"properties": {
 				"cloudSmith.crmSvcUtilPath": {
 					"type": "string",
-					"default": "C:\\Deploy\\Tools\\CoreTools\\CrmSvcUtil.exe",
+					"default": "C:\\Deploy\\Tools\\CoreTools",
 					"description": "The absolute path of the CrmSvcUtil.exe file installed by the CRM SDK"
 				}
 			}

@@ -39,33 +39,48 @@ export function activate(context: vscode.ExtensionContext) {
 
 		, vscode.commands.registerCommand('cloudSmith.generateDynamicsEntitiesCommand', () => { // Match name of command to package.json command
 			// get the svcutil path from configuration
-			const svcUtilPath = config.get('crmSvcUtilPath');
+			const svcUtilPath = config.get('crmSvcUtilPath') as string;
+			if (!svcUtilPath
+				|| svcUtilPath === undefined 
+				|| svcUtilPath.length === 0) {
+					throw new Error('The crmSvcUtilPath was not configured in settings.');
+				}
+
 			// get root path of vscode workspace
-			const rootPath = vscode.workspace.rootPath;
+			const folders = vscode.workspace.workspaceFolders;
+			// see if we have anything open
+			if (folders !== undefined) {
+				// loop through open root workspace folders
+				folders.forEach(folder => {
+					// we only support the file system right now
+					if (folder.uri.scheme === "file") {
+						// hold on to the current root path
+						const rootPath = folder.uri.fsPath;
 
-			if (rootPath !== undefined) { //if this is null, no folder is open
+						// setup the code file path to be generated
+						const codeFilePath = `${rootPath}\\XrmEntities.cs`;
 
-				// setup the code file path to be generated
-				const codeFilePath = `${rootPath}\\XrmEntities.cs`;
+						// setup the command text
+						const commandToExecute = `& .\\CrmSvcUtil.exe `
+							+ `/url:http://crmserver/test/XRMServices/2011/Organization.svc `
+							+ `/username:missioncommand `
+							+ `/password:$mokingTir33 `.replace('$', '`$') // $ is a problem in powershell
+							+ `/domain:CONTOSO `
+							+ `/namespace:CloudSmith.Dynamics365.SampleTests `
+							+ `/out:${codeFilePath}`;
 
-				// setup the command text
-				const commandToExecute = `& "${svcUtilPath}" `
-					+ `/url:http://crmserver/test/XRMServices/2011/Organization.svc `
-					+ `/username:missioncommand `
-					+ `/password:"$mokingTir33" `.replace('$', '`$') // $ is a problem in powershell
-					+ `/domain:CONTOSO `
-					+ `/namespace:CloudSmith.Dynamics365.SampleTests `
-					+ `/out:${codeFilePath}`;
-				
-				// build a powershell terminal
-				const terminal = vscode.window.createTerminal({
-					name: "CloudSmith: Dynamics Terminal",
-					// make sure we get powershell
-					shellPath: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+						// build a powershell terminal
+						const terminal = vscode.window.createTerminal({
+							name: "CloudSmith: Dynamics PowerShell",
+							// make sure we get powershell
+							shellPath: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+							cwd: svcUtilPath
+						});
+						// show it and execute the command
+						terminal.show();
+						terminal.sendText(commandToExecute);
+					}
 				});
-				// show it and execute the command
-				terminal.show();
-				terminal.sendText(commandToExecute);
 			}
 		}) // <-- no semi-colon, comma starts next command registration
 
