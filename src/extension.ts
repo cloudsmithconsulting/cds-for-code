@@ -21,18 +21,26 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		
 		// CloudSmith VSCode Command
-		vscode.commands.registerCommand('cloudSmith.tellThemHowWeFeelCommand', () => { // Match name of command to package.json command
+		vscode.commands.registerCommand('cloudSmith.unpackDynamicsSolutionCommand', () => { // Match name of command to package.json command
 			// Run command code
 			vscode.window.showInformationMessage(
-				'CloudSmith <3 VSCode!'
+				'cloudSmith.unpackDynamicsSolutionCommand'
 			);
 		}) // <-- no semi-colon, comma starts next command registration
 
 		// Tell Time Command
-		,vscode.commands.registerCommand('cloudSmith.tellTimeCommand', () => { // Match name of command to package.json command
+		,vscode.commands.registerCommand('cloudSmith.deployDynamicsSolutionCommand', () => { // Match name of command to package.json command
 			// Run command code
 			vscode.window.showWarningMessage(
-				`The time is ${new Date().toLocaleTimeString()}!`
+				'cloudSmith.deployDynamicsSolutionCommand'
+			);
+		}) // <-- no semi-colon, comma starts next command registration
+
+		// Tell Time Command
+		,vscode.commands.registerCommand('cloudSmith.generateDynamicsEntitiesCommand', () => { // Match name of command to package.json command
+			// Run command code
+			vscode.window.showWarningMessage(
+				'cloudSmith.generateDynamicsEntitiesCommand'
 			);
 		}) // <-- no semi-colon, comma starts next command registration
 

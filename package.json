@@ -11,19 +11,24 @@
 	],
 	"activationEvents": [
 		"onView:dynamicsConnectionsView",
-		"onCommand:cloudSmith.tellThemHowWeFeelCommand",
-		"onCommand:cloudSmith.tellTimeCommand"
+		"onCommand:cloudSmith.unpackDynamicsSolutionCommand",
+		"onCommand:cloudSmith.deployDynamicsSolutionCommand",
+		"onCommand:cloudSmith.generateDynamicsEntitiesCommand"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "cloudSmith.tellThemHowWeFeelCommand",
-				"title": "CloudSmith: Tell Them How We Feel"
+				"command": "cloudSmith.unpackDynamicsSolutionCommand",
+				"title": "CloudSmith: Unpack Solution From Dynamics Server"
 			},
 			{
-				"command": "cloudSmith.tellTimeCommand",
-				"title": "CloudSmith: Tell Time"
+				"command": "cloudSmith.deployDynamicsSolutionCommand",
+				"title": "CloudSmith: Deploy Solution to Dynamics Server"
+			},
+			{
+				"command": "cloudSmith.generateDynamicsEntitiesCommand",
+				"title": "CloudSmith: Generate Entities From Dynamics Server"
 			}
 		],
 		"viewsContainers": {
