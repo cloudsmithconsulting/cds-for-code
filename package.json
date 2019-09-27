@@ -18,12 +18,12 @@
 	"main": "./out/extension.js",
 	"contributes": {
 		"configuration": {
-			"title": "Dynamics365",
+			"title": "CloudSmith",
 			"properties": {
-				"cloudSmith.crmSvcUtilPath": {
+				"cloudSmith.crmSdkRootPath": {
 					"type": "string",
-					"default": "C:\\Deploy\\Tools\\CoreTools",
-					"description": "The absolute path of the CrmSvcUtil.exe file installed by the CRM SDK"
+					"default": "C:\\Deploy\\Tools",
+					"description": "The full path to the root of the CRM SDK installation on your computer"
 				}
 			}
 		},

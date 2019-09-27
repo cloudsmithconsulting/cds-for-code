@@ -13,9 +13,22 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('[CloudSmith]: extension:activate');
 
+	const terminalName = 'CloudSmith: Dynamics PowerShell';
 	// load extension configuration
 	const config = vscode.workspace.getConfiguration('cloudSmith');
-	const terminalName = 'CloudSmith: Dynamics PowerShell';
+	const crmSdkRoot = config.get('crmSdkRootPath') as string;
+
+	// get the svcutil path from configuration
+	if (!crmSdkRoot
+		|| crmSdkRoot === undefined 
+		|| crmSdkRoot.length === 0) {
+			vscode.window.showErrorMessage(
+				`The configuration setting cloudSmith.crmSdkRootPath was invalid or not set.`
+			);
+		}
+
+	// set core tools root
+	const coreToolsRoot = `${crmSdkRoot}\\CoreTools`;
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
@@ -93,14 +106,6 @@ export function activate(context: vscode.ExtensionContext) {
 		}) // <-- no semi-colon, comma starts next command registration
 
 		, vscode.commands.registerCommand('cloudSmith.generateDynamicsEntitiesCommand', () => { // Match name of command to package.json command
-			// get the svcutil path from configuration
-			const svcUtilPath = config.get('crmSvcUtilPath') as string;
-			if (!svcUtilPath
-				|| svcUtilPath === undefined 
-				|| svcUtilPath.length === 0) {
-					throw new Error('The crmSvcUtilPath was not configured in settings.');
-				}
-
 			// get root path of vscode workspace
 			const folders = vscode.workspace.workspaceFolders;
 			// see if we have anything open
@@ -125,7 +130,7 @@ export function activate(context: vscode.ExtensionContext) {
 							+ `/out:${codeFilePath}`;
 
 						// build a powershell terminal
-						const terminal = showAndReturnTerminal(svcUtilPath);
+						const terminal = showAndReturnTerminal(coreToolsRoot);
 						// execute the command
 						terminal.sendText(commandToExecute);
 					}
