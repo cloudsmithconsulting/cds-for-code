@@ -15,10 +15,37 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// load extension configuration
 	const config = vscode.workspace.getConfiguration('cloudSmith');
+	const terminalName = 'CloudSmith: Dynamics PowerShell';
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
+
+	function showAndReturnTerminal(cwd: string) : vscode.Terminal {
+		//see if our terminal is open all ready
+		const index = vscode.window.terminals.findIndex(t => t.name === terminalName);
+		if (index === -1) { 
+			// index wasn't found, return new terminal
+			const result = vscode.window.createTerminal({
+				name: terminalName,
+				// make sure we get powershell
+				shellPath: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+				cwd // current working directory
+			});
+			// show it
+			result.show();
+			// return it
+			return result;
+		}
+		// get terminal with name at index
+		const result = vscode.window.terminals[index];
+		// change cwd
+		result.sendText(`cd ${cwd}`);
+		// show it
+		result.show();
+		// return it
+		return result;
+	}
 
 	// They will all get pushed into these subscriptions using an ...items spread
 	context.subscriptions.push(
@@ -98,14 +125,8 @@ export function activate(context: vscode.ExtensionContext) {
 							+ `/out:${codeFilePath}`;
 
 						// build a powershell terminal
-						const terminal = vscode.window.createTerminal({
-							name: "CloudSmith: Dynamics PowerShell",
-							// make sure we get powershell
-							shellPath: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-							cwd: svcUtilPath
-						});
-						// show it and execute the command
-						terminal.show();
+						const terminal = showAndReturnTerminal(svcUtilPath);
+						// execute the command
 						terminal.sendText(commandToExecute);
 					}
 				});
