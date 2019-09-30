@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import axios from 'axios';
+import { AuthenticationContext, TokenResponse, AcquireTokenCallback, ErrorResponse } from 'adal-node';
 
 import * as fs from 'fs';
 import * as https from 'https';
@@ -211,15 +212,28 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	function connectToCrmUsingAdal(url: vscode.Uri) {
-		// do some oath stuff in here
+		const resource = '/';
+		const clientId = '3a5623b0-a2a4-432b-977c-e4762606eef7';
+		const username = 'ira.mellor@cloudsmith.consulting';
+		const pass = 'pass';
+
+		const authContext = new AuthenticationContext('https://login.microsoftonline.com/common/oauth2/nativeclient');
+
+		authContext.acquireTokenWithUsernamePassword(resource, username, pass, clientId, (err: Error, res: TokenResponse | ErrorResponse) => {
+			if (err) {
+				console.log('well that didn\'t work: ' + err.stack);
+			  } else {
+				console.log(res);
+			  }
+		});
 	}
 
 	// Invoke donwloadScripts.
 	downloadScripts(context.globalStoragePath);
 	//connectToCrmUsingAxois(vscode.Uri.parse("http://win-a6ljo0slrsh"));
 	//connectToCrmUsingHttpNtlm(vscode.Uri.parse("http://win-a6ljo0slrsh/"));
-	connectToCrmUsingAxios(vscode.Uri.parse("http://40.76.24.100"));
-	//connectToCrmUsingAdal(vscode.Uri.parse("https://cloudsmithconsulting-qa.crm.dynamics.com"));
+	//connectToCrmUsingAxios(vscode.Uri.parse("http://40.76.24.100"));
+	connectToCrmUsingAdal(vscode.Uri.parse("https://cloudsmithconsulting-qa.crm.dynamics.com"));
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
