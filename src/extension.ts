@@ -3,6 +3,8 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import axios from 'axios';
+import { SSL_OP_CISCO_ANYCONNECT } from 'constants';
+import { error } from 'console';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -95,8 +97,143 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	}
 
+	async function connectToCrmUsingAxois(url:vscode.Uri)
+	{
+		return axios.request({
+			responseType: 'json',
+			url: url.toString() + "/api/discovery/v8.0/Instances",
+			method: 'get',
+			headers: {
+				'Content-Type': 'application/json',
+				'Accepts': 'application/json'
+			},
+		}).then((result: { data: any; }) => {
+			console.log(result);
+		}).catch((error) => {
+			console.log(error);
+		});
+	}
+
+	async function connectToCrmUsingHttpNtlm(url:vscode.Uri)
+	{
+		var httpntlm = require('httpntlm');
+
+		httpntlm.get({
+			method: "GET",
+			url: url.toString() + "/api/discovery/v8.0/Instances",
+			username: "Administrator",
+			password: "p@ssw0rd1",
+			domain: "contoso"
+		}, function (error: any, response: { headers: any; body: any; })
+		{
+			if (error) {
+				return error;
+			}
+
+			console.log(response.headers);
+			console.log(response.body);
+		});
+	}
+
+	function connectToCrmUsingAxios(url:vscode.Uri)
+	{
+		var ntlm = require('httpntlm').ntlm;
+		const axios = require('axios');
+
+		const https = require('https');
+		const httpsAgent = new https.Agent({ keepAlive: true });
+
+		const client = axios.create({
+		    httpsAgent,
+		    agent: httpsAgent,
+		    withCredentials: true,
+		    shouldKeepAlive: true,
+		    keepAlive: true,
+		    keepAliveMsecs: 3000,
+		    maxRedirects: 0,
+		    'Access-Control-Allow-Origin': '*',
+		});
+
+		var options = {
+			url: url.toString() + "/api/discovery/v8.0/Instances",
+			username: "Administrator",
+			password: "pass@w0rd1",
+			workstation: '',
+			domain: "contoso"
+		};
+		
+		client.interceptors.response.use(
+		    (response: any) => {
+		        return response;
+		    },
+		    (err: { response: any; config: { headers: { [x: string]: any; }; }; }) => {
+				const error = err.response;
+				
+				if (error.status === 401 && error.headers['www-authenticate'] && error.headers['www-authenticate'] === 'Negotiate, NTLM' && !err.config.headers['X-retry']) 
+				{
+					// TYPE 1 MESSAGE
+					return sendType1Message();
+				} 
+				else if (error.status === 401 && error.headers['www-authenticate'] && error.headers['www-authenticate'].substring(0,4) === 'NTLM' ) 
+				{
+					// TYPE 2 MESSAGE PARSE ANS TYPE 3 MESSAGE SEND
+					return sendType3Message(error.headers['www-authenticate']);
+				}
+
+	        	return err;
+	    	},
+
+		);
+
+		client.interceptors.request.use((request: any) => {
+		    return request;
+		});
+
+		const sendType1Message = () => {
+		    var type1msg = ntlm.createType1Message(options);
+
+			return client({
+				method: 'get',
+				url: options.url,
+				headers:{
+					'Connection' : 'keep-alive',
+					'Authorization': type1msg
+				},
+			});
+		};
+
+		const sendType3Message = (token: string) => {
+			var type2msg = ntlm.parseType2Message(token, (err: any) => { console.log(err); });
+			var type3msg = ntlm.createType3Message(type2msg, options);
+
+			return client({
+				method: 'get',
+				url: options.url,
+				headers:{
+					'X-retry' : 'false',
+					'Connection' : 'Close',
+					'Authorization': type3msg
+				}}
+			);
+		};
+
+
+		client({
+			method: 'get',
+			url: options.url,
+		}).then((response: any) => {
+			console.log(response);
+		})
+		.catch((error: any) => {
+			console.log(error);
+		});		
+	}
+
 	// Invoke donwloadScripts.
 	downloadScripts(context.globalStoragePath);
+	//connectToCrmUsingAxois(vscode.Uri.parse("http://win-a6ljo0slrsh"));
+	//connectToCrmUsingHttpNtlm(vscode.Uri.parse("http://win-a6ljo0slrsh/"));
+	connectToCrmUsingAxios(vscode.Uri.parse("http://win-a6ljo0slrsh"));
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
