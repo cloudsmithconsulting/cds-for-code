@@ -1,6 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import axios from 'axios';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -29,6 +31,72 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// set core tools root
 	const coreToolsRoot = `${crmSdkRoot}\\CoreTools`;
+
+	async function downloadScripts(folder:string)
+	{
+		if (!fs.existsSync(folder)) 
+		{ 
+			console.log(`[CloudSmith] Creating folder '${folder}' as it does not exist.`);
+			fs.mkdirSync(folder); 
+		}
+
+		const folders = await vscode.workspace.fs.readDirectory(vscode.Uri.file(folder));
+
+		if (!fs.existsSync(folder + "/Deploy-XrmSolution.ps1"))
+		{
+			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Deploy-XrmSolution.ps1"), folder);
+		}
+
+		if (!fs.existsSync(folder + "/Generate-XrmEntities.ps1"))
+		{
+			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Generate-XrmEntities.ps1"), folder);
+		}
+
+		if (!fs.existsSync(folder + "/Get-XrmSolution.ps1"))
+		{
+			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Get-XrmSolution.ps1"), folder);
+		}
+
+		if (!fs.existsSync(folder + "/Install-Sdk.ps1"))
+		{
+			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Install-Sdk.ps1"), folder);
+		}
+		
+		if (!fs.existsSync(folder + "/Install-XrmToolbox.ps1"))
+		{
+			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Install-XrmToolbox.ps1"), folder);
+		}
+
+		if (!fs.existsSync(folder + "/Setup-EasyRepro.ps1"))
+		{
+			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Setup-EasyRepro.ps1"), folder);
+		}
+
+		if (!fs.existsSync(folder + "/runonce-script.ps1"))
+		{
+			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/runonce-script.ps1"), folder);
+		}
+	}
+
+	async function downloadScript(file:vscode.Uri, folder:string)
+	{	
+		return axios.request({
+			responseType: 'arraybuffer',
+			url: file.toString(),
+			method: 'get',
+			headers: {
+				'Content-Type': 'text/plain',
+			},
+		}).then((result: { data: any; }) => {
+			var filename = file.fsPath.toString().replace(/^.*[\\\/]/, '');
+			const outputFilename = folder + "\\" + filename;
+			fs.writeFileSync(outputFilename, result.data);
+			return outputFilename;
+		});
+	}
+
+	// Invoke donwloadScripts.
+	downloadScripts(context.globalStoragePath);
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
@@ -138,6 +206,10 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		}) // <-- no semi-colon, comma starts next command registration
 
+		, vscode.commands.registerCommand('cloudSmith.downloadDynamicsScriptsCommand', () => { // Downloads scripts from the Internet.
+			let uri = vscode.Uri.parse(context.globalStoragePath);
+			const folders = vscode.workspace.fs.readDirectory(uri);
+		})
 	);
 }
 
