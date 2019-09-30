@@ -1,10 +1,10 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 import axios from 'axios';
-import { SSL_OP_CISCO_ANYCONNECT } from 'constants';
-import { error } from 'console';
+
+import * as fs from 'fs';
+import * as https from 'https';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -24,64 +24,54 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// get the svcutil path from configuration
 	if (!crmSdkRoot
-		|| crmSdkRoot === undefined 
+		|| crmSdkRoot === undefined
 		|| crmSdkRoot.length === 0) {
-			vscode.window.showErrorMessage(
-				`The configuration setting cloudSmith.crmSdkRootPath was invalid or not set.`
-			);
-		}
+		vscode.window.showErrorMessage(
+			`The configuration setting cloudSmith.crmSdkRootPath was invalid or not set.`
+		);
+	}
 
 	// set core tools root
 	const coreToolsRoot = `${crmSdkRoot}\\CoreTools`;
 
-	async function downloadScripts(folder:string)
-	{
-		if (!fs.existsSync(folder)) 
-		{ 
+	async function downloadScripts(folder: string) {
+		if (!fs.existsSync(folder)) {
 			console.log(`[CloudSmith] Creating folder '${folder}' as it does not exist.`);
-			fs.mkdirSync(folder); 
+			fs.mkdirSync(folder);
 		}
 
 		const folders = await vscode.workspace.fs.readDirectory(vscode.Uri.file(folder));
 
-		if (!fs.existsSync(folder + "/Deploy-XrmSolution.ps1"))
-		{
+		if (!fs.existsSync(folder + "/Deploy-XrmSolution.ps1")) {
 			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Deploy-XrmSolution.ps1"), folder);
 		}
 
-		if (!fs.existsSync(folder + "/Generate-XrmEntities.ps1"))
-		{
+		if (!fs.existsSync(folder + "/Generate-XrmEntities.ps1")) {
 			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Generate-XrmEntities.ps1"), folder);
 		}
 
-		if (!fs.existsSync(folder + "/Get-XrmSolution.ps1"))
-		{
+		if (!fs.existsSync(folder + "/Get-XrmSolution.ps1")) {
 			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Get-XrmSolution.ps1"), folder);
 		}
 
-		if (!fs.existsSync(folder + "/Install-Sdk.ps1"))
-		{
+		if (!fs.existsSync(folder + "/Install-Sdk.ps1")) {
 			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Install-Sdk.ps1"), folder);
 		}
-		
-		if (!fs.existsSync(folder + "/Install-XrmToolbox.ps1"))
-		{
+
+		if (!fs.existsSync(folder + "/Install-XrmToolbox.ps1")) {
 			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Install-XrmToolbox.ps1"), folder);
 		}
 
-		if (!fs.existsSync(folder + "/Setup-EasyRepro.ps1"))
-		{
+		if (!fs.existsSync(folder + "/Setup-EasyRepro.ps1")) {
 			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Setup-EasyRepro.ps1"), folder);
 		}
 
-		if (!fs.existsSync(folder + "/runonce-script.ps1"))
-		{
+		if (!fs.existsSync(folder + "/runonce-script.ps1")) {
 			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/runonce-script.ps1"), folder);
 		}
 	}
 
-	async function downloadScript(file:vscode.Uri, folder:string)
-	{	
+	async function downloadScript(file: vscode.Uri, folder: string) {
 		return axios.request({
 			responseType: 'arraybuffer',
 			url: file.toString(),
@@ -97,106 +87,96 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	}
 
-	async function connectToCrmUsingAxois(url:vscode.Uri)
-	{
-		return axios.request({
-			responseType: 'json',
-			url: url.toString() + "/api/discovery/v8.0/Instances",
-			method: 'get',
-			headers: {
-				'Content-Type': 'application/json',
-				'Accepts': 'application/json'
-			},
-		}).then((result: { data: any; }) => {
-			console.log(result);
-		}).catch((error) => {
-			console.log(error);
-		});
-	}
+	// async function connectToCrmUsingAxois(url:vscode.Uri)
+	// {
+	// 	return axios.request({
+	// 		responseType: 'json',
+	// 		url: url.toString() + "/api/discovery/v8.0/Instances",
+	// 		method: 'get',
+	// 		headers: {
+	// 			'Content-Type': 'application/json',
+	// 			'Accepts': 'application/json'
+	// 		},
+	// 	}).then((result: { data: any; }) => {
+	// 		console.log(result);
+	// 	}).catch((error: any) => {
+	// 		console.log(error);
+	// 	});
+	// }
 
-	async function connectToCrmUsingHttpNtlm(url:vscode.Uri)
-	{
-		var httpntlm = require('httpntlm');
+	// async function connectToCrmUsingHttpNtlm(url:vscode.Uri)
+	// {
+	// 	var httpntlm = require('httpntlm');
 
-		httpntlm.get({
-			method: "GET",
-			url: url.toString() + "/api/discovery/v8.0/Instances",
-			username: "Administrator",
-			password: "p@ssw0rd1",
-			domain: "contoso"
-		}, function (error: any, response: { headers: any; body: any; })
-		{
-			if (error) {
-				return error;
-			}
+	// 	httpntlm.get({
+	// 		method: "GET",
+	// 		url: url.toString() + "/api/discovery/v8.0/Instances",
+	// 		username: "Administrator",
+	// 		password: "p@ssw0rd1",
+	// 		domain: "contoso"
+	// 	}, function (error: any, response: { headers: any; body: any; })
+	// 	{
+	// 		if (error) {
+	// 			return error;
+	// 		}
 
-			console.log(response.headers);
-			console.log(response.body);
-		});
-	}
+	// 		console.log(response.headers);
+	// 		console.log(response.body);
+	// 	});
+	// }
 
-	function connectToCrmUsingAxios(url:vscode.Uri)
-	{
+	function connectToCrmUsingAxios(url: vscode.Uri) {
 		var ntlm = require('httpntlm').ntlm;
-		const axios = require('axios');
-
-		const https = require('https');
 		const httpsAgent = new https.Agent({ keepAlive: true });
 
 		const client = axios.create({
-		    httpsAgent,
-		    agent: httpsAgent,
-		    withCredentials: true,
-		    shouldKeepAlive: true,
-		    keepAlive: true,
-		    keepAliveMsecs: 3000,
-		    maxRedirects: 0,
-		    'Access-Control-Allow-Origin': '*',
+			httpsAgent,
+			withCredentials: true,
+			maxRedirects: 5,
+			headers: { 'Access-Control-Allow-Origin': '*' }
 		});
 
 		var options = {
 			url: url.toString() + "/api/discovery/v8.0/Instances",
-			username: "Administrator",
-			password: "pass@w0rd1",
+			username: "missioncommand",
+			password: "$mokingTir33",
 			workstation: '',
 			domain: "contoso"
 		};
-		
+
 		client.interceptors.response.use(
-		    (response: any) => {
-		        return response;
-		    },
-		    (err: { response: any; config: { headers: { [x: string]: any; }; }; }) => {
+			(response: any) => {
+				return response;
+			},
+			(err: { response: any; config: { headers: { [x: string]: any; }; }; }) => {
 				const error = err.response;
-				
-				if (error.status === 401 && error.headers['www-authenticate'] && error.headers['www-authenticate'] === 'Negotiate, NTLM' && !err.config.headers['X-retry']) 
-				{
+
+				if (error.status === 401 && error.headers['www-authenticate'] && error.headers['www-authenticate'] === 'Negotiate, NTLM' && !err.config.headers['X-retry']) {
 					// TYPE 1 MESSAGE
 					return sendType1Message();
-				} 
-				else if (error.status === 401 && error.headers['www-authenticate'] && error.headers['www-authenticate'].substring(0,4) === 'NTLM' ) 
-				{
+				}
+				else if (error.status === 401 && error.headers['www-authenticate'] && error.headers['www-authenticate'].substring(0, 4) === 'NTLM') {
 					// TYPE 2 MESSAGE PARSE ANS TYPE 3 MESSAGE SEND
 					return sendType3Message(error.headers['www-authenticate']);
 				}
 
-	        	return err;
-	    	},
+				return err;
+			},
 
 		);
 
 		client.interceptors.request.use((request: any) => {
-		    return request;
+			return request;
 		});
 
 		const sendType1Message = () => {
-		    var type1msg = ntlm.createType1Message(options);
+			var type1msg = ntlm.createType1Message(options);
 
 			return client({
 				method: 'get',
 				url: options.url,
-				headers:{
-					'Connection' : 'keep-alive',
+				headers: {
+					'Connection': 'keep-alive',
 					'Authorization': type1msg
 				},
 			});
@@ -209,11 +189,12 @@ export function activate(context: vscode.ExtensionContext) {
 			return client({
 				method: 'get',
 				url: options.url,
-				headers:{
-					'X-retry' : 'false',
-					'Connection' : 'Close',
+				headers: {
+					'X-retry': 'false',
+					'Connection': 'Close',
 					'Authorization': type3msg
-				}}
+				}
+			}
 			);
 		};
 
@@ -226,23 +207,28 @@ export function activate(context: vscode.ExtensionContext) {
 		})
 		.catch((error: any) => {
 			console.log(error);
-		});		
+		});
+	}
+
+	function connectToCrmUsingAdal(url: vscode.Uri) {
+		// do some oath stuff in here
 	}
 
 	// Invoke donwloadScripts.
 	downloadScripts(context.globalStoragePath);
 	//connectToCrmUsingAxois(vscode.Uri.parse("http://win-a6ljo0slrsh"));
 	//connectToCrmUsingHttpNtlm(vscode.Uri.parse("http://win-a6ljo0slrsh/"));
-	connectToCrmUsingAxios(vscode.Uri.parse("http://win-a6ljo0slrsh"));
+	connectToCrmUsingAxios(vscode.Uri.parse("http://40.76.24.100"));
+	//connectToCrmUsingAdal(vscode.Uri.parse("https://cloudsmithconsulting-qa.crm.dynamics.com"));
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
 
-	function showAndReturnTerminal(cwd: string) : vscode.Terminal {
+	function showAndReturnTerminal(cwd: string): vscode.Terminal {
 		//see if our terminal is open all ready
 		const index = vscode.window.terminals.findIndex(t => t.name === terminalName);
-		if (index === -1) { 
+		if (index === -1) {
 			// index wasn't found, return new terminal
 			const result = vscode.window.createTerminal({
 				name: terminalName,
