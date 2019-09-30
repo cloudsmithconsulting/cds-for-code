@@ -126,7 +126,9 @@
 		"vscode-test": "^1.2.0"
 	},
 	"dependencies": {
+		"adal-node": "^0.2.1",
 		"axios": "^0.19.0",
-		"httpntlm": "^1.7.6"
+		"httpntlm": "^1.7.6",
+		"msal": "^1.1.3"
 	}
 }
