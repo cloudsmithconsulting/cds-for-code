@@ -63,6 +63,10 @@
 			{
 				"command": "cloudSmith.generateDynamicsEntitiesCommand",
 				"title": "CloudSmith: Generate Entities From Dynamics Server"
+			},
+			{
+				"command": "cloudSmith.downloadDynamicsScriptsCommand",
+				"title": "CloudSmith: Download supporting Dynamics scripts from GitHub"
 			}
 		],
 		"viewsContainers": {
@@ -113,7 +117,7 @@
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^5.2.6",
-		"@types/node": "^10.12.21",
+		"@types/node": "^10.14.19",
 		"@types/vscode": "^1.38.0",
 		"glob": "^7.1.4",
 		"mocha": "^6.1.4",
@@ -121,5 +125,7 @@
 		"typescript": "^3.3.1",
 		"vscode-test": "^1.2.0"
 	},
-	"dependencies": {}
+	"dependencies": {
+		"axios": "^0.19.0"
+	}
 }
