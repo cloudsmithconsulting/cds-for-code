@@ -115,10 +115,10 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/axios": "^0.14.0",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^5.2.6",
 		"@types/node": "^10.14.19",
+		"@types/node-fetch": "^2.5.2",
 		"@types/vscode": "^1.38.0",
 		"glob": "^7.1.4",
 		"mocha": "^6.1.4",
@@ -128,7 +128,7 @@
 	},
 	"dependencies": {
 		"adal-node": "^0.2.1",
-		"axios": "^0.19.0",
-		"httpntlm": "^1.7.6"
+		"httpntlm": "^1.7.6",
+		"node-fetch": "^2.6.0"
 	}
 }

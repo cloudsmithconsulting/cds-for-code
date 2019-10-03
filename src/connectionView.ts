@@ -1,14 +1,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-const cats = {
-    'Coding Cat': 'https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif',
-    'Compiling Cat': 'https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif',
-    'Testing Cat': 'https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif'
-};
-
 /**
- * Manages cat coding webview panels
+ * Manages connectionView webview panels
  */
 export default class ConnectionView {
 	/**
@@ -37,14 +31,14 @@ export default class ConnectionView {
 		// Otherwise, create a new panel.
 		const panel = vscode.window.createWebviewPanel(
 			ConnectionView.viewType,
-			'Cat Coding',
+			ConnectionView.viewTitle,
 			column || vscode.ViewColumn.One,
 			{
 				// Enable javascript in the webview
 				enableScripts: true,
 
-				// And restrict the webview to only loading content from our extension's `media` directory.
-				localResourceRoots: [vscode.Uri.file(path.join(extensionPath, 'media'))]
+				// And restrict the webview to only loading content from our extension's `resources` directory.
+				localResourceRoots: [vscode.Uri.file(path.join(extensionPath, 'resources'))]
 			}
 		);
 
@@ -115,28 +109,7 @@ export default class ConnectionView {
         const webview = this._panel.webview;
         this._panel.title = ConnectionView.viewTitle;
 	    this._panel.webview.html = this._getHtmlForWebview(webview);
-
-		// Vary the webview's content based on where it is located in the editor.
-		// switch (this._panel.viewColumn) {
-		// 	case vscode.ViewColumn.Two:
-		// 		this._updateForCat(webview, 'Compiling Cat');
-		// 		return;
-
-		// 	case vscode.ViewColumn.Three:
-		// 		this._updateForCat(webview, 'Testing Cat');
-		// 		return;
-
-		// 	case vscode.ViewColumn.One:
-		// 	default:
-		// 		this._updateForCat(webview, 'Coding Cat');
-		// 		return;
-		// }
 	}
-
-	// private _updateForCat(webview: vscode.Webview, catName: keyof typeof cats) {
-	// 	this._panel.title = catName;
-	// 	this._panel.webview.html = this._getHtmlForWebview(webview, cats[catName]);
-	// }
 
 	private _getHtmlForWebview(webview: vscode.Webview) {
         // Local path to main script run in the webview
@@ -158,13 +131,13 @@ export default class ConnectionView {
     and only allow scripts that have a specific nonce.
     -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CloudSmith - Dynamics 365 Connection</title>
 </head>
 <body>
     <h1>Connect to Dynamics 365</h1>
     <form>
-        <table cellpadding="4" cellspacing="0">
+        <table cellpadding="4" cellspacing="0" style="visibility:hidden">
             <tr>
                 <td>
                     <label for="Server">
