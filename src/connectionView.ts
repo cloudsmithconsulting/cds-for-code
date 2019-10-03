@@ -1,14 +1,24 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-/**
- * Manages connectionView webview panels
- */
 export default class ConnectionView {
+	public static wireUpCommands(context: vscode.ExtensionContext) {
+        context.subscriptions.push(
+
+            vscode.commands.registerCommand('cloudSmith.addEntry', async () => { // Match name of command to package.json command
+                // Run command code
+                //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
+                ConnectionViewManager.createOrShow(context.extensionPath);
+            }) // <-- no semi-colon, comma starts next command registration
+        );
+    }
+}
+
+class ConnectionViewManager {
 	/**
 	 * Track the currently panel. Only allow a single panel to exist at a time.
 	 */
-	public static currentPanel: ConnectionView | undefined;
+	public static currentPanel: ConnectionViewManager | undefined;
 
     public static readonly viewType = 'connectionView';
     public static readonly viewTitle = 'CloudSmith - Dynamics 365 Connection';
@@ -23,15 +33,15 @@ export default class ConnectionView {
 			: undefined;
 
 		// If we already have a panel, show it.
-		if (ConnectionView.currentPanel) {
-			ConnectionView.currentPanel._panel.reveal(column);
+		if (ConnectionViewManager.currentPanel) {
+			ConnectionViewManager.currentPanel._panel.reveal(column);
 			return;
 		}
 
 		// Otherwise, create a new panel.
 		const panel = vscode.window.createWebviewPanel(
-			ConnectionView.viewType,
-			ConnectionView.viewTitle,
+			ConnectionViewManager.viewType,
+			ConnectionViewManager.viewTitle,
 			column || vscode.ViewColumn.One,
 			{
 				// Enable javascript in the webview
@@ -42,11 +52,11 @@ export default class ConnectionView {
 			}
 		);
 
-		ConnectionView.currentPanel = new ConnectionView(panel, extensionPath);
+		ConnectionViewManager.currentPanel = new ConnectionViewManager(panel, extensionPath);
 	}
 
 	public static revive(panel: vscode.WebviewPanel, extensionPath: string) {
-		ConnectionView.currentPanel = new ConnectionView(panel, extensionPath);
+		ConnectionViewManager.currentPanel = new ConnectionViewManager(panel, extensionPath);
 	}
 
 	private constructor(panel: vscode.WebviewPanel, extensionPath: string) {
@@ -92,7 +102,7 @@ export default class ConnectionView {
 	// }
 
 	public dispose() {
-		ConnectionView.currentPanel = undefined;
+		ConnectionViewManager.currentPanel = undefined;
 
 		// Clean up our resources
 		this._panel.dispose();
@@ -107,7 +117,7 @@ export default class ConnectionView {
 
 	private _update() {
         const webview = this._panel.webview;
-        this._panel.title = ConnectionView.viewTitle;
+        this._panel.title = ConnectionViewManager.viewTitle;
 	    this._panel.webview.html = this._getHtmlForWebview(webview);
 	}
 
