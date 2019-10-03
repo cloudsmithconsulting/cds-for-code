@@ -7,6 +7,8 @@ import { AuthenticationContext, TokenResponse, AcquireTokenCallback, ErrorRespon
 import * as fs from 'fs';
 import * as https from 'https';
 
+import ConnectionView from './connectionView';
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 // *****************
@@ -40,8 +42,6 @@ export function activate(context: vscode.ExtensionContext) {
 			console.log(`[CloudSmith] Creating folder '${folder}' as it does not exist.`);
 			fs.mkdirSync(folder);
 		}
-
-		const folders = await vscode.workspace.fs.readDirectory(vscode.Uri.file(folder));
 
 		if (!fs.existsSync(folder + "/Deploy-XrmSolution.ps1")) {
 			downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/Deploy-XrmSolution.ps1"), folder);
@@ -270,21 +270,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 		vscode.commands.registerCommand('cloudSmith.addEntry', async () => { // Match name of command to package.json command
 			// Run command code
-			let content = '';
-			await vscode.workspace.fs.readFile(vscode.Uri.file('./webViews/connectionView.html'))
-				.then((data) => {
-					content = data.toString();
-				});
-			// Create and show a new webview
-			const panel = vscode.window.createWebviewPanel(
-				'connectionView', // Identifies the type of the webview. Used internally
-				'Dynamics 365 Connection - Add', // Title of the panel displayed to the user
-				vscode.ViewColumn.One, // Editor column to show the new webview panel in.
-				{} // Webview options. More on these later.
-			);
-
-			panel.webview.html = content;
-			panel.reveal(vscode.ViewColumn.One);
+			//const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
+			ConnectionView.createOrShow(context.extensionPath);
 		}) // <-- no semi-colon, comma starts next command registration
 
 		, vscode.commands.registerCommand('cloudSmith.deleteEntry', () => { // Match name of command to package.json command
