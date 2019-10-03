@@ -206,9 +206,9 @@ export function activate(context: vscode.ExtensionContext) {
 		}).then((response: any) => {
 			console.log(response);
 		})
-		.catch((error: any) => {
-			console.log(error);
-		});
+			.catch((error: any) => {
+				console.log(error);
+			});
 	}
 
 	function connectToCrmUsingAdal(url: vscode.Uri) {
@@ -222,9 +222,9 @@ export function activate(context: vscode.ExtensionContext) {
 		authContext.acquireTokenWithUsernamePassword(resource, username, pass, clientId, (err: Error, res: TokenResponse | ErrorResponse) => {
 			if (err) {
 				console.log('well that didn\'t work: ' + err.stack);
-			  } else {
+			} else {
 				console.log(res);
-			  }
+			}
 		});
 	}
 
@@ -233,7 +233,7 @@ export function activate(context: vscode.ExtensionContext) {
 	//connectToCrmUsingAxois(vscode.Uri.parse("http://win-a6ljo0slrsh"));
 	//connectToCrmUsingHttpNtlm(vscode.Uri.parse("http://win-a6ljo0slrsh/"));
 	//connectToCrmUsingAxios(vscode.Uri.parse("http://40.76.24.100"));
-	connectToCrmUsingAdal(vscode.Uri.parse("https://cloudsmithconsulting-qa.crm.dynamics.com"));
+	//connectToCrmUsingAdal(vscode.Uri.parse("https://cloudsmithconsulting-qa.crm.dynamics.com"));
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
@@ -268,11 +268,23 @@ export function activate(context: vscode.ExtensionContext) {
 	// They will all get pushed into these subscriptions using an ...items spread
 	context.subscriptions.push(
 
-		vscode.commands.registerCommand('cloudSmith.addEntry', () => { // Match name of command to package.json command
+		vscode.commands.registerCommand('cloudSmith.addEntry', async () => { // Match name of command to package.json command
 			// Run command code
-			vscode.window.showInformationMessage(
-				'cloudSmith.addEntry'
+			let content = '';
+			await vscode.workspace.fs.readFile(vscode.Uri.file('./webViews/connectionView.html'))
+				.then((data) => {
+					content = data.toString();
+				});
+			// Create and show a new webview
+			const panel = vscode.window.createWebviewPanel(
+				'connectionView', // Identifies the type of the webview. Used internally
+				'Dynamics 365 Connection - Add', // Title of the panel displayed to the user
+				vscode.ViewColumn.One, // Editor column to show the new webview panel in.
+				{} // Webview options. More on these later.
 			);
+
+			panel.webview.html = content;
+			panel.reveal(vscode.ViewColumn.One);
 		}) // <-- no semi-colon, comma starts next command registration
 
 		, vscode.commands.registerCommand('cloudSmith.deleteEntry', () => { // Match name of command to package.json command
