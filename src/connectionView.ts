@@ -137,7 +137,7 @@ export default class ConnectionView {
 <body>
     <h1>Connect to Dynamics 365</h1>
     <form>
-        <table cellpadding="4" cellspacing="0" style="visibility:hidden">
+        <table cellpadding="4" cellspacing="0">
             <tr>
                 <td>
                     <label for="Server">
