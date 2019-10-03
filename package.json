@@ -53,6 +53,10 @@
 				"title": "Delete"
 			},
 			{
+				"command": "cloudSmith.clickEntry",
+				"title": "Click"
+			},
+			{
 				"command": "cloudSmith.unpackDynamicsSolutionCommand",
 				"title": "CloudSmith: Unpack Solution From Dynamics Server"
 			},

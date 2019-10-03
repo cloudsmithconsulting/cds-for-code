@@ -9,7 +9,16 @@ export default class DynamicsTreeView {
         
         // setup commands
         context.subscriptions.push(
-            vscode.commands.registerCommand('cloudSmith.deleteEntry', () => { // Match name of command to package.json command
+            vscode.commands.registerCommand('cloudSmith.refreshEntry', () => treeProvider.refresh()) // <-- no semi-colon, comma starts next command registration
+
+            , vscode.commands.registerCommand('cloudSmith.clickEntry', (name) => { // Match name of command to package.json command
+                // Run command code
+                vscode.window.showInformationMessage(
+                    `cloudSmith.clickEntry ${name || ''}`
+                );
+            }) // <-- no semi-colon, comma starts next command registration
+            
+            , vscode.commands.registerCommand('cloudSmith.deleteEntry', () => { // Match name of command to package.json command
                 // Run command code
                 vscode.window.showInformationMessage(
                     'cloudSmith.deleteEntry'
@@ -22,8 +31,6 @@ export default class DynamicsTreeView {
                     'cloudSmith.editEntry'
                 );
             }) // <-- no semi-colon, comma starts next command registration
-    
-            , vscode.commands.registerCommand('cloudSmith.refreshEntry', () => treeProvider.refresh()) // <-- no semi-colon, comma starts next command registration
         );
     }
 }
@@ -50,30 +57,35 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<ConnectionEn
 			return Promise.resolve([]);
 		}
 		return Promise.resolve(this.sampleData());
-		// if (element) {
-		// 	return Promise.resolve(this.getDepsInPackageJson(path.join(this.workspaceRoot, 'node_modules', element.label, 'package.json')));
-		// } else {
-		// 	const packageJsonPath = path.join(this.workspaceRoot, 'package.json');
-		// 	if (this.pathExists(packageJsonPath)) {
-		// 		return Promise.resolve(this.getDepsInPackageJson(packageJsonPath));
-		// 	} else {
-		// 		vscode.window.showInformationMessage('Workspace has no package.json');
-		// 		return Promise.resolve([]);
-		// 	}
-		// }
 	}
 
 	sampleData(): ConnectionEntry[] {
 		return [
 			new ConnectionEntry('Connection 1', vscode.TreeItemCollapsibleState.None, {
-                command: 'cloudSmith.deleteEntry',
-                title: 'Hello!'//,
-                //arguments: [moduleName]
+                command: 'cloudSmith.clickEntry',
+                title: 'Hello!',
+                arguments: ['Connection 1']
             }),
-			new ConnectionEntry('Connection 2', vscode.TreeItemCollapsibleState.None, undefined),
-			new ConnectionEntry('Connection 3', vscode.TreeItemCollapsibleState.None, undefined),
-			new ConnectionEntry('Connection 4', vscode.TreeItemCollapsibleState.None, undefined),
-			new ConnectionEntry('Connection 5', vscode.TreeItemCollapsibleState.None, undefined),
+			new ConnectionEntry('Connection 2', vscode.TreeItemCollapsibleState.None, {
+                command: 'cloudSmith.clickEntry',
+                title: 'Hello!',
+                arguments: ['Connection 2']
+            }),
+            new ConnectionEntry('Connection 3', vscode.TreeItemCollapsibleState.None, {
+                command: 'cloudSmith.clickEntry',
+                title: 'Hello!',
+                arguments: ['Connection 3']
+            }),
+            new ConnectionEntry('Connection 4', vscode.TreeItemCollapsibleState.None, {
+                command: 'cloudSmith.clickEntry',
+                title: 'Hello!',
+                arguments: ['Connection 4']
+            }),
+            new ConnectionEntry('Connection 5', vscode.TreeItemCollapsibleState.None, {
+                command: 'cloudSmith.clickEntry',
+                title: 'Hello!',
+                arguments: ['Connection 5']
+            })
 		];
 	}
 }
@@ -81,7 +93,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<ConnectionEn
 class ConnectionEntry extends vscode.TreeItem {
 
 	constructor(
-		public readonly label: string,
+        public readonly label: string,
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
 		public readonly command?: vscode.Command
 	) {
