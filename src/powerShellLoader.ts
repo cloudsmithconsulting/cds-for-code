@@ -17,7 +17,34 @@ export default class PowerShellLoader {
     }
 
     private static runScriptCheck(context: vscode.ExtensionContext) {
-        const folder = context.globalStoragePath;
+		const folder = context.globalStoragePath;
+		
+		// Array that stores folder locations
+		var array = [
+			"/Deploy-XrmSolution.ps1",
+			"/Generate-XrmEntities.ps1",
+			"/Get-XrmSolution.ps1",
+			"/Install-Sdk.ps1",
+			"/Install-XrmToolbox.ps1",
+			"/Setup-EasyRepro.ps1",
+			"/runonce-script.ps1"
+		];
+
+		// Checks to see if folder exist
+		if (!fs.existsSync(folder)) {
+			console.log(`[CloudSmith] Creating folder '${folder}' as it does not exist.`);
+			fs.mkdirSync(folder);
+		}
+
+		// For loop to iterate through the array
+		for (var i = 0; i < array.length; i++ )
+		{
+			if (!fs.existsSync(folder + array[i]))
+			{
+				PowerShellLoader.downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts" + array[i]), folder);
+			}
+		}
+/*
         if (!fs.existsSync(folder)) {
 			console.log(`[CloudSmith] Creating folder '${folder}' as it does not exist.`);
 			fs.mkdirSync(folder);
@@ -50,6 +77,7 @@ export default class PowerShellLoader {
 		if (!fs.existsSync(folder + "/runonce-script.ps1")) {
 			PowerShellLoader.downloadScript(vscode.Uri.parse("https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/CloudSmith.Dynamics365.SampleScripts/runonce-script.ps1"), folder);
 		}
+		*/
     }
 
     private static downloadScript(file: vscode.Uri, folder: string) {
