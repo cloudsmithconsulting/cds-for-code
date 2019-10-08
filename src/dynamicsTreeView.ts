@@ -35,10 +35,10 @@ export default class DynamicsTreeView {
     }
 }
 
-class DynamicsServerTreeProvider implements vscode.TreeDataProvider<ConnectionEntry> {
+class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
-	private _onDidChangeTreeData: vscode.EventEmitter<ConnectionEntry | undefined> = new vscode.EventEmitter<ConnectionEntry | undefined>();
-	readonly onDidChangeTreeData: vscode.Event<ConnectionEntry | undefined> = this._onDidChangeTreeData.event;
+	private _onDidChangeTreeData: vscode.EventEmitter<TreeEntry | undefined> = new vscode.EventEmitter<TreeEntry | undefined>();
+	readonly onDidChangeTreeData: vscode.Event<TreeEntry | undefined> = this._onDidChangeTreeData.event;
 
 	constructor(private workspaceRoot: string) {
 	}
@@ -47,57 +47,104 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<ConnectionEn
 		this._onDidChangeTreeData.fire();
 	}
 
-	getTreeItem(element: ConnectionEntry): vscode.TreeItem {
+	getTreeItem(element: TreeEntry): vscode.TreeItem {
 		return element;
 	}
 
-	getChildren(element?: ConnectionEntry): Thenable<ConnectionEntry[]> {
+	getChildren(element?: TreeEntry): Thenable<TreeEntry[]> {
 		if (!this.workspaceRoot) {
 			vscode.window.showInformationMessage('No dependency in empty workspace');
 			return Promise.resolve([]);
-		}
-		return Promise.resolve(this.sampleData());
+        }
+    
+        if (element && element !== undefined) {
+            switch (element.itemType) {
+                case "connection":
+                    return Promise.resolve(this.getConnectionDetails());
+                case "entitycontainer":
+                    return Promise.resolve(this.getEntities());
+            }
+        }
+
+        return Promise.resolve(this.getConnections());
 	}
 
-	sampleData(): ConnectionEntry[] {
+	getConnections(): TreeEntry[] {
 		return [
-			new ConnectionEntry('Connection 1', vscode.TreeItemCollapsibleState.None, {
+			new TreeEntry('Connection 1', 'connection', vscode.TreeItemCollapsibleState.Collapsed, {
                 command: 'cloudSmith.clickEntry',
                 title: 'Hello!',
                 arguments: ['Connection 1']
             }),
-			new ConnectionEntry('Connection 2', vscode.TreeItemCollapsibleState.None, {
+			new TreeEntry('Connection 2', 'connection', vscode.TreeItemCollapsibleState.None, {
                 command: 'cloudSmith.clickEntry',
                 title: 'Hello!',
                 arguments: ['Connection 2']
             }),
-            new ConnectionEntry('Connection 3', vscode.TreeItemCollapsibleState.None, {
+            new TreeEntry('Connection 3', 'connection', vscode.TreeItemCollapsibleState.None, {
                 command: 'cloudSmith.clickEntry',
                 title: 'Hello!',
                 arguments: ['Connection 3']
             }),
-            new ConnectionEntry('Connection 4', vscode.TreeItemCollapsibleState.None, {
+            new TreeEntry('Connection 4', 'connection', vscode.TreeItemCollapsibleState.Collapsed, {
                 command: 'cloudSmith.clickEntry',
                 title: 'Hello!',
                 arguments: ['Connection 4']
             }),
-            new ConnectionEntry('Connection 5', vscode.TreeItemCollapsibleState.None, {
+            new TreeEntry('Connection 5', 'connection', vscode.TreeItemCollapsibleState.None, {
                 command: 'cloudSmith.clickEntry',
                 title: 'Hello!',
                 arguments: ['Connection 5']
             })
 		];
+    }
+    
+    getConnectionDetails(): TreeEntry[] {
+		return [
+			new TreeEntry('Entities', 'entitycontainer', vscode.TreeItemCollapsibleState.Collapsed, {
+                command: 'cloudSmith.clickEntry',
+                title: 'Hello!',
+                arguments: ['Entities']
+            }),
+			new TreeEntry('Plugins', 'serveritem', vscode.TreeItemCollapsibleState.None, {
+                command: 'cloudSmith.clickEntry',
+                title: 'Hello!',
+                arguments: ['Plugins']
+            })
+		];
+    }
+    
+    getEntities(): TreeEntry[] {
+		return [
+			new TreeEntry('Account', 'enitity', vscode.TreeItemCollapsibleState.None, {
+                command: 'cloudSmith.clickEntry',
+                title: 'Hello!',
+                arguments: ['Account']
+            }),
+            new TreeEntry('Contact', 'enitity', vscode.TreeItemCollapsibleState.None, {
+                command: 'cloudSmith.clickEntry',
+                title: 'Hello!',
+                arguments: ['Contact']
+            }),
+            new TreeEntry('Lead', 'enitity', vscode.TreeItemCollapsibleState.None, {
+                command: 'cloudSmith.clickEntry',
+                title: 'Hello!',
+                arguments: ['Lead']
+            })
+		];
 	}
 }
 
-class ConnectionEntry extends vscode.TreeItem {
+class TreeEntry extends vscode.TreeItem {
 
 	constructor(
         public readonly label: string,
+        public readonly itemType: string,
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
 		public readonly command?: vscode.Command
 	) {
-		super(label, collapsibleState);
+        super(label, collapsibleState);
+        this.contextValue = itemType;
 	}
 
 	get tooltip(): string {
@@ -112,7 +159,4 @@ class ConnectionEntry extends vscode.TreeItem {
 		light: path.join(__filename, '..', '..', 'resources', 'light', 'dependency.svg'),
 		dark: path.join(__filename, '..', '..', 'resources', 'dark', 'dependency.svg')
 	};
-
-	contextValue = 'dependency';
-
 }
