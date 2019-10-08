@@ -4,7 +4,7 @@ import * as path from 'path';
 export default class DynamicsTreeView {
     public static wireUpCommands(context: vscode.ExtensionContext) {
         // register the provider and connect it to the treeview window
-        const treeProvider = new DynamicsServerTreeProvider(vscode.workspace.rootPath || '');
+        const treeProvider = new DynamicsServerTreeProvider();
         vscode.window.registerTreeDataProvider('dynamicsConnectionsView', treeProvider);
         
         // setup commands
@@ -40,7 +40,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 	private _onDidChangeTreeData: vscode.EventEmitter<TreeEntry | undefined> = new vscode.EventEmitter<TreeEntry | undefined>();
 	readonly onDidChangeTreeData: vscode.Event<TreeEntry | undefined> = this._onDidChangeTreeData.event;
 
-	constructor(private workspaceRoot: string) {
+	constructor() {
 	}
 
 	refresh(): void {
@@ -52,11 +52,6 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 	}
 
 	getChildren(element?: TreeEntry): Thenable<TreeEntry[]> {
-		if (!this.workspaceRoot) {
-			vscode.window.showInformationMessage('No dependency in empty workspace');
-			return Promise.resolve([]);
-        }
-    
         if (element && element !== undefined) {
             switch (element.itemType) {
                 case "connection":
