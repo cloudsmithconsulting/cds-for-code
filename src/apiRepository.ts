@@ -34,6 +34,8 @@ export default class ApiRepository
     public async retrieveSolutions() : Promise<any[]> {
         let q = this.webapi.query('solution', 'solutions').orderBy("name");
         
-        return await this.webapi.fetch(q);
+        let values = await this.webapi.fetch(q);
+
+        return values;
     }
 }
