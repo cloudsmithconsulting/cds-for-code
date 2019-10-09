@@ -1,14 +1,24 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-/**
- * Manages connectionView webview panels
- */
 export default class ConnectionView {
+	public static wireUpCommands(context: vscode.ExtensionContext) {
+        context.subscriptions.push(
+
+            vscode.commands.registerCommand('cloudSmith.addEntry', async () => { // Match name of command to package.json command
+                // Run command code
+                //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
+                ConnectionViewManager.createOrShow(context.extensionPath);
+            }) // <-- no semi-colon, comma starts next command registration
+        );
+    }
+}
+
+class ConnectionViewManager {
 	/**
 	 * Track the currently panel. Only allow a single panel to exist at a time.
 	 */
-	public static currentPanel: ConnectionView | undefined;
+	public static currentPanel: ConnectionViewManager | undefined;
 
     public static readonly viewType = 'connectionView';
     public static readonly viewTitle = 'CloudSmith - Dynamics 365 Connection';
@@ -23,15 +33,15 @@ export default class ConnectionView {
 			: undefined;
 
 		// If we already have a panel, show it.
-		if (ConnectionView.currentPanel) {
-			ConnectionView.currentPanel._panel.reveal(column);
+		if (ConnectionViewManager.currentPanel) {
+			ConnectionViewManager.currentPanel._panel.reveal(column);
 			return;
 		}
 
 		// Otherwise, create a new panel.
 		const panel = vscode.window.createWebviewPanel(
-			ConnectionView.viewType,
-			ConnectionView.viewTitle,
+			ConnectionViewManager.viewType,
+			ConnectionViewManager.viewTitle,
 			column || vscode.ViewColumn.One,
 			{
 				// Enable javascript in the webview
@@ -42,11 +52,11 @@ export default class ConnectionView {
 			}
 		);
 
-		ConnectionView.currentPanel = new ConnectionView(panel, extensionPath);
+		ConnectionViewManager.currentPanel = new ConnectionViewManager(panel, extensionPath);
 	}
 
 	public static revive(panel: vscode.WebviewPanel, extensionPath: string) {
-		ConnectionView.currentPanel = new ConnectionView(panel, extensionPath);
+		ConnectionViewManager.currentPanel = new ConnectionViewManager(panel, extensionPath);
 	}
 
 	private constructor(panel: vscode.WebviewPanel, extensionPath: string) {
@@ -75,8 +85,9 @@ export default class ConnectionView {
 		this._panel.webview.onDidReceiveMessage(
 			message => {
 				switch (message.command) {
-					case 'alert':
-						vscode.window.showErrorMessage(message.text);
+					case 'createConnection':
+                        vscode.window.showInformationMessage(message.settings.server);
+                        this._panel.webview.postMessage({ command: 'connectionCreated' });
 						return;
 				}
 			},
@@ -85,14 +96,8 @@ export default class ConnectionView {
 		);
 	}
 
-	// public doRefactor() {
-	// 	// Send a message to the webview webview.
-	// 	// You can send any JSON serializable data.
-	// 	this._panel.webview.postMessage({ command: 'refactor' });
-	// }
-
 	public dispose() {
-		ConnectionView.currentPanel = undefined;
+		ConnectionViewManager.currentPanel = undefined;
 
 		// Clean up our resources
 		this._panel.dispose();
@@ -107,7 +112,7 @@ export default class ConnectionView {
 
 	private _update() {
         const webview = this._panel.webview;
-        this._panel.title = ConnectionView.viewTitle;
+        this._panel.title = ConnectionViewManager.viewTitle;
 	    this._panel.webview.html = this._getHtmlForWebview(webview);
 	}
 
@@ -136,75 +141,74 @@ export default class ConnectionView {
 </head>
 <body>
     <h1>Connect to Dynamics 365</h1>
-    <form>
-        <table cellpadding="4" cellspacing="0">
-            <tr>
-                <td>
-                    <label for="Server">
-                        <strong>Server</strong>
-                    </label>
-                </td>
-                <td>
-                    <input type="text" id="Server" name="Server">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="Port">
-                        <strong>Port</strong>
-                    </label>
-                </td>
-                <td>
-                    <input type="text" id="Port" name="Port">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="UseSsl">
-                        <strong>Use SSL</strong>
-                    </label>
-                </td>
-                <td>
-                    <input type="checkbox" id="UseSsl" name="UseSsl" value="true">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="Domain">
-                        <strong>Domain</strong>
-                    </label>
-                </td>
-                <td>
-                    <input type="text" id="Domain" name="Domain">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="Username">
-                        <strong>Username</strong>
-                    </label>
-                </td>
-                <td>
-                    <input type="text" id="Username" name="Username">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="Password">
-                        <strong>Password</strong>
-                    </label>
-                </td>
-                <td>
-                    <input type="password" id="Password" name="Password">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <button type="submit">Test Connection</button>
-                </td>
-            </tr>
-        </table>
-    </form>
+    <table cellpadding="4" cellspacing="0">
+        <tr>
+            <td>
+                <label for="Server">
+                    <strong>Server</strong>
+                </label>
+            </td>
+            <td>
+                <input type="text" id="Server" name="Server">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="Port">
+                    <strong>Port</strong>
+                </label>
+            </td>
+            <td>
+                <input type="text" id="Port" name="Port">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="UseSsl">
+                    <strong>Use SSL</strong>
+                </label>
+            </td>
+            <td>
+                <input type="checkbox" id="UseSsl" name="UseSsl" value="true">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="Domain">
+                    <strong>Domain</strong>
+                </label>
+            </td>
+            <td>
+                <input type="text" id="Domain" name="Domain">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="Username">
+                    <strong>Username</strong>
+                </label>
+            </td>
+            <td>
+                <input type="text" id="Username" name="Username">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="Password">
+                    <strong>Password</strong>
+                </label>
+            </td>
+            <td>
+                <input type="password" id="Password" name="Password">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button id="submitButton">Test Connection</button>
+            </td>
+        </tr>
+    </table>
+    <div id="output"></div>
     <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>
 </html>`;

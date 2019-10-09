@@ -3,36 +3,35 @@
 (function () {
     const vscode = acquireVsCodeApi();
 
-    const oldState = vscode.getState();
+    //const oldState = vscode.getState();
 
-    const counter = document.getElementById('lines-of-code-counter');
-    console.log(oldState);
-    let currentCount = (oldState && oldState.count) || 0;
-    counter.textContent = currentCount;
+    const outputDiv = document.getElementById("output");
+    const submitButton = document.getElementById("submitButton");
+    
+    submitButton.addEventListener("click", event => {
+        event.preventDefault();
 
-    setInterval(() => {
-        counter.textContent = currentCount++;
+        outputDiv.innerHTML =  "Form Submitted!";
 
-        // Update state
-        vscode.setState({ count: currentCount });
-
-        // Alert the extension when the cat introduces a bug
-        if (Math.random() < Math.min(0.001 * currentCount, 0.05)) {
-            // Send a message back to the extension
-            vscode.postMessage({
-                command: 'alert',
-                text: '🐛  on line ' + currentCount
-            });
-        }
-    }, 100);
+        vscode.postMessage({
+            command: 'createConnection',
+            settings: {
+                server: document.getElementById("Server").value,
+                port: document.getElementById("Port").value,
+                useSsl: document.getElementById("UseSsl").value === "true",
+                domain: document.getElementById("Domain").value,
+                username: document.getElementById("Username").value,
+                password: document.getElementById("Password").value
+            }
+        });
+    });
 
     // Handle messages sent from the extension to the webview
     window.addEventListener('message', event => {
         const message = event.data; // The json data that the extension sent
         switch (message.command) {
-            case 'refactor':
-                currentCount = Math.ceil(currentCount * 0.5);
-                counter.textContent = currentCount;
+            case 'connectionCreated':
+                outputDiv.innerHTML =  "Your connection was created!";
                 break;
         }
     });
