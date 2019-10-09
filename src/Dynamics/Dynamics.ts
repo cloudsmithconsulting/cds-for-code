@@ -2,7 +2,8 @@ import query, { Query } from "../Query/Query";
 import { dynamicsBatch, DynamicsBatch } from "./DynamicsBatch";
 import { ConnectionOptions, dynamicsQuery, dynamicsRequest, dynamicsSave } from "./DynamicsRequest";
 
-export const WebApiVersion = 'v9.1';
+//export const WebApiVersion = 'v9.1';
+export const WebApiVersion = 'v8.2';
 export const DefaultMaxRecords = 100;
 export const DynamicsHeaders = {
     'OData-MaxVersion': '4.0',

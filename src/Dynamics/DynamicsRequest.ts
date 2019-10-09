@@ -1,13 +1,8 @@
 import { GetRootQuery, Query } from "../Query/Query";
 import GetQueryXml from "../Query/QueryXml";
 import { DynamicsHeaders, WebApiVersion } from "./Dynamics";
-//import { Ntlm } from "../ntlm/ntlm";
 import * as httpntlm from "httpntlm";
 import fetch from "node-fetch";
-import * as https from 'https';
-import { isOptionSetAttribute } from "../../out/Dynamics/DynamicsMetadata";
-
-const keepAlive = new https.Agent({ keepAlive: true });
 
 export enum AuthenticationType
 {
@@ -25,69 +20,6 @@ export class ConnectionOptions {
     serverUrl: string = "";
 }
 
-export async function authenticate(connectionOptions: ConnectionOptions): Promise<string>
-{
-    if (connectionOptions.authType === AuthenticationType.Windows)
-    {
-        let returnValue:string;
-        let options = {
-            url: connectionOptions.serverUrl,
-            username: connectionOptions.username || "",
-            password: connectionOptions.password || "",
-            workstation: connectionOptions.workstation || "",
-            domain: connectionOptions.domain || ""
-        };
-
-        const type1Message = httpntlm.ntlm.createType1Message(options);
-
-        await fetch(connectionOptions.serverUrl, {
-            method: "HEAD",
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-                'Authorization': type1Message,
-                'Connection': 'keep-alive',
-                ...DynamicsHeaders
-            },
-            agent: keepAlive
-        })
-        .then(response => response.headers.get('www-authenticate'))
-        .then((auth) => {
-            if (!auth) {
-                throw new Error('Stage 1 NTLM handshake failed.');
-            }
-        
-            const type2Message = httpntlm.ntlm.parseType2Message(auth);
-
-            if (!connectionOptions.username)
-            {
-                connectionOptions.username = "";
-            }
-
-            if (!connectionOptions.password)
-            {
-                connectionOptions.password = "";
-            }
-
-            let type3Message = httpntlm.ntlm.createType3Message(type2Message, options);
-
-            if (type3Message)
-            {
-                console.log(`NTLM authentication to ${connectionOptions.serverUrl} completed as ${connectionOptions.username}.`);
-
-                returnValue = type3Message;
-            }
-        })
-        .catch(response => {
-            if (!response.Ok)
-            {
-                throw new Error(response.responseText);
-            }
-        });
-
-        return returnValue;
-    }
-}
-
 export async function dynamicsQuery<T>(connectionOptions: ConnectionOptions, query: Query, maxRowCount?: number, headers?: any): Promise<T[]> {
     const dataQuery = GetRootQuery(query);
 
@@ -95,49 +27,25 @@ export async function dynamicsQuery<T>(connectionOptions: ConnectionOptions, que
         throw new Error('dynamicsQuery requires a Query object with an EntityPath');
     }
 
-    /*
-    if (!connectionOptions.accessToken)
-    {
-        connectionOptions.accessToken = await authenticate(connectionOptions);
-    }
-    */
-
     return dynamicsQueryUrl<T>(connectionOptions, `/api/data/${WebApiVersion}/${dataQuery.EntityPath}`, query, maxRowCount, headers);
 }
 
 export async function dynamicsQueryUrl<T>(connectionOptions: ConnectionOptions, dynamicsEntitySetUrl: string, query: Query, maxRowCount?: number, headers?: any): Promise<T[]> {
     const querySeparator = (dynamicsEntitySetUrl.indexOf('?') > -1 ? '&' : '?');
 
-    /*
-    if (!connectionOptions.accessToken)
-    {
-        connectionOptions.accessToken = await authenticate(connectionOptions);
-    }
-    */
-
-    return request2<T[]>(connectionOptions, `${dynamicsEntitySetUrl}${querySeparator}fetchXml=${escape(GetQueryXml(query, maxRowCount))}`, 'GET', undefined, headers);
+    return request<T[]>(connectionOptions, `${dynamicsEntitySetUrl}${querySeparator}fetchXml=${escape(GetQueryXml(query, maxRowCount))}`, 'GET', undefined, headers);
 }
 
 export async function dynamicsRequest<T>(connectionOptions: ConnectionOptions, dynamicsEntitySetUrl: string, headers?: any): Promise<T> {
-    if (!connectionOptions.accessToken)
-    {
-        connectionOptions.accessToken = await authenticate(connectionOptions);
-    }
-
-    return request2<T>(connectionOptions, dynamicsEntitySetUrl, 'GET', undefined, headers);
+    return request<T>(connectionOptions, dynamicsEntitySetUrl, 'GET', undefined, headers);
 }
 
 export async function dynamicsSave(connectionOptions: ConnectionOptions, entitySetName: string, data: any, id?: string, headers?: any): Promise<string> {
-    if (!connectionOptions.accessToken)
-    {
-        connectionOptions.accessToken = await authenticate(connectionOptions);
-    }
-
     if (id) {
-        return request2(connectionOptions, `/api/data/${WebApiVersion}/${entitySetName}(${trimId(id)})`, 'PATCH', data, headers);
+        return request(connectionOptions, `/api/data/${WebApiVersion}/${entitySetName}(${trimId(id)})`, 'PATCH', data, headers);
     }
     else {
-        return request2(connectionOptions, `/api/data/${WebApiVersion}/${entitySetName}()`, 'POST', data, headers);
+        return request(connectionOptions, `/api/data/${WebApiVersion}/${entitySetName}()`, 'POST', data, headers);
     }
 }
 
@@ -199,46 +107,7 @@ export function formatDynamicsResponse(data: any): any {
     return items;
 }
 
-async function request2<T>(connectionOptions: ConnectionOptions, url: string, method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE', body?: any, headers?: any): Promise<T> {
-    let callUrl: string = connectionOptions.serverUrl;
-
-    if (callUrl.endsWith("/"))
-    {
-        callUrl = callUrl.substr(0, callUrl.length - 1);
-    }
-
-    callUrl = `${callUrl}${url}`;
-
-    return await httpntlm[method.toLowerCase()]({
-        url: callUrl,
-        username: connectionOptions.username,
-        password: connectionOptions.password,
-        workstation: connectionOptions.workstation || '',
-        domain: connectionOptions.domain || ''
-    }, function (err, res){
-        if(err) 
-        { 
-            console.error(err);
-
-            throw err;
-        }
-    
-        console.log(res.headers);
-        console.log(res.body);
-        
-        const json = res.body.json();
-        const data = formatDynamicsResponse(json);
-
-        return data;
-    });
-}
-
 async function request<T>(connectionOptions: ConnectionOptions, url: string, method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE', body?: any, headers?: any): Promise<T> {
-    if (!connectionOptions.accessToken)
-    {
-        connectionOptions.accessToken = await authenticate(connectionOptions);
-    }
-
     let callUrl: string = connectionOptions.serverUrl;
 
     if (callUrl.endsWith("/"))
@@ -248,20 +117,53 @@ async function request<T>(connectionOptions: ConnectionOptions, url: string, met
 
     callUrl = `${callUrl}${url}`;
 
-    return fetch(callUrl, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            'Authorization': connectionOptions.accessToken,
-            'Connection': 'keep-alive',
-            ...DynamicsHeaders,
-            ...headers
-        },
-        agent: keepAlive,
-        body: body
-    })
-        .then(response => response.json())
-        .then(data => formatDynamicsResponse(data));
+    //TODO: fetch if we can.
+    if (connectionOptions.authType === AuthenticationType.Windows)
+    {
+        return await httpntlm[method.toLowerCase()]({
+            url: callUrl,
+            username: connectionOptions.username,
+            password: connectionOptions.password,
+            workstation: connectionOptions.workstation || '',
+            domain: connectionOptions.domain || '',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                ...DynamicsHeaders,
+                ...headers
+            },
+            body: body
+        }, function (err, res){
+            if(err) 
+            { 
+                console.error(err);
+
+                throw err;
+            }
+        
+            console.log(res.headers);
+            console.log(res.body);
+            
+            const json = res.body.json();
+            const data = formatDynamicsResponse(json);
+
+            return data;
+        });
+    }
+    else
+    {
+        return fetch(url, {
+            method: method,
+            headers: {
+                'Authorization': `Bearer ${connectionOptions.accessToken}`,
+                'Content-Type': 'application/json; charset=utf-8',
+                ...DynamicsHeaders,
+                ...headers
+            },
+            body: body
+        })
+            .then(response => response.json())
+            .then(data => formatDynamicsResponse(data));
+    }
 }
 
 function trimId(id: string) {
