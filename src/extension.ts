@@ -12,6 +12,7 @@ import ConnectionView from './connectionView';
 import PowerShellLoader from './powerShellLoader';
 import GenerateEntitiesCommand from './generateEntitiesCommand';
 import ApiRepository from './apiRepository';
+import DiscoveryRepository from "./discoveryRepository";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -31,6 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
 	PowerShellLoader.wireUpCommands(context);
 	GenerateEntitiesCommand.wireUpCommands(context, config);
 	ApiRepository.wireUpCommands(context);
+	DiscoveryRepository.wireUpCommands(context);
 	
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand

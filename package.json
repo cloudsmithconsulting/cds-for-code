@@ -70,7 +70,11 @@
 			},
 			{
 				"command": "cloudSmith.getSolutionsCommand",
-				"title": "CloudSmith: Get Dynamics Solutions associated with the current conection."
+				"title": "CloudSmith: Get Dynamics Solutions associated with the current connection."
+			},
+			{
+				"command": "cloudSmith.getOrganizationsCommand",
+				"title": "CloudSmith: Get a list of organizations associated with the current connection."
 			}
 		],
 		"viewsContainers": {

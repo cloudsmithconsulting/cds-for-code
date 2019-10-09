@@ -2,6 +2,9 @@ import * as vscode from 'vscode';
 import { ConnectionOptions, AuthenticationType } from './Dynamics/DynamicsRequest';
 import dynamics, { Dynamics } from './Dynamics/Dynamics';
 import { QueryOperator } from './Query/Query';
+import { connect } from 'tls';
+import { url } from 'inspector';
+import { DH_UNABLE_TO_CHECK_GENERATOR } from 'constants';
 
 export default class ApiRepository
 {
@@ -10,7 +13,7 @@ export default class ApiRepository
         context.subscriptions.push(
             vscode.commands.registerCommand('cloudSmith.getSolutionsCommand', () => { // Gets a list of solutions according to a given connection profile.
                 //TODO: fix this to take an actual connection parameter.
-                var options = new ConnectionOptions();
+                const options = new ConnectionOptions();
 
                 options.authType = AuthenticationType.Windows;
                 options.domain = "CONTOSO";
@@ -19,15 +22,18 @@ export default class ApiRepository
                 options.serverUrl = "http://win-a6ljo0slrsh/test/";
                 options.webApiVersion = "v8.2";         // Defaults to latest.
 
-                var api = new ApiRepository(options);
+                const api = new ApiRepository(options);
                 
-                return api.retrievePluginAssemblies();
+                return api.retrieveSolutions();
             })
         );
     }
 
+    private options:ConnectionOptions;
+
     public constructor (connectionOptions:ConnectionOptions)
     {
+        this.options = connectionOptions;
         this.webapi = dynamics(connectionOptions); 
     }
 

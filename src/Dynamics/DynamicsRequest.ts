@@ -147,7 +147,15 @@ async function request<T>(connectionOptions: ConnectionOptions, url: string, met
 
                 if (json.error)
                 {
+                    console.error(json.error.message);
+
                     reject (json.error.message);
+                }
+                else if (json.ExceptionMessage)
+                {
+                    console.error(json.ExceptionMessage);
+
+                    reject (`The service call returned HTTP ${json.ErrorCode} - ${json.ExceptionMessage}`);
                 }
                 else
                 {
