@@ -125,13 +125,15 @@ async function request<T>(connectionOptions: ConnectionOptions, url: string, met
             username: connectionOptions.username,
             password: connectionOptions.password,
             workstation: connectionOptions.workstation || '',
-            domain: connectionOptions.domain || '',
+            domain: connectionOptions.domain || ''
+            /*
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',
                 ...DynamicsHeaders,
                 ...headers
             },
             body: body
+            */
         }, function (err, res){
             if(err) 
             { 

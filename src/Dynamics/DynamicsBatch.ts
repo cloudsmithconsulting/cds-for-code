@@ -1,7 +1,7 @@
 import { GetRootQuery, Query } from "../Query/Query";
 import GetQueryXml from "../Query/QueryXml";
 import { DefaultMaxRecords, DynamicsHeaders, WebApiVersion } from "./Dynamics";
-import { formatDynamicsResponse, ConnectionOptions, authenticate } from "./DynamicsRequest";
+import { formatDynamicsResponse, ConnectionOptions } from "./DynamicsRequest";
 import fetch from "node-fetch";
 
 export interface DynamicsBatch {
@@ -53,11 +53,6 @@ class Batch implements DynamicsBatch {
     }
 
     async execute() {
-        if (this.ConnectionOptions.accessToken === undefined)
-        {
-            this.ConnectionOptions = authenticate(this.ConnectionOptions);
-        }
-    
         const results = await Batch.requestBatch(this.connectionOptions, `/api/data/${WebApiVersion}/$batch`, this.Changes, this.headers);
 
         if (this.RelatedChanges.length > 0) {
