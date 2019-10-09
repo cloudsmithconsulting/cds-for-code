@@ -109,7 +109,6 @@ export function formatDynamicsResponse(data: any): any {
 
 async function request<T>(connectionOptions: ConnectionOptions, url: string, method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE', body?: any, headers?: any): Promise<T> {
     let callUrl: string = connectionOptions.serverUrl;
-    let returnObject;
 
     if (callUrl.endsWith("/"))
     {
@@ -144,9 +143,8 @@ async function request<T>(connectionOptions: ConnectionOptions, url: string, met
                 }
                
                 const json = JSON.parse(res.body);
-                returnObject = formatDynamicsResponse(json);
 
-                resolve(returnObject);
+                resolve(formatDynamicsResponse(json));
             });
         });
     }
