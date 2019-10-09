@@ -85,8 +85,9 @@ class ConnectionViewManager {
 		this._panel.webview.onDidReceiveMessage(
 			message => {
 				switch (message.command) {
-					case 'alert':
-						vscode.window.showErrorMessage(message.text);
+					case 'createConnection':
+                        vscode.window.showInformationMessage(message.settings.server);
+                        this._panel.webview.postMessage({ command: 'connectionCreated' });
 						return;
 				}
 			},
@@ -94,12 +95,6 @@ class ConnectionViewManager {
 			this._disposables
 		);
 	}
-
-	// public doRefactor() {
-	// 	// Send a message to the webview webview.
-	// 	// You can send any JSON serializable data.
-	// 	this._panel.webview.postMessage({ command: 'refactor' });
-	// }
 
 	public dispose() {
 		ConnectionViewManager.currentPanel = undefined;
@@ -146,75 +141,74 @@ class ConnectionViewManager {
 </head>
 <body>
     <h1>Connect to Dynamics 365</h1>
-    <form>
-        <table cellpadding="4" cellspacing="0">
-            <tr>
-                <td>
-                    <label for="Server">
-                        <strong>Server</strong>
-                    </label>
-                </td>
-                <td>
-                    <input type="text" id="Server" name="Server">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="Port">
-                        <strong>Port</strong>
-                    </label>
-                </td>
-                <td>
-                    <input type="text" id="Port" name="Port">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="UseSsl">
-                        <strong>Use SSL</strong>
-                    </label>
-                </td>
-                <td>
-                    <input type="checkbox" id="UseSsl" name="UseSsl" value="true">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="Domain">
-                        <strong>Domain</strong>
-                    </label>
-                </td>
-                <td>
-                    <input type="text" id="Domain" name="Domain">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="Username">
-                        <strong>Username</strong>
-                    </label>
-                </td>
-                <td>
-                    <input type="text" id="Username" name="Username">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="Password">
-                        <strong>Password</strong>
-                    </label>
-                </td>
-                <td>
-                    <input type="password" id="Password" name="Password">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <button type="submit">Test Connection</button>
-                </td>
-            </tr>
-        </table>
-    </form>
+    <table cellpadding="4" cellspacing="0">
+        <tr>
+            <td>
+                <label for="Server">
+                    <strong>Server</strong>
+                </label>
+            </td>
+            <td>
+                <input type="text" id="Server" name="Server">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="Port">
+                    <strong>Port</strong>
+                </label>
+            </td>
+            <td>
+                <input type="text" id="Port" name="Port">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="UseSsl">
+                    <strong>Use SSL</strong>
+                </label>
+            </td>
+            <td>
+                <input type="checkbox" id="UseSsl" name="UseSsl" value="true">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="Domain">
+                    <strong>Domain</strong>
+                </label>
+            </td>
+            <td>
+                <input type="text" id="Domain" name="Domain">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="Username">
+                    <strong>Username</strong>
+                </label>
+            </td>
+            <td>
+                <input type="text" id="Username" name="Username">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="Password">
+                    <strong>Password</strong>
+                </label>
+            </td>
+            <td>
+                <input type="password" id="Password" name="Password">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button id="submitButton">Test Connection</button>
+            </td>
+        </tr>
+    </table>
+    <div id="output"></div>
     <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>
 </html>`;
