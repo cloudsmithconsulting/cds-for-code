@@ -31,11 +31,13 @@ export default class ApiRepository
 
     private webapi: Dynamics;
 
-    public async retrieveSolutions() : Promise<any[]> {
-        let q = this.webapi.query('solution', 'solutions').orderBy("name");
+    public retrieveSolutions() : any {
+        let q = this.webapi.query('solution', 'solutions').orderBy("uniquename");
         
-        let values = await this.webapi.fetch(q);
-
-        return values;
+        this.webapi.fetch(q).then(results =>
+            {
+                console.log(results);
+                return results;
+            });
     }
 }

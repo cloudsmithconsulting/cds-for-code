@@ -27,25 +27,25 @@ export async function dynamicsQuery<T>(connectionOptions: ConnectionOptions, que
         throw new Error('dynamicsQuery requires a Query object with an EntityPath');
     }
 
-    return dynamicsQueryUrl<T>(connectionOptions, `/api/data/${WebApiVersion}/${dataQuery.EntityPath}`, query, maxRowCount, headers);
+    return await dynamicsQueryUrl<T>(connectionOptions, `/api/data/${WebApiVersion}/${dataQuery.EntityPath}`, query, maxRowCount, headers);
 }
 
 export async function dynamicsQueryUrl<T>(connectionOptions: ConnectionOptions, dynamicsEntitySetUrl: string, query: Query, maxRowCount?: number, headers?: any): Promise<T[]> {
     const querySeparator = (dynamicsEntitySetUrl.indexOf('?') > -1 ? '&' : '?');
 
-    return request<T[]>(connectionOptions, `${dynamicsEntitySetUrl}${querySeparator}fetchXml=${escape(GetQueryXml(query, maxRowCount))}`, 'GET', undefined, headers);
+    return await request<T[]>(connectionOptions, `${dynamicsEntitySetUrl}${querySeparator}fetchXml=${escape(GetQueryXml(query, maxRowCount))}`, 'GET', undefined, headers);
 }
 
 export async function dynamicsRequest<T>(connectionOptions: ConnectionOptions, dynamicsEntitySetUrl: string, headers?: any): Promise<T> {
-    return request<T>(connectionOptions, dynamicsEntitySetUrl, 'GET', undefined, headers);
+    return await request<T>(connectionOptions, dynamicsEntitySetUrl, 'GET', undefined, headers);
 }
 
 export async function dynamicsSave(connectionOptions: ConnectionOptions, entitySetName: string, data: any, id?: string, headers?: any): Promise<string> {
     if (id) {
-        return request(connectionOptions, `/api/data/${WebApiVersion}/${entitySetName}(${trimId(id)})`, 'PATCH', data, headers);
+        return await request(connectionOptions, `/api/data/${WebApiVersion}/${entitySetName}(${trimId(id)})`, 'PATCH', data, headers);
     }
     else {
-        return request(connectionOptions, `/api/data/${WebApiVersion}/${entitySetName}()`, 'POST', data, headers);
+        return await request(connectionOptions, `/api/data/${WebApiVersion}/${entitySetName}()`, 'POST', data, headers);
     }
 }
 
@@ -109,6 +109,7 @@ export function formatDynamicsResponse(data: any): any {
 
 async function request<T>(connectionOptions: ConnectionOptions, url: string, method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE', body?: any, headers?: any): Promise<T> {
     let callUrl: string = connectionOptions.serverUrl;
+    let returnObject;
 
     if (callUrl.endsWith("/"))
     {
@@ -120,35 +121,35 @@ async function request<T>(connectionOptions: ConnectionOptions, url: string, met
     //TODO: fetch if we can.
     if (connectionOptions.authType === AuthenticationType.Windows)
     {
-        return await httpntlm[method.toLowerCase()]({
-            url: callUrl,
-            username: connectionOptions.username,
-            password: connectionOptions.password,
-            workstation: connectionOptions.workstation || '',
-            domain: connectionOptions.domain || ''
-            /*
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-                ...DynamicsHeaders,
-                ...headers
-            },
-            body: body
-            */
-        }, function (err, res){
-            if(err) 
-            { 
-                console.error(err);
+        return new Promise((resolve, reject) =>
+        {
+            httpntlm[method.toLowerCase()]({
+                url: callUrl,
+                username: connectionOptions.username,
+                password: connectionOptions.password,
+                workstation: connectionOptions.workstation || '',
+                domain: connectionOptions.domain || '',
+                body: body
+                /*
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    ...DynamicsHeaders,
+                    ...headers
+                },
+                */
+            }, function (err, res){
+                if (err) 
+                { 
+                    console.error(err);
+    
+                    reject(err);
+                }
+               
+                const json = JSON.parse(res.body);
+                returnObject = formatDynamicsResponse(json);
 
-                throw err;
-            }
-        
-            console.log(res.headers);
-            console.log(res.body);
-            
-            const json = res.body.json();
-            const data = formatDynamicsResponse(json);
-
-            return data;
+                resolve(returnObject);
+            });
         });
     }
     else
