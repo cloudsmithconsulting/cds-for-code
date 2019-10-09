@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { ConnectionOptions, AuthenticationType } from './Dynamics/DynamicsRequest';
 import dynamics, { Dynamics } from './Dynamics/Dynamics';
+import { QueryOperator } from './Query/Query';
 
 export default class ApiRepository
 {
@@ -16,10 +17,11 @@ export default class ApiRepository
                 options.username = "Administrator";
                 options.password = "p@ssw0rd1";
                 options.serverUrl = "http://win-a6ljo0slrsh/test/";
+                options.webApiVersion = "v8.2";         // Defaults to latest.
 
                 var api = new ApiRepository(options);
                 
-                return api.retrieveSolutions();
+                return api.retrievePluginAssemblies();
             })
         );
     }
@@ -37,9 +39,14 @@ export default class ApiRepository
         return this.webapi.fetch(q);
     }
 
-    public retrievePluginAssemblies<T>() : Promise<T[]> {
-        let q = this.webapi.query('pluginassembly', 'pluginassemblies').orderBy("uniquename");
+    public retrievePluginAssemblies<T>(solutionId:string = undefined) : Promise<T[]> {
+        let q = this.webapi.query('pluginassembly', 'pluginassemblies');
         
+        if (solutionId)
+        {
+            q = q.where("SolutionId", QueryOperator.Equals, solutionId);
+        }
+
         return this.webapi.fetch(q);
     }
 }

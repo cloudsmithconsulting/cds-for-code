@@ -1,6 +1,6 @@
 import { GetRootQuery, Query } from "../Query/Query";
 import GetQueryXml from "../Query/QueryXml";
-import { DynamicsHeaders, WebApiVersion } from "./Dynamics";
+import { DynamicsHeaders, DefaultWebApiVersion } from "./Dynamics";
 import * as httpntlm from "httpntlm";
 import fetch from "node-fetch";
 
@@ -18,6 +18,7 @@ export class ConnectionOptions {
     workstation?: string;
     accessToken?: string;
     serverUrl: string = "";
+    webApiVersion: string = DefaultWebApiVersion;
 }
 
 export async function dynamicsQuery<T>(connectionOptions: ConnectionOptions, query: Query, maxRowCount?: number, headers?: any): Promise<T[]> {
@@ -27,7 +28,7 @@ export async function dynamicsQuery<T>(connectionOptions: ConnectionOptions, que
         throw new Error('dynamicsQuery requires a Query object with an EntityPath');
     }
 
-    return await dynamicsQueryUrl<T>(connectionOptions, `/api/data/${WebApiVersion}/${dataQuery.EntityPath}`, query, maxRowCount, headers);
+    return await dynamicsQueryUrl<T>(connectionOptions, `/api/data/${connectionOptions.webApiVersion}/${dataQuery.EntityPath}`, query, maxRowCount, headers);
 }
 
 export async function dynamicsQueryUrl<T>(connectionOptions: ConnectionOptions, dynamicsEntitySetUrl: string, query: Query, maxRowCount?: number, headers?: any): Promise<T[]> {
@@ -42,10 +43,10 @@ export async function dynamicsRequest<T>(connectionOptions: ConnectionOptions, d
 
 export async function dynamicsSave(connectionOptions: ConnectionOptions, entitySetName: string, data: any, id?: string, headers?: any): Promise<string> {
     if (id) {
-        return await request(connectionOptions, `/api/data/${WebApiVersion}/${entitySetName}(${trimId(id)})`, 'PATCH', data, headers);
+        return await request(connectionOptions, `/api/data/${connectionOptions.webApiVersion}/${entitySetName}(${trimId(id)})`, 'PATCH', data, headers);
     }
     else {
-        return await request(connectionOptions, `/api/data/${WebApiVersion}/${entitySetName}()`, 'POST', data, headers);
+        return await request(connectionOptions, `/api/data/${connectionOptions.webApiVersion}/${entitySetName}()`, 'POST', data, headers);
     }
 }
 
@@ -144,7 +145,14 @@ async function request<T>(connectionOptions: ConnectionOptions, url: string, met
                
                 const json = JSON.parse(res.body);
 
-                resolve(formatDynamicsResponse(json));
+                if (json.error)
+                {
+                    reject (json.error.message);
+                }
+                else
+                {
+                    resolve(formatDynamicsResponse(json));
+                }
             });
         });
     }

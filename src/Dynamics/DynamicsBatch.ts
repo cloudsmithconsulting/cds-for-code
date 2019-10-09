@@ -1,6 +1,6 @@
 import { GetRootQuery, Query } from "../Query/Query";
 import GetQueryXml from "../Query/QueryXml";
-import { DefaultMaxRecords, DynamicsHeaders, WebApiVersion } from "./Dynamics";
+import { DefaultMaxRecords, DynamicsHeaders } from "./Dynamics";
 import { formatDynamicsResponse, ConnectionOptions, AuthenticationType } from "./DynamicsRequest";
 import * as httpntlm from "httpntlm";
 import fetch from "node-fetch";
@@ -47,14 +47,14 @@ class Batch implements DynamicsBatch {
     private RelatedChanges: BatchRequest[];
     private ConnectionOptions!: ConnectionOptions;
 
-    constructor(private connectionOptions: ConnectionOptions, private headers?: any) {
-        this.ConnectionOptions = connectionOptions;
+    constructor(private options: ConnectionOptions, private headers?: any) {
+        this.ConnectionOptions = options;
         this.Changes = [];
         this.RelatedChanges = [];
     }
 
     async execute() {
-        const results = await Batch.requestBatch(this.connectionOptions, `/api/data/${WebApiVersion}/$batch`, this.Changes, this.headers);
+        const results = await Batch.requestBatch(this.ConnectionOptions, `/api/data/${this.ConnectionOptions.webApiVersion}/$batch`, this.Changes, this.headers);
 
         if (this.RelatedChanges.length > 0) {
             for (let change of this.RelatedChanges) {
@@ -66,7 +66,7 @@ class Batch implements DynamicsBatch {
                 }
             }
         
-            const related = await Batch.requestBatch(this.connectionOptions, `/api/data/${WebApiVersion}/$batch`, this.RelatedChanges, this.headers);
+            const related = await Batch.requestBatch(this.ConnectionOptions, `/api/data/${this.ConnectionOptions.webApiVersion}/$batch`, this.RelatedChanges, this.headers);
         
             return results !== undefined ? results.concat(related) : undefined;
         }
@@ -167,7 +167,7 @@ class Batch implements DynamicsBatch {
                     password: connectionOptions.password,
                     workstation: connectionOptions.workstation || '',
                     domain: connectionOptions.domain || '',
-                    body: Batch.formatBatchRequest(batchId, requests),
+                    body: Batch.formatBatchRequest(connectionOptions, batchId, requests),
                     headers: {
                         'Content-Type': `multipart/mixed;boundary=batch_${batchId}`,
                         ...DynamicsHeaders,
@@ -180,7 +180,7 @@ class Batch implements DynamicsBatch {
         
                         reject(err);
                     }
-                                       
+
                     resolve(Batch.formatBatchResponse(res.responseText));
                 });
             });   
@@ -195,13 +195,13 @@ class Batch implements DynamicsBatch {
                     ...DynamicsHeaders,
                     ...headers
                 },
-                body: Batch.formatBatchRequest(batchId, requests)
+                body: Batch.formatBatchRequest(connectionOptions, batchId, requests)
             })
                 .then(response => Batch.formatBatchResponse(response.text()));
         }
     }
 
-    static formatBatchRequest(batchId: string, changes: BatchRequest[]) {
+    static formatBatchRequest(connectionOptions:ConnectionOptions, batchId: string, changes: BatchRequest[]) {
         let batchBody = [];
         let requestBody = [];
         let changeNumber = 1;
@@ -216,7 +216,7 @@ class Batch implements DynamicsBatch {
                 requestBody.push('Content-Transfer-Encoding:binary');
                 requestBody.push('');
                 if (change.entitySetName) {
-                    requestBody.push(`GET ${encodeURI(`/api/data/${WebApiVersion}/${change.entitySetName}?${change.entitySetQuery}`)} HTTP/1.1`);
+                    requestBody.push(`GET ${encodeURI(`/api/data/${connectionOptions.webApiVersion}/${change.entitySetName}?${change.entitySetQuery}`)} HTTP/1.1`);
                 }
                 else {
                     requestBody.push(`GET ${encodeURI(change.entitySetQuery)} HTTP/1.1`);
@@ -231,7 +231,7 @@ class Batch implements DynamicsBatch {
                 batchBody.push('Content-Transfer-Encoding:binary');
                 batchBody.push(`Content-ID: ${changeNumber++}`);
                 batchBody.push('');
-                batchBody.push(`${change.entityId ? 'PATCH' : 'POST'} ${encodeURI(`/api/data/${WebApiVersion}/${change.entitySetName}(${Batch.trimId(change.entityId)})`)} HTTP/1.1`);
+                batchBody.push(`${change.entityId ? 'PATCH' : 'POST'} ${encodeURI(`/api/data/${connectionOptions.webApiVersion}/${change.entitySetName}(${Batch.trimId(change.entityId)})`)} HTTP/1.1`);
                 batchBody.push('Content-Type: application/json;type=entry');
                 batchBody.push('');
                 batchBody.push(JSON.stringify(change.entityData));

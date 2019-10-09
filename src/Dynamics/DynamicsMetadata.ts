@@ -1,4 +1,3 @@
-import { WebApiVersion } from "./Dynamics";
 import { dynamicsBatch } from "./DynamicsBatch";
 import { dynamicsRequest, ConnectionOptions } from "./DynamicsRequest";
 import { AttributeMetadata, AttributeTypeCode, EntityAttributeMetadata, LookupAttributeMetadata } from "./Model/AttributeMetadata";
@@ -55,7 +54,7 @@ interface LookupAttributeType extends AttributeType {
 }
 
 interface OptionSetAttributeType extends AttributeType {
-    OptionSet?: { Options: OptionSetType[] }
+    OptionSet?: { Options: OptionSetType[] };
 }
 
 interface OptionSetType {
@@ -69,7 +68,7 @@ type AnyAttributeMetadata = AttributeMetadata | LookupAttributeMetadata | Option
 interface DisplayName {
     UserLocalizedLabel: {
         Label: string;
-    }
+    };
 }
 
 const entityProperties = [
@@ -126,20 +125,20 @@ class DynamicsMetadataClient implements DynamicsMetadata {
             .requestAllUrls(this.getMetadataUrls(entityName, false))
             .execute()
             .then(data => this.flatten(data)
-                .filter((attribute: AttributeType) => attribute.LogicalName.indexOf('yomi') === -1 || attribute.LogicalName.indexOf('base') != attribute.LogicalName.length - 4)
+                .filter((attribute: AttributeType) => attribute.LogicalName.indexOf('yomi') === -1 || attribute.LogicalName.indexOf('base') !== attribute.LogicalName.length - 4)
                 .map(DynamicsMetadataMapper.MapAttribute)
             );
     }
 
     entities(): Promise<EntityMetadata[]> {
-        return dynamicsRequest<EntityType[]>(this.connectionOptions, `/api/data/${WebApiVersion}/EntityDefinitions?$select=EntitySetName,Description,DisplayName,LogicalName,PrimaryIdAttribute,PrimaryNameAttribute,IconSmallName,IsActivity,IsCustomEntity`, this.dynamicsHeaders)
+        return dynamicsRequest<EntityType[]>(this.connectionOptions, `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions?$select=EntitySetName,Description,DisplayName,LogicalName,PrimaryIdAttribute,PrimaryNameAttribute,IconSmallName,IsActivity,IsCustomEntity`, this.dynamicsHeaders)
             .then(data => data
                 .map(entity => DynamicsMetadataMapper.MapEntity(entity))
             );
     }
 
     entity(entityName: string): Promise<EntityAttributeMetadata> {
-        return dynamicsRequest<EntityType>(this.connectionOptions, `/api/data/${WebApiVersion}/EntityDefinitions(LogicalName='${entityName}')?$select=EntitySetName,Description,DisplayName,LogicalName,PrimaryIdAttribute,PrimaryNameAttribute,IconSmallName,IsActivity,IsCustomEntity`, this.dynamicsHeaders)
+        return dynamicsRequest<EntityType>(this.connectionOptions, `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions(LogicalName='${entityName}')?$select=EntitySetName,Description,DisplayName,LogicalName,PrimaryIdAttribute,PrimaryNameAttribute,IconSmallName,IsActivity,IsCustomEntity`, this.dynamicsHeaders)
             .then(entity =>
                 this.attributes(entityName)
                     .then(attributes => DynamicsMetadataMapper.MapEntity(entity, attributes))
@@ -159,7 +158,7 @@ class DynamicsMetadataClient implements DynamicsMetadata {
                         currentEntity = DynamicsMetadataMapper.MapEntity(item);
                         entities.push(currentEntity);
                     }
-                    else if (item.LogicalName.indexOf('yomi') == -1 && item.LogicalName.indexOf('base') != item.LogicalName.length - 4) {
+                    else if (item.LogicalName.indexOf('yomi') === -1 && item.LogicalName.indexOf('base') !== item.LogicalName.length - 4) {
                         currentEntity.Attributes.push(DynamicsMetadataMapper.MapAttribute(item));
                     }
                 }
@@ -171,12 +170,12 @@ class DynamicsMetadataClient implements DynamicsMetadata {
         const attributeTypeFilter = ExcludedAttributeTypeFilters.map(v => `AttributeType ne Microsoft.Dynamics.CRM.AttributeTypeCode'${v}'`).join(' and ');
         const attributeNameFilter = ExcludedAttributeNameFilters.map(v => `LogicalName ne '${v}'`).join(' and ');
         return [
-            `/api/data/${WebApiVersion}/EntityDefinitions(LogicalName='${entityName}')?$select=${entityProperties}`,
-            `/api/data/${WebApiVersion}/EntityDefinitions(LogicalName='${entityName}')/Attributes?$select=${attributeProperties}&$filter=${attributeTypeFilter} and ${attributeNameFilter}`,
-            `/api/data/${WebApiVersion}/EntityDefinitions(LogicalName='${entityName}')/Attributes/Microsoft.Dynamics.CRM.LookupAttributeMetadata?$select=${attributeProperties},Targets`,
-            `/api/data/${WebApiVersion}/EntityDefinitions(LogicalName='${entityName}')/Attributes/Microsoft.Dynamics.CRM.PicklistAttributeMetadata?$select=${attributeProperties}&$expand=OptionSet($select=Options)`,
-            `/api/data/${WebApiVersion}/EntityDefinitions(LogicalName='${entityName}')/Attributes/Microsoft.Dynamics.CRM.StatusAttributeMetadata?$select=${attributeProperties}&$expand=OptionSet($select=Options)`,
-            `/api/data/${WebApiVersion}/EntityDefinitions(LogicalName='${entityName}')/Attributes/Microsoft.Dynamics.CRM.StateAttributeMetadata?$select=${attributeProperties}&$expand=OptionSet($select=Options)`
+            `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions(LogicalName='${entityName}')?$select=${entityProperties}`,
+            `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions(LogicalName='${entityName}')/Attributes?$select=${attributeProperties}&$filter=${attributeTypeFilter} and ${attributeNameFilter}`,
+            `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions(LogicalName='${entityName}')/Attributes/Microsoft.Dynamics.CRM.LookupAttributeMetadata?$select=${attributeProperties},Targets`,
+            `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions(LogicalName='${entityName}')/Attributes/Microsoft.Dynamics.CRM.PicklistAttributeMetadata?$select=${attributeProperties}&$expand=OptionSet($select=Options)`,
+            `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions(LogicalName='${entityName}')/Attributes/Microsoft.Dynamics.CRM.StatusAttributeMetadata?$select=${attributeProperties}&$expand=OptionSet($select=Options)`,
+            `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions(LogicalName='${entityName}')/Attributes/Microsoft.Dynamics.CRM.StateAttributeMetadata?$select=${attributeProperties}&$expand=OptionSet($select=Options)`
         ].slice(includeEntity ? 0 : 1);
     }
     
