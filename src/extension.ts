@@ -4,15 +4,12 @@ import * as vscode from 'vscode';
 
 // config
 import CloudSmithConfig from './cloudSmithConfig';
-
-// views
 import ConnectionView from './connectionView';
-
-// commands
-import PowerShellLoader from './powerShellLoader';
 import GenerateEntitiesCommand from './generateEntitiesCommand';
+import PowerShellLoader from './powerShellLoader';
+import DynamicsTreeView from './dynamicsTreeView';
 import ApiRepository from './apiRepository';
-import DiscoveryRepository from "./discoveryRepository";
+import DiscoveryRepository from './discoveryRepository';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -28,6 +25,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// load and check extension configuration
 	const config = CloudSmithConfig.checkConfig();
 
+	// wire up views
+	DynamicsTreeView.wireUpCommands(context);
+	ConnectionView.wireUpCommands(context);
+
 	// wire up commands via import object
 	PowerShellLoader.wireUpCommands(context);
 	GenerateEntitiesCommand.wireUpCommands(context, config);
@@ -40,35 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// They will all get pushed into these subscriptions using an ...items spread
 	context.subscriptions.push(
-
-		vscode.commands.registerCommand('cloudSmith.addEntry', async () => { // Match name of command to package.json command
-			// Run command code
-			//const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-			ConnectionView.createOrShow(context.extensionPath);
-		}) // <-- no semi-colon, comma starts next command registration
-
-		, vscode.commands.registerCommand('cloudSmith.deleteEntry', () => { // Match name of command to package.json command
-			// Run command code
-			vscode.window.showInformationMessage(
-				'cloudSmith.deleteEntry'
-			);
-		}) // <-- no semi-colon, comma starts next command registration
-
-		, vscode.commands.registerCommand('cloudSmith.editEntry', () => { // Match name of command to package.json command
-			// Run command code
-			vscode.window.showInformationMessage(
-				'cloudSmith.editEntry'
-			);
-		}) // <-- no semi-colon, comma starts next command registration
-
-		, vscode.commands.registerCommand('cloudSmith.refreshEntry', () => { // Match name of command to package.json command
-			// Run command code
-			vscode.window.showInformationMessage(
-				'cloudSmith.refreshEntry'
-			);
-		}) // <-- no semi-colon, comma starts next command registration
-
-		, vscode.commands.registerCommand('cloudSmith.unpackDynamicsSolutionCommand', () => { // Match name of command to package.json command
+		vscode.commands.registerCommand('cloudSmith.unpackDynamicsSolutionCommand', () => { // Match name of command to package.json command
 			// Run command code
 			vscode.window.showInformationMessage(
 				'cloudSmith.unpackDynamicsSolutionCommand'
@@ -86,12 +59,3 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() { }
-
-// TreeViewDataProvider
-// function aNodeWithIdTreeDataProvider(): vscode.TreeDataProvider<{ key: string }> {
-// 	return {
-// 		getChildren: [],
-// 		getParent: null,
-// 		getTreeItem: null
-// 	};
-// }

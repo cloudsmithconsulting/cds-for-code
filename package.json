@@ -53,6 +53,10 @@
 				"title": "Delete"
 			},
 			{
+				"command": "cloudSmith.clickEntry",
+				"title": "Click"
+			},
+			{
 				"command": "cloudSmith.unpackDynamicsSolutionCommand",
 				"title": "CloudSmith: Unpack Solution From Dynamics Server"
 			},
@@ -110,7 +114,8 @@
 					"group": "inline"
 				},
 				{
-					"command": "cloudSmith.deleteEntry"
+					"command": "cloudSmith.deleteEntry",
+					"when": "viewItem == connection"
 				}
 			]
 		}
