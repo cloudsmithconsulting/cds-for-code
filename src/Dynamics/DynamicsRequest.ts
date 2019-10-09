@@ -129,14 +129,12 @@ async function request<T>(connectionOptions: ConnectionOptions, url: string, met
                 password: connectionOptions.password,
                 workstation: connectionOptions.workstation || '',
                 domain: connectionOptions.domain || '',
-                body: body
-                /*
+                body: body,
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     ...DynamicsHeaders,
                     ...headers
-                },
-                */
+                }
             }, function (err, res){
                 if (err) 
                 { 

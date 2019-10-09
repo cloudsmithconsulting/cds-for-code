@@ -1,7 +1,8 @@
 import { GetRootQuery, Query } from "../Query/Query";
 import GetQueryXml from "../Query/QueryXml";
 import { DefaultMaxRecords, DynamicsHeaders, WebApiVersion } from "./Dynamics";
-import { formatDynamicsResponse, ConnectionOptions } from "./DynamicsRequest";
+import { formatDynamicsResponse, ConnectionOptions, AuthenticationType } from "./DynamicsRequest";
+import * as httpntlm from "httpntlm";
 import fetch from "node-fetch";
 
 export interface DynamicsBatch {
@@ -47,7 +48,7 @@ class Batch implements DynamicsBatch {
     private ConnectionOptions!: ConnectionOptions;
 
     constructor(private connectionOptions: ConnectionOptions, private headers?: any) {
-        this.connectionOptions = connectionOptions;
+        this.ConnectionOptions = connectionOptions;
         this.Changes = [];
         this.RelatedChanges = [];
     }
@@ -156,17 +157,48 @@ class Batch implements DynamicsBatch {
 
         const batchId = Batch.createId();
 
-        return fetch(callUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': `multipart/mixed;boundary=batch_${batchId}`,
-                'Authorization': connectionOptions.accessToken,
-                ...DynamicsHeaders,
-                ...headers
-            },
-            body: Batch.formatBatchRequest(batchId, requests)
-        })
-            .then(response => Batch.formatBatchResponse(response.text()));
+        if (connectionOptions.authType === AuthenticationType.Windows)
+        {
+            return new Promise((resolve, reject) =>
+            {
+                httpntlm.post({
+                    url: callUrl,
+                    username: connectionOptions.username,
+                    password: connectionOptions.password,
+                    workstation: connectionOptions.workstation || '',
+                    domain: connectionOptions.domain || '',
+                    body: Batch.formatBatchRequest(batchId, requests),
+                    headers: {
+                        'Content-Type': `multipart/mixed;boundary=batch_${batchId}`,
+                        ...DynamicsHeaders,
+                        ...headers
+                    }
+                }, function (err, res){
+                    if (err) 
+                    { 
+                        console.error(err);
+        
+                        reject(err);
+                    }
+                                       
+                    resolve(Batch.formatBatchResponse(res.responseText));
+                });
+            });   
+        }
+        else
+        {
+            return fetch(callUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': `multipart/mixed;boundary=batch_${batchId}`,
+                    'Authorization': connectionOptions.accessToken,
+                    ...DynamicsHeaders,
+                    ...headers
+                },
+                body: Batch.formatBatchRequest(batchId, requests)
+            })
+                .then(response => Batch.formatBatchResponse(response.text()));
+        }
     }
 
     static formatBatchRequest(batchId: string, changes: BatchRequest[]) {
