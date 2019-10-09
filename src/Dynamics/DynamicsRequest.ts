@@ -3,6 +3,7 @@ import GetQueryXml from "../Query/QueryXml";
 import { DynamicsHeaders, WebApiVersion } from "./Dynamics";
 import { Ntlm } from "../ntlm/ntlm";
 import fetch from "node-fetch";
+import { connect } from "http2";
 
 export enum AuthenticationType
 {
@@ -18,10 +19,12 @@ export class ConnectionOptions {
     workstation?: string;
     accessToken?: string;
     serverUrl: string = "";
-};
+}
 
-export function authenticate(connectionOptions: ConnectionOptions): ConnectionOptions
+export function authenticate(connectionOptions: ConnectionOptions): string
 {
+    let returnValue:string = "";
+
     if (connectionOptions.authType === AuthenticationType.Windows)
     {
         let ntlm = new Ntlm();
@@ -58,7 +61,8 @@ export function authenticate(connectionOptions: ConnectionOptions): ConnectionOp
 
             if (type3Message)
             {
-                connectionOptions.accessToken = type3Message.header();
+                returnValue = type3Message.header();
+                console.log(`NTLM authentication to ${connectionOptions.serverUrl} completed as ${connectionOptions.username}.`);
             }
         })
         .catch(response => {
@@ -69,7 +73,7 @@ export function authenticate(connectionOptions: ConnectionOptions): ConnectionOp
         });
     }
 
-    return connectionOptions;
+    return returnValue;
 }
 
 export function dynamicsQuery<T>(connectionOptions: ConnectionOptions, query: Query, maxRowCount?: number, headers?: any): Promise<T[]> {
@@ -79,9 +83,9 @@ export function dynamicsQuery<T>(connectionOptions: ConnectionOptions, query: Qu
         throw new Error('dynamicsQuery requires a Query object with an EntityPath');
     }
 
-    if (connectionOptions.accessToken === undefined)
+    if (!connectionOptions.accessToken)
     {
-        connectionOptions = authenticate(connectionOptions);
+        connectionOptions.accessToken = authenticate(connectionOptions);
     }
 
     return dynamicsQueryUrl<T>(connectionOptions, `/api/data/${WebApiVersion}/${dataQuery.EntityPath}`, query, maxRowCount, headers);
@@ -90,27 +94,27 @@ export function dynamicsQuery<T>(connectionOptions: ConnectionOptions, query: Qu
 export function dynamicsQueryUrl<T>(connectionOptions: ConnectionOptions, dynamicsEntitySetUrl: string, query: Query, maxRowCount?: number, headers?: any): Promise<T[]> {
     const querySeparator = (dynamicsEntitySetUrl.indexOf('?') > -1 ? '&' : '?');
 
-    if (connectionOptions.accessToken === undefined)
+    if (!connectionOptions.accessToken)
     {
-        connectionOptions = authenticate(connectionOptions);
+        connectionOptions.accessToken = authenticate(connectionOptions);
     }
 
     return request<T[]>(connectionOptions, `${dynamicsEntitySetUrl}${querySeparator}fetchXml=${escape(GetQueryXml(query, maxRowCount))}`, 'GET', undefined, headers);
 }
 
 export function dynamicsRequest<T>(connectionOptions: ConnectionOptions, dynamicsEntitySetUrl: string, headers?: any): Promise<T> {
-    if (connectionOptions.accessToken === undefined)
+    if (!connectionOptions.accessToken)
     {
-        connectionOptions = authenticate(connectionOptions);
+        connectionOptions.accessToken = authenticate(connectionOptions);
     }
 
     return request<T>(connectionOptions, dynamicsEntitySetUrl, 'GET', undefined, headers);
 }
 
 export function dynamicsSave(connectionOptions: ConnectionOptions, entitySetName: string, data: any, id?: string, headers?: any): Promise<string> {
-    if (connectionOptions.accessToken === undefined)
+    if (!connectionOptions.accessToken)
     {
-        connectionOptions = authenticate(connectionOptions);
+        connectionOptions.accessToken = authenticate(connectionOptions);
     }
 
     if (id) {
@@ -148,10 +152,12 @@ export function formatDynamicsResponse(data: any): any {
                 }
 
                 if (name.indexOf('@') > -1) {
-                    name = name.substring(0, name.indexOf('@'))
+                    name = name.substring(0, name.indexOf('@'));
+
                     if (name.indexOf('_') === 0) {
                         name = name.slice(1, -6);
                     }
+                    
                     name += "_formatted";
                 }
                 else if (name.indexOf('_') === 0) {
@@ -178,6 +184,11 @@ export function formatDynamicsResponse(data: any): any {
 }
 
 function request<T>(connectionOptions: ConnectionOptions, url: string, method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE', body?: any, headers?: any): Promise<T> {
+    if (!connectionOptions.accessToken)
+    {
+        connectionOptions.accessToken = authenticate(connectionOptions);
+    }
+
     let callUrl: string = connectionOptions.serverUrl;
 
     if (callUrl.endsWith("/"))

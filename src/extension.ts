@@ -11,6 +11,7 @@ import ConnectionView from './connectionView';
 // commands
 import PowerShellLoader from './powerShellLoader';
 import GenerateEntitiesCommand from './generateEntitiesCommand';
+import ApiRepository from './apiRepository';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -18,7 +19,7 @@ import GenerateEntitiesCommand from './generateEntitiesCommand';
 // More on activation events can be found here: https://code.visualstudio.com/api/references/activation-events#Start-up
 // *****************
 export function activate(context: vscode.ExtensionContext) {
-
+	
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('[CloudSmith]: extension:activate');
@@ -29,7 +30,8 @@ export function activate(context: vscode.ExtensionContext) {
 	// wire up commands via import object
 	PowerShellLoader.wireUpCommands(context);
 	GenerateEntitiesCommand.wireUpCommands(context, config);
-
+	ApiRepository.wireUpCommands(context);
+	
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json

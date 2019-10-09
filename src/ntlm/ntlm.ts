@@ -65,7 +65,7 @@ export class Ntlm implements INtlm {
     NtlmFlags.NEGOTIATE_ALWAYS_SIGN |
     NtlmFlags.NEGOTIATE_VERSION;
 
-  if (ntlm_version == 1) {
+  if (ntlm_version === 1) {
     messageFlags |= NtlmFlags.NEGOTIATE_NTLM_KEY |
       NtlmFlags.NEGOTIATE_LM_KEY;
   } else {

@@ -67,6 +67,10 @@
 			{
 				"command": "cloudSmith.downloadDynamicsScriptsCommand",
 				"title": "CloudSmith: Download supporting Dynamics scripts from GitHub"
+			},
+			{
+				"command": "cloudSmith.getSolutionsCommand",
+				"title": "CloudSmith: Get Dynamics Solutions associated with the current conection."
 			}
 		],
 		"viewsContainers": {
