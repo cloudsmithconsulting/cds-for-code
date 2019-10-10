@@ -1,9 +1,9 @@
 import query, { Query } from "../Query/Query";
 import { dynamicsBatch, DynamicsBatch } from "./DynamicsBatch";
-import { ConnectionOptions, dynamicsQuery, dynamicsRequest, dynamicsSave, dynamicsBoundAction, dynamicsBoundFunction, dynamicsUnboundAction, dynamicsUnboundFunction } from "./DynamicsRequest";
+import { ConnectionOptions, dynamicsQuery, dynamicsGetRequest, request, dynamicsSave, dynamicsBoundAction, dynamicsBoundFunction, dynamicsUnboundAction, dynamicsUnboundFunction } from "./DynamicsRequest";
 import { DynamicsAction } from "./Model/ActionMetadata";
 import { DynamicsFunction } from "./Model/FunctionMetadata";
-import { Z_UNKNOWN } from "zlib";
+import { Utilities } from "./Utilities";
 
 export const DefaultWebApiVersion = 'v9.1';
 export const DefaultMaxRecords = 100;
@@ -53,6 +53,14 @@ class DynamicsClient implements Dynamics {
         return dynamicsBatch(this.connectionOptions, this.dynamicsHeaders);
     }
 
+    delete(entitySetName: string, id: string): Promise<void> {
+        return request(this.connectionOptions, `/api/data/${this.connectionOptions.webApiVersion}/${entitySetName}/${Utilities.TrimGuid(id)}`, 'DELETE', undefined, this.dynamicsHeaders);
+    }
+
+    deleteAttributeValue(entitySetName: string, id: string, attributeName: string): Promise<void> {
+        return request(this.connectionOptions, `/api/data/${this.connectionOptions.webApiVersion}/${entitySetName}/${Utilities.TrimGuid(id)}/${attributeName}`, 'DELETE', undefined, this.dynamicsHeaders);
+    }
+
     fetch<T>(query: Query, maxRowCount: number = DefaultMaxRecords): Promise<T[]>
     {
         return dynamicsQuery<T>(this.connectionOptions, query, maxRowCount, this.dynamicsHeaders);
@@ -60,7 +68,7 @@ class DynamicsClient implements Dynamics {
 
     optionset(entityName: any, attributeName: any): Promise<{ label: string, value: number }[]>
     {
-        return dynamicsRequest<any>(this.connectionOptions, `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions(LogicalName='${entityName}')/Attributes(LogicalName='${attributeName}')/Microsoft.Dynamics.CRM.PicklistAttributeMetadata?$select=LogicalName&$expand=OptionSet($select=Options),GlobalOptionSet($select=Options)`, this.dynamicsHeaders)
+        return dynamicsGetRequest<any>(this.connectionOptions, `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions(LogicalName='${entityName}')/Attributes(LogicalName='${attributeName}')/Microsoft.Dynamics.CRM.PicklistAttributeMetadata?$select=LogicalName&$expand=OptionSet($select=Options),GlobalOptionSet($select=Options)`, this.dynamicsHeaders)
         .then(attribute =>
             (attribute.OptionSet || attribute.GlobalOptionSet).Options.map(
                 (option: { Label: { UserLocalizedLabel: { Label: any; }; }; Value: any; }) => ({
@@ -78,6 +86,10 @@ class DynamicsClient implements Dynamics {
 
     save(entitySetName: string, data: any, id?: string): Promise<string> {
         return dynamicsSave(this.connectionOptions, entitySetName, data, id, this.dynamicsHeaders);
+    }
+
+    updateAttributeValue<T>(entitySetName: string, id: string, attributeName: string, value: any): Promise<T> {
+        return request(this.connectionOptions, `/api/data/${this.connectionOptions.webApiVersion}/${entitySetName}/${Utilities.TrimGuid(id)}/${attributeName}`, 'PATCH', {value}, this.dynamicsHeaders);
     }
 
     unboundAction<T>(action: DynamicsAction, parameters?: any): Promise<T> {
