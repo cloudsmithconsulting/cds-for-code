@@ -1,6 +1,9 @@
 import query, { Query } from "../Query/Query";
 import { dynamicsBatch, DynamicsBatch } from "./DynamicsBatch";
-import { ConnectionOptions, dynamicsQuery, dynamicsRequest, dynamicsSave } from "./DynamicsRequest";
+import { ConnectionOptions, dynamicsQuery, dynamicsRequest, dynamicsSave, dynamicsBoundAction, dynamicsBoundFunction, dynamicsUnboundAction, dynamicsUnboundFunction } from "./DynamicsRequest";
+import { DynamicsAction } from "./Model/ActionMetadata";
+import { DynamicsFunction } from "./Model/FunctionMetadata";
+import { Z_UNKNOWN } from "zlib";
 
 export const DefaultWebApiVersion = 'v9.1';
 export const DefaultMaxRecords = 100;
@@ -11,11 +14,15 @@ export const DynamicsHeaders = {
 };
 
 export interface Dynamics {
+    boundAction<T>(entitySetName: string, id: string, action: DynamicsAction, ...parameters: any[]): Promise<T>;
+    boundFunction<T>(entitySetName: string, id: string, func: DynamicsFunction, ...parameters: any[]): Promise<T>;
     batch(): DynamicsBatch;
     fetch<T>(query: Query, maxRowCount?: number): Promise<T[]>;
     optionset(entityName: any, attributeName: any): Promise<{ label: string, value: number }[]>;
     query(entityLogicalName: string, entitySetName: string): Query;
     save(entitySetName: string, data: any, id?: string): Promise<string>;
+    unboundAction<T>(action: DynamicsAction, ...parameters: any[]): Promise<T>;
+    unboundFunction<T>(func: DynamicsFunction, ...parameters: any[]): Promise<T>;
 }
 
 export default function dynamics(connectionOptions?: ConnectionOptions): Dynamics {
@@ -32,6 +39,14 @@ class DynamicsClient implements Dynamics {
         {
             this.connectionOptions = options;
         }
+    }
+
+    boundAction<T>(entitySetName: string, id: string, action: DynamicsAction, parameters?: any): Promise<T> {
+        return dynamicsBoundAction<T>(this.connectionOptions, entitySetName, id, action, this.dynamicsHeaders, parameters);
+    }
+
+    boundFunction<T>(entitySetName: string, id: string, func: DynamicsFunction, parameters?: any): Promise<T> {
+        return dynamicsBoundFunction<T>(this.connectionOptions, entitySetName, id, func, this.dynamicsHeaders, parameters);
     }
 
     batch(): DynamicsBatch {
@@ -63,5 +78,13 @@ class DynamicsClient implements Dynamics {
 
     save(entitySetName: string, data: any, id?: string): Promise<string> {
         return dynamicsSave(this.connectionOptions, entitySetName, data, id, this.dynamicsHeaders);
+    }
+
+    unboundAction<T>(action: DynamicsAction, parameters?: any): Promise<T> {
+        return dynamicsUnboundAction<T>(this.connectionOptions, action, this.dynamicsHeaders, parameters);
+    }
+
+    unboundFunction<T>(func: DynamicsFunction, parameters?: any): Promise<T> {
+        return dynamicsUnboundFunction<T>(this.connectionOptions, func, this.dynamicsHeaders, parameters);
     }
 }

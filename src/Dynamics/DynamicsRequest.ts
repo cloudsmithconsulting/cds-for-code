@@ -3,6 +3,9 @@ import GetQueryXml from "../Query/QueryXml";
 import { DynamicsHeaders, DefaultWebApiVersion } from "./Dynamics";
 import * as httpntlm from "httpntlm";
 import fetch from "node-fetch";
+import { DynamicsFunction } from "./Model/FunctionMetadata";
+import { Utilities } from "./Utilities";
+import { DynamicsAction } from "./Model/ActionMetadata";
 
 export enum AuthenticationType
 {
@@ -19,6 +22,22 @@ export class ConnectionOptions {
     accessToken?: string;
     serverUrl: string = "";
     webApiVersion: string = DefaultWebApiVersion;
+}
+
+export async function dynamicsBoundAction<T>(connectionOptions: ConnectionOptions, entitySetName: string, id: string, dynamicsAction: DynamicsAction, headers?: any, parameters?: any): Promise<T> {
+    return await request(connectionOptions, `/api/data/${connectionOptions.webApiVersion}/${entitySetName}(${Utilities.TrimGuid(id)})/${dynamicsAction}`, 'POST', parameters, headers);
+}
+
+export async function dynamicsUnboundAction<T>(connectionOptions: ConnectionOptions, dynamicsAction: DynamicsAction, headers?: any, parameters?: any): Promise<T> {
+    return await request(connectionOptions, `/api/data/${connectionOptions.webApiVersion}/${dynamicsAction}`, 'POST', parameters, headers);
+}
+
+export async function dynamicsBoundFunction<T>(connectionOptions: ConnectionOptions, entitySetName: string, id: string, dynamicsFunction: DynamicsFunction, headers?: any, parameters?: any): Promise<T> {
+    return await request(connectionOptions, `/api/data/${connectionOptions.webApiVersion}/${entitySetName}(${Utilities.TrimGuid(id)})/${dynamicsFunction}${Utilities.BuildFunctionParameters(parameters)}`, 'GET', undefined, headers);
+}
+
+export async function dynamicsUnboundFunction<T>(connectionOptions: ConnectionOptions, dynamicsFunction: DynamicsFunction, headers?: any, parameters?: any): Promise<T> {
+    return await request(connectionOptions, `/api/data/${connectionOptions.webApiVersion}/${dynamicsFunction}${Utilities.BuildFunctionParameters(parameters)}`, 'GET', undefined, headers);
 }
 
 export async function dynamicsQuery<T>(connectionOptions: ConnectionOptions, query: Query, maxRowCount?: number, headers?: any): Promise<T[]> {
@@ -43,69 +62,11 @@ export async function dynamicsRequest<T>(connectionOptions: ConnectionOptions, d
 
 export async function dynamicsSave(connectionOptions: ConnectionOptions, entitySetName: string, data: any, id?: string, headers?: any): Promise<string> {
     if (id) {
-        return await request(connectionOptions, `/api/data/${connectionOptions.webApiVersion}/${entitySetName}(${trimId(id)})`, 'PATCH', data, headers);
+        return await request(connectionOptions, `/api/data/${connectionOptions.webApiVersion}/${entitySetName}(${Utilities.TrimGuid(id)})`, 'PATCH', data, headers);
     }
     else {
         return await request(connectionOptions, `/api/data/${connectionOptions.webApiVersion}/${entitySetName}()`, 'POST', data, headers);
     }
-}
-
-export function formatDynamicsResponse(data: any): any {
-    var items = []; 
-    if (data && data.error) {
-        throw new Error(data.error);
-    }
-    if (data && data.value) {
-        data = data.value;
-    }
-    if (!Array.isArray(data)) {
-        return formatDynamicsResponse([data])[0];
-    }
-    if (data) {
-        for (var item of data) {
-            let row:any = {};
-
-            for (let key in item) {
-                var name: string = key;
-
-                if (name.indexOf('@odata') === 0) {
-                    continue;
-                }
-
-                if (name.indexOf('transactioncurrencyid') > -1) {
-                    continue;
-                }
-
-                if (name.indexOf('@') > -1) {
-                    name = name.substring(0, name.indexOf('@'));
-
-                    if (name.indexOf('_') === 0) {
-                        name = name.slice(1, -6);
-                    }
-                    
-                    name += "_formatted";
-                }
-                else if (name.indexOf('_') === 0) {
-                    name = name.slice(1, -6);
-                }
-
-                if (name.indexOf('_x002e_') > -1) {
-                    var obj = name.substring(0, name.indexOf('_x002e_'));
-                    name = name.substring(name.indexOf('_x002e_') + 7);
-
-                    if (!row[obj]) {
-                        row[obj] = {};
-                    }
-                    row[obj][name] = item[key];
-                }
-                else {
-                    row[name] = item[key];
-                }
-            }
-            items.push(row);
-        }
-    }
-    return items;
 }
 
 async function request<T>(connectionOptions: ConnectionOptions, url: string, method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE', body?: any, headers?: any): Promise<T> {
@@ -123,6 +84,8 @@ async function request<T>(connectionOptions: ConnectionOptions, url: string, met
     {
         return new Promise((resolve, reject) =>
         {
+            console.log(`[HTTP]: ${callUrl} (${headers ? headers.length : 0} headers / ${body ? body.length : 0} bytes)`);
+
             httpntlm[method.toLowerCase()]({
                 url: callUrl,
                 username: connectionOptions.username,
@@ -159,7 +122,7 @@ async function request<T>(connectionOptions: ConnectionOptions, url: string, met
                 }
                 else
                 {
-                    resolve(formatDynamicsResponse(json));
+                    resolve(Utilities.FormatDynamicsResponse(json));
                 }
             });
         });
@@ -177,10 +140,6 @@ async function request<T>(connectionOptions: ConnectionOptions, url: string, met
             body: body
         })
             .then(response => response.json())
-            .then(data => formatDynamicsResponse(data));
+            .then(data => Utilities.FormatDynamicsResponse(data));
     }
-}
-
-function trimId(id: string) {
-    return (id || '').replace(/{|}/g, '');
 }
