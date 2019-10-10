@@ -17,12 +17,15 @@ export interface Dynamics {
     boundAction<T>(entitySetName: string, id: string, action: DynamicsAction, ...parameters: any[]): Promise<T>;
     boundFunction<T>(entitySetName: string, id: string, func: DynamicsFunction, ...parameters: any[]): Promise<T>;
     batch(): DynamicsBatch;
+    delete(entitySetName: string, id: string): Promise<void>;
+    deleteAttributeValue(entitySetName: string, id: string, attributeName: string): Promise<void>;
     fetch<T>(query: Query, maxRowCount?: number): Promise<T[]>;
     optionset(entityName: any, attributeName: any): Promise<{ label: string, value: number }[]>;
     query(entityLogicalName: string, entitySetName: string): Query;
     save(entitySetName: string, data: any, id?: string): Promise<string>;
     unboundAction<T>(action: DynamicsAction, ...parameters: any[]): Promise<T>;
     unboundFunction<T>(func: DynamicsFunction, ...parameters: any[]): Promise<T>;
+    updateAttributeValue<T>(entitySetName: string, id: string, attributeName: string, value: any): Promise<T>;
 }
 
 export default function dynamics(connectionOptions?: ConnectionOptions): Dynamics {
