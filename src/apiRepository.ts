@@ -2,9 +2,6 @@ import * as vscode from 'vscode';
 import { ConnectionOptions, AuthenticationType } from './Dynamics/DynamicsRequest';
 import dynamics, { Dynamics } from './Dynamics/Dynamics';
 import { QueryOperator } from './Query/Query';
-import { connect } from 'tls';
-import { url } from 'inspector';
-import { DH_UNABLE_TO_CHECK_GENERATOR } from 'constants';
 
 export default class ApiRepository
 {
@@ -39,13 +36,18 @@ export default class ApiRepository
 
     private webapi: Dynamics;
 
-    public retrieveSolutions<T>() : Promise<T[]> {
-        let q = this.webapi.query('solution', 'solutions').orderBy("uniquename");
-        
-        return this.webapi.fetch(q);
+    public async whoAmI() : Promise<string>
+    {
+        return await this.webapi.unboundFunction('WhoAmI');
     }
 
-    public retrievePluginAssemblies<T>(solutionId:string = undefined) : Promise<T[]> {
+    public async retrieveSolutions<T>() : Promise<T[]> {
+        let q = this.webapi.query('solution', 'solutions').orderBy("uniquename");
+        
+        return await this.webapi.fetch(q);
+    }
+
+    public async retrievePluginAssemblies<T>(solutionId:string = undefined) : Promise<T[]> {
         let q = this.webapi.query('pluginassembly', 'pluginassemblies');
         
         if (solutionId)
@@ -53,6 +55,6 @@ export default class ApiRepository
             q = q.where("SolutionId", QueryOperator.Equals, solutionId);
         }
 
-        return this.webapi.fetch(q);
+        return await this.webapi.fetch(q);
     }
 }

@@ -10,7 +10,7 @@ export type DynamicsOptionSetMetadata = OptionSetMetadata;
 export type DynamicsLookupAttributeMetadata = LookupAttributeMetadata;
 export type DynamicsOptionSetAttributeMetadata = OptionSetAttributeMetadata;
 
-export default function dynamicsmetdata(connectionOptions?: ConnectionOptions): DynamicsMetadata {
+export default function dynamicsMetdata(connectionOptions?: ConnectionOptions): DynamicsMetadata {
     return new DynamicsMetadataClient(connectionOptions);
 }
 
