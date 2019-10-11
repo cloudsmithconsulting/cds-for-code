@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 export default class CloudSmithConfig {
-    public static checkConfig(): vscode.WorkspaceConfiguration {
+    public static returnValidConfig(): vscode.WorkspaceConfiguration {
         // get root config
         const config = vscode.workspace.getConfiguration('cloudSmith');
 

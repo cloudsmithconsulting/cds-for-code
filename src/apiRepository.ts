@@ -2,9 +2,6 @@ import * as vscode from 'vscode';
 import { ConnectionOptions, AuthenticationType } from './Dynamics/DynamicsRequest';
 import dynamics, { Dynamics } from './Dynamics/Dynamics';
 import { QueryOperator } from './Query/Query';
-import { connect } from 'tls';
-import { url } from 'inspector';
-import { DH_UNABLE_TO_CHECK_GENERATOR } from 'constants';
 
 export default class ApiRepository
 {
