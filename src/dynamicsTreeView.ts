@@ -3,6 +3,7 @@ import * as path from 'path';
 import { ConnectionOptions, AuthenticationType } from './Dynamics/DynamicsRequest';
 import DiscoveryRepository from './discoveryRepository';
 import ApiRepository from './apiRepository';
+import { Utilities } from './Utilities';
 
 export default class DynamicsTreeView {
     public static wireUpCommands(context: vscode.ExtensionContext) {
@@ -11,9 +12,9 @@ export default class DynamicsTreeView {
             authType: AuthenticationType.Windows,
             domain: "CONTOSO",
             username: "Administrator",
-            password: "p@ssw0rd1",
-            serverUrl: "http://win-a6ljo0slrsh/",
-            webApiVersion: "v8.2" 
+            password: "p@ssw0rd",
+            serverUrl: "http://win-oi4mlu9323r/",
+            webApiVersion: "v9.0" 
         });
 
         vscode.window.registerTreeDataProvider('dynamicsConnectionsView', treeProvider);
@@ -22,11 +23,9 @@ export default class DynamicsTreeView {
         context.subscriptions.push(
             vscode.commands.registerCommand('cloudSmith.refreshEntry', () => treeProvider.refresh()) // <-- no semi-colon, comma starts next command registration
 
-            , vscode.commands.registerCommand('cloudSmith.clickEntry', (name) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand('cloudSmith.clickEntry', (name?:string) => { // Match name of command to package.json command
                 // Run command code
-                vscode.window.showInformationMessage(
-                    `cloudSmith.clickEntry ${name || ''}`
-                );
+                vscode.window.showInformationMessage(`Clicked ${name || ''}`);
             }) // <-- no semi-colon, comma starts next command registration
             
             , vscode.commands.registerCommand('cloudSmith.deleteEntry', () => { // Match name of command to package.json command
@@ -67,24 +66,27 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 	}
 
 	getTreeItem(element: TreeEntry): vscode.TreeItem {
+
 		return element;
 	}
 
 	getChildren(element?: TreeEntry): Thenable<TreeEntry[]> {
         if (element) {
+            const commandPrefix:string = Utilities.RemoveTrailingSlash(((element.command && element.command.arguments) || '').toString());
+
             switch (element.itemType) {
                 case EntryType.Connection:
-                    return this.getConnectionDetails(element);
+                    return this.getConnectionDetails(element, commandPrefix);
                 case EntryType.Organization:
-                    return Promise.resolve(this.getOrganizationDetails(element));
+                    return Promise.resolve(this.getOrganizationDetails(element, commandPrefix));
                 case EntryType.Solutions:
-                    return this.getSolutionDetails(element);
+                    return this.getSolutionDetails(element, commandPrefix);
             }
             return; //return nothing if type falls through
         }
 
         return Promise.resolve(this.getConnections());
-	}
+    }
 
 	getConnections(): TreeEntry[] {
 
@@ -99,7 +101,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 {
                     command: 'cloudSmith.clickEntry',
                     title: connection.serverUrl,
-                    arguments: [connection.serverUrl]
+                    arguments: [connection.serverUrl.replace("http://", "").replace("https://", "")]
                 },
                 connection
             ));
@@ -108,7 +110,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return result;
     }
     
-    getConnectionDetails(element: TreeEntry): Promise<TreeEntry[]> {
+    getConnectionDetails(element: TreeEntry, commandPrefix?:string): Promise<TreeEntry[]> {
         const connection = element.context;
 		const api = new DiscoveryRepository(connection);
         
@@ -139,7 +141,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                             {
                                 command: 'cloudSmith.clickEntry',
                                 title: org.FriendlyName,
-                                arguments: [org.FriendlyName]
+                                arguments: [`${commandPrefix || ''}/${org.Id}`]
                             },
                             orgConnection)
                     );
@@ -151,7 +153,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             });
     }
 
-    getSolutionDetails(element: TreeEntry): Promise<TreeEntry[]> {
+    getSolutionDetails(element: TreeEntry, commandPrefix?:string): Promise<TreeEntry[]> {
         const connection = element.context;
 		const api = new ApiRepository(connection);
         
@@ -169,7 +171,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                             {
                                 command: 'cloudSmith.clickEntry',
                                 title: solution.friendlyname,
-                                arguments: [solution.friendlyname]
+                                arguments: [`${commandPrefix || ''}/${solution.solutionid}`]
                             },
                             solution)
                     );
@@ -178,7 +180,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             });
     }
 
-    getOrganizationDetails(element: TreeEntry) : TreeEntry[] {
+    getOrganizationDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
         return [
             new TreeEntry(
                 'Entities',
@@ -188,7 +190,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 {
                     command: 'cloudSmith.clickEntry',
                     title: 'Entities',
-                    arguments: ['Entities']
+                    arguments: [`${commandPrefix || ''}/Entities`]
                 },
                 element.context
             ),
@@ -200,7 +202,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 {
                     command: 'cloudSmith.clickEntry',
                     title: 'Plugins',
-                    arguments: ['Plugins']
+                    arguments: [`${commandPrefix || ''}/Plugins`]
                 },
                 element.context
             ),
@@ -212,7 +214,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 {
                     command: 'cloudSmith.clickEntry',
                     title: 'Solutions',
-                    arguments: ['Solutions']
+                    arguments: [`${commandPrefix || ''}/Solutions`]
                 },
                 element.context
             )

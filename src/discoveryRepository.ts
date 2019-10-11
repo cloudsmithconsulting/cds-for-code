@@ -36,10 +36,6 @@ export default class DiscoveryRepository
     private webapi: DynamicsDiscovery;
 
     public retrieveOrganizations() : Promise<OrganizationMetadata[]> {
-        return this.webapi.discover()
-            .then(items => {
-                const x = items;
-                return items;
-            });
+        return this.webapi.discover();
     }
 }

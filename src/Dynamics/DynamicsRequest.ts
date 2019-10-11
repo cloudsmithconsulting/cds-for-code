@@ -4,7 +4,7 @@ import { DynamicsHeaders, DefaultWebApiVersion } from "./Dynamics";
 import * as httpntlm from "httpntlm";
 import fetch from "node-fetch";
 import { DynamicsFunction } from "./Model/FunctionMetadata";
-import { Utilities } from "./Utilities";
+import { Utilities } from "../Utilities";
 import { DynamicsAction } from "./Model/ActionMetadata";
 
 export enum AuthenticationType

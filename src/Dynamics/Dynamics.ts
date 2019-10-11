@@ -3,7 +3,7 @@ import { dynamicsBatch, DynamicsBatch } from "./DynamicsBatch";
 import { ConnectionOptions, dynamicsQuery, dynamicsGetRequest, request, dynamicsSave, dynamicsBoundAction, dynamicsBoundFunction, dynamicsUnboundAction, dynamicsUnboundFunction } from "./DynamicsRequest";
 import { DynamicsAction } from "./Model/ActionMetadata";
 import { DynamicsFunction } from "./Model/FunctionMetadata";
-import { Utilities } from "./Utilities";
+import { Utilities } from "../Utilities";
 
 export const DefaultWebApiVersion = 'v9.1';
 export const DefaultMaxRecords = 100;
