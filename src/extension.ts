@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as path from 'path';
 
 // config
 import CloudSmithConfig from './cloudSmithConfig';
@@ -11,6 +12,8 @@ import ConnectionView from './connectionView';
 // commands
 import PowerShellLoader from './powerShellLoader';
 import GenerateEntitiesCommand from './generateEntitiesCommand';
+import { DeployDynamicsSolutionCommand } from './deployDynamicsSolutionCommand';
+import { UnpackDynamicsSolutionCommand } from './unpackDynamicsSolutionCommand';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -29,6 +32,8 @@ export function activate(context: vscode.ExtensionContext) {
 	// wire up commands via import object
 	PowerShellLoader.wireUpCommands(context);
 	GenerateEntitiesCommand.wireUpCommands(context, config);
+	DeployDynamicsSolutionCommand.wireUpCommands(context, config);
+	UnpackDynamicsSolutionCommand.wireUpCommands(context, config);
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
@@ -61,20 +66,6 @@ export function activate(context: vscode.ExtensionContext) {
 			// Run command code
 			vscode.window.showInformationMessage(
 				'cloudSmith.refreshEntry'
-			);
-		}) // <-- no semi-colon, comma starts next command registration
-
-		, vscode.commands.registerCommand('cloudSmith.unpackDynamicsSolutionCommand', () => { // Match name of command to package.json command
-			// Run command code
-			vscode.window.showInformationMessage(
-				'cloudSmith.unpackDynamicsSolutionCommand'
-			);
-		}) // <-- no semi-colon, comma starts next command registration
-
-		, vscode.commands.registerCommand('cloudSmith.deployDynamicsSolutionCommand', () => { // Match name of command to package.json command
-			// Run command code
-			vscode.window.showInformationMessage(
-				'cloudSmith.deployDynamicsSolutionCommand'
 			);
 		}) // <-- no semi-colon, comma starts next command registration
 	);
