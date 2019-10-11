@@ -50,8 +50,10 @@ export default class ApiRepository
         return await this.webapi.fetch(q);
     }
 
-    public async retrievePluginAssemblies<T>(solutionId:string = undefined) : Promise<T[]> {
-        let q = this.webapi.query('pluginassembly', 'pluginassemblies');
+    public async retrievePluginAssemblies<T>(solutionId:string) : Promise<T[]> {
+        let q = this.webapi
+            .query('pluginassembly', 'pluginassemblies')
+            .where("ishidden", QueryOperator.Equals, "false");
         
         if (solutionId)
         {
