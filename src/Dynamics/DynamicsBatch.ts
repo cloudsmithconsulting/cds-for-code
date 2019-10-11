@@ -1,7 +1,8 @@
 import { GetRootQuery, Query } from "../Query/Query";
 import GetQueryXml from "../Query/QueryXml";
 import { DefaultMaxRecords, DynamicsHeaders } from "./Dynamics";
-import { formatDynamicsResponse, ConnectionOptions, AuthenticationType } from "./DynamicsRequest";
+import { ConnectionOptions, AuthenticationType } from "./DynamicsRequest";
+import { Utilities } from "./Utilities";
 import * as httpntlm from "httpntlm";
 import fetch from "node-fetch";
 
@@ -266,7 +267,7 @@ class Batch implements DynamicsBatch {
                             let responseIndex = request.indexOf('{');
                             let json = request.substring(responseIndex);
                             let item = JSON.parse(json);
-                            data.push(formatDynamicsResponse(item));
+                            data.push(Utilities.FormatDynamicsResponse(item));
                         }
                     }
                     return data;
