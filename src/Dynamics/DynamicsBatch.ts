@@ -2,7 +2,7 @@ import { GetRootQuery, Query } from "../Query/Query";
 import GetQueryXml from "../Query/QueryXml";
 import { DefaultMaxRecords, DynamicsHeaders } from "./Dynamics";
 import { ConnectionOptions, AuthenticationType } from "./DynamicsRequest";
-import { Utilities } from "./Utilities";
+import { Utilities } from "../Utilities";
 import * as httpntlm from "httpntlm";
 import fetch from "node-fetch";
 

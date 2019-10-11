@@ -1,4 +1,4 @@
-import { dynamicsRequest, ConnectionOptions } from "./DynamicsRequest";
+import { dynamicsGetRequest, ConnectionOptions } from "./DynamicsRequest";
 import { OrganizationMetadata } from "./Model/OrganizationMetadata";
 
 export type OrganizationMetadata = OrganizationMetadata;
@@ -30,6 +30,6 @@ class DynamicsDiscoveryClient implements DynamicsDiscovery {
     }
 
     discover(): Promise<OrganizationMetadata[]> {
-        return dynamicsRequest<OrganizationMetadata[]>(this.connectionOptions, `/api/discovery/${this.connectionOptions.webApiVersion}/Instances`, this.dynamicsHeaders);
+        return dynamicsGetRequest<OrganizationMetadata[]>(this.connectionOptions, `/api/discovery/${this.connectionOptions.webApiVersion}/Instances`, this.dynamicsHeaders);
     }
 }

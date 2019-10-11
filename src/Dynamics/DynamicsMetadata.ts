@@ -1,5 +1,5 @@
 import { dynamicsBatch } from "./DynamicsBatch";
-import { dynamicsRequest, ConnectionOptions } from "./DynamicsRequest";
+import { dynamicsGetRequest, ConnectionOptions } from "./DynamicsRequest";
 import { AttributeMetadata, AttributeTypeCode, EntityAttributeMetadata, LookupAttributeMetadata } from "./Model/AttributeMetadata";
 import { EntityMetadata } from "./Model/EntityMetadata";
 import { OptionSetAttributeMetadata, OptionSetMetadata } from "./Model/OptionSetMetadata";
@@ -131,14 +131,14 @@ class DynamicsMetadataClient implements DynamicsMetadata {
     }
 
     entities(): Promise<EntityMetadata[]> {
-        return dynamicsRequest<EntityType[]>(this.connectionOptions, `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions?$select=EntitySetName,Description,DisplayName,LogicalName,PrimaryIdAttribute,PrimaryNameAttribute,IconSmallName,IsActivity,IsCustomEntity`, this.dynamicsHeaders)
+        return dynamicsGetRequest<EntityType[]>(this.connectionOptions, `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions?$select=EntitySetName,Description,DisplayName,LogicalName,PrimaryIdAttribute,PrimaryNameAttribute,IconSmallName,IsActivity,IsCustomEntity`, this.dynamicsHeaders)
             .then(data => data
                 .map(entity => DynamicsMetadataMapper.MapEntity(entity))
             );
     }
 
     entity(entityName: string): Promise<EntityAttributeMetadata> {
-        return dynamicsRequest<EntityType>(this.connectionOptions, `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions(LogicalName='${entityName}')?$select=EntitySetName,Description,DisplayName,LogicalName,PrimaryIdAttribute,PrimaryNameAttribute,IconSmallName,IsActivity,IsCustomEntity`, this.dynamicsHeaders)
+        return dynamicsGetRequest<EntityType>(this.connectionOptions, `/api/data/${this.connectionOptions.webApiVersion}/EntityDefinitions(LogicalName='${entityName}')?$select=EntitySetName,Description,DisplayName,LogicalName,PrimaryIdAttribute,PrimaryNameAttribute,IconSmallName,IsActivity,IsCustomEntity`, this.dynamicsHeaders)
             .then(entity =>
                 this.attributes(entityName)
                     .then(attributes => DynamicsMetadataMapper.MapEntity(entity, attributes))
