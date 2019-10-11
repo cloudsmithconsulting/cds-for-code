@@ -7,6 +7,6 @@ export interface OrganizationMetadata
     State?: number;
     Version?: string;
     Uri?: string;
-    AppUri?: string;
+    ApiUrl?: string;
     LastUpdated?: Date;
 }

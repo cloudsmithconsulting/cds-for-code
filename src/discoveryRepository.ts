@@ -1,7 +1,5 @@
 import * as vscode from 'vscode';
 import { ConnectionOptions, AuthenticationType } from './Dynamics/DynamicsRequest';
-import { Dynamics } from './Dynamics/Dynamics';
-import { QueryOperator } from './Query/Query';
 import dynamicsDiscovery, { DynamicsDiscovery, OrganizationMetadata } from './Dynamics/DynamicsDiscovery';
 
 export default class DiscoveryRepository
@@ -38,8 +36,10 @@ export default class DiscoveryRepository
     private webapi: DynamicsDiscovery;
 
     public retrieveOrganizations() : Promise<OrganizationMetadata[]> {
-        let q = this.webapi.discover();
-
-        return q;
+        return this.webapi.discover()
+            .then(items => {
+                const x = items;
+                return items;
+            });
     }
 }

@@ -23,7 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
 	console.log('[CloudSmith]: extension:activate');
 	
 	// load and check extension configuration
-	const config = CloudSmithConfig.checkConfig();
+	const config = CloudSmithConfig.returnValidConfig();
 
 	// wire up views
 	DynamicsTreeView.wireUpCommands(context);
@@ -32,7 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// wire up commands via import object
 	PowerShellLoader.wireUpCommands(context);
 	GenerateEntitiesCommand.wireUpCommands(context, config);
-	ApiRepository.wireUpCommands(context);
+	//ApiRepository.wireUpCommands(context);
 	DiscoveryRepository.wireUpCommands(context);
 	
 	// The command has been defined in the package.json file

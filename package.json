@@ -11,6 +11,7 @@
 	],
 	"activationEvents": [
 		"onView:dynamicsConnectionsView",
+		"onCommand:cloudSmith.getOrganizationsCommand",
 		"onCommand:cloudSmith.unpackDynamicsSolutionCommand",
 		"onCommand:cloudSmith.deployDynamicsSolutionCommand",
 		"onCommand:cloudSmith.generateDynamicsEntitiesCommand"
@@ -115,7 +116,7 @@
 				},
 				{
 					"command": "cloudSmith.deleteEntry",
-					"when": "viewItem == connection"
+					"when": "viewItem == Connection"
 				}
 			]
 		}
