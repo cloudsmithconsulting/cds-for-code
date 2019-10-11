@@ -56,7 +56,7 @@ export async function dynamicsQueryUrl<T>(connectionOptions: ConnectionOptions, 
     return await request<T[]>(connectionOptions, `${dynamicsEntitySetUrl}${querySeparator}fetchXml=${escape(GetQueryXml(query, maxRowCount))}`, 'GET', undefined, headers);
 }
 
-export async function dynamicsRequest<T>(connectionOptions: ConnectionOptions, dynamicsEntitySetUrl: string, headers?: any): Promise<T> {
+export async function dynamicsGetRequest<T>(connectionOptions: ConnectionOptions, dynamicsEntitySetUrl: string, headers?: any): Promise<T> {
     return await request<T>(connectionOptions, dynamicsEntitySetUrl, 'GET', undefined, headers);
 }
 
@@ -69,7 +69,7 @@ export async function dynamicsSave(connectionOptions: ConnectionOptions, entityS
     }
 }
 
-async function request<T>(connectionOptions: ConnectionOptions, url: string, method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE', body?: any, headers?: any): Promise<T> {
+export async function request<T>(connectionOptions: ConnectionOptions, url: string, method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE', body?: any, headers?: any): Promise<T> {
     let callUrl: string = connectionOptions.serverUrl;
 
     if (callUrl.endsWith("/"))

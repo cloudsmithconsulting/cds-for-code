@@ -36,13 +36,16 @@ export default class ApiRepository
 
     private webapi: Dynamics;
 
-    public async whoAmI() : Promise<string>
+    public async whoAmI() : Promise<any>
     {
         return await this.webapi.unboundFunction('WhoAmI');
     }
 
     public async retrieveSolutions<T>() : Promise<T[]> {
-        let q = this.webapi.query('solution', 'solutions').orderBy("uniquename");
+        let q = this.webapi
+            .query('solution', 'solutions')
+            .where("isvisible", QueryOperator.Equals, "true")
+            .orderBy("uniquename");
         
         return await this.webapi.fetch(q);
     }
