@@ -45,7 +45,7 @@ export default class GenerateEntitiesCommand {
         );
     }
 
-    private static showAndReturnTerminal(cwd: string): vscode.Terminal {
+    public static showAndReturnTerminal(cwd: string): vscode.Terminal {
         const terminalName = 'CloudSmith: Dynamics PowerShell';
 		//see if our terminal is open all ready
 		const index = vscode.window.terminals.findIndex(t => t.name === terminalName);
