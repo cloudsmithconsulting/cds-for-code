@@ -20,6 +20,7 @@
                 port: document.getElementById("Port").value,
                 useSsl: document.getElementById("UseSsl").value === "true",
                 domain: document.getElementById("Domain").value,
+                domain: document.getElementById("Workstation").value,
                 username: document.getElementById("Username").value,
                 password: document.getElementById("Password").value
             }

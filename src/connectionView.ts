@@ -184,6 +184,16 @@ class ConnectionViewManager {
         </tr>
         <tr>
             <td>
+                <label for="Workstation">
+                    <strong>Workstation</strong>
+                </label>
+            </td>
+            <td>
+                <input type="text" id="Workstation" name="Workstation">
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <label for="Username">
                     <strong>Username</strong>
                 </label>
