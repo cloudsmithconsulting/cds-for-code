@@ -106,12 +106,14 @@
 					"group": "navigation"
 				},
 				{
-					"command": "cloudSmith.addEntry"
+					"command": "cloudSmith.addEntry",
+					"group": "navigation"
 				}
 			],
 			"view/item/context": [
 				{
 					"command": "cloudSmith.editEntry",
+					"when": "viewItem == Solution || viewItem == Plugin || viewItem == Entity || viewItem == Entry",
 					"group": "inline"
 				},
 				{

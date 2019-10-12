@@ -139,4 +139,8 @@ export class Utilities
         }
         return items;
     }    
+
+    public static RemoveTrailingSlash(string:string) {
+        return string.replace(/\/$/, "");
+    }
 }

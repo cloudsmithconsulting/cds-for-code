@@ -4,7 +4,7 @@ import { DynamicsHeaders, DefaultWebApiVersion } from "./Dynamics";
 import * as httpntlm from "httpntlm";
 import fetch from "node-fetch";
 import { DynamicsFunction } from "./Model/FunctionMetadata";
-import { Utilities } from "./Utilities";
+import { Utilities } from "../Utilities";
 import { DynamicsAction } from "./Model/ActionMetadata";
 
 export enum AuthenticationType
@@ -14,6 +14,20 @@ export enum AuthenticationType
 }
 
 export class ConnectionOptions {
+    constructor(clone?:ConnectionOptions) {
+        if (clone)
+        {
+            this.authType = clone.authType;
+            this.username = clone.username;
+            this.password = clone.password;
+            this.domain = clone.domain;
+            this.workstation = clone.workstation;
+            this.accessToken = clone.accessToken;
+            this.serverUrl = clone.serverUrl;
+            this.webApiVersion = clone.webApiVersion;
+        }        
+    }
+
     authType: AuthenticationType = AuthenticationType.OAuth;
     username?: string;
     password?: string;
