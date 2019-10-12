@@ -14,9 +14,9 @@ export default class DynamicsTreeView {
             authType: AuthenticationType.Windows,
             domain: "CONTOSO",
             username: "Administrator",
-            password: "p@ssw0rd",
-            serverUrl: "http://win-oi4mlu9323r/",
-            webApiVersion: "v8.0" 
+            password: "p@ssw0rd1",
+            serverUrl: "http://win-a6ljo0slrsh/",
+            webApiVersion: "v8.2" 
         });
 
         vscode.window.registerTreeDataProvider('dynamicsConnectionsView', treeProvider);
