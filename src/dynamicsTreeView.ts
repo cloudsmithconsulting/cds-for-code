@@ -15,7 +15,7 @@ export default class DynamicsTreeView {
             domain: "CONTOSO",
             username: "Administrator",
             password: "p@ssw0rd",
-            serverUrl: "http://win-oi4mlu9323r/",
+            serverUrl: "http://awin-oi4mlu9323r/",
             webApiVersion: "v8.0" 
         });
 
@@ -117,6 +117,27 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return result;
     }
     
+    private treeviewCommandError(errorMessage:string, retryFunction:any): void
+    {
+        vscode.window.showErrorMessage(errorMessage, "Try Again", "Close").then(selectedItem =>
+            {
+                switch (selectedItem)
+                {
+                    case "Try Again":
+                        if (typeof retryFunction === "function")
+                        {
+                            retryFunction();
+                        }
+
+                        break;
+                    case "Close":
+                        break;
+                }
+
+                Promise.resolve(this);
+            });
+    }
+
     getConnectionDetails(element: TreeEntry, commandPrefix?:string): Promise<TreeEntry[]> {
         const connection = element.connection;
 		const api = new DiscoveryRepository(connection);
@@ -124,6 +145,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return api.retrieveOrganizations()
             .then(orgs => {
                 const result : TreeEntry[] = new Array();
+                
                 for (let i = 0; i < orgs.length; i++) {
                     const org = orgs[i];
                     const versionSplit = org.Version.split('.');
@@ -154,20 +176,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             .catch(err => {
                 console.error(err);
 
-                vscode.window.showErrorMessage(`An error occurred while accessing organizations from ${connection.serverUrl}`, "Try Again", "Close").then(selectedItem =>
-                {
-                    switch (selectedItem)
-                    {
-                        case "Try Again":
-                            this.getConnectionDetails(element, commandPrefix);
-
-                            break;
-                        case "Close":
-                            break;
-                    }
-
-                    Promise.resolve(this);
-                });
+                this.treeviewCommandError(`An error occurred while accessing organizations from ${connection.serverUrl}`, () => this.getConnectionDetails(element, commandPrefix));
 
                 throw err;
             });
@@ -242,22 +251,9 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             .catch(err => {
                 console.error(err);
 
-                vscode.window.showErrorMessage(`An error occurred while retrieving solutions from ${element.connection.serverUrl}`, "Try Again", "Close").then(selectedItem =>
-                {
-                    switch (selectedItem)
-                    {
-                        case "Try Again":
-                            this.getSolutionDetails(element, commandPrefix);
+                this.treeviewCommandError(`An error occurred while retrieving solutions from ${element.connection.serverUrl}`, () => this.getSolutionDetails(element, commandPrefix));
 
-                            break;
-                        case "Close":
-                            break;
-                    }
-
-                    Promise.resolve(this);
-                });
-
-                throw err;
+                return null;
             });
     }
 
@@ -289,22 +285,9 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             .catch(err => {
                 console.error(err);
 
-                vscode.window.showErrorMessage(`An error occurred while retrieving solutions from ${element.connection.serverUrl}`, "Try Again", "Close").then(selectedItem =>
-                {
-                    switch (selectedItem)
-                    {
-                        case "Try Again":
-                            this.getSolutionDetails(element, commandPrefix);
+                this.treeviewCommandError(`An error occurred while retrieving plug-in assemblies from ${element.connection.serverUrl}`, () => this.getPluginDetails(element, commandPrefix, solutionId));
 
-                            break;
-                        case "Close":
-                            break;
-                    }
-
-                    Promise.resolve(this);
-                });
-
-                throw err;
+                return null;
             });
     }
 
@@ -336,22 +319,9 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             .catch(err => {
                 console.error(err);
 
-                vscode.window.showErrorMessage(`An error occurred while retrieving entities from ${element.connection.serverUrl}`, "Try Again", "Close").then(selectedItem =>
-                {
-                    switch (selectedItem)
-                    {
-                        case "Try Again":
-                            this.getEntityDetails(element, commandPrefix);
+                this.treeviewCommandError(`An error occurred while retrieving entities from ${element.connection.serverUrl}`, () => this.getEntityDetails(element, commandPrefix, solutionId));
 
-                            break;
-                        case "Close":
-                            break;
-                    }
-
-                    Promise.resolve(this);
-                });
-
-                throw err;
+                return null;
             });
     }
 }
