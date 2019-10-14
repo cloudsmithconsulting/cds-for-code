@@ -69,7 +69,6 @@ class ConnectionViewManager {
                 // success, add it to connection window
                 vscode.commands.executeCommand('cloudSmith.addDynamicsConnection', connection)
                 .then(() => {
-                    vscode.window.showInformationMessage(`Your connection ${connection.serverUrl} was added`);
                     this._panel.dispose();
                 });
             })

@@ -10,16 +10,16 @@ import { EntityMetadata } from './Dynamics/Model/EntityMetadata';
 export default class DynamicsTreeView {
     public static wireUpCommands(context: vscode.ExtensionContext) {
         // register the provider and connect it to the treeview window
-        // const treeProvider = new DynamicsServerTreeProvider({
+        // {
         //     authType: AuthenticationType.Windows,
         //     domain: "CONTOSO",
         //     username: "Administrator",
         //     password: "p@ssw0rd1",
         //     serverUrl: "http://win-a6ljo0slrsh/",
         //     webApiVersion: "v8.2" 
-        // });
+        // };
 
-        const treeProvider = new DynamicsServerTreeProvider();
+        const treeProvider = new DynamicsServerTreeProvider(context);
 
         vscode.window.registerTreeDataProvider('dynamicsConnectionsView', treeProvider);
         
@@ -29,18 +29,21 @@ export default class DynamicsTreeView {
 
             , vscode.commands.registerCommand('cloudSmith.addDynamicsConnection', (connection: ConnectionOptions) => {
                 treeProvider.addConnection(connection);
-                treeProvider.refresh();
+                vscode.window.showInformationMessage(
+                    `Add Dynamics Connection: ${connection.serverUrl}`
+                );
             }) // <-- no semi-colon, comma starts next command registration
 
-            , vscode.commands.registerCommand('cloudSmith.clickEntry', (name?:string) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand('cloudSmith.clickEntry', (label?: string) => { // Match name of command to package.json command
                 // Run command code
-                vscode.window.showInformationMessage(`Clicked ${name || ''}`);
+                vscode.window.showInformationMessage(`Clicked ${label || ''}`);
             }) // <-- no semi-colon, comma starts next command registration
             
-            , vscode.commands.registerCommand('cloudSmith.deleteEntry', () => { // Match name of command to package.json command
+            , vscode.commands.registerCommand('cloudSmith.deleteEntry', (item: TreeEntry) => { // Match name of command to package.json command
                 // Run command code
+                treeProvider.removeConnection(item.connection);
                 vscode.window.showInformationMessage(
-                    'cloudSmith.deleteEntry'
+                    `Delete Dynamics Connection: ${item.connection.serverUrl}`
                 );
             }) // <-- no semi-colon, comma starts next command registration
     
@@ -56,18 +59,36 @@ export default class DynamicsTreeView {
 
 class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
+    readonly connectionsGlobalStateKey = 'cloudsmith:dynamicsConnections';
 	private _onDidChangeTreeData: vscode.EventEmitter<TreeEntry | undefined> = new vscode.EventEmitter<TreeEntry | undefined>();
     readonly onDidChangeTreeData: vscode.Event<TreeEntry | undefined> = this._onDidChangeTreeData.event;
     private _connections: ConnectionOptions[] = [];
+    private _context: vscode.ExtensionContext;
 
-	constructor(...options: ConnectionOptions[]) {
-        this.addConnection(...options);
+	constructor(context: vscode.ExtensionContext) {
+        this._context = context;
+        const connections: ConnectionOptions[] | undefined = this._context.globalState.get(this.connectionsGlobalStateKey);
+        if (connections && connections.length > 0) {
+            this._connections = connections;
+            this.refresh();
+        }
     }
     
     public addConnection(...options: ConnectionOptions[]): void {
         options.forEach(o => {
             this._connections.push(o); 
         });
+        this._context.globalState.update(this.connectionsGlobalStateKey, this._connections);
+        this.refresh();
+    }
+
+    public removeConnection(connection: ConnectionOptions): void {
+        const removeIndex = this._connections.findIndex(c => c.serverUrl === connection.serverUrl);
+        if (removeIndex >= 0) {
+            this._connections.splice(removeIndex, 1);
+            this._context.globalState.update(this.connectionsGlobalStateKey, this._connections);
+            this.refresh();
+        }
     }
 
 	refresh(): void {
