@@ -10,20 +10,27 @@ import { EntityMetadata } from './Dynamics/Model/EntityMetadata';
 export default class DynamicsTreeView {
     public static wireUpCommands(context: vscode.ExtensionContext) {
         // register the provider and connect it to the treeview window
-        const treeProvider = new DynamicsServerTreeProvider({
-            authType: AuthenticationType.Windows,
-            domain: "CONTOSO",
-            username: "Administrator",
-            password: "p@ssw0rd1",
-            serverUrl: "http://win-a6ljo0slrsh/",
-            webApiVersion: "v8.2" 
-        });
+        // const treeProvider = new DynamicsServerTreeProvider({
+        //     authType: AuthenticationType.Windows,
+        //     domain: "CONTOSO",
+        //     username: "Administrator",
+        //     password: "p@ssw0rd1",
+        //     serverUrl: "http://win-a6ljo0slrsh/",
+        //     webApiVersion: "v8.2" 
+        // });
+
+        const treeProvider = new DynamicsServerTreeProvider();
 
         vscode.window.registerTreeDataProvider('dynamicsConnectionsView', treeProvider);
         
         // setup commands
         context.subscriptions.push(
             vscode.commands.registerCommand('cloudSmith.refreshEntry', () => treeProvider.refresh()) // <-- no semi-colon, comma starts next command registration
+
+            , vscode.commands.registerCommand('cloudSmith.addDynamicsConnection', (connection: ConnectionOptions) => {
+                treeProvider.addConnection(connection);
+                treeProvider.refresh();
+            }) // <-- no semi-colon, comma starts next command registration
 
             , vscode.commands.registerCommand('cloudSmith.clickEntry', (name?:string) => { // Match name of command to package.json command
                 // Run command code
@@ -57,7 +64,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         this.addConnection(...options);
     }
     
-    private addConnection(...options: ConnectionOptions[]): void {
+    public addConnection(...options: ConnectionOptions[]): void {
         options.forEach(o => {
             this._connections.push(o); 
         });

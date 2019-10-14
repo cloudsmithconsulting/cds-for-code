@@ -85,9 +85,9 @@ body {
     background-color: var(--vscode-button-hoverBackground);
 }
 
-.panel {
-    margin: 0 7px 0 5px;
-    padding: 0 16px 0 10px;
+.panel_error {
+    margin: 0 7px 10px 5px;
+    padding: 0 10px 10px 10px;
     border-left-width: 5px;
     border-left-style: solid;
     background: var(--vscode-textBlockQuote-background);
@@ -95,5 +95,5 @@ body {
 }
 
 .panel__text{
-    line-height: 2;
+    line-height: 1.5em;
 }

@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { ConnectionOptions } from './Dynamics/DynamicsRequest';
+import DiscoveryRepository from './discoveryRepository';
 
 export default class ConnectionView {
 	public static wireUpCommands(context: vscode.ExtensionContext) {
@@ -57,7 +59,24 @@ class ConnectionViewManager {
 
 	public static revive(panel: vscode.WebviewPanel, extensionPath: string) {
 		ConnectionViewManager.currentPanel = new ConnectionViewManager(panel, extensionPath);
-	}
+    }
+    
+    private testConnection(connection: ConnectionOptions) {
+        const api = new DiscoveryRepository(connection);
+        // try a discovery request
+        api.retrieveOrganizations()
+            .then(() => {
+                // success, add it to connection window
+                vscode.commands.executeCommand('cloudSmith.addDynamicsConnection', connection)
+                .then(() => {
+                    vscode.window.showInformationMessage(`Your connection ${connection.serverUrl} was added`);
+                    this._panel.dispose();
+                });
+            })
+            .catch(err => {
+                this._panel.webview.postMessage({ command: 'connectionError', message: err.message });
+            });
+    }
 
 	private constructor(panel: vscode.WebviewPanel, extensionPath: string) {
 		this._panel = panel;
@@ -86,8 +105,7 @@ class ConnectionViewManager {
 			message => {
 				switch (message.command) {
 					case 'createConnection':
-                        vscode.window.showInformationMessage(message.settings.serverUrl);
-                        this._panel.webview.postMessage({ command: 'connectionCreated' });
+                        this.testConnection(message.settings);
 						return;
 				}
 			},
@@ -151,6 +169,13 @@ class ConnectionViewManager {
     <div class="container">
         <h1>Connect to Dynamics 365</h1>
 
+        <blockquote class="panel_error" id="errorPanel" hidden>
+            <div class="panel__text">
+                <h4>Oops! Slight problem</h4>
+                <span id="errorMessage">lalksdjflaksdjfloasjdflkaj</span>
+            </div>
+        </blockquote>
+
         <div class="field">
             <label class="field__label" for="WebApiVersion">
                 Web API Version
@@ -165,8 +190,8 @@ class ConnectionViewManager {
                 Auth Type
             </label>
             <select id="AuthType" name="AuthType" class="field__input">
-                <option>OAuth</option>
-                <option>Windows</option>
+                <option value="2">OAuth</option>
+                <option value="1">Windows</option>
             </select>
         </div>
         <div class="field">
@@ -208,9 +233,6 @@ class ConnectionViewManager {
         <div class="field">
             <button id="submitButton" class="button button--primary">Add Connection</button>
         </div>
-
-        <div id="localOutput"></div>
-        <div id="serverOutput"></div>
     </div>
     <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>
