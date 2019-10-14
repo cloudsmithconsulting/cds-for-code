@@ -86,7 +86,7 @@ class ConnectionViewManager {
 			message => {
 				switch (message.command) {
 					case 'createConnection':
-                        vscode.window.showInformationMessage(message.settings.server);
+                        vscode.window.showInformationMessage(message.settings.serverUrl);
                         this._panel.webview.postMessage({ command: 'connectionCreated' });
 						return;
 				}
@@ -124,6 +124,13 @@ class ConnectionViewManager {
         
 		// The uri we use to load this script in the webview
         const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
+
+        const cssPathOnDisk = vscode.Uri.file(
+			path.join(this._extensionPath, 'resources', 'style.css')
+        );
+        
+		// The uri we use to load this script in the webview
+        const cssUri = webview.asWebviewUri(cssPathOnDisk);
         // Use a nonce to whitelist which scripts can be run
         const nonce = getNonce();
 
@@ -135,90 +142,76 @@ class ConnectionViewManager {
     Use a content security policy to only allow loading images from https or from our extension directory,
     and only allow scripts that have a specific nonce.
     -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}'; style-src 'nonce-${nonce}';">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="${cssUri}" nonce="${nonce}">
     <title>CloudSmith - Dynamics 365 Connection</title>
 </head>
 <body>
-    <h1>Connect to Dynamics 365</h1>
-    <table cellpadding="4" cellspacing="0">
-        <tr>
-            <td>
-                <label for="Server">
-                    <strong>Server</strong>
-                </label>
-            </td>
-            <td>
-                <input type="text" id="Server" name="Server">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="Port">
-                    <strong>Port</strong>
-                </label>
-            </td>
-            <td>
-                <input type="text" id="Port" name="Port">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="UseSsl">
-                    <strong>Use SSL</strong>
-                </label>
-            </td>
-            <td>
-                <input type="checkbox" id="UseSsl" name="UseSsl" value="true">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="Domain">
-                    <strong>Domain</strong>
-                </label>
-            </td>
-            <td>
-                <input type="text" id="Domain" name="Domain">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="Workstation">
-                    <strong>Workstation</strong>
-                </label>
-            </td>
-            <td>
-                <input type="text" id="Workstation" name="Workstation">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="Username">
-                    <strong>Username</strong>
-                </label>
-            </td>
-            <td>
-                <input type="text" id="Username" name="Username">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="Password">
-                    <strong>Password</strong>
-                </label>
-            </td>
-            <td>
-                <input type="password" id="Password" name="Password">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <button id="submitButton">Test Connection</button>
-            </td>
-        </tr>
-    </table>
-    <div id="output"></div>
+    <div class="container">
+        <h1>Connect to Dynamics 365</h1>
+
+        <div class="field">
+            <label class="field__label" for="WebApiVersion">
+                Web API Version
+            </label>
+            <select id="WebApiVersion" name="WebApiVersion" class="field__input">
+                <option>v9.1</option>
+                <option>v8.2</option>
+            </select>
+        </div>
+        <div class="field">
+            <label class="field__label" for="authType">
+                Auth Type
+            </label>
+            <select id="AuthType" name="AuthType" class="field__input">
+                <option>OAuth</option>
+                <option>Windows</option>
+            </select>
+        </div>
+        <div class="field">
+            <label class="field__label" for="ServerUrl">
+                Server URL
+            </label>
+            <input type="text" class="field__input" id="ServerUrl" name="ServerUrl" />
+        </div>
+        <div class="field">
+            <label class="field__label" for="Domain">
+                Domain
+            </label>
+            <input type="text" class="field__input" id="Domain" name="Domain" />
+        </div>
+        <div class="field">
+            <label class="field__label" for="Workstation">
+                Workstation
+            </label>
+            <input type="text" class="field__input" id="Workstation" name="Workstation" />
+        </div>
+        <div class="field">
+            <label class="field__label" for="AccessToken">
+                Access Token
+            </label>
+            <input type="text" class="field__input" id="AccessToken" name="AccessToken" />
+        </div>
+        <div class="field">
+            <label class="field__label" for="Username">
+                Username
+            </label>
+            <input type="text" class="field__input" id="Username" name="Username" />
+        </div>
+        <div class="field">
+            <label class="field__label" for="Password">
+                Password
+            </label>
+            <input type="password" class="field__input" id="Password" name="Password" />
+        </div>
+        <div class="field">
+            <button id="submitButton" class="button button--primary">Add Connection</button>
+        </div>
+
+        <div id="localOutput"></div>
+        <div id="serverOutput"></div>
+    </div>
     <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>
 </html>`;

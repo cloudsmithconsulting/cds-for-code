@@ -5,24 +5,26 @@
 
     //const oldState = vscode.getState();
 
-    const outputDiv = document.getElementById("output");
+    const localOutputDiv = document.getElementById("localOutput");
+    const serverOutputDiv = document.getElementById("serverOutput");
     const submitButton = document.getElementById("submitButton");
     
     submitButton.addEventListener("click", event => {
         event.preventDefault();
 
-        outputDiv.innerHTML =  "Form Submitted!";
+        localOutputDiv.innerHTML =  "Form Submitted!";
 
         vscode.postMessage({
             command: 'createConnection',
             settings: {
-                server: document.getElementById("Server").value,
-                port: document.getElementById("Port").value,
-                useSsl: document.getElementById("UseSsl").value === "true",
+                authType: document.getElementById("AuthType").value,
+                serverUrl: document.getElementById("ServerUrl").value,
                 domain: document.getElementById("Domain").value,
-                domain: document.getElementById("Workstation").value,
+                workstation: document.getElementById("Workstation").value,
+                accessToken: document.getElementById("AccessToken").value,
                 username: document.getElementById("Username").value,
-                password: document.getElementById("Password").value
+                password: document.getElementById("Password").value,
+                webApiVersion: document.getElementById("WebApiVersion").value
             }
         });
     });
@@ -32,7 +34,7 @@
         const message = event.data; // The json data that the extension sent
         switch (message.command) {
             case 'connectionCreated':
-                outputDiv.innerHTML =  "Your connection was created!";
+                serverOutputDiv.innerHTML =  "Your connection was created!";
                 break;
         }
     });
