@@ -54,21 +54,12 @@ export abstract class ViewManager {
 		return result;
 	}
 
-	public static getNonce(): string {
-		let result = '';
-		const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		for (let i = 0; i < 32; i++) {
-			result += possible.charAt(Math.floor(Math.random() * possible.length));
-		}
-		return result;
-	}
-
 	protected readonly _viewOptions: IViewOptions;
 	protected readonly _panel: vscode.WebviewPanel;
 	protected _disposables: vscode.Disposable[] = [];
 	protected readonly _extensionPath: string;
 
-	abstract getHtmlForWebview(webview: vscode.Webview): string;
+	abstract getHtmlForWebview(): string;
 
 	abstract onDidReceiveMessage(instance: ViewManager, message: any): vscode.Event<any>;
 
@@ -99,6 +90,22 @@ export abstract class ViewManager {
 		this._panel.webview.onDidReceiveMessage(m => this.onDidReceiveMessage(this, m));
 	}
 
+	public getNonce(): string {
+		let result = '';
+		const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		for (let i = 0; i < 32; i++) {
+			result += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+		return result;
+	}
+
+	public getFileUri(...paths: string[]): vscode.Uri {
+		const pathOnDisk = vscode.Uri.file(
+			path.join(this._extensionPath, ...paths)
+        );
+		return this._panel.webview.asWebviewUri(pathOnDisk);
+	}
+
 	public dispose() {
 		// If we already have a panel, removie it from the open panels
 		const panelIndex =
@@ -122,8 +129,7 @@ export abstract class ViewManager {
 	}
 
 	private _update() {
-		const webview = this._panel.webview;
 		this._panel.title = this._viewOptions.viewTitle;
-		this._panel.webview.html = this.getHtmlForWebview(webview);
+		this._panel.webview.html = this.getHtmlForWebview();
 	}
 }

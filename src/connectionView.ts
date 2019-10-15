@@ -21,29 +21,11 @@ export default class ConnectionView {
 }
 
 class ConnectionViewManager extends ViewManager {
-    public getHtmlForWebview(webview: vscode.Webview): string {
-        // Local path to main script run in the webview
-		const scriptPathOnDisk = vscode.Uri.file(
-			path.join(this._extensionPath, 'resources', 'webViewClient.js')
-        );
-        
-		// The uri we use to load this script in the webview
-        const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
-
-        const cssPathOnDisk = vscode.Uri.file(
-			path.join(this._extensionPath, 'resources', 'style.css')
-        );
-        
-		// The uri we use to load this script in the webview
-        const cssUri = webview.asWebviewUri(cssPathOnDisk);
-
-        const imgPathOnDisk = vscode.Uri.file(
-            path.join(this._extensionPath, 'resources', 'cloudsmith-logo-only-50px.png')
-        );
-
-        const imgUri = webview.asWebviewUri(imgPathOnDisk);
-        // Use a nonce to whitelist which scripts can be run
-        const nonce = ViewManager.getNonce();
+    public getHtmlForWebview(): string {
+        const scriptUri = this.getFileUri('resources', 'connectionView.js');
+        const cssUri = this.getFileUri('resources', 'style.css');
+        const imgUri = this.getFileUri('resources', 'cloudsmith-logo-only-50px.png');
+        const nonce = this.getNonce();
 
         return `<!DOCTYPE html>
 <html lang="en">
