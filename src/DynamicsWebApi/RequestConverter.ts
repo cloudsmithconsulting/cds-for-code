@@ -32,7 +32,7 @@ export class RequestConverter {
                 }
             }
 
-            if (request.select !== null && request.select.length) {
+            if (request.select && request.select !== null && request.select.length) {
                 if (request.select.length === 1 && request.select[0].endsWith('/$ref')) {
                     url += '/' + request.select[0];
                 }
@@ -97,7 +97,7 @@ export class RequestConverter {
                 headers['Prefer'] = prefer;
             }
 
-            if (request.ifmatch !== null && request.ifnonematch !== null) {
+            if (request.ifmatch && request.ifmatch !== null && request.ifnonematch && request.ifnonematch !== null) {
                 throw new Error('Either one of request.ifmatch or request.ifnonematch parameters should be used in a call, not both.');
             }
 
@@ -172,7 +172,8 @@ export class RequestConverter {
      * @param {Object} [config] - DynamicsWebApi config
      * @returns {ConvertedRequest} Converted request
      */
-    public static convertRequest(request, config) {
+    public static convertRequest(request:any, config:DynamicsWebApi.Config) {
+        let baseUrl = `api/data/v${config.webApiVersion}/`;
         let url = '';
         let result;
 
@@ -198,6 +199,8 @@ export class RequestConverter {
                     url += "(" + request.key + ")";
                 }
             }
+
+            url = baseUrl + url;
 
             if (request._additionalUrl) {
                 if (url) {

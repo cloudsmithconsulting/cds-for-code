@@ -293,11 +293,11 @@ export class WebApiRequest
         this.sendRequest("GET", `api/discovery/v8.0/${!Utilities.IsNull(request) ? request.collection : "Instances"}`, config, null, null, null, resolve, reject, request ? request.isBatch : false, true);
     }
 
-    public makeRequest(method, request, config, responseParams, resolve, reject) {
+    public makeRequest(method:string, request:any, config:DynamicsWebApi.Config, responseParams:any, resolve:any, reject:any): any {
         const successCallback = (collectionName) => {
             request.collection = collectionName;
 
-            var result = RequestConverter.convertRequest(request, config);
+            const result = RequestConverter.convertRequest(request, config);
 
             this.sendRequest(method, result.url, config, request.data || request.entity, result.headers, responseParams, resolve, reject, request.isBatch, result.async);
         };
@@ -332,24 +332,26 @@ export class WebApiRequest
     
         const parsedUrl = vscode.Uri.parse(uri);
         const protocol = parsedUrl.scheme.replace(':','');
+        const handleResponse = this._handleResponse;
 
         let protocolInterface = ntlmAuth ? httpntlm : protocol === 'http' ? http : https;
         let internalOptions;
 
         if (protocolInterface === httpntlm)
         {
+            console.log(`WebAPI: [${method}] ${uri} - (${headers ? Object.keys(headers).length : 0} headers / ${data ? data.length : 0} bytes)`);
+
             protocolInterface[method.toLowerCase()]({
                 url: uri,
                 username: options.config.username,
                 password: options.config.password,
                 workstation: options.config.workstation || '',
                 domain: options.config.domain || '',
-                //body: data,
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                    //...headers
-                }
-            }, function (error, res){
+                body: data,
+                headers: headers
+            }, function (error, res){               
+                console.log(`WebAPI: [${method}] ${uri}: return ${res.statusCode} - ${res.body.length} byte(s)`);
+
                 if (error) 
                 { 
                     responseParams.length = 0;
@@ -357,7 +359,7 @@ export class WebApiRequest
                     errorCallback(error);
                 }
                
-                this._handleResponse(res, responseParams, successCallback, errorCallback);
+                handleResponse(res, responseParams, successCallback, errorCallback, res.body);
             });
         }
         else
@@ -390,7 +392,15 @@ export class WebApiRequest
             }
 
             const request = protocolInterface.request(internalOptions, (res) => {
-                this._handleResponse(res, responseParams, successCallback, errorCallback);
+                let rawData = '';
+
+                res.setEncoding('utf8');
+                res.on('data', (chunk) => { rawData += chunk; });
+                res.on('end', () => {
+                    console.log(`WebAPI: [${method}] ${uri}: return ${res.statusCode} - ${rawData.length} byte(s)`);
+
+                    handleResponse(res, responseParams, successCallback, errorCallback, rawData);
+                });
             });
         
             if (internalOptions.timeout) {
@@ -403,21 +413,18 @@ export class WebApiRequest
                 errorCallback(error);
             });
         
+            console.log(`WebAPI: [${method}] ${uri} - (${headers ? Object.keys(headers).length : 0} headers / ${data ? data.length : 0} bytes)`);
+
             if (data) {
                 request.write(data);
             }
-        
+
             request.end();
         }
     }
 
-    private _handleResponse(res:any, responseParams:any, successCallback: any, errorCallback: any): void
+    private _handleResponse(res:any, responseParams:any, successCallback: any, errorCallback: any, rawData: any): void
     {
-        let rawData = '';
-
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => { rawData += chunk; });
-        res.on('end', function () {
             switch (res.statusCode) {
                 case 200: // Success with content returned in response body.
                 case 201: // Success with content returned in response body.
@@ -462,6 +469,5 @@ export class WebApiRequest
             }
 
             responseParams.length = 0;
-        });        
     }
 }

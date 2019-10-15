@@ -17,15 +17,25 @@ export default class MetadataRepository
 
     private webapi: DynamicsWebApi;
 
-    public async retrieveEntities(solutionId?:string) : Promise<any[]>
+    public retrieveEntities(solutionId?:string) : Promise<any[]>
     {
-        let components:DynamicsWebApi.RetrieveMultipleRequest = {
-            collection: "solutioncomponents",
-            filter: "componenttype -eq 1" + (solutionId ? ` and SolutionId eq "${solutionId}"` : ""),
-            orderBy: ["uniquename"]
-        };
+        let componentsQuery:DynamicsWebApi.RetrieveMultipleRequest;
 
-        //TODO: Fix this.
-        return this.webapi.retrieveEntities();
+        if (solutionId)
+        {
+            componentsQuery = {
+                collection: "solutioncomponents",
+                filter: "componenttype -eq 1" + (solutionId ? ` and SolutionId eq "${solutionId}"` : ""),
+                orderBy: ["uniquename"]
+            };    
+        }
+
+        let entitiesQuery:DynamicsWebApi.RetrieveMultipleRequest = {
+            orderBy: ["logicalName"]
+        };
+        
+        //TODO: Fix this so that it cross references with the solutioncomponents query above.
+        return this.webapi.retrieveEntitiesRequest(entitiesQuery)
+            .then(response => response.value);
     }
 }

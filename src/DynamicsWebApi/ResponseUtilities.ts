@@ -31,8 +31,10 @@ export class ResponseUtilities
 
         if (keyName.indexOf('@') !== -1) {
             const format = keyName.split('@');
+            const format0 = format.length > 0 ? format[0] : null;
+            const format1 = format.length > 1 ? format[1] : null;
 
-            switch (format[1]) {
+            switch (format1) {
                 case 'odata.context':
                     newKey = 'oDataContext';
                     
@@ -47,16 +49,19 @@ export class ResponseUtilities
                     
                     break;
                 case DynamicsWebApi.Prefer.Annotations.FormattedValue:
-                    newKey = format[0] + '_Formatted';
+                    newKey = format0 + '_Formatted';
                     
                     break;
                 case DynamicsWebApi.Prefer.Annotations.AssociatedNavigationProperty:
-                    newKey = format[0] + '_NavigationProperty';
+                    newKey = format0 + '_NavigationProperty';
                     
                     break;
                 case DynamicsWebApi.Prefer.Annotations.LookupLogicalName:
-                    newKey = format[0] + '_LogicalName';
+                    newKey = format0 + '_LogicalName';
 
+                    break;
+                default:
+                    newKey = format1;
                     break;
             }
         }

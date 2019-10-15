@@ -17,7 +17,7 @@ export class DynamicsWebApi {
     {
         this._webApiRequest = new WebApiRequest();
         this._internalConfig = {
-            webApiVersion: "8.0",
+            webApiVersion: "v8.0",
             webApiUrl: null,
             impersonate: null,
             onTokenRefresh: null,
@@ -154,7 +154,7 @@ export class DynamicsWebApi {
             impersonate: impersonateUserId
         };
 
-        return this._makeRequest("GET", request, 'executeFunction')
+        return this._makeRequest("GET", request)
             .then(response => { return response.data; });
     }
 
@@ -168,7 +168,22 @@ export class DynamicsWebApi {
             data: requestObject
         };
 
-        return this._makeRequest("POST", request, 'executeAction')
+        return this._makeRequest("POST", request)
+            .then(response => { return response.data; });
+    }
+
+    /**
+     * Sends an asynchronous request to the discovery service looking for CRM instances.
+     *
+     * @param request - An Array representing the CollectionName Query Option to control which attributes will be returned.
+     * @example
+        *dynamicsWebApi.discover().then(function (orgs) {
+        *}.catch(function (error) {
+        *});
+     */
+    public discover() : Promise<any>
+    {
+        return this._makeDiscoveryRequest({ collection: 'Instances'})
             .then(response => { return response.data; });
     }
 
@@ -196,22 +211,7 @@ export class DynamicsWebApi {
      */
     public createRequest(request: DynamicsWebApi.CreateRequest): Promise<any>
     {
-        return this._makeRequest('POST', request, 'create')
-            .then(response => { return response.data; });
-    }
-
-    /**
-     * Sends an asynchronous request to the discovery service looking for CRM instances.
-     *
-     * @param request - An Array representing the CollectionName Query Option to control which attributes will be returned.
-     * @example
-        *dynamicsWebApi.discover().then(function (orgs) {
-        *}.catch(function (error) {
-        *});
-     */
-    public discover() : Promise<any>
-    {
-        return this._makeDiscoveryRequest({ collection: 'Instances'})
+        return this._makeRequest('POST', request)
             .then(response => { return response.data; });
     }
 
@@ -320,7 +320,7 @@ export class DynamicsWebApi {
             data: { value: fieldValue }
         };
 
-        return this._makeRequest('PUT', request, 'updateSingleProperty')
+        return this._makeRequest('PUT', request)
             .then(response => { return response.data; });
     }
 
@@ -363,7 +363,7 @@ export class DynamicsWebApi {
             key: key
         };
 
-        return this._makeRequest('DELETE', request, 'deleteRecord')
+        return this._makeRequest('DELETE', request)
             .then(() => { return; });
     }
 
@@ -412,7 +412,7 @@ export class DynamicsWebApi {
         const ifnonematch = request.ifnonematch;
         const ifmatch = request.ifmatch;
 
-        return this._makeRequest("PATCH", request, 'upsert')
+        return this._makeRequest("PATCH", request)
             .then(response => { return response.data; })
             .catch(error => {
                 if (ifnonematch && error.status === 412) {
@@ -533,7 +533,7 @@ export class DynamicsWebApi {
             request.url = nextPageLink;
         }
 
-        return this._makeRequest("GET", request, 'retrieveMultiple')
+        return this._makeRequest("GET", request)
             .then(response => { return response.data; });
     }
 
@@ -542,7 +542,7 @@ export class DynamicsWebApi {
      *
      * @param request - An object that represents all possible options for a current request.
      */
-    public retrieveAllRequest(request: DynamicsWebApi.RetrieveMultipleRequest): Promise<any>
+    public  retrieveAllRequest(request: DynamicsWebApi.RetrieveMultipleRequest): Promise<any>
     {
         return this._retrieveAllRequest(request, undefined, undefined);
     }
@@ -642,7 +642,7 @@ export class DynamicsWebApi {
             data: { "@odata.id": relatedCollection + "(" + relatedKey + ")" }
         };
 
-        return this._makeRequest("POST", request, 'associate')
+        return this._makeRequest("POST", request)
             .then(() => { return; });
     }
 
@@ -664,7 +664,7 @@ export class DynamicsWebApi {
             impersonate: impersonateUserId
         };
 
-        return this._makeRequest("DELETE", request, 'disassociate')
+        return this._makeRequest("DELETE", request)
             .then(() => { return; });
     }
 
@@ -688,7 +688,7 @@ export class DynamicsWebApi {
             data: { "@odata.id": relatedCollection + "(" + relatedKey + ")" }
         };
 
-        return this._makeRequest("PUT", request, 'associateSingleValued')
+        return this._makeRequest("PUT", request)
             .then(() => { return; });
     }
 
@@ -709,7 +709,7 @@ export class DynamicsWebApi {
             impersonate: impersonateUserId
         };
 
-        return this._makeRequest("DELETE", request, 'disassociateSingleValued')
+        return this._makeRequest("DELETE", request)
             .then(() => { return; });
     }
 
@@ -830,6 +830,19 @@ export class DynamicsWebApi {
             select: select,
             filter: filter
         };
+
+        return this.retrieveRequest(request);
+    }
+
+        /**
+     * Sends an asynchronous request to retrieve entity definitions.
+     *
+     * @param select - Use the $select system query option to limit the properties returned.
+     * @param filter - Use the $filter system query option to set criteria for which entity definitions will be returned.
+     */
+    public retrieveEntitiesRequest(request: DynamicsWebApi.RetrieveMultipleRequest): Promise<any>
+    {
+        request.collection = "EntityDefinitions";
 
         return this.retrieveRequest(request);
     }
@@ -1111,7 +1124,7 @@ export class DynamicsWebApi {
     {
         this._isBatch = false;
 
-        return this._makeRequest('POST', { collection: '$batch' }, 'executeBatch')
+        return this._makeRequest('POST', { collection: '$batch' })
             .then(response => { return response.data; });
     }
 

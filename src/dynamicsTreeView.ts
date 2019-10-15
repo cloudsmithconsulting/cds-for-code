@@ -13,7 +13,7 @@ export default class DynamicsTreeView {
             username: "Administrator",
             password: "p@ssw0rd",
             webApiUrl: "http://win-oi4mlu9323r/",
-            webApiVersion: "v8.0" 
+            webApiVersion: "8.0" 
         });
 
         vscode.window.registerTreeDataProvider('dynamicsConnectionsView', treeProvider);
@@ -151,7 +151,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     const orgConnection = Utilities.Clone<DynamicsWebApi.Config>(connection);
 
                     orgConnection.webApiUrl = org.ApiUrl;
-                    orgConnection.webApiVersion = `v${versionSplit[0]}.${versionSplit[1]}`;
+                    orgConnection.webApiVersion = `${versionSplit[0]}.${versionSplit[1]}`;
 
                     result.push(
                         new TreeEntry(
@@ -175,7 +175,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
                 this.treeviewCommandError(`An error occurred while accessing organizations from ${connection.webApiUrl}`, () => this.getConnectionDetails(element, commandPrefix));
 
-                throw err;
+                return null;
             });
     }
 
