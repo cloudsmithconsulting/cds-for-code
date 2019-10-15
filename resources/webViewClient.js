@@ -52,12 +52,7 @@
 
         if (isNullOrEmpty(settings.webApiUrl))
             messages.push("The Server URL is required");
-<<<<<<< HEAD
-        if (!isNullOrEmpty(settings.serverUrl) 
-            && !/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.serverUrl))
-=======
         if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.webApiUrl))
->>>>>>> 152951b5be3c0f3637bd153b120d3ea50c0c2926
             messages.push("The Server URL is invalid");
         if (isNullOrEmpty(settings.domain))
             messages.push("The Domain is required");
