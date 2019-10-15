@@ -77,15 +77,15 @@ export type FetchQueryOperatorExpression =
     'ne-userid' |
     'eq-userteams';
    
-export default function fetch(entityName: string, ...attributeNames: string[]): Query {
-    return new QueryProvider(entityName).select(...attributeNames);
+export default function fetchQuery(entityName: string, ...attributeNames: string[]): Query {
+    return FetchQueryProvider.Create(entityName, ...attributeNames);
 }
 
 export function GetRootQuery(query: Query): FetchQuery {
     return (query['RootQuery'] || query).Query;
 }
 
-class QueryProvider implements Query {
+class FetchQueryProvider implements Query {
     public Query: FetchQuery;
     public RootQuery: Query | undefined;
 
@@ -98,6 +98,11 @@ class QueryProvider implements Query {
             Conditions: [],
             Joins: []
         };
+    }
+
+    public static Create(entityName:string, ...attributeNames: string[]): Query
+    {
+        return new FetchQueryProvider(entityName).select(...attributeNames);
     }
 
     public alias(attributeName: string, alias: string): Query {
@@ -157,7 +162,7 @@ class QueryProvider implements Query {
     }
 
     public join(entityName: string, fromAttribute: string, toAttribute?: string, alias?: string, isOuterJoin?: boolean): Query {
-        var exp = new QueryProvider(entityName);
+        var exp = new FetchQueryProvider(entityName);
         var join = <FetchQueryJoin>exp.Query;
        
         exp.RootQuery = this.RootQuery || this;
