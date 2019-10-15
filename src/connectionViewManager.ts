@@ -11,7 +11,7 @@ export default class ConnectionViewManager {
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 ConnectionView.createOrShow<ConnectionView>(ConnectionView, {
                     extensionPath: context.extensionPath,
-                    viewTitle: 'New Dynamics 365 Connection',
+                    viewTitle: 'New Connection - Dynamics 365 CE',
                     viewType: 'cloudsmith:DynamicsConnectionView'
                 });
             }) // <-- no semi-colon, comma starts next command registration
