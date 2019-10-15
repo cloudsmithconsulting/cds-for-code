@@ -1,4 +1,4 @@
-import query, { Query } from "../Query/Query";
+import fetch, { Query } from "../DynamicsWebApi/FetchQuery";
 import { dynamicsBatch, DynamicsBatch } from "./DynamicsBatch";
 import { ConnectionOptions, dynamicsQuery, dynamicsGetRequest, request, dynamicsSave, dynamicsBoundAction, dynamicsBoundFunction, dynamicsUnboundAction, dynamicsUnboundFunction } from "./DynamicsRequest";
 import { DynamicsAction } from "./Model/ActionMetadata";
@@ -84,7 +84,7 @@ class DynamicsClient implements Dynamics {
 
     query(entityLogicalName: string, entitySetName: string): Query
     {
-        return query(entityLogicalName).path(entitySetName);
+        return fetch(entityLogicalName).path(entitySetName);
     }
 
     save(entitySetName: string, data: any, id?: string): Promise<string> {

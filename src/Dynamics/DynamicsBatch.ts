@@ -1,10 +1,10 @@
-import { GetRootQuery, Query } from "../Query/Query";
-import GetQueryXml from "../Query/QueryXml";
+import { GetRootQuery, Query } from "../DynamicsWebApi/FetchQuery";
 import { DefaultMaxRecords, DynamicsHeaders } from "./Dynamics";
 import { ConnectionOptions, AuthenticationType } from "./DynamicsRequest";
 import { Utilities } from "../Utilities";
 import * as httpntlm from "httpntlm";
 import fetch from "node-fetch";
+import { FetchQueryResolver } from "../DynamicsWebApi/FetchQueryResolver";
 
 export interface DynamicsBatch {
     execute(): Promise<any[] | undefined>;
@@ -89,7 +89,7 @@ class Batch implements DynamicsBatch {
         
             return {
                 entitySetName: dataQuery.EntityPath,
-                entitySetQuery: `fetchXml=${escape(GetQueryXml(query))}`
+                entitySetQuery: `fetchXml=${escape(FetchQueryResolver.ResolveQuery(query))}`
             };
         }));
         
@@ -103,7 +103,7 @@ class Batch implements DynamicsBatch {
         }
         this.Changes.push({
             entitySetName: dataQuery.EntityPath,
-            entitySetQuery: `fetchXml=${escape(GetQueryXml(query, maxRowCount))}`
+            entitySetQuery: `fetchXml=${escape(FetchQueryResolver.ResolveQuery(query, maxRowCount))}`
         });
         return this;
     }

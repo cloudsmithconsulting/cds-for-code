@@ -1,11 +1,11 @@
-import { GetRootQuery, Query } from "../Query/Query";
-import GetQueryXml from "../Query/QueryXml";
+import { GetRootQuery, Query } from "../DynamicsWebApi/FetchQuery";
 import { DynamicsHeaders, DefaultWebApiVersion } from "./Dynamics";
 import * as httpntlm from "httpntlm";
 import fetch from "node-fetch";
 import { DynamicsFunction } from "./Model/FunctionMetadata";
 import { Utilities } from "../Utilities";
 import { DynamicsAction } from "./Model/ActionMetadata";
+import { FetchQueryResolver } from "../DynamicsWebApi/FetchQueryResolver";
 
 export enum AuthenticationType
 {
@@ -67,7 +67,7 @@ export async function dynamicsQuery<T>(connectionOptions: ConnectionOptions, que
 export async function dynamicsQueryUrl<T>(connectionOptions: ConnectionOptions, dynamicsEntitySetUrl: string, query: Query, maxRowCount?: number, headers?: any): Promise<T[]> {
     const querySeparator = (dynamicsEntitySetUrl.indexOf('?') > -1 ? '&' : '?');
 
-    return await request<T[]>(connectionOptions, `${dynamicsEntitySetUrl}${querySeparator}fetchXml=${escape(GetQueryXml(query, maxRowCount))}`, 'GET', undefined, headers);
+    return await request<T[]>(connectionOptions, `${dynamicsEntitySetUrl}${querySeparator}fetchXml=${escape(FetchQueryResolver.ResolveQuery(query, maxRowCount))}`, 'GET', undefined, headers);
 }
 
 export async function dynamicsGetRequest<T>(connectionOptions: ConnectionOptions, dynamicsEntitySetUrl: string, headers?: any): Promise<T> {
