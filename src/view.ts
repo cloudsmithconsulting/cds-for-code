@@ -7,13 +7,13 @@ export interface IViewOptions {
 	viewType: string;
 }
 
-export abstract class ViewManager {
+export abstract class View {
     /**
 	 * Track the currently panel. Only allow a single panel to exist at a time.
 	 */
-	public static openPanels: ViewManager[] = new Array();
+	public static openPanels: View[] = new Array();
 
-	public static createOrShow<T extends ViewManager>(
+	public static createOrShow<T extends View>(
 		c: new(viewOptions: IViewOptions, panel: vscode.WebviewPanel) => T, 
 		viewOptions: IViewOptions): T {
 		
@@ -47,7 +47,7 @@ export abstract class ViewManager {
 		);
 
 		const result: T = new c(viewOptions, panel);
-		ViewManager.openPanels.push(
+		View.openPanels.push(
 			result
 		);
 
@@ -61,7 +61,7 @@ export abstract class ViewManager {
 
 	abstract getHtmlForWebview(): string;
 
-	abstract onDidReceiveMessage(instance: ViewManager, message: any): vscode.Event<any>;
+	abstract onDidReceiveMessage(instance: View, message: any): vscode.Event<any>;
 
 	public constructor(viewOptions: IViewOptions, panel: vscode.WebviewPanel) {
 		this._viewOptions = viewOptions;
@@ -109,12 +109,12 @@ export abstract class ViewManager {
 	public dispose() {
 		// If we already have a panel, removie it from the open panels
 		const panelIndex =
-			ViewManager.openPanels.findIndex(
+			View.openPanels.findIndex(
 				p => p._panel.title === this._viewOptions.viewTitle
 			);
 		
 		if (panelIndex >= 0) {
-			ViewManager.openPanels.slice(panelIndex, 1);
+			View.openPanels.slice(panelIndex, 1);
 		}
 
 		while (this._disposables.length) {

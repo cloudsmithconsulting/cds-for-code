@@ -1,16 +1,15 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import DiscoveryRepository from './discoveryRepository';
-import { ViewManager } from './viewManager';
+import { View } from './view';
 
-export default class ConnectionView {
+export default class ConnectionViewManager {
 	public static wireUpCommands(context: vscode.ExtensionContext) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand('cloudSmith.addEntry', async () => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-                ConnectionViewManager.createOrShow<ConnectionViewManager>(ConnectionViewManager, {
+                ConnectionView.createOrShow<ConnectionView>(ConnectionView, {
                     extensionPath: context.extensionPath,
                     viewTitle: 'New Dynamics 365 Connection',
                     viewType: 'cloudsmith:DynamicsConnectionView'
@@ -20,7 +19,7 @@ export default class ConnectionView {
     }
 }
 
-class ConnectionViewManager extends ViewManager {
+class ConnectionView extends View {
     public getHtmlForWebview(): string {
         const scriptUri = this.getFileUri('resources', 'connectionView.js');
         const cssUri = this.getFileUri('resources', 'webviewStyles.css');
@@ -110,7 +109,7 @@ class ConnectionViewManager extends ViewManager {
 </html>`;
     }    
     
-    public onDidReceiveMessage(instance: ConnectionViewManager, message: any): vscode.Event<any> {
+    public onDidReceiveMessage(instance: ConnectionView, message: any): vscode.Event<any> {
         switch (message.command) {
             case 'createConnection':
                 instance.testConnection(message.settings);
