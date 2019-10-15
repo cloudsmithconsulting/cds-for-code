@@ -182,7 +182,7 @@ export class WebApiRequest
             this._executeRequest({
                 config: config,
                 method: method,
-                uri: config.webApiUrl + path,
+                uri: Utilities.EnforceTrailingSlash(config.webApiUrl) + path,
                 data: stringifiedData,
                 additionalHeaders: additionalHeaders,
                 responseParams: this.responseParseParams,

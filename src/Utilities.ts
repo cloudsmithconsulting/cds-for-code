@@ -1,4 +1,5 @@
 import { performance } from "perf_hooks";
+import { stringify } from "querystring";
 
 export class Utilities
 {
@@ -166,6 +167,15 @@ export class Utilities
         const result = /\/(\w+)\(([0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12})/i.exec(responseData["@odata.id"]);
 
         return { id: result[2], collection: result[1], oDataContext: responseData["@odata.context"] };
+    }
+
+    public static EnforceTrailingSlash(path: string): string {
+        if (!path.endsWith("/"))
+        {
+            path = `${path}/`;
+        }
+
+        return path;
     }
 
     public static RemoveTrailingSlash(string:string): string {
