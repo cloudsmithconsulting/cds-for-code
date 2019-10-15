@@ -25,10 +25,10 @@ export default class DynamicsTreeView {
         context.subscriptions.push(
             vscode.commands.registerCommand('cloudSmith.refreshEntry', () => treeProvider.refresh()) // <-- no semi-colon, comma starts next command registration
 
-            , vscode.commands.registerCommand('cloudSmith.addDynamicsConnection', (connection: DynamicsWebApi.Config) => {
-                treeProvider.addConnection(connection);
+            , vscode.commands.registerCommand('cloudSmith.addDynamicsConnection', (config: DynamicsWebApi.Config) => {
+                treeProvider.addConnection(config);
                 vscode.window.showInformationMessage(
-                    `Add Dynamics Connection: ${connection.webApiUrl}`
+                    `Add Dynamics Connection: ${config.webApiUrl}`
                 );
             }) // <-- no semi-colon, comma starts next command registration
 
