@@ -15,7 +15,7 @@
         const settings = {
             webApiVersion: document.getElementById("WebApiVersion").value,
             authType: parseInt(document.getElementById("AuthType").value),
-            serverUrl: document.getElementById("ServerUrl").value,
+            webApiUrl: document.getElementById("ServerUrl").value,
             domain: document.getElementById("Domain").value,
             workstation: document.getElementById("Workstation").value,
             accessToken: document.getElementById("AccessToken").value,
@@ -52,9 +52,9 @@
     function validateForm(settings) {
         const messages = [];
 
-        if (isNullOrEmpty(settings.serverUrl))
+        if (isNullOrEmpty(settings.webApiUrl))
             messages.push("The Server URL is required");
-        if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.serverUrl))
+        if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.webApiUrl))
             messages.push("The Server URL is invalid");
         if (isNullOrEmpty(settings.domain))
             messages.push("The Domain is required");

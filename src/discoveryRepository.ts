@@ -1,41 +1,31 @@
 import * as vscode from 'vscode';
-import { ConnectionOptions, AuthenticationType } from './Dynamics/DynamicsRequest';
-import dynamicsDiscovery, { DynamicsDiscovery, OrganizationMetadata } from './Dynamics/DynamicsDiscovery';
+import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
 
 export default class DiscoveryRepository
 {
     public static wireUpCommands(context: vscode.ExtensionContext) {
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand('cloudSmith.getOrganizationsCommand', () => { // Gets a list of organizations in a connection
-                //TODO: fix this to take an actual connection parameter.
-                const options = new ConnectionOptions();
-
-                options.authType = AuthenticationType.Windows;
-                options.domain = "CONTOSO";
-                options.username = "Administrator";
-                options.password = "p@ssw0rd1";
-                options.serverUrl = "http://win-a6ljo0slrsh/";
-                options.webApiVersion = "v8.2";         // Defaults to latest.
-
+            vscode.commands.registerCommand('cloudSmith.getOrganizationsCommand', async (options:DynamicsWebApi.Config) => { // Gets a list of organizations in a connection
                 const api = new DiscoveryRepository(options);
                 
-                return api.retrieveOrganizations();
+                return await api.retrieveOrganizations();
             })
         );
     }
 
-    private options:ConnectionOptions;
+    private config:DynamicsWebApi.Config;
 
-    public constructor (connectionOptions:ConnectionOptions)
+    public constructor (config:DynamicsWebApi.Config)
     {
-        this.options = connectionOptions;
-        this.webapi = dynamicsDiscovery(connectionOptions); 
+        this.config = config;
+        this.webapi = new DynamicsWebApiClient(config);
     }
 
-    private webapi: DynamicsDiscovery;
+    private webapi: DynamicsWebApiClient;
 
-    public retrieveOrganizations() : Promise<OrganizationMetadata[]> {
-        return this.webapi.discover();
+    public async retrieveOrganizations() : Promise<any> {
+        return this.webapi.discover()
+            .then(result => result.value);
     }
 }

@@ -1,9 +1,5 @@
 import * as vscode from 'vscode';
-import { ConnectionOptions, AuthenticationType } from './Dynamics/DynamicsRequest';
-import dynamicsMetdata, { DynamicsMetadata } from './Dynamics/DynamicsMetadata';
-import dynamics, { Dynamics  } from './Dynamics/Dynamics';
-import { QueryOperator } from './Query/Query';
-import { EntityMetadata } from './Dynamics/Model/EntityMetadata';
+import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
 
 export default class MetadataRepository
 {
@@ -11,37 +7,39 @@ export default class MetadataRepository
         return;
     }
 
-    private options:ConnectionOptions;
+    private config:DynamicsWebApi.Config;
 
-    public constructor (connectionOptions:ConnectionOptions)
+    public constructor (config:DynamicsWebApi.Config)
     {
-        this.options = connectionOptions;
-        this.metadataApi = dynamicsMetdata(connectionOptions); 
-        this.webApi = dynamics(connectionOptions);
+        this.config = config;
+        this.webapi = new DynamicsWebApiClient(config);
     }
 
-    private metadataApi: DynamicsMetadata;
-    private webApi: Dynamics;
+    private webapi: DynamicsWebApiClient;
 
-    public async retrieveEntities(solutionId?:string) : Promise<EntityMetadata[]>
+    public retrieveEntities(solutionId?:string) : Promise<any[]>
     {
+        let componentsQuery:DynamicsWebApi.RetrieveMultipleRequest;
+
         if (solutionId)
         {
-            const components = await this.webApi
-                .query("solutioncomponent", "solutioncomponents")
-                .where("componenttype", QueryOperator.Equals, 1)        // Entity
-                .where("solutionid", QueryOperator.Equals, solutionId);
-
-            //TODO: Fix this.
-            return this.metadataApi.entities().then(data => this.flatten(data));
+            componentsQuery = {
+                collection: "solutioncomponents",
+                filter: "componenttype -eq 1" + (solutionId ? ` and SolutionId eq "${solutionId}"` : ""),
+                orderBy: ["uniquename"]
+            };    
         }
-        else
-        {
-            return this.metadataApi.entities();
-        }
-    }
 
-    private flatten(values: any[]): any[] {
-        return [].concat(...values);
+        let entitiesQuery:DynamicsWebApi.RetrieveMultipleRequest;
+        /*
+        Looks like Microsoft didn't see fit to allow orderBy expressions on metadata queries.  Silly gooses!
+        = {
+            orderBy: ["logicalName"]
+        };
+        */
+        
+        //TODO: Fix this so that it cross references with the solutioncomponents query above.
+        return this.webapi.retrieveEntitiesRequest(entitiesQuery)
+            .then(response => response.value);
     }
 }

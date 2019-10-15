@@ -61,13 +61,13 @@ class ConnectionViewManager {
 		ConnectionViewManager.currentPanel = new ConnectionViewManager(panel, extensionPath);
     }
     
-    private testConnection(connection: ConnectionOptions) {
-        const api = new DiscoveryRepository(connection);
+    private testConnection(config: DynamicsWebApi.Config) {
+        const api = new DiscoveryRepository(config);
         // try a discovery request
         api.retrieveOrganizations()
             .then(() => {
                 // success, add it to connection window
-                vscode.commands.executeCommand('cloudSmith.addDynamicsConnection', connection)
+                vscode.commands.executeCommand('cloudSmith.addDynamicsConnection', config)
                 .then(() => {
                     this._panel.dispose();
                 });

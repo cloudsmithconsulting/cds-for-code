@@ -1,4 +1,5 @@
 import { performance } from "perf_hooks";
+import { stringify } from "querystring";
 
 export class Utilities
 {
@@ -40,6 +41,28 @@ export class Utilities
 
         return new Date(date);        
     }
+
+    public static IsGuid(parameter:string): boolean {
+        ///<summary>
+        /// Private function used to check whether required parameter is a valid GUID
+        ///</summary>
+        ///<param name="parameter" type="String">
+        /// The GUID parameter to check;
+        ///</param>
+        ///<param name="message" type="String">
+        /// The error message text to include when the error is thrown.
+        ///</param>
+        /// <returns type="String" />
+
+        try {
+            const match = /[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}/i.exec(parameter)[0];
+
+            return !this.IsNull(match);
+        }
+        catch (error) {
+            return false;
+        }
+    }    
 
     public static TrimGuid(id: string) {
         return (id || '').replace(/{|}/g, '');
@@ -140,7 +163,48 @@ export class Utilities
         return items;
     }    
 
-    public static RemoveTrailingSlash(string:string) {
+    public static ConvertToReferenceObject(responseData:any):any {
+        const result = /\/(\w+)\(([0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12})/i.exec(responseData["@odata.id"]);
+
+        return { id: result[2], collection: result[1], oDataContext: responseData["@odata.context"] };
+    }
+
+    public static EnforceTrailingSlash(path: string): string {
+        if (!path.endsWith("/"))
+        {
+            path = `${path}/`;
+        }
+
+        return path;
+    }
+
+    public static RemoveTrailingSlash(string:string): string {
         return string.replace(/\/$/, "");
+    }
+
+    public static InitWebApiUrl(version:string): string {
+        return '/api/data/v' + version + '/';
+    }
+
+    public static IsObject(obj):boolean {
+        const type = typeof obj;
+        return type === 'function' || type === 'object' && !!obj;
+    }
+
+    public static Clone<T>(src: any): T {
+        let target = {};
+
+        for (let prop in src) {
+            if (src.hasOwnProperty(prop)) {
+                // if the value is a nested object, recursively copy all it's properties
+                if (Utilities.IsObject(src[prop])) {
+                    target[prop] = Utilities.Clone(src[prop]);
+                } else {
+                    target[prop] = src[prop];
+                }
+            }
+        }
+
+        return <T>target;
     }
 }

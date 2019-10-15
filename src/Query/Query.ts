@@ -10,7 +10,7 @@ export interface DataQuery {
 
 export interface DataQueryCondition {
     AttributeName: string;
-    Operator: QueryOperator;
+    Operator: FetchXmlQueryOperator;
     Values: any[];
 }
 
@@ -33,9 +33,16 @@ export interface Query {
     Query: DataQuery;
 }
 
-export type QueryOperatorParam = QueryOperator | QueryOperatorExpression;
+// Query operators are either Fetch or WebApi
+export type QueryOperatorParam = FetchXmlQueryOperatorParam | WebApiQueryOperatorParam;
 
-export enum QueryOperator {
+// Fetch types
+export type FetchXmlQueryOperatorParam = FetchXmlQueryOperator | FetchXmlQueryOperatorExpression;
+
+// Web API types
+export type WebApiQueryOperatorParam = WebApiQueryOperator | WebApiQueryOperatorExpression;
+
+export enum FetchXmlQueryOperator {
     Contains = 'like',
     NotContains = 'not-like',
     StartsWith = 'begins-with',
@@ -54,7 +61,7 @@ export enum QueryOperator {
     IsCurrentUserTeam = 'eq-userteams'
 }
 
-export type QueryOperatorExpression =
+export type FetchXmlQueryOperatorExpression =
     'like' |
     'not-like' |
     'begins-with' |
@@ -72,6 +79,45 @@ export type QueryOperatorExpression =
     'ne-userid' |
     'eq-userteams';
 
+export enum WebApiQueryOperator {
+    Contains = 'contains()',
+    NotContains = 'not contains()',
+    StartsWith = 'startswith()',
+    Equals = 'eq',
+    NotEquals = 'ne',
+    GreaterThan = 'gt',
+    GreaterThanOrEqual = 'ge',
+    LessThan = 'lt',
+    LessThanOrEqual = 'le',
+    In = 'in',
+    NotIn = 'not-in',
+    OnOrBefore = 'on-or-before',
+    OnOrAfter = 'on-or-after',
+    Null = 'null',
+    NotNull = 'not-null',
+    IsCurrentUser = 'eq-userid',
+    IsNotCurrentUser = 'ne-userid',
+    IsCurrentUserTeam = 'eq-userteams'
+}
+
+export type WebApiQueryOperatorExpression =
+    'like' |
+    'not-like' |
+    'begins-with' |
+    'eq' |
+    'neq' |
+    'gt' |
+    'lt' |
+    'in' |
+    'not-in' |
+    'on-or-before' |
+    'on-or-after' |
+    'null' |
+    'not-null' |
+    'eq-userid' |
+    'ne-userid' |
+    'eq-userteams';
+    
 export default function query(entityName: string, ...attributeNames: string[]): Query {
     return new QueryProvider(entityName).select(...attributeNames);
 }
@@ -120,7 +166,7 @@ class QueryProvider implements Query {
     public where(attributeName: string, operator: QueryOperatorParam, ...values: any[]): Query {
         this.Query.Conditions.push({
             AttributeName: attributeName,
-            Operator: operator as QueryOperator,
+            Operator: operator as FetchXmlQueryOperator,
             Values: this.flatten(values)
         });
         return this;
@@ -132,7 +178,7 @@ class QueryProvider implements Query {
         any((attributeName: string, operator: QueryOperatorParam, ...values: any[]) => {
             conditions.push({
                 AttributeName: attributeName,
-                Operator: operator as QueryOperator,
+                Operator: operator as FetchXmlQueryOperator,
                 Values: this.flatten(values)
             });
         });
