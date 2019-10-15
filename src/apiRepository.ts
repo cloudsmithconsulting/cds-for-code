@@ -1,65 +1,56 @@
 import * as vscode from 'vscode';
-import { ConnectionOptions, AuthenticationType } from './Dynamics/DynamicsRequest';
-import dynamics, { Dynamics } from './Dynamics/Dynamics';
-import { QueryOperator } from './Query/Query';
+import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
 
 export default class ApiRepository
 {
     public static wireUpCommands(context: vscode.ExtensionContext) {
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand('cloudSmith.getSolutionsCommand', () => { // Gets a list of solutions according to a given connection profile.
-                //TODO: fix this to take an actual connection parameter.
-                const options = new ConnectionOptions();
-
-                options.authType = AuthenticationType.Windows;
-                options.domain = "CONTOSO";
-                options.username = "Administrator";
-                options.password = "p@ssw0rd1";
-                options.serverUrl = "http://win-a6ljo0slrsh/test/";
-                options.webApiVersion = "v8.2";         // Defaults to latest.
-
+            vscode.commands.registerCommand('cloudSmith.getSolutionsCommand', async (options:DynamicsWebApi.Config) => { // Gets a list of organizations in a connection
                 const api = new ApiRepository(options);
                 
-                return api.retrieveSolutions();
+                return await api.retrieveSolutions();
             })
         );
     }
 
-    private options:ConnectionOptions;
+    private config:DynamicsWebApi.Config;
 
-    public constructor (connectionOptions:ConnectionOptions)
+    public constructor (config:DynamicsWebApi.Config)
     {
-        this.options = connectionOptions;
-        this.webapi = dynamics(connectionOptions); 
+        this.config = config;
+        this.webapi = new DynamicsWebApiClient(config);
     }
 
-    private webapi: Dynamics;
+    private webapi: DynamicsWebApiClient;
 
     public async whoAmI() : Promise<any>
     {
-        return await this.webapi.unboundFunction('WhoAmI');
+        return await this.webapi.executeUnboundFunction('WhoAmI');
     }
 
-    public async retrieveSolutions<T>() : Promise<T[]> {
-        let q = this.webapi
-            .query('solution', 'solutions')
-            .where("isvisible", QueryOperator.Equals, "true")
-            .orderBy("uniquename");
-        
-        return await this.webapi.fetch(q);
+    public retrieveSolutions<T>() : Promise<T[]> {
+        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "solutions",
+            filter: "isvisible eq true",
+            orderBy: ["uniquename"]
+        };
+
+        return this.webapi.retrieveAllRequest(request)
+            .then(response => response.value);
     }
 
-    public async retrievePluginAssemblies<T>(solutionId:string) : Promise<T[]> {
-        let q = this.webapi
-            .query('pluginassembly', 'pluginassemblies')
-            .where("ishidden", QueryOperator.Equals, "false");
-        
-        if (solutionId)
-        {
-            q = q.where("SolutionId", QueryOperator.Equals, solutionId);
-        }
+    public retrievePluginAssemblies<T>(solutionId:string) : Promise<T[]> {
+        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "pluginassemblies",
+            //filter: "ishidden.Value eq false" + (solutionId ? ` and SolutionId eq ${solutionId}` : ""),
+            filter: (solutionId ? `SolutionId eq ${solutionId}` : null),
+            orderBy: ["name"]
+        };
 
-        return await this.webapi.fetch(q);
+        return this.webapi.retrieveAllRequest(request)
+            .then(response => {
+                return response.value;
+            });
     }
 }
