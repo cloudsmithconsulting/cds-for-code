@@ -4,11 +4,10 @@ import * as vscode from 'vscode';
 
 // config
 import CloudSmithConfig from './cloudSmithConfig';
-import ConnectionView from './connectionView';
+import ConnectionViewManager from './connectionViewManager';
 import GenerateEntitiesCommand from './generateEntitiesCommand';
 import PowerShellLoader from './powerShellLoader';
 import DynamicsTreeView from './dynamicsTreeView';
-import ApiRepository from './apiRepository';
 import DiscoveryRepository from './discoveryRepository';
 
 // this method is called when your extension is activated
@@ -27,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// wire up views
 	DynamicsTreeView.wireUpCommands(context);
-	ConnectionView.wireUpCommands(context);
+	ConnectionViewManager.wireUpCommands(context);
 
 	// wire up commands via import object
 	PowerShellLoader.wireUpCommands(context);
