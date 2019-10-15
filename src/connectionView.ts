@@ -23,7 +23,7 @@ export default class ConnectionView {
 class ConnectionViewManager extends ViewManager {
     public getHtmlForWebview(): string {
         const scriptUri = this.getFileUri('resources', 'connectionView.js');
-        const cssUri = this.getFileUri('resources', 'style.css');
+        const cssUri = this.getFileUri('resources', 'webviewStyles.css');
         const imgUri = this.getFileUri('resources', 'cloudsmith-logo-only-50px.png');
         const nonce = this.getNonce();
 
@@ -35,16 +35,17 @@ class ConnectionViewManager extends ViewManager {
     Use a content security policy to only allow loading images from https or from our extension directory,
     and only allow scripts that have a specific nonce.
     -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-${nonce}'; style-src 'nonce-${nonce}'; img-src 'nonce-${nonce}'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${this._panel.webview.cspSource} https:; script-src 'nonce-${nonce}'; style-src 'nonce-${nonce}';">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="${cssUri}" nonce="${nonce}">
-    <title>CloudSmith - Dynamics 365 Connection</title>
+    <title>${this._viewOptions.viewTitle}</title>
 </head>
 <body>
     <div class="container">
+        <img class="branding" src="${imgUri}" />
+        
         <h1>
-            <img src="${imgUri}" nonce="${nonce}" />
-            Connect to Dynamics 365
+            ${this._viewOptions.viewTitle}
         </h1>
 
         <blockquote class="panel_error" id="errorPanel" hidden>
@@ -125,7 +126,7 @@ class ConnectionViewManager extends ViewManager {
                 // success, add it to connection window
                 vscode.commands.executeCommand('cloudSmith.addDynamicsConnection', config)
                 .then(() => {
-                    this._panel.dispose();
+                    this.dispose();
                 });
             })
             .catch(err => {

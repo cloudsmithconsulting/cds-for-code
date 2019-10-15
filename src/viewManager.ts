@@ -117,16 +117,18 @@ export abstract class ViewManager {
 			ViewManager.openPanels.slice(panelIndex, 1);
 		}
 
-		// Clean up our resources
-		this._panel.dispose();
-
 		while (this._disposables.length) {
 			const x = this._disposables.pop();
 			if (x) {
 				x.dispose();
 			}
 		}
-	}
+
+		// Clean up our resources
+		if (this._panel) {
+			this._panel.dispose();
+		}
+}
 
 	private _update() {
 		this._panel.title = this._viewOptions.viewTitle;

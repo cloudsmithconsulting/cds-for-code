@@ -97,3 +97,9 @@ body {
 .panel__text{
     line-height: 1.5em;
 }
+
+.branding {
+    border: none;
+    border-width: 0;
+    float: right;
+}
