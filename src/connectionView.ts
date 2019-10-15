@@ -29,7 +29,7 @@ class ConnectionViewManager {
 	private readonly _extensionPath: string;
 	private _disposables: vscode.Disposable[] = [];
 
-	public static createOrShow(extensionPath: string) {
+	public static createOrShow(extensionPath: string, connection?: ConnectionOptions) {
 		const column = vscode.window.activeTextEditor
 			? vscode.window.activeTextEditor.viewColumn
 			: undefined;
@@ -181,7 +181,10 @@ class ConnectionViewManager {
             </label>
             <select id="WebApiVersion" name="WebApiVersion" class="field__input">
                 <option>v9.1</option>
+                <option>v9.0</option>
                 <option>v8.2</option>
+                <option>v8.1</option>
+                <option>v8.0</option>
             </select>
         </div>
         <div class="field">
@@ -204,18 +207,6 @@ class ConnectionViewManager {
                 Domain
             </label>
             <input type="text" class="field__input" id="Domain" name="Domain" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="Workstation">
-                Workstation
-            </label>
-            <input type="text" class="field__input" id="Workstation" name="Workstation" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="AccessToken">
-                Access Token
-            </label>
-            <input type="text" class="field__input" id="AccessToken" name="AccessToken" />
         </div>
         <div class="field">
             <label class="field__label" for="Username">

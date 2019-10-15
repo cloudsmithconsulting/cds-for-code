@@ -17,8 +17,6 @@
             authType: parseInt(document.getElementById("AuthType").value),
             webApiUrl: document.getElementById("ServerUrl").value,
             domain: document.getElementById("Domain").value,
-            workstation: document.getElementById("Workstation").value,
-            accessToken: document.getElementById("AccessToken").value,
             username: document.getElementById("Username").value,
             password: document.getElementById("Password").value
         };
@@ -58,13 +56,9 @@
             messages.push("The Server URL is invalid");
         if (isNullOrEmpty(settings.domain))
             messages.push("The Domain is required");
-
-        // logic for credentials. we either require access token, or username and password
-        if (isNullOrEmpty(settings.accessToken) && isNullOrEmpty(settings.username))
-            messages.push('An Access Token or Username and Password are required');
-
-        // if they fill in the username, also require password
-        if (!isNullOrEmpty(settings.username) && isNullOrEmpty(settings.password))
+        if (isNullOrEmpty(settings.username))
+            messages.push("The Username is required");
+        if (isNullOrEmpty(settings.password))
             messages.push('The Password is required')
         
         if (messages.length > 0) {
