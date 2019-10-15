@@ -1,5 +1,7 @@
 import { Utilities } from "../Utilities";
 import { WebApiRequest } from "./WebApiRequest";
+import fetchQuery, {  Query } from "./FetchQuery";
+import { FetchQueryResolver } from "./FetchQueryResolver";
 
 // Dynamics Web API
 // Original Project: https://github.com/AleksandrRogov/DynamicsWebApi/
@@ -591,9 +593,9 @@ export class DynamicsWebApiClient {
      * @param pagingCookie - Paging cookie. For retrieving the first page, pagingCookie should be null.
      * @param impersonateUserId - A String representing the GUID value for the Dynamics 365 system user id. Impersonates the user.
      */
-    public fetch(collection: string, fetchXml: string, includeAnnotations?: string, pageNumber?: number, pagingCookie?: string, impersonateUserId?: string): Promise<any>
+    public fetch(query: Query, includeAnnotations?: string, pageNumber?: number, pagingCookie?: string, impersonateUserId?: string): Promise<any>
     {
-        return this.executeFetchXml(collection, fetchXml, includeAnnotations, pageNumber, pagingCookie, impersonateUserId);
+        return this.executeFetchXml(query.Query.EntityPath, FetchQueryResolver.ResolveQuery(query), includeAnnotations, pageNumber, pagingCookie, impersonateUserId);
     }
 
     /**
@@ -617,9 +619,9 @@ export class DynamicsWebApiClient {
      * @param includeAnnotations - Use this parameter to include annotations to a result. For example: * or Microsoft.Dynamics.CRM.fetchxmlpagingcookie
      * @param impersonateUserId - A String representing the GUID value for the Dynamics 365 system user id. Impersonates the user.
      */
-    public fetchAll(collection: string, fetchXml: string, includeAnnotations?: string, impersonateUserId?: string): Promise<any>
+    public fetchAll(query: Query, includeAnnotations?: string, impersonateUserId?: string): Promise<any>
     {
-        return this.executeFetchXmlAll(collection, fetchXml, includeAnnotations, impersonateUserId);
+        return this.executeFetchXmlAll(query.Query.EntityPath, FetchQueryResolver.ResolveQuery(query), includeAnnotations, impersonateUserId);
     }
 
     /**

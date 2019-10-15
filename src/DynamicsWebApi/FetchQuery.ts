@@ -1,24 +1,28 @@
-export interface DataQuery {
+export interface FetchQuery {
     Alias: any;
     EntityName: string;
     EntityPath?: string;
     Attributes: Set<string>;
     OrderBy: Set<string>;
-    Conditions: (DataQueryCondition | DataQueryCondition[])[];
-    Joins: DataQueryJoin[];
+    Conditions: (FetchQueryCondition | FetchQueryCondition[])[];
+    Joins: FetchQueryJoin[];
 }
 
-export interface DataQueryCondition {
+export interface FetchQueryCondition {
     AttributeName: string;
-    Operator: FetchXmlQueryOperator;
+    Operator: FetchQueryOperator;
     Values: any[];
 }
 
-export interface DataQueryJoin extends DataQuery {
+export interface FetchQueryJoin extends FetchQuery {
     JoinAlias?: string;
     JoinFromAttributeName?: string;
     JoinToAttributeName?: string;
     IsOuterJoin?: boolean;
+}
+
+export interface QueryResolver {
+    ResolveQuery(query: Query): string;
 }
 
 export interface Query {
@@ -30,19 +34,13 @@ export interface Query {
     whereAny(any: (or: (attributeName: string, operator: QueryOperatorParam, ...values: any[]) => void) => void): Query;
     orderBy(attributeName: string, isDescendingOrder?: boolean): Query;
     join(entityName: string, fromAttribute: string, toAttribute?: string, alias?: string, isOuterJoin?: boolean): Query;
-    Query: DataQuery;
+    Query: FetchQuery;
 }
 
 // Query operators are either Fetch or WebApi
-export type QueryOperatorParam = FetchXmlQueryOperatorParam | WebApiQueryOperatorParam;
+export type QueryOperatorParam = FetchQueryOperator | FetchQueryOperatorExpression;
 
-// Fetch types
-export type FetchXmlQueryOperatorParam = FetchXmlQueryOperator | FetchXmlQueryOperatorExpression;
-
-// Web API types
-export type WebApiQueryOperatorParam = WebApiQueryOperator | WebApiQueryOperatorExpression;
-
-export enum FetchXmlQueryOperator {
+export enum FetchQueryOperator {
     Contains = 'like',
     NotContains = 'not-like',
     StartsWith = 'begins-with',
@@ -61,7 +59,7 @@ export enum FetchXmlQueryOperator {
     IsCurrentUserTeam = 'eq-userteams'
 }
 
-export type FetchXmlQueryOperatorExpression =
+export type FetchQueryOperatorExpression =
     'like' |
     'not-like' |
     'begins-with' |
@@ -78,55 +76,17 @@ export type FetchXmlQueryOperatorExpression =
     'eq-userid' |
     'ne-userid' |
     'eq-userteams';
-
-export enum WebApiQueryOperator {
-    Contains = 'contains()',
-    NotContains = 'not contains()',
-    StartsWith = 'startswith()',
-    Equals = 'eq',
-    NotEquals = 'ne',
-    GreaterThan = 'gt',
-    GreaterThanOrEqual = 'ge',
-    LessThan = 'lt',
-    LessThanOrEqual = 'le',
-    In = 'in',
-    NotIn = 'not-in',
-    OnOrBefore = 'on-or-before',
-    OnOrAfter = 'on-or-after',
-    Null = 'null',
-    NotNull = 'not-null',
-    IsCurrentUser = 'eq-userid',
-    IsNotCurrentUser = 'ne-userid',
-    IsCurrentUserTeam = 'eq-userteams'
+   
+export default function fetchQuery(entityName: string, ...attributeNames: string[]): Query {
+    return FetchQueryProvider.Create(entityName, ...attributeNames);
 }
 
-export type WebApiQueryOperatorExpression =
-    'like' |
-    'not-like' |
-    'begins-with' |
-    'eq' |
-    'neq' |
-    'gt' |
-    'lt' |
-    'in' |
-    'not-in' |
-    'on-or-before' |
-    'on-or-after' |
-    'null' |
-    'not-null' |
-    'eq-userid' |
-    'ne-userid' |
-    'eq-userteams';
-    
-export default function query(entityName: string, ...attributeNames: string[]): Query {
-    return new QueryProvider(entityName).select(...attributeNames);
-}
-
-export function GetRootQuery(query: Query): DataQuery {
+export function GetRootQuery(query: Query): FetchQuery {
     return (query['RootQuery'] || query).Query;
 }
-class QueryProvider implements Query {
-    public Query: DataQuery;
+
+class FetchQueryProvider implements Query {
+    public Query: FetchQuery;
     public RootQuery: Query | undefined;
 
     constructor(private EntityName: string) {
@@ -138,6 +98,11 @@ class QueryProvider implements Query {
             Conditions: [],
             Joins: []
         };
+    }
+
+    public static Create(entityName:string, ...attributeNames: string[]): Query
+    {
+        return new FetchQueryProvider(entityName).select(...attributeNames);
     }
 
     public alias(attributeName: string, alias: string): Query {
@@ -166,19 +131,19 @@ class QueryProvider implements Query {
     public where(attributeName: string, operator: QueryOperatorParam, ...values: any[]): Query {
         this.Query.Conditions.push({
             AttributeName: attributeName,
-            Operator: operator as FetchXmlQueryOperator,
+            Operator: operator as FetchQueryOperator,
             Values: this.flatten(values)
         });
         return this;
     }
 
     public whereAny(any: (or: (attributeName: string, operator: QueryOperatorParam, ...values: any[]) => void) => void): Query {
-        let conditions:DataQueryCondition[] = [];
+        let conditions:FetchQueryCondition[] = [];
         
         any((attributeName: string, operator: QueryOperatorParam, ...values: any[]) => {
             conditions.push({
                 AttributeName: attributeName,
-                Operator: operator as FetchXmlQueryOperator,
+                Operator: operator as FetchQueryOperator,
                 Values: this.flatten(values)
             });
         });
@@ -197,14 +162,17 @@ class QueryProvider implements Query {
     }
 
     public join(entityName: string, fromAttribute: string, toAttribute?: string, alias?: string, isOuterJoin?: boolean): Query {
-        var exp = new QueryProvider(entityName);
-        var join = <DataQueryJoin>exp.Query;
+        var exp = new FetchQueryProvider(entityName);
+        var join = <FetchQueryJoin>exp.Query;
+       
         exp.RootQuery = this.RootQuery || this;
         join.JoinAlias = alias || entityName;
         join.JoinFromAttributeName = fromAttribute;
         join.JoinToAttributeName = toAttribute || this.EntityName + 'id';
         join.IsOuterJoin = isOuterJoin;
+
         this.Query.Joins.push(join);
+       
         return exp;
     }
 
