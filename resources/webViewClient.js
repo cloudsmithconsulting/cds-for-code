@@ -18,7 +18,7 @@
             webApiUrl: document.getElementById("ServerUrl").value,
             domain: document.getElementById("Domain").value,
             workstation: document.getElementById("Workstation").value,
-            //accessToken: document.getElementById("AccessToken").value,
+            accessToken: document.getElementById("AccessToken").value,
             username: document.getElementById("Username").value,
             password: document.getElementById("Password").value
         };
