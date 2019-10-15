@@ -34,35 +34,40 @@ export class ResponseUtilities
             const format0 = format.length > 0 ? format[0] : null;
             const format1 = format.length > 1 ? format[1] : null;
 
-            switch (format1) {
-                case 'odata.context':
-                    newKey = 'oDataContext';
-                    
-                    break;
-                case 'odata.count':
-                    newKey = 'oDataCount';
-                    value = value !== null ? parseInt(value) : 0;
+            try
+            {
+                switch (format1) {
+                    case 'odata.context':
+                        newKey = 'oDataContext';
+                        
+                        break;
+                    case 'odata.count':
+                        newKey = 'oDataCount';
+                        value = value !== null ? parseInt(value) : 0;
 
-                    break;
-                case 'odata.nextLink':
-                    newKey = 'oDataNextLink';
-                    
-                    break;
-                case DynamicsWebApi.Prefer.Annotations.FormattedValue:
-                    newKey = format0 + '_Formatted';
-                    
-                    break;
-                case DynamicsWebApi.Prefer.Annotations.AssociatedNavigationProperty:
-                    newKey = format0 + '_NavigationProperty';
-                    
-                    break;
-                case DynamicsWebApi.Prefer.Annotations.LookupLogicalName:
-                    newKey = format0 + '_LogicalName';
+                        break;
+                    case 'odata.nextLink':
+                        newKey = 'oDataNextLink';
+                        
+                        break;
+                    case 'OData.Community.Display.V1.FormattedValue':
+                        newKey = format0 + '_Formatted';
+                        
+                        break;
+                    case 'Microsoft.Dynamics.CRM.associatednavigationproperty':
+                        newKey = format0 + '_NavigationProperty';
+                        
+                        break;
+                    case 'Microsoft.Dynamics.CRM.lookuplogicalname':
+                        newKey = format0 + '_LogicalName';
 
-                    break;
-                default:
-                    newKey = format1;
-                    break;
+                        break;
+                }
+            }
+            catch (error)
+            {
+                console.error(error);
+                throw error;
             }
         }
     
@@ -82,7 +87,7 @@ export class ResponseUtilities
             }
     
             if (parseParams.toCount) {
-                return ResponseUtilities.getFormattedKeyValue('@odata.count', object['@odata.count'])[1] || 0;
+                return this.getFormattedKeyValue('@odata.count', object['@odata.count'])[1] || 0;
             }
         }
     
@@ -93,12 +98,12 @@ export class ResponseUtilities
     
             if (object[currentKey] !== null && object[currentKey].constructor === Array) {
                 for (let j = 0; j < object[currentKey].length; j++) {
-                    object[currentKey][j] = ResponseUtilities.parseData(object[currentKey][j]);
+                    object[currentKey][j] = this.parseData(object[currentKey][j]);
                 }
             }
     
             //parse formatted values
-            let formattedKeyValue = ResponseUtilities.getFormattedKeyValue(currentKey, object[currentKey]);
+            let formattedKeyValue = this.getFormattedKeyValue(currentKey, object[currentKey]);
 
             if (formattedKeyValue[0]) {
                 object[formattedKeyValue[0]] = formattedKeyValue[1];
@@ -121,7 +126,7 @@ export class ResponseUtilities
                 object[aliasKeys[0]][aliasKeys[1]] = object[currentKey];
     
                 //aliases also contain formatted values
-                formattedKeyValue = ResponseUtilities.getFormattedKeyValue(aliasKeys[1], object[currentKey]);
+                formattedKeyValue = this.getFormattedKeyValue(aliasKeys[1], object[currentKey]);
 
                 if (formattedKeyValue[0]) {
                     object[aliasKeys[0]][formattedKeyValue[0]] = formattedKeyValue[1];
@@ -130,8 +135,8 @@ export class ResponseUtilities
         }
     
         if (parseParams) {
-            if (parseParams.hasOwnProperty('pageNumber') && object['@' + DynamicsWebApi.Prefer.Annotations.FetchXmlPagingCookie] !== null) {
-                object.PagingInfo = RequestUtilities.getFetchXmlPagingCookie(object['@' + DynamicsWebApi.Prefer.Annotations.FetchXmlPagingCookie], parseParams.pageNumber);
+            if (parseParams.hasOwnProperty('pageNumber') && object['@Microsoft.Dynamics.CRM.fetchxmlpagingcookie'] !== null) {
+                object.PagingInfo = RequestUtilities.getFetchXmlPagingCookie(object['@Microsoft.Dynamics.CRM.fetchxmlpagingcookie'], parseParams.pageNumber);
             }
         }
     

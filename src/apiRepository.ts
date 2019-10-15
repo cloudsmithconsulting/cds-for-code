@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { DynamicsWebApi } from "./DynamicsWebApi/DynamicsWebApi";
+import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
 
 export default class ApiRepository
 {
@@ -19,10 +19,10 @@ export default class ApiRepository
     public constructor (config:DynamicsWebApi.Config)
     {
         this.config = config;
-        this.webapi = new DynamicsWebApi(config);
+        this.webapi = new DynamicsWebApiClient(config);
     }
 
-    private webapi: DynamicsWebApi;
+    private webapi: DynamicsWebApiClient;
 
     public async whoAmI() : Promise<any>
     {
@@ -43,8 +43,9 @@ export default class ApiRepository
     public retrievePluginAssemblies<T>(solutionId:string) : Promise<T[]> {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "pluginassemblies",
-            filter: "ishidden eq false" + (solutionId ? ` and SolutionId eq "${solutionId}"` : ""),
-            orderBy: ["uniquename"]
+            //filter: "ishidden.Value eq false" + (solutionId ? ` and SolutionId eq ${solutionId}` : ""),
+            filter: (solutionId ? `SolutionId eq ${solutionId}` : null),
+            orderBy: ["name"]
         };
 
         return this.webapi.retrieveAllRequest(request)

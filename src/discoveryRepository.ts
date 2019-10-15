@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { DynamicsWebApi } from "./DynamicsWebApi/DynamicsWebApi";
+import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
 
 export default class DiscoveryRepository
 {
@@ -19,10 +19,10 @@ export default class DiscoveryRepository
     public constructor (config:DynamicsWebApi.Config)
     {
         this.config = config;
-        this.webapi = new DynamicsWebApi(config);
+        this.webapi = new DynamicsWebApiClient(config);
     }
 
-    private webapi: DynamicsWebApi;
+    private webapi: DynamicsWebApiClient;
 
     public async retrieveOrganizations() : Promise<any> {
         return this.webapi.discover()

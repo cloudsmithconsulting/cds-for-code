@@ -87,7 +87,7 @@ export class RequestConverter {
                 requestArray.push("$top=" + request.top);
             }
 
-            if (request.orderBy !== null && request.orderBy.length) {
+            if (request.orderBy && request.orderBy !== null && request.orderBy.length) {
                 requestArray.push("$orderby=" + request.orderBy.join(','));
             }
 

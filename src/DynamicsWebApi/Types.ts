@@ -193,6 +193,7 @@ namespace DynamicsWebApi {
         };
     }
 
+        /*
     export class Prefer
     {
         static readonly ReturnRepresentation:string = "return=representation";
@@ -204,4 +205,5 @@ namespace DynamicsWebApi {
             FetchXmlPagingCookie: 'Microsoft.Dynamics.CRM.fetchxmlpagingcookie'
         };
     }
+        */
 }

@@ -460,7 +460,8 @@ export class WebApiRequest
                     }
                     
                     let error;
-                    
+                    error = {};
+
                     Object.keys(crmError).forEach(k => { error[k] = crmError[k]; });
                     error.status = res.statusCode;
                     errorCallback(error);

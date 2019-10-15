@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { DynamicsWebApi } from "./DynamicsWebApi/DynamicsWebApi";
+import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
 
 export default class MetadataRepository
 {
@@ -12,10 +12,10 @@ export default class MetadataRepository
     public constructor (config:DynamicsWebApi.Config)
     {
         this.config = config;
-        this.webapi = new DynamicsWebApi(config);
+        this.webapi = new DynamicsWebApiClient(config);
     }
 
-    private webapi: DynamicsWebApi;
+    private webapi: DynamicsWebApiClient;
 
     public retrieveEntities(solutionId?:string) : Promise<any[]>
     {
@@ -30,9 +30,13 @@ export default class MetadataRepository
             };    
         }
 
-        let entitiesQuery:DynamicsWebApi.RetrieveMultipleRequest = {
+        let entitiesQuery:DynamicsWebApi.RetrieveMultipleRequest;
+        /*
+        Looks like Microsoft didn't see fit to allow orderBy expressions on metadata queries.  Silly gooses!
+        = {
             orderBy: ["logicalName"]
         };
+        */
         
         //TODO: Fix this so that it cross references with the solutioncomponents query above.
         return this.webapi.retrieveEntitiesRequest(entitiesQuery)

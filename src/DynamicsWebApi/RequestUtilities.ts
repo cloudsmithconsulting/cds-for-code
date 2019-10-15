@@ -98,7 +98,7 @@ export class RequestUtilities
             for (let i in prefer) {
                 const item = prefer[i].trim();
 
-                if (item === DynamicsWebApi.Prefer.ReturnRepresentation) {
+                if (item === 'return=representation') {
                     returnRepresentation = true;
                 }
                 else if (item.startsWith("odata.include-annotations=")) {
@@ -121,7 +121,7 @@ export class RequestUtilities
         }
     
         if (returnRepresentation) {
-            prefer.push(DynamicsWebApi.Prefer.ReturnRepresentation);
+            prefer.push('return=representation');
         }
     
         if (includeAnnotations) {

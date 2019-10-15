@@ -1,10 +1,10 @@
-import {Utilities} from "../Utilities";
+import { Utilities } from "../Utilities";
 import { WebApiRequest } from "./WebApiRequest";
 
 // Dynamics Web API
 // Original Project: https://github.com/AleksandrRogov/DynamicsWebApi/
 
-export class DynamicsWebApi {
+export class DynamicsWebApiClient {
     private _internalConfig:DynamicsWebApi.Config;
     private _isBatch:boolean;
     private _webApiRequest:WebApiRequest;
@@ -375,7 +375,7 @@ export class DynamicsWebApi {
     public retrieveRequest(request: DynamicsWebApi.RetrieveRequest): Promise<any>
     {
         //copy locally
-        const isRef = request.select !== null && request.select.length === 1 && request.select[0].endsWith("/$ref");
+        const isRef = request.select && request.select !== null && request.select.length === 1 && request.select[0].endsWith("/$ref");
         
         return this._makeRequest('GET', request, { isRef: isRef })
             .then(response => { return response.data; });
@@ -458,7 +458,7 @@ export class DynamicsWebApi {
      */
     public count(collection: string, filter?: string): Promise<any>
     {
-        const hasFilter = (filter === null || (filter !== null && !filter.length));
+        const hasFilter = ((!filter || filter === null) || (filter !== null && !filter.length));
         const request = {
             collection: collection,
             navigationProperty: hasFilter ? '$count' : undefined,
@@ -842,7 +842,16 @@ export class DynamicsWebApi {
      */
     public retrieveEntitiesRequest(request: DynamicsWebApi.RetrieveMultipleRequest): Promise<any>
     {
-        request.collection = "EntityDefinitions";
+        if (request)
+        {
+            request.collection = "EntityDefinitions";
+        }
+        else
+        {
+            request = {
+                collection: "EntityDefinitions"
+            };
+        }
 
         return this.retrieveRequest(request);
     }
@@ -1133,8 +1142,8 @@ export class DynamicsWebApi {
      *
      * @param config - configuration object.
      */
-    public static initializeInstance(config?: DynamicsWebApi.Config): DynamicsWebApi
+    public static initializeInstance(config?: DynamicsWebApi.Config): DynamicsWebApiClient
     {
-        return new DynamicsWebApi(config);
+        return new DynamicsWebApiClient(config);
     }
 }

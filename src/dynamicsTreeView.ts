@@ -171,7 +171,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 return result;
             })
             .catch(err => {
-                console.error(err);
+                console.error(err.innererror ? err.innererror : err);
 
                 this.treeviewCommandError(`An error occurred while accessing organizations from ${connection.webApiUrl}`, () => this.getConnectionDetails(element, commandPrefix));
 
@@ -246,7 +246,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 return result;
             })
             .catch(err => {
-                console.error(err);
+                console.error(err.innererror ? err.innererror : err);
 
                 this.treeviewCommandError(`An error occurred while retrieving solutions from ${element.config.webApiUrl}`, () => this.getSolutionDetails(element, commandPrefix));
 
@@ -280,7 +280,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 return result;
             })
             .catch(err => {
-                console.error(err);
+                console.error(err.innererror ? err.innererror : err);
 
                 this.treeviewCommandError(`An error occurred while retrieving plug-in assemblies from ${element.config.webApiUrl}`, () => this.getPluginDetails(element, commandPrefix, solutionId));
 
@@ -297,16 +297,17 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 
                 for (let i = 0; i < entities.length; i++) {
                     const entity = entities[i];
+                    let displayName = entity.DisplayName && entity.DisplayName.LocalizedLabels && entity.DisplayName.LocalizedLabels.length > 0 ? entity.DisplayName.LocalizedLabels[0].Label : "";
 
                     result.push(
                         new TreeEntry(
-                            entity.DisplayName, 
+                            displayName,
                             EntryType.Entity,
                             vscode.TreeItemCollapsibleState.None,
                             entity.LogicalName, 
                             {
                                 command: 'cloudSmith.clickEntry',
-                                title: entity.DisplayName,
+                                title: displayName,
                                 arguments: [`${commandPrefix || ''}/${entity.LogicalName}`]
                             },
                             element.config,
@@ -316,7 +317,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 return result;
             })
             .catch(err => {
-                console.error(err);
+                console.error(err.innererror ? err.innererror : err);
 
                 this.treeviewCommandError(`An error occurred while retrieving entities from ${element.config.webApiUrl}`, () => this.getEntityDetails(element, commandPrefix, solutionId));
 
