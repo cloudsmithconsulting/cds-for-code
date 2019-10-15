@@ -8,13 +8,16 @@ import MetadataRepository from './metadataRepository';
 export default class DynamicsTreeView {
     public static wireUpCommands(context: vscode.ExtensionContext) {
         // register the provider and connect it to the treeview window
-        const treeProvider = new DynamicsServerTreeProvider({
-            domain: "CONTOSO",
-            username: "Administrator",
-            password: "p@ssw0rd",
-            webApiUrl: "http://win-oi4mlu9323r/",
-            webApiVersion: "8.0" 
-        });
+        // {
+        //     authType: AuthenticationType.Windows,
+        //     domain: "CONTOSO",
+        //     username: "Administrator",
+        //     password: "p@ssw0rd1",
+        //     serverUrl: "http://win-a6ljo0slrsh/",
+        //     webApiVersion: "v8.2" 
+        // };
+
+        const treeProvider = new DynamicsServerTreeProvider(context);
 
         vscode.window.registerTreeDataProvider('dynamicsConnectionsView', treeProvider);
         
@@ -22,15 +25,23 @@ export default class DynamicsTreeView {
         context.subscriptions.push(
             vscode.commands.registerCommand('cloudSmith.refreshEntry', () => treeProvider.refresh()) // <-- no semi-colon, comma starts next command registration
 
-            , vscode.commands.registerCommand('cloudSmith.clickEntry', (name?:string) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand('cloudSmith.addDynamicsConnection', (connection: DynamicsWebApi.Config) => {
+                treeProvider.addConnection(connection);
+                vscode.window.showInformationMessage(
+                    `Add Dynamics Connection: ${connection.webApiUrl}`
+                );
+            }) // <-- no semi-colon, comma starts next command registration
+
+            , vscode.commands.registerCommand('cloudSmith.clickEntry', (label?: string) => { // Match name of command to package.json command
                 // Run command code
-                vscode.window.showInformationMessage(`Clicked ${name || ''}`);
+                vscode.window.showInformationMessage(`Clicked ${label || ''}`);
             }) // <-- no semi-colon, comma starts next command registration
             
-            , vscode.commands.registerCommand('cloudSmith.deleteEntry', () => { // Match name of command to package.json command
+            , vscode.commands.registerCommand('cloudSmith.deleteEntry', (item: TreeEntry) => { // Match name of command to package.json command
                 // Run command code
+                treeProvider.removeConnection(item.config);
                 vscode.window.showInformationMessage(
-                    'cloudSmith.deleteEntry'
+                    `Delete Dynamics Connection: ${item.config.webApiUrl}`
                 );
             }) // <-- no semi-colon, comma starts next command registration
     
@@ -46,18 +57,36 @@ export default class DynamicsTreeView {
 
 class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
+    readonly connectionsGlobalStateKey = 'cloudsmith:dynamicsConnections';
 	private _onDidChangeTreeData: vscode.EventEmitter<TreeEntry | undefined> = new vscode.EventEmitter<TreeEntry | undefined>();
     readonly onDidChangeTreeData: vscode.Event<TreeEntry | undefined> = this._onDidChangeTreeData.event;
     private _connections: DynamicsWebApi.Config[] = [];
+    private _context: vscode.ExtensionContext;
 
-	constructor(...options: DynamicsWebApi.Config[]) {
-        this.addConnection(...options);
+	constructor(context: vscode.ExtensionContext) {
+        this._context = context;
+        const connections: DynamicsWebApi.Config[] | undefined = this._context.globalState.get(this.connectionsGlobalStateKey);
+        if (connections && connections.length > 0) {
+            this._connections = connections;
+            this.refresh();
+        }
     }
     
-    private addConnection(...options: DynamicsWebApi.Config[]): void {
+    public addConnection(...options: DynamicsWebApi.Config[]): void {
         options.forEach(o => {
             this._connections.push(o); 
         });
+        this._context.globalState.update(this.connectionsGlobalStateKey, this._connections);
+        this.refresh();
+    }
+
+    public removeConnection(connection: DynamicsWebApi.Config): void {
+        const removeIndex = this._connections.findIndex(c => c.webApiUrl === connection.webApiUrl);
+        if (removeIndex >= 0) {
+            this._connections.splice(removeIndex, 1);
+            this._context.globalState.update(this.connectionsGlobalStateKey, this._connections);
+            this.refresh();
+        }
     }
 
 	refresh(): void {

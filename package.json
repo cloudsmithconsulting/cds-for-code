@@ -39,7 +39,11 @@
 			},
 			{
 				"command": "cloudSmith.addEntry",
-				"title": "Add"
+				"title": "Add",
+				"icon": {
+					"light": "resources/light/plus.svg",
+					"dark": "resources/dark/plus.svg"
+				}
 			},
 			{
 				"command": "cloudSmith.editEntry",

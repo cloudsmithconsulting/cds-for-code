@@ -5,34 +5,82 @@
 
     //const oldState = vscode.getState();
 
-    const outputDiv = document.getElementById("output");
+    const errorPanel = document.getElementById("errorPanel");
+    const errorMessage = document.getElementById("errorMessage");
     const submitButton = document.getElementById("submitButton");
     
     submitButton.addEventListener("click", event => {
         event.preventDefault();
 
-        outputDiv.innerHTML =  "Form Submitted!";
+        const settings = {
+            webApiVersion: document.getElementById("WebApiVersion").value,
+            authType: parseInt(document.getElementById("AuthType").value),
+            serverUrl: document.getElementById("ServerUrl").value,
+            domain: document.getElementById("Domain").value,
+            workstation: document.getElementById("Workstation").value,
+            accessToken: document.getElementById("AccessToken").value,
+            username: document.getElementById("Username").value,
+            password: document.getElementById("Password").value
+        };
+
+        if (!validateForm(settings)) return;
 
         vscode.postMessage({
             command: 'createConnection',
-            settings: {
-                server: document.getElementById("Server").value,
-                port: document.getElementById("Port").value,
-                useSsl: document.getElementById("UseSsl").value === "true",
-                domain: document.getElementById("Domain").value,
-                username: document.getElementById("Username").value,
-                password: document.getElementById("Password").value
-            }
+            settings
         });
     });
 
     // Handle messages sent from the extension to the webview
-    window.addEventListener('message', event => {
+    window.addEventListener("message", event => {
         const message = event.data; // The json data that the extension sent
         switch (message.command) {
-            case 'connectionCreated':
-                outputDiv.innerHTML =  "Your connection was created!";
+            case "connectionError":
+                showConnectionError(message.message);
                 break;
         }
     });
+
+    function showConnectionError(message) {
+        // build and inject error message
+        const errorHtml = message;
+        errorMessage.innerHTML = errorHtml;
+        // show this panel
+        errorPanel.removeAttribute('hidden');
+    }
+
+    function validateForm(settings) {
+        const messages = [];
+
+        if (isNullOrEmpty(settings.serverUrl))
+            messages.push("The Server URL is required");
+        if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.serverUrl))
+            messages.push("The Server URL is invalid");
+        if (isNullOrEmpty(settings.domain))
+            messages.push("The Domain is required");
+
+        // logic for credentials. we either require access token, or username and password
+        if (isNullOrEmpty(settings.accessToken) && isNullOrEmpty(settings.username))
+            messages.push('An Access Token or Username and Password are required');
+
+        // if they fill in the username, also require password
+        if (!isNullOrEmpty(settings.username) && isNullOrEmpty(settings.password))
+            messages.push('The Password is required')
+        
+        if (messages.length > 0) {
+            // build and inject error message
+            const errorHtml = `&nbsp;&nbsp;-&nbsp;${messages.join("<br/>&nbsp;&nbsp;-&nbsp;")}`
+            errorMessage.innerHTML = errorHtml;
+            // show this panel
+            errorPanel.removeAttribute('hidden');
+        } else {
+            errorPanel.attributes["hidden"] = "hidden";
+        }
+
+        return messages.length === 0;
+    }
+
+    function isNullOrEmpty(str) {
+        return (!str || str.replace(/\s/gi, "").length === 0);
+    }
 }());
