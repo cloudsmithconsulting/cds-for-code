@@ -1,9 +1,5 @@
 import * as vscode from 'vscode';
-import { ConnectionOptions, AuthenticationType } from './Dynamics/DynamicsRequest';
-import dynamicsMetdata, { DynamicsMetadata } from './Dynamics/DynamicsMetadata';
-import dynamics, { Dynamics  } from './Dynamics/Dynamics';
-import { QueryOperator } from './Query/Query';
-import { EntityMetadata } from './Dynamics/Model/EntityMetadata';
+import { DynamicsWebApi } from "./DynamicsWebApi/DynamicsWebApi";
 
 export default class MetadataRepository
 {
@@ -11,37 +7,25 @@ export default class MetadataRepository
         return;
     }
 
-    private options:ConnectionOptions;
+    private config:DynamicsWebApi.Config;
 
-    public constructor (connectionOptions:ConnectionOptions)
+    public constructor (config:DynamicsWebApi.Config)
     {
-        this.options = connectionOptions;
-        this.metadataApi = dynamicsMetdata(connectionOptions); 
-        this.webApi = dynamics(connectionOptions);
+        this.config = config;
+        this.webapi = new DynamicsWebApi(config);
     }
 
-    private metadataApi: DynamicsMetadata;
-    private webApi: Dynamics;
+    private webapi: DynamicsWebApi;
 
-    public async retrieveEntities(solutionId?:string) : Promise<EntityMetadata[]>
+    public async retrieveEntities(solutionId?:string) : Promise<any[]>
     {
-        if (solutionId)
-        {
-            const components = await this.webApi
-                .query("solutioncomponent", "solutioncomponents")
-                .where("componenttype", QueryOperator.Equals, 1)        // Entity
-                .where("solutionid", QueryOperator.Equals, solutionId);
+        let components:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "solutioncomponents",
+            filter: "componenttype -eq 1" + (solutionId ? ` and SolutionId eq "${solutionId}"` : ""),
+            orderBy: ["uniquename"]
+        };
 
-            //TODO: Fix this.
-            return this.metadataApi.entities().then(data => this.flatten(data));
-        }
-        else
-        {
-            return this.metadataApi.entities();
-        }
-    }
-
-    private flatten(values: any[]): any[] {
-        return [].concat(...values);
+        //TODO: Fix this.
+        return this.webapi.retrieveEntities();
     }
 }
