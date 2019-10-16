@@ -10,6 +10,7 @@
     const errorMessage = document.getElementById("errorMessage");
     const authTypeRadios = document.getElementsByName("AuthType");
     const accessTokenField = document.getElementById("accessTokenField");
+    const accessTokenInput = document.getElementById("AccessToken");
     const submitButton = document.getElementById("submitButton");
 
     authTypeRadios.forEach(el => {
@@ -20,7 +21,7 @@
                 accessTokenField.removeAttribute("hidden");
             } else {
                 accessTokenField.setAttribute("hidden", "hidden");
-                accessTokenField.value = ""; // clear it out
+                accessTokenInput.value = ""; // clear it out
             }
         });
     });
