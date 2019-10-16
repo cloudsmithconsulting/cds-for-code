@@ -1,9 +1,9 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-
+import * as cs from './cs';
 // config
-import CloudSmithConfig from './cloudSmithConfig';
+import ExtensionConfiguration from './ExtensionConfiguration';
 import ConnectionViewManager from './connectionViewManager';
 import GenerateEntitiesCommand from './generateEntitiesCommand';
 import PowerShellLoader from './powerShellLoader';
@@ -22,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
 	console.log('[CloudSmith]: extension:activate');
 	
 	// load and check extension configuration
-	const config = CloudSmithConfig.returnValidConfig();
+	const config = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration._namespace);
 
 	// wire up views
 	DynamicsTreeView.wireUpCommands(context);
@@ -40,17 +40,17 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// They will all get pushed into these subscriptions using an ...items spread
 	context.subscriptions.push(
-		vscode.commands.registerCommand('cloudSmith.unpackDynamicsSolutionCommand', () => { // Match name of command to package.json command
+		vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolution, () => { // Match name of command to package.json command
 			// Run command code
 			vscode.window.showInformationMessage(
-				'cloudSmith.unpackDynamicsSolutionCommand'
+				cs.dynamics.powerShell.unpackSolution
 			);
 		}) // <-- no semi-colon, comma starts next command registration
 
-		, vscode.commands.registerCommand('cloudSmith.deployDynamicsSolutionCommand', () => { // Match name of command to package.json command
+		, vscode.commands.registerCommand(cs.dynamics.powerShell.packSolution, () => { // Match name of command to package.json command
 			// Run command code
 			vscode.window.showInformationMessage(
-				'cloudSmith.deployDynamicsSolutionCommand'
+				cs.dynamics.powerShell.packSolution
 			);
 		}) // <-- no semi-colon, comma starts next command registration
 	);

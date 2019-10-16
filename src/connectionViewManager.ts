@@ -1,18 +1,19 @@
 import * as vscode from 'vscode';
 import DiscoveryRepository from './discoveryRepository';
 import { View } from './view';
+import * as cs from './cs';
 
 export default class ConnectionViewManager {
 	public static wireUpCommands(context: vscode.ExtensionContext) {
         context.subscriptions.push(
 
-            vscode.commands.registerCommand('cloudSmith.addEntry', async () => { // Match name of command to package.json command
+            vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, async () => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 ConnectionView.createOrShow<ConnectionView>(ConnectionView, {
                     extensionPath: context.extensionPath,
                     viewTitle: 'New Connection - Dynamics 365 CE',
-                    viewType: 'cloudsmith:DynamicsConnectionView'
+                    viewType: cs.dynamics.views.connectionView
                 });
             }) // <-- no semi-colon, comma starts next command registration
         );
@@ -21,11 +22,18 @@ export default class ConnectionViewManager {
 
 class ConnectionView extends View {
     public getHtmlForWebview(): string {
-        const scriptUri = this.getFileUri('resources', 'connectionView.js');
-        const cssUri = this.getFileUri('resources', 'webviewStyles.css');
-        const imgUri = this.getFileUri('resources', 'cloudsmith-logo-only-50px.png');
+        const scriptUri = this.getFileUri('resources', 'scripts', 'connectionView.js');
+        const cssUri = this.getFileUri('resources', 'styles', 'webviewStyles.css');
+        const imgUri = this.getFileUri('resources', 'images', 'cloudsmith-logo-only-50px.png');
         const nonce = this.getNonce();
+/*
+        public getHtmlForWebView(options: ViewOptions): string
+        {
+            options.addStylesheet('resources', 'style.css')
 
+            return ``;
+        }
+*/
         return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -123,7 +131,7 @@ class ConnectionView extends View {
         api.retrieveOrganizations()
             .then(() => {
                 // success, add it to connection window
-                vscode.commands.executeCommand('cloudSmith.addDynamicsConnection', config)
+                vscode.commands.executeCommand(cs.dynamics.controls.treeView.addConnection, config)
                 .then(() => {
                     this.dispose();
                 });
