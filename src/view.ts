@@ -7,6 +7,102 @@ export interface IViewOptions {
 	viewType: string;
 }
 
+interface IWebViewAsset {
+	name: string;
+	uri: vscode.Uri;
+}
+
+export class ViewRenderer {
+	private readonly _view: View;
+	private _images: IWebViewAsset[] = [];
+	private _scripts: IWebViewAsset[] = [];
+	private _styleSheets: IWebViewAsset[] = [];
+
+	public readonly nonce: string;
+
+	constructor(view: View) {
+		this.nonce = this.getNonce();
+		this._view = view;
+	}
+
+	public addImage(imageName: string) {
+		this._images.push({
+			name: imageName,
+			uri: this.getFileUri('resources', 'images', imageName)
+		});
+	}
+
+	public addScript(scriptName: string) {
+		this._scripts.push({
+			name: scriptName,
+			uri: this.getFileUri('resources', 'scripts', scriptName)
+		});
+	}
+
+	public addStyleSheet(styleSheetName: string) {
+		this._styleSheets.push({
+			name: styleSheetName,
+			uri: this.getFileUri('resources', 'styles', styleSheetName)
+		});
+	}
+
+	private getFileUri(...paths: string[]): vscode.Uri {
+		const pathOnDisk = vscode.Uri.file(
+			path.join(this._view.extensionPath, ...paths)
+        );
+		return this._view.panel.webview.asWebviewUri(pathOnDisk);
+	}
+
+	public getImageUri(imageName: string): vscode.Uri {
+		const index = this._images.findIndex(i => i.name === imageName);
+		if (index >= 0) {
+			return this._images[index].uri;
+		}
+		return null;
+	}
+
+	private getNonce(): string {
+		let result = '';
+		const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		for (let i = 0; i < 32; i++) {
+			result += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+		return result;
+	}
+
+	public renderHtml(htmlParial: string): string {
+		let cssHtml: string = '';
+		this._styleSheets.forEach(i => {
+			cssHtml += `<link rel="stylesheet" type="text/css" href="${i.uri}" nonce="${this.nonce}">`;
+		});
+		let scriptHtml: string = '';
+		this._scripts.forEach(i => {
+			scriptHtml += `<script src="${i.uri}" nonce="${this.nonce}"></script>`;
+		});
+
+		return `<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<!--
+	Use a content security policy to only allow loading images from https or from our extension directory,
+	and only allow scripts that have a specific nonce.
+	-->
+	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${this._view.panel.webview.cspSource} https:; script-src 'nonce-${this.nonce}'; style-src 'nonce-${this.nonce}';">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	${cssHtml}
+	<title>${this._view.viewOptions.viewTitle}</title>
+</head>
+<body>
+	<div class="container">
+		${htmlParial}
+	</div>
+	${scriptHtml}
+</body>
+</html>`;
+	}
+}
+
 export abstract class View {
     /**
 	 * Track the currently panel. Only allow a single panel to exist at a time.
@@ -23,10 +119,10 @@ export abstract class View {
 
 		// If we already have a panel, show it.
 		const panelIndex =
-			this.openPanels.findIndex(p => p._panel.title === viewOptions.viewTitle);
+			this.openPanels.findIndex(p => p.panel.title === viewOptions.viewTitle);
 
 		if (panelIndex >= 0) {
-			this.openPanels[panelIndex]._panel.reveal(column);
+			this.openPanels[panelIndex].panel.reveal(column);
 			return;
 		}
 
@@ -54,31 +150,34 @@ export abstract class View {
 		return result;
 	}
 
-	protected readonly _viewOptions: IViewOptions;
-	protected readonly _panel: vscode.WebviewPanel;
-	protected _disposables: vscode.Disposable[] = [];
-	protected readonly _extensionPath: string;
+	public readonly extensionPath: string;
+	public readonly panel: vscode.WebviewPanel;
+	public readonly viewOptions: IViewOptions;
 
-	abstract getHtmlForWebview(): string;
+	protected _disposables: vscode.Disposable[] = [];
+	protected readonly _viewRenderer: ViewRenderer;
+
+	abstract getHtmlForWebview(renderer: ViewRenderer): string;
 
 	abstract onDidReceiveMessage(instance: View, message: any): vscode.Event<any>;
 
 	public constructor(viewOptions: IViewOptions, panel: vscode.WebviewPanel) {
-		this._viewOptions = viewOptions;
-		this._extensionPath = viewOptions.extensionPath;
-		this._panel = panel;
+		this.viewOptions = viewOptions;
+		this.panel = panel;
+		this._viewRenderer = new ViewRenderer(this);
+		this.extensionPath = viewOptions.extensionPath;
 
 		// Set the webview's initial html content
 		this._update();
 
 		// Listen for when the panel is disposed
 		// This happens when the user closes the panel or when the panel is closed programatically
-		this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
+		this.panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
 		// Update the content based on view changes
-		this._panel.onDidChangeViewState(
+		this.panel.onDidChangeViewState(
 			e => {
-				if (this._panel.visible) {
+				if (this.panel.visible) {
 					this._update();
 				}
 			},
@@ -87,34 +186,18 @@ export abstract class View {
 		);
 
 		// Handle messages from the webview
-		this._panel.webview.onDidReceiveMessage(m => this.onDidReceiveMessage(this, m));
-	}
-
-	public getNonce(): string {
-		let result = '';
-		const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		for (let i = 0; i < 32; i++) {
-			result += possible.charAt(Math.floor(Math.random() * possible.length));
-		}
-		return result;
-	}
-
-	public getFileUri(...paths: string[]): vscode.Uri {
-		const pathOnDisk = vscode.Uri.file(
-			path.join(this._extensionPath, ...paths)
-        );
-		return this._panel.webview.asWebviewUri(pathOnDisk);
+		this.panel.webview.onDidReceiveMessage(m => this.onDidReceiveMessage(this, m));
 	}
 
 	public dispose() {
 		// If we already have a panel, removie it from the open panels
 		const panelIndex =
 			View.openPanels.findIndex(
-				p => p._panel.title === this._viewOptions.viewTitle
+				p => p.panel.title === this.viewOptions.viewTitle
 			);
 		
 		if (panelIndex >= 0) {
-			View.openPanels.slice(panelIndex, 1);
+			View.openPanels.splice(panelIndex, 1);
 		}
 
 		while (this._disposables.length) {
@@ -125,13 +208,13 @@ export abstract class View {
 		}
 
 		// Clean up our resources
-		if (this._panel) {
-			this._panel.dispose();
+		if (this.panel) {
+			this.panel.dispose();
 		}
 }
 
 	private _update() {
-		this._panel.title = this._viewOptions.viewTitle;
-		this._panel.webview.html = this.getHtmlForWebview();
+		this.panel.title = this.viewOptions.viewTitle;
+		this.panel.webview.html = this.getHtmlForWebview(this._viewRenderer);
 	}
 }
