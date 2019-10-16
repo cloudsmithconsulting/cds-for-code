@@ -198,7 +198,7 @@ export class WebApiRequest
             config.onTokenRefresh(sendInternalRequest);
         }
         else {
-            sendInternalRequest(config.authToken);
+            sendInternalRequest(config.accessToken);
         }
     }
     
