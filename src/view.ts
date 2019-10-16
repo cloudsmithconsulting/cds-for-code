@@ -5,7 +5,7 @@ export interface IViewOptions {
 	extensionPath: string;
 	viewTitle: string;
 	viewType: string;
-	iconPath?: vscode.Uri;
+	iconPath?: string;
 }
 
 interface IWebViewAsset {
@@ -142,7 +142,16 @@ export abstract class View {
 			}
 		);
 
-		panel.iconPath = viewOptions.iconPath;
+		// do some icon path fixing here
+		let iconPath = viewOptions.iconPath;
+		if (iconPath.startsWith('./')) {
+			iconPath = iconPath.substr(2);
+		}
+		else if (iconPath.startsWith('/')) {
+			iconPath = iconPath.substr(1);
+		}
+		const arrIconPath = iconPath.split('/');
+		panel.iconPath = vscode.Uri.file(path.join(extensionPath, ...arrIconPath));
 
 		const result: T = new c(viewOptions, panel);
 		
