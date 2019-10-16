@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as cs from './cs';
-import { SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG } from 'constants';
 
 export default class ExtensionConfiguration {
     private static _configurations: { [key: string]: vscode.WorkspaceConfiguration } = {};
