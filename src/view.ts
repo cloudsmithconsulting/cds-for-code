@@ -5,6 +5,7 @@ export interface IViewOptions {
 	extensionPath: string;
 	viewTitle: string;
 	viewType: string;
+	iconPath?: vscode.Uri;
 }
 
 interface IWebViewAsset {
@@ -141,6 +142,8 @@ export abstract class View {
 				localResourceRoots: [vscode.Uri.file(path.join(extensionPath, 'resources'))]
 			}
 		);
+
+		panel.iconPath = viewOptions.iconPath;
 
 		const result: T = new c(viewOptions, panel);
 		View.openPanels.push(

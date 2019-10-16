@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import DiscoveryRepository from './discoveryRepository';
 import { View, ViewRenderer } from './view';
 import * as cs from './cs';
@@ -12,6 +13,7 @@ export default class ConnectionViewManager {
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 ConnectionView.createOrShow<ConnectionView>(ConnectionView, {
                     extensionPath: context.extensionPath,
+                    iconPath: vscode.Uri.file(path.join(context.extensionPath, 'resources', 'images', 'cloudsmith-logo-only-50px.png')),
                     viewTitle: 'New Connection - Dynamics 365 CE',
                     viewType: cs.dynamics.views.connectionView
                 });
