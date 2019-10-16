@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import DiscoveryRepository from './discoveryRepository';
-import { View } from './view';
+import { View, ViewRenderer } from './view';
 import * as cs from './cs';
 
 export default class ConnectionViewManager {
@@ -21,100 +21,79 @@ export default class ConnectionViewManager {
 }
 
 class ConnectionView extends View {
-    public getHtmlForWebview(): string {
-        const scriptUri = this.getFileUri('resources', 'scripts', 'connectionView.js');
-        const cssUri = this.getFileUri('resources', 'styles', 'webviewStyles.css');
-        const imgUri = this.getFileUri('resources', 'images', 'cloudsmith-logo-only-50px.png');
-        const nonce = this.getNonce();
-/*
-        public getHtmlForWebView(options: ViewOptions): string
-        {
-            options.addStylesheet('resources', 'style.css')
+    public getHtmlForWebview(viewRenderer: ViewRenderer): string {
+        // add script and css assets
+        viewRenderer.addScript('connectionView.js');
+        viewRenderer.addStyleSheet('webviewStyles.css');
 
-            return ``;
-        }
-*/
-        return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <!--
-    Use a content security policy to only allow loading images from https or from our extension directory,
-    and only allow scripts that have a specific nonce.
-    -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${this._panel.webview.cspSource} https:; script-src 'nonce-${nonce}'; style-src 'nonce-${nonce}';">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="${cssUri}" nonce="${nonce}">
-    <title>${this._viewOptions.viewTitle}</title>
-</head>
-<body>
-    <div class="container">
-        <img class="branding" src="${imgUri}" />
-        
-        <h1>
-            ${this._viewOptions.viewTitle}
-        </h1>
+        // add image assets
+        viewRenderer.addImage('cloudsmith-logo-only-50px.png');
 
-        <blockquote class="panel_error" id="errorPanel" hidden>
-            <div class="panel__text">
-                <h4>Oops! Slight problem</h4>
-                <span id="errorMessage">lalksdjflaksdjfloasjdflkaj</span>
-            </div>
-        </blockquote>
+        // return rendered html
+        return viewRenderer.renderHtml(`
+<img class="branding" src="${viewRenderer.getImageUri('cloudsmith-logo-only-50px.png')}" alt="CloudSmith Conulting" />
 
-        <div class="field">
-            <label class="field__label" for="WebApiVersion">
-                Web API Version
-            </label>
-            <select id="WebApiVersion" name="WebApiVersion" class="field__input">
-                <option>v8.0</option>
-                <option>v8.1</option>
-                <option>v8.2</option>
-                <option>v9.0</option>
-                <option>v9.1</option>
-                
-            </select>
-        </div>
-        <div class="field">
-            <label class="field__label" for="authType">
-                Auth Type
-            </label>
-            <select id="AuthType" name="AuthType" class="field__input">
-                <option value="2">OAuth</option>
-                <option value="1">Windows</option>
-            </select>
-        </div>
-        <div class="field">
-            <label class="field__label" for="ServerUrl">
-                Server URL
-            </label>
-            <input type="text" class="field__input" id="ServerUrl" name="ServerUrl" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="Domain">
-                Domain
-            </label>
-            <input type="text" class="field__input" id="Domain" name="Domain" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="Username">
-                Username
-            </label>
-            <input type="text" class="field__input" id="Username" name="Username" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="Password">
-                Password
-            </label>
-            <input type="password" class="field__input" id="Password" name="Password" />
-        </div>
-        <div class="field">
-            <button id="submitButton" class="button button--primary">Add Connection</button>
-        </div>
+<h1>
+    ${this.viewOptions.viewTitle}
+</h1>
+
+<blockquote class="panel_error" id="errorPanel" hidden>
+    <div class="panel__text">
+        <h4>Oops! Slight problem</h4>
+        <span id="errorMessage">lalksdjflaksdjfloasjdflkaj</span>
     </div>
-    <script nonce="${nonce}" src="${scriptUri}"></script>
-</body>
-</html>`;
+</blockquote>
+
+<div class="field">
+    <label class="field__label" for="WebApiVersion">
+        Web API Version
+    </label>
+    <select id="WebApiVersion" name="WebApiVersion" class="field__input">
+        <option>v8.0</option>
+        <option>v8.1</option>
+        <option>v8.2</option>
+        <option>v9.0</option>
+        <option>v9.1</option>
+        
+    </select>
+</div>
+<div class="field">
+    <label class="field__label" for="authType">
+        Auth Type
+    </label>
+    <select id="AuthType" name="AuthType" class="field__input">
+        <option value="2">OAuth</option>
+        <option value="1">Windows</option>
+    </select>
+</div>
+<div class="field">
+    <label class="field__label" for="ServerUrl">
+        Server URL
+    </label>
+    <input type="text" class="field__input" id="ServerUrl" name="ServerUrl" />
+</div>
+<div class="field">
+    <label class="field__label" for="Domain">
+        Domain
+    </label>
+    <input type="text" class="field__input" id="Domain" name="Domain" />
+</div>
+<div class="field">
+    <label class="field__label" for="Username">
+        Username
+    </label>
+    <input type="text" class="field__input" id="Username" name="Username" />
+</div>
+<div class="field">
+    <label class="field__label" for="Password">
+        Password
+    </label>
+    <input type="password" class="field__input" id="Password" name="Password" />
+</div>
+<div class="field">
+    <button id="submitButton" class="button button--primary">Add Connection</button>
+</div>
+        `);
     }    
     
     public onDidReceiveMessage(instance: ConnectionView, message: any): vscode.Event<any> {
@@ -137,7 +116,7 @@ class ConnectionView extends View {
                 });
             })
             .catch(err => {
-                this._panel.webview.postMessage({ command: 'connectionError', message: err.message });
+                this.panel.webview.postMessage({ command: 'connectionError', message: err.message });
             });
     }
 }
