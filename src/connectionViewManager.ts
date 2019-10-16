@@ -69,6 +69,12 @@ class ConnectionView extends View {
     </select>
 </div>
 <div class="field">
+    <label class="field__label" for="Name">
+        Friendly Name
+    </label>
+    <input type="text" class="field__input" id="Name" name="Name" />
+</div>
+<div class="field">
     <label class="field__label" for="ServerUrl">
         Server URL
     </label>

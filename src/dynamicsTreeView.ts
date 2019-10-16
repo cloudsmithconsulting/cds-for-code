@@ -123,17 +123,19 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         const result: TreeEntry[] = [];
         
         this._connections.forEach(connection => {
-            const displayUrl = connection.webApiUrl.replace("http://", "").replace("https://", "");
+            const displayName = (connection.name)
+                ? connection.name
+                : connection.webApiUrl.replace("http://", "").replace("https://", "");
 
             result.push(new TreeEntry(
-                displayUrl, 
+                displayName, 
                 EntryType.Connection, 
                 vscode.TreeItemCollapsibleState.Collapsed, 
                 connection.workstation || connection.domain,
                 {
                     command: cs.dynamics.controls.treeView.clickEntry,
                     title: connection.webApiUrl,
-                    arguments: [displayUrl]
+                    arguments: [connection.webApiUrl]
                 },
                 connection                
             ));

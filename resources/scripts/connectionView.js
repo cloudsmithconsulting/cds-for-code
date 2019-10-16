@@ -13,12 +13,13 @@
         event.preventDefault();
 
         const settings = {
-            webApiVersion: document.getElementById("WebApiVersion").value,
             authType: parseInt(document.getElementById("AuthType").value),
-            webApiUrl: document.getElementById("ServerUrl").value,
             domain: document.getElementById("Domain").value,
+            password: document.getElementById("Password").value,
+            name: document.getElementById("Name").value,
             username: document.getElementById("Username").value,
-            password: document.getElementById("Password").value
+            webApiUrl: document.getElementById("ServerUrl").value,
+            webApiVersion: document.getElementById("WebApiVersion").value
         };
 
         if (!validateForm(settings)) return;
