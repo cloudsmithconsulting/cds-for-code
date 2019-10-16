@@ -5,19 +5,14 @@ export interface IViewOptions {
 	extensionPath: string;
 	viewTitle: string;
 	viewType: string;
-	iconPath?: vscode.Uri;
-}
-
-interface IWebViewAsset {
-	name: string;
-	uri: vscode.Uri;
+	iconPath?: string;
 }
 
 export class ViewRenderer {
 	private readonly _view: View;
-	private _images: IWebViewAsset[] = [];
-	private _scripts: IWebViewAsset[] = [];
-	private _styleSheets: IWebViewAsset[] = [];
+	private _images: { [key: string]: vscode.Uri } = {};
+	private _scripts: { [key: string]: vscode.Uri } = {};
+	private _styleSheets: { [key: string]: vscode.Uri } = {};
 
 	public readonly nonce: string;
 
@@ -27,24 +22,15 @@ export class ViewRenderer {
 	}
 
 	public addImage(imageName: string) {
-		this._images.push({
-			name: imageName,
-			uri: this.getFileUri('resources', 'images', imageName)
-		});
+		this._images[imageName] = this.getFileUri('resources', 'images', imageName);
 	}
 
 	public addScript(scriptName: string) {
-		this._scripts.push({
-			name: scriptName,
-			uri: this.getFileUri('resources', 'scripts', scriptName)
-		});
+		this._scripts[scriptName] = this.getFileUri('resources', 'scripts', scriptName);
 	}
 
 	public addStyleSheet(styleSheetName: string) {
-		this._styleSheets.push({
-			name: styleSheetName,
-			uri: this.getFileUri('resources', 'styles', styleSheetName)
-		});
+		this._styleSheets[styleSheetName] = this.getFileUri('resources', 'styles', styleSheetName);
 	}
 
 	private getFileUri(...paths: string[]): vscode.Uri {
@@ -55,11 +41,7 @@ export class ViewRenderer {
 	}
 
 	public getImageUri(imageName: string): vscode.Uri {
-		const index = this._images.findIndex(i => i.name === imageName);
-		if (index >= 0) {
-			return this._images[index].uri;
-		}
-		return null;
+		return this._images[imageName];
 	}
 
 	private getNonce(): string {
@@ -73,12 +55,13 @@ export class ViewRenderer {
 
 	public renderHtml(htmlParial: string): string {
 		let cssHtml: string = '';
-		this._styleSheets.forEach(i => {
-			cssHtml += `<link rel="stylesheet" type="text/css" href="${i.uri}" nonce="${this.nonce}">`;
+		Object.keys(this._styleSheets).forEach(key => {
+			cssHtml += `<link rel="stylesheet" type="text/css" href="${this._styleSheets[key]}" nonce="${this.nonce}">`;
 		});
+		
 		let scriptHtml: string = '';
-		this._scripts.forEach(i => {
-			scriptHtml += `<script src="${i.uri}" nonce="${this.nonce}"></script>`;
+		Object.keys(this._scripts).forEach(key => {
+			scriptHtml += `<script src="${this._scripts[key]}" nonce="${this.nonce}"></script>`;
 		});
 
 		return `<!DOCTYPE html>
@@ -142,7 +125,16 @@ export abstract class View {
 			}
 		);
 
-		panel.iconPath = viewOptions.iconPath;
+		// do some icon path fixing here
+		let iconPath = viewOptions.iconPath;
+		if (iconPath.startsWith('./')) {
+			iconPath = iconPath.substr(2);
+		}
+		else if (iconPath.startsWith('/')) {
+			iconPath = iconPath.substr(1);
+		}
+		const arrIconPath = iconPath.split('/');
+		panel.iconPath = vscode.Uri.file(path.join(extensionPath, ...arrIconPath));
 
 		const result: T = new c(viewOptions, panel);
 		
