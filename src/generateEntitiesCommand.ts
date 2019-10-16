@@ -26,13 +26,15 @@ export default class GenerateEntitiesCommand {
                             const codeFilePath = path.join(rootPath, 'XrmEntities.cs');
     
                             // setup the command text
-                            const commandToExecute = `& .\\CrmSvcUtil.exe `
-                                + `/url:http://crmserver/test/XRMServices/2011/Organization.svc `
+                            const commandToExecute = ` .\\Generate-XrmEntities `
+                                + `/url:$ConnectionString`
+                                + `/path: $Path `
                                 + `/username:missioncommand `
                                 + `/password:$mokingTir33 `.replace('$', '`$') // $ is a problem in powershell
                                 + `/domain:CONTOSO `
-                                + `/namespace:CloudSmith.Dynamics365.SampleTests `
-                                + `/out:${codeFilePath}`;
+                                + `/out:${codeFilePath}`
+                                + `/toolpath: $ToolPath `
+                                + `/namespace:$Namespace `;
     
                             // build a powershell terminal
                             const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
