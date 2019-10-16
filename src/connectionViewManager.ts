@@ -42,7 +42,7 @@ class ConnectionView extends View {
 <blockquote class="panel_error" id="errorPanel" hidden>
     <div class="panel__text">
         <h4>Oops! Slight problem</h4>
-        <span id="errorMessage">lalksdjflaksdjfloasjdflkaj</span>
+        <span id="errorMessage"></span>
     </div>
 </blockquote>
 
