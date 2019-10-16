@@ -4,6 +4,7 @@ import DiscoveryRepository from './discoveryRepository';
 import ApiRepository from './apiRepository';
 import { Utilities } from './Utilities';
 import MetadataRepository from './metadataRepository';
+import * as cs from './cs';
 
 export default class DynamicsTreeView {
     public static wireUpCommands(context: vscode.ExtensionContext) {
@@ -19,25 +20,25 @@ export default class DynamicsTreeView {
 
         const treeProvider = new DynamicsServerTreeProvider(context);
 
-        vscode.window.registerTreeDataProvider('dynamicsConnectionsView', treeProvider);
+        vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.connections, treeProvider);
         
         // setup commands
         context.subscriptions.push(
-            vscode.commands.registerCommand('cloudSmith.refreshEntry', () => treeProvider.refresh()) // <-- no semi-colon, comma starts next command registration
+            vscode.commands.registerCommand(cs.dynamics.controls.treeView.refreshEntry, () => treeProvider.refresh()) // <-- no semi-colon, comma starts next command registration
 
-            , vscode.commands.registerCommand('cloudSmith.addDynamicsConnection', (config: DynamicsWebApi.Config) => {
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addConnection, (config: DynamicsWebApi.Config) => {
                 treeProvider.addConnection(config);
                 vscode.window.showInformationMessage(
                     `Add Dynamics Connection: ${config.webApiUrl}`
                 );
             }) // <-- no semi-colon, comma starts next command registration
 
-            , vscode.commands.registerCommand('cloudSmith.clickEntry', (label?: string) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.clickEntry, (label?: string) => { // Match name of command to package.json command
                 // Run command code
                 vscode.window.showInformationMessage(`Clicked ${label || ''}`);
             }) // <-- no semi-colon, comma starts next command registration
             
-            , vscode.commands.registerCommand('cloudSmith.deleteEntry', (item: TreeEntry) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.deleteEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 // Run command code
                 treeProvider.removeConnection(item.config);
                 vscode.window.showInformationMessage(
@@ -45,11 +46,9 @@ export default class DynamicsTreeView {
                 );
             }) // <-- no semi-colon, comma starts next command registration
     
-            , vscode.commands.registerCommand('cloudSmith.editEntry', () => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.editEntry, () => { // Match name of command to package.json command
                 // Run command code
-                vscode.window.showInformationMessage(
-                    'cloudSmith.editEntry'
-                );
+                vscode.window.showInformationMessage(cs.dynamics.controls.treeView.editEntry);
             }) // <-- no semi-colon, comma starts next command registration
         );
     }
@@ -132,7 +131,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed, 
                 connection.workstation || connection.domain,
                 {
-                    command: 'cloudSmith.clickEntry',
+                    command: cs.dynamics.controls.treeView.clickEntry,
                     title: connection.webApiUrl,
                     arguments: [displayUrl]
                 },
@@ -189,7 +188,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                             vscode.TreeItemCollapsibleState.Collapsed,
                             org.Version, 
                             {
-                                command: 'cloudSmith.clickEntry',
+                                command: cs.dynamics.controls.treeView.clickEntry,
                                 title: org.FriendlyName,
                                 arguments: [`${commandPrefix || ''}/${org.Id}`]
                             },
@@ -216,7 +215,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed, 
                 null,
                 {
-                    command: 'cloudSmith.clickEntry',
+                    command: cs.dynamics.controls.treeView.clickEntry,
                     title: 'Entities',
                     arguments: [`${commandPrefix || ''}/Entities`]
                 },
@@ -228,7 +227,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed, 
                 null,
                 {
-                    command: 'cloudSmith.clickEntry',
+                    command: cs.dynamics.controls.treeView.clickEntry,
                     title: 'Plugins',
                     arguments: [`${commandPrefix || ''}/Plugins`]
                 },
@@ -240,7 +239,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed, 
                 null,
                 {
-                    command: 'cloudSmith.clickEntry',
+                    command: cs.dynamics.controls.treeView.clickEntry,
                     title: 'Solutions',
                     arguments: [`${commandPrefix || ''}/Solutions`]
                 },
@@ -264,7 +263,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                             vscode.TreeItemCollapsibleState.None,
                             `v${solution.version} ${solution.ismanaged_formatted}`, 
                             {
-                                command: 'cloudSmith.clickEntry',
+                                command: cs.dynamics.controls.treeView.clickEntry,
                                 title: solution.friendlyname,
                                 arguments: [`${commandPrefix || ''}/${solution.solutionid}`]
                             },
@@ -298,7 +297,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                             vscode.TreeItemCollapsibleState.None,
                             `v${plugin.version} (${plugin.publickeytoken})`, 
                             {
-                                command: 'cloudSmith.clickEntry',
+                                command: cs.dynamics.controls.treeView.clickEntry,
                                 title: plugin.friendlyname,
                                 arguments: [`${commandPrefix || ''}/${plugin.pluginassemblyid}`]
                             },
@@ -335,7 +334,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                             vscode.TreeItemCollapsibleState.None,
                             entity.LogicalName, 
                             {
-                                command: 'cloudSmith.clickEntry',
+                                command: cs.dynamics.controls.treeView.clickEntry,
                                 title: displayName,
                                 arguments: [`${commandPrefix || ''}/${entity.LogicalName}`]
                             },
@@ -372,35 +371,35 @@ class TreeEntry extends vscode.TreeItem {
         switch (itemType) {
             case EntryType.Connection:
                     this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'light', 'server.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'server.svg')
+                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'server.svg'),
+                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'server.svg')
                     };
                 break;
             case EntryType.Organization:
                   this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'light', 'dependency.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'dependency.svg')
+                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'dependency.svg'),
+                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'dependency.svg')
                     };
                 break;
             case EntryType.Entities:
             case EntryType.Entity:
                     this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'light', 'object-ungroup.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'object-ungroup.svg')
+                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'object-ungroup.svg'),
+                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'object-ungroup.svg')
                     };
                 break;
             case EntryType.Plugins:
             case EntryType.Plugin:
                   this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'light', 'plug.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'plug.svg')
+                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'plug.svg'),
+                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'plug.svg')
                     };
                 break;
             case EntryType.Solutions:
             case EntryType.Solution:
                   this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'light', 'puzzle-piece.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'puzzle-piece.svg')
+                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'puzzle-piece.svg'),
+                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'puzzle-piece.svg')
                     };
                 break;
         }
