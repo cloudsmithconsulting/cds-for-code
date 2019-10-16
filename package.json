@@ -141,6 +141,7 @@
 	"dependencies": {
 		"adal-node": "^0.2.1",
 		"httpntlm": "^1.7.6",
-		"node-fetch": "^2.6.0"
+		"node-fetch": "^2.6.0",
+		"typescript-linq": "^1.0.6"
 	}
 }
