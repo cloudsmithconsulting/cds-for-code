@@ -5,6 +5,7 @@ export interface IViewOptions {
 	extensionPath: string;
 	viewTitle: string;
 	viewType: string;
+	iconPath?: vscode.Uri;
 }
 
 interface IWebViewAsset {
@@ -107,23 +108,22 @@ export abstract class View {
     /**
 	 * Track the currently panel. Only allow a single panel to exist at a time.
 	 */
-	public static openPanels: View[] = new Array();
+	public static openPanels: { [key: string]: View } = {};
 
 	public static createOrShow<T extends View>(
 		c: new(viewOptions: IViewOptions, panel: vscode.WebviewPanel) => T, 
 		viewOptions: IViewOptions): T {
 		
-			const column = vscode.window.activeTextEditor
+		const column = vscode.window.activeTextEditor
 			? vscode.window.activeTextEditor.viewColumn
 			: undefined;
 
 		// If we already have a panel, show it.
-		const panelIndex =
-			this.openPanels.findIndex(p => p.panel.title === viewOptions.viewTitle);
-
-		if (panelIndex >= 0) {
-			this.openPanels[panelIndex].panel.reveal(column);
-			return;
+		if (Object.keys(this.openPanels).length > 0) {
+			if (View.openPanels[viewOptions.viewType]) {
+				View.openPanels[viewOptions.viewType].panel.reveal(column);
+				return;
+			}
 		}
 
 		const extensionPath = viewOptions.extensionPath;
@@ -142,11 +142,13 @@ export abstract class View {
 			}
 		);
 
-		const result: T = new c(viewOptions, panel);
-		View.openPanels.push(
-			result
-		);
+		panel.iconPath = viewOptions.iconPath;
 
+		const result: T = new c(viewOptions, panel);
+		
+		// cache this
+		View.openPanels[viewOptions.viewType] = result;
+		
 		return result;
 	}
 
@@ -191,14 +193,16 @@ export abstract class View {
 
 	public dispose() {
 		// If we already have a panel, removie it from the open panels
-		const panelIndex =
-			View.openPanels.findIndex(
-				p => p.panel.title === this.viewOptions.viewTitle
-			);
+		// const panelIndex =
+		// 	View.openPanels.findIndex(
+		// 		p => p.panel.title === this.viewOptions.viewTitle
+		// 	);
 		
-		if (panelIndex >= 0) {
-			View.openPanels.splice(panelIndex, 1);
-		}
+		// if (panelIndex >= 0) {
+		// 	View.openPanels.splice(panelIndex, 1);
+		// }
+
+		delete View.openPanels[this.viewOptions.viewType];
 
 		while (this._disposables.length) {
 			const x = this._disposables.pop();

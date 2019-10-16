@@ -4,21 +4,40 @@
     const vscode = acquireVsCodeApi();
 
     //const oldState = vscode.getState();
+    let currentAuthType = 2; // default
 
     const errorPanel = document.getElementById("errorPanel");
     const errorMessage = document.getElementById("errorMessage");
+    const authTypeRadios = document.getElementsByName("AuthType");
+    const accessTokenField = document.getElementById("accessTokenField");
     const submitButton = document.getElementById("submitButton");
-    
+
+    authTypeRadios.forEach(el => {
+        el.addEventListener("change", event => {
+            const value = parseInt(event.target.value);
+            currentAuthType = value;
+            if (currentAuthType === 2) {
+                accessTokenField.removeAttribute("hidden");
+            } else {
+                accessTokenField.setAttribute("hidden", "hidden");
+                accessTokenField.value = ""; // clear it out
+            }
+        });
+    });
+
     submitButton.addEventListener("click", event => {
         event.preventDefault();
 
         const settings = {
-            webApiVersion: document.getElementById("WebApiVersion").value,
-            authType: parseInt(document.getElementById("AuthType").value),
-            webApiUrl: document.getElementById("ServerUrl").value,
             domain: document.getElementById("Domain").value,
+            accessToken: document.getElementById("AccessToken").value,
+            authType: currentAuthType,
+            domain: document.getElementById("Domain").value,
+            password: document.getElementById("Password").value,
+            name: document.getElementById("Name").value,
             username: document.getElementById("Username").value,
-            password: document.getElementById("Password").value
+            webApiUrl: document.getElementById("ServerUrl").value,
+            webApiVersion: document.getElementById("WebApiVersion").value
         };
 
         if (!validateForm(settings)) return;
@@ -56,17 +75,30 @@
             messages.push("The Server URL is invalid");
         if (isNullOrEmpty(settings.domain))
             messages.push("The Domain is required");
-        if (isNullOrEmpty(settings.username))
-            messages.push("The Username is required");
-        if (isNullOrEmpty(settings.password))
-            messages.push('The Password is required')
+
+        if (settings.authType === 1) {
+            if (isNullOrEmpty(settings.username))
+                messages.push("The Username is required");
+            if (isNullOrEmpty(settings.password))
+                messages.push('The Password is required');
+        } else {
+            if (isNullOrEmpty(settings.accessToken) 
+                && isNullOrEmpty(settings.username)) {
+                    messages.push("Access Token or Username and Password is required");
+            }
+            if (isNullOrEmpty(settings.accessToken)
+                && !isNullOrEmpty(settings.username)
+                && isNullOrEmpty(settings.password)) {
+                    messages.push('The Password is required');
+            }
+        }
         
         if (messages.length > 0) {
             // build and inject error message
             const errorHtml = `&nbsp;&nbsp;-&nbsp;${messages.join("<br/>&nbsp;&nbsp;-&nbsp;")}`
             errorMessage.innerHTML = errorHtml;
             // show this panel
-            errorPanel.removeAttribute('hidden');
+            errorPanel.removeAttribute("hidden");
         } else {
             errorPanel.attributes["hidden"] = "hidden";
         }

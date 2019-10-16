@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import DiscoveryRepository from './discoveryRepository';
 import { View, ViewRenderer } from './view';
 import * as cs from './cs';
@@ -12,6 +13,7 @@ export default class ConnectionViewManager {
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 ConnectionView.createOrShow<ConnectionView>(ConnectionView, {
                     extensionPath: context.extensionPath,
+                    iconPath: vscode.Uri.file(path.join(context.extensionPath, 'resources', 'images', 'cloudsmith-logo-only-50px.png')),
                     viewTitle: 'New Connection - Dynamics 365 CE',
                     viewType: cs.dynamics.views.connectionView
                 });
@@ -40,10 +42,20 @@ class ConnectionView extends View {
 <blockquote class="panel_error" id="errorPanel" hidden>
     <div class="panel__text">
         <h4>Oops! Slight problem</h4>
-        <span id="errorMessage">lalksdjflaksdjfloasjdflkaj</span>
+        <span id="errorMessage"></span>
     </div>
 </blockquote>
 
+<div class="field field--checkbox">
+    <label class="field__label" for="AuthType1">
+        Windows
+    </label>
+    <input type="radio" class="field__input" id="AuthType1" name="AuthType" value="1" />
+    <label class="field__label" for="AuthType2">
+        OAuth
+    </label>
+    <input type="radio" class="field__input" id="AuthType2" name="AuthType" value="2" checked="checked" />
+</div>
 <div class="field">
     <label class="field__label" for="WebApiVersion">
         Web API Version
@@ -54,17 +66,13 @@ class ConnectionView extends View {
         <option>v8.2</option>
         <option>v9.0</option>
         <option>v9.1</option>
-        
     </select>
 </div>
 <div class="field">
-    <label class="field__label" for="authType">
-        Auth Type
+    <label class="field__label" for="Name">
+        Friendly Name
     </label>
-    <select id="AuthType" name="AuthType" class="field__input">
-        <option value="2">OAuth</option>
-        <option value="1">Windows</option>
-    </select>
+    <input type="text" class="field__input" id="Name" name="Name" />
 </div>
 <div class="field">
     <label class="field__label" for="ServerUrl">
@@ -77,6 +85,12 @@ class ConnectionView extends View {
         Domain
     </label>
     <input type="text" class="field__input" id="Domain" name="Domain" />
+</div>
+<div id="accessTokenField" class="field">
+    <label class="field__label" for="AccessToken">
+        Access Token
+    </label>
+    <input type="text" class="field__input" id="AccessToken" name="AccessToken" />
 </div>
 <div class="field">
     <label class="field__label" for="Username">
@@ -105,7 +119,14 @@ class ConnectionView extends View {
     }
 
     private testConnection(config: DynamicsWebApi.Config) {
+        // first clean up the config, if we have an access token get rid of username and password
+        if (config.accessToken && config.accessToken.length > 0) {
+            config.username = null;
+            config.password = null;
+        }
+        
         const api = new DiscoveryRepository(config);
+        
         // try a discovery request
         api.retrieveOrganizations()
             .then(() => {
