@@ -26,9 +26,12 @@ export default class GenerateEntitiesCommand {
                             const codeFilePath = path.join(rootPath, 'XrmEntities.cs');
     
                             // setup the command text
-                            const commandToExecute = ` .\\Generate-XrmEntities `
-                                + `/url:$ConnectionString`
-                                + `/path: $Path `
+                            const commandToExecute = ` .\\Generate-XrmEntities.ps1 `
+                                + `-ConnectionString ${ConnectionString}`
+                                + `-Path ${Path} `
+                                + `-OutputFile ${codeFilePath} `
+                                + `-ToolsPath ${ToolsPath}`
+                                + `-Namespace ${Namespace} `
                                 + `/username:missioncommand `
                                 + `/password:$mokingTir33 `.replace('$', '`$') // $ is a problem in powershell
                                 + `/domain:CONTOSO `

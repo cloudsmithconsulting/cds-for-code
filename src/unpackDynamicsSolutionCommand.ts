@@ -26,6 +26,12 @@ export class UnpackDynamicsSolutionCommand {
 
 						// setup the command text
 						const commandToExecute = `.\\Get-XrmSolution.ps1 `
+							+ `-ServerUrl ${ServerUrl}`
+							+ `-OrgName ${OrgName}`
+							+ `-SolutionName ${SolutionName}`
+							+ `-Path ${Path}`
+							+ `-ToolsPath ${ToolsPath}`
+							+ `-Credential ${Credential}`
 							+ `/url:http://crmserver/test/XRMServices/2011/Organization.svc `
 							+ `/username:missioncommand `
 							+ `/password:$mokingTir33 `.replace('$', '`$') // $ is a problem in powershell

@@ -29,6 +29,12 @@ export class DeployDynamicsSolutionCommand {
 						// setup the command text
 						const commandToExecute = `.\\Deploy-XrmSolutions.ps1 `
 							+ '-ServerUrl "${ServerURL}/XRMServices/2011/Organization.svc" '
+							+ `-OrgName ${OrgName}`
+							+ `-SolutionName ${SolutionName}`
+							+ `-Path ${Path}`
+							+ `-ToolsPath ${ToolsPath}`
+							+ `-Credential ${Credential}`
+							+ `-Managed ${Managed}`
 							+ `/username:missioncommand `
 							+ `/password:$mokingTir33 `.replace('$', '`$') // $ is a problem in powershell
 							+ `/domain:CONTOSO `
