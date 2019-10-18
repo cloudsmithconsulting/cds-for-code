@@ -3,16 +3,12 @@ import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
 
 export default class MetadataRepository
 {
-    public static wireUpCommands(context: vscode.ExtensionContext) {
-        return;
-    }
-
     private config:DynamicsWebApi.Config;
 
     public constructor (config:DynamicsWebApi.Config)
     {
         this.config = config;
-        this.webapi = new DynamicsWebApiClient(config);
+        this.webapi = new DynamicsWebApiClient(this.config);
     }
 
     private webapi: DynamicsWebApiClient;

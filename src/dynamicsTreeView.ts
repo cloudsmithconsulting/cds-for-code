@@ -5,9 +5,10 @@ import ApiRepository from './apiRepository';
 import { Utilities } from './Utilities';
 import MetadataRepository from './metadataRepository';
 import * as cs from './cs';
+import { IWireUpCommands } from './wireUpCommand';
 
-export default class DynamicsTreeView {
-    public static wireUpCommands(context: vscode.ExtensionContext) {
+export default class DynamicsTreeView implements IWireUpCommands {
+    public wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         // register the provider and connect it to the treeview window
         // {
         //     authType: AuthenticationType.Windows,

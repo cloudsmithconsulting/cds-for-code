@@ -8,7 +8,7 @@ import ConnectionViewManager from './connectionViewManager';
 import GenerateEntitiesCommand from './generateEntitiesCommand';
 import PowerShellLoader from './powerShellLoader';
 import DynamicsTreeView from './dynamicsTreeView';
-import DiscoveryRepository from './discoveryRepository';
+import { IWireUpCommands } from './wireUpCommand';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -24,15 +24,18 @@ export function activate(context: vscode.ExtensionContext) {
 	// load and check extension configuration
 	const config = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration._namespace);
 
-	// wire up views
-	DynamicsTreeView.wireUpCommands(context);
-	ConnectionViewManager.wireUpCommands(context);
+	// setup what we want to initialize
+	const commands: IWireUpCommands[] = [
+		// our views
+		new DynamicsTreeView(),
+		new ConnectionViewManager(),
+		// our commands
+		new PowerShellLoader(),
+		new GenerateEntitiesCommand()
+	];
 
-	// wire up commands via import object
-	PowerShellLoader.wireUpCommands(context);
-	GenerateEntitiesCommand.wireUpCommands(context, config);
-	//ApiRepository.wireUpCommands(context);
-	DiscoveryRepository.wireUpCommands(context);
+	// call to wire up all commands
+	commands.forEach(c => c.wireUpCommands(context, config));
 	
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
