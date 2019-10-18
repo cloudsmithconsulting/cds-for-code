@@ -11,9 +11,9 @@
 	],
 	"activationEvents": [
 		"onView:cs.dynamics.viewContainers.connections",
-		"onCommand:cs.dynamics.powershell.unpackSolution",
-		"onCommand:cs.dynamics.powershell.packSolution",
-		"onCommand:cs.dynamics.powershell.generateEntities",
+		"onCommand:cs.dynamics.powerShell.unpackSolution",
+		"onCommand:cs.dynamics.powerShell.packSolution",
+		"onCommand:cs.dynamics.powerShell.generateEntities",
 		"onCommand:cs.dynamics.extension.downloadRequiredScripts"
 	],
 	"main": "./out/extension.js",
@@ -62,15 +62,15 @@
 				"title": "Click"
 			},
 			{
-				"command": "cs.dynamics.powershell.unpackSolution",
+				"command": "cs.dynamics.powerShell.unpackSolution",
 				"title": "Dynamics 365 CE: Download & unpack solution from a registered Dynamics server"
 			},
 			{
-				"command": "cs.dynamics.powershell.packSolution",
+				"command": "cs.dynamics.powerShell.packSolution",
 				"title": "Dynamics 365 CE: Pack & deploy solution to a registerd Dynamics server"
 			},
 			{
-				"command": "cs.dynamics.powershell.generateEntities",
+				"command": "cs.dynamics.powerShell.generateEntities",
 				"title": "Dynamics 365 CE: Generate entity code from metadata on a registered Dynamics server"
 			},
 			{
@@ -109,7 +109,7 @@
 			"view/item/context": [
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
-					"when": "viewItem == Solution || viewItem == Plugin || viewItem == Entity || viewItem == Entry",
+					"when": "viewItem == Connection || viewItem == Solution || viewItem == Plugin || viewItem == Entity || viewItem == Entry",
 					"group": "inline"
 				},
 				{

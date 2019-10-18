@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import DiscoveryRepository from './discoveryRepository';
 import { View, ViewRenderer } from './view';
 import * as cs from './cs';
@@ -8,15 +7,17 @@ export default class ConnectionViewManager {
 	public static wireUpCommands(context: vscode.ExtensionContext) {
         context.subscriptions.push(
 
-            vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, async () => { // Match name of command to package.json command
+            vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, async (config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-                ConnectionView.createOrShow<ConnectionView>(ConnectionView, {
+                const view = ConnectionView.createOrShow<ConnectionView>(ConnectionView, {
                     extensionPath: context.extensionPath,
                     iconPath: './resources/images/cloudsmith-logo-only-50px.png',
                     viewTitle: 'New Connection - Dynamics 365 CE',
                     viewType: cs.dynamics.views.connectionView
                 });
+
+                view.setInitialState(config);
             }) // <-- no semi-colon, comma starts next command registration
         );
     }
@@ -35,7 +36,7 @@ class ConnectionView extends View {
         return viewRenderer.renderHtml(`
 <img class="branding" src="${viewRenderer.getImageUri('cloudsmith-logo-only-50px.png')}" alt="CloudSmith Conulting" />
 
-<h1>
+<h1 id="title">
     ${this.viewOptions.viewTitle}
 </h1>
 
@@ -45,6 +46,8 @@ class ConnectionView extends View {
         <span id="errorMessage"></span>
     </div>
 </blockquote>
+
+<input type="hidden" id="Id" name="Id" value="" />
 
 <div class="field field--checkbox">
     <label class="field__label" for="AuthType1">
@@ -115,6 +118,12 @@ class ConnectionView extends View {
             case 'createConnection':
                 instance.testConnection(message.settings);
                 return;
+        }
+    }
+
+    public setInitialState(config?: DynamicsWebApi.Config) {
+        if (config) {
+            this.panel.webview.postMessage({ command: 'connectionEdit', message: config });
         }
     }
 
