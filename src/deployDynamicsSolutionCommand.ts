@@ -26,19 +26,32 @@ export class DeployDynamicsSolutionCommand {
 						// setup the code file path to be generated
 						const codeFilePath = path.join(rootPath, 'Deploy-XrmSolutions.ps1');
 
+						// Variables to help execuate PowerShell Commands
+						const ServerURL = null;
+						const OrgName = null;
+						const SolutionName = null;
+						const Path = null;
+						const ToolsPath = null;
+						const Credential = null;
+						const Managed = null;
+						const Username = "missioncommand";
+						const Password = "$mokingTir33";
+						const Domain = "CONTOSO";
+						const Namespace = "CloudSmith.Dynamics365.SampleTests";
+
 						// setup the command text
-						const commandToExecute = `.\\Deploy-XrmSolutions.ps1 `
-							+ '-ServerUrl "${ServerURL}/XRMServices/2011/Organization.svc" '
+						const commandToExecute = `${codeFilePath} `
+							+ `-ServerUrl "${ServerURL}/XRMServices/2011/Organization.svc" `
 							+ `-OrgName ${OrgName}`
 							+ `-SolutionName ${SolutionName}`
 							+ `-Path ${Path}`
 							+ `-ToolsPath ${ToolsPath}`
 							+ `-Credential ${Credential}`
 							+ `-Managed ${Managed}`
-							+ `/username:missioncommand `
-							+ `/password:$mokingTir33 `.replace('$', '`$') // $ is a problem in powershell
-							+ `/domain:CONTOSO `
-							+ `/namespace:CloudSmith.Dynamics365.SampleTests `
+							+ `-Username:${Username} `
+							+ `-Password:${Password} `.replace('$', '`$') // $ is a problem in powershell
+							+ `-Domain:${Domain} `
+							+ `-Namespace:${Namespace} `
 							+ `/out:${codeFilePath}`;
 
 						// build a powershell terminal
