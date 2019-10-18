@@ -18,7 +18,10 @@ export default class ConnectionViewManager implements IWireUpCommands {
                     viewType: cs.dynamics.views.connectionView
                 });
 
-                view.setInitialState(config);
+                // only do this if we are editing
+                if (config && config.id) {
+                    view.setInitialState(config);
+                }
             }) // <-- no semi-colon, comma starts next command registration
         );
     }
