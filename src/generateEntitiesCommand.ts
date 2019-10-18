@@ -25,19 +25,26 @@ export default class GenerateEntitiesCommand {
                             // setup the code file path to be generated
                             const codeFilePath = path.join(rootPath, 'XrmEntities.cs');
     
+                            // Variables to help execuate PowerShell Commands
+                            const ConnectionString = null;
+                            const Path = null;
+                            const ToolsPath = null;
+                            const Namespace = null;
+                            const Username = "missioncommand";
+                            const Password = "$mokingTir33";
+                            const Domain = "CONTOSO";
+
                             // setup the command text
-                            const commandToExecute = ` .\\Generate-XrmEntities.ps1 `
+                            const commandToExecute = `${codeFilePath} `
                                 + `-ConnectionString ${ConnectionString}`
                                 + `-Path ${Path} `
                                 + `-OutputFile ${codeFilePath} `
                                 + `-ToolsPath ${ToolsPath}`
                                 + `-Namespace ${Namespace} `
-                                + `/username:missioncommand `
-                                + `/password:$mokingTir33 `.replace('$', '`$') // $ is a problem in powershell
-                                + `/domain:CONTOSO `
-                                + `/out:${codeFilePath}`
-                                + `/toolpath: $ToolPath `
-                                + `/namespace:$Namespace `;
+                                + `-Username:${Username} `
+                                + `-Password:${Password} `.replace('$', '`$') // $ is a problem in powershell
+                                + `-Domain:${Domain} `
+                                + `/out:${codeFilePath}`;
     
                             // build a powershell terminal
                             const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
