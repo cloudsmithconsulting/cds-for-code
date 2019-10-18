@@ -140,6 +140,8 @@ namespace DynamicsWebApi {
     }
 
     export interface Config {
+        /**The id (id) to use when displaying the connection to Dynamics365 in the TreeView */
+        id?: string;
         /**The friendly name (name) to use when displaying the connection to Dynamics365 in the TreeView */
         name?: string;
         /**The access token (accessToken) to use when connecting to Dynamics365 */
