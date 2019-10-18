@@ -10,17 +10,18 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onView:dynamicsConnectionsView",
-		"onCommand:cloudSmith.unpackDynamicsSolutionCommand",
-		"onCommand:cloudSmith.deployDynamicsSolutionCommand",
-		"onCommand:cloudSmith.generateDynamicsEntitiesCommand"
+		"onView:cs.dynamics.viewContainers.connections",
+		"onCommand:cs.dynamics.powerShell.unpackSolution",
+		"onCommand:cs.dynamics.powerShell.packSolution",
+		"onCommand:cs.dynamics.powerShell.generateEntities",
+		"onCommand:cs.dynamics.extension.downloadRequiredScripts"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"configuration": {
-			"title": "CloudSmith",
+			"title": "Dynamics 365 CE VSCode Toolkit",
 			"properties": {
-				"cloudSmith.crmSdkRootPath": {
+				"cs.dynamics.configuration.sdkInstallPath": {
 					"type": "string",
 					"default": "C:\\Deploy\\Tools",
 					"description": "The full path to the root of the CRM SDK installation on your computer"
@@ -29,80 +30,91 @@
 		},
 		"commands": [
 			{
-				"command": "cloudSmith.refreshEntry",
+				"command": "cs.dynamics.controls.treeView.refreshEntry",
 				"title": "Refresh",
 				"icon": {
-					"light": "resources/light/refresh.svg",
-					"dark": "resources/dark/refresh.svg"
+					"light": "resources/icons/light/refresh.svg",
+					"dark": "resources/icons/dark/refresh.svg"
 				}
 			},
 			{
-				"command": "cloudSmith.addEntry",
-				"title": "Add"
+				"command": "cs.dynamics.controls.treeView.addEntry",
+				"title": "Add Connection",
+				"icon": {
+					"light": "resources/icons/light/plus.svg",
+					"dark": "resources/icons/dark/plus.svg"
+				}
 			},
 			{
-				"command": "cloudSmith.editEntry",
+				"command": "cs.dynamics.controls.treeView.editEntry",
 				"title": "Edit",
 				"icon": {
-					"light": "resources/light/edit.svg",
-					"dark": "resources/dark/edit.svg"
+					"light": "resources/icons/light/edit.svg",
+					"dark": "resources/icons/dark/edit.svg"
 				}
 			},
 			{
-				"command": "cloudSmith.deleteEntry",
+				"command": "cs.dynamics.controls.treeView.deleteEntry",
 				"title": "Delete"
 			},
 			{
-				"command": "cloudSmith.unpackDynamicsSolutionCommand",
-				"title": "CloudSmith: Unpack Solution From Dynamics Server"
+				"command": "cs.dynamics.controls.treeView.clickEntry",
+				"title": "Click"
 			},
 			{
-				"command": "cloudSmith.deployDynamicsSolutionCommand",
-				"title": "CloudSmith: Deploy Solution to Dynamics Server"
+				"command": "cs.dynamics.powerShell.unpackSolution",
+				"title": "Dynamics 365 CE: Download & unpack solution from a registered Dynamics server"
 			},
 			{
-				"command": "cloudSmith.generateDynamicsEntitiesCommand",
-				"title": "CloudSmith: Generate Entities From Dynamics Server"
+				"command": "cs.dynamics.powerShell.packSolution",
+				"title": "Dynamics 365 CE: Pack & deploy solution to a registerd Dynamics server"
 			},
 			{
-				"command": "cloudSmith.downloadDynamicsScriptsCommand",
-				"title": "CloudSmith: Download supporting Dynamics scripts from GitHub"
+				"command": "cs.dynamics.powerShell.generateEntities",
+				"title": "Dynamics 365 CE: Generate entity code from metadata on a registered Dynamics server"
+			},
+			{
+				"command": "cs.dynamics.extension.downloadRequiredScripts",
+				"title": "Dynamics 365 CE: Download required PowerShell scripts for VSCode extension from GitHub"
 			}
 		],
 		"viewsContainers": {
 			"activitybar": [
 				{
 					"id": "view-container",
-					"title": "CloudSmith",
-					"icon": "media/dynamics.png"
+					"title": "Dynamics 365 CE",
+					"icon": "resources/images/dynamics.png"
 				}
 			]
 		},
 		"views": {
 			"view-container": [
 				{
-					"id": "dynamicsConnectionsView",
-					"name": "Dynamics Connections"
+					"id": "cs.dynamics.viewContainers.connections",
+					"name": "Connections"
 				}
 			]
 		},
 		"menus": {
 			"view/title": [
 				{
-					"command": "cloudSmith.refreshEntry",
+					"command": "cs.dynamics.controls.treeView.refreshEntry",
 					"group": "navigation"
 				},
 				{
-					"command": "cloudSmith.addEntry"
+					"command": "cs.dynamics.controls.treeView.addEntry",
+					"group": "navigation"
 				}
 			],
 			"view/item/context": [
 				{
-					"command": "cloudSmith.editEntry",
+					"command": "cs.dynamics.controls.treeView.editEntry",
+					"when": "viewItem == Connection || viewItem == Solution || viewItem == Plugin || viewItem == Entity || viewItem == Entry",
 					"group": "inline"
 				},
 				{
-					"command": "cloudSmith.deleteEntry"
+					"command": "cs.dynamics.controls.treeView.deleteEntry",
+					"when": "viewItem == Connection"
 				}
 			]
 		}
@@ -129,6 +141,7 @@
 	"dependencies": {
 		"adal-node": "^0.2.1",
 		"httpntlm": "^1.7.6",
-		"node-fetch": "^2.6.0"
+		"node-fetch": "^2.6.0",
+		"typescript-linq": "^1.0.6"
 	}
 }

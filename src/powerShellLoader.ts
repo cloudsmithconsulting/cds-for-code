@@ -1,16 +1,18 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as cs from './cs';
 import fetch from 'node-fetch';
+import { IWireUpCommands } from './wireUpCommand';
 
-export default class PowerShellLoader {
-    public static wireUpCommands(context: vscode.ExtensionContext) {
+export default class PowerShellLoader implements IWireUpCommands {
+    public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         // do this immediately
         PowerShellLoader.runScriptCheck(context);
 
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand('cloudSmith.downloadDynamicsScriptsCommand', () => { // Downloads scripts from the Internet.
+            vscode.commands.registerCommand(cs.dynamics.extension.downloadRequiredScripts, () => { // Downloads scripts from the Internet.
                 PowerShellLoader.runScriptCheck(context);
             })
         );
