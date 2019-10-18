@@ -3,9 +3,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as cs from './cs';
 import fetch from 'node-fetch';
+import { IWireUpCommands } from './wireUpCommand';
 
-export default class PowerShellLoader {
-    public static wireUpCommands(context: vscode.ExtensionContext) {
+export default class PowerShellLoader implements IWireUpCommands {
+    public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         // do this immediately
         PowerShellLoader.runScriptCheck(context);
 

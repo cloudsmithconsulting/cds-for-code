@@ -104,8 +104,9 @@ export abstract class View {
 		// If we already have a panel, show it.
 		if (Object.keys(this.openPanels).length > 0) {
 			if (View.openPanels[viewOptions.viewType]) {
-				View.openPanels[viewOptions.viewType].panel.reveal(column);
-				return;
+				const result = View.openPanels[viewOptions.viewType];
+				result.panel.reveal(column);
+				return <T>result;
 			}
 		}
 

@@ -2,9 +2,10 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as cs from './cs';
 import ExtensionConfiguration from './ExtensionConfiguration';
+import { IWireUpCommands } from './wireUpCommand';
 
-export default class GenerateEntitiesCommand {
-    public static wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
+export default class GenerateEntitiesCommand implements IWireUpCommands {
+    public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
         // setup configurations
         const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(config, cs.dynamics.configuration.sdkInstallPath);
         // set core tools root

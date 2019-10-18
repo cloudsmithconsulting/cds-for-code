@@ -2,9 +2,10 @@ import * as vscode from 'vscode';
 import DiscoveryRepository from './discoveryRepository';
 import { View, ViewRenderer } from './view';
 import * as cs from './cs';
+import { IWireUpCommands } from './wireUpCommand';
 
-export default class ConnectionViewManager {
-	public static wireUpCommands(context: vscode.ExtensionContext) {
+export default class ConnectionViewManager implements IWireUpCommands {
+	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, async (config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
@@ -17,7 +18,10 @@ export default class ConnectionViewManager {
                     viewType: cs.dynamics.views.connectionView
                 });
 
-                view.setInitialState(config);
+                // only do this if we are editing
+                if (config && config.id) {
+                    view.setInitialState(config);
+                }
             }) // <-- no semi-colon, comma starts next command registration
         );
     }
