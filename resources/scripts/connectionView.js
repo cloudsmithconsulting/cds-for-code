@@ -68,6 +68,9 @@
         
         document.title = newTitle;
         document.getElementById("title").innerHTML = newTitle;
+
+        submitButton.innerHTML = submitButton.innerHTML
+            .replace('Add', 'Update');
         
         if (message.authType === 1) {
             currentAuthType = 1;

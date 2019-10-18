@@ -27,9 +27,18 @@ export default class DynamicsTreeView {
             vscode.commands.registerCommand(cs.dynamics.controls.treeView.refreshEntry, () => treeProvider.refresh()) // <-- no semi-colon, comma starts next command registration
 
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addConnection, (config: DynamicsWebApi.Config) => {
+                // add the connection and refresh treeview
                 treeProvider.addConnection(config);
+                // create the message, if id exists this was an edit
+                let message = '';
+                if (config.id) {
+                    message = `Updated Dynamics Connection: ${config.webApiUrl}`;
+                } else {
+                    message = `Added Dynamics Connection: ${config.webApiUrl}`;
+                }
+                // show the message
                 vscode.window.showInformationMessage(
-                    `Add Dynamics Connection: ${config.webApiUrl}`
+                    message
                 );
             }) // <-- no semi-colon, comma starts next command registration
 
