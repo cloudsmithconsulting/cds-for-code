@@ -24,19 +24,30 @@ export class UnpackDynamicsSolutionCommand {
 						// setup the code file path to be generated
 						const codeFilePath = path.join(rootPath, 'Get-XrmSolution.ps1');
 
+						// Variables to help execuate PowerShell Commands
+						const ServerUrl = null;
+						const OrgName = null;
+						const SolutionName = null;
+						const Path = null;
+						const ToolsPath = null;
+						const Credential = null;
+						const Username = "missioncommand";
+						const Password = "$mokingTir33";
+						const Domain = "CONTOSO";
+						const Namespace = "CloudSmith.Dynamics365.SampleTests";
+
 						// setup the command text
-						const commandToExecute = `.\\Get-XrmSolution.ps1 `
-							+ `-ServerUrl ${ServerUrl}`
-							+ `-OrgName ${OrgName}`
-							+ `-SolutionName ${SolutionName}`
-							+ `-Path ${Path}`
-							+ `-ToolsPath ${ToolsPath}`
-							+ `-Credential ${Credential}`
-							+ `/url:http://crmserver/test/XRMServices/2011/Organization.svc `
-							+ `/username:missioncommand `
-							+ `/password:$mokingTir33 `.replace('$', '`$') // $ is a problem in powershell
-							+ `/domain:CONTOSO `
-							+ `/namespace:CloudSmith.Dynamics365.SampleTests `
+						const commandToExecute = `${codeFilePath} `
+							+ `-ServerUrl "${ServerUrl}/test/XRMServices/2011/Organization.svc" `
+							+ `-OrgName ${OrgName} `
+							+ `-SolutionName ${SolutionName} `
+							+ `-Path ${Path} `
+							+ `-ToolsPath ${ToolsPath} `
+							+ `-Credential ${Credential} `
+							+ `-Username:${Username} `
+							+ `-Password:${Password} `.replace('$', '`$') // $ is a problem in powershell
+							+ `-Domain:${Domain} `
+							+ `-Namespace:${Namespace} `
 							+ `/out:${codeFilePath}`;
 
 						// build a powershell terminal
