@@ -29,16 +29,17 @@
     submitButton.addEventListener("click", event => {
         event.preventDefault();
 
+        const id = document.getElementById("Id").value;
         const settings = {
+            id: (id.length > 0) ? id: null, // pass the id or null
+            authType: currentAuthType,
+            webApiVersion: document.getElementById("WebApiVersion").value,
+            name: document.getElementById("Name").value,
+            webApiUrl: document.getElementById("ServerUrl").value,
             domain: document.getElementById("Domain").value,
             accessToken: document.getElementById("AccessToken").value,
-            authType: currentAuthType,
-            domain: document.getElementById("Domain").value,
-            password: document.getElementById("Password").value,
-            name: document.getElementById("Name").value,
             username: document.getElementById("Username").value,
-            webApiUrl: document.getElementById("ServerUrl").value,
-            webApiVersion: document.getElementById("WebApiVersion").value
+            password: document.getElementById("Password").value
         };
 
         if (!validateForm(settings)) return;
@@ -53,11 +54,36 @@
     window.addEventListener("message", event => {
         const message = event.data; // The json data that the extension sent
         switch (message.command) {
+            case "connectionEdit":
+                setEditMode(message.message);
+                break;
             case "connectionError":
                 showConnectionError(message.message);
-                break;
         }
     });
+
+    function setEditMode(message) {
+        const newTitle = document.getElementById("title").innerHTML
+            .replace('New', 'Edit');
+        
+        document.title = newTitle;
+        document.getElementById("title").innerHTML = newTitle;
+        
+        if (message.authType === 1) {
+            currentAuthType = 1;
+            document.getElementById("AuthType1").checked = true;
+            accessTokenField.setAttribute("hidden", "hidden");
+        }
+
+        document.getElementById("Id").value = message.id || "";
+        document.getElementById("WebApiVersion").value = message.webApiVersion || "";
+        document.getElementById("Name").value = message.name || "";
+        document.getElementById("ServerUrl").value = message.webApiUrl || "";
+        document.getElementById("Domain").value = message.domain || "";
+        document.getElementById("AccessToken").value = message.accessToken || "";
+        document.getElementById("Username").value = message.username || "";
+        document.getElementById("Password").value = message.password || "";
+    }
 
     function showConnectionError(message) {
         // build and inject error message

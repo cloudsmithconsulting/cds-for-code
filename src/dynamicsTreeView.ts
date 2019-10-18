@@ -46,8 +46,12 @@ export default class DynamicsTreeView {
                 );
             }) // <-- no semi-colon, comma starts next command registration
     
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.editEntry, () => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.editEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 // Run command code
+                if (item.itemType === EntryType.Connection) {
+                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.addEntry, item.config);
+                    return;
+                }
                 vscode.window.showInformationMessage(cs.dynamics.controls.treeView.editEntry);
             }) // <-- no semi-colon, comma starts next command registration
         );
@@ -73,9 +77,21 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
     
     public addConnection(...options: DynamicsWebApi.Config[]): void {
         options.forEach(o => {
-            this._connections.push(o); 
+            // Make sure the connection has an id
+            if (!o.id) {
+                // give this an id
+                o.id = Utilities.NewGuid();
+                // add it to the list
+                this._connections.push(o); 
+            } else {
+                const updateIndex = this._connections.findIndex(c => c.id === o.id);
+                this._connections[updateIndex] = o;
+            }
         });
+
+        // save to state
         this._context.globalState.update(this.connectionsGlobalStateKey, this._connections);
+        // refresh the treeview
         this.refresh();
     }
 
