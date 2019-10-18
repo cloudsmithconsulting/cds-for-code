@@ -9,6 +9,8 @@ import GenerateEntitiesCommand from './generateEntitiesCommand';
 import PowerShellLoader from './powerShellLoader';
 import DynamicsTreeView from './dynamicsTreeView';
 import { IWireUpCommands } from './wireUpCommand';
+import { PackDynamicsSolutionCommand } from './packDynamicsSolutionCommand';
+import { UnpackDynamicsSolutionCommand } from './unpackDynamicsSolutionCommand';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -31,7 +33,9 @@ export function activate(context: vscode.ExtensionContext) {
 		new ConnectionViewManager(),
 		// our commands
 		new PowerShellLoader(),
-		new GenerateEntitiesCommand()
+		new GenerateEntitiesCommand(),
+		new PackDynamicsSolutionCommand(),
+		new UnpackDynamicsSolutionCommand()
 	];
 	
 	// The command has been defined in the package.json file

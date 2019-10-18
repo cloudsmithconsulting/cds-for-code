@@ -1,17 +1,19 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import GenerateEntitiesCommand from './generateEntitiesCommand';
+import * as cs from './cs';
+import { IWireUpCommands } from './wireUpCommand';
 
-export class DeployDynamicsSolutionCommand {
-	public static wireUpCommands (context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
+export class PackDynamicsSolutionCommand implements IWireUpCommands {
+	public wireUpCommands (context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
 	// setup configurations
-	const crmSdkRoot = config.get('crmSdkRootPath') as string;
+	const crmSdkRoot = config.get('sdkInstallPath') as string;
 	// set core tools root
 	const coreToolsRoot = path.join(crmSdkRoot, 'CoreTools');
 
 	// now wire a command into the context
 	context.subscriptions.push(
-		vscode.commands.registerCommand('cloudSmith.deployDynamicsSolutionCommand', () => { // Match name of command to package.json command
+		vscode.commands.registerCommand(cs.dynamics.powerShell.packSolution, () => { // Match name of command to package.json command
 			// get root path of vscode workspace
 			const folders = vscode.workspace.workspaceFolders;
 			// see if we have anything open
