@@ -28,13 +28,25 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                             // setup the code file path to be generated
                             const codeFilePath = path.join(rootPath, 'XrmEntities.cs');
     
+                            // Variables to help execuate PowerShell Commands
+                            const ConnectionString = null;
+                            const Path = null;
+                            const ToolsPath = null;
+                            const Namespace = null;
+                            const Username = "missioncommand";
+                            const Password = "$mokingTir33";
+                            const Domain = "CONTOSO";
+
                             // setup the command text
-                            const commandToExecute = `& .\\CrmSvcUtil.exe `
-                                + `/url:http://crmserver/test/XRMServices/2011/Organization.svc `
-                                + `/username:missioncommand `
-                                + `/password:$mokingTir33 `.replace('$', '`$') // $ is a problem in powershell
-                                + `/domain:CONTOSO `
-                                + `/namespace:CloudSmith.Dynamics365.SampleTests `
+                            const commandToExecute = `${codeFilePath} `
+                                + `-ConnectionString ${ConnectionString}`
+                                + `-Path ${Path} `
+                                + `-OutputFile ${codeFilePath} `
+                                + `-ToolsPath ${ToolsPath}`
+                                + `-Namespace ${Namespace} `
+                                + `-Username:${Username} `
+                                + `-Password:${Password} `.replace('$', '`$') // $ is a problem in powershell
+                                + `-Domain:${Domain} `
                                 + `/out:${codeFilePath}`;
     
                             // build a powershell terminal
@@ -48,7 +60,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
         );
     }
 
-    private static showAndReturnTerminal(cwd: string): vscode.Terminal {
+    public static showAndReturnTerminal(cwd: string): vscode.Terminal {
         const terminalName = 'CloudSmith: Dynamics PowerShell';
 		//see if our terminal is open all ready
 		const index = vscode.window.terminals.findIndex(t => t.name === terminalName);
