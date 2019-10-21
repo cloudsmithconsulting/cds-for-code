@@ -27,7 +27,7 @@ export default class ApiRepository
         };
 
         return this.webapi.retrieveAllRequest(request)
-            .then(response => response.Value);
+            .then(response => response.value);
     }
 
     public retrievePluginAssemblies<T>(solutionId:string) : Promise<T[] | unknown[]> {
