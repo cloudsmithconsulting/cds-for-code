@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
+import * as TS from 'typescript-linq/TS';
 
 export default class ApiRepository
 {
@@ -18,7 +19,7 @@ export default class ApiRepository
         return await this.webapi.executeUnboundFunction('WhoAmI');
     }
 
-    public retrieveSolutions<T>() : Promise<T[]> {
+    public retrieveSolutions<T>() : Promise<T[] | unknown[]> {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "solutions",
             filter: "isvisible eq true",
@@ -26,10 +27,10 @@ export default class ApiRepository
         };
 
         return this.webapi.retrieveAllRequest(request)
-            .then(response => response.value);
+            .then(response => response.Value);
     }
 
-    public retrievePluginAssemblies<T>(solutionId:string) : Promise<T[]> {
+    public retrievePluginAssemblies<T>(solutionId:string) : Promise<T[] | unknown[]> {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "pluginassemblies",
             //filter: "ishidden.Value eq false" + (solutionId ? ` and SolutionId eq ${solutionId}` : ""),
@@ -39,7 +40,7 @@ export default class ApiRepository
 
         return this.webapi.retrieveAllRequest(request)
             .then(response => {
-                return response.value;
+                return new TS.TS.Linq.Enumerator(response.value).where(plugin => plugin["ishidden"].Value === false).toArray();
             });
     }
 }

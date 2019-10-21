@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
+import * as TS from 'typescript-linq/TS';
 
 export default class MetadataRepository
 {
@@ -36,6 +37,8 @@ export default class MetadataRepository
         
         //TODO: Fix this so that it cross references with the solutioncomponents query above.
         return this.webapi.retrieveEntitiesRequest(entitiesQuery)
-            .then(response => response.value);
+            .then(response => 
+                new TS.TS.Linq.Enumerator(response.value).where(e => e["IsIntersect"] === false).orderBy(e => e["LogicalName"]).toArray()
+            );
     }
 }
