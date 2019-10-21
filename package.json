@@ -118,12 +118,18 @@
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
-					"when": "viewItem == Connection || viewItem == Solution || viewItem == Plugin || viewItem == Entity || viewItem == Entry",
-					"group": "inline"
+					"group": "inline",
+					"when": "viewItem == Connection || viewItem == Solution || viewItem == Plugin || viewItem == Entity || viewItem == Entry"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.deleteEntry",
+					"group": "inline",
 					"when": "viewItem == Connection"
+				},
+				{
+					"command": "cs.dynamics.controls.treeView.refreshEntry",
+					"group": "inline",
+					"when": "viewItem == Solutions || viewItem == Plugins || viewItem == Entities || viewItem == Entries"
 				}
 			]
 		}

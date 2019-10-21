@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
 import * as TS from 'typescript-linq/TS';
+import { filter } from 'minimatch';
 
 export default class MetadataRepository
 {
@@ -14,31 +15,43 @@ export default class MetadataRepository
 
     private webapi: DynamicsWebApiClient;
 
-    public retrieveEntities(solutionId?:string) : Promise<any[]>
+    public async retrieveEntities(solutionId?:string) : Promise<any[]>
     {
-        let componentsQuery:DynamicsWebApi.RetrieveMultipleRequest;
+        let solutionQuery:DynamicsWebApi.RetrieveRequest;
+        let solution:any;
+        let entitiesQuery:DynamicsWebApi.RetrieveMultipleRequest = {
+            filter: "IsIntersect eq false"
+        };
 
         if (solutionId)
         {
-            componentsQuery = {
-                collection: "solutioncomponents",
-                filter: "componenttype -eq 1" + (solutionId ? ` and SolutionId eq "${solutionId}"` : ""),
-                orderBy: ["uniquename"]
+            solutionQuery = {
+                collection: "solutions",
+                id: solutionId,
+                expand: [ { property: "solution_solutioncomponent", filter: "componenttype eq 1" } ]
             };    
-        }
 
-        let entitiesQuery:DynamicsWebApi.RetrieveMultipleRequest;
-        /*
-        Looks like Microsoft didn't see fit to allow orderBy expressions on metadata queries.  Silly gooses!
-        = {
-            orderBy: ["logicalName"]
-        };
-        */
-        
-        //TODO: Fix this so that it cross references with the solutioncomponents query above.
-        return this.webapi.retrieveEntitiesRequest(entitiesQuery)
-            .then(response => 
-                new TS.TS.Linq.Enumerator(response.value).where(e => e["IsIntersect"] === false).orderBy(e => e["LogicalName"]).toArray()
-            );
+            solution = await this.webapi.retrieveRequest(solutionQuery);
+
+            if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0)
+            {
+                return null;
+            }
+
+            let entities = await this.webapi.retrieveEntitiesRequest(entitiesQuery);
+            let components = new TS.TS.Linq.Enumerator(solution.solution_solutioncomponent);
+            let filteredList = components.join(new TS.TS.Linq.Enumerator(entities.value), c => c["objectid"], e => e["MetadataId"], (c, e) => e).toArray();
+
+            return filteredList;
+        }
+        else
+        {
+            //TODO: Fix this so that it cross references with the solutioncomponents query above.
+            return this.webapi.retrieveEntitiesRequest(entitiesQuery)
+                .then(response => 
+                    //new TS.TS.Linq.Enumerator(response.value).where(e => e["IsIntersect"] === false).orderBy(e => e["LogicalName"]).toArray()
+                    new TS.TS.Linq.Enumerator(response.value).orderBy(e => e["LogicalName"]).toArray()
+                );   
+        }
     }
 }

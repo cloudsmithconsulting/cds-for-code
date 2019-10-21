@@ -26,7 +26,9 @@ export default class DynamicsTreeView implements IWireUpCommands {
         
         // setup commands
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.controls.treeView.refreshEntry, () => treeProvider.refresh()) // <-- no semi-colon, comma starts next command registration
+            vscode.commands.registerCommand(cs.dynamics.controls.treeView.refreshEntry, (item?: TreeEntry) => {
+                treeProvider.refresh(item);
+            }) // <-- no semi-colon, comma starts next command registration
 
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addConnection, (config: DynamicsWebApi.Config) => {
                 // add the connection and refresh treeview
@@ -151,9 +153,9 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         }
     }
 
-	refresh(): void {
-		this._onDidChangeTreeData.fire();
-	}
+    refresh(item?:TreeEntry): void {
+        this._onDidChangeTreeData.fire(item);
+    }
 
 	getTreeItem(element: TreeEntry): vscode.TreeItem {
 
@@ -168,13 +170,15 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 case EntryType.Connection:
                     return this.getConnectionDetails(element, commandPrefix);
                 case EntryType.Organization:
-                    return Promise.resolve(this.getOrganizationDetails(element, commandPrefix));
+                    return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix));
                 case EntryType.Solutions:
                     return this.getSolutionDetails(element, commandPrefix);
+                case EntryType.Solution:
+                    return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix));
                 case EntryType.Plugins:
-                    return this.getPluginDetails(element, commandPrefix, undefined);
+                    return this.getPluginDetails(element, commandPrefix, element.context);
                 case EntryType.Entities:
-                    return this.getEntityDetails(element, commandPrefix, undefined);
+                    return this.getEntityDetails(element, commandPrefix, element.context);
             }
             return; //return nothing if type falls through
         }
@@ -272,8 +276,8 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             });
     }
 
-    getOrganizationDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
-        return [
+    getSolutionLevelDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
+        const returnObject = [
             new TreeEntry(
                 'Entities',
                 EntryType.Entities,
@@ -284,7 +288,8 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     title: 'Entities',
                     arguments: [`${commandPrefix || ''}/Entities`]
                 },
-                element.config
+                element.config,
+                element.itemType === EntryType.Solution ? element.context.solutionid : undefined
             ),
             new TreeEntry(
                 'Plugins',
@@ -296,21 +301,29 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     title: 'Plugins',
                     arguments: [`${commandPrefix || ''}/Plugins`]
                 },
-                element.config
-            ),
-            new TreeEntry(
-                'Solutions',
-                EntryType.Solutions,
-                vscode.TreeItemCollapsibleState.Collapsed, 
-                null,
-                {
-                    command: cs.dynamics.controls.treeView.clickEntry,
-                    title: 'Solutions',
-                    arguments: [`${commandPrefix || ''}/Solutions`]
-                },
-                element.config
+                element.config,
+                element.itemType === EntryType.Solution ? element.context.solutionid : undefined
             )
         ];
+
+        if (element.itemType !== EntryType.Solution)
+        {
+            returnObject.push(
+                new TreeEntry(
+                    'Solutions',
+                    EntryType.Solutions,
+                    vscode.TreeItemCollapsibleState.Collapsed, 
+                    null,
+                    {
+                        command: cs.dynamics.controls.treeView.clickEntry,
+                        title: 'Solutions',
+                        arguments: [`${commandPrefix || ''}/Solutions`]
+                    },
+                    element.config
+                ));
+        }
+
+        return returnObject;
     }
 
     getSolutionDetails(element: TreeEntry, commandPrefix?:string): Promise<TreeEntry[]> {
@@ -319,13 +332,19 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return api.retrieveSolutions()
             .then(solutions => {
                 const result : TreeEntry[] = new Array();
+
+                if (!solutions)
+                {
+                    return;
+                }
+                
                 for (let i = 0; i < solutions.length; i++) {
                     const solution: any = solutions[i];
                     result.push(
                         new TreeEntry(
                             solution.friendlyname, 
                             EntryType.Solution,
-                            vscode.TreeItemCollapsibleState.None,
+                            vscode.TreeItemCollapsibleState.Collapsed,
                             `v${solution.version} ${solution.ismanaged_formatted}`, 
                             {
                                 command: cs.dynamics.controls.treeView.clickEntry,
@@ -353,6 +372,11 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return api.retrievePluginAssemblies(solutionId)
             .then(plugins => {
                 const result : TreeEntry[] = new Array();
+
+                if (!plugins) {
+                    return;
+                }
+
                 for (let i = 0; i < plugins.length; i++) {
                     const plugin: any = plugins[i];
                     result.push(
@@ -388,6 +412,10 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             .then(entities => {
                 const result : TreeEntry[] = new Array();
                 
+                if (!entities) {
+                    return;
+                }
+
                 for (let i = 0; i < entities.length; i++) {
                     const entity = entities[i];
                     let displayName = entity.DisplayName && entity.DisplayName.LocalizedLabels && entity.DisplayName.LocalizedLabels.length > 0 ? entity.DisplayName.LocalizedLabels[0].Label : "";
@@ -488,5 +516,6 @@ enum EntryType {
     Entity = "Entity",
     Plugin = "Plugin",
     Solution = "Solution",
-    Entry = "Entry"
+    Entry = "Entry",
+    Entries = "Entries"
 }
