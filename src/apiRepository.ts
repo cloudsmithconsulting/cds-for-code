@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
-import * as TS from 'typescript-linq/TS';
+import { TS } from 'typescript-linq/TS';
 
 export default class ApiRepository
 {
@@ -30,17 +30,38 @@ export default class ApiRepository
             .then(response => response.value);
     }
 
-    public retrievePluginAssemblies<T>(solutionId:string) : Promise<T[] | unknown[]> {
+    public retrievePluginAssemblies(solutionId?:string) : Promise<any[]> {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "pluginassemblies",
-            //filter: "ishidden.Value eq false" + (solutionId ? ` and SolutionId eq ${solutionId}` : ""),
-            filter: (solutionId ? `SolutionId eq ${solutionId}` : null),
             orderBy: ["name"]
         };
 
         return this.webapi.retrieveAllRequest(request)
             .then(response => {
-                return new TS.TS.Linq.Enumerator(response.value).where(plugin => plugin["ishidden"].Value === false).toArray();
+                if (solutionId) {
+                    let solutionQuery:DynamicsWebApi.RetrieveRequest = {
+                        collection: "solutions",
+                        id: solutionId,
+                        expand: [ { property: "solution_solutioncomponent", filter: "componenttype eq 91" } ]
+                    };    
+                    
+                    return this.webapi.retrieveRequest(solutionQuery).then(solution => {
+                        if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0)
+                        {
+                            return null;
+                        }
+            
+                        let components = new TS.Linq.Enumerator(solution.solution_solutioncomponent);
+                        let filteredList = components
+                            .join(new TS.Linq.Enumerator(response.value), c => c["objectid"], p => p["pluginassemblyid"], (c, p) => p)
+                            .where(p => p["ishidden"].Value === false)
+                            .toArray();
+            
+                        return filteredList;
+                    });           
+                } else {
+                    return new TS.Linq.Enumerator(response.value).where(plugin => plugin["ishidden"].Value === false).toArray();
+                }
             });
     }
 }

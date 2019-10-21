@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
-import * as TS from 'typescript-linq/TS';
-import { filter } from 'minimatch';
+import { TS } from 'typescript-linq/TS';
 
 export default class MetadataRepository
 {
@@ -36,16 +35,16 @@ export default class MetadataRepository
                             return null;
                         }
             
-                        let components = new TS.TS.Linq.Enumerator(solution.solution_solutioncomponent);
+                        let components = new TS.Linq.Enumerator(solution.solution_solutioncomponent);
                         let filteredList = components
-                            .join(new TS.TS.Linq.Enumerator(entitiesResponse.value), c => c["objectid"], e => e["MetadataId"], (c, e) => e)
+                            .join(new TS.Linq.Enumerator(entitiesResponse.value), c => c["objectid"], e => e["MetadataId"], (c, e) => e)
                             .orderBy(e => e["LogicalName"])
                             .toArray();
             
                         return filteredList;
                     });           
                 } else {
-                    return new TS.TS.Linq.Enumerator(entitiesResponse.value).orderBy(e => e["LogicalName"]).toArray();
+                    return new TS.Linq.Enumerator(entitiesResponse.value).orderBy(e => e["LogicalName"]).toArray();
                 }
             }
         );   
