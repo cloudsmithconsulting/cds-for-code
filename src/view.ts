@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 import * as path from 'path';
+import * as _ from 'lodash';
 
 export interface IViewOptions {
 	extensionPath: string;
@@ -36,7 +38,7 @@ export class ViewRenderer {
 	private getFileUri(...paths: string[]): vscode.Uri {
 		const pathOnDisk = vscode.Uri.file(
 			path.join(this._view.extensionPath, ...paths)
-        );
+		);
 		return this._view.panel.webview.asWebviewUri(pathOnDisk);
 	}
 
@@ -51,6 +53,29 @@ export class ViewRenderer {
 			result += possible.charAt(Math.floor(Math.random() * possible.length));
 		}
 		return result;
+	}
+
+	public renderPartialFile(webviewFileName: string) : string {
+		// get the file path
+		const pathOnDisk = path.join(this._view.extensionPath, 'resources', 'webviews', webviewFileName);
+		// read file contents from disk
+		const fileHtml = fs.readFileSync(pathOnDisk).toString();
+		// use custom delimiter ${ }
+		_.templateSettings.interpolate = /\${([\s\S]+?)}/g;
+		// compile the template
+		const compiled = _.template(fileHtml);
+		// create a base viewModel
+		const viewModel = {
+			viewTitle: this._view.viewOptions.viewTitle,
+			images: []
+		};
+		// add images to viewModel
+		Object.keys(this._images).forEach(key => {
+			viewModel.images.push(this._images[key]);
+		});
+		const result = compiled(viewModel);
+		// return output
+		return this.renderHtml(result);
 	}
 
 	public renderHtml(htmlParial: string): string {
