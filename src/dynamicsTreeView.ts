@@ -7,6 +7,7 @@ import MetadataRepository from './metadataRepository';
 import * as cs from './cs';
 import { IWireUpCommands } from './wireUpCommand';
 import { DynamicsUrlResolver } from './DynamicsWebApi/DynamicsUrlResolver';
+import ExtensionConfiguration from './ExtensionConfiguration';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
@@ -158,7 +159,6 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
     }
 
 	getTreeItem(element: TreeEntry): vscode.TreeItem {
-
 		return element;
 	}
 
@@ -175,11 +175,16 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     return this.getSolutionDetails(element, commandPrefix);
                 case EntryType.Solution:
                     return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix));
+                case EntryType.Processes:
+                    return this.getProcessDetails(element, commandPrefix, element.context);
                 case EntryType.Plugins:
                     return this.getPluginDetails(element, commandPrefix, element.context);
                 case EntryType.Entities:
                     return this.getEntityDetails(element, commandPrefix, element.context);
+                case EntryType.WebResources:
+                    return this.getWebResourcesDetails(element, commandPrefix, element.context);
             }
+
             return; //return nothing if type falls through
         }
 
@@ -277,8 +282,11 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
     }
 
     getSolutionLevelDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
-        const returnObject = [
-            new TreeEntry(
+        let returnObject = [];
+        const showDefaultSolution = ExtensionConfiguration.getConfigurationValue<boolean>(cs.dynamics.configuration.showDefaultSolution);
+        
+        if (element.itemType === EntryType.Solution || showDefaultSolution) {
+            returnObject.push(new TreeEntry(
                 'Entities',
                 EntryType.Entities,
                 vscode.TreeItemCollapsibleState.Collapsed, 
@@ -290,8 +298,37 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 },
                 element.config,
                 element.itemType === EntryType.Solution ? element.context.solutionid : undefined
-            ),
-            new TreeEntry(
+            ));
+
+            returnObject.push(new TreeEntry(
+                'Processes',
+                EntryType.Processes,
+                vscode.TreeItemCollapsibleState.Collapsed, 
+                null,
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: 'Processes',
+                    arguments: [`${commandPrefix || ''}/Processes`]
+                },
+                element.config,
+                element.itemType === EntryType.Solution ? element.context.solutionid : undefined
+            ));
+
+            returnObject.push(new TreeEntry(
+                'Web Resources',
+                EntryType.WebResources,
+                vscode.TreeItemCollapsibleState.Collapsed, 
+                null,
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: 'Web Resources',
+                    arguments: [`${commandPrefix || ''}/WebResources`]
+                },
+                element.config,
+                element.itemType === EntryType.Solution ? element.context.solutionid : undefined
+            ));
+
+            returnObject.push(new TreeEntry(
                 'Plugins',
                 EntryType.Plugins,
                 vscode.TreeItemCollapsibleState.Collapsed, 
@@ -303,8 +340,8 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 },
                 element.config,
                 element.itemType === EntryType.Solution ? element.context.solutionid : undefined
-            )
-        ];
+            ));
+        }
 
         if (element.itemType !== EntryType.Solution)
         {
@@ -337,7 +374,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 {
                     return;
                 }
-                
+
                 for (let i = 0; i < solutions.length; i++) {
                     const solution: any = solutions[i];
                     result.push(
@@ -345,7 +382,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                             solution.friendlyname, 
                             EntryType.Solution,
                             vscode.TreeItemCollapsibleState.Collapsed,
-                            `v${solution.version} ${solution.ismanaged_formatted}`, 
+                            `v${solution.version} (${solution.ismanaged ? "Managed" :  "Unmanaged"})`, 
                             {
                                 command: cs.dynamics.controls.treeView.clickEntry,
                                 title: solution.friendlyname,
@@ -405,6 +442,83 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             });
     }
 
+    getWebResourcesDetails(element: TreeEntry, commandPrefix?: string, solutionId?: string): Thenable<TreeEntry[]> {
+		const api = new ApiRepository(element.config);
+        
+        return api.retrieveWebResources(solutionId)
+            .then(webresources => {
+                const result : TreeEntry[] = new Array();
+
+                if (!webresources) {
+                    return;
+                }
+
+                for (let i = 0; i < webresources.length; i++) {
+                    const webresource: any = webresources[i];
+                    result.push(
+                        new TreeEntry(
+                            webresource.name, 
+                            EntryType.WebResource,
+                            vscode.TreeItemCollapsibleState.None,
+                            webresource.displayname, 
+                            {
+                                command: cs.dynamics.controls.treeView.clickEntry,
+                                title: webresource.displayname,
+                                arguments: [`${commandPrefix || ''}/${webresource.webresourceid}`]
+                            },
+                            element.config,
+                            webresource)
+                    );
+                }
+                return result;
+            })
+            .catch(err => {
+                console.error(err.innererror ? err.innererror : err);
+
+                this.retryWithMessage(`An error occurred while retrieving web resources from ${element.config.webApiUrl}`, () => this.getWebResourcesDetails(element, commandPrefix, solutionId));
+
+                return null;
+            });
+    }
+
+    getProcessDetails(element: TreeEntry, commandPrefix?: string, solutionId?: string): Thenable<TreeEntry[]> {
+		const api = new ApiRepository(element.config);
+        
+        return api.retrieveProcesses(solutionId)
+            .then(processes => {
+                const result : TreeEntry[] = new Array();
+
+                if (!processes) {
+                    return;
+                }
+
+                for (let i = 0; i < processes.length; i++) {
+                    const process: any = processes[i];
+                    result.push(
+                        new TreeEntry(
+                            process.name, 
+                            EntryType.Process,
+                            vscode.TreeItemCollapsibleState.None,
+                            process.displayname, 
+                            {
+                                command: cs.dynamics.controls.treeView.clickEntry,
+                                title: process.displayname,
+                                arguments: [`${commandPrefix || ''}/${process.workflowid}`]
+                            },
+                            element.config,
+                            process)
+                    );
+                }
+                return result;
+            })
+            .catch(err => {
+                console.error(err.innererror ? err.innererror : err);
+
+                this.retryWithMessage(`An error occurred while retrieving business processes from ${element.config.webApiUrl}`, () => this.getProcessDetails(element, commandPrefix, solutionId));
+
+                return null;
+            });
+    }
     getEntityDetails(element: TreeEntry, commandPrefix?: string, solutionId?: string): Thenable<TreeEntry[]> {
 		const api = new MetadataRepository(element.config);
         
@@ -512,9 +626,13 @@ enum EntryType {
     Organization = "Organization",
     Entities = "Entities",
     Plugins = "Plugins",
+    WebResources = "WebResources",
+    Processes = "Processes",
     Solutions = "Solutions",
     Entity = "Entity",
     Plugin = "Plugin",
+    WebResource = "WebResource",
+    Process = "Process",
     Solution = "Solution",
     Entry = "Entry",
     Entries = "Entries"

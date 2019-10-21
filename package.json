@@ -25,6 +25,11 @@
 					"type": "string",
 					"default": "C:\\Deploy\\Tools",
 					"description": "The full path to the root of the CRM SDK installation on your computer"
+				},
+				"cs.dynamics.configuration.showDefaultSolution": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Show the Default Solution in the Dynamics explorer pane"
 				}
 			}
 		},
@@ -114,12 +119,12 @@
 				{
 					"command": "cs.dynamics.controls.treeView.addEntry",
 					"group": "inline",
-					"when": "viewItem == Solutions"
+					"when": "viewItem == Solutions || viewItem == Plugins || viewItem == Entities || viewItem == WebResources || viewItem == Entries"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
 					"group": "inline",
-					"when": "viewItem == Connection || viewItem == Solution || viewItem == Plugin || viewItem == Entity || viewItem == Entry"
+					"when": "viewItem == Connection || viewItem == Solution || viewItem == Entity || viewItem == WebResource || viewItem == Entry"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.deleteEntry",
@@ -129,7 +134,7 @@
 				{
 					"command": "cs.dynamics.controls.treeView.refreshEntry",
 					"group": "inline",
-					"when": "viewItem == Solutions || viewItem == Plugins || viewItem == Entities || viewItem == Entries"
+					"when": "viewItem == Solutions || viewItem == Plugins || viewItem == Entities || viewItem == WebResources || viewItem == Entries"
 				}
 			]
 		}
