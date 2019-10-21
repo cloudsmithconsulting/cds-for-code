@@ -48,6 +48,7 @@ export namespace dynamics
             public static readonly clickEntry:string = `${treeView._namespace}.clickEntry`;
             public static readonly deleteEntry:string = `${treeView._namespace}.deleteEntry`;
             public static readonly editEntry:string = `${treeView._namespace}.editEntry`;
+            public static readonly openConnection:string = `${treeView._namespace}.openConnection`;
             public static readonly refreshEntry:string = `${treeView._namespace}.refreshEntry`;
 
         }

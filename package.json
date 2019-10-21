@@ -39,7 +39,7 @@
 			},
 			{
 				"command": "cs.dynamics.controls.treeView.addEntry",
-				"title": "Add Connection",
+				"title": "New",
 				"icon": {
 					"light": "resources/icons/light/plus.svg",
 					"dark": "resources/icons/dark/plus.svg"
@@ -60,6 +60,10 @@
 			{
 				"command": "cs.dynamics.controls.treeView.clickEntry",
 				"title": "Click"
+			},
+			{
+				"command": "cs.dynamics.controls.treeView.openConnection",
+				"title": "Open"
 			},
 			{
 				"command": "cs.dynamics.powerShell.unpackSolution",
@@ -107,6 +111,11 @@
 				}
 			],
 			"view/item/context": [
+				{
+					"command": "cs.dynamics.controls.treeView.addEntry",
+					"group": "inline",
+					"when": "viewItem == Solutions"
+				},
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
 					"when": "viewItem == Connection || viewItem == Solution || viewItem == Plugin || viewItem == Entity || viewItem == Entry",

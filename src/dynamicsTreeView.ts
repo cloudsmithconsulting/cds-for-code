@@ -6,6 +6,7 @@ import { Utilities } from './Utilities';
 import MetadataRepository from './metadataRepository';
 import * as cs from './cs';
 import { IWireUpCommands } from './wireUpCommand';
+import { DynamicsUrlResolver } from './DynamicsWebApi/DynamicsUrlResolver';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
@@ -55,13 +56,49 @@ export default class DynamicsTreeView implements IWireUpCommands {
                     `Delete Dynamics Connection: ${item.config.webApiUrl}`
                 );
             }) // <-- no semi-colon, comma starts next command registration
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, (item: TreeEntry) => { // Match name of command to package.json command
+                if (!item)
+                {
+                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection);
+                }
+
+                if (item.itemType === EntryType.Solutions)
+                {
+                    vscode.env.openExternal(DynamicsUrlResolver.getSolutionUri(item.config)).then(opened =>
+                        {
+                            if (!opened)
+                            {
+                                treeProvider.retryWithMessage("There was a problem opening the Dynamics 365 browser window", () => {
+                                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.addEntry, item);
+                                });
+                            }
+                        });
     
+                        return;    
+                }
+            })   
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.editEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 // Run command code
                 if (item.itemType === EntryType.Connection) {
-                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.addEntry, item.config);
+                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection, item.config);
+
                     return;
                 }
+
+                if (item.itemType === EntryType.Solution) {
+                    vscode.env.openExternal(DynamicsUrlResolver.getSolutionUri(item.config, item.context.solutionid)).then(opened =>
+                    {
+                        if (!opened)
+                        {
+                            treeProvider.retryWithMessage("There was a problem opening the Dynamics 365 browser window", () => {
+                                vscode.commands.executeCommand(cs.dynamics.controls.treeView.editEntry, item);
+                            });
+                        }
+                    });
+
+                    return;
+                }
+
                 vscode.window.showInformationMessage(cs.dynamics.controls.treeView.editEntry);
             }) // <-- no semi-colon, comma starts next command registration
         );
@@ -170,7 +207,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return result;
     }
     
-    private treeviewCommandError(errorMessage:string, retryFunction:any): void
+    retryWithMessage(errorMessage:string, retryFunction:any): void
     {
         vscode.window.showErrorMessage(errorMessage, "Try Again", "Close").then(selectedItem =>
             {
@@ -229,7 +266,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             .catch(err => {
                 console.error(err.innererror ? err.innererror : err);
 
-                this.treeviewCommandError(`An error occurred while accessing organizations from ${connection.webApiUrl}`, () => this.getConnectionDetails(element, commandPrefix));
+                this.retryWithMessage(`An error occurred while accessing organizations from ${connection.webApiUrl}`, () => this.getConnectionDetails(element, commandPrefix));
 
                 return null;
             });
@@ -304,7 +341,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             .catch(err => {
                 console.error(err.innererror ? err.innererror : err);
 
-                this.treeviewCommandError(`An error occurred while retrieving solutions from ${element.config.webApiUrl}`, () => this.getSolutionDetails(element, commandPrefix));
+                this.retryWithMessage(`An error occurred while retrieving solutions from ${element.config.webApiUrl}`, () => this.getSolutionDetails(element, commandPrefix));
 
                 return null;
             });
@@ -338,7 +375,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             .catch(err => {
                 console.error(err.innererror ? err.innererror : err);
 
-                this.treeviewCommandError(`An error occurred while retrieving plug-in assemblies from ${element.config.webApiUrl}`, () => this.getPluginDetails(element, commandPrefix, solutionId));
+                this.retryWithMessage(`An error occurred while retrieving plug-in assemblies from ${element.config.webApiUrl}`, () => this.getPluginDetails(element, commandPrefix, solutionId));
 
                 return null;
             });
@@ -375,7 +412,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             .catch(err => {
                 console.error(err.innererror ? err.innererror : err);
 
-                this.treeviewCommandError(`An error occurred while retrieving entities from ${element.config.webApiUrl}`, () => this.getEntityDetails(element, commandPrefix, solutionId));
+                this.retryWithMessage(`An error occurred while retrieving entities from ${element.config.webApiUrl}`, () => this.getEntityDetails(element, commandPrefix, solutionId));
 
                 return null;
             });
