@@ -67,11 +67,12 @@ export class ViewRenderer {
 		// create a base viewModel
 		const viewModel = {
 			viewTitle: this._view.viewOptions.viewTitle,
-			images: []
+			images: { }
 		};
 		// add images to viewModel
 		Object.keys(this._images).forEach(key => {
-			viewModel.images.push(this._images[key]);
+			//viewModel.images.push(this._images[key]);
+			viewModel.images[key] = this._images[key];
 		});
 		const result = compiled(viewModel);
 		// return output
