@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { TS } from 'typescript-linq/TS';
 import DiscoveryRepository from './discoveryRepository';
 import ApiRepository from './apiRepository';
 import { Utilities } from './Utilities';
@@ -8,8 +9,11 @@ import * as cs from './cs';
 import { IWireUpCommands } from './wireUpCommand';
 import { DynamicsUrlResolver } from './DynamicsWebApi/DynamicsUrlResolver';
 import ExtensionConfiguration from './ExtensionConfiguration';
+import { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } from 'constants';
 
 export default class DynamicsTreeView implements IWireUpCommands {
+    public static Instance:DynamicsServerTreeProvider;
+
     public wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         // register the provider and connect it to the treeview window
         // {
@@ -20,10 +24,14 @@ export default class DynamicsTreeView implements IWireUpCommands {
         //     serverUrl: "http://win-a6ljo0slrsh/",
         //     webApiVersion: "v8.2" 
         // };
+        
+        const isNew = !DynamicsTreeView.Instance;        
+        const treeProvider = isNew ? new DynamicsServerTreeProvider(context) : DynamicsTreeView.Instance;
 
-        const treeProvider = new DynamicsServerTreeProvider(context);
-
-        vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.connections, treeProvider);
+        if (isNew) {
+            DynamicsTreeView.Instance = treeProvider;
+            vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.connections, treeProvider);        
+        }
         
         // setup commands
         context.subscriptions.push(
@@ -188,7 +196,10 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     public getConnections():DynamicsWebApi.Config[]
     {
-        return this._connections;
+        return TreeEntryCache.Instance.Items
+            .where(i => i.itemType === EntryType.Organization)
+            .select(i => i.config)
+            .toArray();
     }
 
     public removeConnection(connection: DynamicsWebApi.Config): void {
@@ -618,8 +629,44 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
     }
 }
 
-class TreeEntry extends vscode.TreeItem {
+class TreeEntryCache
+{
+    private static _instance:TreeEntryCache;
+    private _items:TreeEntry[] = [];
 
+    private constructor() { 
+    }
+
+    static get Instance(): TreeEntryCache
+    {
+        if (!this._instance) {
+            this._instance = new TreeEntryCache();
+        }
+
+        return this._instance;
+    }
+
+    AddEntry(entry:TreeEntry): void
+    {
+        this._items.push(entry);
+    }
+
+    Clear(): void
+    {
+        this._items = [];
+    }
+
+    get Items(): TS.Linq.Enumerator<TreeEntry>
+    {
+        return new TS.Linq.Enumerator(this._items);
+    }
+
+    Under(path:string): TS.Linq.Enumerator<TreeEntry>
+    {
+        return this.Items.where(item => item.id.startsWith(path));
+    }
+}
+class TreeEntry extends vscode.TreeItem {
 	constructor(
         public readonly label: string,
         public readonly itemType: EntryType,
@@ -667,7 +714,14 @@ class TreeEntry extends vscode.TreeItem {
                     };
                 break;
         }
-	}
+
+        if (command && command.arguments && command.arguments.length > 0)
+        {
+            this.id = command.arguments[0].toString();
+        }
+
+        TreeEntryCache.Instance.AddEntry(this);
+    }
 
 	get tooltip(): string {
 		return `${this.label}`;
@@ -675,7 +729,7 @@ class TreeEntry extends vscode.TreeItem {
 
 	get description(): string {
 		return this.subtext || this.itemType.toString(); 
-	}
+    }
 }
 
 enum EntryType {
