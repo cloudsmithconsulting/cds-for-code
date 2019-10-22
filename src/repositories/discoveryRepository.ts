@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { DynamicsWebApiClient } from "./DynamicsWebApi/DynamicsWebApi";
+import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
 
 export default class DiscoveryRepository
 {
