@@ -19,7 +19,7 @@ export default class ApiRepository
         return await this.webapi.executeUnboundFunction('WhoAmI');
     }
 
-    public retrieveSolutions<T>() : Promise<T[] | unknown[]> {
+    public retrieveSolutions() : Promise<any[]> {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "solutions",
             filter: "isvisible eq true",

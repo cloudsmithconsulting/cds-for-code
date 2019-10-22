@@ -49,4 +49,36 @@ export default class MetadataRepository
             }
         );   
     }
+
+    public retrieveAttributes(entityKey:string) : Promise<any[]>
+    {
+        return this.webapi.retrieveAttributes(entityKey, undefined, undefined, 'AttributeOf eq null')
+            .then(response => new TS.Linq.Enumerator(response.value).orderBy(a => a["LogicalName"]).toArray());
+    }
+
+    public retrieveForms(entityLogicalName:string) : Promise<any[]>
+    {
+        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "systemforms",
+            filter: `objecttypecode eq "${entityLogicalName}"`,
+            orderBy: ["name"]
+        };
+
+        return this.webapi.retrieveRequest(request)
+            .then(response => response.value);
+    }
+
+    /*
+    public retrieveViews(entityLogicalName:string) : Promise<any[]>
+    {
+        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "savedquery",
+            filter: `objecttypecode eq "${entityLogicalName}"`,
+            orderBy: ["name"]
+        };
+
+        return this.webapi.retrieveRequest(request)
+            .then(response => response.value);
+    }
+    */
 }
