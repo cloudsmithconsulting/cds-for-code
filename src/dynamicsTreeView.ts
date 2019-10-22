@@ -196,10 +196,29 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     public getConnections():DynamicsWebApi.Config[]
     {
-        return TreeEntryCache.Instance.Items
-            .where(i => i.itemType === EntryType.Organization)
-            .select(i => i.config)
-            .toArray();
+        return this._connections;
+    }
+
+    public async getOrgConnections():Promise<DynamicsWebApi.Config[]>
+    {        
+        const returnObject:DynamicsWebApi.Config[] = [];
+
+        if (this._connections)
+        {
+            const api = new DiscoveryRepository(this._connections[i]);
+
+            for (var i = 0; i < this._connections.length; i++)
+            {
+                var orgs = await api.retrieveOrganizations();
+
+                for (var j = 0; j < orgs.length; j++)
+                {
+                    returnObject.push(this.createOrganizationConnection(orgs[j], this._connections[i]));
+                }
+            }
+        }
+
+        return returnObject;
     }
 
     public removeConnection(connection: DynamicsWebApi.Config): void {
@@ -265,30 +284,32 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         const connection = element.config;
 		const api = new DiscoveryRepository(connection);
         
-        return this._createTreeEntries(api.retrieveOrganizations(), org => {
-                const versionSplit = org.Version.split('.');
-
-                // Clone the current connection and override the endpoint and version.
-                const orgConnection = Utilities.Clone<DynamicsWebApi.Config>(connection);
-
-                orgConnection.webApiUrl = org.ApiUrl;
-                orgConnection.webApiVersion = `${versionSplit[0]}.${versionSplit[1]}`;
-
-                return new TreeEntry(
-                    org.FriendlyName, 
-                    EntryType.Organization,
-                    vscode.TreeItemCollapsibleState.Collapsed,
-                    org.Version, 
-                    {
-                        command: cs.dynamics.controls.treeView.clickEntry,
-                        title: org.FriendlyName,
-                        arguments: [`${commandPrefix || ''}/${org.Id}`]
-                    },
-                    orgConnection,
-                    org);
-            },
+        return this._createTreeEntries(api.retrieveOrganizations(), 
+            org =>  new TreeEntry(
+                org.FriendlyName, 
+                EntryType.Organization,
+                vscode.TreeItemCollapsibleState.Collapsed,
+                org.Version, 
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: org.FriendlyName,
+                    arguments: [`${commandPrefix || ''}/${org.Id}`]
+                },
+                this.createOrganizationConnection(org, connection),
+                org),
             `An error occurred while accessing organizations from ${connection.webApiUrl}`, 
             () => this.getConnectionDetails(element, commandPrefix));
+    }
+
+    private createOrganizationConnection(org: any, connection: DynamicsWebApi.Config):DynamicsWebApi.Config {
+        const versionSplit = org.Version.split('.');
+        // Clone the current connection and override the endpoint and version.
+        const orgConnection = Utilities.Clone<DynamicsWebApi.Config>(connection);
+
+        orgConnection.webApiUrl = org.ApiUrl;
+        orgConnection.webApiVersion = `${versionSplit[0]}.${versionSplit[1]}`;
+        
+        return orgConnection;
     }
 
     private getSolutionLevelDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
