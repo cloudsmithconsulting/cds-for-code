@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as cs from './cs';
 import ExtensionConfiguration from './ExtensionConfiguration';
 import { IWireUpCommands } from './wireUpCommand';
+import DynamicsTreeView from './dynamicsTreeView';
 
 export default class GenerateEntitiesCommand implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
@@ -24,35 +25,36 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                         if (folder.uri.scheme === "file") {
                             // hold on to the current root path
                             const rootPath = folder.uri.fsPath;
-    
-                            // setup the code file path to be generated
-                            const codeFilePath = path.join(rootPath, 'XrmEntities.cs');
-    
-                            // Variables to help execuate PowerShell Commands
-                            const ConnectionString = null;
-                            const Path = null;
-                            const ToolsPath = null;
-                            const Namespace = null;
-                            const Username = "missioncommand";
-                            const Password = "$mokingTir33";
-                            const Domain = "CONTOSO";
 
-                            // setup the command text
-                            const commandToExecute = `${codeFilePath} `
-                                + `-ConnectionString ${ConnectionString}`
-                                + `-Path ${Path} `
-                                + `-OutputFile ${codeFilePath} `
-                                + `-ToolsPath ${ToolsPath}`
-                                + `-Namespace ${Namespace} `
-                                + `-Username:${Username} `
-                                + `-Password:${Password} `.replace('$', '`$') // $ is a problem in powershell
-                                + `-Domain:${Domain} `
-                                + `/out:${codeFilePath}`;
-    
-                            // build a powershell terminal
-                            const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
-                            // execute the command
-                            terminal.sendText(commandToExecute);
+                            const connections = DynamicsTreeView.Instance.getConnections();
+                            const options = connections.map(c => c.webApiUrl);
+
+                            // ask which connection we are using
+                            vscode.window.showQuickPick(options)
+                                .then(value => {
+                                    const index = connections.findIndex(c => c.webApiUrl === value);
+                                    const connection: DynamicsWebApi.Config = connections[index];
+
+                                    const powerShellFilePath = path.join(rootPath, 'Get-XrmSolution.ps1');
+                                    const connectionString = `AuthType=AD;Url=${connection.webApiUrl};Username=${connection.username};Password=${connection.password};Domain=${connection.domain}`;
+
+                                    // Variables to help execuate PowerShell Commands
+                                    const ConnectionString = connectionString;
+                                    const Path = null;
+                                    const OutputFileName = null;
+                                    const Namespace = null;
+                                    // setup the command text
+                                    const commandToExecute = `${powerShellFilePath} `
+                                        + `-ConnectionString ${ConnectionString}`
+                                        + `-Path ${Path} `
+                                        + `-OutputFile ${OutputFileName} `
+                                        + `-Namespace ${Namespace} `;
+            
+                                    // build a powershell terminal
+                                    const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
+                                    // execute the command
+                                    terminal.sendText(commandToExecute);
+                                });
                         }
                     });
                 }

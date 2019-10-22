@@ -9,7 +9,6 @@ import * as cs from './cs';
 import { IWireUpCommands } from './wireUpCommand';
 import { DynamicsUrlResolver } from './DynamicsWebApi/DynamicsUrlResolver';
 import ExtensionConfiguration from './ExtensionConfiguration';
-import { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } from 'constants';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
