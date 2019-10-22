@@ -1,4 +1,4 @@
-import { Utilities } from "../Utilities";
+import { Utilities } from "../helpers/Utilities";
 
 export class RequestUtilities
 {

@@ -1,15 +1,14 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { TS } from 'typescript-linq/TS';
-import DiscoveryRepository from './discoveryRepository';
-import ApiRepository from './apiRepository';
-import { Utilities } from './Utilities';
-import MetadataRepository from './metadataRepository';
+import DiscoveryRepository from './repositories/discoveryRepository';
+import ApiRepository from './repositories/apiRepository';
+import { Utilities } from './helpers/Utilities';
+import MetadataRepository from './repositories/metadataRepository';
 import * as cs from './cs';
 import { IWireUpCommands } from './wireUpCommand';
-import { DynamicsUrlResolver } from './DynamicsWebApi/DynamicsUrlResolver';
+import { DynamicsUrlResolver } from './api/DynamicsUrlResolver';
 import ExtensionConfiguration from './ExtensionConfiguration';
-import { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS, SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from 'constants';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
@@ -411,10 +410,10 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return returnValue;
     }
 
-    private getPluginDetails(element: TreeEntry, commandPrefix?: string, solutionId?: string): Thenable<TreeEntry[]> {
+    private getPluginDetails(element: TreeEntry, commandPrefix?: string, solution?: any): Thenable<TreeEntry[]> {
 		const api = new ApiRepository(element.config);
         const returnValue = this.createTreeEntries(
-            api.retrievePluginAssemblies(solutionId), 
+            api.retrievePluginAssemblies(solution ? solution.solutionid : undefined), 
             plugin => new TreeEntry(
                 plugin.name, 
                 EntryType.Plugin,
@@ -428,15 +427,15 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 element.config,
                 plugin),
             `An error occurred while retrieving plug-in assemblies from ${element.config.webApiUrl}`,
-            () => this.getPluginDetails(element, commandPrefix, solutionId));
+            () => this.getPluginDetails(element, commandPrefix, solution));
 
         return returnValue;
     }
 
-    private getWebResourcesDetails(element: TreeEntry, commandPrefix?: string, solutionId?: string): Thenable<TreeEntry[]> {
+    private getWebResourcesDetails(element: TreeEntry, commandPrefix?: string, solution?: any): Thenable<TreeEntry[]> {
 		const api = new ApiRepository(element.config);
         const returnValue = this.createTreeEntries(
-            api.retrieveWebResources(solutionId), 
+            api.retrieveWebResources(solution ? solution.solutionid : undefined), 
             webresource => new TreeEntry(
                 webresource.name, 
                 EntryType.WebResource,
@@ -450,15 +449,15 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 element.config,
                 webresource),
             `An error occurred while retrieving web resources from ${element.config.webApiUrl}`, 
-            () => this.getWebResourcesDetails(element, commandPrefix, solutionId));
+            () => this.getWebResourcesDetails(element, commandPrefix, solution));
 
         return returnValue;
     }
 
-    private getProcessDetails(element: TreeEntry, commandPrefix?: string, solutionId?: string): Thenable<TreeEntry[]> {
+    private getProcessDetails(element: TreeEntry, commandPrefix?: string, solution?: any): Thenable<TreeEntry[]> {
 		const api = new ApiRepository(element.config);
         const returnValue = this.createTreeEntries(
-            api.retrieveProcesses(solutionId), 
+            api.retrieveProcesses(solution ? solution.solutionid : undefined), 
             process => new TreeEntry(
                 process.name, 
                 EntryType.Process,
@@ -472,15 +471,15 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 element.config,
                 process),
             `An error occurred while retrieving business processes from ${element.config.webApiUrl}`,
-            () => this.getProcessDetails(element, commandPrefix, solutionId));
+            () => this.getProcessDetails(element, commandPrefix, solution));
 
         return returnValue;
     }
 
-    private getEntityDetails(element: TreeEntry, commandPrefix?: string, solutionId?: string): Thenable<TreeEntry[]> {
+    private getEntityDetails(element: TreeEntry, commandPrefix?: string, solution?: any): Thenable<TreeEntry[]> {
 		const api = new MetadataRepository(element.config);
         const returnValue = this.createTreeEntries(
-            api.retrieveEntities(solutionId), 
+            api.retrieveEntities(solution ? solution.solutionid : undefined), 
             entity => {
                 let displayName = entity.DisplayName && entity.DisplayName.LocalizedLabels && entity.DisplayName.LocalizedLabels.length > 0 ? entity.DisplayName.LocalizedLabels[0].Label : "";
 
@@ -498,7 +497,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     entity);
             },
             `An error occurred while retrieving entities from ${element.config.webApiUrl}`,
-            () => this.getEntityDetails(element, commandPrefix, solutionId));
+            () => this.getEntityDetails(element, commandPrefix, solution));
     
         return returnValue;
     }

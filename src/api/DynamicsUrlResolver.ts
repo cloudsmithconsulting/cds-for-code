@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Utilities } from '../Utilities';
+import { Utilities } from '../helpers/Utilities';
 
 export enum DynamicsForm
 {
