@@ -5,6 +5,7 @@ export namespace dynamics
     {
         public static readonly _namespace:string = "cs.dynamics.configuration";
         public static readonly sdkInstallPath:string = `${configuration._namespace}.sdkInstallPath`;
+        public static readonly showDefaultSolution:string = `${configuration._namespace}.showDefaultSolution`;
     }
 
     // tslint:disable-next-line: class-name
@@ -48,6 +49,7 @@ export namespace dynamics
             public static readonly clickEntry:string = `${treeView._namespace}.clickEntry`;
             public static readonly deleteEntry:string = `${treeView._namespace}.deleteEntry`;
             public static readonly editEntry:string = `${treeView._namespace}.editEntry`;
+            public static readonly openConnection:string = `${treeView._namespace}.openConnection`;
             public static readonly refreshEntry:string = `${treeView._namespace}.refreshEntry`;
 
         }
