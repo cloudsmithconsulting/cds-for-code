@@ -8,7 +8,7 @@ import MetadataRepository from './repositories/metadataRepository';
 import * as cs from './cs';
 import { IWireUpCommands } from './wireUpCommand';
 import { DynamicsUrlResolver } from './api/DynamicsUrlResolver';
-import ExtensionConfiguration from './ExtensionConfiguration';
+import ExtensionConfiguration from './helpers/ExtensionConfiguration';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
@@ -85,7 +85,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case EntryType.Form:
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, item.context.type, item.context.formid, item.solutionId), retryFunction);
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, DynamicsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId), retryFunction);
                         break;
                 }
            }) // <-- no semi-colon, comma starts next command registration
@@ -562,7 +562,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 {
                     command: cs.dynamics.controls.treeView.clickEntry,
                     title: form.name,
-                    arguments: [`${commandPrefix || ''}/${form.systemformid}`]
+                    arguments: [`${commandPrefix || ''}/${form.formid}`]
                 },
                 element.config,
                 form),

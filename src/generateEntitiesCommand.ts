@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as cs from './cs';
-import ExtensionConfiguration from './ExtensionConfiguration';
+import ExtensionConfiguration from './helpers/ExtensionConfiguration';
 import { IWireUpCommands } from './wireUpCommand';
 
 export default class GenerateEntitiesCommand implements IWireUpCommands {
