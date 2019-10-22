@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as cs from './cs';
+import * as cs from '../cs';
 
 export default class ExtensionConfiguration {
     private static _configurations: { [key: string]: vscode.WorkspaceConfiguration } = {};

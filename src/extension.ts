@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import * as cs from './cs';
 // config
-import ExtensionConfiguration from './ExtensionConfiguration';
+import ExtensionConfiguration from './helpers/ExtensionConfiguration';
 import ConnectionViewManager from './connectionViewManager';
 import GenerateEntitiesCommand from './generateEntitiesCommand';
 import PowerShellLoader from './powerShellLoader';

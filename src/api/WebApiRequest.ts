@@ -1,5 +1,5 @@
 import { RequestConverter } from "./RequestConverter";
-import { Utilities } from "../Utilities";
+import { Utilities } from "../helpers/Utilities";
 import * as vscode from 'vscode';
 import * as httpntlm from "httpntlm";
 import * as http from 'http';
