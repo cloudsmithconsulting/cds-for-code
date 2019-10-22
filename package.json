@@ -119,12 +119,12 @@
 				{
 					"command": "cs.dynamics.controls.treeView.addEntry",
 					"group": "inline",
-					"when": "viewItem == Solutions || viewItem == Plugins || viewItem == Entities || viewItem == WebResources || viewItem == Entries"
+					"when": "viewItem == Solutions || viewItem == Plugins || viewItem == Entities || viewItem == WebResources || viewItem == Process || viewItem == Entries"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
 					"group": "inline",
-					"when": "viewItem == Connection || viewItem == Solution || viewItem == Entity || viewItem == WebResource || viewItem == Entry"
+					"when": "viewItem == Connection || viewItem == Solution || viewItem == Entity || viewItem == WebResource || viewItem == Process || viewItem == Attribute || viewItem == Form || viewItem == View || viewItem == Entry"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.deleteEntry",
@@ -134,7 +134,7 @@
 				{
 					"command": "cs.dynamics.controls.treeView.refreshEntry",
 					"group": "inline",
-					"when": "viewItem == Solutions || viewItem == Plugins || viewItem == Entities || viewItem == WebResources || viewItem == Entries"
+					"when": "viewItem == Solutions || viewItem == Plugins || viewItem == Entities || viewItem == WebResources || viewItem == Processes || viewItem == Entries"
 				}
 			]
 		}
