@@ -26,34 +26,57 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                             // hold on to the current root path
                             const rootPath = folder.uri.fsPath;
 
-                            const connections = DynamicsTreeView.Instance.getConnections();
-                            const options = connections.map(c => c.webApiUrl);
+                            DynamicsTreeView.Instance.getOrgConnections()
+                                .then(connections => {
+                                    // map to array for options in  pick list
+                                    const options = connections.map(c => c.webApiUrl);
+                                    // ask which connection we are using
+                                    vscode.window.showQuickPick(options)
+                                        .then(value => {
+                                            const index = connections.findIndex(c => c.webApiUrl === value);
+                                            const connection: DynamicsWebApi.Config = connections[index];
 
-                            // ask which connection we are using
-                            vscode.window.showQuickPick(options)
-                                .then(value => {
-                                    const index = connections.findIndex(c => c.webApiUrl === value);
-                                    const connection: DynamicsWebApi.Config = connections[index];
+                                            const powerShellFilePath = path.join(rootPath, 'Get-XrmSolution.ps1');
+                                            const connectionString = `AuthType=AD;Url=${connection.webApiUrl};Username=${connection.username};Password=${connection.password};Domain=${connection.domain}`;
+                                            let Path: string; //will be filled in below
+                                            let OutputFileName = null; //will be filled in below
+                                            let Namespace = null; //will be filled in below
 
-                                    const powerShellFilePath = path.join(rootPath, 'Get-XrmSolution.ps1');
-                                    const connectionString = `AuthType=AD;Url=${connection.webApiUrl};Username=${connection.username};Password=${connection.password};Domain=${connection.domain}`;
+                                            // Variables to help execuate PowerShell Commands
+                                            const ConnectionString = connectionString;
+                                            vscode.window.showWorkspaceFolderPick({
+                                                placeHolder: 'Path'
+                                            })
+                                            .then(folder => {
+                                                Path = folder.name;
+                                                
+                                                vscode.window.showInputBox({
+                                                    prompt: 'Please enter the output file name',
+                                                    value: 'XrmEntities.cs'
+                                                }).then(value => {
+                                                    OutputFileName = value;
 
-                                    // Variables to help execuate PowerShell Commands
-                                    const ConnectionString = connectionString;
-                                    const Path = null;
-                                    const OutputFileName = null;
-                                    const Namespace = null;
-                                    // setup the command text
-                                    const commandToExecute = `${powerShellFilePath} `
-                                        + `-ConnectionString ${ConnectionString}`
-                                        + `-Path ${Path} `
-                                        + `-OutputFile ${OutputFileName} `
-                                        + `-Namespace ${Namespace} `;
-            
-                                    // build a powershell terminal
-                                    const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
-                                    // execute the command
-                                    terminal.sendText(commandToExecute);
+                                                    vscode.window.showInputBox({
+                                                        prompt: 'Please enter the namespace for the generated code',
+                                                        value: 'XrmEntities'
+                                                    }).then(value => {
+                                                        Namespace = value;
+
+                                                        // setup the command text
+                                                        const commandToExecute = `${powerShellFilePath} `
+                                                            + `-ConnectionString ${ConnectionString}`
+                                                            + `-Path ${Path} `
+                                                            + `-OutputFile ${OutputFileName} `
+                                                            + `-Namespace ${Namespace} `;
+                                
+                                                        // build a powershell terminal
+                                                        const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
+                                                        // execute the command
+                                                        terminal.sendText(commandToExecute);
+                                                    });
+                                                });
+                                            });
+                                        });
                                 });
                         }
                     });
