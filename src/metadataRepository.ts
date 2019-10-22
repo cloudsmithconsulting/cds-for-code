@@ -60,7 +60,7 @@ export default class MetadataRepository
     {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "systemforms",
-            filter: `objecttypecode eq "${entityLogicalName}"`,
+            filter: `objecttypecode eq '${entityLogicalName}'`,
             orderBy: ["name"]
         };
 
@@ -68,17 +68,15 @@ export default class MetadataRepository
             .then(response => response.value);
     }
 
-    /*
-    public retrieveViews(entityLogicalName:string) : Promise<any[]>
+    public retrieveViews(entityLogicalName:number) : Promise<any[]>
     {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
-            collection: "savedquery",
-            filter: `objecttypecode eq "${entityLogicalName}"`,
+            collection: "savedqueries",
+            filter: `returnedtypecode eq '${entityLogicalName}'`,
             orderBy: ["name"]
         };
 
         return this.webapi.retrieveRequest(request)
             .then(response => response.value);
     }
-    */
 }

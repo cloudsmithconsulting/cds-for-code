@@ -153,13 +153,17 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 case EntryType.Entity:
                     return Promise.resolve(this.getEntityLevelDetails(element, commandPrefix));
                 case EntryType.Attributes:
-                    return this.getAttributeDetails(element, commandPrefix, element.context);
+                    return this.getEntityAttributeDetails(element, commandPrefix, element.context);
+                case EntryType.Views:
+                    return this.getEntityViewDetails(element, commandPrefix, element.context);
+                case EntryType.Forms:
+                    return this.getEntityFormDetails(element, commandPrefix, element.context);
             }
 
             return; //return nothing if type falls through
         }
 
-        return Promise.resolve(this.getConnections());
+        return Promise.resolve(this.getConnectionEntries());
     }
 
     public addConnection(...options: DynamicsWebApi.Config[]): void {
@@ -180,6 +184,11 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         this._context.globalState.update(this.connectionsGlobalStateKey, this._connections);
         // refresh the treeview
         this.refresh();
+    }
+
+    public getConnections():DynamicsWebApi.Config[]
+    {
+        return this._connections;
     }
 
     public removeConnection(connection: DynamicsWebApi.Config): void {
@@ -216,7 +225,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             });
     }
     
-	private getConnections(): TreeEntry[] {
+	private getConnectionEntries(): TreeEntry[] {
         const result: TreeEntry[] = [];
         
         this._connections.forEach(connection => {
@@ -381,7 +390,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 arguments: [`${commandPrefix || ''}/Views`]
             },
             element.config,
-            element.itemType === EntryType.Solution ? element.context : undefined
+            element.itemType === EntryType.Entity ? element.context : undefined
         ));
 
         returnObject.push(new TreeEntry(
@@ -510,7 +519,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             () => this.getEntityDetails(element, commandPrefix, solutionId));
     }
 
-    private getAttributeDetails(element: TreeEntry, commandPrefix?: string, entity?:any): Thenable<TreeEntry[]> {
+    private getEntityAttributeDetails(element: TreeEntry, commandPrefix?: string, entity?:any): Thenable<TreeEntry[]> {
         const api = new MetadataRepository(element.config);
 
         return this._createTreeEntries(
@@ -532,7 +541,49 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     attribute);
             },
             `An error occurred while retrieving attributes from ${element.config.webApiUrl}`,
-            () => this.getAttributeDetails(element, commandPrefix, entity));
+            () => this.getEntityAttributeDetails(element, commandPrefix, entity));
+    }
+
+    private getEntityViewDetails(element: TreeEntry, commandPrefix?: string, entity?:any): Thenable<TreeEntry[]> {
+        const api = new MetadataRepository(element.config);
+
+        return this._createTreeEntries(
+            api.retrieveViews(entity.LogicalName), 
+            query => new TreeEntry(
+                query.name,
+                EntryType.View,
+                vscode.TreeItemCollapsibleState.None,
+                query.description, 
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: query.name,
+                    arguments: [`${commandPrefix || ''}/${query.savedqueryid}`]
+                },
+                element.config,
+                query),
+            `An error occurred while retrieving views from ${element.config.webApiUrl}`,
+            () => this.getEntityViewDetails(element, commandPrefix, entity));
+    }
+
+    private getEntityFormDetails(element: TreeEntry, commandPrefix?: string, entity?:any): Thenable<TreeEntry[]> {
+        const api = new MetadataRepository(element.config);
+
+        return this._createTreeEntries(
+            api.retrieveForms(entity.LogicalName), 
+            form => new TreeEntry(
+                form.name,
+                EntryType.Form,
+                vscode.TreeItemCollapsibleState.None,
+                form.description, 
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: form.name,
+                    arguments: [`${commandPrefix || ''}/${form.systemformid}`]
+                },
+                element.config,
+                form),
+            `An error occurred while retrieving forms from ${element.config.webApiUrl}`,
+            () => this.getEntityFormDetails(element, commandPrefix, entity));
     }
 
     private _createTreeEntries(whenComplete: Promise<any[]>, parser: (item: any) => TreeEntry, errorMessage?:string, retryFunction?:any): Promise<TreeEntry[]>
