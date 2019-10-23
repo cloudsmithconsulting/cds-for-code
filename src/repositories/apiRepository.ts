@@ -33,12 +33,13 @@ export default class ApiRepository
     public retrieveProcesses(solutionId?:string) : Promise<any[]> {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "workflows",
+            filter: "componentstate ne 2 and componentstate ne 3 and type eq 1",
             orderBy: ["name"]
         };
 
         if (solutionId)
         {
-            request.filter = `solutionid eq ${solutionId}`;
+            request.filter = ` and solutionid eq ${solutionId}`;
         }
 
         return this.webapi.retrieveAllRequest(request)

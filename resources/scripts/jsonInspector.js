@@ -2,6 +2,7 @@
 // It cannot access the main VS Code APIs directly.
 (function () {
     const vscode = acquireVsCodeApi();
+    var editor = null;
 
     // Handle messages sent from the extension to the webview
     window.addEventListener("message", event => {
@@ -11,7 +12,14 @@
             case "inspect":
                 var item = message.message;
 
-                inspect(item);
+                if (!editor)
+                {
+                    editor = inspect(item);
+                }
+                else
+                {
+                    editor.data = item;
+                }
 
                 break;
         }
@@ -20,12 +28,12 @@
     function inspect(item)
     {
         // create the editor
-        const container = document.getElementById("container")
+        const container = document.getElementById("container");
         const options = {
             //modes: ['text', 'tree']
             mode: 'view'
-        }
-        const editor = new JSONEditor(container, options, item)
+        };
+        const editor = new JSONEditor(container, options, item);
 
         return editor;
     }

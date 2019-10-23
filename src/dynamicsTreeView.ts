@@ -64,22 +64,21 @@ export default class DynamicsTreeView implements IWireUpCommands {
                 }
             })   
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.editEntry, (item: TreeEntry) => { // Match name of command to package.json command
-                // Run command code
-                if (item.itemType === EntryType.Connection) {
-                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection, item.config);
-
-                    return;
-                }
-
                 let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.treeView.editEntry, item);
 
                 switch (item.itemType)
                 {
+                    case EntryType.Connection:
+                        vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection, item.config);
+                        break;
                     case EntryType.Solution:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config, item.context.solutionid), retryFunction);
                         break;
                     case EntryType.Entity:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityUri(item.config, item.context.MetadataId, item.solutionId), retryFunction);
+                        break;
+                    case EntryType.Process:
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, DynamicsUrlResolver.parseProcessType(item.context.category), item.context.workflowid, item.solutionId), retryFunction);
                         break;
                     case EntryType.Attribute:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
@@ -87,6 +86,9 @@ export default class DynamicsTreeView implements IWireUpCommands {
                     case EntryType.Form:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, DynamicsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId || item.context.solutionid), retryFunction);
                         break;
+                    case EntryType.View:
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.context.savedqueryid, item.solutionId), retryFunction);
+                        break;                    
                 }
            }) // <-- no semi-colon, comma starts next command registration
         );
@@ -462,7 +464,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 process.name, 
                 EntryType.Process,
                 vscode.TreeItemCollapsibleState.None,
-                process.displayname, 
+                DynamicsUrlResolver.parseProcessType(process.category).toString(), 
                 {
                     command: cs.dynamics.controls.treeView.clickEntry,
                     title: process.displayname,
