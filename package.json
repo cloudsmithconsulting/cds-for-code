@@ -67,6 +67,10 @@
 				"title": "Click"
 			},
 			{
+				"command": "cs.dynamics.controls.treeView.inspectEntry",
+				"title": "Inspect"
+			},
+			{
 				"command": "cs.dynamics.controls.treeView.openConnection",
 				"title": "Open"
 			},
@@ -127,6 +131,11 @@
 					"when": "viewItem == Connection || viewItem == Solution || viewItem == Entity || viewItem == WebResource || viewItem == Process || viewItem == Attribute || viewItem == Form || viewItem == View || viewItem == Entry"
 				},
 				{
+					"command": "cs.dynamics.controls.treeView.inspectEntry",
+					"group": "1",
+					"when": "viewItem == Solution || viewItem == Entity || viewItem == WebResource || viewItem == Process || viewItem == Attribute || viewItem == Form || viewItem == View || viewItem == Entry"
+				},
+				{
 					"command": "cs.dynamics.controls.treeView.deleteEntry",
 					"group": "inline",
 					"when": "viewItem == Connection"
@@ -162,6 +171,7 @@
 	"dependencies": {
 		"adal-node": "^0.2.1",
 		"httpntlm": "^1.7.6",
+		"jsoneditor": "^7.1.0",
 		"lodash": "^4.17.15",
 		"node-fetch": "^2.6.0",
 		"typescript-linq": "^1.0.6"

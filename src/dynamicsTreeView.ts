@@ -27,24 +27,24 @@ export default class DynamicsTreeView implements IWireUpCommands {
             vscode.commands.registerCommand(cs.dynamics.controls.treeView.refreshEntry, (item?: TreeEntry) => {
                 treeProvider.refresh(item);
             }) // <-- no semi-colon, comma starts next command registration
-
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addConnection, (config: DynamicsWebApi.Config) => {
                 // add the connection and refresh treeview
                 treeProvider.addConnection(config);
 
                 vscode.window.showInformationMessage(config.id ? `Updated Dynamics Connection: ${config.webApiUrl}` : `Added Dynamics Connection: ${config.webApiUrl}`);
             }) // <-- no semi-colon, comma starts next command registration
-
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.clickEntry, (label?: string) => { // Match name of command to package.json command
                 // Run command code
                 vscode.window.showInformationMessage(`Clicked ${label || ''}`);
             }) // <-- no semi-colon, comma starts next command registration
-            
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.deleteEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 // Run command code
                 treeProvider.removeConnection(item.config);
 
                 vscode.window.showInformationMessage(`Delete Dynamics Connection: ${item.config.webApiUrl}`);
+            }) // <-- no semi-colon, comma starts next command registration
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.inspectEntry, (item: TreeEntry) => { // Match name of command to package.json command
+                vscode.commands.executeCommand(cs.dynamics.controls.jsonInspector.inspect, item.context);
             }) // <-- no semi-colon, comma starts next command registration
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item)
@@ -85,7 +85,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case EntryType.Form:
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, DynamicsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId), retryFunction);
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, DynamicsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId || item.context.solutionid), retryFunction);
                         break;
                 }
            }) // <-- no semi-colon, comma starts next command registration

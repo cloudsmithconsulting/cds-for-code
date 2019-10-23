@@ -11,6 +11,7 @@ import DynamicsTreeView from './dynamicsTreeView';
 import { IWireUpCommands } from './wireUpCommand';
 import { PackDynamicsSolutionCommand } from './packDynamicsSolutionCommand';
 import { UnpackDynamicsSolutionCommand } from './unpackDynamicsSolutionCommand';
+import JsonInspectorViewManager from './views/jsonInspectorView';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -31,6 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
 		// our views
 		new DynamicsTreeView(),
 		new ConnectionViewManager(),
+		new JsonInspectorViewManager(),
 		// our commands
 		new PowerShellLoader(),
 		new GenerateEntitiesCommand(),

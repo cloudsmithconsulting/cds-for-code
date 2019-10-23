@@ -36,6 +36,7 @@ export namespace dynamics
     {
         public static readonly _namespace:string = "cs.dynamics.views";
         public static readonly connectionView:string = `${viewContainers._namespace}.connectionView`;
+        public static readonly jsonInspectorView:string = `${viewContainers._namespace}.jsonInspectorView`;
     }
 
     export namespace controls
@@ -49,9 +50,16 @@ export namespace dynamics
             public static readonly clickEntry:string = `${treeView._namespace}.clickEntry`;
             public static readonly deleteEntry:string = `${treeView._namespace}.deleteEntry`;
             public static readonly editEntry:string = `${treeView._namespace}.editEntry`;
+            public static readonly inspectEntry:string = `${treeView._namespace}.inspectEntry`;
             public static readonly openConnection:string = `${treeView._namespace}.openConnection`;
             public static readonly refreshEntry:string = `${treeView._namespace}.refreshEntry`;
+        }
 
+        // tslint:disable-next-line: class-name
+        export class jsonInspector
+        {
+            public static readonly _namespace:string = "cs.dynamics.controls.jsonInspector";
+            public static readonly inspect:string = `${jsonInspector._namespace}.inspect`;
         }
     }
 }

@@ -60,7 +60,7 @@ export default class MetadataRepository
     {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "systemforms",
-            filter: `objecttypecode eq '${entityLogicalName}'`,
+            filter: `objecttypecode eq '${entityLogicalName}' and formactivationstate eq 1`,
             orderBy: ["name"]
         };
 
@@ -72,7 +72,7 @@ export default class MetadataRepository
     {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "savedqueries",
-            filter: `returnedtypecode eq '${entityLogicalName}'`,
+            filter: `returnedtypecode eq '${entityLogicalName}' and statecode eq 0`,
             orderBy: ["name"]
         };
 
