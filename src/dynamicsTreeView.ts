@@ -182,10 +182,10 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
         if (this._connections)
         {
-            const api = new DiscoveryRepository(this._connections[i]);
-
             for (var i = 0; i < this._connections.length; i++)
             {
+                const api = new DiscoveryRepository(this._connections[i]);
+
                 var orgs = await api.retrieveOrganizations();
 
                 for (var j = 0; j < orgs.length; j++)

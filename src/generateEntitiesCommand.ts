@@ -20,11 +20,11 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                 // see if we have anything open
                 if (folders !== undefined) {
                     // loop through open root workspace folders
-                    folders.forEach(folder => {
+                    folders.forEach(workspaceFolder => {
                         // we only support the file system right now
-                        if (folder.uri.scheme === "file") {
+                        if (workspaceFolder.uri.scheme === "file") {
                             // hold on to the current root path
-                            const rootPath = folder.uri.fsPath;
+                            const workspaceUri = workspaceFolder.uri;
 
                             DynamicsTreeView.Instance.getOrgConnections()
                                 .then(connections => {
@@ -36,7 +36,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                                             const index = connections.findIndex(c => c.webApiUrl === value);
                                             const connection: DynamicsWebApi.Config = connections[index];
 
-                                            const powerShellFilePath = path.join(rootPath, 'Get-XrmSolution.ps1');
+                                            const powerShellFilePath = path.join(context.globalStoragePath, 'Generate-XrmEntities.ps1');
                                             const connectionString = `AuthType=AD;Url=${connection.webApiUrl};Username=${connection.username};Password=${connection.password};Domain=${connection.domain}`;
                                             let Path: string; //will be filled in below
                                             let OutputFileName = null; //will be filled in below
@@ -44,11 +44,14 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
 
                                             // Variables to help execuate PowerShell Commands
                                             const ConnectionString = connectionString;
-                                            vscode.window.showWorkspaceFolderPick({
-                                                placeHolder: 'Path'
+                                            vscode.window.showOpenDialog({
+                                                canSelectFolders: true,
+                                                canSelectFiles: false,
+                                                canSelectMany: false,
+                                                defaultUri: workspaceUri
                                             })
-                                            .then(folder => {
-                                                Path = folder.name;
+                                            .then(uriArray => {
+                                                Path = uriArray[0].fsPath;
                                                 
                                                 vscode.window.showInputBox({
                                                     prompt: 'Please enter the output file name',
@@ -64,10 +67,11 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
 
                                                         // setup the command text
                                                         const commandToExecute = `${powerShellFilePath} `
-                                                            + `-ConnectionString ${ConnectionString}`
-                                                            + `-Path ${Path} `
-                                                            + `-OutputFile ${OutputFileName} `
-                                                            + `-Namespace ${Namespace} `;
+                                                            + `-ToolsPath "${coreToolsRoot}" `
+                                                            + `-ConnectionString "${ConnectionString}" `
+                                                            + `-Path "${Path}" `
+                                                            + `-OutputFile "${OutputFileName}" `
+                                                            + `-Namespace "${Namespace}" `;
                                 
                                                         // build a powershell terminal
                                                         const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
