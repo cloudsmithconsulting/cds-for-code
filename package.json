@@ -198,17 +198,17 @@
 				{
 					"command": "cs.dynamics.controls.treeView.addEntry",
 					"group": "inline",
-					"when": "viewItem =~ /^(Solutions|Plugins|Entities|WebResources|Processes|Attributes|Forms|Views|Entries)$/"
+					"when": "viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Entries)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
 					"group": "inline",
-					"when": "viewItem =~ /^(Connection|Solution|Entity|WebResource|Process|Attribute|Form|View|Entry)$/"
+					"when": "viewItem =~ /^(Connection|Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Entry)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.inspectEntry",
 					"group": "contextMenu@1",
-					"when": "viewItem =~ /^(Solution|Entity|WebResource|Process|Attribute|Form|View|Entry)$/"
+					"when": "viewItem =~ /^(Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Entry)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.deleteEntry",
@@ -218,7 +218,7 @@
 				{
 					"command": "cs.dynamics.controls.treeView.refreshEntry",
 					"group": "contextMenu@1",
-					"when": "viewItem =~ /^(Solutions|Plugins|Entities|WebResources|Processes|Attributes|Forms|Views|Entries)$/"
+					"when": "viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Entries)$/"
 				}
 			]
 		}

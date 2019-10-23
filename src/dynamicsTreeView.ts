@@ -9,6 +9,7 @@ import * as cs from './cs';
 import { IWireUpCommands } from './wireUpCommand';
 import { DynamicsUrlResolver } from './api/DynamicsUrlResolver';
 import ExtensionConfiguration from './helpers/ExtensionConfiguration';
+import { IDictionary, Dictionary } from './helpers/Dictionary';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
@@ -135,6 +136,8 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     return this.getPluginDetails(element, commandPrefix, element.context);
                 case EntryType.Entities:
                     return this.getEntityDetails(element, commandPrefix, element.context);
+                case EntryType.OptionSets:
+                    return this.getOptionSetDetails(element, commandPrefix, element.context);
                 case EntryType.WebResources:
                     return this.getWebResourcesDetails(element, commandPrefix, element.context);
                 case EntryType.Entity:
@@ -274,6 +277,20 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     command: cs.dynamics.controls.treeView.clickEntry,
                     title: 'Entities',
                     arguments: [`${commandPrefix || ''}/Entities`]
+                },
+                element.config,
+                element.itemType === EntryType.Solution ? element.context : undefined
+            ));
+
+            returnObject.push(new TreeEntry(
+                'Option Sets',
+                EntryType.OptionSets,
+                vscode.TreeItemCollapsibleState.Collapsed, 
+                null,
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: 'OptionSets',
+                    arguments: [`${commandPrefix || ''}/OptionSets`]
                 },
                 element.config,
                 element.itemType === EntryType.Solution ? element.context : undefined
@@ -478,6 +495,32 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return returnValue;
     }
 
+    private getOptionSetDetails(element: TreeEntry, commandPrefix?: string, solution?: any): Thenable<TreeEntry[]> {
+		const api = new MetadataRepository(element.config);
+        const returnValue = this.createTreeEntries(
+            api.retrieveOptionSets(solution ? solution.solutionid : undefined), 
+            optionSet => {
+                let displayName = optionSet.DisplayName && optionSet.DisplayName.LocalizedLabels && optionSet.DisplayName.LocalizedLabels.length > 0 ? optionSet.DisplayName.LocalizedLabels[0].Label : "";
+
+                return new TreeEntry(
+                    displayName,
+                    EntryType.OptionSet,
+                    vscode.TreeItemCollapsibleState.Collapsed,
+                    optionSet.Name, 
+                    {
+                        command: cs.dynamics.controls.treeView.clickEntry,
+                        title: displayName,
+                        arguments: [`${commandPrefix || ''}/${optionSet.Name}`]
+                    },
+                    element.config,
+                    optionSet);
+            },
+            `An error occurred while retrieving option sets from ${element.config.webApiUrl}`,
+            () => this.getOptionSetDetails(element, commandPrefix, solution));
+    
+        return returnValue;
+    }
+
     private getEntityDetails(element: TreeEntry, commandPrefix?: string, solution?: any): Thenable<TreeEntry[]> {
 		const api = new MetadataRepository(element.config);
         const returnValue = this.createTreeEntries(
@@ -655,7 +698,35 @@ class TreeEntryCache
         return this.Items.where(item => item.id.startsWith(path));
     }
 }
+class IconResolver
+{
+    public readonly iconPath: { light: string | vscode.Uri; dark: string | vscode.Uri } = null;
+
+    constructor(
+        public readonly lightPath: string,
+        public readonly darkPath: string
+    )
+    {
+        this.iconPath = {
+            light: path.join(__filename, ...lightPath.split("/")),
+            dark: path.join(__filename, ...darkPath.split("/"))
+        };
+    }
+
+}
+
 class TreeEntry extends vscode.TreeItem {
+    private static _icons = new Dictionary<string, IconResolver>([
+        { key: "Connection", value: new IconResolver("../../resources/icons/light/server.svg", "../../resources/icons/dark/server.svg") },
+        { key: "Organization", value: new IconResolver("../../resources/icons/light/dependency.svg", "../../resources/icons/dark/dependency.svg") },
+        { key: "Entities", value: new IconResolver("../../resources/icons/light/object-ungroup.svg", "../../resources/icons/dark/object-ungroup.svg") },
+        { key: "Entity", value: new IconResolver("../../resources/icons/light/object-ungroup.svg", "../../resources/icons/dark/object-ungroup.svg") },
+        { key: "Plugins", value: new IconResolver("../../resources/icons/light/plug.svg", "../../resources/icons/dark/plug.svg") },
+        { key: "Plugin", value: new IconResolver("../../resources/icons/light/plug.svg", "../../resources/icons/dark/plug.svg") },
+        { key: "Solutions", value: new IconResolver("../../resources/icons/light/puzzle-piece.svg", "../../resources/icons/dark/puzzle-piece.svg") },
+        { key: "Solution", value: new IconResolver("../../resources/icons/light/puzzle-piece.svg", "../../resources/icons/dark/puzzle-piece.svg") },
+    ]);
+
 	constructor(
         public readonly label: string,
         public readonly itemType: EntryType,
@@ -667,41 +738,9 @@ class TreeEntry extends vscode.TreeItem {
 	) {
         super(label, collapsibleState);
         this.contextValue = itemType.toString();
-
-        switch (itemType) {
-            case EntryType.Connection:
-                    this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'server.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'server.svg')
-                    };
-                break;
-            case EntryType.Organization:
-                  this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'dependency.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'dependency.svg')
-                    };
-                break;
-            case EntryType.Entities:
-            case EntryType.Entity:
-                    this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'object-ungroup.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'object-ungroup.svg')
-                    };
-                break;
-            case EntryType.Plugins:
-            case EntryType.Plugin:
-                  this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'plug.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'plug.svg')
-                    };
-                break;
-            case EntryType.Solutions:
-            case EntryType.Solution:
-                  this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'puzzle-piece.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'puzzle-piece.svg')
-                    };
-                break;
+        
+        if (TreeEntry._icons.containsKey(itemType.toString())) {
+            this.iconPath = TreeEntry._icons[itemType.toString()].iconPath;
         }
 
         if (command && command.arguments && command.arguments.length > 0)
@@ -754,11 +793,13 @@ enum EntryType {
     Connection = "Connection",
     Organization = "Organization",
     Entities = "Entities",
+    OptionSets = "OptionSets",
     WebResources = "WebResources",
     Plugins = "Plugins",
     Processes = "Processes",
     Solutions = "Solutions",
     Entity = "Entity",
+    OptionSet = "OptionSet",
     WebResource = "WebResource",
     Plugin = "Plugin",
     Process = "Process",

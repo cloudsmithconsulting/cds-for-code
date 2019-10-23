@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
 import { TS } from 'typescript-linq/TS';
+import { Z_UNKNOWN } from 'zlib';
 
 export default class MetadataRepository
 {
@@ -54,6 +55,37 @@ export default class MetadataRepository
     {
         return this.webapi.retrieveAttributes(entityKey, undefined, undefined, 'AttributeOf eq null')
             .then(response => new TS.Linq.Enumerator(response.value).orderBy(a => a["LogicalName"]).toArray());
+    }
+
+    public retrieveOptionSets(solutionId?:string): Promise<any[]>
+    {
+        return this.webapi.retrieveGlobalOptionSets()
+            .then(optionSetResponse => {
+                if (solutionId) {
+                    let solutionQuery:DynamicsWebApi.RetrieveRequest = {
+                        collection: "solutions",
+                        id: solutionId,
+                        expand: [ { property: "solution_solutioncomponent", filter: "componenttype eq 9" } ]
+                    };    
+                    
+                    return this.webapi.retrieveRequest(solutionQuery).then(solution => {
+                        if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0)
+                        {
+                            return null;
+                        }
+            
+                        let components = new TS.Linq.Enumerator(solution.solution_solutioncomponent);
+                        let filteredList = components
+                            .join(new TS.Linq.Enumerator(optionSetResponse.value), c => c["objectid"], o => o["MetadataId"], (c, o) => o)
+                            .orderBy(o => o["LogicalName"])
+                            .toArray();
+            
+                        return filteredList;
+                    });           
+                } else {
+                    return new TS.Linq.Enumerator(optionSetResponse.value).orderBy(e => e["LogicalName"]).toArray();
+                }                
+            });
     }
 
     public retrieveForms(entityLogicalName:string) : Promise<any[]>
