@@ -8,10 +8,10 @@ import ConnectionViewManager from './connectionViewManager';
 import GenerateEntitiesCommand from './generateEntitiesCommand';
 import PowerShellLoader from './powerShellLoader';
 import DynamicsTreeView from './dynamicsTreeView';
-import { IWireUpCommands } from './wireUpCommand';
 import { PackDynamicsSolutionCommand } from './packDynamicsSolutionCommand';
 import { UnpackDynamicsSolutionCommand } from './unpackDynamicsSolutionCommand';
 import JsonInspectorViewManager from './views/jsonInspectorView';
+import ProjectTemplatesPlugin from './ProjectTemplatesPlugin';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -19,33 +19,30 @@ import JsonInspectorViewManager from './views/jsonInspectorView';
 // More on activation events can be found here: https://code.visualstudio.com/api/references/activation-events#Start-up
 // *****************
 export function activate(context: vscode.ExtensionContext) {
-	
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('[CloudSmith]: extension:activate');
 	
 	// load and check extension configuration
-	const config = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration._namespace);
+	const toolsConfig = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration.tools._namespace);
+	const templatesConfig = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration.templates._namespace);
 
-	// setup what we want to initialize
-	const commands: IWireUpCommands[] = [
-		// our views
+	// Setup any scripts that require tools configuration, then templating.
+	[   // our views
 		new DynamicsTreeView(),
 		new ConnectionViewManager(),
 		new JsonInspectorViewManager(),
+		
 		// our commands
 		new PowerShellLoader(),
 		new GenerateEntitiesCommand(),
 		new PackDynamicsSolutionCommand(),
 		new UnpackDynamicsSolutionCommand()
-	];
-	
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
+	].forEach(c => c.wireUpCommands(context, toolsConfig));
 
-	// call to wire up all commands
-	commands.forEach(c => c.wireUpCommands(context, config));
+	[   // templating engine.
+		new ProjectTemplatesPlugin(context)
+	].forEach(c => c.wireUpCommands(context, templatesConfig));
 }
 
 // this method is called when your extension is deactivated

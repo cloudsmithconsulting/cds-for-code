@@ -262,7 +262,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getSolutionLevelDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
         let returnObject = [];
-        const showDefaultSolution = ExtensionConfiguration.getConfigurationValue<boolean>(cs.dynamics.configuration.showDefaultSolution);
+        const showDefaultSolution = ExtensionConfiguration.getConfigurationValue<boolean>(cs.dynamics.configuration.explorer.showDefaultSolution);
         
         if (element.itemType === EntryType.Solution || showDefaultSolution) {
             returnObject.push(new TreeEntry(
