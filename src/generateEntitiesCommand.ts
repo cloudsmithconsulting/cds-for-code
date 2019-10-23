@@ -9,7 +9,7 @@ import { Utilities } from './helpers/Utilities';
 export default class GenerateEntitiesCommand implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
         // setup configurations
-        const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(config, cs.dynamics.configuration.sdkInstallPath);
+        const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(config, cs.dynamics.configuration.tools.sdkInstallPath);
         // set core tools root
         const coreToolsRoot = path.join(sdkInstallPath, 'CoreTools');
 

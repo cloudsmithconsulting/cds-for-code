@@ -23,6 +23,16 @@ export enum DynamicsForm
     PowerBIDashboard = "powerbi"
 }
 
+export enum ProcessType
+{
+    Workflow = "Workflow",
+    Dialog = "Dialog",
+    BusinessRule = "Business Rule",
+    Action = "Action",
+    BusinessProcessFlow = "Business Process Flow",
+    Flow = "Flow"
+}
+
 export class DynamicsUrlResolver
 {
     private static _formTypes = new Dictionary<number, DynamicsForm>([
@@ -44,10 +54,24 @@ export class DynamicsUrlResolver
         { key: 102, value: DynamicsForm.AppointmentBookBackup },
         { key: 103, value: DynamicsForm.PowerBIDashboard }
     ]);
-    
+
+    private static _processTypes = new Dictionary<number, ProcessType>([
+        { key: 0, value: ProcessType.Workflow },
+        { key: 1, value: ProcessType.Dialog },
+        { key: 2, value: ProcessType.BusinessRule },
+        { key: 3, value: ProcessType.Action },
+        { key: 4, value: ProcessType.BusinessProcessFlow },
+        { key: 5, value: ProcessType.Flow }
+    ]);
+
     public static parseFormType(formType:number): DynamicsForm
     {
         return this._formTypes[formType];
+    }
+
+    public static parseProcessType(processType:number): ProcessType
+    {
+        return this._processTypes[processType];
     }
 
     public static getManageSolutionUri(config:DynamicsWebApi.Config, solutionId?:string):vscode.Uri
@@ -103,6 +127,37 @@ export class DynamicsUrlResolver
         }
 
         return this.parseUriString(uriString, solutionId);
+    }
+
+    public static getManageBusinessProcessUri(config:DynamicsWebApi.Config, processType:ProcessType, processId?:string, solutionId?:string):vscode.Uri
+    {
+        let uriString:string;
+        let uri:vscode.Uri;
+
+        switch (processType)
+        {
+            case ProcessType.BusinessProcessFlow:
+                uriString = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}Tools/ProcessControl/UnifiedProcessDesigner.aspx?`;
+
+                if (processId) {
+                    uriString += `id=%7b${processId}%7d`;                    
+                }
+
+                uri = this.parseUriString(uriString);
+                break;
+            case ProcessType.Action:
+            case ProcessType.Workflow:
+                uriString = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}sfa/workflow/edit.aspx?`;
+
+                if (processId) {
+                    uriString += `id=%7b${processId}%7d`;                    
+                }
+
+                uri = this.parseUriString(uriString, solutionId);
+                break;
+        }
+
+        return uri;
     }
 
     private static parseUriString(uriString:string, solutionId?:string):vscode.Uri

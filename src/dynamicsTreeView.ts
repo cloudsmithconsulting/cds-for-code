@@ -9,6 +9,7 @@ import * as cs from './cs';
 import { IWireUpCommands } from './wireUpCommand';
 import { DynamicsUrlResolver } from './api/DynamicsUrlResolver';
 import ExtensionConfiguration from './helpers/ExtensionConfiguration';
+import { IDictionary, Dictionary } from './helpers/Dictionary';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
@@ -27,24 +28,24 @@ export default class DynamicsTreeView implements IWireUpCommands {
             vscode.commands.registerCommand(cs.dynamics.controls.treeView.refreshEntry, (item?: TreeEntry) => {
                 treeProvider.refresh(item);
             }) // <-- no semi-colon, comma starts next command registration
-
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addConnection, (config: DynamicsWebApi.Config) => {
                 // add the connection and refresh treeview
                 treeProvider.addConnection(config);
 
                 vscode.window.showInformationMessage(config.id ? `Updated Dynamics Connection: ${config.webApiUrl}` : `Added Dynamics Connection: ${config.webApiUrl}`);
             }) // <-- no semi-colon, comma starts next command registration
-
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.clickEntry, (label?: string) => { // Match name of command to package.json command
                 // Run command code
                 vscode.window.showInformationMessage(`Clicked ${label || ''}`);
             }) // <-- no semi-colon, comma starts next command registration
-            
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.deleteEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 // Run command code
                 treeProvider.removeConnection(item.config);
 
                 vscode.window.showInformationMessage(`Delete Dynamics Connection: ${item.config.webApiUrl}`);
+            }) // <-- no semi-colon, comma starts next command registration
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.inspectEntry, (item: TreeEntry) => { // Match name of command to package.json command
+                vscode.commands.executeCommand(cs.dynamics.controls.jsonInspector.inspect, item.context);
             }) // <-- no semi-colon, comma starts next command registration
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item)
@@ -64,29 +65,31 @@ export default class DynamicsTreeView implements IWireUpCommands {
                 }
             })   
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.editEntry, (item: TreeEntry) => { // Match name of command to package.json command
-                // Run command code
-                if (item.itemType === EntryType.Connection) {
-                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection, item.config);
-
-                    return;
-                }
-
                 let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.treeView.editEntry, item);
 
                 switch (item.itemType)
                 {
+                    case EntryType.Connection:
+                        vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection, item.config);
+                        break;
                     case EntryType.Solution:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config, item.context.solutionid), retryFunction);
                         break;
                     case EntryType.Entity:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityUri(item.config, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
+                    case EntryType.Process:
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, DynamicsUrlResolver.parseProcessType(item.context.category), item.context.workflowid, item.solutionId), retryFunction);
+                        break;
                     case EntryType.Attribute:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case EntryType.Form:
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, DynamicsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId), retryFunction);
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, DynamicsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId || item.context.solutionid), retryFunction);
                         break;
+                    case EntryType.View:
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.context.savedqueryid, item.solutionId), retryFunction);
+                        break;                    
                 }
            }) // <-- no semi-colon, comma starts next command registration
         );
@@ -133,6 +136,8 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     return this.getPluginDetails(element, commandPrefix, element.context);
                 case EntryType.Entities:
                     return this.getEntityDetails(element, commandPrefix, element.context);
+                case EntryType.OptionSets:
+                    return this.getOptionSetDetails(element, commandPrefix, element.context);
                 case EntryType.WebResources:
                     return this.getWebResourcesDetails(element, commandPrefix, element.context);
                 case EntryType.Entity:
@@ -260,7 +265,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getSolutionLevelDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
         let returnObject = [];
-        const showDefaultSolution = ExtensionConfiguration.getConfigurationValue<boolean>(cs.dynamics.configuration.showDefaultSolution);
+        const showDefaultSolution = ExtensionConfiguration.getConfigurationValue<boolean>(cs.dynamics.configuration.explorer.showDefaultSolution);
         
         if (element.itemType === EntryType.Solution || showDefaultSolution) {
             returnObject.push(new TreeEntry(
@@ -272,6 +277,20 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     command: cs.dynamics.controls.treeView.clickEntry,
                     title: 'Entities',
                     arguments: [`${commandPrefix || ''}/Entities`]
+                },
+                element.config,
+                element.itemType === EntryType.Solution ? element.context : undefined
+            ));
+
+            returnObject.push(new TreeEntry(
+                'Option Sets',
+                EntryType.OptionSets,
+                vscode.TreeItemCollapsibleState.Collapsed, 
+                null,
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: 'OptionSets',
+                    arguments: [`${commandPrefix || ''}/OptionSets`]
                 },
                 element.config,
                 element.itemType === EntryType.Solution ? element.context : undefined
@@ -462,7 +481,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 process.name, 
                 EntryType.Process,
                 vscode.TreeItemCollapsibleState.None,
-                process.displayname, 
+                DynamicsUrlResolver.parseProcessType(process.category).toString(), 
                 {
                     command: cs.dynamics.controls.treeView.clickEntry,
                     title: process.displayname,
@@ -473,6 +492,32 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             `An error occurred while retrieving business processes from ${element.config.webApiUrl}`,
             () => this.getProcessDetails(element, commandPrefix, solution));
 
+        return returnValue;
+    }
+
+    private getOptionSetDetails(element: TreeEntry, commandPrefix?: string, solution?: any): Thenable<TreeEntry[]> {
+		const api = new MetadataRepository(element.config);
+        const returnValue = this.createTreeEntries(
+            api.retrieveOptionSets(solution ? solution.solutionid : undefined), 
+            optionSet => {
+                let displayName = optionSet.DisplayName && optionSet.DisplayName.LocalizedLabels && optionSet.DisplayName.LocalizedLabels.length > 0 ? optionSet.DisplayName.LocalizedLabels[0].Label : "";
+
+                return new TreeEntry(
+                    displayName,
+                    EntryType.OptionSet,
+                    vscode.TreeItemCollapsibleState.Collapsed,
+                    optionSet.Name, 
+                    {
+                        command: cs.dynamics.controls.treeView.clickEntry,
+                        title: displayName,
+                        arguments: [`${commandPrefix || ''}/${optionSet.Name}`]
+                    },
+                    element.config,
+                    optionSet);
+            },
+            `An error occurred while retrieving option sets from ${element.config.webApiUrl}`,
+            () => this.getOptionSetDetails(element, commandPrefix, solution));
+    
         return returnValue;
     }
 
@@ -653,7 +698,35 @@ class TreeEntryCache
         return this.Items.where(item => item.id.startsWith(path));
     }
 }
+class IconResolver
+{
+    public readonly iconPath: { light: string | vscode.Uri; dark: string | vscode.Uri } = null;
+
+    constructor(
+        public readonly lightPath: string,
+        public readonly darkPath: string
+    )
+    {
+        this.iconPath = {
+            light: path.join(__filename, ...lightPath.split("/")),
+            dark: path.join(__filename, ...darkPath.split("/"))
+        };
+    }
+
+}
+
 class TreeEntry extends vscode.TreeItem {
+    private static _icons = new Dictionary<string, IconResolver>([
+        { key: "Connection", value: new IconResolver("../../resources/icons/light/server.svg", "../../resources/icons/dark/server.svg") },
+        { key: "Organization", value: new IconResolver("../../resources/icons/light/dependency.svg", "../../resources/icons/dark/dependency.svg") },
+        { key: "Entities", value: new IconResolver("../../resources/icons/light/object-ungroup.svg", "../../resources/icons/dark/object-ungroup.svg") },
+        { key: "Entity", value: new IconResolver("../../resources/icons/light/object-ungroup.svg", "../../resources/icons/dark/object-ungroup.svg") },
+        { key: "Plugins", value: new IconResolver("../../resources/icons/light/plug.svg", "../../resources/icons/dark/plug.svg") },
+        { key: "Plugin", value: new IconResolver("../../resources/icons/light/plug.svg", "../../resources/icons/dark/plug.svg") },
+        { key: "Solutions", value: new IconResolver("../../resources/icons/light/puzzle-piece.svg", "../../resources/icons/dark/puzzle-piece.svg") },
+        { key: "Solution", value: new IconResolver("../../resources/icons/light/puzzle-piece.svg", "../../resources/icons/dark/puzzle-piece.svg") },
+    ]);
+
 	constructor(
         public readonly label: string,
         public readonly itemType: EntryType,
@@ -665,41 +738,9 @@ class TreeEntry extends vscode.TreeItem {
 	) {
         super(label, collapsibleState);
         this.contextValue = itemType.toString();
-
-        switch (itemType) {
-            case EntryType.Connection:
-                    this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'server.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'server.svg')
-                    };
-                break;
-            case EntryType.Organization:
-                  this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'dependency.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'dependency.svg')
-                    };
-                break;
-            case EntryType.Entities:
-            case EntryType.Entity:
-                    this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'object-ungroup.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'object-ungroup.svg')
-                    };
-                break;
-            case EntryType.Plugins:
-            case EntryType.Plugin:
-                  this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'plug.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'plug.svg')
-                    };
-                break;
-            case EntryType.Solutions:
-            case EntryType.Solution:
-                  this.iconPath = {
-                        light: path.join(__filename, '..', '..', 'resources', 'icons', 'light', 'puzzle-piece.svg'),
-                        dark: path.join(__filename, '..', '..', 'resources', 'icons', 'dark', 'puzzle-piece.svg')
-                    };
-                break;
+        
+        if (TreeEntry._icons.containsKey(itemType.toString())) {
+            this.iconPath = TreeEntry._icons[itemType.toString()].iconPath;
         }
 
         if (command && command.arguments && command.arguments.length > 0)
@@ -752,11 +793,13 @@ enum EntryType {
     Connection = "Connection",
     Organization = "Organization",
     Entities = "Entities",
+    OptionSets = "OptionSets",
     WebResources = "WebResources",
     Plugins = "Plugins",
     Processes = "Processes",
     Solutions = "Solutions",
     Entity = "Entity",
+    OptionSet = "OptionSet",
     WebResource = "WebResource",
     Plugin = "Plugin",
     Process = "Process",

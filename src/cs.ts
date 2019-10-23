@@ -1,18 +1,16 @@
+import { ConfigurationTarget } from "vscode";
+
 export namespace dynamics
 {
-    // tslint:disable-next-line: class-name
-    export class configuration
-    {
-        public static readonly _namespace:string = "cs.dynamics.configuration";
-        public static readonly sdkInstallPath:string = `${configuration._namespace}.sdkInstallPath`;
-        public static readonly showDefaultSolution:string = `${configuration._namespace}.showDefaultSolution`;
-    }
-
     // tslint:disable-next-line: class-name
     export class extension
     {
         public static readonly _namespace:string = "cs.dynamics.extension";
         public static readonly downloadRequiredScripts:string = `${extension._namespace}.downloadRequiredScripts`;
+        public static readonly openProjectTemplatesFolder:string = `${extension._namespace}.openProjectTemplatesFolder`;
+        public static readonly saveProjectAsTemplate:string = `${extension._namespace}.saveProjectAsTemplate`;
+        public static readonly deleteProjectTemplate:string = `${extension._namespace}.deleteProjectTemplate`;
+        public static readonly createProjectFromTemplate:string = `${extension._namespace}.createProjectFromTemplate`;
     }
 
     // tslint:disable-next-line: class-name
@@ -36,6 +34,34 @@ export namespace dynamics
     {
         public static readonly _namespace:string = "cs.dynamics.views";
         public static readonly connectionView:string = `${viewContainers._namespace}.connectionView`;
+        public static readonly jsonInspectorView:string = `${viewContainers._namespace}.jsonInspectorView`;
+    }
+
+    export namespace configuration
+    {
+        // tslint:disable-next-line: class-name
+        export class tools
+        {
+            public static readonly _namespace:string = "cs.dynamics.configuration.tools";
+            public static readonly sdkInstallPath:string = `${tools._namespace}.sdkInstallPath`;
+        }
+
+        // tslint:disable-next-line: class-name
+        export class explorer
+        {
+            public static readonly _namespace:string = "cs.dynamics.configuration.explorer";
+            public static readonly showDefaultSolution:string = `${explorer._namespace}.showDefaultSolution`;
+        }
+
+        // tslint:disable-next-line: class-name
+        export class templates
+        {
+            public static readonly _namespace:string = "cs.dynamics.configuration.templates";
+            public static readonly templatesDirectory:string = `${explorer._namespace}.templatesDirectory`;
+            public static readonly usePlaceholders:string = `${explorer._namespace}.usePlaceholders`;
+            public static readonly placeholderRegExp:string = `${explorer._namespace}.placeholderRegExp`;
+            public static readonly placeholders:string = `${explorer._namespace}.placeholders`;            
+        }
     }
 
     export namespace controls
@@ -49,9 +75,16 @@ export namespace dynamics
             public static readonly clickEntry:string = `${treeView._namespace}.clickEntry`;
             public static readonly deleteEntry:string = `${treeView._namespace}.deleteEntry`;
             public static readonly editEntry:string = `${treeView._namespace}.editEntry`;
+            public static readonly inspectEntry:string = `${treeView._namespace}.inspectEntry`;
             public static readonly openConnection:string = `${treeView._namespace}.openConnection`;
             public static readonly refreshEntry:string = `${treeView._namespace}.refreshEntry`;
+        }
 
+        // tslint:disable-next-line: class-name
+        export class jsonInspector
+        {
+            public static readonly _namespace:string = "cs.dynamics.controls.jsonInspector";
+            public static readonly inspect:string = `${jsonInspector._namespace}.inspect`;
         }
     }
 }
