@@ -5,13 +5,12 @@ import * as cs from './cs';
 import fetch, { Response } from 'node-fetch';
 import { IWireUpCommands } from './wireUpCommand';
 import ExtensionConfiguration from './helpers/ExtensionConfiguration';
-import GenerateEntitiesCommand from './generateEntitiesCommand';
 import { Terminal } from './helpers/Terminal';
 import { Utilities } from './helpers/Utilities';
 
 export default class PowerShellLoader implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-		//context.globalState.update("ScriptVersion", null);
+		context.globalState.update("ScriptVersion", null);
 
 		// do this immediately
         PowerShellLoader.runScriptCheck(context);

@@ -158,6 +158,8 @@ namespace DynamicsWebApi {
         webApiUrl?: string;
         /**The version of Web API to use, for example: "8.1" */
         webApiVersion?: string;
+        /**The name of the organization */
+        orgName?:string;
         /**A String representing the GUID value for the Dynamics 365 system user id.Impersonates the user. */
         impersonate?: string;
         /**A function that is called when a security token needs to be refreshed. */
