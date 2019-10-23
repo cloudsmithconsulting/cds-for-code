@@ -44,6 +44,8 @@ export namespace dynamics
         {
             public static readonly _namespace:string = "cs.dynamics.configuration.tools";
             public static readonly sdkInstallPath:string = `${tools._namespace}.sdkInstallPath`;
+            public static readonly updateSource:string = `${tools._namespace}.updateSource`;
+            public static readonly updateChannel:string = `${tools._namespace}.updateChannel`;
         }
 
         // tslint:disable-next-line: class-name

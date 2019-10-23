@@ -39,27 +39,37 @@
 					"default": "C:\\Deploy\\Tools",
 					"description": "The full path to the root of the CRM SDK installation on your computer"
 				},
+				"cs.dynamics.configuration.tools.updateSource": {
+					"type": "string",
+					"default": "https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/",
+					"description": "The URL where supporting scripts are located"
+				},
+				"cs.dynamics.configuration.tools.updateChannel": {
+					"type": "string",
+					"default": "production",
+					"description": "The update channel to use (production|beta)"
+				},
 				"cs.dynamics.configuration.explorer.showDefaultSolution": {
 					"type": "boolean",
 					"default": "true",
 					"description": "Show the Default Solution in the Dynamics explorer pane"
 				},
                 "cs.dynamics.configuration.templates.templatesDirectory": {
-                    "type": ["string", "null"],
+                    "type": "string",
                     "description": "Directory to read/store project template folders"
                 },
                 "cs.dynamics.configuration.templates.usePlaceholders": {
-                    "type": [ "boolean" ],
+                    "type": "boolean",
                     "default": true,
                     "description": "Look for and replace placeholders in template (e.g. #{author})"
                 },
                 "cs.dynamics.configuration.templates.placeholderRegExp": {
-                    "type": [ "string" ],
+                    "type": "string",
                     "default": "#{(\\w+)?}",
                     "description": "Regular expression for detecting placeholders (e.g. \"#{(\\w+?)}\").  The first capture group dictates the placeholder key."
                 },
                 "cs.dynamics.configuration.templates.placeholders": {
-                    "type": [ "object" ],
+                    "type": "object",
                     "default": {},
                     "description": "List of placeholders, in key-value string pairs."
 				}
