@@ -3,6 +3,8 @@ import * as path from 'path';
 import * as cs from './cs';
 import ExtensionConfiguration from './helpers/ExtensionConfiguration';
 import { IWireUpCommands } from './wireUpCommand';
+import DynamicsTreeView from './dynamicsTreeView';
+import { Utilities } from './helpers/Utilities';
 
 export default class GenerateEntitiesCommand implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
@@ -19,40 +21,57 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                 // see if we have anything open
                 if (folders !== undefined) {
                     // loop through open root workspace folders
-                    folders.forEach(folder => {
+                    folders.forEach(async workspaceFolder => {
                         // we only support the file system right now
-                        if (folder.uri.scheme === "file") {
+                        if (workspaceFolder.uri.scheme === "file") {
                             // hold on to the current root path
-                            const rootPath = folder.uri.fsPath;
-    
-                            // setup the code file path to be generated
-                            const codeFilePath = path.join(rootPath, 'XrmEntities.cs');
-    
-                            // Variables to help execuate PowerShell Commands
-                            const ConnectionString = null;
-                            const Path = null;
-                            const ToolsPath = null;
-                            const Namespace = null;
-                            const Username = "missioncommand";
-                            const Password = "$mokingTir33";
-                            const Domain = "CONTOSO";
-
-                            // setup the command text
-                            const commandToExecute = `${codeFilePath} `
-                                + `-ConnectionString ${ConnectionString}`
+                            const workspaceUri = workspaceFolder.uri;
+                            // get the connections
+                            const connections = await DynamicsTreeView.Instance.getOrgConnections();
+                            // map to array for options in  pick list
+                            const options = connections.map(c => c.webApiUrl);
+                            // pick which org url you want to run against
+                            const url = await vscode.window.showQuickPick(options);
+                            // find the index for this url
+                            const index = connections.findIndex(c => c.webApiUrl === url);
+                            // if nothing just return
+                            if (index === -1) { return; }
+                            // set the selected connection config
+                            const connection: DynamicsWebApi.Config = connections[index];
+                            // get the path to generate the file in
+                            vscode.window.showOpenDialog({
+                                canSelectFolders: true,
+                                canSelectFiles: false,
+                                canSelectMany: false,
+                                defaultUri: workspaceUri
+                            }).then(async pathUris => {
+                                // collect the selected path uri
+                                const Path = pathUris[0].fsPath;
+                                // get the output file name
+                                const OutputFileName = await vscode.window.showInputBox({
+                                    prompt: 'Please enter the output file name',
+                                    value: 'XrmEntities.cs'
+                                });
+                                // get the namespace
+                                const Namespace = await vscode.window.showInputBox({
+                                    prompt: 'Please enter the namespace for the generated code',
+                                    value: 'XrmEntities'
+                                });
+                                // setup other variables
+                                const ConnectionString = `AuthType=AD;Url=${connection.webApiUrl};Username=${connection.username};Password=${connection.password};Domain=${connection.domain}`;
+                                const powerShellFilePath = path.join(context.globalStoragePath, 'Generate-XrmEntities.ps1');
+                                // setup the command text
+                                const commandToExecute = `${powerShellFilePath} `
+                                + `-ToolsPath ${coreToolsRoot} `
+                                + `-ConnectionString ${ConnectionString} `
                                 + `-Path ${Path} `
-                                + `-OutputFile ${codeFilePath} `
-                                + `-ToolsPath ${ToolsPath}`
-                                + `-Namespace ${Namespace} `
-                                + `-Username:${Username} `
-                                + `-Password:${Password} `.replace('$', '`$') // $ is a problem in powershell
-                                + `-Domain:${Domain} `
-                                + `/out:${codeFilePath}`;
-    
-                            // build a powershell terminal
-                            const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
-                            // execute the command
-                            terminal.sendText(commandToExecute);
+                                + `-OutputFile ${OutputFileName} `
+                                + `-Namespace ${Namespace} `;
+                                // build a powershell terminal
+                                const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
+                                // execute the command
+                                terminal.sendText(commandToExecute);
+                            });
                         }
                     });
                 }
