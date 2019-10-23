@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as _ from 'lodash';
+import * as cs from './cs';
+import ExtensionConfiguration from './helpers/ExtensionConfiguration';
 
 export interface IViewOptions {
 	extensionPath: string;
@@ -61,7 +63,8 @@ export class ViewRenderer {
 		// read file contents from disk
 		const fileHtml = fs.readFileSync(pathOnDisk).toString();
 		// use custom delimiter ${ }
-		_.templateSettings.interpolate = /\${([\s\S]+?)}/g;
+		const regex = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.templates.placeholderRegExp);
+		_.templateSettings.interpolate = new RegExp(regex);
 		// compile the template
 		const compiled = _.template(fileHtml);
 		// create a base viewModel
