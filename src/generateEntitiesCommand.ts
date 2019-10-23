@@ -38,7 +38,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
 
                                             const powerShellFilePath = path.join(context.globalStoragePath, 'Generate-XrmEntities.ps1');
                                             const connectionString = `AuthType=AD;Url=${connection.webApiUrl};Username=${connection.username};Password=${connection.password};Domain=${connection.domain}`;
-                                            let Path: string; //will be filled in below
+                                            let Path = null; //will be filled in below
                                             let OutputFileName = null; //will be filled in below
                                             let Namespace = null; //will be filled in below
 
