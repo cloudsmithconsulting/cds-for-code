@@ -5,6 +5,7 @@ import ExtensionConfiguration from './helpers/ExtensionConfiguration';
 import { IWireUpCommands } from './wireUpCommand';
 import DynamicsTreeView from './dynamicsTreeView';
 import { Utilities } from './helpers/Utilities';
+import { Terminal } from './helpers/Terminal';
 
 export default class GenerateEntitiesCommand implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
@@ -57,18 +58,20 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                                     prompt: 'Please enter the namespace for the generated code',
                                     value: 'XrmEntities'
                                 });
-                                // setup other variables
-                                const ConnectionString = `AuthType=AD;Url=${connection.webApiUrl};Username=${connection.username};Password=${connection.password};Domain=${connection.domain}`;
-                                const powerShellFilePath = path.join(context.globalStoragePath, 'Generate-XrmEntities.ps1');
+
                                 // setup the command text
-                                const commandToExecute = `${powerShellFilePath} `
+                                const commandToExecute = `.\\Generate-XrmEntities.ps1 `
                                 + `-ToolsPath ${coreToolsRoot} `
-                                + `-ConnectionString ${ConnectionString} `
-                                + `-Path ${Path} `
-                                + `-OutputFile ${OutputFileName} `
-                                + `-Namespace ${Namespace} `;
+                                + `-Url "${Utilities.EnforceTrailingSlash(connection.webApiUrl)}XRMServices/2011/Organization.svc" `
+                                + `-Username "${connection.username}" `
+                                + `-Password "${connection.password}" `
+                                + (connection.domain ? `-Domain "${connection.domain}" ` : '')
+                                + `-Path "${Path}" `
+                                + `-OutputFile "${OutputFileName}" `
+                                + (!Utilities.IsNull(Namespace) ? `-Namespace "${Namespace}" ` : '');
+
                                 // build a powershell terminal
-                                const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
+                                const terminal = Terminal.showTerminal(context.globalStoragePath);
                                 // execute the command
                                 terminal.sendText(commandToExecute);
                             });
@@ -79,30 +82,5 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
         );
     }
 
-    public static showAndReturnTerminal(cwd: string): vscode.Terminal {
-        const terminalName = 'CloudSmith: Dynamics PowerShell';
-		//see if our terminal is open all ready
-		const index = vscode.window.terminals.findIndex(t => t.name === terminalName);
-		if (index === -1) {
-			// index wasn't found, return new terminal
-			const result = vscode.window.createTerminal({
-				name: terminalName,
-				// make sure we get powershell
-				shellPath: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-				cwd // current working directory
-			});
-			// show it
-			result.show();
-			// return it
-			return result;
-		}
-		// get terminal with name at index
-		const result = vscode.window.terminals[index];
-		// change cwd
-		result.sendText(`cd ${cwd}`);
-		// show it
-		result.show();
-		// return it
-		return result;
-	}
+
 }
