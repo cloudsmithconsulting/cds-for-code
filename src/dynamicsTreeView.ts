@@ -98,7 +98,6 @@ export default class DynamicsTreeView implements IWireUpCommands {
 
 class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
-    readonly connectionsGlobalStateKey = 'cloudsmith:dynamicsConnections';
 	private _onDidChangeTreeData: vscode.EventEmitter<TreeEntry | undefined> = new vscode.EventEmitter<TreeEntry | undefined>();
     readonly onDidChangeTreeData: vscode.Event<TreeEntry | undefined> = this._onDidChangeTreeData.event;
     private _connections: DynamicsWebApi.Config[] = [];
@@ -106,9 +105,9 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
 	constructor(context: vscode.ExtensionContext) {
         this._context = context;
-        const connections: DynamicsWebApi.Config[] | undefined = this._context.globalState.get(this.connectionsGlobalStateKey);
-        if (connections && connections.length > 0) {
-            this._connections = connections;
+        this._connections = DiscoveryRepository.getConnections(context);
+
+        if (this._connections && this._connections.length > 0) {
             this.refresh();
         }
     }
@@ -171,7 +170,8 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         });
 
         // save to state
-        this._context.globalState.update(this.connectionsGlobalStateKey, this._connections);
+        DiscoveryRepository.saveConnections(this._context, this._connections);
+
         // refresh the treeview
         this.refresh();
     }
@@ -181,33 +181,12 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return this._connections;
     }
 
-    public async getOrgConnections():Promise<DynamicsWebApi.Config[]>
-    {        
-        const returnObject:DynamicsWebApi.Config[] = [];
-
-        if (this._connections)
-        {
-            for (var i = 0; i < this._connections.length; i++)
-            {
-                const api = new DiscoveryRepository(this._connections[i]);
-
-                var orgs = await api.retrieveOrganizations();
-
-                for (var j = 0; j < orgs.length; j++)
-                {
-                    returnObject.push(this.createOrganizationConnection(orgs[j], this._connections[i]));
-                }
-            }
-        }
-
-        return returnObject;
-    }
-
     public removeConnection(connection: DynamicsWebApi.Config): void {
         const removeIndex = this._connections.findIndex(c => c.webApiUrl === connection.webApiUrl);
+        
         if (removeIndex >= 0) {
             this._connections.splice(removeIndex, 1);
-            this._context.globalState.update(this.connectionsGlobalStateKey, this._connections);
+            DiscoveryRepository.saveConnections(this._context, this._connections);
             this.refresh();
         }
     }
@@ -255,7 +234,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     title: org.FriendlyName,
                     arguments: [`${commandPrefix || ''}/${org.Id}`]
                 },
-                this.createOrganizationConnection(org, connection),
+                DiscoveryRepository.createOrganizationConnection(org, connection),
                 org),
             `An error occurred while accessing organizations from ${connection.webApiUrl}`, 
             () => this.getConnectionDetails(element, commandPrefix));
@@ -615,18 +594,6 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             () => this.getEntityFormDetails(element, commandPrefix, entity));
 
         return returnValue;
-    }
-
-    private createOrganizationConnection(org: any, connection: DynamicsWebApi.Config):DynamicsWebApi.Config {
-        const versionSplit = org.Version.split('.');
-        // Clone the current connection and override the endpoint and version.
-        const orgConnection = Utilities.Clone<DynamicsWebApi.Config>(connection);
-
-        orgConnection.webApiUrl = org.ApiUrl;
-        orgConnection.webApiVersion = `${versionSplit[0]}.${versionSplit[1]}`;
-        orgConnection.name = org.FriendlyName;
-
-        return orgConnection;
     }
 
     private createTreeEntries(whenComplete: Promise<any[]>, parser: (item: any) => TreeEntry, errorMessage?:string, retryFunction?:any): Promise<TreeEntry[]>

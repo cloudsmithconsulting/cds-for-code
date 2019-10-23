@@ -6,6 +6,7 @@ import { IWireUpCommands } from './wireUpCommand';
 import DynamicsTreeView from './dynamicsTreeView';
 import { Utilities } from './helpers/Utilities';
 import { Terminal } from './helpers/Terminal';
+import DiscoveryRepository from './repositories/discoveryRepository';
 
 export default class GenerateEntitiesCommand implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
@@ -28,7 +29,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                             // hold on to the current root path
                             const workspaceUri = workspaceFolder.uri;
                             // get the connections
-                            const connections = await DynamicsTreeView.Instance.getOrgConnections();
+                            const connections = await DiscoveryRepository.getOrgConnections(context);
                             // map to array for options in  pick list
                             const options = connections.map(c => c.webApiUrl);
                             // pick which org url you want to run against
