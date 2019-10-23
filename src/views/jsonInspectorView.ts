@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import DiscoveryRepository from '../repositories/discoveryRepository';
 import { View, ViewRenderer } from '../view';
 import * as cs from '../cs';
 import { IWireUpCommands } from '../wireUpCommand';
