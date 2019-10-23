@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as cs from './cs';
 import ExtensionConfiguration from './helpers/ExtensionConfiguration';
 import { IWireUpCommands } from './wireUpCommand';
+import DynamicsTreeView from './dynamicsTreeView';
 
 export default class GenerateEntitiesCommand implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
@@ -19,40 +20,68 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                 // see if we have anything open
                 if (folders !== undefined) {
                     // loop through open root workspace folders
-                    folders.forEach(folder => {
+                    folders.forEach(workspaceFolder => {
                         // we only support the file system right now
-                        if (folder.uri.scheme === "file") {
+                        if (workspaceFolder.uri.scheme === "file") {
                             // hold on to the current root path
-                            const rootPath = folder.uri.fsPath;
-    
-                            // setup the code file path to be generated
-                            const codeFilePath = path.join(rootPath, 'XrmEntities.cs');
-    
-                            // Variables to help execuate PowerShell Commands
-                            const ConnectionString = null;
-                            const Path = null;
-                            const ToolsPath = null;
-                            const Namespace = null;
-                            const Username = "missioncommand";
-                            const Password = "$mokingTir33";
-                            const Domain = "CONTOSO";
+                            const workspaceUri = workspaceFolder.uri;
 
-                            // setup the command text
-                            const commandToExecute = `${codeFilePath} `
-                                + `-ConnectionString ${ConnectionString}`
-                                + `-Path ${Path} `
-                                + `-OutputFile ${codeFilePath} `
-                                + `-ToolsPath ${ToolsPath}`
-                                + `-Namespace ${Namespace} `
-                                + `-Username:${Username} `
-                                + `-Password:${Password} `.replace('$', '`$') // $ is a problem in powershell
-                                + `-Domain:${Domain} `
-                                + `/out:${codeFilePath}`;
-    
-                            // build a powershell terminal
-                            const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
-                            // execute the command
-                            terminal.sendText(commandToExecute);
+                            DynamicsTreeView.Instance.getOrgConnections()
+                                .then(connections => {
+                                    // map to array for options in  pick list
+                                    const options = connections.map(c => c.webApiUrl);
+                                    // ask which connection we are using
+                                    vscode.window.showQuickPick(options)
+                                        .then(value => {
+                                            const index = connections.findIndex(c => c.webApiUrl === value);
+                                            const connection: DynamicsWebApi.Config = connections[index];
+
+                                            const powerShellFilePath = path.join(context.globalStoragePath, 'Generate-XrmEntities.ps1');
+                                            const connectionString = `AuthType=AD;Url=${connection.webApiUrl};Username=${connection.username};Password=${connection.password};Domain=${connection.domain}`;
+                                            let Path = null; //will be filled in below
+                                            let OutputFileName = null; //will be filled in below
+                                            let Namespace = null; //will be filled in below
+
+                                            // Variables to help execuate PowerShell Commands
+                                            const ConnectionString = connectionString;
+                                            vscode.window.showOpenDialog({
+                                                canSelectFolders: true,
+                                                canSelectFiles: false,
+                                                canSelectMany: false,
+                                                defaultUri: workspaceUri
+                                            })
+                                            .then(uriArray => {
+                                                Path = uriArray[0].fsPath;
+                                                
+                                                vscode.window.showInputBox({
+                                                    prompt: 'Please enter the output file name',
+                                                    value: 'XrmEntities.cs'
+                                                }).then(value => {
+                                                    OutputFileName = value;
+
+                                                    vscode.window.showInputBox({
+                                                        prompt: 'Please enter the namespace for the generated code',
+                                                        value: 'XrmEntities'
+                                                    }).then(value => {
+                                                        Namespace = value;
+
+                                                        // setup the command text
+                                                        const commandToExecute = `${powerShellFilePath} `
+                                                            + `-ToolsPath "${coreToolsRoot}" `
+                                                            + `-ConnectionString "${ConnectionString}" `
+                                                            + `-Path "${Path}" `
+                                                            + `-OutputFile "${OutputFileName}" `
+                                                            + `-Namespace "${Namespace}" `;
+                                
+                                                        // build a powershell terminal
+                                                        const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
+                                                        // execute the command
+                                                        terminal.sendText(commandToExecute);
+                                                    });
+                                                });
+                                            });
+                                        });
+                                });
                         }
                     });
                 }
