@@ -123,27 +123,27 @@
 				{
 					"command": "cs.dynamics.controls.treeView.addEntry",
 					"group": "inline",
-					"when": "viewItem == Solutions || viewItem == Plugins || viewItem == Entities || viewItem == WebResources || viewItem == Process || viewItem == Entries"
+					"when": "viewItem =~ /^(Solutions|Plugins|Entities|WebResources|Processes|Attributes|Forms|Views|Entries)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
 					"group": "inline",
-					"when": "viewItem == Connection || viewItem == Solution || viewItem == Entity || viewItem == WebResource || viewItem == Process || viewItem == Attribute || viewItem == Form || viewItem == View || viewItem == Entry"
+					"when": "viewItem =~ /^(Connection|Solution|Entity|WebResource|Process|Attribute|Form|View|Entry)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.inspectEntry",
 					"group": "1",
-					"when": "viewItem == Solution || viewItem == Entity || viewItem == WebResource || viewItem == Process || viewItem == Attribute || viewItem == Form || viewItem == View || viewItem == Entry"
+					"when": "viewItem =~ /^(Solution|Entity|WebResource|Process|Attribute|Form|View|Entry)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.deleteEntry",
 					"group": "inline",
-					"when": "viewItem == Connection"
+					"when": "viewItem =~ /^(Connection)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.refreshEntry",
-					"group": "inline",
-					"when": "viewItem == Solutions || viewItem == Plugins || viewItem == Entities || viewItem == WebResources || viewItem == Processes || viewItem == Entries"
+					"group": "1",
+					"when": "viewItem =~ /^(Solutions|Plugins|Entities|WebResources|Processes|Attributes|Forms|Views|Entries)$/"
 				}
 			]
 		}
