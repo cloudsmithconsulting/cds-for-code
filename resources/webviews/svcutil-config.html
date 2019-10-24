@@ -4,6 +4,13 @@
     #{viewTitle}
 </h1>
 
+<blockquote class="panel_error" id="errorPanel" hidden>
+    <div class="panel__text">
+        <h4>Oops! Slight problem</h4>
+        <span id="errorMessage"></span>
+    </div>
+</blockquote>
+
 <!-- Tab styles come from the default webViewStyles.css -->
 <!-- viewRenderer.addStyleSheet('webviewStyles.css') -->
 <!-- changeTab() function comes from tabs.js -->
@@ -20,14 +27,14 @@
     </li>
 </ul>
 
-<div id="Filtering" class="tabcontent">
+<div id="Filtering" class="tab__content">
     <h3>Filtering</h3>
 </div>
 
-<div id="Naming" class="tabcontent">
+<div id="Naming" class="tab__content" hidden>
     <h3>Naming</h3>
 </div>
 
-<div id="Code-Generation" class="tabcontent">
+<div id="Code-Generation" class="tab__content" hidden>
     <h3>Code Generation</h3>
 </div>

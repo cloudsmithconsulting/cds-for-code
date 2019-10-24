@@ -2,10 +2,12 @@
 // It cannot access the main VS Code APIs directly.
 (function () {
     const changeTab = window.changeTab = function(evt, tabId) {
+        if (!evt) { return; } // only do this if event exists
+
         // Get all elements with class="tabcontent" and hide them
-        const tabcontent = document.getElementsByClassName("tabcontent");
+        const tabcontent = document.getElementsByClassName("tab__content");
         for (let i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
+            tabcontent[i].setAttribute("hidden", "hidden");
         }
 
         // Get all elements with class="tablinks" and remove the class "active"
@@ -15,8 +17,9 @@
         }
 
         // Show the current tab, and add an "active" class to the button that opened the tab
-        document.getElementById(tabId).style.display = "block";
-        if (evt)
-            evt.currentTarget.className += " tab__item--active";
+        document.getElementById(tabId).removeAttribute("hidden");
+        
+        // set the class of active tab
+        evt.currentTarget.className += " tab__item--active";
     }
 }());
