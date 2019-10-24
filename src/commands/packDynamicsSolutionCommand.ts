@@ -1,14 +1,14 @@
-import * as vscode from 'vscode';
 import * as path from 'path';
-import * as cs from '../cs';
-import { IWireUpCommands } from '../wireUpCommand';
-import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import { Terminal } from '../helpers/Terminal';
-import DiscoveryRepository from '../repositories/discoveryRepository';
-import QuickPickOption from '../helpers/QuickPicker';
 import { TS } from 'typescript-linq/TS';
-import ApiRepository from '../repositories/apiRepository';
+import * as vscode from 'vscode';
+import * as cs from '../cs';
+import ExtensionConfiguration from '../helpers/ExtensionConfiguration';
+import QuickPickOption from '../helpers/QuickPicker';
+import { Terminal } from '../helpers/Terminal';
 import { Utilities } from '../helpers/Utilities';
+import ApiRepository from '../repositories/apiRepository';
+import DiscoveryRepository from '../repositories/discoveryRepository';
+import { IWireUpCommands } from '../wireUpCommand';
 
 export class PackDynamicsSolutionCommand implements IWireUpCommands {
 	public wireUpCommands (context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
@@ -21,39 +21,27 @@ export class PackDynamicsSolutionCommand implements IWireUpCommands {
 		// now wire a command into the context
 		context.subscriptions.push(
 			vscode.commands.registerCommand(cs.dynamics.powerShell.packSolution, async (config?:DynamicsWebApi.Config, folder?:string, solutionName?:string, toolsPath?:string, managed?:boolean) => { // Match name of command to package.json command
-				if (!config) {
-					config = await DiscoveryRepository.getOrgConnections(context)
-						.then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(org.name, org.webApiUrl, undefined, org)).toArray())
-						.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Dynamics 365 Organization", canPickMany: false, ignoreFocusOut: true}))
-						.then(chosen => chosen.context);
+				config = config || await DiscoveryRepository.getOrgConnections(context)
+					.then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(org.name, org.webApiUrl, undefined, org)).toArray())
+					.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Dynamics 365 Organization", canPickMany: false, ignoreFocusOut: true}))
+					.then(chosen => chosen.context);
+				if (!config) { return; }
 
-					if (!config) { return; }
-				}
+				folder = folder || await vscode.window
+					.showOpenDialog({canSelectFolders: true, canSelectFiles: false, canSelectMany: false, defaultUri: workspaceFolder.uri})
+					.then(async pathUris => pathUris[0].fsPath);
 
-				if (!folder) {
-					folder = await vscode.window
-						.showOpenDialog({canSelectFolders: true, canSelectFiles: false, canSelectMany: false, defaultUri: workspaceFolder.uri})
-						.then(async pathUris => pathUris[0].fsPath);
+				if (Utilities.IsNullOrEmpty(folder)) { return; }
 
-					if (Utilities.IsNullOrEmpty(folder)) { return; }
-				}
-
-				if (!solutionName) {
-					solutionName = await new ApiRepository(config).retrieveSolutions()
+				solutionName = solutionName || await new ApiRepository(config).retrieveSolutions()
 						.then(solutions => new TS.Linq.Enumerator(solutions).select(solution => new QuickPickOption(solution.friendlyname, solution.solutionid, undefined, solution)).toArray())
 						.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Solution to pack", canPickMany: false, ignoreFocusOut: true}))
 						.then(chosen => chosen.context.uniquename);
 
-					if (Utilities.IsNullOrEmpty(solutionName)) { return; }
-				}
+				if (Utilities.IsNullOrEmpty(solutionName)) { return; }
 
-				if (!toolsPath) {
-					toolsPath = coreToolsRoot;
-				}
-
-				if (!managed) {
-					managed = false;
-				}
+				toolsPath = toolsPath || coreToolsRoot;
+				managed = managed || false;
 
 				const splitUrl = Utilities.RemoveTrailingSlash(config.webApiUrl).split("/");
 				const orgName = config.domain ? splitUrl[splitUrl.length - 1] : config.orgName;
