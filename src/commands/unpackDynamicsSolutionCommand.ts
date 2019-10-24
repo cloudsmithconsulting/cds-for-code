@@ -2,7 +2,7 @@ import * as path from 'path';
 import { TS } from 'typescript-linq';
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import ExtensionConfiguration from '../helpers/ExtensionConfiguration';
+import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import QuickPickOption from '../helpers/QuickPicker';
 import { Terminal } from '../helpers/Terminal';
 import { Utilities } from '../helpers/Utilities';
