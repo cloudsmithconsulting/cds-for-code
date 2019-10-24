@@ -11,15 +11,15 @@ export default class ExtensionConfiguration {
             delete this._configurations[namespace];
         }
     }
-    
+
     public static getConfiguration(namespace:string): vscode.WorkspaceConfiguration {
         if (!this._configurations || !this._configurations[namespace] || !this._validConfigurations || !this._validConfigurations[namespace])
         {
             // get root config
             const config = vscode.workspace.getConfiguration(namespace);
 
-                this._configurations[namespace] = config;
-                this._validConfigurations[namespace] = this.validateConfiguration(namespace, config);
+            this._configurations[namespace] = config;
+            this._validConfigurations[namespace] = this.validateConfiguration(namespace, config);
         }
         
         // return the configuration

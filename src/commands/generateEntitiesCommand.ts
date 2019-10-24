@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as cs from '../cs';
-import ExtensionConfiguration from '../helpers/ExtensionConfiguration';
+import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import { IWireUpCommands } from '../wireUpCommand';
 import { Utilities } from '../helpers/Utilities';
 import { Terminal } from '../helpers/Terminal';

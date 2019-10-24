@@ -4,13 +4,14 @@ import * as path from 'path';
 import * as cs from '../cs';
 import fetch, { Response } from 'node-fetch';
 import { IWireUpCommands } from '../wireUpCommand';
-import ExtensionConfiguration from '../helpers/ExtensionConfiguration';
+import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import { Terminal } from '../helpers/Terminal';
 import { Utilities } from '../helpers/Utilities';
+import GlobalState from '../config/GlobalState';
 
 export default class PowerShellLoader implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-		context.globalState.update("ScriptVersion", null);
+		//GlobalState.Instance(context).PowerShellScriptVersion = null;
 
 		// do this immediately
         PowerShellLoader.runScriptCheck(context);
@@ -56,7 +57,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 					return;
 				}
 
-				let currentVersion = context.globalState.get("ScriptVersion");
+				const currentVersion = GlobalState.Instance(context).PowerShellScriptVersion;
 
 				if (!currentVersion || parseFloat(currentVersion.toString()) < version) {
 					// For loop to iterate through the array
@@ -99,7 +100,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 						}
 					}
 
-					context.globalState.update("ScriptVersion", version);
+					GlobalState.Instance(context).PowerShellScriptVersion = version;
 				}
 			});
     }

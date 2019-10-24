@@ -1,7 +1,7 @@
 import vscode = require("vscode");
 import filemanager = require("../helpers/FileManager");
 import TemplatesManager from "../projectTemplatesPlugin";
-import ExtensionConfiguration from "../helpers/ExtensionConfiguration";
+import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
 
 /**
