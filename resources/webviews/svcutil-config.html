@@ -4,14 +4,18 @@
     #{viewTitle}
 </h1>
 
+<!-- Tab styles come from the default webViewStyles.css -->
+<!-- viewRenderer.addStyleSheet('webviewStyles.css') -->
+<!-- changeTab() function comes from tabs.js -->
+<!-- viewRenderer.addScript('tabs.js') -->
 <ul class="tab" id="tabs">
-    <li class="tab__item tab__item--active" onclick="changeTab('Filtering')" nonce="#{nonce}">
+    <li class="tab__item tab__item--active" onclick="changeTab(event, 'Filtering')">
         Filtering
     </li>
-    <li class="tab__item" onclick="changeTab('Naming')" nonce="#{nonce}">
+    <li class="tab__item" onclick="changeTab(event, 'Naming')">
         Naming
     </li>
-    <li class="tab__item" onclick="changeTab('Code-Generation')" nonce="#{nonce}">
+    <li class="tab__item" onclick="changeTab(event, 'Code-Generation')">
         Code Generation
     </li>
 </ul>

@@ -29,6 +29,7 @@ export default class SvcUtilConfigViewManager implements IWireUpCommands {
 class SvcUtilConfigView extends View {
     public getHtmlForWebview(viewRenderer: ViewRenderer): string {
         // add script and css assets
+        viewRenderer.addScript('tabs.js');
         viewRenderer.addScript('crmSvcUtilConfigView.js');
         viewRenderer.addStyleSheet('webviewStyles.css');
 
