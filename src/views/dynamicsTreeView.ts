@@ -8,7 +8,7 @@ import MetadataRepository from '../repositories/metadataRepository';
 import * as cs from '../cs';
 import { IWireUpCommands } from '../wireUpCommand';
 import { DynamicsUrlResolver } from '../api/DynamicsUrlResolver';
-import ExtensionConfiguration from '../helpers/ExtensionConfiguration';
+import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import { IDictionary, Dictionary } from '../helpers/Dictionary';
 
 export default class DynamicsTreeView implements IWireUpCommands {

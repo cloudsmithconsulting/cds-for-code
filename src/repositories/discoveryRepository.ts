@@ -1,8 +1,7 @@
 import * as vscode from 'vscode';
 import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
 import { Utilities } from '../helpers/Utilities';
-import * as cs from '../cs';
-import { connect } from 'http2';
+import GlobalState from '../config/GlobalState';
 
 export default class DiscoveryRepository
 {
@@ -23,7 +22,7 @@ export default class DiscoveryRepository
 
     public static getConnections(context: vscode.ExtensionContext):DynamicsWebApi.Config[]
     {
-        const connections: DynamicsWebApi.Config[] | undefined = context.globalState.get(cs.dynamics.configuration.explorer.connectionsGlobalStateKey);
+        const connections: DynamicsWebApi.Config[] | undefined = GlobalState.Instance(context).DynamicsConnections;
 
         return connections;
     }
@@ -53,7 +52,7 @@ export default class DiscoveryRepository
 
     public static saveConnections(context: vscode.ExtensionContext, connections:DynamicsWebApi.Config[]): void
     {
-        context.globalState.update(cs.dynamics.configuration.explorer.connectionsGlobalStateKey, connections);
+        GlobalState.Instance(context).DynamicsConnections = connections;
     }
 
     public static createOrganizationConnection(org: any, connection: DynamicsWebApi.Config):DynamicsWebApi.Config {
