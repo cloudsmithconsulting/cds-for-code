@@ -25,12 +25,16 @@ export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 						.then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(org.name, org.webApiUrl, undefined, org)).toArray())
 						.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Dynamics 365 Organization", canPickMany: false, ignoreFocusOut: true}))
 						.then(chosen => chosen.context);
+
+						if (!config) { return; }
 				}
 
 				if (!folder) {
 					folder = await vscode.window
 						.showOpenDialog({canSelectFolders: true, canSelectFiles: false, canSelectMany: false, defaultUri: workspaceFolder.uri})
 						.then(async pathUris => pathUris[0].fsPath);
+
+					if (Utilities.IsNullOrEmpty(folder)) { return; }
 				}
 
 				if (!solutionName) {
@@ -38,6 +42,8 @@ export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 						.then(solutions => new TS.Linq.Enumerator(solutions).select(solution => new QuickPickOption(solution.friendlyname, solution.solutionid, undefined, solution)).toArray())
 						.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Solution to unpack", canPickMany: false, ignoreFocusOut: true}))
 						.then(chosen => chosen.context.uniquename);
+
+					if (Utilities.IsNullOrEmpty(solutionName)) { return; }
 				}
 
 				if (!toolsPath) {
@@ -59,7 +65,7 @@ export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 					+ `-SolutionName "${solutionName}" `
 					+ `-Path "${folder}" `
 					+ `-ToolsPath "${toolsPath}" `
-					+ `-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “${config.password}” -AsPlainText -Force))) `;
+					+ `-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “${Utilities.PowerShellSafeString(config.password)}” -AsPlainText -Force))) `;
 
 				// build a powershell terminal
 				const terminal = Terminal.showTerminal(context.globalStoragePath);

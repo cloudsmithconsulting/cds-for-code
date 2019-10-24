@@ -3,6 +3,10 @@ import * as vscode from 'vscode';
 
 export class Utilities
 {
+    public static IsNullOrEmpty(value: any) : boolean {
+        return !(value && value.length > 0);
+    }
+
     public static IsNull(value: any) : boolean
     {
         return typeof value === "undefined" || value === null;
@@ -229,5 +233,9 @@ export class Utilities
         const result = /\/(\w+)\(([0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12})/i.exec(responseData["@odata.id"]);
 
         return { id: result[2], collection: result[1], oDataContext: responseData["@odata.context"] };
+    }
+
+    public static PowerShellSafeString(value: string) : string {
+        return value.replace('$', '`$');
     }
 }
