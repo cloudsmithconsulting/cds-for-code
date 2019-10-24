@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as cs from './cs';
-import { IWireUpCommands } from './wireUpCommand';
-import ExtensionConfiguration from './helpers/ExtensionConfiguration';
-import { Terminal } from './helpers/Terminal';
-import DiscoveryRepository from './repositories/discoveryRepository';
-import QuickPickOption from './helpers/QuickPicker';
+import * as cs from '../cs';
+import { IWireUpCommands } from '../wireUpCommand';
+import ExtensionConfiguration from '../helpers/ExtensionConfiguration';
+import { Terminal } from '../helpers/Terminal';
+import DiscoveryRepository from '../repositories/discoveryRepository';
+import QuickPickOption from '../helpers/QuickPicker';
 import { TS } from 'typescript-linq/TS';
-import ApiRepository from './repositories/apiRepository';
-import { Utilities } from './helpers/Utilities';
+import ApiRepository from '../repositories/apiRepository';
+import { Utilities } from '../helpers/Utilities';
 
 export class PackDynamicsSolutionCommand implements IWireUpCommands {
 	public wireUpCommands (context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {

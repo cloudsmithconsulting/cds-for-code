@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as cs from './cs';
-import { IWireUpCommands } from './wireUpCommand';
-import ExtensionConfiguration from './helpers/ExtensionConfiguration';
+import * as cs from '../cs';
+import { IWireUpCommands } from '../wireUpCommand';
+import ExtensionConfiguration from '../helpers/ExtensionConfiguration';
 import { TS } from 'typescript-linq';
-import DiscoveryRepository from './repositories/discoveryRepository';
-import QuickPickOption from './helpers/QuickPicker';
-import ApiRepository from './repositories/apiRepository';
-import { Terminal } from './helpers/Terminal';
-import { Utilities } from './helpers/Utilities';
+import DiscoveryRepository from '../repositories/discoveryRepository';
+import QuickPickOption from '../helpers/QuickPicker';
+import ApiRepository from '../repositories/apiRepository';
+import { Terminal } from '../helpers/Terminal';
+import { Utilities } from '../helpers/Utilities';
 
 export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration){

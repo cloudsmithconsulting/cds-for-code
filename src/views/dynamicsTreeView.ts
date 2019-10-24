@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { TS } from 'typescript-linq/TS';
-import DiscoveryRepository from './repositories/discoveryRepository';
-import ApiRepository from './repositories/apiRepository';
-import { Utilities } from './helpers/Utilities';
-import MetadataRepository from './repositories/metadataRepository';
-import * as cs from './cs';
-import { IWireUpCommands } from './wireUpCommand';
-import { DynamicsUrlResolver } from './api/DynamicsUrlResolver';
-import ExtensionConfiguration from './helpers/ExtensionConfiguration';
-import { IDictionary, Dictionary } from './helpers/Dictionary';
+import DiscoveryRepository from '../repositories/discoveryRepository';
+import ApiRepository from '../repositories/apiRepository';
+import { Utilities } from '../helpers/Utilities';
+import MetadataRepository from '../repositories/metadataRepository';
+import * as cs from '../cs';
+import { IWireUpCommands } from '../wireUpCommand';
+import { DynamicsUrlResolver } from '../api/DynamicsUrlResolver';
+import ExtensionConfiguration from '../helpers/ExtensionConfiguration';
+import { IDictionary, Dictionary } from '../helpers/Dictionary';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
@@ -684,14 +684,14 @@ class IconResolver
 
 class TreeEntry extends vscode.TreeItem {
     private static _icons = new Dictionary<string, IconResolver>([
-        { key: "Connection", value: new IconResolver("../../resources/icons/light/server.svg", "../../resources/icons/dark/server.svg") },
-        { key: "Organization", value: new IconResolver("../../resources/icons/light/dependency.svg", "../../resources/icons/dark/dependency.svg") },
-        { key: "Entities", value: new IconResolver("../../resources/icons/light/object-ungroup.svg", "../../resources/icons/dark/object-ungroup.svg") },
-        { key: "Entity", value: new IconResolver("../../resources/icons/light/object-ungroup.svg", "../../resources/icons/dark/object-ungroup.svg") },
-        { key: "Plugins", value: new IconResolver("../../resources/icons/light/plug.svg", "../../resources/icons/dark/plug.svg") },
-        { key: "Plugin", value: new IconResolver("../../resources/icons/light/plug.svg", "../../resources/icons/dark/plug.svg") },
-        { key: "Solutions", value: new IconResolver("../../resources/icons/light/puzzle-piece.svg", "../../resources/icons/dark/puzzle-piece.svg") },
-        { key: "Solution", value: new IconResolver("../../resources/icons/light/puzzle-piece.svg", "../../resources/icons/dark/puzzle-piece.svg") },
+        { key: "Connection", value: new IconResolver("../../../resources/icons/light/server.svg", "../../../resources/icons/dark/server.svg") },
+        { key: "Organization", value: new IconResolver("../../../resources/icons/light/dependency.svg", "../../../resources/icons/dark/dependency.svg") },
+        { key: "Entities", value: new IconResolver("../../../resources/icons/light/object-ungroup.svg", "../../../resources/icons/dark/object-ungroup.svg") },
+        { key: "Entity", value: new IconResolver("../../../resources/icons/light/object-ungroup.svg", "../../../resources/icons/dark/object-ungroup.svg") },
+        { key: "Plugins", value: new IconResolver("../../../resources/icons/light/plug.svg", "../../../resources/icons/dark/plug.svg") },
+        { key: "Plugin", value: new IconResolver("../../../resources/icons/light/plug.svg", "../../../resources/icons/dark/plug.svg") },
+        { key: "Solutions", value: new IconResolver("../../../resources/icons/light/puzzle-piece.svg", "../../../resources/icons/dark/puzzle-piece.svg") },
+        { key: "Solution", value: new IconResolver("../../../resources/icons/light/puzzle-piece.svg", "../../../resources/icons/dark/puzzle-piece.svg") },
     ]);
 
 	constructor(
