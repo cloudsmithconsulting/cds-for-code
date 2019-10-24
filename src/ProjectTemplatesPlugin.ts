@@ -7,7 +7,7 @@ import * as path from 'path';
 import * as fsutils from './helpers/FileSystem';
 import * as fmutils from './helpers/FileManager';
 import * as EnvironmentVariables from './helpers/EnvironmentVariables';
-import ExtensionConfiguration from './helpers/ExtensionConfiguration';
+import ExtensionConfiguration from './config/ExtensionConfiguration';
 import { IWireUpCommands } from './wireUpCommand';
 
 import * as CreateProjectFromTemplateCommand from './commands/createProjectFromTemplate';
