@@ -60,10 +60,10 @@ export namespace dynamics
         export class templates
         {
             public static readonly _namespace:string = "cs.dynamics.configuration.templates";
-            public static readonly templatesDirectory:string = `${explorer._namespace}.templatesDirectory`;
-            public static readonly usePlaceholders:string = `${explorer._namespace}.usePlaceholders`;
-            public static readonly placeholderRegExp:string = `${explorer._namespace}.placeholderRegExp`;
-            public static readonly placeholders:string = `${explorer._namespace}.placeholders`;            
+            public static readonly templatesDirectory:string = `${templates._namespace}.templatesDirectory`;
+            public static readonly usePlaceholders:string = `${templates._namespace}.usePlaceholders`;
+            public static readonly placeholderRegExp:string = `${templates._namespace}.placeholderRegExp`;
+            public static readonly placeholders:string = `${templates._namespace}.placeholders`;            
         }
     }
 

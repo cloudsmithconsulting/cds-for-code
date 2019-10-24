@@ -60,8 +60,8 @@ export class ViewRenderer {
 		const pathOnDisk = path.join(this._view.extensionPath, 'resources', 'webviews', webviewFileName);
 		// read file contents from disk
 		const fileHtml = fs.readFileSync(pathOnDisk).toString();
-		// use custom delimiter ${ }
-		_.templateSettings.interpolate = /\${([\s\S]+?)}/g;
+		// use custom delimiter #{ }
+		_.templateSettings.interpolate = /#{([\s\S]+?)}/g;
 		// compile the template
 		const compiled = _.template(fileHtml);
 		// create a base viewModel
