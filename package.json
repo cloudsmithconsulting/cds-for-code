@@ -16,17 +16,17 @@
 		"Dynamics",
 		"Dynamics 365",
 		"CRM"
-	],	
+	],
 	"activationEvents": [
 		"onView:cs.dynamics.viewContainers.connections",
 		"onCommand:cs.dynamics.powerShell.unpackSolution",
 		"onCommand:cs.dynamics.powerShell.packSolution",
 		"onCommand:cs.dynamics.powerShell.generateEntities",
 		"onCommand:cs.dynamics.extension.downloadRequiredScripts",
-        "onCommand:cs.dynamics.extension.openProjectTemplatesFolder",
-        "onCommand:cs.dynamics.extension.saveProjectAsTemplate",
-        "onCommand:cs.dynamics.extension.deleteProjectTemplate",
-        "onCommand:cs.dynamics.extension.createProjectFromTemplate"		
+		"onCommand:cs.dynamics.extension.openProjectTemplatesFolder",
+		"onCommand:cs.dynamics.extension.saveProjectAsTemplate",
+		"onCommand:cs.dynamics.extension.deleteProjectTemplate",
+		"onCommand:cs.dynamics.extension.createProjectFromTemplate"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -54,24 +54,24 @@
 					"default": "true",
 					"description": "Show the Default Solution in the Dynamics explorer pane"
 				},
-                "cs.dynamics.configuration.templates.templatesDirectory": {
-                    "type": "string",
-                    "description": "Directory to read/store project template folders"
-                },
-                "cs.dynamics.configuration.templates.usePlaceholders": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Look for and replace placeholders in template (e.g. #{author})"
-                },
-                "cs.dynamics.configuration.templates.placeholderRegExp": {
-                    "type": "string",
-                    "default": "#{(\\w+)?}",
-                    "description": "Regular expression for detecting placeholders (e.g. \"#{(\\w+?)}\").  The first capture group dictates the placeholder key."
-                },
-                "cs.dynamics.configuration.templates.placeholders": {
-                    "type": "object",
-                    "default": {},
-                    "description": "List of placeholders, in key-value string pairs."
+				"cs.dynamics.configuration.templates.templatesDirectory": {
+					"type": "string",
+					"description": "Directory to read/store project template folders"
+				},
+				"cs.dynamics.configuration.templates.usePlaceholders": {
+					"type": "boolean",
+					"default": true,
+					"description": "Look for and replace placeholders in template (e.g. #{author})"
+				},
+				"cs.dynamics.configuration.templates.placeholderRegExp": {
+					"type": "string",
+					"default": "#{(\\w+)?}",
+					"description": "Regular expression for detecting placeholders (e.g. \"#{(\\w+?)}\").  The first capture group dictates the placeholder key."
+				},
+				"cs.dynamics.configuration.templates.placeholders": {
+					"type": "object",
+					"default": {},
+					"description": "List of placeholders, in key-value string pairs."
 				}
 			}
 		},
@@ -143,26 +143,26 @@
 				"title": "Dynamics 365 CE: Download required PowerShell scripts for VSCode extension from GitHub",
 				"category": "Tools"
 			},
-            {
-                "command": "cs.dynamics.extension.openProjectTemplatesFolder",
-                "title": "Open Templates Folder",
-                "category": "Project"
-            },
-            {
-                "command": "cs.dynamics.extension.saveProjectAsTemplate",
-                "title": "Save Project as Template",
-                "category": "Project"
-            },
-            {
-                "command": "cs.dynamics.extension.deleteProjectTemplate",
-                "title": "Delete Existing Template",
-                "category": "Project"
-            },
-            {
-                "command": "cs.dynamics.extension.createProjectFromTemplate",
-                "title": "Create Project from Template",
-                "category": "Project"
-            }			
+			{
+				"command": "cs.dynamics.extension.openProjectTemplatesFolder",
+				"title": "Open Templates Folder",
+				"category": "Project"
+			},
+			{
+				"command": "cs.dynamics.extension.saveProjectAsTemplate",
+				"title": "Save Project as Template",
+				"category": "Project"
+			},
+			{
+				"command": "cs.dynamics.extension.deleteProjectTemplate",
+				"title": "Delete Existing Template",
+				"category": "Project"
+			},
+			{
+				"command": "cs.dynamics.extension.createProjectFromTemplate",
+				"title": "Create Project from Template",
+				"category": "Project"
+			}
 		],
 		"viewsContainers": {
 			"activitybar": [
@@ -183,16 +183,16 @@
 		},
 		"menus": {
 			"explorer/context": [
-                {
-                    "command": "cs.dynamics.extension.createProjectFromTemplate",
-                    "when": "explorerResourceIsFolder",
-                    "group": "projectTemplates@1"
-                },
-                {
-                    "command": "cs.dynamics.extension.saveProjectAsTemplate",
-                    "when": "explorerResourceIsFolder",
-                    "group": "projectTemplates@2"
-                }
+				{
+					"command": "cs.dynamics.extension.createProjectFromTemplate",
+					"when": "explorerResourceIsFolder",
+					"group": "projectTemplates@1"
+				},
+				{
+					"command": "cs.dynamics.extension.saveProjectAsTemplate",
+					"when": "explorerResourceIsFolder",
+					"group": "projectTemplates@2"
+				}
 			],
 			"view/title": [
 				{
@@ -254,11 +254,13 @@
 		"vscode-test": "^1.2.0"
 	},
 	"dependencies": {
+		"@types/xml2js": "^0.4.5",
 		"adal-node": "^0.2.1",
 		"httpntlm": "^1.7.6",
 		"jsoneditor": "^7.1.0",
 		"lodash": "^4.17.15",
 		"node-fetch": "^2.6.0",
-		"typescript-linq": "^1.0.6"
+		"typescript-linq": "^1.0.6",
+		"xml2js": "^0.4.22"
 	}
 }

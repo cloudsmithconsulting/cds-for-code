@@ -2,6 +2,7 @@ import vscode = require("vscode");
 import ProjectTemplatesPlugin from "../projectTemplatesPlugin";
 import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
+import { QuickPicker } from "../helpers/QuickPicker";
 
 /**
  * Main command to save the current project as a template.
@@ -12,7 +13,7 @@ import * as cs from "../cs";
  */
 export async function run(templateManager: ProjectTemplatesPlugin, args: any) {
 	// get workspace folder
-	let workspace = await templateManager.selectWorkspace(args);
+	let workspace = await QuickPicker.pickWorkspacePath(args);
 
     if (!workspace) {
 		vscode.window.showErrorMessage("No workspace selected");
