@@ -7,6 +7,7 @@ import { Terminal } from '../helpers/Terminal';
 import { Utilities } from '../helpers/Utilities';
 import { IWireUpCommands } from '../wireUpCommand';
 import SolutionMap from '../config/SolutionMap';
+import { TS } from 'typescript-linq';
 
 export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;
@@ -26,6 +27,14 @@ export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 
 				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a Solution to unpack", true);
 				if (!solution) { return; }
+
+				folder = folder || await SolutionMap.read().then(map => {
+			  		const results = new TS.Linq.Enumerator(map.mappings)
+						.where(m => m.solutionId === solution.solutionid && m.organizationId === config.orgId)
+						.toArray();
+
+					if (results && results.length > 0) { return results[0].path; } else { return undefined; }
+				});
 
 				folder = folder || await QuickPicker.pickWorkspacePath(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true);
 				if (Utilities.IsNullOrEmpty(folder)) {
