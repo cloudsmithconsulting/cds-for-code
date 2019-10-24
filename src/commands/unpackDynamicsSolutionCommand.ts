@@ -6,6 +6,7 @@ import { QuickPicker } from '../helpers/QuickPicker';
 import { Terminal } from '../helpers/Terminal';
 import { Utilities } from '../helpers/Utilities';
 import { IWireUpCommands } from '../wireUpCommand';
+import SolutionMap from '../config/SolutionMap';
 
 export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;
@@ -14,7 +15,7 @@ export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 		this.workspaceConfiguration = config;
 		
 		context.subscriptions.push(
-			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolution, async (config?:DynamicsWebApi.Config, folder?:string, solutionName?:string, toolsPath?:string) => { // Match name of command to package.json command
+			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolution, async (config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string) => { // Match name of command to package.json command
                 // setup configurations
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
                 const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
@@ -23,11 +24,8 @@ export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
-				if (!solutionName){
-					const solution = await QuickPicker.pickDynamicsSolution(config, "Choose a Solution to unpack", true);
-
-					if (!solution) { return; } else { solutionName = solution.uniquename; }
-				}
+				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a Solution to unpack", true);
+				if (!solution) { return; }
 
 				folder = folder || await QuickPicker.pickWorkspacePath(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true);
 				if (Utilities.IsNullOrEmpty(folder)) {
@@ -51,7 +49,7 @@ export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				const commandToExecute = `.\\Get-XrmSolution.ps1 `
 					+ `-ServerUrl "${serverUrl}" `
 					+ `-OrgName "${orgName}" `
-					+ `-SolutionName "${solutionName}" `
+					+ `-SolutionName "${solution.uniquename}" `
 					+ `-Path "${folder}" `
 					+ `-ToolsPath "${toolsPath}" `
 					+ `-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “${Utilities.PowerShellSafeString(config.password)}” -AsPlainText -Force))) `;
@@ -61,6 +59,11 @@ export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				
 				// execute the command
 				terminal.sendText(commandToExecute);
+
+				// write this to our solution map.
+				SolutionMap.read()
+					.then(map => map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename)))
+					.then(map => map.save());
 			})
 		);
 	}
