@@ -1,4 +1,4 @@
-import { Utilities } from "../Utilities";
+import { Utilities } from "../helpers/Utilities";
 import { WebApiRequest } from "./WebApiRequest";
 import fetchQuery, {  Query } from "./FetchQuery";
 import { FetchQueryResolver } from "./FetchQueryResolver";

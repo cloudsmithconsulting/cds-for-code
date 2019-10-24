@@ -1,8 +1,12 @@
 import { performance } from "perf_hooks";
-import { stringify } from "querystring";
+import * as vscode from 'vscode';
 
 export class Utilities
 {
+    public static IsNullOrEmpty(value: any) : boolean {
+        return !(value && value.length > 0);
+    }
+
     public static IsNull(value: any) : boolean
     {
         return typeof value === "undefined" || value === null;
@@ -43,17 +47,6 @@ export class Utilities
     }
 
     public static IsGuid(parameter:string): boolean {
-        ///<summary>
-        /// Private function used to check whether required parameter is a valid GUID
-        ///</summary>
-        ///<param name="parameter" type="String">
-        /// The GUID parameter to check;
-        ///</param>
-        ///<param name="message" type="String">
-        /// The error message text to include when the error is thrown.
-        ///</param>
-        /// <returns type="String" />
-
         try {
             const match = /[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}/i.exec(parameter)[0];
 
@@ -67,6 +60,79 @@ export class Utilities
     public static TrimGuid(id: string) {
         return (id || '').replace(/{|}/g, '');
     }
+
+    public static EnforceTrailingSlash(path: string): string {
+        if (!path.endsWith("/"))
+        {
+            path = `${path}/`;
+        }
+
+        return path;
+    }
+
+    public static RemoveTrailingSlash(string:string): string {
+        return string.replace(/\/$/, "");
+    }
+
+    public static InitWebApiUrl(version:string): string {
+        return '/api/data/v' + version + '/';
+    }
+
+    public static IsObject(obj):boolean {
+        const type = typeof obj;
+        return type === 'function' || type === 'object' && !!obj;
+    }
+
+    public static Clone<T>(src: any): T {
+        let target = {};
+
+        for (let prop in src) {
+            if (src.hasOwnProperty(prop)) {
+                // if the value is a nested object, recursively copy all it's properties
+                if (Utilities.IsObject(src[prop])) {
+                    target[prop] = Utilities.Clone(src[prop]);
+                } else {
+                    target[prop] = src[prop];
+                }
+            }
+        }
+
+        return <T>target;
+    }
+
+    public static OpenWindow(uri:vscode.Uri, retryFunction?:any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close"): void
+    {
+        vscode.env.openExternal(uri).then(opened =>
+        {
+            if (!opened && retryFunction)
+            {
+                this.RetryWithMessage("There was a problem opening the Dynamics 365 browser window", retryFunction, tryAgainMessage, closeMessage);
+            }
+        });
+    }
+
+    public static RetryWithMessage(errorMessage:string, retryFunction:any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close"): void
+    {
+        vscode.window
+            .showErrorMessage(errorMessage, tryAgainMessage, closeMessage)
+            .then(selectedItem =>
+            {
+                switch (selectedItem)
+                {
+                    case tryAgainMessage:
+                        if (typeof retryFunction === "function")
+                        {
+                            retryFunction();
+                        }
+
+                        break;
+                    case closeMessage:
+                        break;
+                }
+
+                Promise.resolve(this);
+            });
+    }    
 
     public static BuildFunctionParameters(parameters?: any) : string {
         if (parameters) {
@@ -169,42 +235,7 @@ export class Utilities
         return { id: result[2], collection: result[1], oDataContext: responseData["@odata.context"] };
     }
 
-    public static EnforceTrailingSlash(path: string): string {
-        if (!path.endsWith("/"))
-        {
-            path = `${path}/`;
-        }
-
-        return path;
-    }
-
-    public static RemoveTrailingSlash(string:string): string {
-        return string.replace(/\/$/, "");
-    }
-
-    public static InitWebApiUrl(version:string): string {
-        return '/api/data/v' + version + '/';
-    }
-
-    public static IsObject(obj):boolean {
-        const type = typeof obj;
-        return type === 'function' || type === 'object' && !!obj;
-    }
-
-    public static Clone<T>(src: any): T {
-        let target = {};
-
-        for (let prop in src) {
-            if (src.hasOwnProperty(prop)) {
-                // if the value is a nested object, recursively copy all it's properties
-                if (Utilities.IsObject(src[prop])) {
-                    target[prop] = Utilities.Clone(src[prop]);
-                } else {
-                    target[prop] = src[prop];
-                }
-            }
-        }
-
-        return <T>target;
+    public static PowerShellSafeString(value: string) : string {
+        return value.replace('$', '`$');
     }
 }
