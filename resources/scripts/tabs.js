@@ -1,8 +1,8 @@
 // This script will be run within the webview itself
 // It cannot access the main VS Code APIs directly.
 (function () {
-    const changeTab = window.changeTab = function(evt, tabId) {
-        if (!evt) { return; } // only do this if event exists
+    const changeTab = window.changeTab = function(event, tabId) {
+        if (!event) { return; } // only do this if event exists
 
         // Get all elements with class="tabcontent" and hide them
         const tabcontent = document.getElementsByClassName("tab__content");
@@ -18,8 +18,7 @@
 
         // Show the current tab, and add an "active" class to the button that opened the tab
         document.getElementById(tabId).removeAttribute("hidden");
-        
         // set the class of active tab
-        evt.currentTarget.className += " tab__item--active";
+        event.currentTarget.className += " tab__item--active";
     }
 }());
