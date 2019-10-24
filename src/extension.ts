@@ -12,6 +12,7 @@ import { PackDynamicsSolutionCommand } from './commands/packDynamicsSolutionComm
 import { UnpackDynamicsSolutionCommand } from './commands/unpackDynamicsSolutionCommand';
 import JsonInspectorViewManager from './views/jsonInspectorView';
 import ProjectTemplatesPlugin from './ProjectTemplatesPlugin';
+import SvcUtilConfigViewManager from './views/svcUtilConfigView';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -32,6 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
 		new DynamicsTreeView(),
 		new ConnectionViewManager(),
 		new JsonInspectorViewManager(),
+		new SvcUtilConfigViewManager(),
 		
 		// our commands
 		new PowerShellLoader(),
