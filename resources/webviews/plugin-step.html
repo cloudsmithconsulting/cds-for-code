@@ -59,6 +59,55 @@
     </label>
     <input type="password" class="field__input" id="AuthType8" name="Execution Order" />
 </div>
+
+<p>Event Pipeline Stage of Execution</p>
+
+<div class="field field--checkbox">
+    <input type="radio" class="field__input" id="AuthType1" name="AuthType"/>
+    <label class="field__label" for="AuthType1">
+        Pre-validation
+    </label>
+</div>
+
+<div class="field field--checkbox">
+    <input type="radio" class="field__input" id="AuthType1" name="AuthType" />
+    <label class="field__label" for="AuthType1">
+        Pre-operation
+    </label>
+</div>
+
+<div class="field field--checkbox">
+        <input type="radio" class="field__input" id="AuthType1" name="AuthType"/>
+        <label class="field__label" for="AuthType1">
+            Post-operation
+        </label>
+</div>
+
+<div class="field field--checkbox">
+        <input type="checkbox" class="field__input" id="AuthType1" name="AuthType"/>
+        <label class="field__label" for="AuthType1">
+            Delete AsyncOperation if StatusCode = Successful
+        </label>
+</div>
+
+<p>Execution Mode</p>
+
+<div class="field field--checkbox">
+        <input type="radio" class="field__input" id="AuthType1" name="AuthType"/>
+        <label class="field__label" for="AuthType1">
+            Asynchronous
+        </label>
+</div>
+
+<div class="field field--checkbox">
+        <input type="radio" class="field__input" id="AuthType1" name="AuthType"/>
+        <label class="field__label" for="AuthType1">
+            Synchronous
+        </label>
+</div>
+
+<br></br>
 <div class="field">
-    <button id="submitButton" class="button button--primary">Add Connection</button>
+    <button id="submitButton" class="button button--primary">Update Step</button>
+    <button id="submitButton" class="button button--primary">Cancel</button>
 </div>
