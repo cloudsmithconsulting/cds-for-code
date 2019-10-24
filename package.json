@@ -23,6 +23,7 @@
 		"onCommand:cs.dynamics.powerShell.packSolution",
 		"onCommand:cs.dynamics.powerShell.generateEntities",
 		"onCommand:cs.dynamics.extension.downloadRequiredScripts",
+		"onCommand:cs.dynamics.controls.pluginStep.open",
         "onCommand:cs.dynamics.extension.openProjectTemplatesFolder",
         "onCommand:cs.dynamics.extension.saveProjectAsTemplate",
         "onCommand:cs.dynamics.extension.deleteProjectTemplate",
@@ -141,6 +142,11 @@
 			{
 				"command": "cs.dynamics.extension.downloadRequiredScripts",
 				"title": "Dynamics 365 CE: Download required PowerShell scripts for VSCode extension from GitHub",
+				"category": "Tools"
+			},
+			{
+				"command": "cs.dynamics.controls.pluginStep.open",
+				"title": "Dynamics 365 CE: Open plugin step",
 				"category": "Tools"
 			},
             {
