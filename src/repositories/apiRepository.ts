@@ -19,6 +19,11 @@ export default class ApiRepository
         return await this.webapi.executeUnboundFunction('WhoAmI');
     }
 
+    public retrieveSolution(solutionId:string) : Promise<any[]> {
+        return this.webapi.retrieveRequest({ collection: "solutions", id: solutionId })
+            .then(response => response.value);
+    }
+
     public retrieveSolutions() : Promise<any[]> {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "solutions",

@@ -1,43 +1,50 @@
 import * as path from 'path';
-import { TS } from 'typescript-linq';
 import * as vscode from 'vscode';
 import * as cs from '../cs';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import QuickPickOption from '../helpers/QuickPicker';
+import { QuickPicker } from '../helpers/QuickPicker';
 import { Terminal } from '../helpers/Terminal';
 import { Utilities } from '../helpers/Utilities';
-import ApiRepository from '../repositories/apiRepository';
-import DiscoveryRepository from '../repositories/discoveryRepository';
 import { IWireUpCommands } from '../wireUpCommand';
+import SolutionMap from '../config/SolutionMap';
+import { TS } from 'typescript-linq';
 
 export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
-    public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration){
-		// setup configurations
-		const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(config, cs.dynamics.configuration.tools.sdkInstallPath);
-		// set core tools root
-		const coreToolsRoot = path.join(sdkInstallPath, 'CoreTools');
-		const workspaceFolder = vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
+	public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
+    public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration){
+		this.workspaceConfiguration = config;
+		
 		context.subscriptions.push(
-			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolution, async (config?:DynamicsWebApi.Config, folder?:string, solutionName?:string, toolsPath?:string) => { // Match name of command to package.json command
-				config = config || await DiscoveryRepository.getOrgConnections(context)
-					.then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(org.name, org.webApiUrl, undefined, org)).toArray())
-					.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Dynamics 365 Organization", canPickMany: false, ignoreFocusOut: true}))
-					.then(chosen => chosen.context);
+			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolution, async (config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string) => { // Match name of command to package.json command
+                // setup configurations
+                const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
+                const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
+                const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
+
+				config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
-				
-				folder = folder || await vscode.window
-						.showOpenDialog({canSelectFolders: true, canSelectFiles: false, canSelectMany: false, defaultUri: workspaceFolder.uri})
-						.then(async pathUris => pathUris[0].fsPath);
-				if (Utilities.IsNullOrEmpty(folder)) { return; }
-				
-				solutionName = solutionName || await new ApiRepository(config).retrieveSolutions()
-						.then(solutions => new TS.Linq.Enumerator(solutions).select(solution => new QuickPickOption(solution.friendlyname, solution.solutionid, undefined, solution)).toArray())
-						.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Solution to unpack", canPickMany: false, ignoreFocusOut: true}))
-						.then(chosen => chosen.context.uniquename);
-				if (Utilities.IsNullOrEmpty(solutionName)) { return; }
+
+				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a Solution to unpack", true);
+				if (!solution) { return; }
+
+				folder = folder || await SolutionMap.read().then(map => {
+			  		const results = new TS.Linq.Enumerator(map.mappings)
+						.where(m => m.solutionId === solution.solutionid && m.organizationId === config.orgId)
+						.toArray();
+
+					if (results && results.length > 0) { return results[0].path; } else { return undefined; }
+				});
+
+				folder = folder || await QuickPicker.pickWorkspacePath(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true);
+				if (Utilities.IsNullOrEmpty(folder)) {
+					vscode.window.showInformationMessage("You must have at least one workspace open to unpack solutions.");
+
+					 return; 
+				}
 				
 				toolsPath = toolsPath || coreToolsRoot;
+				if (Utilities.IsNull(toolsPath)) { return; }
 
 				const splitUrl = Utilities.RemoveTrailingSlash(config.webApiUrl).split("/");
 				const orgName = config.domain ? splitUrl[splitUrl.length - 1] : config.orgName;
@@ -51,7 +58,7 @@ export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				const commandToExecute = `.\\Get-XrmSolution.ps1 `
 					+ `-ServerUrl "${serverUrl}" `
 					+ `-OrgName "${orgName}" `
-					+ `-SolutionName "${solutionName}" `
+					+ `-SolutionName "${solution.uniquename}" `
 					+ `-Path "${folder}" `
 					+ `-ToolsPath "${toolsPath}" `
 					+ `-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “${Utilities.PowerShellSafeString(config.password)}” -AsPlainText -Force))) `;
@@ -61,6 +68,11 @@ export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				
 				// execute the command
 				terminal.sendText(commandToExecute);
+
+				// write this to our solution map.
+				SolutionMap.read()
+					.then(map => map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename)))
+					.then(map => map.save());
 			})
 		);
 	}

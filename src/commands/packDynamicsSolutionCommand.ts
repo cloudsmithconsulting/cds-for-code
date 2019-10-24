@@ -1,46 +1,86 @@
-import * as path from 'path';
-import { TS } from 'typescript-linq/TS';
 import * as vscode from 'vscode';
 import * as cs from '../cs';
+import * as fs from 'fs';
+import * as path from 'path';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import QuickPickOption from '../helpers/QuickPicker';
+import QuickPickOption, { QuickPicker } from '../helpers/QuickPicker';
 import { Terminal } from '../helpers/Terminal';
 import { Utilities } from '../helpers/Utilities';
-import ApiRepository from '../repositories/apiRepository';
-import DiscoveryRepository from '../repositories/discoveryRepository';
 import { IWireUpCommands } from '../wireUpCommand';
+import SolutionMap from '../config/SolutionMap';
+import XmlParser from '../helpers/XmlParser';
+import { TS } from 'typescript-linq/TS';
 
 export class PackDynamicsSolutionCommand implements IWireUpCommands {
+	public workspaceConfiguration:vscode.WorkspaceConfiguration;
+
 	public wireUpCommands (context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
-		// setup configurations
-		const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(config, cs.dynamics.configuration.tools.sdkInstallPath);
-		// set core tools root
-		const coreToolsRoot = path.join(sdkInstallPath, 'CoreTools');
-		const workspaceFolder = vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
+		this.workspaceConfiguration = config;
 
 		// now wire a command into the context
 		context.subscriptions.push(
-			vscode.commands.registerCommand(cs.dynamics.powerShell.packSolution, async (config?:DynamicsWebApi.Config, folder?:string, solutionName?:string, toolsPath?:string, managed?:boolean) => { // Match name of command to package.json command
-				config = config || await DiscoveryRepository.getOrgConnections(context)
-					.then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(org.name, org.webApiUrl, undefined, org)).toArray())
-					.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Dynamics 365 Organization", canPickMany: false, ignoreFocusOut: true}))
-					.then(chosen => chosen.context);
+			vscode.commands.registerCommand(cs.dynamics.powerShell.packSolution, async (config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string, managed?:boolean) => { // Match name of command to package.json command
+                // setup configurations
+                const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
+                const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
+                const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
+
+				folder = folder || await QuickPicker.pickWorkspacePath(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder containing the solution to pack", true);
+				if (Utilities.IsNullOrEmpty(folder)) { return; }
+				
+				config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
-				folder = folder || await vscode.window
-					.showOpenDialog({canSelectFolders: true, canSelectFiles: false, canSelectMany: false, defaultUri: workspaceFolder.uri})
-					.then(async pathUris => pathUris[0].fsPath);
+				if (!solution) {
+					let solutionFolder = folder;
+					let solutionFile = path.join(solutionFolder, "Other/Solution.xml");
 
-				if (Utilities.IsNullOrEmpty(folder)) { return; }
+					if (!fs.existsSync(solutionFile)) { 
+						solutionFile = ''; 
 
-				solutionName = solutionName || await new ApiRepository(config).retrieveSolutions()
-						.then(solutions => new TS.Linq.Enumerator(solutions).select(solution => new QuickPickOption(solution.friendlyname, solution.solutionid, undefined, solution)).toArray())
-						.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Solution to pack", canPickMany: false, ignoreFocusOut: true}))
-						.then(chosen => chosen.context.uniquename);
+						const solutionMap:SolutionMap = await SolutionMap.read();
+						const solutionFolders = new TS.Linq.Enumerator(solutionMap.mappings)
+							.where(m => m.path.startsWith(folder))
+							.select(m => new QuickPickOption(m.path, null))
+							.toArray();
+	
+						if (solutionFolders && solutionFolders.length > 0) {
+							if (solutionFolders.length > 1) {
+								let pickValue = await QuickPicker.pick("Choose the folder containing the solution to pack", ...solutionFolders);
+	
+								if (pickValue) { solutionFolder = pickValue.label; } else { return; }
+							} else { 
+								solutionFolder = solutionFolders[0].label; 
+							}
+	
+							folder = solutionFolder;
+							solutionFile = path.join(solutionFolder, "Other/Solution.xml");
+						}
+					}
 
-				if (Utilities.IsNullOrEmpty(solutionName)) { return; }
+					if (fs.existsSync(solutionFile)) {
+						const solutionFileObject = await XmlParser.parseFile(solutionFile);
+						
+						if (!solutionFileObject 
+							|| !solutionFileObject.ImportExportXml 
+							|| !solutionFileObject.ImportExportXml.SolutionManifest 
+							|| solutionFileObject.ImportExportXml.SolutionManifest.length === 0 
+							|| !solutionFileObject.ImportExportXml.SolutionManifest[0].UniqueName) {
+							vscode.window.showErrorMessage(`The solution file ${solutionFile} is not a valid Dynamics 365 solution manifest.`); 
+
+							return;
+						}
+
+						solution = solutionFileObject.ImportExportXml.SolutionManifest[0].UniqueName.toString();
+					} 
+					else {
+						return;
+					}
+				}
 
 				toolsPath = toolsPath || coreToolsRoot;
+				if (Utilities.IsNull(toolsPath)) { return; }
+
 				managed = managed || false;
 
 				const splitUrl = Utilities.RemoveTrailingSlash(config.webApiUrl).split("/");
@@ -52,10 +92,10 @@ export class PackDynamicsSolutionCommand implements IWireUpCommands {
 				}
 				
 				// setup the command text
-				const commandToExecute = `.\\Deploy-XrmSolutions.ps1 `
+				const commandToExecute = `.\\Deploy-XrmSolution.ps1 `
 					+ `-ServerUrl "${serverUrl}" `
 					+ `-OrgName "${orgName}" `
-					+ `-SolutionName "${solutionName}" `
+					+ `-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `
 					+ `-Path "${folder}" `
 					+ `-ToolsPath "${toolsPath}" `
 					+ `-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “${Utilities.PowerShellSafeString(config.password)}” -AsPlainText -Force))) `
