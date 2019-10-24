@@ -98,7 +98,7 @@ export class ViewRenderer {
 	Use a content security policy to only allow loading images from https or from our extension directory,
 	and only allow scripts that have a specific nonce.
 	-->
-	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${this._view.panel.webview.cspSource} https:; style-src ${this._view.panel.webview.cspSource}; script-src 'nonce-${this.nonce}';">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${this._view.panel.webview.cspSource} https:; style-src ${this._view.panel.webview.cspSource}; script-src 'self' 'nonce-${this.nonce}';">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	${cssHtml}
 	<title>${this._view.viewOptions.viewTitle}</title>

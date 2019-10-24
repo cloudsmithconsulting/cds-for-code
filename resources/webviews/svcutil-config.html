@@ -4,6 +4,26 @@
     #{viewTitle}
 </h1>
 
-<p>
-    This is the CrmSvcUtil Config
-</p>
+<ul class="tab" id="tabs">
+    <li class="tab__item tab__item--active" onclick="changeTab('Filtering')">
+        Filtering
+    </li>
+    <li class="tab__item" onclick="changeTab('Naming')">
+        Naming
+    </li>
+    <li class="tab__item" onclick="changeTab('Code-Generation')">
+        Code Generation
+    </li>
+</ul>
+
+<div id="Filtering" class="tabcontent">
+    <h3>Filtering</h3>
+</div>
+
+<div id="Naming" class="tabcontent">
+    <h3>Naming</h3>
+</div>
+
+<div id="Code-Generation" class="tabcontent">
+    <h3>Code Generation</h3>
+</div>
