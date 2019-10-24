@@ -1,69 +1,78 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import GenerateEntitiesCommand from './generateEntitiesCommand';
 import * as cs from './cs';
 import { IWireUpCommands } from './wireUpCommand';
+import ExtensionConfiguration from './helpers/ExtensionConfiguration';
+import { Terminal } from './helpers/Terminal';
+import DiscoveryRepository from './repositories/discoveryRepository';
+import QuickPickOption from './helpers/QuickPicker';
+import { TS } from 'typescript-linq/TS';
+import ApiRepository from './repositories/apiRepository';
+import { Utilities } from './helpers/Utilities';
 
 export class PackDynamicsSolutionCommand implements IWireUpCommands {
 	public wireUpCommands (context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
-	// setup configurations
-	const crmSdkRoot = config.get('sdkInstallPath') as string;
-	// set core tools root
-	const coreToolsRoot = path.join(crmSdkRoot, 'CoreTools');
+		// setup configurations
+		const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(config, cs.dynamics.configuration.tools.sdkInstallPath);
+		// set core tools root
+		const coreToolsRoot = path.join(sdkInstallPath, 'CoreTools');
+		const workspaceFolder = vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 
-	// now wire a command into the context
-	context.subscriptions.push(
-		vscode.commands.registerCommand(cs.dynamics.powerShell.packSolution, () => { // Match name of command to package.json command
-			// get root path of vscode workspace
-			const folders = vscode.workspace.workspaceFolders;
-			// see if we have anything open
-			if (folders !== undefined) {
-				// loop through open root workspace folders
-				folders.forEach(folder => {
-					// we only support the file system right now
-					if (folder.uri.scheme === "file") {
-						// hold on to the current root path
-						const rootPath = folder.uri.fsPath;
+		// now wire a command into the context
+		context.subscriptions.push(
+			vscode.commands.registerCommand(cs.dynamics.powerShell.packSolution, async (config?:DynamicsWebApi.Config, folder?:string, solutionName?:string, toolsPath?:string, managed?:boolean) => { // Match name of command to package.json command
+				if (!config) {
+					config = await DiscoveryRepository.getOrgConnections(context)
+						.then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(org.name, org.webApiUrl, undefined, org)).toArray())
+						.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Dynamics 365 Organization", canPickMany: false, ignoreFocusOut: true}))
+						.then(chosen => chosen.context);
+				}
 
-						// setup the code file path to be generated
-						const codeFilePath = path.join(rootPath, 'Deploy-XrmSolutions.ps1');
+				if (!folder) {
+					folder = await vscode.window
+						.showOpenDialog({canSelectFolders: true, canSelectFiles: false, canSelectMany: false, defaultUri: workspaceFolder.uri})
+						.then(async pathUris => pathUris[0].fsPath);
+				}
 
-						// Variables to help execuate PowerShell Commands
-						const ServerURL = null;
-						const OrgName = null;
-						const SolutionName = null;
-						const Path = null;
-						const ToolsPath = null;
-						const Credential = null;
-						const Managed = null;
-						const Username = "missioncommand";
-						const Password = "$mokingTir33";
-						const Domain = "CONTOSO";
-						const Namespace = "CloudSmith.Dynamics365.SampleTests";
+				if (!solutionName) {
+					solutionName = await new ApiRepository(config).retrieveSolutions()
+						.then(solutions => new TS.Linq.Enumerator(solutions).select(solution => new QuickPickOption(solution.friendlyname, solution.solutionid, undefined, solution)).toArray())
+						.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Solution to pack", canPickMany: false, ignoreFocusOut: true}))
+						.then(chosen => chosen.context.uniquename);
+				}
 
-						// setup the command text
-						const commandToExecute = `${codeFilePath} `
-							+ `-ServerUrl "${ServerURL}/XRMServices/2011/Organization.svc" `
-							+ `-OrgName ${OrgName}`
-							+ `-SolutionName ${SolutionName}`
-							+ `-Path ${Path}`
-							+ `-ToolsPath ${ToolsPath}`
-							+ `-Credential ${Credential}`
-							+ `-Managed ${Managed}`
-							+ `-Username:${Username} `
-							+ `-Password:${Password} `.replace('$', '`$') // $ is a problem in powershell
-							+ `-Domain:${Domain} `
-							+ `-Namespace:${Namespace} `
-							+ `/out:${codeFilePath}`;
+				if (!toolsPath) {
+					toolsPath = coreToolsRoot;
+				}
 
-						// build a powershell terminal
-						const terminal = GenerateEntitiesCommand.showAndReturnTerminal(coreToolsRoot);
-						// execute the command
-						terminal.sendText(commandToExecute);
-					}
-				});
-			}
-		})
-	);
-}
+				if (!managed) {
+					managed = false;
+				}
+
+				const splitUrl = Utilities.RemoveTrailingSlash(config.webApiUrl).split("/");
+				const orgName = config.domain ? splitUrl[splitUrl.length - 1] : config.orgName;
+				let serverUrl = config.domain ? config.webApiUrl.replace(orgName, "") : config.webApiUrl;
+
+				if (serverUrl.endsWith("//")) {
+					serverUrl = serverUrl.substring(0, serverUrl.length - 1);
+				}
+				
+				// setup the command text
+				const commandToExecute = `.\\Deploy-XrmSolutions.ps1 `
+					+ `-ServerUrl "${serverUrl}" `
+					+ `-OrgName "${orgName}" `
+					+ `-SolutionName "${solutionName}" `
+					+ `-Path "${folder}" `
+					+ `-ToolsPath "${toolsPath}" `
+					+ `-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “${config.password}” -AsPlainText -Force))) `
+					+ (managed ? `-Managed ` : '');
+
+				// build a powershell terminal
+				const terminal = Terminal.showTerminal(context.globalStoragePath);
+
+				// execute the command
+				terminal.sendText(commandToExecute);
+			})
+		);
+	}
 }

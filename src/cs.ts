@@ -53,6 +53,7 @@ export namespace dynamics
         {
             public static readonly _namespace:string = "cs.dynamics.configuration.explorer";
             public static readonly showDefaultSolution:string = `${explorer._namespace}.showDefaultSolution`;
+            public static readonly connectionsGlobalStateKey = 'cloudsmith:dynamicsConnections';
         }
 
         // tslint:disable-next-line: class-name
@@ -68,6 +69,14 @@ export namespace dynamics
 
     export namespace controls
     {
+        // tslint:disable-next-line: class-name
+        export class quickPicker
+        {
+            public static readonly _namespace:string = "cs.dynamics.controls.quickPicker";
+            public static readonly cancel:string = `search.action.focusActiveEditor`;
+            public static readonly quit:string = `workbench.action.quit`;
+        }
+
         // tslint:disable-next-line: class-name
         export class treeView
         {
