@@ -1,46 +1,41 @@
 import * as path from 'path';
-import { TS } from 'typescript-linq/TS';
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import ExtensionConfiguration from '../helpers/ExtensionConfiguration';
-import QuickPickOption from '../helpers/QuickPicker';
+import ExtensionConfiguration from '../config/ExtensionConfiguration';
+import { QuickPicker } from '../helpers/QuickPicker';
 import { Terminal } from '../helpers/Terminal';
 import { Utilities } from '../helpers/Utilities';
-import ApiRepository from '../repositories/apiRepository';
-import DiscoveryRepository from '../repositories/discoveryRepository';
 import { IWireUpCommands } from '../wireUpCommand';
 
 export class PackDynamicsSolutionCommand implements IWireUpCommands {
+	public workspaceConfiguration:vscode.WorkspaceConfiguration;
+
 	public wireUpCommands (context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
-		// setup configurations
-		const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(config, cs.dynamics.configuration.tools.sdkInstallPath);
-		// set core tools root
-		const coreToolsRoot = path.join(sdkInstallPath, 'CoreTools');
-		const workspaceFolder = vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
+		this.workspaceConfiguration = config;
 
 		// now wire a command into the context
 		context.subscriptions.push(
 			vscode.commands.registerCommand(cs.dynamics.powerShell.packSolution, async (config?:DynamicsWebApi.Config, folder?:string, solutionName?:string, toolsPath?:string, managed?:boolean) => { // Match name of command to package.json command
-				config = config || await DiscoveryRepository.getOrgConnections(context)
-					.then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(org.name, org.webApiUrl, undefined, org)).toArray())
-					.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Dynamics 365 Organization", canPickMany: false, ignoreFocusOut: true}))
-					.then(chosen => chosen.context);
+                // setup configurations
+                const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
+                const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
+                const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
+
+				config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
-				folder = folder || await vscode.window
-					.showOpenDialog({canSelectFolders: true, canSelectFiles: false, canSelectMany: false, defaultUri: workspaceFolder.uri})
-					.then(async pathUris => pathUris[0].fsPath);
+				if (!solutionName) {
+					const solution = await QuickPicker.pickDynamicsSolution(config, "Choose a solution to update", true);
 
+					if (!solution) { return; } else { solutionName = solution.uniquename; }
+				}
+
+				folder = folder || await QuickPicker.pickWorkspacePath(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder containing the solution to pack", true);
 				if (Utilities.IsNullOrEmpty(folder)) { return; }
 
-				solutionName = solutionName || await new ApiRepository(config).retrieveSolutions()
-						.then(solutions => new TS.Linq.Enumerator(solutions).select(solution => new QuickPickOption(solution.friendlyname, solution.solutionid, undefined, solution)).toArray())
-						.then(options => vscode.window.showQuickPick(options, { placeHolder: "Choose a Solution to pack", canPickMany: false, ignoreFocusOut: true}))
-						.then(chosen => chosen.context.uniquename);
-
-				if (Utilities.IsNullOrEmpty(solutionName)) { return; }
-
 				toolsPath = toolsPath || coreToolsRoot;
+				if (Utilities.IsNull(toolsPath)) { return; }
+
 				managed = managed || false;
 
 				const splitUrl = Utilities.RemoveTrailingSlash(config.webApiUrl).split("/");

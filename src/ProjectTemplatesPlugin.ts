@@ -44,35 +44,6 @@ export default class ProjectTemplatesPlugin implements IWireUpCommands {
     }
 
     /**
-     * Selects a workspace folder.  If args contains an fsPath, then it uses
-     * that.  Otherwise, for single root workspaces it will select the root directory,
-     * or for multi-root will present a chooser to select a workspace.
-     * @param args 
-     */
-    public async selectWorkspace(args : any) : Promise<string> {
-        let workspace : string = "";
-
-        // check arguments
-        if (args && args.fsPath) {
-            workspace = args.fsPath;
-        } else if (vscode.workspace.workspaceFolders) {
-            // single or multi-root
-            if (vscode.workspace.workspaceFolders.length === 1) {
-                workspace = vscode.workspace.workspaceFolders[0].uri.fsPath;
-            } else if (vscode.workspace.workspaceFolders.length > 1) {
-                // choose workspace
-                let ws = await vscode.window.showWorkspaceFolderPick();
-
-                if (ws) {
-                    workspace = ws.uri.fsPath;
-                }
-            }
-        }
-
-        return workspace;
-    }
-
-    /**
      * Returns a list of available project templates by reading the Templates Directory.
      * @returns list of templates found
      */

@@ -64,6 +64,7 @@ export default class DiscoveryRepository
         orgConnection.webApiVersion = `${versionSplit[0]}.${versionSplit[1]}`;
         orgConnection.name = org.FriendlyName;
         orgConnection.orgName = org.Name;
+        orgConnection.orgId = org.Id;
 
         return orgConnection;
     }
