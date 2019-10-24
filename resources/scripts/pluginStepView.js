@@ -29,7 +29,7 @@
             // show this panel
             errorPanel.removeAttribute("hidden");
         } else {
-            errorPanel.attributes["hidden"] = "hidden";
+            errorPanel.setAttribute("hidden", "hidden");
         }
 
         return messages.length === 0;
