@@ -4,12 +4,12 @@ import * as vscode from 'vscode';
 import * as cs from './cs';
 // config
 import ExtensionConfiguration from './helpers/ExtensionConfiguration';
-import ConnectionViewManager from './connectionViewManager';
-import GenerateEntitiesCommand from './generateEntitiesCommand';
-import PowerShellLoader from './powerShellLoader';
-import DynamicsTreeView from './dynamicsTreeView';
-import { PackDynamicsSolutionCommand } from './packDynamicsSolutionCommand';
-import { UnpackDynamicsSolutionCommand } from './unpackDynamicsSolutionCommand';
+import ConnectionViewManager from './views/connectionView';
+import GenerateEntitiesCommand from './commands/generateEntitiesCommand';
+import PowerShellLoader from './commands/powerShellLoader';
+import DynamicsTreeView from './views/dynamicsTreeView';
+import { PackDynamicsSolutionCommand } from './commands/packDynamicsSolutionCommand';
+import { UnpackDynamicsSolutionCommand } from './commands/unpackDynamicsSolutionCommand';
 import JsonInspectorViewManager from './views/jsonInspectorView';
 import ProjectTemplatesPlugin from './ProjectTemplatesPlugin';
 

@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as cs from './cs';
+import * as cs from '../cs';
 import fetch, { Response } from 'node-fetch';
-import { IWireUpCommands } from './wireUpCommand';
-import ExtensionConfiguration from './helpers/ExtensionConfiguration';
-import { Terminal } from './helpers/Terminal';
-import { Utilities } from './helpers/Utilities';
+import { IWireUpCommands } from '../wireUpCommand';
+import ExtensionConfiguration from '../helpers/ExtensionConfiguration';
+import { Terminal } from '../helpers/Terminal';
+import { Utilities } from '../helpers/Utilities';
 
 export default class PowerShellLoader implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
