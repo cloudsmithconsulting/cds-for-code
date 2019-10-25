@@ -146,16 +146,6 @@
 				"category": "Dynamics 365 CE"
 			},
 			{
-				"command": "cs.dynamics.extension.createTerminal",
-				"title": "Show the Dynamics terminal",
-				"category": "Dynamics 365 CE"
-			},
-			{
-				"command": "cs.dynamics.extension.clearTerminal",
-				"title": "Clear the Dynamics terminal",
-				"category": "Dynamics 365 CE"
-			},
-			{
 				"command": "cs.dynamics.extension.openProjectTemplatesFolder",
 				"title": "Open project templates folder",
 				"category": "Dynamics 365 CE"
