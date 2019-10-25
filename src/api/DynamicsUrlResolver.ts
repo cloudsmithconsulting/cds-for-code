@@ -1,77 +1,22 @@
 import * as vscode from 'vscode';
-import { Utilities } from '../helpers/Utilities';
-import { Dictionary } from '../helpers/Dictionary';
+import Utilities from '../helpers/Utilities';
+import { DynamicsWebApi } from './Types';
 
-export enum DynamicsForm
+export default class DynamicsUrlResolver
 {
-    Dashboard = "dashboard",
-    AppointmentBook = "appointmentbook",
-    Main = "main",
-    MiniCampaignBO = "minicampaignbo",
-    Preview = "preview",
-    MobileExpress = "mobile",
-    QuickView = "quick",
-    QuickCreate = "quickCreate",
-    Dialog = "dialog",
-    TaskFlow = "taskflow",
-    InteractionCentricDashboard = "icdashboard",
-    ActionCard = "card",
-    MainInteractive = "maininteractive",
-    Other = "other",
-    MainBackup = "mainbackup",
-    AppointmentBookBackup = "appointmentbookbackup",
-    PowerBIDashboard = "powerbi"
-}
-
-export enum ProcessType
-{
-    Workflow = "Workflow",
-    Dialog = "Dialog",
-    BusinessRule = "Business Rule",
-    Action = "Action",
-    BusinessProcessFlow = "Business Process Flow",
-    Flow = "Flow"
-}
-
-export class DynamicsUrlResolver
-{
-    private static _formTypes = new Dictionary<number, DynamicsForm>([
-        { key: 0, value: DynamicsForm.Dashboard },
-        { key: 1, value: DynamicsForm.AppointmentBook },
-        { key: 2, value: DynamicsForm.Main },
-        { key: 3, value: DynamicsForm.MiniCampaignBO },
-        { key: 4, value: DynamicsForm.Preview },
-        { key: 5, value: DynamicsForm.MobileExpress },
-        { key: 6, value: DynamicsForm.QuickView },
-        { key: 7, value: DynamicsForm.QuickCreate },
-        { key: 8, value: DynamicsForm.Dialog },
-        { key: 9, value: DynamicsForm.TaskFlow },
-        { key: 10, value: DynamicsForm.InteractionCentricDashboard },
-        { key: 11, value: DynamicsForm.ActionCard },
-        { key: 12, value: DynamicsForm.MainInteractive },
-        { key: 100, value: DynamicsForm.Other },
-        { key: 101, value: DynamicsForm.MainBackup },
-        { key: 102, value: DynamicsForm.AppointmentBookBackup },
-        { key: 103, value: DynamicsForm.PowerBIDashboard }
-    ]);
-
-    private static _processTypes = new Dictionary<number, ProcessType>([
-        { key: 0, value: ProcessType.Workflow },
-        { key: 1, value: ProcessType.Dialog },
-        { key: 2, value: ProcessType.BusinessRule },
-        { key: 3, value: ProcessType.Action },
-        { key: 4, value: ProcessType.BusinessProcessFlow },
-        { key: 5, value: ProcessType.Flow }
-    ]);
-
-    public static parseFormType(formType:number): DynamicsForm
+    public static parseFormType(formType:number): DynamicsWebApi.DynamicsForm
     {
-        return this._formTypes[formType];
+        return DynamicsWebApi.CodeMappings.DynamicsForms[formType];
     }
 
-    public static parseProcessType(processType:number): ProcessType
+    public static parseProcessType(processType:number): DynamicsWebApi.ProcessType
     {
-        return this._processTypes[processType];
+        return DynamicsWebApi.CodeMappings.ProcessTypes[processType];
+    }
+
+    public static parseSolutionComponent(solutionComponent:number): DynamicsWebApi.SolutionComponent
+    {
+        return DynamicsWebApi.CodeMappings.SolutionComponents[solutionComponent];
     }
 
     public static getManageSolutionUri(config:DynamicsWebApi.Config, solutionId?:string):vscode.Uri
@@ -103,7 +48,7 @@ export class DynamicsUrlResolver
         return this.parseUriString(uriString, solutionId);
     }
 
-    public static getManageEntityFormUri(config:DynamicsWebApi.Config, entityTypeCode:string, formType:DynamicsForm, formId?:string, solutionId?:string):vscode.Uri
+    public static getManageEntityFormUri(config:DynamicsWebApi.Config, entityTypeCode:string, formType:DynamicsWebApi.DynamicsForm, formId?:string, solutionId?:string):vscode.Uri
     {
         let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?etc=${entityTypeCode}&extraqs=formtype%3d${formType.toString()}%26`;
         
@@ -129,14 +74,14 @@ export class DynamicsUrlResolver
         return this.parseUriString(uriString, solutionId);
     }
 
-    public static getManageBusinessProcessUri(config:DynamicsWebApi.Config, processType:ProcessType, processId?:string, solutionId?:string):vscode.Uri
+    public static getManageBusinessProcessUri(config:DynamicsWebApi.Config, processType:DynamicsWebApi.ProcessType, processId?:string, solutionId?:string):vscode.Uri
     {
         let uriString:string;
         let uri:vscode.Uri;
 
         switch (processType)
         {
-            case ProcessType.BusinessProcessFlow:
+            case DynamicsWebApi.ProcessType.BusinessProcessFlow:
                 uriString = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}Tools/ProcessControl/UnifiedProcessDesigner.aspx?`;
 
                 if (processId) {
@@ -145,8 +90,8 @@ export class DynamicsUrlResolver
 
                 uri = this.parseUriString(uriString);
                 break;
-            case ProcessType.Action:
-            case ProcessType.Workflow:
+            case DynamicsWebApi.ProcessType.Action:
+            case DynamicsWebApi.ProcessType.Workflow:
                 uriString = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}sfa/workflow/edit.aspx?`;
 
                 if (processId) {

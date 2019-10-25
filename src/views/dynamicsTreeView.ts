@@ -3,13 +3,13 @@ import * as path from 'path';
 import { TS } from 'typescript-linq/TS';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import ApiRepository from '../repositories/apiRepository';
-import { Utilities } from '../helpers/Utilities';
+import Utilities from '../helpers/Utilities';
 import MetadataRepository from '../repositories/metadataRepository';
 import * as cs from '../cs';
-import { IWireUpCommands } from '../wireUpCommand';
-import { DynamicsUrlResolver } from '../api/DynamicsUrlResolver';
+import IWireUpCommands from '../wireUpCommand';
+import DynamicsUrlResolver from '../api/DynamicsUrlResolver';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import { IDictionary, Dictionary } from '../helpers/Dictionary';
+import Dictionary from '../helpers/Dictionary';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
@@ -116,7 +116,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 		return element;
 	}
 
-	public getChildren(element?: TreeEntry): Thenable<TreeEntry[]> {
+	public async getChildren(element?: TreeEntry): Promise<TreeEntry[]> {
         if (element) {
             const commandPrefix:string = Utilities.RemoveTrailingSlash(((element.command && element.command.arguments) || '').toString());
 
@@ -138,7 +138,19 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 case EntryType.OptionSets:
                     return this.getOptionSetDetails(element, commandPrefix, element.context);
                 case EntryType.WebResources:
-                    return this.getWebResourcesDetails(element, commandPrefix, element.context);
+                    var folders = await this.getWebResourcesFolderDetails(element, commandPrefix, element.solutionId);
+                    var items = await this.getWebResourcesDetails(element, commandPrefix, element.solutionId);
+
+                    if (items) { items.forEach(i => folders.push(i)); }
+
+                    return folders;
+                case EntryType.Folder:
+                    var innerFolders = await this.getWebResourcesFolderDetails(element, commandPrefix, element.solutionId, element.folder);
+                    var innerItems = await this.getWebResourcesDetails(element, commandPrefix, element.solutionId, element.folder);
+
+                    if (innerItems) { innerItems.forEach(i => innerFolders.push(i)); }
+
+                    return innerFolders;
                 case EntryType.Entity:
                     return Promise.resolve(this.getEntityLevelDetails(element, commandPrefix));
                 case EntryType.Attributes:
@@ -430,10 +442,32 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return returnValue;
     }
 
-    private getWebResourcesDetails(element: TreeEntry, commandPrefix?: string, solution?: any): Thenable<TreeEntry[]> {
-		const api = new ApiRepository(element.config);
+    private getWebResourcesFolderDetails(element: TreeEntry, commandPrefix?: string, solution?: any, folder?: string): Thenable<TreeEntry[]> {
+        const api = new ApiRepository(element.config);
         const returnValue = this.createTreeEntries(
-            api.retrieveWebResources(solution ? solution.solutionid : undefined), 
+            api.retrieveWebResourceFolders(solution ? solution.solutionid : undefined, folder),
+            container => new TreeEntry(
+                container, 
+                EntryType.Folder,
+                vscode.TreeItemCollapsibleState.Collapsed,
+                '', 
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: container,
+                    arguments: [`${commandPrefix || ''}/${container}`]
+                },
+                element.config,
+                EntryType.WebResources),
+            `An error occurred while retrieving web resources from ${element.config.webApiUrl}`, 
+            () => this.getWebResourcesDetails(element, commandPrefix, solution));
+
+        return returnValue;
+    }
+
+    private getWebResourcesDetails(element: TreeEntry, commandPrefix?: string, solution?: any, folder?: string): Thenable<TreeEntry[]> {
+        const api = new ApiRepository(element.config);
+        const returnValue = this.createTreeEntries(
+            api.retrieveWebResources(solution ? solution.solutionid : undefined, folder), 
             webresource => new TreeEntry(
                 webresource.name, 
                 EntryType.WebResource,
@@ -447,7 +481,14 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 element.config,
                 webresource),
             `An error occurred while retrieving web resources from ${element.config.webApiUrl}`, 
-            () => this.getWebResourcesDetails(element, commandPrefix, solution));
+            () => this.getWebResourcesDetails(element, commandPrefix, solution))
+            .then(results => { 
+                if (folder) {
+                    results.forEach(r => r.label = r.label.replace(Utilities.EnforceTrailingSlash(r.folder), '')); 
+                }
+            
+                return results; 
+            });
 
         return returnValue;
     }
@@ -695,9 +736,9 @@ class TreeEntry extends vscode.TreeItem {
     ]);
 
 	constructor(
-        public readonly label: string,
+        public label: string,
         public readonly itemType: EntryType,
-        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+        public collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly subtext?: string,
         public readonly command?: vscode.Command,
         public readonly config?: DynamicsWebApi.Config,
@@ -741,6 +782,18 @@ class TreeEntry extends vscode.TreeItem {
         return null;
     }
 
+    get folder(): string {
+        if (this.itemType === EntryType.Folder && this.id) {
+            var index = this.id.lastIndexOf(`${this.context.toString()}/`);
+
+            return this.id.substring(index + this.context.toString().length + 1);
+        } else if (this.parent && this.parent.itemType === EntryType.Folder && this.parent.id) {
+            return this.parent.folder;
+        }
+
+        return '';
+    }
+
     get solutionId(): string {
         if (this.id)
         {
@@ -778,5 +831,6 @@ enum EntryType {
     View = "View",
     Form = "Form",
     Entry = "Entry",
-    Entries = "Entries"
+    Entries = "Entries",
+    Folder = "Folder"
 }

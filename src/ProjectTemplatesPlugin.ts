@@ -8,7 +8,7 @@ import * as fsutils from './helpers/FileSystem';
 import * as fmutils from './helpers/FileManager';
 import * as EnvironmentVariables from './helpers/EnvironmentVariables';
 import ExtensionConfiguration from './config/ExtensionConfiguration';
-import { IWireUpCommands } from './wireUpCommand';
+import IWireUpCommands from './wireUpCommand';
 
 import * as CreateProjectFromTemplateCommand from './commands/createProjectFromTemplate';
 import * as DeleteProjectTemplateCommand from './commands/deleteProjectTemplate';

@@ -23,4 +23,10 @@ export default class XmlParser {
             });
         });
     }
+
+    public static async createXml(object:any, options?:xml2js.OptionsV2): Promise<string> {
+        const builder = new xml2js.Builder(options);
+        
+        return Promise.resolve(builder.buildObject(object));
+    }
 }

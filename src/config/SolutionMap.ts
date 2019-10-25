@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as fs from 'fs';
-import { QuickPicker } from "../helpers/QuickPicker";
+import QuickPicker from "../helpers/QuickPicker";
 import * as path from 'path';
 import * as FileSystem from '../helpers/FileSystem';
 import { TS } from "typescript-linq";
