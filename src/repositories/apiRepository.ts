@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
 import { TS } from 'typescript-linq/TS';
+import { Utilities } from '../helpers/Utilities';
 
 export default class ApiRepository
 {
@@ -51,11 +52,20 @@ export default class ApiRepository
             .then(response => response.value);
     }
 
-    public retrieveWebResources(solutionId?:string) : Promise<any[]> {
+    public retrieveWebResourceFolders(solutionId?:string, folder?:string) : Promise<string[]> {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "webresourceset",
-            orderBy: ["displayname"]
+            filter: "contains(name, '/')",
+            select: ['webresourceid', "name"],
+            orderBy: ["name"]
         };
+
+        let depth: number = 0;
+
+        if (folder) {
+            folder = Utilities.EnforceTrailingSlash(folder);
+            request.filter = `startswith(name,'${folder}')`;
+        }
 
         return this.webapi.retrieveAllRequest(request)
             .then(response => {
@@ -74,13 +84,70 @@ export default class ApiRepository
             
                         let components = new TS.Linq.Enumerator(solution.solution_solutioncomponent);
                         let filteredList = components
-                            .join(new TS.Linq.Enumerator(response.value), c => c["objectid"], p => p["webresourceid"], (c, p) => p)
+                            .join(new TS.Linq.Enumerator(response.value), c => c["objectid"], w => w["webresourceid"], (c, w) => w)
+                            .select(w => w["name"].replace(folder || '', ''))
+                            .where(n => n.split("/").length > 1)
+                            .select(n => n.split("/")[0])
+                            .distinct()
                             .toArray();
             
                         return filteredList;
                     });           
                 } else {
-                    return new TS.Linq.Enumerator(response.value).toArray();
+                    var object = new TS.Linq.Enumerator(response.value)
+                        .select(w => w["name"].replace(folder || '', ''))
+                        .where(n => n.split("/").length > 1)
+                        .select(n => n.split("/")[0])
+                        .distinct()
+                        .toArray();
+
+                    return object;
+                }
+            });
+        }
+
+    public retrieveWebResources(solutionId?:string, folder?:string) : Promise<any[]> {
+        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "webresourceset",
+            filter: "not contains(name, '/')",
+            orderBy: ["displayname"]
+        };
+
+        let depth: number = 0;
+
+        if (folder) {
+            folder = Utilities.EnforceTrailingSlash(folder);
+            request.filter = `startswith(name,'${folder}')`;
+            depth = folder.split("/").length - 1;
+        }
+
+        return this.webapi.retrieveAllRequest(request)
+            .then(response => {
+                if (solutionId) {
+                    let solutionQuery:DynamicsWebApi.RetrieveRequest = {
+                        collection: "solutions",
+                        id: solutionId,
+                        expand: [ { property: "solution_solutioncomponent", filter: "componenttype eq 61" } ]
+                    };    
+                    
+                    return this.webapi.retrieveRequest(solutionQuery).then(solution => {
+                        if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0)
+                        {
+                            return null;
+                        }
+            
+                        let components = new TS.Linq.Enumerator(solution.solution_solutioncomponent);
+                        let filteredList = components
+                            .join(new TS.Linq.Enumerator(response.value), c => c["objectid"], w => w["webresourceid"], (c, w) => w)
+                            .where(w => w["name"].split("/").length === depth + 1)
+                            .toArray();
+            
+                        return filteredList;
+                    });           
+                } else {
+                    return new TS.Linq.Enumerator(response.value)
+                        .where(w => w["name"].split("/").length === depth + 1)
+                        .toArray() || [];
                 }
             });
     }
