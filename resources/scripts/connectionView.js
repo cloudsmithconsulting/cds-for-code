@@ -15,7 +15,7 @@
 
     authTypeRadios.forEach(el => {
         el.addEventListener("change", event => {
-            const value = parseInt(event.target.value);
+            const value = parseInt(event.currentTarget.value);
             currentAuthType = value;
             if (currentAuthType === 2) {
                 accessTokenField.removeAttribute("hidden");

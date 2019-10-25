@@ -67,28 +67,28 @@
 <p>Event Pipeline Stage of Execution</p>
 
 <div class="field field--checkbox">
-    <input type="radio" class="field__input" id="PreValidation" name="PreValidation"/>
+    <input type="radio" class="field__input" id="PreValidation" name="ExecutionPipeline" value="PreValidation"/>
     <label class="field__label" for="PreValidation">
         Pre-validation
     </label>
 </div>
 
 <div class="field field--checkbox">
-    <input type="radio" class="field__input" id="PreOperation" name="PreOperation" />
+    <input type="radio" class="field__input" id="PreOperation" name="ExecutionPipeline" value="PreOperation"/>
     <label class="field__label" for="PreOperation">
         Pre-operation
     </label>
 </div>
 
 <div class="field field--checkbox">
-        <input type="radio" class="field__input" id="PostOperation" name="PostOperation"/>
+        <input type="radio" class="field__input" id="PostOperation" name="ExecutionPipeline" value="PostOperation" checked="checked"/>
         <label class="field__label" for="PostOperation">
             Post-operation
         </label>
 </div>
 
 <div class="field field--checkbox">
-        <input type="checkbox" class="field__input" id="StatusCode" name="StatusCode"/>
+        <input type="checkbox" class="field__input" id="StatusCode" name="StatusCode" value="true"/>
         <label class="field__label" for="StatusCode">
             Delete AsyncOperation if StatusCode = Successful
         </label>
@@ -97,30 +97,27 @@
 <p>Execution Mode</p>
 
 <div class="field field--checkbox">
-        <input type="radio" class="field__input" id="Asynchronous" name="Asynchronous"/>
-        <label class="field__label" for="Asynchronous">
+    <label class="field__label" for="Asynchronous">
             Asynchronous
-        </label>
-</div>
-
-<div class="field field--checkbox">
-        <input type="radio" class="field__input" id="Synchronous" name="Synchronous"/>
-        <label class="field__label" for="Synchronous">
+    </label>
+    <input type="radio" class="field__input" id="Asynchronous" name="ExecutionMode" value="Asynchronous"/>
+    <label class="field__label" for="Synchronous">
             Synchronous
-        </label>
+    </label>
+    <input type="radio" class="field__input" id="Synchronous" name="ExecutionMode" value="Synchronous" checked="checked"/>
 </div>
 
 <p>Deployment</p>
 
 <div class="field field--checkbox">
-        <input type="checkbox" class="field__input" id="Server" name="Server"/>
+        <input type="checkbox" class="field__input" id="Server" name="Server" value="true"/>
         <label class="field__label" for="Server">
             Server
         </label>
 </div>
 
 <div class="field field--checkbox">
-        <input type="checkbox" class="field__input" id="Offline" name="Offline"/>
+        <input type="checkbox" class="field__input" id="Offline" name="Offline" value="true" />
         <label class="field__label" for="Offline">
             Offline
         </label>
