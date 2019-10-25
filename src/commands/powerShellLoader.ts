@@ -2,10 +2,10 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as cs from '../cs';
-import fetch, { Response } from 'node-fetch';
+import fetch from 'node-fetch';
 import IWireUpCommands from '../wireUpCommand';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import Terminal from '../helpers/Terminal';
+import DynamicsTerminal from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import GlobalState from '../config/GlobalState';
 
@@ -91,7 +91,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 
 										const commandToExecute = `.\\Install-Sdk.ps1 `
 										+ `-Path ${sdkInstallPath} `;
-										const terminal = Terminal.showTerminal(context.globalStoragePath);
+										const terminal = DynamicsTerminal.showTerminal(context.globalStoragePath);
 
 										// execute the command
 										terminal.sendText(commandToExecute);

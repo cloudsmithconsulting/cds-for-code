@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import QuickPicker, { QuickPickOption } from '../helpers/QuickPicker';
-import Terminal from '../helpers/Terminal';
+import DynamicsTerminal from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import IWireUpCommands from '../wireUpCommand';
 import SolutionMap from '../config/SolutionMap';
@@ -103,7 +103,7 @@ export class PackDynamicsSolutionCommand implements IWireUpCommands {
 					+ (managed ? `-Managed ` : '');
 
 				// build a powershell terminal
-				const terminal = Terminal.showTerminal(context.globalStoragePath);
+				const terminal = DynamicsTerminal.showTerminal(context.globalStoragePath);
 
 				// execute the command
 				terminal.sendText(commandToExecute);

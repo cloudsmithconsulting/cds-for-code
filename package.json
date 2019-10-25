@@ -26,7 +26,9 @@
 		"onCommand:cs.dynamics.extension.openProjectTemplatesFolder",
 		"onCommand:cs.dynamics.extension.saveProjectAsTemplate",
 		"onCommand:cs.dynamics.extension.deleteProjectTemplate",
-		"onCommand:cs.dynamics.extension.createProjectFromTemplate"
+		"onCommand:cs.dynamics.extension.createProjectFromTemplate",
+		"onCommand:cs.dynamics.extension.createTerminal",
+		"onCommand:cs.dynamics.extension.clearTerminal"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -125,43 +127,53 @@
 			},
 			{
 				"command": "cs.dynamics.powerShell.unpackSolution",
-				"title": "Dynamics 365 CE: Download & unpack solution from a registered Dynamics server",
-				"category": "Deployment"
+				"title": "Download & unpack solution from a registered Dynamics server",
+				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.powerShell.packSolution",
-				"title": "Dynamics 365 CE: Pack & deploy solution to a registerd Dynamics server",
-				"category": "Deployment"
+				"title": "Pack & deploy solution to a registerd Dynamics server",
+				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.powerShell.generateEntities",
-				"title": "Dynamics 365 CE: Generate entity code from metadata on a registered Dynamics server",
-				"category": "Deployment"
+				"title": "Generate entity code from metadata on a registered Dynamics server",
+				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.extension.downloadRequiredScripts",
-				"title": "Dynamics 365 CE: Download required PowerShell scripts for VSCode extension from GitHub",
-				"category": "Tools"
+				"title": "Download required PowerShell scripts for VSCode extension from GitHub",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.extension.createTerminal",
+				"title": "Show the Dynamics terminal",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.extension.clearTerminal",
+				"title": "Clear the Dynamics terminal",
+				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.extension.openProjectTemplatesFolder",
-				"title": "Open Templates Folder",
-				"category": "Project"
+				"title": "Open project templates folder",
+				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.extension.saveProjectAsTemplate",
-				"title": "Save Project as Template",
-				"category": "Project"
+				"title": "Save folder contents as template",
+				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.extension.deleteProjectTemplate",
-				"title": "Delete Existing Template",
-				"category": "Project"
+				"title": "Delete project template from library",
+				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.extension.createProjectFromTemplate",
-				"title": "Create Project from Template",
-				"category": "Project"
+				"title": "Create project from a template",
+				"category": "Dynamics 365 CE"
 			}
 		],
 		"viewsContainers": {
