@@ -1,9 +1,10 @@
 export interface IDictionary<TKey, T> {
     add(key: TKey, value: T): void;
-    remove(key: TKey): void;
-    get(key: TKey): T;
     containsKey(key: TKey): boolean;
+    get(key: TKey): T;
+    getKey(value: T): TKey;
     keys(): TKey[];
+    remove(key: TKey): void;
     values(): T[];
 }
 
@@ -37,6 +38,12 @@ export class Dictionary<TKey, T> implements IDictionary<TKey, T> {
 
     get(key: TKey): T {
         return this[key.toString()];
+    }
+
+    getKey(value: T): TKey {
+        var index = this._values.indexOf(value, 0);
+
+        return this._keys[index];
     }
 
     keys(): TKey[] {

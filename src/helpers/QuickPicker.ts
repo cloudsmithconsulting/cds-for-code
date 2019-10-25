@@ -5,7 +5,20 @@ import { TS } from 'typescript-linq';
 import ApiRepository from "../repositories/apiRepository";
 
 export class QuickPicker {
-	/**
+    /**
+     * shows an input box with a question and returns a response
+     * @param prompt prompt to display when asking
+     * @param placeHolder text to display when nothing was chosen
+     * @param value pre-selected value, if any
+     * @param ignoreFocusOut boolean indicating if the input box should be closed if it loses focus
+     */
+    public static async ask(prompt: string, placeHolder?:string, value?: string, ignoreFocusOut: boolean = true): Promise<string> {
+        return vscode.window
+            .showInputBox({ prompt, placeHolder, value, ignoreFocusOut })
+            .then(chosen => chosen);
+    }
+
+    /**
 	 * shows a QuickPick-Panel in the VS Code Window
 	 * @param placeHolder text to display when nothing was chosen
 	 * @param options options to choose from
@@ -23,11 +36,15 @@ export class QuickPicker {
 		return await vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut: true, canPickMany: true });
 	}    
 
-    public static async ask(prompt: string, placeHolder?:string, value?: string, ignoreFocusOut: boolean = true): Promise<string> {
-        return vscode.window
-            .showInputBox({ prompt, placeHolder, value, ignoreFocusOut })
-            .then(chosen => chosen);
-    }
+        /**
+	 * shows a QuickPick-Panel in the VS Code Window
+	 * @param placeHolder text to display when nothing was chosen
+	 * @param options options to choose from
+	 */
+	public static async pickBoolean(placeHolder: string, trueValue:string = "True", falseValue:string = "False"): Promise<boolean> {
+        return await vscode.window.showQuickPick([new QuickPickOption(trueValue, undefined), new QuickPickOption(falseValue, undefined)], { placeHolder, ignoreFocusOut: true, canPickMany: false })
+            .then(value => value.label === trueValue ? true : value.label === falseValue ? false : null);
+	}    
 
     /**
      * Selects a workspace folder.  If args contains an fsPath, then it uses

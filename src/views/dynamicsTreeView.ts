@@ -148,7 +148,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     var innerFolders = await this.getWebResourcesFolderDetails(element, commandPrefix, element.solutionId, element.folder);
                     var innerItems = await this.getWebResourcesDetails(element, commandPrefix, element.solutionId, element.folder);
 
-                    if (innerItems) { innerItems.forEach(i => innerFolders.push(i)) };
+                    if (innerItems) { innerItems.forEach(i => innerFolders.push(i)); }
 
                     return innerFolders;
                 case EntryType.Entity:

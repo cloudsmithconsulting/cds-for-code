@@ -1,7 +1,7 @@
-import * as vscode from 'vscode';
 import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
-import { TS } from 'typescript-linq/TS';
+import { DynamicsWebApi } from '../api/Types';
 import { Utilities } from '../helpers/Utilities';
+import ApiHelper from "../helpers/ApiHelper";
 
 export default class ApiRepository
 {
@@ -60,50 +60,19 @@ export default class ApiRepository
             orderBy: ["name"]
         };
 
-        let depth: number = 0;
-
         if (folder) {
             folder = Utilities.EnforceTrailingSlash(folder);
             request.filter = `startswith(name,'${folder}')`;
         }
 
         return this.webapi.retrieveAllRequest(request)
-            .then(response => {
-                if (solutionId) {
-                    let solutionQuery:DynamicsWebApi.RetrieveRequest = {
-                        collection: "solutions",
-                        id: solutionId,
-                        expand: [ { property: "solution_solutioncomponent", filter: "componenttype eq 61" } ]
-                    };    
-                    
-                    return this.webapi.retrieveRequest(solutionQuery).then(solution => {
-                        if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0)
-                        {
-                            return null;
-                        }
-            
-                        let components = new TS.Linq.Enumerator(solution.solution_solutioncomponent);
-                        let filteredList = components
-                            .join(new TS.Linq.Enumerator(response.value), c => c["objectid"], w => w["webresourceid"], (c, w) => w)
-                            .select(w => w["name"].replace(folder || '', ''))
-                            .where(n => n.split("/").length > 1)
-                            .select(n => n.split("/")[0])
-                            .distinct()
-                            .toArray();
-            
-                        return filteredList;
-                    });           
-                } else {
-                    var object = new TS.Linq.Enumerator(response.value)
-                        .select(w => w["name"].replace(folder || '', ''))
-                        .where(n => n.split("/").length > 1)
-                        .select(n => n.split("/")[0])
-                        .distinct()
-                        .toArray();
-
-                    return object;
-                }
-            });
+            .then(webResourceFolderResponse => ApiHelper.filterSolutionComponents(this.webapi, webResourceFolderResponse, solutionId, DynamicsWebApi.SolutionComponent.WebResource, w => w["webresourceid"]))
+            .then(response => response
+                .select(w => w["name"].replace(folder || '', ''))
+                .where(n => n.split("/").length > 1)
+                .select(n => n.split("/")[0])
+                .distinct()
+                .toArray());
         }
 
     public retrieveWebResources(solutionId?:string, folder?:string) : Promise<any[]> {
@@ -122,34 +91,10 @@ export default class ApiRepository
         }
 
         return this.webapi.retrieveAllRequest(request)
-            .then(response => {
-                if (solutionId) {
-                    let solutionQuery:DynamicsWebApi.RetrieveRequest = {
-                        collection: "solutions",
-                        id: solutionId,
-                        expand: [ { property: "solution_solutioncomponent", filter: "componenttype eq 61" } ]
-                    };    
-                    
-                    return this.webapi.retrieveRequest(solutionQuery).then(solution => {
-                        if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0)
-                        {
-                            return null;
-                        }
-            
-                        let components = new TS.Linq.Enumerator(solution.solution_solutioncomponent);
-                        let filteredList = components
-                            .join(new TS.Linq.Enumerator(response.value), c => c["objectid"], w => w["webresourceid"], (c, w) => w)
-                            .where(w => w["name"].split("/").length === depth + 1)
-                            .toArray();
-            
-                        return filteredList;
-                    });           
-                } else {
-                    return new TS.Linq.Enumerator(response.value)
-                        .where(w => w["name"].split("/").length === depth + 1)
-                        .toArray() || [];
-                }
-            });
+            .then(webResourceResponse => ApiHelper.filterSolutionComponents(this.webapi, webResourceResponse, solutionId, DynamicsWebApi.SolutionComponent.WebResource, w => w["webresourceid"]))
+            .then(response => response
+                .where(w => w["name"].split("/").length === depth + 1)
+                .toArray());
     }
 
     public retrievePluginAssemblies(solutionId?:string) : Promise<any[]> {
@@ -159,31 +104,23 @@ export default class ApiRepository
         };
 
         return this.webapi.retrieveAllRequest(request)
-            .then(response => {
-                if (solutionId) {
-                    let solutionQuery:DynamicsWebApi.RetrieveRequest = {
-                        collection: "solutions",
-                        id: solutionId,
-                        expand: [ { property: "solution_solutioncomponent", filter: "componenttype eq 91" } ]
-                    };    
-                    
-                    return this.webapi.retrieveRequest(solutionQuery).then(solution => {
-                        if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0)
-                        {
-                            return null;
-                        }
-            
-                        let components = new TS.Linq.Enumerator(solution.solution_solutioncomponent);
-                        let filteredList = components
-                            .join(new TS.Linq.Enumerator(response.value), c => c["objectid"], p => p["pluginassemblyid"], (c, p) => p)
-                            .where(p => p["ishidden"].Value === false)
-                            .toArray();
-            
-                        return filteredList;
-                    });           
-                } else {
-                    return new TS.Linq.Enumerator(response.value).where(plugin => plugin["ishidden"].Value === false).toArray();
-                }
-            });
+            .then(pluginResponse => ApiHelper.filterSolutionComponents(this.webapi, pluginResponse, solutionId, DynamicsWebApi.SolutionComponent.PluginAssembly, w => w["pluginassemblyid"]))
+            .then(response => response
+                .where(p => p["ishidden"].Value === false)
+                .toArray());
+    }
+
+    public addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any>
+    {
+        var actionParams = { 
+            ComponentId: componentId,
+            ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
+            SolutionUniqueName: solution.uniquename,  
+            AddRequiredComponents: addRequiredComponents,
+            DoNotIncludeSubcomponents: doNotIncludeSubcomponents,
+            IncludedComponentSettingsValues: componentSettings
+        };
+
+        return this.webapi.executeBoundAction(solution.solutionid, "solutions", "AddSolutionComponent", actionParams);
     }
 }
