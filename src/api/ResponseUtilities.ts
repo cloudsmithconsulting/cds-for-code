@@ -1,7 +1,7 @@
-import { Utilities } from "../helpers/Utilities";
-import { RequestUtilities } from "./RequestUtilities";
+import Utilities from "../helpers/Utilities";
+import RequestUtilities from "./RequestUtilities";
 
-export class ResponseUtilities
+export default class ResponseUtilities
 {
     private static dateReviver(key:string, value:string) {
         ///<summary>

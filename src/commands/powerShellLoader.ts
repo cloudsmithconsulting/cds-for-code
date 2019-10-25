@@ -3,10 +3,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as cs from '../cs';
 import fetch, { Response } from 'node-fetch';
-import { IWireUpCommands } from '../wireUpCommand';
+import IWireUpCommands from '../wireUpCommand';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import { Terminal } from '../helpers/Terminal';
-import { Utilities } from '../helpers/Utilities';
+import Terminal from '../helpers/Terminal';
+import Utilities from '../helpers/Utilities';
 import GlobalState from '../config/GlobalState';
 
 export default class PowerShellLoader implements IWireUpCommands {

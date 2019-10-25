@@ -2,7 +2,7 @@ import vscode = require("vscode");
 import ProjectTemplatesPlugin from "../projectTemplatesPlugin";
 import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
-import { QuickPicker } from "../helpers/QuickPicker";
+import QuickPicker from "../helpers/QuickPicker";
 
 /**
  * Main command to save the current project as a template.

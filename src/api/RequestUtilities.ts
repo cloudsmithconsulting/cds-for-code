@@ -1,6 +1,6 @@
-import { Utilities } from "../helpers/Utilities";
+import Utilities from "../helpers/Utilities";
 
-export class RequestUtilities
+export default class RequestUtilities
 {
     public static convertToBatch(requests:any[]):any {
         const batchBoundary = 'dwa_batch_' + Utilities.NewGuid();

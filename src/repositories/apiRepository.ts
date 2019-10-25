@@ -1,6 +1,6 @@
 import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
 import { DynamicsWebApi } from '../api/Types';
-import { Utilities } from '../helpers/Utilities';
+import Utilities from '../helpers/Utilities';
 import ApiHelper from "../helpers/ApiHelper";
 
 export default class ApiRepository

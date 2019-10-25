@@ -8,7 +8,7 @@ export interface IDictionary<TKey, T> {
     values(): T[];
 }
 
-export class Dictionary<TKey, T> implements IDictionary<TKey, T> {
+export default class Dictionary<TKey, T> implements IDictionary<TKey, T> {
     _keys: TKey[] = [];
     _values: T[] = [];
 

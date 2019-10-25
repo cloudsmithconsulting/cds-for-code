@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { Utilities } from '../helpers/Utilities';
+import Utilities from '../helpers/Utilities';
 import { DynamicsWebApi } from './Types';
 
-export class DynamicsUrlResolver
+export default class DynamicsUrlResolver
 {
     public static parseFormType(formType:number): DynamicsWebApi.DynamicsForm
     {

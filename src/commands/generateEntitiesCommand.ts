@@ -2,10 +2,11 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import * as cs from '../cs';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import { QuickPicker } from '../helpers/QuickPicker';
-import { Terminal } from '../helpers/Terminal';
-import { Utilities } from '../helpers/Utilities';
-import { IWireUpCommands } from '../wireUpCommand';
+import QuickPicker from '../helpers/QuickPicker';
+import Terminal from '../helpers/Terminal';
+import Utilities from '../helpers/Utilities';
+import IWireUpCommands from '../wireUpCommand';
+import { DynamicsWebApi } from '../api/Types';
 
 export default class GenerateEntitiesCommand implements IWireUpCommands {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;

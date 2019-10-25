@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export class Terminal
+export default class Terminal
 {
     public static showTerminal(path: string): vscode.Terminal {
         const terminalName = 'CloudSmith: Dynamics PowerShell';

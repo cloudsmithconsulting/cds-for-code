@@ -1,13 +1,13 @@
-import { RequestConverter } from "./RequestConverter";
-import { Utilities } from "../helpers/Utilities";
 import * as vscode from 'vscode';
 import * as httpntlm from "httpntlm";
 import * as http from 'http';
 import * as https from 'https';
-import { ResponseUtilities } from "./ResponseUtilities";
-import { RequestUtilities  } from "./RequestUtilities";
+import ResponseUtilities from "./ResponseUtilities";
+import RequestUtilities from "./RequestUtilities";
+import RequestConverter from "./RequestConverter";
+import Utilities from "../helpers/Utilities";
 
-export class WebApiRequest
+export default class WebApiRequest
 {
     private _entityNames;
 

@@ -1,5 +1,4 @@
-import { Dictionary } from "../helpers/Dictionary";
-import { compileFunction } from "vm";
+import Dictionary from "../helpers/Dictionary";
 
 export namespace DynamicsWebApi {
     export interface Expand {

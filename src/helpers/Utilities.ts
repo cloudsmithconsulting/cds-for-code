@@ -1,7 +1,7 @@
 import { performance } from "perf_hooks";
 import * as vscode from 'vscode';
 
-export class Utilities
+export default class Utilities
 {
     public static IsNullOrEmpty(value: any) : boolean {
         return !(value && value.length > 0);

@@ -4,7 +4,7 @@ import DiscoveryRepository from "../repositories/discoveryRepository";
 import { TS } from 'typescript-linq';
 import ApiRepository from "../repositories/apiRepository";
 
-export class QuickPicker {
+export default class QuickPicker {
     /**
      * shows an input box with a question and returns a response
      * @param prompt prompt to display when asking
@@ -102,7 +102,7 @@ export class QuickPicker {
     }
 }
 
-export default class QuickPickOption implements vscode.QuickPickItem {
+export class QuickPickOption implements vscode.QuickPickItem {
 	public label: string;
 	public command: string;
 	public description: string;

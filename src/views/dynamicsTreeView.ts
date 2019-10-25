@@ -3,13 +3,13 @@ import * as path from 'path';
 import { TS } from 'typescript-linq/TS';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import ApiRepository from '../repositories/apiRepository';
-import { Utilities } from '../helpers/Utilities';
+import Utilities from '../helpers/Utilities';
 import MetadataRepository from '../repositories/metadataRepository';
 import * as cs from '../cs';
-import { IWireUpCommands } from '../wireUpCommand';
-import { DynamicsUrlResolver } from '../api/DynamicsUrlResolver';
+import IWireUpCommands from '../wireUpCommand';
+import DynamicsUrlResolver from '../api/DynamicsUrlResolver';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import { IDictionary, Dictionary } from '../helpers/Dictionary';
+import Dictionary from '../helpers/Dictionary';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
