@@ -31,8 +31,6 @@ export default class DynamicsTreeView implements IWireUpCommands {
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addConnection, (config: DynamicsWebApi.Config) => {
                 // add the connection and refresh treeview
                 treeProvider.addConnection(config);
-
-                vscode.window.showInformationMessage(config.id ? `Updated Dynamics Connection: ${config.webApiUrl}` : `Added Dynamics Connection: ${config.webApiUrl}`);
             }) // <-- no semi-colon, comma starts next command registration
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.clickEntry, (label?: string) => { // Match name of command to package.json command
                 // Run command code
@@ -41,11 +39,23 @@ export default class DynamicsTreeView implements IWireUpCommands {
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.deleteEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 // Run command code
                 treeProvider.removeConnection(item.config);
-
-                vscode.window.showInformationMessage(`Delete Dynamics Connection: ${item.config.webApiUrl}`);
             }) // <-- no semi-colon, comma starts next command registration
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.inspectEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 vscode.commands.executeCommand(cs.dynamics.controls.jsonInspector.inspect, item.context);
+            }) // <-- no semi-colon, comma starts next command registration
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntryToSolution, (item: TreeEntry) => { // Match name of command to package.json command
+                if (item.solutionId) {
+                    vscode.window.showInformationMessage(`The component ${item.label} is already a part of a solution.`);
+
+                    return;
+                }
+            }) // <-- no semi-colon, comma starts next command registration
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.deleteEntryFromSolution, (item: TreeEntry) => { // Match name of command to package.json command
+                if (!item.solutionId) {
+                    vscode.window.showInformationMessage(`The component ${item.label} is not part of a solution.`);
+
+                    return;
+                }
             }) // <-- no semi-colon, comma starts next command registration
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item)
@@ -145,12 +155,15 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
                     return folders;
                 case EntryType.Folder:
-                    var innerFolders = await this.getWebResourcesFolderDetails(element, commandPrefix, element.solutionId, element.folder);
-                    var innerItems = await this.getWebResourcesDetails(element, commandPrefix, element.solutionId, element.folder);
-
-                    if (innerItems) { innerItems.forEach(i => innerFolders.push(i)); }
-
-                    return innerFolders;
+                    switch (element.context) {
+                        case EntryType.WebResources:
+                            var innerFolders = await this.getWebResourcesFolderDetails(element, commandPrefix, element.solutionId, element.folder);
+                            var innerItems = await this.getWebResourcesDetails(element, commandPrefix, element.solutionId, element.folder);
+        
+                            if (innerItems) { innerItems.forEach(i => innerFolders.push(i)); }
+        
+                            return innerFolders;
+                    }
                 case EntryType.Entity:
                     return Promise.resolve(this.getEntityLevelDetails(element, commandPrefix));
                 case EntryType.Attributes:

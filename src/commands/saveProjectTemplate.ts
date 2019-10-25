@@ -11,7 +11,7 @@ import QuickPicker from "../helpers/QuickPicker";
  * @param {ProjectTemplatesPlugin} templateManager
  * @param {*} args
  */
-export async function run(templateManager: ProjectTemplatesPlugin, args: any) {
+export default async function run(templateManager: ProjectTemplatesPlugin, args: any) {
 	// get workspace folder
 	let workspace = await QuickPicker.pickWorkspacePath(args);
 

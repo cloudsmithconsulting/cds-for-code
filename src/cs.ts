@@ -19,7 +19,9 @@ export namespace dynamics
         public static readonly _namespace:string = "cs.dynamics.powerShell";
         public static readonly generateEntities:string = `${powerShell._namespace}.generateEntities`;
         public static readonly packSolution:string = `${powerShell._namespace}.packSolution`;
+        public static readonly packSolutionFromExplorer:string = `${powerShell.packSolution}.explorer`;
         public static readonly unpackSolution:string = `${powerShell._namespace}.unpackSolution`;
+        public static readonly unpackSolutionFromExplorer:string = `${powerShell.unpackSolution}.explorer`;
     }
 
     // tslint:disable-next-line: class-name
@@ -97,8 +99,10 @@ export namespace dynamics
             public static readonly _namespace:string = "cs.dynamics.controls.treeView";
             public static readonly addConnection:string = `${treeView._namespace}.addConnection`;
             public static readonly addEntry:string = `${treeView._namespace}.addEntry`;
+            public static readonly addEntryToSolution:string = `${treeView._namespace}.addEntryToSolution`;
             public static readonly clickEntry:string = `${treeView._namespace}.clickEntry`;
             public static readonly deleteEntry:string = `${treeView._namespace}.deleteEntry`;
+            public static readonly deleteEntryFromSolution:string = `${treeView._namespace}.deleteEntryFromSolution`;
             public static readonly editEntry:string = `${treeView._namespace}.editEntry`;
             public static readonly inspectEntry:string = `${treeView._namespace}.inspectEntry`;
             public static readonly openConnection:string = `${treeView._namespace}.openConnection`;

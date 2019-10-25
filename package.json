@@ -1,6 +1,7 @@
 {
 	"name": "dynamics-365-toolkit",
 	"displayName": "dynamics-365-toolkit",
+	"publisher": "cloudsmith",
 	"description": "A toolkit for working with Dynamics 365 within VSCode by CloudSmith Consulting LLC.",
 	"version": "0.1.0",
 	"preview": true,
@@ -28,7 +29,9 @@
 		"onCommand:cs.dynamics.extension.deleteProjectTemplate",
 		"onCommand:cs.dynamics.extension.createProjectFromTemplate",
 		"onCommand:cs.dynamics.extension.createTerminal",
-		"onCommand:cs.dynamics.extension.clearTerminal"
+		"onCommand:cs.dynamics.extension.clearTerminal",
+		"onCommand:cs.dynamics.powerShell.packSolution.explorer",
+		"onCommand:cs.dynamics.powerShell.unpackSolution.explorer"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -43,13 +46,19 @@
 				},
 				"cs.dynamics.configuration.tools.updateSource": {
 					"type": "string",
+					"format": "uri",
 					"default": "https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/",
 					"description": "The URL where supporting scripts are located"
 				},
 				"cs.dynamics.configuration.tools.updateChannel": {
 					"type": "string",
 					"default": "production",
-					"description": "The update channel to use (production|beta)"
+					"enum": ["production", "beta"],
+					"enumDescriptions": [
+						"Production updates only",
+						"Beta updates"
+					],
+					"description": "The update channel to use"
 				},
 				"cs.dynamics.configuration.explorer.showDefaultSolution": {
 					"type": "boolean",
@@ -126,13 +135,33 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.dynamics.controls.treeView.addEntryToSolution",
+				"title": "Add to Solution",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.treeView.deleteEntryFromSolution",
+				"title": "Remove from Solution",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.powerShell.unpackSolution",
 				"title": "Download & unpack solution from a registered Dynamics server",
 				"category": "Dynamics 365 CE"
 			},
 			{
+				"command": "cs.dynamics.powerShell.unpackSolution.explorer",
+				"title": "Export to workspace",
+				"category": "Dynamics 365 CE"
+			},
+			{
 				"command": "cs.dynamics.powerShell.packSolution",
 				"title": "Pack & deploy solution to a registerd Dynamics server",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.powerShell.packSolution.explorer",
+				"title": "Deploy to Dynamics 365",
 				"category": "Dynamics 365 CE"
 			},
 			{
@@ -194,43 +223,65 @@
 					"command": "cs.dynamics.extension.saveProjectAsTemplate",
 					"when": "explorerResourceIsFolder",
 					"group": "projectTemplates@2"
+				},
+				{
+					"command": "cs.dynamics.powerShell.packSolution.explorer",
+					"when": "explorerResourceIsFolder",
+					"group": "zzz_azuretools_deploy@3"
 				}
 			],
 			"view/title": [
 				{
 					"command": "cs.dynamics.controls.treeView.refreshEntry",
-					"group": "navigation"
+					"group": "navigation",
+					"when": "view == cs.dynamics.viewContainers.connections"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.addEntry",
-					"group": "navigation"
+					"group": "navigation",
+					"when": "view == cs.dynamics.viewContainers.connections"
 				}
 			],
 			"view/item/context": [
 				{
 					"command": "cs.dynamics.controls.treeView.addEntry",
 					"group": "inline",
-					"when": "viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Entries)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Entries)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
 					"group": "inline",
-					"when": "viewItem =~ /^(Connection|Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Entry)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Connection|Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Entry)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.inspectEntry",
-					"group": "contextMenu@1",
-					"when": "viewItem =~ /^(Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Entry)$/"
+					"group": "group@2",
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Entry)$/"
+				},
+				{
+					"command": "cs.dynamics.powerShell.unpackSolution.explorer",
+					"group": "deployment@3",
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solution)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.deleteEntry",
 					"group": "inline",
-					"when": "viewItem =~ /^(Connection)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Connection)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.treeView.addEntryToSolution",
+					"group": "deployment@1",
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Plugin|Entity|OptionSet|WebResource|Process)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.treeView.deleteEntryFromSolution",
+					"group": "deployment@2",
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Plugin|Entity|OptionSet|WebResource|Process)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.refreshEntry",
-					"group": "contextMenu@1",
-					"when": "viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Entries)$/"
+					"group": "group@1",
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Entries)$/"
 				}
 			]
 		}

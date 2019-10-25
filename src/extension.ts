@@ -4,13 +4,13 @@ import * as vscode from 'vscode';
 import * as cs from './cs';
 // config
 import ExtensionConfiguration from './config/ExtensionConfiguration';
-import ConnectionViewManager from './views/connectionView';
-import GenerateEntitiesCommand from './commands/generateEntitiesCommand';
+import ConnectionViewManager from './views/ConnectionView';
+import GenerateEntities from './commands/generateEntities';
 import PowerShellLoader from './commands/powerShellLoader';
-import DynamicsTreeView from './views/dynamicsTreeView';
-import { PackDynamicsSolutionCommand } from './commands/packDynamicsSolutionCommand';
-import { UnpackDynamicsSolutionCommand } from './commands/unpackDynamicsSolutionCommand';
-import JsonInspectorViewManager from './views/jsonInspectorView';
+import DynamicsTreeView from './views/DynamicsTreeView';
+import PackDynamicsSolution from './commands/packDynamicsSolution';
+import UnpackDynamicsSolution from './commands/unpackDynamicsSolution';
+import JsonInspectorViewManager from './views/JsonInspectorView';
 import ProjectTemplatesPlugin from './ProjectTemplatesPlugin';
 import DynamicsTerminal from '../out/views/DynamicsTerminal';
 
@@ -37,9 +37,9 @@ export function activate(context: vscode.ExtensionContext) {
 		
 		// our commands
 		new PowerShellLoader(),
-		new GenerateEntitiesCommand(),
-		new PackDynamicsSolutionCommand(),
-		new UnpackDynamicsSolutionCommand()
+		new GenerateEntities(),
+		new PackDynamicsSolution(),
+		new UnpackDynamicsSolution()
 	].forEach(c => c.wireUpCommands(context, toolsConfig));
 
 	[   // templating engine.

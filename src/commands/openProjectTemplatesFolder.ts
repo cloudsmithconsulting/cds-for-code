@@ -12,7 +12,7 @@ import * as cs from "../cs";
  * @param {*} args
  * @returns
  */
-export async function run(templateManager: TemplatesManager, args: any) {
+export default async function run(templateManager: TemplatesManager, args: any) {
 	// load latest configuration
 	ExtensionConfiguration.updateConfiguration(cs.dynamics.configuration.templates._namespace);
 
