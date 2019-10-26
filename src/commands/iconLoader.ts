@@ -50,7 +50,7 @@ export class ExtensionIconTheme {
 			{ key: "Attribute", value: 'whh-twocolumnsrightalt'},
 			{ key: "View", value: "ic-baseline-pageview" },
 			{ key: "Form", value: "dashicons-format-aside"},
-			{ key: "Option Set", value: "ion-options-outline "},
+			{ key: "Option Set", value: "ion-options-outline"},
 			{ key: "Process", value: "vaadin-file-process" },
 			{ key: "Web Resource", value: "fa-file-code-o" },
 			{ key: "Plugin", value: "mdi-codepen" },
