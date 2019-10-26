@@ -4,6 +4,7 @@ export namespace dynamics
     export class extension
     {
         public static readonly _namespace:string = "cs.dynamics.extension";
+        public static readonly downloadRequiredIcons:string = `${extension._namespace}.downloadRequiredIcons`;
         public static readonly downloadRequiredScripts:string = `${extension._namespace}.downloadRequiredScripts`;
         public static readonly openProjectTemplatesFolder:string = `${extension._namespace}.openProjectTemplatesFolder`;
         public static readonly saveProjectAsTemplate:string = `${extension._namespace}.saveProjectAsTemplate`;

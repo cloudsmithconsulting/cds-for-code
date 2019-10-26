@@ -12,7 +12,8 @@ import PackDynamicsSolution from './commands/packDynamicsSolution';
 import UnpackDynamicsSolution from './commands/unpackDynamicsSolution';
 import JsonInspectorViewManager from './views/JsonInspectorView';
 import ProjectTemplatesPlugin from './ProjectTemplatesPlugin';
-import DynamicsTerminal from '../out/views/DynamicsTerminal';
+import DynamicsTerminal from './views/DynamicsTerminal';
+import IconLoader from './commands/iconLoader';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -37,6 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
 		
 		// our commands
 		new PowerShellLoader(),
+		new IconLoader(),
 		new GenerateEntities(),
 		new PackDynamicsSolution(),
 		new UnpackDynamicsSolution()

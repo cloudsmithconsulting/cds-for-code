@@ -26,7 +26,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 
     private static runScriptCheck(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
 		// get local storage folder
-		const folder = context.globalStoragePath;
+		const folder = path.join(context.globalStoragePath, "/scripts/");
 		
 		// Checks to see if folder exist
 		if (!fs.existsSync(folder)) {
@@ -35,7 +35,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 		}
 
 		// Array that stores script names
-		var scriptsToFetch = [
+		const scriptsToFetch = [
 			"CloudSmith.Dynamics365.SampleScripts/Deploy-XrmSolution.ps1",
 			"CloudSmith.Dynamics365.SampleScripts/Generate-XrmEntities.ps1",
 			"CloudSmith.Dynamics365.SampleScripts/Get-XrmSolution.ps1",
@@ -50,8 +50,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 		
 		this.checkVersion(remoteFolderPath, updateChannel)
 			.then(version => {
-				if (version === -1)
-				{
+				if (version === -1) {
 					vscode.window.showErrorMessage(`The Dynamics 365 extension could not check for updates in the ${updateChannel} channel.  Please check the configuration updateSource and updateChannel to ensure they are set correctly.`);
 
 					return;
@@ -61,8 +60,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 
 				if (!currentVersion || parseFloat(currentVersion.toString()) < version) {
 					// For loop to iterate through the array
-					for (var i = 0; i < scriptsToFetch.length; i++ )
-					{
+					for (var i = 0; i < scriptsToFetch.length; i++ ) {
 						// hold the file name for this iteration
 						const fileName = scriptsToFetch[i];
 						// uri containing remote file location
@@ -90,7 +88,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 										}
 
 										const commandToExecute = `.\\Install-Sdk.ps1 `
-										+ `-Path ${sdkInstallPath} `;
+											+ `-Path ${sdkInstallPath} `;
 										const terminal = DynamicsTerminal.showTerminal(context.globalStoragePath);
 
 										// execute the command
