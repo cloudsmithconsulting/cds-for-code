@@ -43,6 +43,8 @@ export class ExtensionIconTheme {
 			{ key: "Option Sets", value: "mdi-folder-outline" },
 			{ key: "Processes", value: "mdi-folder-outline" },
 			{ key: "Web Resources", value: "mdi-folder-outline" },
+			{ key: "Plugins", value: "mdi-folder-outline" },
+			{ key: "Solutions", value: "mdi-folder-outline" },
 			{ key: "Folder", value: "mdi-folder-outline" },
 			{ key: "Entity", value: 'fe-table'},
 			{ key: "Attribute", value: 'whh-twocolumnsrightalt'},
@@ -51,6 +53,8 @@ export class ExtensionIconTheme {
 			{ key: "Option Set", value: "ion-options-outline "},
 			{ key: "Process", value: "vaadin-file-process" },
 			{ key: "Web Resource", value: "fa-file-code-o" },
+			{ key: "Plugin", value: "mdi-codepen" },
+			{ key: "Solution", value: "ic-round-border-all" },
 			{ key: "Add", value: "ic-baseline-add" },
 			{ key: "Edit", value: "ic-twotone-edit" },
 			{ key: "Refresh", value: "ic-round-refresh" },
@@ -79,10 +83,10 @@ export class ExtensionIconTheme {
 	download(folder: string): void {
 		const destination = path.join(folder, this.name.replace(`${cs.dynamics.configuration.iconThemes._namespace}.`, ''));
 
-		FileSystem.MakeFolderSync(destination);
-
 		this.icons.forEach(icon => {
-			const localPath = path.join(destination, icon.getMappedOutputFile(this.mappings.keys[this.mappings.values.indexOf(icon.name)]));
+			const localPath = path.join(destination, icon.mappedOutputFile);
+
+			FileSystem.MakeFolderSync(path.dirname(localPath));
 
 			if (fs.existsSync(localPath)) { return; }
 
@@ -112,7 +116,7 @@ export class ExtensionIconTheme {
 		const returnObject:IconOptions[] = [];
 		
 		if (mappings) {
-			for (let i = 0; i < mappings.length; i++) {
+			for (let i = 0; i < mappings.keys.length; i++) {
 				if (!lightColor && !darkColor) {
 					returnObject.push(new IconOptions(mappings.values[i], undefined, undefined, undefined, undefined, undefined, mappings.keys[i]));
 				}
@@ -194,8 +198,8 @@ export class IconOptions {
 		return `https://api.iconify.design/${this.name}${this.format.toString()}?${this.toQueryObject()}`;
 	}	
 
-	getMappedOutputFile(extensionIcon: ExtensionIcon) {
-		return `${extensionIcon.replace(" ", "")}${this.annotation ? "." + this.annotation : ""}${this.format.toString()}`;
+	get mappedOutputFile(): string {
+		return `${this.extensionIcon.replace(" ", "")}${this.annotation ? "." + this.annotation : ""}${this.format.toString()}`;
 	}
 
 	get outputfile(): string {

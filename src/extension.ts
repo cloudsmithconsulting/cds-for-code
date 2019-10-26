@@ -40,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
 		
 		// our commands
 		new PowerShellLoader(),
-		//new IconLoader(),
+		new IconLoader(),
 		new GenerateEntities(),
 		new PackDynamicsSolution(),
 		new UnpackDynamicsSolution()

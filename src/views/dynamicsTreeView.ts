@@ -730,8 +730,8 @@ class IconResolver
     )
     {
         this.iconPath = {
-            light: path.join(ExtensionConfiguration.extensionPath || __filename, lightPath),
-            dark: path.join(ExtensionConfiguration.extensionPath || __filename, darkPath)
+            light: path.join(__filename, ...lightPath.split("/")),
+            dark: path.join(__filename, ...darkPath.split("/"))
         };
     }
 
@@ -747,6 +747,8 @@ class TreeEntry extends vscode.TreeItem {
         { key: "Attribute", value: new IconResolver("../../../resources/icons/default/attribute.light.svg", "../../../resources/icons/default/attribute.dark.svg") },
         { key: "Views", value: new IconResolver("../../../resources/icons/default/views.light.svg", "../../../resources/icons/default/views.dark.svg") },
         { key: "View", value: new IconResolver("../../../resources/icons/default/view.light.svg", "../../../resources/icons/default/view.dark.svg") },
+        { key: "Forms", value: new IconResolver("../../../resources/icons/default/forms.light.svg", "../../../resources/icons/default/forms.dark.svg") },
+        { key: "Form", value: new IconResolver("../../../resources/icons/default/form.light.svg", "../../../resources/icons/default/form.dark.svg") },
         { key: "OptionSets", value: new IconResolver("../../../resources/icons/default/optionsets.light.svg", "../../../resources/icons/default/optionsets.dark.svg") },
         { key: "OptionSet", value: new IconResolver("../../../resources/icons/default/optionset.light.svg", "../../../resources/icons/default/optionset.dark.svg") },
         { key: "Processes", value: new IconResolver("../../../resources/icons/default/processes.light.svg", "../../../resources/icons/default/processes.dark.svg") },

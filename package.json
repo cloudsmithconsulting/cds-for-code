@@ -117,6 +117,10 @@
 			{
 				"command": "cs.dynamics.controls.treeView.deleteEntry",
 				"title": "Delete",
+				"icon": {
+					"light": "resources/icons/default/delete.light.svg",
+					"dark": "resources/icons/default/delete.dark.svg"
+				},
 				"category": "UserInterface"
 			},
 			{
