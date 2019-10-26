@@ -23,7 +23,7 @@ export default class MetadataRepository
 
         return this.webapi.retrieveEntitiesRequest(entitiesQuery)
             .then(entitiesResponse => ApiHelper.filterSolutionComponents(this.webapi, entitiesResponse, solutionId, DynamicsWebApi.SolutionComponent.Entity, e => e["MetadataId"]))
-            .then(response => response.orderBy(e => e["LogicalName"]).toArray());
+            .then(response => response ? response.orderBy(e => e["LogicalName"]).toArray() : []);
     }
 
     public retrieveAttributes(entityKey:string) : Promise<any[]>
