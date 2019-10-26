@@ -91,8 +91,8 @@
 				"command": "cs.dynamics.controls.treeView.refreshEntry",
 				"title": "Refresh",
 				"icon": {
-					"light": "resources/icons/light/refresh.svg",
-					"dark": "resources/icons/dark/refresh.svg"
+					"light": "resources/icons/default/refresh.light.svg",
+					"dark": "resources/icons/default/refresh.dark.svg"
 				},
 				"category": "UserInterface"
 			},
@@ -100,8 +100,8 @@
 				"command": "cs.dynamics.controls.treeView.addEntry",
 				"title": "New",
 				"icon": {
-					"light": "resources/icons/light/plus.svg",
-					"dark": "resources/icons/dark/plus.svg"
+					"light": "resources/icons/default/add.light.svg",
+					"dark": "resources/icons/default/add.dark.svg"
 				},
 				"category": "UserInterface"
 			},
@@ -109,8 +109,8 @@
 				"command": "cs.dynamics.controls.treeView.editEntry",
 				"title": "Edit",
 				"icon": {
-					"light": "resources/icons/light/edit.svg",
-					"dark": "resources/icons/dark/edit.svg"
+					"light": "resources/icons/default/edit.light.svg",
+					"dark": "resources/icons/default/edit.dark.svg"
 				},
 				"category": "UserInterface"
 			},

@@ -1,5 +1,6 @@
 import * as cs from '../cs';
 import { ExtensionContext } from 'vscode';
+import { DynamicsWebApi } from '../api/Types';
 
 export default class GlobalState
 {

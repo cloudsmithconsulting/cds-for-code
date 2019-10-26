@@ -43,11 +43,18 @@ export namespace dynamics
     export namespace configuration
     {
         // tslint:disable-next-line: class-name
+        export class iconThemes 
+        {
+            public static readonly _namespace:string = "cs.dynamics.configuration.iconThemes";
+            public static readonly default:string = `${iconThemes._namespace}.default`;
+        }
+
+        // tslint:disable-next-line: class-name
         export class globalState
         {
             public static readonly _namespace:string = "cs.dynamics.configuration.globalState";
             public static readonly dynamicsConnections:string = `${globalState._namespace}:dynamicsConnections`;
-            public static readonly powerShellScriptVersion:string = `${globalState._namespace}.powerShellScriptVersion`;
+            public static readonly powerShellScriptVersion:string = `${globalState._namespace}:powerShellScriptVersion`;
         }
 
         // tslint:disable-next-line: class-name

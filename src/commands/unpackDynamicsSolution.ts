@@ -60,7 +60,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				}
 
 				// setup the command text
-				const commandToExecute = `.\\Get-XrmSolution.ps1 `
+				const commandToExecute = `.\\Scripts\\Get-XrmSolution.ps1 `
 					+ `-ServerUrl "${serverUrl}" `
 					+ `-OrgName "${orgName}" `
 					+ `-SolutionName "${solution.uniquename}" `

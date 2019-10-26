@@ -25,6 +25,8 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('[CloudSmith]: extension:activate');
 	
+	ExtensionConfiguration.extensionPath = context.extensionPath;
+	
 	// load and check extension configuration
 	const toolsConfig = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration.tools._namespace);
 	const templatesConfig = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration.templates._namespace);
@@ -38,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
 		
 		// our commands
 		new PowerShellLoader(),
-		new IconLoader(),
+		//new IconLoader(),
 		new GenerateEntities(),
 		new PackDynamicsSolution(),
 		new UnpackDynamicsSolution()

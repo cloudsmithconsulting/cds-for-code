@@ -3,6 +3,7 @@ import DiscoveryRepository from '../repositories/discoveryRepository';
 import { View, ViewRenderer } from '../view';
 import * as cs from '../cs';
 import IWireUpCommands from '../wireUpCommand';
+import { DynamicsWebApi } from '../api/Types';
 
 export default class ConnectionViewManager implements IWireUpCommands {
 	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {

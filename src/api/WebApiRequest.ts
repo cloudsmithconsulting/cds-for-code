@@ -6,6 +6,7 @@ import ResponseUtilities from "./ResponseUtilities";
 import RequestUtilities from "./RequestUtilities";
 import RequestConverter from "./RequestConverter";
 import Utilities from "../helpers/Utilities";
+import { DynamicsWebApi } from './Types';
 
 export default class WebApiRequest
 {

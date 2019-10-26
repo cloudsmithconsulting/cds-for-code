@@ -5,29 +5,184 @@ import * as cs from '../cs';
 import fetch from 'node-fetch';
 import IWireUpCommands from '../wireUpCommand';
 import Utilities from '../helpers/Utilities';
-import { SSL_OP_CIPHER_SERVER_PREFERENCE } from 'constants';
+import Dictionary from '../helpers/Dictionary';
+import * as FileSystem from '../helpers/FileSystem';
 
-enum ScriptedIconFormat {
+export default class IconLoader implements IWireUpCommands {
+    public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+		//GlobalState.Instance(context).PowerShellScriptVersion = null;
+
+		// do this immediately
+        IconLoader.downloadIconTheme(context);
+
+        // now wire a command into the context
+        context.subscriptions.push(
+            vscode.commands.registerCommand(cs.dynamics.extension.downloadRequiredIcons, () => { // Downloads scripts from the Internet.
+                IconLoader.downloadIconTheme(context, config);
+            })
+        );
+    }
+
+    private static downloadIconTheme(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+		// get local storage folder
+		const folder = path.join(context.extensionPath, "/resources/icons/");
+		
+		ExtensionIconTheme.defaultTheme.download(folder);
+	}
+}
+
+export class ExtensionIconTheme {
+	public static readonly defaultTheme:ExtensionIconTheme = new ExtensionIconTheme(
+		cs.dynamics.configuration.iconThemes.default, new Dictionary<ExtensionIcon, string>([
+			{ key: "Connection", value: 'uil-cloud-data-connection' },
+			{ key: "Organization", value: 'jam-building-f' },
+			{ key: "Entities", value: "mdi-folder-outline" },
+			{ key: "Attributes", value: "mdi-folder-outline" },
+			{ key: "Views", value: "mdi-folder-outline" },
+			{ key: "Forms", value: "mdi-folder-outline" },
+			{ key: "Option Sets", value: "mdi-folder-outline" },
+			{ key: "Processes", value: "mdi-folder-outline" },
+			{ key: "Web Resources", value: "mdi-folder-outline" },
+			{ key: "Folder", value: "mdi-folder-outline" },
+			{ key: "Entity", value: 'fe-table'},
+			{ key: "Attribute", value: 'whh-twocolumnsrightalt'},
+			{ key: "View", value: "ic-baseline-pageview" },
+			{ key: "Form", value: "dashicons-format-aside"},
+			{ key: "Option Set", value: "ion-options-outline "},
+			{ key: "Process", value: "vaadin-file-process" },
+			{ key: "Web Resource", value: "fa-file-code-o" },
+			{ key: "Add", value: "ic-baseline-add" },
+			{ key: "Edit", value: "ic-twotone-edit" },
+			{ key: "Refresh", value: "ic-round-refresh" },
+			{ key: "Delete", value: "ic-twotone-delete" }, 
+			{ key: "Save", value: "ic-twotone-save-alt" },
+			{ key: "Cancel", value: "ic-twotone-cancel" },
+		]), "black", "white");
+
+	constructor(name:string, mappings:Dictionary<ExtensionIcon, string>, lightColor?:string, darkColor?:string) {
+		this.name = name;
+		this.mappings = mappings;
+		this.lightColor = lightColor;
+		this.darkColor = darkColor;
+	}
+
+	get icons():IconOptions[] {
+		return ExtensionIconTheme.getIcons(this.mappings, this.lightColor, this.darkColor);
+	}
+
+	name:string;
+	lightColor:string;
+	darkColor:string;
+	mappings:Dictionary<ExtensionIcon, string>;
+
+	//TODO: remove dependence on fetch.
+	download(folder: string): void {
+		const destination = path.join(folder, this.name.replace(`${cs.dynamics.configuration.iconThemes._namespace}.`, ''));
+
+		FileSystem.MakeFolderSync(destination);
+
+		this.icons.forEach(icon => {
+			const localPath = path.join(destination, icon.getMappedOutputFile(this.mappings.keys[this.mappings.values.indexOf(icon.name)]));
+
+			if (fs.existsSync(localPath)) { return; }
+
+			return fetch(icon.url, {
+				method: 'get',
+				headers: {
+					'Accepts': icon.mimeType
+				}
+			})
+			.then(res => res.text())
+			.then(body => {
+				fs.writeFileSync(localPath, body);
+	
+				return localPath;
+			})
+			.catch(err => {
+				console.error(err);
+	
+				return "";
+			});
+		});
+
+		return;
+	}
+	
+	private static getIcons(mappings:Dictionary<ExtensionIcon, string>, lightColor?:string, darkColor?:string): IconOptions[] {
+		const returnObject:IconOptions[] = [];
+		
+		if (mappings) {
+			for (let i = 0; i < mappings.length; i++) {
+				if (!lightColor && !darkColor) {
+					returnObject.push(new IconOptions(mappings.values[i], undefined, undefined, undefined, undefined, undefined, mappings.keys[i]));
+				}
+
+				if (lightColor) {
+					returnObject.push(new IconOptions(mappings.values[i], lightColor, "light", undefined, undefined, undefined, mappings.keys[i]));
+				}
+
+				if (darkColor) {
+					returnObject.push(new IconOptions(mappings.values[i], darkColor, "dark", undefined, undefined, undefined, mappings.keys[i]));
+				}
+			}
+		}
+
+		return returnObject;
+	}
+}
+
+export type ExtensionIcon =
+	'Connection' |
+	'Organization' |
+	'Entities' |
+	'Entity' |
+	'Attributes' |
+	'Attribute' |
+	'Views' |
+	'View' |
+	'Forms' |
+	'Form' |
+	'Option Sets' |
+	'Option Set' |
+	'Processes' |
+	'Process' |
+	'Web Resources' |
+	'Folder' |
+	'Web Resource' |
+	'Plugins' |
+	'Plugin' |
+	'Solutions' |
+	'Solution' |
+	'Add' |
+	'Edit' |
+	'Delete' |
+	'Refresh' |
+	'Save' |
+	'Cancel';
+
+export enum ScriptedIconFormat {
 	svg = ".svg",
 	js = ".js",
 	json = ".json"
 }
 
-class IconOptions {
+export class IconOptions {
 	private _color:string;
 	public height?:number;
 	public width?:number;
 	public name:string;
 	public format:ScriptedIconFormat;
 	public annotation:string;
+	public extensionIcon:ExtensionIcon;
 
-	constructor(name:string, color?:string, annotation?:string, height:number = 0, width:number = 0, format:ScriptedIconFormat = ScriptedIconFormat.svg) {
+	constructor(name:string, color?:string, annotation?:string, height:number = 0, width:number = 0, format:ScriptedIconFormat = ScriptedIconFormat.svg, extensionIcon?:ExtensionIcon) {
 		this.name = name;
 		this.color = color;
 		this.annotation = annotation;
 		this.height = height;
 		this.width = width;
 		this.format = format;
+		this.extensionIcon = extensionIcon;
 	}
 
 	get color(): string { return this._color; }
@@ -39,8 +194,12 @@ class IconOptions {
 		return `https://api.iconify.design/${this.name}${this.format.toString()}?${this.toQueryObject()}`;
 	}	
 
+	getMappedOutputFile(extensionIcon: ExtensionIcon) {
+		return `${extensionIcon.replace(" ", "")}${this.annotation ? "." + this.annotation : ""}${this.format.toString()}`;
+	}
+
 	get outputfile(): string {
-		return `${this.name}${this.annotation ? "." + this.annotation : ""}${this.format.toString()}`;
+		return `${this.name.replace(":", "-")}${this.annotation ? "." + this.annotation : ""}${this.format.toString()}`;
 	}
 
 	get mimeType(): string { 
@@ -57,7 +216,7 @@ class IconOptions {
 	}
 
 	private isColorCode(value:string):boolean {
-		return value.match('^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$').length > 0;
+		return value && value.match('^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$') !== null; 
 	}
 
 	private toQueryObject(): any {
@@ -68,68 +227,5 @@ class IconOptions {
 		if (this.width > 0) { querystring["width"] = this.height; }
 
 		return Utilities.ObjectToQuerystring(querystring);
-	}
-}
-
-export default class IconLoader implements IWireUpCommands {
-    public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-		//GlobalState.Instance(context).PowerShellScriptVersion = null;
-
-		// do this immediately
-        IconLoader.runIconCheck(context);
-
-        // now wire a command into the context
-        context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.extension.downloadRequiredIcons, () => { // Downloads scripts from the Internet.
-                IconLoader.runIconCheck(context, config);
-            })
-        );
-    }
-
-    private static runIconCheck(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-		// get local storage folder
-		const folder = path.join(context.globalStoragePath, "/icons/");
-		
-		// Checks to see if folder exist
-		if (!fs.existsSync(folder)) {
-			console.log(`[CloudSmith] Creating folder '${folder}' as it does not exist.`);
-			fs.mkdirSync(folder);
-		}
-
-		// Array that stores script names
-		const iconsToFetch:IconOptions[] = [
-			new IconOptions("mdi-pencil-circle", "#C0C0C0", "dark"),
-			new IconOptions("mdi-pencil-circle", "#303030", "light")
-		];
-
-		iconsToFetch.forEach(icon => {
-			const localPath = path.join(folder, icon.outputfile);
-
-			if (!fs.existsSync(localPath)) {
-				IconLoader.downloadIcon(icon, localPath)
-					.then(localPath => { vscode.window.showInformationMessage(`${icon.outputfile} downloaded`); return localPath; });
-			}
-		});
-	}
-			
-	//TODO: remove dependence on fetch.
-    private static downloadIcon(icon: IconOptions, localFilePath: string): Promise<string> {
-        return fetch(icon.url, {
-            method: 'get',
-            headers: {
-                'Accepts': icon.mimeType
-			}
-        })
-		.then(res => res.text())
-		.then(body => {
-			fs.writeFileSync(localFilePath, body);
-
-			return localFilePath;
-        })
-        .catch(err => {
-			console.error(err);
-
-			return "";
-		});
 	}
 }

@@ -2,6 +2,7 @@ import Utilities from "../helpers/Utilities";
 import WebApiRequest from "./WebApiRequest";
 import { Query } from "./FetchQuery";
 import FetchQueryResolver from "./FetchQueryResolver";
+import { DynamicsWebApi } from "./Types";
 
 // Dynamics Web API
 // Original Project: https://github.com/AleksandrRogov/DynamicsWebApi/

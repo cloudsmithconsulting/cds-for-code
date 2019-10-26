@@ -10,6 +10,7 @@ import IWireUpCommands from '../wireUpCommand';
 import DynamicsUrlResolver from '../api/DynamicsUrlResolver';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import Dictionary from '../helpers/Dictionary';
+import { DynamicsWebApi } from '../api/Types';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
@@ -729,8 +730,8 @@ class IconResolver
     )
     {
         this.iconPath = {
-            light: path.join(__filename, ...lightPath.split("/")),
-            dark: path.join(__filename, ...darkPath.split("/"))
+            light: path.join(ExtensionConfiguration.extensionPath || __filename, lightPath),
+            dark: path.join(ExtensionConfiguration.extensionPath || __filename, darkPath)
         };
     }
 
@@ -738,14 +739,25 @@ class IconResolver
 
 class TreeEntry extends vscode.TreeItem {
     private static _icons = new Dictionary<string, IconResolver>([
-        { key: "Connection", value: new IconResolver("../../../resources/icons/light/server.svg", "../../../resources/icons/dark/server.svg") },
-        { key: "Organization", value: new IconResolver("../../../resources/icons/light/dependency.svg", "../../../resources/icons/dark/dependency.svg") },
-        { key: "Entities", value: new IconResolver("../../../resources/icons/light/object-ungroup.svg", "../../../resources/icons/dark/object-ungroup.svg") },
-        { key: "Entity", value: new IconResolver("../../../resources/icons/light/object-ungroup.svg", "../../../resources/icons/dark/object-ungroup.svg") },
-        { key: "Plugins", value: new IconResolver("../../../resources/icons/light/plug.svg", "../../../resources/icons/dark/plug.svg") },
-        { key: "Plugin", value: new IconResolver("../../../resources/icons/light/plug.svg", "../../../resources/icons/dark/plug.svg") },
-        { key: "Solutions", value: new IconResolver("../../../resources/icons/light/puzzle-piece.svg", "../../../resources/icons/dark/puzzle-piece.svg") },
-        { key: "Solution", value: new IconResolver("../../../resources/icons/light/puzzle-piece.svg", "../../../resources/icons/dark/puzzle-piece.svg") },
+        { key: "Connection", value: new IconResolver("/resources/icons/default/connection.light.svg", "/resources/icons/default/connection.dark.svg") },
+        { key: "Organization", value: new IconResolver("/resources/icons/default/organization.light.svg", "/resources/icons/default/organization.dark.svg") },
+        { key: "Entities", value: new IconResolver("/resources/icons/default/entities.light.svg", "/resources/icons/default/entities.dark.svg") },
+        { key: "Entity", value: new IconResolver("/resources/icons/default/entity.light.svg", "/resources/icons/default/entity.dark.svg") },
+        { key: "Attributes", value: new IconResolver("/resources/icons/default/attributes.light.svg", "/resources/icons/default/attributes.dark.svg") },
+        { key: "Attribute", value: new IconResolver("/resources/icons/default/attribute.light.svg", "/resources/icons/default/attribute.dark.svg") },
+        { key: "Views", value: new IconResolver("/resources/icons/default/views.light.svg", "/resources/icons/default/views.dark.svg") },
+        { key: "View", value: new IconResolver("/resources/icons/default/view.light.svg", "/resources/icons/default/view.dark.svg") },
+        { key: "OptionSets", value: new IconResolver("/resources/icons/default/optionsets.light.svg", "/resources/icons/default/optionsets.dark.svg") },
+        { key: "OptionSet", value: new IconResolver("/resources/icons/default/optionset.light.svg", "/resources/icons/default/optionset.dark.svg") },
+        { key: "Processes", value: new IconResolver("/resources/icons/default/processes.light.svg", "/resources/icons/default/processes.dark.svg") },
+        { key: "Process", value: new IconResolver("/resources/icons/default/process.light.svg", "/resources/icons/default/process.dark.svg") },
+        { key: "WebResources", value: new IconResolver("/resources/icons/default/webresources.light.svg", "/resources/icons/default/webresources.dark.svg") },
+        { key: "WebResource", value: new IconResolver("/resources/icons/default/webresource.light.svg", "/resources/icons/default/webresource.dark.svg") },
+        { key: "Plugins", value: new IconResolver("/resources/icons/default/plugins.light.svg", "/resources/icons/default/plugins.dark.svg") },
+        { key: "Plugin", value: new IconResolver("/resources/icons/default/plugin.light.svg", "/resources/icons/default/plugin.dark.svg") },
+        { key: "Solutions", value: new IconResolver("/resources/icons/default/solutions.light.svg", "/resources/icons/default/solutions.dark.svg") },
+        { key: "Solution", value: new IconResolver("/resources/icons/default/solution.light.svg", "/resources/icons/default/solution.dark.svg") },
+        { key: "Folder", value: new IconResolver("/resources/icons/default/folder.light.svg", "/resources/icons/default/folder.dark.svg") },
     ]);
 
 	constructor(

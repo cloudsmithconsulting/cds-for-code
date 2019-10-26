@@ -35,7 +35,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                 if (Utilities.IsNullOrEmpty(namespace)) { return; }
 
                 // setup the command text
-                const commandToExecute = `.\\Generate-XrmEntities.ps1 `
+                const commandToExecute = `.\\Scripts\\Generate-XrmEntities.ps1 `
                     + `-ToolsPath ${coreToolsRoot} `
                     + `-Url "${Utilities.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `
                     + `-Username "${config.username}" `

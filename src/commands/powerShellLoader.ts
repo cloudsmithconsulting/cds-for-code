@@ -87,7 +87,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 											fs.mkdirSync(sdkInstallPath);
 										}
 
-										const commandToExecute = `.\\Install-Sdk.ps1 `
+										const commandToExecute = `.\\Scripts\\Install-Sdk.ps1 `
 											+ `-Path ${sdkInstallPath} `;
 										const terminal = DynamicsTerminal.showTerminal(context.globalStoragePath);
 
