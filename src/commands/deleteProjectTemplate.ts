@@ -10,7 +10,7 @@ import * as cs from "../cs";
  * @param {ProjectTemplatesPlugin} templateManager
  * @param {*} args
  */
-export async function run(templateManager: ProjectTemplatesPlugin, args: any) {
+export default async function run(templateManager: ProjectTemplatesPlugin, args: any) {
     // load latest configuration
     ExtensionConfiguration.updateConfiguration(cs.dynamics.configuration.templates._namespace);
 

@@ -3,9 +3,10 @@ export interface IDictionary<TKey, T> {
     containsKey(key: TKey): boolean;
     get(key: TKey): T;
     getKey(value: T): TKey;
-    keys(): TKey[];
+    keys: TKey[];
+    length: number;
     remove(key: TKey): void;
-    values(): T[];
+    values: T[];
 }
 
 export default class Dictionary<TKey, T> implements IDictionary<TKey, T> {
@@ -46,11 +47,15 @@ export default class Dictionary<TKey, T> implements IDictionary<TKey, T> {
         return this._keys[index];
     }
 
-    keys(): TKey[] {
+    get keys(): TKey[] {
         return this._keys;
     }
 
-    values(): T[] {
+    get length(): number {
+        return this._keys.length;
+    }
+
+    get values(): T[] {
         return this._values;
     }
 

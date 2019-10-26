@@ -2,6 +2,43 @@ import * as vscode from 'vscode';
 import IWireUpCommands from '../wireUpCommand';
 import * as cs from '../cs';
 
+/* This entire terminal class is on hold right now...  Here are the missing package.json contributions:
+
+	{
+		"command": "cs.dynamics.extension.createTerminal",
+		"title": "Show the Dynamics terminal",
+		"category": "Dynamics 365 CE"
+	},
+	{
+		"command": "cs.dynamics.extension.clearTerminal",
+		"title": "Clear the Dynamics terminal",
+		"category": "Dynamics 365 CE"
+	},
+
+	in order for this to work, we need one of our APIs back!!!
+
+	This is the new API, but is only available when you use --enable-proposed-api switch on CL.
+
+	(<any>vscode.window).onDidWriteTerminalData((e: any) => {
+		vscode.window.showInformationMessage(`onDidWriteTerminalData listener attached, check the devtools console to see events`);
+		console.log('onDidWriteData', e);
+	});
+
+	This is the old API, which has been deprecated as of 9/13/19 - https://github.com/microsoft/vscode/issues/78574
+
+	vscode.window.onDidOpenTerminal(terminal => { 
+		terminal.processId.then(terminalId => { 
+			this._hiddenTerminal.processId.then(hiddenProcessId => {
+				if (terminalId === hiddenProcessId) {
+					(<any>terminal).onDidWriteData((data: any) => {
+						// ...
+					});
+				}
+			});
+		});
+	});
+	
+*/
 export class Terminal implements vscode.Terminal {
 	private _onDidWrite: vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
 	private _onDidOpen: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();

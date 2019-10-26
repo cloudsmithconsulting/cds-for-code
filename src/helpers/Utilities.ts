@@ -171,63 +171,9 @@ export default class Utilities
         }
     }    
 
-    public static FormatDynamicsResponse(data: any): any {
-        var items = []; 
-        if (data && data.error) {
-            throw new Error(data.error);
-        }
-        if (data && data.value) {
-            data = data.value;
-        }
-        if (!Array.isArray(data)) {
-            return Utilities.FormatDynamicsResponse([data])[0];
-        }
-        if (data) {
-            for (var item of data) {
-                let row:any = {};
-    
-                for (let key in item) {
-                    var name: string = key;
-    
-                    if (name.indexOf('@odata') === 0) {
-                        continue;
-                    }
-    
-                    if (name.indexOf('transactioncurrencyid') > -1) {
-                        continue;
-                    }
-    
-                    if (name.indexOf('@') > -1) {
-                        name = name.substring(0, name.indexOf('@'));
-    
-                        if (name.indexOf('_') === 0) {
-                            name = name.slice(1, -6);
-                        }
-                        
-                        name += "_formatted";
-                    }
-                    else if (name.indexOf('_') === 0) {
-                        name = name.slice(1, -6);
-                    }
-    
-                    if (name.indexOf('_x002e_') > -1) {
-                        var obj = name.substring(0, name.indexOf('_x002e_'));
-                        name = name.substring(name.indexOf('_x002e_') + 7);
-    
-                        if (!row[obj]) {
-                            row[obj] = {};
-                        }
-                        row[obj][name] = item[key];
-                    }
-                    else {
-                        row[name] = item[key];
-                    }
-                }
-                items.push(row);
-            }
-        }
-        return items;
-    }    
+    public static ObjectToQuerystring(source:any):string {
+        return Object.keys(source).map(key => key + '=' + encodeURIComponent(source[key])).join('&');
+    }
 
     public static ConvertToReferenceObject(responseData:any):any {
         const result = /\/(\w+)\(([0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12})/i.exec(responseData["@odata.id"]);

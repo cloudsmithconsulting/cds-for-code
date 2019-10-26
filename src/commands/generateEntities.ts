@@ -16,7 +16,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
 
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.powerShell.generateEntities, async (config?:DynamicsWebApi.Config, folder?:string, outputFileName?: string, namespace?: string) => { // Match name of command to package.json command
+            vscode.commands.registerCommand(cs.dynamics.powerShell.generateEntities, async (config?:DynamicsWebApi.Config, folder?:string, outputFileName?: string, namespace?: string) => { 
                 // setup configurations
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
                 const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
@@ -35,7 +35,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                 if (Utilities.IsNullOrEmpty(namespace)) { return; }
 
                 // setup the command text
-                const commandToExecute = `.\\Generate-XrmEntities.ps1 `
+                const commandToExecute = `.\\Scripts\\Generate-XrmEntities.ps1 `
                     + `-ToolsPath ${coreToolsRoot} `
                     + `-Url "${Utilities.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `
                     + `-Username "${config.username}" `

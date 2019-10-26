@@ -1,5 +1,6 @@
 import Utilities from "../helpers/Utilities";
 import RequestUtilities from "./RequestUtilities";
+import { DynamicsWebApi } from "./Types";
 
 export default class RequestConverter {
     /**

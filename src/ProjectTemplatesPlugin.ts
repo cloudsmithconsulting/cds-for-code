@@ -10,10 +10,10 @@ import * as EnvironmentVariables from './helpers/EnvironmentVariables';
 import ExtensionConfiguration from './config/ExtensionConfiguration';
 import IWireUpCommands from './wireUpCommand';
 
-import * as CreateProjectFromTemplateCommand from './commands/createProjectFromTemplate';
-import * as DeleteProjectTemplateCommand from './commands/deleteProjectTemplate';
-import * as OpenProjectTemplatesFolderCommand from './commands/openProjectTemplatesFolder';
-import * as SaveProjectAsTemplateCommand from './commands/saveProjectTemplate';
+import CreateProjectFromTemplateCommand from './commands/createProjectFromTemplate';
+import DeleteProjectTemplateCommand from './commands/deleteProjectTemplate';
+import OpenProjectTemplatesFolderCommand from './commands/openProjectTemplatesFolder';
+import SaveProjectAsTemplateCommand from './commands/saveProjectTemplate';
 
 /**
  * Main class to handle the logic of the Project Templates
@@ -36,10 +36,10 @@ export default class ProjectTemplatesPlugin implements IWireUpCommands {
 
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.extension.createProjectFromTemplate, CreateProjectFromTemplateCommand.run.bind(undefined, this)),
-            vscode.commands.registerCommand(cs.dynamics.extension.deleteProjectTemplate, DeleteProjectTemplateCommand.run.bind(undefined, this)),
-            vscode.commands.registerCommand(cs.dynamics.extension.openProjectTemplatesFolder, OpenProjectTemplatesFolderCommand.run.bind(undefined, this)),
-            vscode.commands.registerCommand(cs.dynamics.extension.saveProjectAsTemplate, SaveProjectAsTemplateCommand.run.bind(undefined, this)),
+            vscode.commands.registerCommand(cs.dynamics.extension.createProjectFromTemplate, CreateProjectFromTemplateCommand.bind(undefined, this)),
+            vscode.commands.registerCommand(cs.dynamics.extension.deleteProjectTemplate, DeleteProjectTemplateCommand.bind(undefined, this)),
+            vscode.commands.registerCommand(cs.dynamics.extension.openProjectTemplatesFolder, OpenProjectTemplatesFolderCommand.bind(undefined, this)),
+            vscode.commands.registerCommand(cs.dynamics.extension.saveProjectAsTemplate, SaveProjectAsTemplateCommand.bind(undefined, this)),
         );
     }
 

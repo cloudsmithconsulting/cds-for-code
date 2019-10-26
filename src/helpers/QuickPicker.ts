@@ -3,6 +3,7 @@ import * as cs from '../cs';
 import DiscoveryRepository from "../repositories/discoveryRepository";
 import { TS } from 'typescript-linq';
 import ApiRepository from "../repositories/apiRepository";
+import { DynamicsWebApi } from "../api/Types";
 
 export default class QuickPicker {
     /**

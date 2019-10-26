@@ -10,13 +10,17 @@ import SolutionMap from '../config/SolutionMap';
 import { TS } from 'typescript-linq';
 import { DynamicsWebApi } from '../api/Types';
 
-export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
+export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
     public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration){
 		this.workspaceConfiguration = config;
 		
 		context.subscriptions.push(
+			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolutionFromExplorer, async (item:any) => {
+				vscode.commands.executeCommand(cs.dynamics.powerShell.unpackSolution, item.config, undefined, item.context);
+			}),
+
 			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolution, async (config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string) => { // Match name of command to package.json command
                 // setup configurations
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
@@ -56,7 +60,7 @@ export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				}
 
 				// setup the command text
-				const commandToExecute = `.\\Get-XrmSolution.ps1 `
+				const commandToExecute = `.\\Scripts\\Get-XrmSolution.ps1 `
 					+ `-ServerUrl "${serverUrl}" `
 					+ `-OrgName "${orgName}" `
 					+ `-SolutionName "${solution.uniquename}" `
