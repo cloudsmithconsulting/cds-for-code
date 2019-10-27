@@ -66,7 +66,9 @@ export default class ApiRepository
         }
 
         return this.webapi.retrieveAllRequest(request)
+            .then(response => { console.log(response); return response; })
             .then(webResourceFolderResponse => ApiHelper.filterSolutionComponents(this.webapi, webResourceFolderResponse, solutionId, DynamicsWebApi.SolutionComponent.WebResource, w => w["webresourceid"]))
+            .then(response => { console.log(response); return response; })
             .then(response => response
                 .select(w => w["name"].replace(folder || '', ''))
                 .where(n => n.split("/").length > 1)
@@ -92,9 +94,11 @@ export default class ApiRepository
 
         return this.webapi.retrieveAllRequest(request)
             .then(webResourceResponse => ApiHelper.filterSolutionComponents(this.webapi, webResourceResponse, solutionId, DynamicsWebApi.SolutionComponent.WebResource, w => w["webresourceid"]))
-            .then(response => response
-                .where(w => w["name"].split("/").length === depth + 1)
-                .toArray());
+            .then(response => {
+                return response
+                    .where(w => (w["name"] === folder || w["name"].split("/").length === depth + 1))
+                    .toArray();
+            });
     }
 
     public retrievePluginAssemblies(solutionId?:string) : Promise<any[]> {

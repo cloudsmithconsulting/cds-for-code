@@ -188,21 +188,21 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 case EntryType.OptionSets:
                     return this.getOptionSetDetails(element, commandPrefix, element.context);
                 case EntryType.WebResources:
-                    var folders = await this.getWebResourcesFolderDetails(element, commandPrefix, element.solutionId);
-                    var items = await this.getWebResourcesDetails(element, commandPrefix, element.solutionId);
+                    var folders = await this.getWebResourcesFolderDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context));
+                    var items = await this.getWebResourcesDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context));
 
-                    if (items) { items.forEach(i => folders.push(i)); }
+                    if (items && folders) { items.forEach(i => folders.push(i)); }
 
-                    return folders;
+                    return folders && folders.length > 0 ? folders : items;
                 case EntryType.Folder:
-                    switch (element.context) {
+                    switch (element.context.innerType) {
                         case EntryType.WebResources:
-                            var innerFolders = await this.getWebResourcesFolderDetails(element, commandPrefix, element.solutionId, element.folder);
-                            var innerItems = await this.getWebResourcesDetails(element, commandPrefix, element.solutionId, element.folder);
+                            var innerFolders = await this.getWebResourcesFolderDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context), element.folder);
+                            var innerItems = await this.getWebResourcesDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context), element.folder);
         
-                            if (innerItems) { innerItems.forEach(i => innerFolders.push(i)); }
+                            if (innerItems && innerFolders) { innerItems.forEach(i => innerFolders.push(i)); }
         
-                            return innerFolders;
+                            return innerFolders && innerFolders.length > 0 ? innerFolders : innerItems;
                     }
                 case EntryType.Entity:
                     return Promise.resolve(this.getEntityLevelDetails(element, commandPrefix, element.context));
@@ -518,9 +518,9 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     arguments: [`${commandPrefix || ''}/${container}`]
                 },
                 element.config,
-                EntryType.WebResources),
+                { innerType: EntryType.WebResources, innerContext: (element.context && element.context.innerContext ? element.context.innerContext : element.context) }),
             `An error occurred while retrieving web resources from ${element.config.webApiUrl}`, 
-            () => this.getWebResourcesDetails(element, commandPrefix, solution));
+            () => this.getWebResourcesFolderDetails(element, commandPrefix, solution, folder));
 
         return returnValue;
     }
@@ -542,7 +542,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 element.config,
                 webresource),
             `An error occurred while retrieving web resources from ${element.config.webApiUrl}`, 
-            () => this.getWebResourcesDetails(element, commandPrefix, solution))
+            () => this.getWebResourcesDetails(element, commandPrefix, solution, folder))
             .then(results => { 
                 if (folder) {
                     results.forEach(r => r.label = r.label.replace(Utilities.EnforceTrailingSlash(r.folder), '')); 
@@ -857,10 +857,10 @@ class TreeEntry extends vscode.TreeItem {
     }
 
     get folder(): string {
-        if (this.itemType === EntryType.Folder && this.id) {
-            var index = this.id.lastIndexOf(`${this.context.toString()}/`);
+        if (this.itemType === EntryType.Folder && this.id && this.context && this.context.innerType) {
+            var index = this.id.lastIndexOf(`${this.context.innerType.toString()}/`);
 
-            return this.id.substring(index + this.context.toString().length + 1);
+            return this.id.substring(index + this.context.innerType.toString().length + 1);
         } else if (this.parent && this.parent.itemType === EntryType.Folder && this.parent.id) {
             return this.parent.folder;
         }
