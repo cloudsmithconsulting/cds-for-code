@@ -96,7 +96,8 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case EntryType.Form:
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, DynamicsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId || item.context.solutionid), retryFunction);
+                        vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml })
+                            .then(d => vscode.window.showTextDocument(d));
                         break;
                     case EntryType.View:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.context.savedqueryid, item.solutionId), retryFunction);
@@ -135,11 +136,11 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 case EntryType.Connection:
                     return this.getConnectionDetails(element, commandPrefix);
                 case EntryType.Organization:
-                    return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix));
+                    return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix, element.context));
                 case EntryType.Solutions:
                     return this.getSolutionDetails(element, commandPrefix);
                 case EntryType.Solution:
-                    return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix));
+                    return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix, element.context));
                 case EntryType.Processes:
                     return this.getProcessDetails(element, commandPrefix, element.context);
                 case EntryType.Plugins:
@@ -166,7 +167,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                             return innerFolders;
                     }
                 case EntryType.Entity:
-                    return Promise.resolve(this.getEntityLevelDetails(element, commandPrefix));
+                    return Promise.resolve(this.getEntityLevelDetails(element, commandPrefix, element.context));
                 case EntryType.Attributes:
                     return this.getEntityAttributeDetails(element, commandPrefix, element.context);
                 case EntryType.Views:
@@ -268,7 +269,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return returnValue;
     }
 
-    private getSolutionLevelDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
+    private getSolutionLevelDetails(element: TreeEntry, commandPrefix?:string, context?:any) : TreeEntry[] {
         let returnObject = [];
         const showDefaultSolution = ExtensionConfiguration.getConfigurationValue<boolean>(cs.dynamics.configuration.explorer.showDefaultSolution);
         
@@ -364,7 +365,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return returnObject;
     }
 
-    private getEntityLevelDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
+    private getEntityLevelDetails(element: TreeEntry, commandPrefix?:string, context?:any) : TreeEntry[] {
         let returnObject = [];
         
         returnObject.push(new TreeEntry(

@@ -1,3 +1,5 @@
+import * as vscode from "vscode";
+
 export namespace dynamics
 {
     // tslint:disable-next-line: class-name
@@ -12,6 +14,16 @@ export namespace dynamics
         public static readonly createProjectFromTemplate:string = `${extension._namespace}.createProjectFromTemplate`;
         public static readonly createTerminal:string = `${extension._namespace}.createTerminal`;
         public static readonly clearTerminal:string = `${extension._namespace}.clearTerminal`;
+        public static readonly outputChannelName:string = `${extension._namespace}.outputChannelName`;
+        private static _output:vscode.OutputChannel;
+        static get output()
+        {
+            if (!this._output) {
+                this._output = vscode.window.createOutputChannel(extension.outputChannelName);
+            }
+
+            return this._output;
+        }
     }
 
     // tslint:disable-next-line: class-name
