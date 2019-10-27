@@ -97,7 +97,7 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 				}
 				
 				// setup the command text
-				const commandToExecute = `.\\Scripts\\Deploy-XrmSolution.ps1 `
+				const commandToExecute = `.\\Deploy-XrmSolution.ps1 `
 					+ `-ServerUrl "${serverUrl}" `
 					+ `-OrgName "${orgName}" `
 					+ `-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `
@@ -107,7 +107,7 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 					+ (managed ? `-Managed ` : '');
 
 				// build a powershell terminal
-				const terminal = DynamicsTerminal.showTerminal(context.globalStoragePath);
+				const terminal = DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"));
 
 				// execute the command
 				terminal.sendText(commandToExecute);
