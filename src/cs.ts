@@ -3,6 +3,14 @@ import * as vscode from "vscode";
 export namespace dynamics
 {
     // tslint:disable-next-line: class-name
+    export class deployment
+    {
+        public static readonly _namespace:string = "cs.dynamics.deployment";
+        public static readonly addSolutionComponent:string = `${deployment._namespace}.addSolutionComponent`;
+        public static readonly deleteSolutionComponent:string = `${deployment._namespace}.deleteSolutionComponent`;
+    }
+
+    // tslint:disable-next-line: class-name
     export class extension
     {
         public static readonly _namespace:string = "cs.dynamics.extension";

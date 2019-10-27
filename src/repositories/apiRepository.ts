@@ -118,9 +118,10 @@ export default class ApiRepository
             SolutionUniqueName: solution.uniquename,  
             AddRequiredComponents: addRequiredComponents,
             DoNotIncludeSubcomponents: doNotIncludeSubcomponents,
-            IncludedComponentSettingsValues: componentSettings
+            IncludedComponentSettingsValues: componentSettings || null
         };
 
-        return this.webapi.executeBoundAction(solution.solutionid, "solutions", "AddSolutionComponent", actionParams);
+        return this.webapi.executeUnboundAction("AddSolutionComponent", actionParams)
+            .then(response => response.value || null);
     }
 }

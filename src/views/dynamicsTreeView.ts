@@ -11,6 +11,7 @@ import DynamicsUrlResolver from '../api/DynamicsUrlResolver';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import Dictionary from '../helpers/Dictionary';
 import { DynamicsWebApi } from '../api/Types';
+import SolutionMap from '../../out/config/SolutionMap';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
@@ -50,6 +51,43 @@ export default class DynamicsTreeView implements IWireUpCommands {
 
                     return;
                 }
+
+                let componentId:string;
+                let componentType:DynamicsWebApi.SolutionComponent;
+
+                switch (item.itemType) {
+                    case EntryType.Plugin:
+                        componentType = DynamicsWebApi.SolutionComponent.PluginAssembly;
+                        componentId = item.context.pluginassemblyid;
+
+                        break;
+                    case EntryType.WebResource:
+                        componentType = DynamicsWebApi.SolutionComponent.WebResource;
+                        componentId = item.context.webresourceid;
+
+                        break;
+                    case EntryType.Process:
+                        componentType = DynamicsWebApi.SolutionComponent.Workflow;
+                        componentId = item.context.workflowid;
+
+                        break;
+                    case EntryType.Entity:
+                        componentType = DynamicsWebApi.SolutionComponent.Entity;
+                        componentId = item.context.MetadataId;
+
+                        break;
+                    case EntryType.OptionSet:
+                        componentType = DynamicsWebApi.SolutionComponent.OptionSet;
+                        componentId = item.context.MetadataId;
+
+                        break;
+                    }
+
+                    if (componentId && componentType) {
+                        return vscode.commands.executeCommand(cs.dynamics.deployment.addSolutionComponent, item.config, undefined, componentId, componentType)
+                            .then(item => treeProvider.refreshSolution(item));
+                    }
+
             }) // <-- no semi-colon, comma starts next command registration
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.deleteEntryFromSolution, (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item.solutionId) {
@@ -220,6 +258,14 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     public refresh(item?:TreeEntry): void {
         this._onDidChangeTreeData.fire(item);
+    }
+
+    public refreshSolution(solution?:any): void {
+        if (solution && solution.solutionId) {
+            TreeEntryCache.Instance.Items
+                .where(i => i.solutionId === solution.solutionId)
+                .forEach(i => this._onDidChangeTreeData.fire(i));
+        }
     }
 
 	private getConnectionEntries(): TreeEntry[] {
