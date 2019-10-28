@@ -43,7 +43,7 @@ export default class AddSolutionComponent implements IWireUpCommands {
 
                 return api.addSolutionComponent(solution, componentId, componentType, addRequiredComponents, doNotIncludeSubcomponents, componentSettings)
                     .then(() => solution)
-                    .catch(error => vscode.window.showErrorMessage(`Could not add ${componentType.toString()} to solution.  The error returned was: ${error}`));
+                    .catch(error => vscode.window.showErrorMessage(`Could not add ${componentType.toString()} to solution.  The error returned was: ${error.message}`));
             })
         );
     }

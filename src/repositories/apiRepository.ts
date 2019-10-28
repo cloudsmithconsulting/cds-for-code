@@ -2,6 +2,8 @@ import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
 import { DynamicsWebApi } from '../api/Types';
 import Utilities from '../helpers/Utilities';
 import ApiHelper from "../helpers/ApiHelper";
+import * as vscode from 'vscode';
+import * as path from 'path';
 
 export default class ApiRepository
 {
@@ -109,9 +111,101 @@ export default class ApiRepository
 
         return this.webapi.retrieveAllRequest(request)
             .then(pluginResponse => ApiHelper.filterSolutionComponents(this.webapi, pluginResponse, solutionId, DynamicsWebApi.SolutionComponent.PluginAssembly, w => w["pluginassemblyid"]))
-            .then(response => response
+            .then(response => response ? response
                 .where(p => p["ishidden"].Value === false)
-                .toArray());
+                .toArray() : []);
+    }
+
+    public retrievePluginTypes(pluginAssemblyId:string) {
+        const request:DynamicsWebApi.RetrieveRequest = {
+            collection: "pluginassemblies",
+            id: pluginAssemblyId,
+            select: ['name', 'publickeytoken']
+        };
+
+        return this.webapi.retrieveRequest(request)
+            .then(response => {
+                return this.webapi.retrieveAllRequest({
+                    collection: "plugintypes",
+                    filter: `assemblyname eq '${response.name}'${response.publickeytoken ? " and publickeytoken eq '" + response.publickeytoken + "'" : ""}`
+                }).then(response => response.value);
+            });
+    }
+
+    public retrievePluginSteps(pluginTypeId:string) {
+        const request:DynamicsWebApi.RetrieveRequest = {
+            collection: "plugintypes",
+            id: pluginTypeId,
+            select: ['name', 'publickeytoken'],
+            expand: [ { property: "plugintypeid_sdkmessageprocessingstep"} ]
+        };
+
+        return this.webapi.retrieveRequest(request)
+            .then(response => {
+                return response && response.plugintypeid_sdkmessageprocessingstep && response.plugintypeid_sdkmessageprocessingstep.length > 0 ? response.plugintypeid_sdkmessageprocessingstep : null;
+            });
+    }
+
+    public retrievePluginStepImages(pluginStepId:string) {
+        const request:DynamicsWebApi.RetrieveRequest = {
+            collection: "sdkmessageprocessingsteps",
+            id: pluginStepId,
+            select: [],
+            expand: [ { property: "sdkmessageprocessingstepid_sdkmessageprocessingstepimage"} ]
+        };
+
+        return this.webapi.retrieveRequest(request)
+            .then(response => {
+                return response && response.sdkmessageprocessingstepid_sdkmessageprocessingstepimage && response.sdkmessageprocessingstepid_sdkmessageprocessingstepimage.length > 0 ? response.sdkmessageprocessingstepid_sdkmessageprocessingstepimage : null;
+            });
+    }
+
+    public uploadPluginAssembly(assemblyUri:vscode.Uri, pluginAssemblyId?:string): Thenable<any> {
+        const fs = vscode.workspace.fs;
+        let fileContents;
+
+        return fs.stat(assemblyUri)
+            .then(stat => {
+                return fs.readFile(assemblyUri); 
+            }).then(contents => {
+                fileContents = Utilities.BytesToBase64(contents);
+
+                return fileContents;
+            }).then(contents => {
+                if (pluginAssemblyId) {
+                    return this.webapi.retrieveRequest({ 
+                        collection: "pluginassemblies",
+                        id: pluginAssemblyId,
+                        select: ['pluginassemblyid', 'content', 'culture', 'description', 'name']
+                    }).then(response => response.value)
+                    .catch(error => console.error(error));
+                } else {
+                    const name = path.parse(assemblyUri.fsPath).name;
+
+                    return this.webapi.retrieveMultipleRequest({ 
+                        collection: "pluginassemblies",
+                        filter: `name eq '${name}'`,
+                        select: ['pluginassemblyid', 'content', 'culture', 'description', 'name']
+                    }).then(response => response.value && response.value.length > 0 ? response.value[0] : {
+                        name: path.parse(assemblyUri.fsPath).name
+                    })
+                    .catch(error => console.error(error));                }
+            }).then(pluginassembly => { 
+                pluginAssemblyId = pluginassembly.pluginassemblyid;
+                pluginassembly.content = fileContents; 
+                
+                return pluginassembly; 
+            }).then(pluginAssembly => {
+                if (!pluginAssemblyId) {
+                    return this.webapi.create(pluginAssembly, "pluginassemblies")
+                        .then(assemblyId => pluginAssemblyId)
+                        .catch(error => console.error(error));
+                } else { 
+                    return this.webapi.update(pluginAssemblyId, "pluginassemblies", pluginAssembly)
+                        .then(assemblyId => pluginAssemblyId)
+                        .catch(error => console.error(error));
+                }
+            });
     }
 
     public addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
