@@ -50,12 +50,89 @@ export default class DynamicsTreeView implements IWireUpCommands {
 
                     return;
                 }
+
+                let componentId:string;
+                let componentType:DynamicsWebApi.SolutionComponent;
+
+                switch (item.itemType) {
+                    case EntryType.Plugin:
+                        componentType = DynamicsWebApi.SolutionComponent.PluginAssembly;
+                        componentId = item.context.pluginassemblyid;
+
+                        break;
+                    case EntryType.WebResource:
+                        componentType = DynamicsWebApi.SolutionComponent.WebResource;
+                        componentId = item.context.webresourceid;
+
+                        break;
+                    case EntryType.Process:
+                        componentType = DynamicsWebApi.SolutionComponent.Workflow;
+                        componentId = item.context.workflowid;
+
+                        break;
+                    case EntryType.Entity:
+                        componentType = DynamicsWebApi.SolutionComponent.Entity;
+                        componentId = item.context.MetadataId;
+
+                        break;
+                    case EntryType.OptionSet:
+                        componentType = DynamicsWebApi.SolutionComponent.OptionSet;
+                        componentId = item.context.MetadataId;
+
+                        break;
+                    }
+
+                    if (componentId && componentType) {
+                        return vscode.commands.executeCommand(cs.dynamics.deployment.addSolutionComponent, item.config, undefined, componentId, componentType)
+                            .then(response => treeProvider.refreshSolution(item.solutionPath));
+                    }
+
             }) // <-- no semi-colon, comma starts next command registration
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.deleteEntryFromSolution, (item: TreeEntry) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.removeEntryFromSolution, (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item.solutionId) {
                     vscode.window.showInformationMessage(`The component ${item.label} is not part of a solution.`);
 
                     return;
+                }
+
+                let componentId:string;
+                let componentType:DynamicsWebApi.SolutionComponent;
+
+                switch (item.itemType) {
+                    case EntryType.Plugin:
+                        componentType = DynamicsWebApi.SolutionComponent.PluginAssembly;
+                        componentId = item.context.pluginassemblyid;
+
+                        break;
+                    case EntryType.WebResource:
+                        componentType = DynamicsWebApi.SolutionComponent.WebResource;
+                        componentId = item.context.webresourceid;
+
+                        break;
+                    case EntryType.Process:
+                        componentType = DynamicsWebApi.SolutionComponent.Workflow;
+                        componentId = item.context.workflowid;
+
+                        break;
+                    case EntryType.Entity:
+                        componentType = DynamicsWebApi.SolutionComponent.Entity;
+                        componentId = item.context.MetadataId;
+
+                        break;
+                    case EntryType.OptionSet:
+                        componentType = DynamicsWebApi.SolutionComponent.OptionSet;
+                        componentId = item.context.MetadataId;
+
+                        break;
+                }
+
+                if (!Utilities.IsNullOrEmpty(item.solutionPath)) {
+                    const solutions = TreeEntryCache.Instance.Items.where(i => i.id === item.solutionPath).toArray();
+                    
+                    if (solutions && solutions.length > 0 && componentId && componentType) {
+                        return vscode.commands.executeCommand(cs.dynamics.deployment.removeSolutionComponent, item.config, solutions[0].context, componentId, componentType)
+                            .then(response => treeProvider.refreshSolution(item.solutionPath));
+                    }
                 }
             }) // <-- no semi-colon, comma starts next command registration
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, (item: TreeEntry) => { // Match name of command to package.json command
@@ -96,7 +173,8 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case EntryType.Form:
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, DynamicsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId || item.context.solutionid), retryFunction);
+                        vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml })
+                            .then(d => vscode.window.showTextDocument(d));
                         break;
                     case EntryType.View:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.context.savedqueryid, item.solutionId), retryFunction);
@@ -135,11 +213,11 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 case EntryType.Connection:
                     return this.getConnectionDetails(element, commandPrefix);
                 case EntryType.Organization:
-                    return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix));
+                    return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix, element.context));
                 case EntryType.Solutions:
                     return this.getSolutionDetails(element, commandPrefix);
                 case EntryType.Solution:
-                    return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix));
+                    return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix, element.context));
                 case EntryType.Processes:
                     return this.getProcessDetails(element, commandPrefix, element.context);
                 case EntryType.Plugins:
@@ -149,24 +227,24 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 case EntryType.OptionSets:
                     return this.getOptionSetDetails(element, commandPrefix, element.context);
                 case EntryType.WebResources:
-                    var folders = await this.getWebResourcesFolderDetails(element, commandPrefix, element.solutionId);
-                    var items = await this.getWebResourcesDetails(element, commandPrefix, element.solutionId);
+                    var folders = await this.getWebResourcesFolderDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context));
+                    var items = await this.getWebResourcesDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context));
 
-                    if (items) { items.forEach(i => folders.push(i)); }
+                    if (items && folders) { items.forEach(i => folders.push(i)); }
 
-                    return folders;
+                    return folders && folders.length > 0 ? folders : items;
                 case EntryType.Folder:
-                    switch (element.context) {
+                    switch (element.context.innerType) {
                         case EntryType.WebResources:
-                            var innerFolders = await this.getWebResourcesFolderDetails(element, commandPrefix, element.solutionId, element.folder);
-                            var innerItems = await this.getWebResourcesDetails(element, commandPrefix, element.solutionId, element.folder);
+                            var innerFolders = await this.getWebResourcesFolderDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context), element.folder);
+                            var innerItems = await this.getWebResourcesDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context), element.folder);
         
-                            if (innerItems) { innerItems.forEach(i => innerFolders.push(i)); }
+                            if (innerItems && innerFolders) { innerItems.forEach(i => innerFolders.push(i)); }
         
-                            return innerFolders;
+                            return innerFolders && innerFolders.length > 0 ? innerFolders : innerItems;
                     }
                 case EntryType.Entity:
-                    return Promise.resolve(this.getEntityLevelDetails(element, commandPrefix));
+                    return Promise.resolve(this.getEntityLevelDetails(element, commandPrefix, element.context));
                 case EntryType.Attributes:
                     return this.getEntityAttributeDetails(element, commandPrefix, element.context);
                 case EntryType.Views:
@@ -221,6 +299,14 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         this._onDidChangeTreeData.fire(item);
     }
 
+    public refreshSolution(solutionPath?:string): void {
+        if (solutionPath) {
+            TreeEntryCache.Instance.Items
+                .where(i => i.id === solutionPath)
+                .forEach(i => this._onDidChangeTreeData.fire(i));
+        }
+    }
+
 	private getConnectionEntries(): TreeEntry[] {
         const result: TreeEntry[] = [];
         
@@ -268,7 +354,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return returnValue;
     }
 
-    private getSolutionLevelDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
+    private getSolutionLevelDetails(element: TreeEntry, commandPrefix?:string, context?:any) : TreeEntry[] {
         let returnObject = [];
         const showDefaultSolution = ExtensionConfiguration.getConfigurationValue<boolean>(cs.dynamics.configuration.explorer.showDefaultSolution);
         
@@ -364,7 +450,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return returnObject;
     }
 
-    private getEntityLevelDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
+    private getEntityLevelDetails(element: TreeEntry, commandPrefix?:string, context?:any) : TreeEntry[] {
         let returnObject = [];
         
         returnObject.push(new TreeEntry(
@@ -471,9 +557,9 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     arguments: [`${commandPrefix || ''}/${container}`]
                 },
                 element.config,
-                EntryType.WebResources),
+                { innerType: EntryType.WebResources, innerContext: (element.context && element.context.innerContext ? element.context.innerContext : element.context) }),
             `An error occurred while retrieving web resources from ${element.config.webApiUrl}`, 
-            () => this.getWebResourcesDetails(element, commandPrefix, solution));
+            () => this.getWebResourcesFolderDetails(element, commandPrefix, solution, folder));
 
         return returnValue;
     }
@@ -495,7 +581,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 element.config,
                 webresource),
             `An error occurred while retrieving web resources from ${element.config.webApiUrl}`, 
-            () => this.getWebResourcesDetails(element, commandPrefix, solution))
+            () => this.getWebResourcesDetails(element, commandPrefix, solution, folder))
             .then(results => { 
                 if (folder) {
                     results.forEach(r => r.label = r.label.replace(Utilities.EnforceTrailingSlash(r.folder), '')); 
@@ -810,10 +896,10 @@ class TreeEntry extends vscode.TreeItem {
     }
 
     get folder(): string {
-        if (this.itemType === EntryType.Folder && this.id) {
-            var index = this.id.lastIndexOf(`${this.context.toString()}/`);
+        if (this.itemType === EntryType.Folder && this.id && this.context && this.context.innerType) {
+            var index = this.id.lastIndexOf(`${this.context.innerType.toString()}/`);
 
-            return this.id.substring(index + this.context.toString().length + 1);
+            return this.id.substring(index + this.context.innerType.toString().length + 1);
         } else if (this.parent && this.parent.itemType === EntryType.Folder && this.parent.id) {
             return this.parent.folder;
         }
@@ -833,6 +919,20 @@ class TreeEntry extends vscode.TreeItem {
         }
        
         return undefined;
+    }
+
+    get solutionPath(): string { 
+        if (this.id)
+        {
+            const split = this.id.split("/");
+            const index = split.indexOf("Solutions");
+            
+            if (index >= 0) {
+                return split.slice(0, index + 2).join("/");
+            }        
+        }
+       
+        return undefined;        
     }
 }
 

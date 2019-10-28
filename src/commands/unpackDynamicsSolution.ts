@@ -60,7 +60,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				}
 
 				// setup the command text
-				const commandToExecute = `.\\Scripts\\Get-XrmSolution.ps1 `
+				const commandToExecute = `.\\Get-XrmSolution.ps1 `
 					+ `-ServerUrl "${serverUrl}" `
 					+ `-OrgName "${orgName}" `
 					+ `-SolutionName "${solution.uniquename}" `
@@ -69,7 +69,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 					+ `-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “${Utilities.PowerShellSafeString(config.password)}” -AsPlainText -Force))) `;
 
 				// build a powershell terminal
-				const terminal = DynamicsTerminal.showTerminal(context.globalStoragePath);
+				const terminal = DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"));
 				
 				// execute the command
 				terminal.sendText(commandToExecute);

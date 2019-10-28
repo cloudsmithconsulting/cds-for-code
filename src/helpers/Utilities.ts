@@ -184,4 +184,14 @@ export default class Utilities
     public static PowerShellSafeString(value: string) : string {
         return value.replace('$', '`$');
     }
+
+    public static ToPlural(value:string): string { 
+        if (value.endsWith("s")) {
+            return `${value}es`;
+        } else if (value.endsWith("y")) {
+            return `${value.substring(0, value.length - 1)}ies`;
+        } else {
+            return `${value}s`;
+        }
+    }
 }

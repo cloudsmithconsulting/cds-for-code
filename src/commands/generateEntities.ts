@@ -35,7 +35,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                 if (Utilities.IsNullOrEmpty(namespace)) { return; }
 
                 // setup the command text
-                const commandToExecute = `.\\Scripts\\Generate-XrmEntities.ps1 `
+                const commandToExecute = `.\\Generate-XrmEntities.ps1 `
                     + `-ToolsPath ${coreToolsRoot} `
                     + `-Url "${Utilities.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `
                     + `-Username "${config.username}" `
@@ -46,7 +46,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                     + (!Utilities.IsNull(namespace) ? `-Namespace "${namespace}" ` : '');
 
                 // build a powershell terminal
-                const terminal = DynamicsTerminal.showTerminal(context.globalStoragePath);
+                const terminal = DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"));
                 // execute the command
                 terminal.sendText(commandToExecute);
             })

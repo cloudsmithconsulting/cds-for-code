@@ -36,7 +36,7 @@ export default class MetadataRepository
     {
         return this.webapi.retrieveGlobalOptionSets()
             .then(optionSetResponse => ApiHelper.filterSolutionComponents(this.webapi, optionSetResponse, solutionId, DynamicsWebApi.SolutionComponent.OptionSet, o => o["MetadataId"]))
-            .then(response => response.orderBy(o => o["LogicalName"]).toArray());
+            .then(response => response.orderBy(o => o["Name"]).toArray());
     }
 
     public retrieveForms(entityLogicalName:string) : Promise<any[]>

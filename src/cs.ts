@@ -1,5 +1,15 @@
+import * as vscode from "vscode";
+
 export namespace dynamics
 {
+    // tslint:disable-next-line: class-name
+    export class deployment
+    {
+        public static readonly _namespace:string = "cs.dynamics.deployment";
+        public static readonly addSolutionComponent:string = `${deployment._namespace}.addSolutionComponent`;
+        public static readonly removeSolutionComponent:string = `${deployment._namespace}.removeSolutionComponent`;
+    }
+
     // tslint:disable-next-line: class-name
     export class extension
     {
@@ -12,6 +22,16 @@ export namespace dynamics
         public static readonly createProjectFromTemplate:string = `${extension._namespace}.createProjectFromTemplate`;
         public static readonly createTerminal:string = `${extension._namespace}.createTerminal`;
         public static readonly clearTerminal:string = `${extension._namespace}.clearTerminal`;
+        public static readonly outputChannelName:string = `${extension._namespace}.outputChannelName`;
+        private static _output:vscode.OutputChannel;
+        static get output()
+        {
+            if (!this._output) {
+                this._output = vscode.window.createOutputChannel(extension.outputChannelName);
+            }
+
+            return this._output;
+        }
     }
 
     // tslint:disable-next-line: class-name
@@ -110,11 +130,11 @@ export namespace dynamics
             public static readonly addEntryToSolution:string = `${treeView._namespace}.addEntryToSolution`;
             public static readonly clickEntry:string = `${treeView._namespace}.clickEntry`;
             public static readonly deleteEntry:string = `${treeView._namespace}.deleteEntry`;
-            public static readonly deleteEntryFromSolution:string = `${treeView._namespace}.deleteEntryFromSolution`;
             public static readonly editEntry:string = `${treeView._namespace}.editEntry`;
             public static readonly inspectEntry:string = `${treeView._namespace}.inspectEntry`;
             public static readonly openConnection:string = `${treeView._namespace}.openConnection`;
             public static readonly refreshEntry:string = `${treeView._namespace}.refreshEntry`;
+            public static readonly removeEntryFromSolution:string = `${treeView._namespace}.removeEntryFromSolution`;
         }
     }
 }

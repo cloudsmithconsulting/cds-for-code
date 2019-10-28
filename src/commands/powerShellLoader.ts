@@ -58,44 +58,43 @@ export default class PowerShellLoader implements IWireUpCommands {
 
 				const currentVersion = GlobalState.Instance(context).PowerShellScriptVersion;
 
-				if (!currentVersion || parseFloat(currentVersion.toString()) < version) {
-					// For loop to iterate through the array
-					for (var i = 0; i < scriptsToFetch.length; i++ ) {
-						// hold the file name for this iteration
-						const fileName = scriptsToFetch[i];
-						// uri containing remote file location
-						const remoteFilePath = `${remoteFolderPath}${fileName}`;
-						// local file location
-						const localFilePath = path.join(folder, fileName.replace("CloudSmith.Dynamics365.SampleScripts/", ""));
-						// see if file exists
-						if (!fs.existsSync(localFilePath))
-						{
-							// file doesn't exist, get it from remote location
-							PowerShellLoader.downloadScript(remoteFilePath, localFilePath)
-								.then(localPath => {
-									vscode.window.showInformationMessage(
-										`${fileName} PowerShell script downloaded`
-									);
+				// For loop to iterate through the array
+				for (var i = 0; i < scriptsToFetch.length; i++ ) {
+					// hold the file name for this iteration
+					const fileName = scriptsToFetch[i];
+					// uri containing remote file location
+					const remoteFilePath = `${remoteFolderPath}${fileName}`;
+					// local file location
+					const localFilePath = path.join(folder, fileName.replace("CloudSmith.Dynamics365.SampleScripts/", ""));
+					// see if file exists & if our current version is less than the new version.
+					if ((!fs.existsSync(localFilePath))
+						|| (!currentVersion || parseFloat(currentVersion.toString()) < version))
+					{
+						// file doesn't exist, get it from remote location
+						PowerShellLoader.downloadScript(remoteFilePath, localFilePath)
+							.then(localPath => {
+								vscode.window.showInformationMessage(
+									`${fileName} PowerShell script downloaded`
+								);
 
-									return localPath;
-								})
-								.then(localPath => {
-									if (localPath.endsWith("Install-Sdk.ps1")) {
-										const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
+								return localPath;
+							})
+							.then(localPath => {
+								if (localPath.endsWith("Install-Sdk.ps1")) {
+									const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
 
-										if (!fs.existsSync(sdkInstallPath)) {
-											fs.mkdirSync(sdkInstallPath);
-										}
-
-										const commandToExecute = `.\\Scripts\\Install-Sdk.ps1 `
-											+ `-Path ${sdkInstallPath} `;
-										const terminal = DynamicsTerminal.showTerminal(context.globalStoragePath);
-
-										// execute the command
-										terminal.sendText(commandToExecute);
+									if (!fs.existsSync(sdkInstallPath)) {
+										fs.mkdirSync(sdkInstallPath);
 									}
-								});
-						}
+
+									const commandToExecute = `.\\Scripts\\Install-Sdk.ps1 `
+										+ `-Path ${sdkInstallPath} `;
+									const terminal = DynamicsTerminal.showTerminal(context.globalStoragePath);
+
+									// execute the command
+									terminal.sendText(commandToExecute);
+								}
+							});
 					}
 
 					GlobalState.Instance(context).PowerShellScriptVersion = version;

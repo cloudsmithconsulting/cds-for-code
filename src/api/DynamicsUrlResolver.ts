@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import Utilities from '../helpers/Utilities';
 import { DynamicsWebApi } from './Types';
+import { urlToOptions } from 'vscode-test/out/util';
 
 export default class DynamicsUrlResolver
 {
@@ -48,20 +49,20 @@ export default class DynamicsUrlResolver
         return this.parseUriString(uriString, solutionId);
     }
 
+    /*
     public static getManageEntityFormUri(config:DynamicsWebApi.Config, entityTypeCode:string, formType:DynamicsWebApi.DynamicsForm, formId?:string, solutionId?:string):vscode.Uri
     {
-        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?etc=${entityTypeCode}&extraqs=formtype%3d${formType.toString()}%26`;
-        
-        if (formId) {
-            uriString += `formId%3d${Utilities.TrimGuid(formId).toUpperCase()}%26`;
-        }
+        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?etc=${entityTypeCode}&extraqs=`;
+        let options = { formtype: formType, formId: Utilities.TrimGuid(formId), action: -1 };
 
-        uriString += `action%3d-1&pagetype=formeditor`;
-        
+        uriString += encodeURIComponent(Utilities.ObjectToQuerystring(options));
+        uriString += "&pagetype=formeditor";
+
         console.log(uriString);
 
         return this.parseUriString(uriString, solutionId);
     }
+    */
 
     public static getManageEntityViewUri(config:DynamicsWebApi.Config, entityId:string, viewId?:string, solutionId?:string):vscode.Uri
     {

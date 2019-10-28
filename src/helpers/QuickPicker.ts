@@ -3,7 +3,9 @@ import * as cs from '../cs';
 import DiscoveryRepository from "../repositories/discoveryRepository";
 import { TS } from 'typescript-linq';
 import ApiRepository from "../repositories/apiRepository";
+import MetadataRepository from "../repositories/metadataRepository";
 import { DynamicsWebApi } from "../api/Types";
+import Utilities from "./Utilities";
 
 export default class QuickPicker {
     /**
@@ -100,6 +102,57 @@ export default class QuickPicker {
             .then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(org.name, undefined, undefined, org)).toArray())
             .then(options => vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }))
             .then(chosen => <DynamicsWebApi.Config>chosen.context);
+    }
+
+    public static async pickDynamicsSolutionComponentType(placeHolder?:string, choices?:DynamicsWebApi.SolutionComponent[]): Promise<DynamicsWebApi.SolutionComponent> {
+        if (choices && choices.length > 0) {
+            const options:QuickPickOption[] = [];
+        
+            choices.forEach(c => options.push(new QuickPickOption(Utilities.ToPlural(c.toString()), undefined, undefined, c)));
+
+            return await this.pick(placeHolder, ...options)
+                .then(p => p.context);
+        }
+    }
+
+    public static async pickDynamicsSolutionComponent(config:DynamicsWebApi.Config, solution:any, componentType:DynamicsWebApi.SolutionComponent, placeHolder?:string): Promise<string> {
+        const options:QuickPickOption[] = [];
+        const metadataApi = new MetadataRepository(config);
+        const api = new ApiRepository(config);
+
+        switch (componentType) {
+            case DynamicsWebApi.SolutionComponent.Entity:
+                await metadataApi.retrieveEntities(solution && solution.solutionid ? solution.solutionid : undefined)                
+                    .then(entities => entities.forEach(e => options.push(new QuickPickOption(e["LogicalName"], undefined, undefined, e["MetadataId"]))));
+
+                break;
+            case DynamicsWebApi.SolutionComponent.OptionSet:
+                await metadataApi.retrieveOptionSets(solution && solution.solutionid ? solution.solutionid : undefined)                
+                    .then(optionsets => optionsets.forEach(o => options.push(new QuickPickOption(o["Name"], undefined, undefined, o["MetadataId"]))));
+
+                break;
+            case DynamicsWebApi.SolutionComponent.PluginAssembly:
+                await api.retrievePluginAssemblies(solution && solution.solutionid ? solution.solutionid : undefined)                
+                    .then(plugins => plugins.forEach(p => options.push(new QuickPickOption(p["name"], undefined, undefined, p["pluginassemblyid"]))));
+
+                break;
+            case DynamicsWebApi.SolutionComponent.WebResource:
+                await api.retrieveWebResources(solution && solution.solutionid ? solution.solutionid : undefined)                
+                    .then(webresources => webresources.forEach(w => options.push(new QuickPickOption(w["name"], undefined, undefined, w["webresourceid"]))));
+
+                break;
+            case DynamicsWebApi.SolutionComponent.Workflow:
+                await api.retrieveProcesses(solution && solution.solutionid ? solution.solutionid : undefined)                
+                    .then(processes => processes.forEach(p => options.push(new QuickPickOption(p["name"], undefined, undefined, p["workflowid"]))));
+
+                break;
+        }
+
+        if (options && options.length > 0) {
+            return await this.pick(placeHolder, ...options).then(p => p.context);
+        }
+
+        return null;
     }
 }
 
