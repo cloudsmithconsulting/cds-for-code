@@ -82,12 +82,12 @@ export class ViewRenderer {
 	public renderHtml(htmlParial: string): string {
 		let cssHtml: string = '';
 		Object.keys(this._styleSheets).forEach(key => {
-			cssHtml += `<link rel="stylesheet" type="text/css" href="${this._styleSheets[key]}" nonce="${this.nonce}">`;
+			cssHtml += `<link rel="stylesheet" type="text/css" href="${this._styleSheets[key]}">`;
 		});
 		
 		let scriptHtml: string = '';
 		Object.keys(this._scripts).forEach(key => {
-			scriptHtml += `<script src="${this._scripts[key]}" nonce="${this.nonce}"></script>`;
+			scriptHtml += `<script src="${this._scripts[key]}"></script>`;
 		});
 
 		return `<!DOCTYPE html>
@@ -98,7 +98,7 @@ export class ViewRenderer {
 	Use a content security policy to only allow loading images from https or from our extension directory,
 	and only allow scripts that have a specific nonce.
 	-->
-	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${this._view.panel.webview.cspSource} https:; style-src ${this._view.panel.webview.cspSource}; script-src 'nonce-${this.nonce}';">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${this._view.panel.webview.cspSource} https:; style-src ${this._view.panel.webview.cspSource}; script-src 'unsafe-inline' ${this._view.panel.webview.cspSource};">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	${cssHtml}
 	<title>${this._view.viewOptions.viewTitle}</title>

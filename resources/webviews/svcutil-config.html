@@ -1,0 +1,499 @@
+<img class="branding" src="#{images['cloudsmith-logo-only-50px.png']}" alt="CloudSmith Conulting" />
+
+<h1 id="title">
+    #{viewTitle}
+</h1>
+
+<blockquote class="panel_error" id="errorPanel" hidden>
+    <div class="panel__text">
+        <h4>Oops! Slight problem</h4>
+        <span id="errorMessage"></span>
+    </div>
+</blockquote>
+
+<!-- Tab styles come from the default webViewStyles.css -->
+<!-- viewRenderer.addStyleSheet('webviewStyles.css') -->
+<!-- changeTab() function comes from tabs.js -->
+<!-- viewRenderer.addScript('tabs.js') -->
+<ul class="tab" id="tabs">
+    <li class="tab__item tab__item--active" onclick="changeTab(event, 'WhiteList')">
+        White List
+    </li>
+    <li class="tab__item" onclick="changeTab(event, 'BlackList')">
+        Black List
+    </li>
+    <li class="tab__item" onclick="changeTab(event, 'Naming')">
+        Naming
+    </li>
+    <li class="tab__item" onclick="changeTab(event, 'Code-Generation')">
+        Code Generation
+    </li>
+</ul>
+
+<div id="WhiteList" class="tab__content">
+    <h2>White List</h2>
+
+    <div class="row">
+        <a href="javascript:;" onclick="changeView(event, 'Entities')">Add Entity</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" onclick="changeView(event, 'Attributes')">Add Attribute</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" onclick="changeView(event, 'OptionSets')">Add Option Set</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" onclick="changeView(event, 'Solutions')">Add Solution</a>
+    </div>
+
+    <h3>Add <span class="form-type-label">Entities</span></h3>
+
+    <div class="grid grid--left-panel">
+        <div>
+            <div class="field-container" data-form="Entities,Attributes,OptionSets">
+                <div class="field field--checkbox">
+                    <label class="field__label" for="ByRule">
+                        Add <span class="form-type-label">Entities</span> by selecting from a list
+                    </label>
+                    <input type="radio" class="field__input" id="ByRule" name="RuleType" value="ByRule"
+                        checked="checked" />
+                </div>
+            </div>
+
+            <div class="field-container" data-form="Attributes,OptionSets" hidden>
+                <div class="field">
+                    <select id="EntitySelect" name="EntitySelect" class="field__input">
+                        <option value="">- Select Entity -</option>
+                        <option>Account</option>
+                        <option>Contact</option>
+                        <option>Lead</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <input type="text" class="field__input field__input--wide" id="SearchList" name="SearchList"
+                    placeholder="Search" />
+            </div>
+
+            <div class="field-container" data-form="Entities">
+                <div class="field">
+                    <select id="EntityList" name="EntityList" class="field__input field__input--wide" size="20"
+                        multiple="multiple">
+                        <option>Account</option>
+                        <option>Contact</option>
+                        <option>Lead</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-container" data-form="Attributes" hidden>
+                <div class="field">
+                    <select id="AttributeList" name="AttributeList" class="field__input field__input--wide" size="20"
+                        multiple="multiple">
+                        <option>name</option>
+                        <option>description</option>
+                        <option>statecode</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-container" data-form="OptionSets" hidden>
+                <div class="field">
+                    <select id="OptionSetList" name="OptionSetList" class="field__input field__input--wide" size="20"
+                        multiple="multiple">
+                        <option>addresstype</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-container" data-form="Solutions" hidden>
+                <div class="field">
+                    <select id="SolutionList" name="SolutionList" class="field__input field__input--wide" size="20"
+                        multiple="multiple">
+                        <option>Default Solution</option>
+                        <option>My Custom Solution</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-container" data-form="Attributes,OptionSets" hidden>
+                <div class="field field--checkbox">
+                    <label class="field__label" for="AllEntities">
+                        Apply rule to all entities
+                    </label>
+                    <input type="checkbox" class="field__input" id="AllEntities" name="AllEntities" value="true" />
+                </div>
+            </div>
+
+            <div class="field field--checkbox">
+                <label class="field__label" for="ByRegex">
+                    Add <span class="form-type-label">Entities</span> by regular expression
+                </label>
+                <input type="radio" class="field__input" id="ByRegex" name="RuleType" value="ByRegex" />
+            </div>
+
+            <div class="field">
+                <input type="text" class="field__input field__input--wide" id="Expression" name="Expression"
+                    value=".*" />
+            </div>
+
+            <div class="field field--checkbox">
+                <label class="field__label" for="IgnoreCase">
+                    Ignore Case
+                </label>
+                <input type="checkbox" class="field__input" id="IgnoreCase" name="IgnoreCase" value="true" />
+            </div>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Object Type</th>
+                    <th>Rule</th>
+                    <th>Applies To</th>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="button button--primary">Remove</button>
+                    </td>
+                    <td>Entities</td>
+                    <td>Exact Match</td>
+                    <td>Account</td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="button button--primary">Remove</button>
+                    </td>
+                    <td>Entities</td>
+                    <td>Regular Expression</td>
+                    <td>Contact*</td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="button button--primary">Remove</button>
+                    </td>
+                    <td>Attributes</td>
+                    <td>Exact Match</td>
+                    <td>description (all entities)</td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="button button--primary">Remove</button>
+                    </td>
+                    <td>OptionSets</td>
+                    <td>Exact Match</td>
+                    <td>addresstype</td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="button button--primary">Remove</button>
+                    </td>
+                    <td>Solutions</td>
+                    <td>Exact Match</td>
+                    <td>My Custom Solution</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="BlackList" class="tab__content" hidden>
+    <h2>Black List</h2>
+
+    <div class="row">
+        <a href="javascript:;" onclick="changeView(event, 'Entities')">Add Entity</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" onclick="changeView(event, 'Attributes')">Add Attribute</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" onclick="changeView(event, 'OptionSets')">Add Option Set</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" onclick="changeView(event, 'Solutions')">Add Solution</a>
+    </div>
+
+    <h3>Add <span class="form-type-label">Entities</span></h3>
+
+    <div class="grid grid--left-panel">
+        <div>
+            <div class="field-container" data-form="Entities,Attributes,OptionSets">
+                <div class="field field--checkbox">
+                    <label class="field__label" for="ByRule2">
+                        Add <span class="form-type-label">Entities</span> by selecting from a list
+                    </label>
+                    <input type="radio" class="field__input" id="ByRule2" name="RuleType2" value="ByRule2"
+                        checked="checked" />
+                </div>
+            </div>
+
+            <div class="field-container" data-form="Attributes,OptionSets" hidden>
+                <div class="field">
+                    <select id="EntitySelect2" name="EntitySelect2" class="field__input">
+                        <option value="">- Select Entity -</option>
+                        <option>Account</option>
+                        <option>Contact</option>
+                        <option>Lead</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <input type="text" class="field__input field__input--wide" id="SearchList2" name="SearchList2"
+                    placeholder="Search" />
+            </div>
+
+            <div class="field-container" data-form="Entities">
+                <div class="field">
+                    <select id="EntityList2" name="EntityList2" class="field__input field__input--wide" size="20"
+                        multiple="multiple">
+                        <option>Account</option>
+                        <option>Contact</option>
+                        <option>Lead</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-container" data-form="Attributes" hidden>
+                <div class="field">
+                    <select id="AttributeList2" name="AttributeList2" class="field__input field__input--wide" size="20"
+                        multiple="multiple">
+                        <option>name</option>
+                        <option>description</option>
+                        <option>statecode</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-container" data-form="OptionSets" hidden>
+                <div class="field">
+                    <select id="OptionSetList2" name="OptionSetList2" class="field__input field__input--wide" size="20"
+                        multiple="multiple">
+                        <option>addresstype</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-container" data-form="Solutions" hidden>
+                <div class="field">
+                    <select id="SolutionList2" name="SolutionList2" class="field__input field__input--wide" size="20"
+                        multiple="multiple">
+                        <option>Default Solution</option>
+                        <option>My Custom Solution</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-container" data-form="Attributes,OptionSets" hidden>
+                <div class="field field--checkbox">
+                    <label class="field__label" for="AllEntities">
+                        Apply rule to all entities
+                    </label>
+                    <input type="checkbox" class="field__input" id="AllEntities2" name="AllEntities2" value="true" />
+                </div>
+            </div>
+
+            <div class="field field--checkbox">
+                <label class="field__label" for="ByRegex2">
+                    Add <span class="form-type-label">Entities</span> by regular expression
+                </label>
+                <input type="radio" class="field__input" id="ByRegex2" name="RuleType2" value="ByRegex" />
+            </div>
+
+            <div class="field">
+                <input type="text" class="field__input field__input--wide" id="Expression2" name="Expression2"
+                    value=".*" />
+            </div>
+
+            <div class="field field--checkbox">
+                <label class="field__label" for="IgnoreCase2">
+                    Ignore Case
+                </label>
+                <input type="checkbox" class="field__input" id="IgnoreCase2" name="IgnoreCase2" value="true" />
+            </div>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Object Type</th>
+                    <th>Rule</th>
+                    <th>Applies To</th>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="button button--primary">Remove</button>
+                    </td>
+                    <td>Entities</td>
+                    <td>Exact Match</td>
+                    <td>Account</td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="button button--primary">Remove</button>
+                    </td>
+                    <td>Entities</td>
+                    <td>Regular Expression</td>
+                    <td>Contact*</td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="button button--primary">Remove</button>
+                    </td>
+                    <td>Attributes</td>
+                    <td>Exact Match</td>
+                    <td>description (all entities)</td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="button button--primary">Remove</button>
+                    </td>
+                    <td>OptionSets</td>
+                    <td>Exact Match</td>
+                    <td>addresstype</td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="button button--primary">Remove</button>
+                    </td>
+                    <td>Solutions</td>
+                    <td>Exact Match</td>
+                    <td>My Custom Solution</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="Naming" class="tab__content" hidden>
+    <h3>Naming</h3>
+
+    <h4>Publisher Rules</h4>
+
+    <div class="field">
+        <label class="field__label" for="PublisherPrefix">
+            Remove Publisher Prefix
+        </label>
+        <input type="text" class="field__input" id="PublisherPrefix" name="PublisherPrefix" placeholder="cs_" />
+    </div>
+
+    <h4>Mapping Rules</h4>
+
+    <div class="row">
+        <a href="javascript:;" onclick="changeView(event, 'Entities')">Add Entity</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" onclick="changeView(event, 'Attributes')">Add Attribute</a>
+    </div>
+
+    <div class="field-container" data-form="Attributes" hidden>
+        <div class="field">
+            <select id="EntitySelect3" name="EntitySelect3" class="field__input">
+                <option value="">- Select Entity -</option>
+                <option>Account</option>
+                <option>Contact</option>
+                <option>Lead</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="field">
+        <input type="text" class="field__input field__input--wide" id="SearchList3" name="SearchList3"
+            placeholder="Search" />
+    </div>
+
+    <div class="field-container" data-form="Entities">
+        <div class="field">
+            <select id="EntityList3" name="EntityList3" class="field__input field__input--wide" size="20"
+                multiple="multiple">
+                <option>Account</option>
+                <option>Contact</option>
+                <option>Lead</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="field-container" data-form="Attributes" hidden>
+        <div class="field">
+            <select id="AttributeList3" name="AttributeList3" class="field__input field__input--wide" size="20"
+                multiple="multiple">
+                <option>name</option>
+                <option>description</option>
+                <option>statecode</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="field__label" for="MapsTo">
+            Maps To
+        </label>
+        <input type="text" class="field__input" id="MapsTo" name="MapsTo" />
+    </div>
+</div>
+
+<div id="Code-Generation" class="tab__content" hidden>
+    <h3>Code Generation</h3>
+
+    <h4>General Options</h4>
+
+    <div class="field">
+        <label class="field__label" for="OutputPath">
+            Output Path
+        </label>
+        <input type="text" class="field__input" id="MapsTo" name="OutputPath" placeholder="C:\temp" />
+    </div>
+
+    <div class="field">
+        <label class="field__label" for="OutputLanguage">
+            Language
+        </label>
+        <select id="OutputLanguage" name="OutputLanguage" class="field__input">
+            <option value="CSharp">C#</option>
+            <option value="VisualBasic">Visual Basic</option>
+        </select>
+    </div>
+
+    <h4>Behaviors</h4>
+
+    <div class="field field--checkbox">
+        <label class="field__label" for="TranslateOptionSetsAsEnums">
+            Translate Option Sets As Enums
+        </label>
+        <input type="checkbox" class="field__input" id="TranslateOptionSetsAsEnums" name="TranslateOptionSetsAsEnums"
+            value="true" />
+    </div>
+
+    <div class="field">
+        <label class="field__label" for="Namespaces">
+            Import Namespaces
+        </label>
+        <input type="text" class="field__input" id="Namespaces" name="Namespaces"
+            placeholder="System.Linq,System.ComponentModel" />
+    </div>
+
+    <h4>Files</h4>
+
+    <div class="field">
+        <label class="field__label" for="FileNameFormat">
+            File Name Format
+        </label>
+        <input type="text" class="field__input" id="FileNameFormat" name="FileNameFormat"
+            placeholder="{0}.{1}.{2}.cs" />
+    </div>
+
+    <div class="field">
+        <label class="field__label" for="FileType">
+            Language
+        </label>
+        <select id="FileType" name="FileType" class="field__input">
+            <option>Entities</option>
+            <option>OptionSets</option>
+            <option>Attributes</option>
+            <option>Requests</option>
+            <option>Responses</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label class="field__label" for="GenereationStrategy">
+            Generation Strategy
+        </label>
+        <select id="GenereationStrategy" name="GenereationStrategy" class="field__input">
+            <option>OneFilePerItem</option>
+            <option>OneFilePerType</option>
+            <option>SingleFile</option>
+        </select>
+    </div>
+</div>
+
+<div class="field field--buttons">
+    <button id="submitButton" class="button button--primary">Save Changes</button>
+</div>

@@ -18,6 +18,7 @@ import AddSolutionComponent from './commands/addSolutionComponent';
 import RemoveSolutionComponent from './commands/removeSolutionComponent';
 import PluginStepViewManager from './views/pluginStepView';
 import RegisterPluginAssembly from './commands/registerPluginAssembly';
+import SvcUtilConfigViewManager from './views/svcUtilConfigView';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -40,6 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
 		new DynamicsTreeView(),
 		new ConnectionViewManager(),
 		new JsonInspectorViewManager(),
+		new SvcUtilConfigViewManager(),
 		new DynamicsTerminal(),
 		new PluginStepViewManager(),
 		

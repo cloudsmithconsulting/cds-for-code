@@ -61,6 +61,7 @@ export namespace dynamics
         public static readonly connectionView:string = `${viewContainers._namespace}.connectionView`;
         public static readonly jsonInspectorView:string = `${viewContainers._namespace}.jsonInspectorView`;
         public static readonly pluginStepView:string = `${viewContainers._namespace}.pluginStepView`;
+        public static readonly svcUtilConfigView:string = `${viewContainers._namespace}.svcUtilConfigView`;
     }
 
     export namespace configuration
@@ -110,6 +111,12 @@ export namespace dynamics
     export namespace controls
     {
         // tslint:disable-next-line: class-name
+        export class svcUtilConfig
+        {
+            public static readonly _namespace:string = "cs.dynamics.controls.svcUtilConfig";
+            public static readonly configure:string = `${svcUtilConfig._namespace}.configure`;
+        }
+        
         export class jsonInspector
         {
             public static readonly _namespace:string = "cs.dynamics.controls.jsonInspector";

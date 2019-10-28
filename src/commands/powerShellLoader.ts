@@ -31,6 +31,10 @@ export default class PowerShellLoader implements IWireUpCommands {
 		// Checks to see if folder exist
 		if (!fs.existsSync(folder)) {
 			console.log(`[CloudSmith] Creating folder '${folder}' as it does not exist.`);
+			// first check if ext dir exists
+			if (!fs.existsSync(context.globalStoragePath)) {
+				fs.mkdirSync(context.globalStoragePath);
+			}
 			fs.mkdirSync(folder);
 		}
 
