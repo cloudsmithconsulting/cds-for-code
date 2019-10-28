@@ -21,8 +21,20 @@ export default class AddSolutionComponent implements IWireUpCommands {
 				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a solution", true);
 				if (!solution) { return; }
 
-                if (Utilities.IsNullOrEmpty(componentId)) { return; }
-                if (Utilities.IsNullOrEmpty(componentType)) { return; }
+                componentType = componentType || await QuickPicker.pickDynamicsSolutionComponentType("Choose a component to add", [
+                    DynamicsWebApi.SolutionComponent.Entity,
+                    DynamicsWebApi.SolutionComponent.OptionSet,
+                    DynamicsWebApi.SolutionComponent.PluginAssembly,
+                    DynamicsWebApi.SolutionComponent.WebResource,
+                    DynamicsWebApi.SolutionComponent.Workflow
+                ]);
+                if (!componentType) { return; }
+                
+                if (Utilities.IsNullOrEmpty(componentId)) { 
+                    componentId = await QuickPicker.pickDynamicsSolutionComponent(config, undefined, componentType, "Choose a component to add");
+
+                    if (Utilities.IsNullOrEmpty(componentId)) { return; }
+                }
 
                 addRequiredComponents = addRequiredComponents || await QuickPicker.pickBoolean("Add all dependent components?", "Yes", "No");
                 doNotIncludeSubcomponents = doNotIncludeSubcomponents || !await QuickPicker.pickBoolean("Include subcomponents?", "Yes", "No");
@@ -30,7 +42,8 @@ export default class AddSolutionComponent implements IWireUpCommands {
                 const api = new ApiRepository(config);
 
                 return api.addSolutionComponent(solution, componentId, componentType, addRequiredComponents, doNotIncludeSubcomponents, componentSettings)
-                    .then(() => solution);
+                    .then(() => solution)
+                    .catch(error => vscode.window.showErrorMessage(`Could not add ${componentType.toString()} to solution.  The error returned was: ${error}`));
             })
         );
     }

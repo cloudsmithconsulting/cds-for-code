@@ -20,17 +20,19 @@
 	],
 	"activationEvents": [
 		"onView:cs.dynamics.viewContainers.connections",
-		"onCommand:cs.dynamics.powerShell.unpackSolution",
-		"onCommand:cs.dynamics.powerShell.packSolution",
-		"onCommand:cs.dynamics.powerShell.generateEntities",
+		"onCommand:cs.dynamics.deployment.addSolutionComponent",
+		"onCommand:cs.dynamics.deployment.removeSolutionComponent",
+		"onCommand:cs.dynamics.extension.clearTerminal",
+		"onCommand:cs.dynamics.extension.createProjectFromTemplate",
+		"onCommand:cs.dynamics.extension.createTerminal",
+		"onCommand:cs.dynamics.extension.deleteProjectTemplate",
 		"onCommand:cs.dynamics.extension.downloadRequiredScripts",
 		"onCommand:cs.dynamics.extension.openProjectTemplatesFolder",
 		"onCommand:cs.dynamics.extension.saveProjectAsTemplate",
-		"onCommand:cs.dynamics.extension.deleteProjectTemplate",
-		"onCommand:cs.dynamics.extension.createProjectFromTemplate",
-		"onCommand:cs.dynamics.extension.createTerminal",
-		"onCommand:cs.dynamics.extension.clearTerminal",
+		"onCommand:cs.dynamics.powerShell.generateEntities",
 		"onCommand:cs.dynamics.powerShell.packSolution.explorer",
+		"onCommand:cs.dynamics.powerShell.packSolution",
+		"onCommand:cs.dynamics.powerShell.unpackSolution",
 		"onCommand:cs.dynamics.powerShell.unpackSolution.explorer"
 	],
 	"main": "./out/extension.js",
@@ -149,28 +151,13 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.powerShell.unpackSolution",
-				"title": "Download & unpack solution from a registered Dynamics server",
+				"command": "cs.dynamics.deployment.addSolutionComponent",
+				"title": "Add component to a Dynamics 365 Solution",
 				"category": "Dynamics 365 CE"
 			},
 			{
-				"command": "cs.dynamics.powerShell.unpackSolution.explorer",
-				"title": "Export to workspace",
-				"category": "Dynamics 365 CE"
-			},
-			{
-				"command": "cs.dynamics.powerShell.packSolution",
-				"title": "Pack & deploy solution to a registerd Dynamics server",
-				"category": "Dynamics 365 CE"
-			},
-			{
-				"command": "cs.dynamics.powerShell.packSolution.explorer",
-				"title": "Deploy to Dynamics 365",
-				"category": "Dynamics 365 CE"
-			},
-			{
-				"command": "cs.dynamics.powerShell.generateEntities",
-				"title": "Generate entity code from metadata on a registered Dynamics server",
+				"command": "cs.dynamics.deployment.removeSolutionComponent",
+				"title": "Remove a component from a Dynamics 365 Solution",
 				"category": "Dynamics 365 CE"
 			},
 			{
@@ -196,6 +183,31 @@
 			{
 				"command": "cs.dynamics.extension.createProjectFromTemplate",
 				"title": "Create project from a template",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.powerShell.unpackSolution",
+				"title": "Download & unpack solution from a registered Dynamics server",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.powerShell.unpackSolution.explorer",
+				"title": "Export to workspace",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.powerShell.packSolution",
+				"title": "Pack & deploy solution to a registerd Dynamics server",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.powerShell.packSolution.explorer",
+				"title": "Deploy to Dynamics 365",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.powerShell.generateEntities",
+				"title": "Generate entity code from metadata on a registered Dynamics server",
 				"category": "Dynamics 365 CE"
 			}
 		],

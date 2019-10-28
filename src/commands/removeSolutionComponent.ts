@@ -21,13 +21,29 @@ export default class RemoveSolutionComponent implements IWireUpCommands {
 				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a solution", true);
 				if (!solution) { return; }
 
-                if (Utilities.IsNullOrEmpty(componentId)) { return; }
-                if (Utilities.IsNullOrEmpty(componentType)) { return; }
+                if (Utilities.IsNullOrEmpty(componentType)) {
+                    componentType = await QuickPicker.pickDynamicsSolutionComponentType("Choose a component to remove", [
+                        DynamicsWebApi.SolutionComponent.Entity,
+                        DynamicsWebApi.SolutionComponent.OptionSet,
+                        DynamicsWebApi.SolutionComponent.PluginAssembly,
+                        DynamicsWebApi.SolutionComponent.WebResource,
+                        DynamicsWebApi.SolutionComponent.Workflow
+                    ]);
+
+                    if (Utilities.IsNullOrEmpty(componentType)) { return; }
+                }
+                
+                if (Utilities.IsNullOrEmpty(componentId)) { 
+                    componentId = await QuickPicker.pickDynamicsSolutionComponent(config, solution, componentType, "Choose a component to remove");
+
+                    if (Utilities.IsNullOrEmpty(componentId)) { return; }
+                }
 
                 const api = new ApiRepository(config);
 
                 return api.removeSolutionComponent(solution, componentId, componentType)
-                    .then(() => solution);
+                    .then(() => solution)
+                    .catch(error => vscode.window.showErrorMessage(`Could not remove ${componentType.toString()} from solution.  The error returned was: ${error && error.message ? error.message : error}`));
             })
         );
     }
