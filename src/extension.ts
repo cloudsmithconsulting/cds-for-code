@@ -43,7 +43,6 @@ export function activate(context: vscode.ExtensionContext) {
 		new SvcUtilConfigViewManager(),
 		new DynamicsTerminal(),
 		new PluginStepViewManager(),
-		new SvcUtilConfigViewManager(),
 		
 		// our commands
 		new PowerShellLoader(),
