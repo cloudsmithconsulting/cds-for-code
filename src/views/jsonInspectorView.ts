@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { View, ViewRenderer } from '../view';
 import * as cs from '../cs';
-import { IWireUpCommands } from '../wireUpCommand';
+import IWireUpCommands from '../wireUpCommand';
 
 export default class JsonInspectorViewManager implements IWireUpCommands {
 	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {

@@ -5,6 +5,8 @@ export default class ExtensionConfiguration {
     private static _configurations: { [key: string]: vscode.WorkspaceConfiguration } = {};
     private static _validConfigurations: { [key: string]: boolean } = {};
 
+    static extensionPath:string = "";
+    
     public static updateConfiguration(namespace:string): void
     {
         if (this._configurations && this._configurations[namespace]) {

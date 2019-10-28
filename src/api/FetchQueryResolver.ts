@@ -1,6 +1,6 @@
 import { FetchQuery, FetchQueryCondition, GetRootQuery, Query, QueryResolver } from "./FetchQuery";
 
-export class FetchQueryResolver implements QueryResolver
+export default class FetchQueryResolver implements QueryResolver
 {
     public ResolveQuery(query: Query): string {
         return FetchQueryResolver.ResolveQuery(query);
