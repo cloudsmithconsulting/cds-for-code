@@ -34,7 +34,8 @@
 		"onCommand:cs.dynamics.powerShell.packSolution",
 		"onCommand:cs.dynamics.powerShell.unpackSolution",
 		"onCommand:cs.dynamics.powerShell.unpackSolution.explorer",
-		"onCommand:cs.dynamics.controls.pluginStep.open"
+		"onCommand:cs.dynamics.controls.pluginStep.open",
+		"onCommand:cs.dynamics.controls.svcUtilConfig.configure"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -165,6 +166,11 @@
 				"command": "cs.dynamics.extension.downloadRequiredScripts",
 				"title": "Download required PowerShell scripts for VSCode extension from GitHub",
 				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.controls.svcUtilConfig.configure",
+				"title": "Dynamics 365 CE: Configure entity code generation from the CrmSvcUtil",
+				"category": "Tools"
 			},
 			{
 				"command": "cs.dynamics.extension.openProjectTemplatesFolder",

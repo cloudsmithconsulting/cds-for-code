@@ -2,6 +2,17 @@ body {
     font-size: 1em;
 }
 
+table {
+    margin: 0 auto;
+    width: 95%;
+    border: 1px solid var(--vscode-dropdown-border);
+}
+
+table tr:nth-child(even) {
+    background: var(--vscode-input-background);
+    color: var(--vscode-input-foreground);
+}
+
 .container {
     margin: 1em 1.5em;
     padding: 0;
@@ -33,8 +44,52 @@ body {
     border-bottom-color: var(--vscode-panelTitle-activeForeground);
 }
 
+.tab__content {
+    animation: fadeEffect 1s; /* Fading effect takes 1 second */
+}
+  
+/* Go from zero to full opacity */
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+.grid--left-panel {
+    display: grid;
+    grid-template-columns: 30% auto;
+}
+
+.grid--right-panel {
+    display: grid;
+    grid-template-columns: auto 30%;
+}
+
+.row-column--2 {
+    display: grid;
+    grid-template-columns: 15% auto;
+}
+
+.row-column--3 {
+    display: grid;
+    grid-template-columns: 15% 15% auto;
+}
+
+.row-column--4 {
+    display: grid;
+    grid-template-columns: 15% 15% 15% auto;
+}
+
+.row-column--5 {
+    display: grid;
+    grid-template-columns: 15% 15% 15% 15% auto;
+}
+
 .field {
     padding: 0.5em 0;
+}
+
+.field--buttons {
+    padding: 2em 0 0.5em 0 !important;
 }
 
 .field--checkbox {
@@ -66,6 +121,10 @@ body {
 .field__input:focus {
     border-color: var(--vscode-focusBorder);
     outline: 0;
+}
+
+.field__input--wide {
+    width: 300px;
 }
 
 .button {
