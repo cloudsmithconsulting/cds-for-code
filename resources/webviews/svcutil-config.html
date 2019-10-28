@@ -72,7 +72,7 @@
 
             <div class="field-container" data-form="Entities">
                 <div class="field">
-                    <select id="EntityList" name="EntityList" class="field__input field__input--wide" size="20"
+                    <select id="EntityList" name="EntityList" class="field__input field__input--wide" size="10"
                         multiple="multiple">
                         <option>Account</option>
                         <option>Contact</option>
@@ -83,7 +83,7 @@
 
             <div class="field-container" data-form="Attributes" hidden>
                 <div class="field">
-                    <select id="AttributeList" name="AttributeList" class="field__input field__input--wide" size="20"
+                    <select id="AttributeList" name="AttributeList" class="field__input field__input--wide" size="10"
                         multiple="multiple">
                         <option>name</option>
                         <option>description</option>
@@ -94,7 +94,7 @@
 
             <div class="field-container" data-form="OptionSets" hidden>
                 <div class="field">
-                    <select id="OptionSetList" name="OptionSetList" class="field__input field__input--wide" size="20"
+                    <select id="OptionSetList" name="OptionSetList" class="field__input field__input--wide" size="10"
                         multiple="multiple">
                         <option>addresstype</option>
                     </select>
@@ -103,7 +103,7 @@
 
             <div class="field-container" data-form="Solutions" hidden>
                 <div class="field">
-                    <select id="SolutionList" name="SolutionList" class="field__input field__input--wide" size="20"
+                    <select id="SolutionList" name="SolutionList" class="field__input field__input--wide" size="10"
                         multiple="multiple">
                         <option>Default Solution</option>
                         <option>My Custom Solution</option>
@@ -141,7 +141,10 @@
         </div>
         <div>
             <div class="button--panel">
-                <button id="AddRule" class="button button--primary">Add Rule &raquo;</button>
+                <button id="AddRule" class="button button--primary">
+                    <span class="iconify" data-icon="fa:plus"></span>
+                    Add Rule &raquo;
+                </button>
             </div>
         </div>
         <div>
@@ -154,7 +157,9 @@
                 </tr>
                 <tr>
                     <td>
-                        <button class="button button--primary">Remove</button>
+                        <button class="button button--danger">
+                            <span class="iconify" data-icon="fa:trash"></span>
+                        </button>
                     </td>
                     <td>Entities</td>
                     <td>Exact Match</td>
@@ -162,7 +167,9 @@
                 </tr>
                 <tr>
                     <td>
-                        <button class="button button--primary">Remove</button>
+                        <button class="button button--danger">
+                            <span class="iconify" data-icon="fa:trash"></span>
+                        </button>
                     </td>
                     <td>Entities</td>
                     <td>Regular Expression</td>
@@ -170,7 +177,9 @@
                 </tr>
                 <tr>
                     <td>
-                        <button class="button button--primary">Remove</button>
+                        <button class="button button--danger">
+                            <span class="iconify" data-icon="fa:trash"></span>
+                        </button>
                     </td>
                     <td>Attributes</td>
                     <td>Exact Match</td>
@@ -178,7 +187,9 @@
                 </tr>
                 <tr>
                     <td>
-                        <button class="button button--primary">Remove</button>
+                        <button class="button button--danger">
+                            <span class="iconify" data-icon="fa:trash"></span>
+                        </button>
                     </td>
                     <td>OptionSets</td>
                     <td>Exact Match</td>
@@ -186,7 +197,9 @@
                 </tr>
                 <tr>
                     <td>
-                        <button class="button button--primary">Remove</button>
+                        <button class="button button--danger">
+                            <span class="iconify" data-icon="fa:trash"></span>
+                        </button>
                     </td>
                     <td>Solutions</td>
                     <td>Exact Match</td>
@@ -239,7 +252,7 @@
 
             <div class="field-container" data-form="Entities">
                 <div class="field">
-                    <select id="EntityList2" name="EntityList2" class="field__input field__input--wide" size="20"
+                    <select id="EntityList2" name="EntityList2" class="field__input field__input--wide" size="10"
                         multiple="multiple">
                         <option>Account</option>
                         <option>Contact</option>
@@ -250,7 +263,7 @@
 
             <div class="field-container" data-form="Attributes" hidden>
                 <div class="field">
-                    <select id="AttributeList2" name="AttributeList2" class="field__input field__input--wide" size="20"
+                    <select id="AttributeList2" name="AttributeList2" class="field__input field__input--wide" size="10"
                         multiple="multiple">
                         <option>name</option>
                         <option>description</option>
@@ -261,7 +274,7 @@
 
             <div class="field-container" data-form="OptionSets" hidden>
                 <div class="field">
-                    <select id="OptionSetList2" name="OptionSetList2" class="field__input field__input--wide" size="20"
+                    <select id="OptionSetList2" name="OptionSetList2" class="field__input field__input--wide" size="10"
                         multiple="multiple">
                         <option>addresstype</option>
                     </select>
@@ -270,7 +283,7 @@
 
             <div class="field-container" data-form="Solutions" hidden>
                 <div class="field">
-                    <select id="SolutionList2" name="SolutionList2" class="field__input field__input--wide" size="20"
+                    <select id="SolutionList2" name="SolutionList2" class="field__input field__input--wide" size="10"
                         multiple="multiple">
                         <option>Default Solution</option>
                         <option>My Custom Solution</option>
@@ -308,7 +321,10 @@
         </div>
         <div>
             <div class="button--panel">
-                <button id="AddRule2" class="button button--primary">Add Rule &raquo;</button>
+                <button id="AddRule2" class="button button--primary">
+                    <span class="iconify" data-icon="fa:plus"></span>
+                    Add Rule &raquo;
+                </button>
             </div>
         </div>
         <div>
@@ -321,7 +337,9 @@
                 </tr>
                 <tr>
                     <td>
-                        <button class="button button--primary">Remove</button>
+                        <button class="button button--danger">
+                            <span class="iconify" data-icon="fa:trash"></span>
+                        </button>
                     </td>
                     <td>Entities</td>
                     <td>Regular Expression</td>
@@ -369,7 +387,7 @@
 
     <div class="field-container" data-form="Entities">
         <div class="field">
-            <select id="EntityList3" name="EntityList3" class="field__input field__input--wide" size="20"
+            <select id="EntityList3" name="EntityList3" class="field__input field__input--wide" size="10"
                 multiple="multiple">
                 <option>Account</option>
                 <option>Contact</option>
@@ -380,7 +398,7 @@
 
     <div class="field-container" data-form="Attributes" hidden>
         <div class="field">
-            <select id="AttributeList3" name="AttributeList3" class="field__input field__input--wide" size="20"
+            <select id="AttributeList3" name="AttributeList3" class="field__input field__input--wide" size="10"
                 multiple="multiple">
                 <option>name</option>
                 <option>description</option>
@@ -473,5 +491,12 @@
 </div>
 
 <div class="field field--buttons">
-    <button id="submitButton" class="button button--primary">Save Changes</button>
+    <button id="submitButton" class="button button--primary">
+        <span class="iconify" data-icon="fa:save"></span>
+        Save Changes
+    </button>
+    <button id="cancelButton" class="button">
+        <span class="iconify" data-icon="fa:ban"></span>
+        Cancel
+    </button>
 </div>
