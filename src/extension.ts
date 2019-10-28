@@ -16,6 +16,7 @@ import DynamicsTerminal from './views/DynamicsTerminal';
 import IconLoader from './commands/iconLoader';
 import AddSolutionComponent from './commands/addSolutionComponent';
 import RemoveSolutionComponent from './commands/removeSolutionComponent';
+import PluginStepViewManager from './views/pluginStepView';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -39,6 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
 		new ConnectionViewManager(),
 		new JsonInspectorViewManager(),
 		new DynamicsTerminal(),
+		new PluginStepViewManager(),
 		
 		// our commands
 		new PowerShellLoader(),
