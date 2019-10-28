@@ -4,14 +4,18 @@ import * as vscode from 'vscode';
 import * as cs from './cs';
 // config
 import ExtensionConfiguration from './config/ExtensionConfiguration';
-import ConnectionViewManager from './views/connectionView';
-import GenerateEntitiesCommand from './commands/generateEntitiesCommand';
+import ConnectionViewManager from './views/ConnectionView';
+import GenerateEntities from './commands/generateEntities';
 import PowerShellLoader from './commands/powerShellLoader';
-import DynamicsTreeView from './views/dynamicsTreeView';
-import { PackDynamicsSolutionCommand } from './commands/packDynamicsSolutionCommand';
-import { UnpackDynamicsSolutionCommand } from './commands/unpackDynamicsSolutionCommand';
-import JsonInspectorViewManager from './views/jsonInspectorView';
+import DynamicsTreeView from './views/DynamicsTreeView';
+import PackDynamicsSolution from './commands/packDynamicsSolution';
+import UnpackDynamicsSolution from './commands/unpackDynamicsSolution';
+import JsonInspectorViewManager from './views/JsonInspectorView';
 import ProjectTemplatesPlugin from './ProjectTemplatesPlugin';
+import DynamicsTerminal from './views/DynamicsTerminal';
+import IconLoader from './commands/iconLoader';
+import AddSolutionComponent from './commands/addSolutionComponent';
+import RemoveSolutionComponent from './commands/removeSolutionComponent';
 import SvcUtilConfigViewManager from './views/svcUtilConfigView';
 
 // this method is called when your extension is activated
@@ -24,6 +28,8 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('[CloudSmith]: extension:activate');
 	
+	ExtensionConfiguration.extensionPath = context.extensionPath;
+	
 	// load and check extension configuration
 	const toolsConfig = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration.tools._namespace);
 	const templatesConfig = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration.templates._namespace);
@@ -34,12 +40,16 @@ export function activate(context: vscode.ExtensionContext) {
 		new ConnectionViewManager(),
 		new JsonInspectorViewManager(),
 		new SvcUtilConfigViewManager(),
+		new DynamicsTerminal(),
 		
 		// our commands
 		new PowerShellLoader(),
-		new GenerateEntitiesCommand(),
-		new PackDynamicsSolutionCommand(),
-		new UnpackDynamicsSolutionCommand()
+		new IconLoader(),
+		new GenerateEntities(),
+		new PackDynamicsSolution(),
+		new UnpackDynamicsSolution(),
+		new AddSolutionComponent(),
+		new RemoveSolutionComponent()
 	].forEach(c => c.wireUpCommands(context, toolsConfig));
 
 	[   // templating engine.

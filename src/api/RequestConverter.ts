@@ -1,7 +1,8 @@
-import { Utilities } from "../helpers/Utilities";
-import { RequestUtilities } from "./RequestUtilities";
+import Utilities from "../helpers/Utilities";
+import RequestUtilities from "./RequestUtilities";
+import { DynamicsWebApi } from "./Types";
 
-export class RequestConverter {
+export default class RequestConverter {
     /**
      * Converts optional parameters of the request to URL. If expand parameter exists this function is called recursively.
      *

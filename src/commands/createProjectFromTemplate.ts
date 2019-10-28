@@ -2,7 +2,7 @@ import vscode = require("vscode");
 import ProjectTemplatesPlugin from "../projectTemplatesPlugin";
 import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
-import { QuickPicker } from "../helpers/QuickPicker";
+import QuickPicker from "../helpers/QuickPicker";
 
 /**
  * Main command to create a new project from a template.
@@ -11,7 +11,7 @@ import { QuickPicker } from "../helpers/QuickPicker";
  * @param {ProjectTemplatesPlugin} templateManager
  * @param {*} args
  */
-export async function run(templateManager: ProjectTemplatesPlugin, args: any) {
+export default async function run(templateManager: ProjectTemplatesPlugin, args: any) {
 
     // get workspace folder
     let workspace = await QuickPicker.pickWorkspacePath(args);

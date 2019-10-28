@@ -3,15 +3,16 @@ import * as cs from '../cs';
 import * as fs from 'fs';
 import * as path from 'path';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import QuickPickOption, { QuickPicker } from '../helpers/QuickPicker';
-import { Terminal } from '../helpers/Terminal';
-import { Utilities } from '../helpers/Utilities';
-import { IWireUpCommands } from '../wireUpCommand';
+import QuickPicker, { QuickPickOption } from '../helpers/QuickPicker';
+import DynamicsTerminal from '../views/DynamicsTerminal';
+import Utilities from '../helpers/Utilities';
+import IWireUpCommands from '../wireUpCommand';
 import SolutionMap from '../config/SolutionMap';
 import XmlParser from '../helpers/XmlParser';
 import { TS } from 'typescript-linq/TS';
+import { DynamicsWebApi } from '../api/Types';
 
-export class PackDynamicsSolutionCommand implements IWireUpCommands {
+export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
 	public wireUpCommands (context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
@@ -19,6 +20,10 @@ export class PackDynamicsSolutionCommand implements IWireUpCommands {
 
 		// now wire a command into the context
 		context.subscriptions.push(
+			vscode.commands.registerCommand(cs.dynamics.powerShell.packSolutionFromExplorer, async (folder?:vscode.Uri, arg2?:any) => {
+				vscode.commands.executeCommand(cs.dynamics.powerShell.packSolution, undefined, folder.fsPath);
+			}),
+
 			vscode.commands.registerCommand(cs.dynamics.powerShell.packSolution, async (config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string, managed?:boolean) => { // Match name of command to package.json command
                 // setup configurations
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
@@ -102,7 +107,7 @@ export class PackDynamicsSolutionCommand implements IWireUpCommands {
 					+ (managed ? `-Managed ` : '');
 
 				// build a powershell terminal
-				const terminal = Terminal.showTerminal(context.globalStoragePath);
+				const terminal = DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"));
 
 				// execute the command
 				terminal.sendText(commandToExecute);

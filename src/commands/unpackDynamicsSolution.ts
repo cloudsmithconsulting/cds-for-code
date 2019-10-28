@@ -2,20 +2,25 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import * as cs from '../cs';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import { QuickPicker } from '../helpers/QuickPicker';
-import { Terminal } from '../helpers/Terminal';
-import { Utilities } from '../helpers/Utilities';
-import { IWireUpCommands } from '../wireUpCommand';
+import QuickPicker from '../helpers/QuickPicker';
+import DynamicsTerminal from '../views/DynamicsTerminal';
+import Utilities from '../helpers/Utilities';
+import IWireUpCommands from '../wireUpCommand';
 import SolutionMap from '../config/SolutionMap';
 import { TS } from 'typescript-linq';
+import { DynamicsWebApi } from '../api/Types';
 
-export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
+export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
     public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration){
 		this.workspaceConfiguration = config;
 		
 		context.subscriptions.push(
+			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolutionFromExplorer, async (item:any) => {
+				vscode.commands.executeCommand(cs.dynamics.powerShell.unpackSolution, item.config, undefined, item.context);
+			}),
+
 			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolution, async (config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string) => { // Match name of command to package.json command
                 // setup configurations
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
@@ -64,7 +69,7 @@ export class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 					+ `-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “${Utilities.PowerShellSafeString(config.password)}” -AsPlainText -Force))) `;
 
 				// build a powershell terminal
-				const terminal = Terminal.showTerminal(context.globalStoragePath);
+				const terminal = DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"));
 				
 				// execute the command
 				terminal.sendText(commandToExecute);
