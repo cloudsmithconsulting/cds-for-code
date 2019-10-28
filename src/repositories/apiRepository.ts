@@ -26,7 +26,7 @@ export default class ApiRepository
     }
 
     public retrieveSolutions() : Promise<any[]> {
-        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+        const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "solutions",
             filter: "isvisible eq true",
             orderBy: ["uniquename"]
@@ -37,7 +37,7 @@ export default class ApiRepository
     }
 
     public retrieveProcesses(solutionId?:string) : Promise<any[]> {
-        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+        const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "workflows",
             filter: "componentstate ne 2 and componentstate ne 3 and type eq 1",
             orderBy: ["name"]
@@ -53,7 +53,7 @@ export default class ApiRepository
     }
 
     public retrieveWebResourceFolders(solutionId?:string, folder?:string) : Promise<string[]> {
-        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+        const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "webresourceset",
             filter: "contains(name, '/')",
             select: ['webresourceid', "name"],
@@ -78,7 +78,7 @@ export default class ApiRepository
         }
 
     public retrieveWebResources(solutionId?:string, folder?:string) : Promise<any[]> {
-        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+        const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "webresourceset",
             filter: "not contains(name, '/')",
             orderBy: ["displayname"]
@@ -102,7 +102,7 @@ export default class ApiRepository
     }
 
     public retrievePluginAssemblies(solutionId?:string) : Promise<any[]> {
-        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+        const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "pluginassemblies",
             orderBy: ["name"]
         };
@@ -114,9 +114,8 @@ export default class ApiRepository
                 .toArray());
     }
 
-    public addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any>
-    {
-        var actionParams = { 
+    public addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
+        const actionParams = { 
             ComponentId: componentId,
             ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
             SolutionUniqueName: solution.uniquename,  
@@ -126,6 +125,37 @@ export default class ApiRepository
         };
 
         return this.webapi.executeUnboundAction("AddSolutionComponent", actionParams)
+            .then(response => response.value || null);
+    }
+
+    public getSolutionComponent(componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
+        const solutionQuery:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "solutioncomponents",
+            filter: `componenttype eq ${DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType)} and objectid eq ${componentId}`
+        };    
+
+        return this.webapi.retrieveMultipleRequest(solutionQuery)
+            .then(response => response.value && response.value.length > 0 ? response.value[0] : null);
+    }
+
+    public removeSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
+        return this.getSolutionComponent(componentId, componentType)
+            .then(solutionComponent => {
+                if (!solutionComponent) { return; }
+
+                //TODO: write microsoft about this very messed up API scheme... pass in a "solutioncomponent" object with an id of the child object, not the record???
+                const returnObject = { 
+                    SolutionComponent: {
+                        "solutioncomponentid": solutionComponent.objectid,
+                        "@odata.type":"Microsoft.Dynamics.CRM.solutioncomponent"},
+                    ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
+                    SolutionUniqueName: solution.uniquename
+                };
+
+                return returnObject;
+            })
+            .then(params => this.webapi.executeUnboundAction("RemoveSolutionComponent", params))
+            .catch(error => console.error(error))
             .then(response => response.value || null);
     }
 }

@@ -11,7 +11,6 @@ import DynamicsUrlResolver from '../api/DynamicsUrlResolver';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import Dictionary from '../helpers/Dictionary';
 import { DynamicsWebApi } from '../api/Types';
-import SolutionMap from '../../out/config/SolutionMap';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
@@ -85,15 +84,55 @@ export default class DynamicsTreeView implements IWireUpCommands {
 
                     if (componentId && componentType) {
                         return vscode.commands.executeCommand(cs.dynamics.deployment.addSolutionComponent, item.config, undefined, componentId, componentType)
-                            .then(item => treeProvider.refreshSolution(item));
+                            .then(response => treeProvider.refreshSolution(item.solutionPath));
                     }
 
             }) // <-- no semi-colon, comma starts next command registration
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.deleteEntryFromSolution, (item: TreeEntry) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.removeEntryFromSolution, (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item.solutionId) {
                     vscode.window.showInformationMessage(`The component ${item.label} is not part of a solution.`);
 
                     return;
+                }
+
+                let componentId:string;
+                let componentType:DynamicsWebApi.SolutionComponent;
+
+                switch (item.itemType) {
+                    case EntryType.Plugin:
+                        componentType = DynamicsWebApi.SolutionComponent.PluginAssembly;
+                        componentId = item.context.pluginassemblyid;
+
+                        break;
+                    case EntryType.WebResource:
+                        componentType = DynamicsWebApi.SolutionComponent.WebResource;
+                        componentId = item.context.webresourceid;
+
+                        break;
+                    case EntryType.Process:
+                        componentType = DynamicsWebApi.SolutionComponent.Workflow;
+                        componentId = item.context.workflowid;
+
+                        break;
+                    case EntryType.Entity:
+                        componentType = DynamicsWebApi.SolutionComponent.Entity;
+                        componentId = item.context.MetadataId;
+
+                        break;
+                    case EntryType.OptionSet:
+                        componentType = DynamicsWebApi.SolutionComponent.OptionSet;
+                        componentId = item.context.MetadataId;
+
+                        break;
+                }
+
+                if (!Utilities.IsNullOrEmpty(item.solutionPath)) {
+                    const solutions = TreeEntryCache.Instance.Items.where(i => i.id === item.solutionPath).toArray();
+                    
+                    if (solutions && solutions.length > 0 && componentId && componentType) {
+                        return vscode.commands.executeCommand(cs.dynamics.deployment.removeSolutionComponent, item.config, solutions[0].context, componentId, componentType)
+                            .then(response => treeProvider.refreshSolution(item.solutionPath));
+                    }
                 }
             }) // <-- no semi-colon, comma starts next command registration
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, (item: TreeEntry) => { // Match name of command to package.json command
@@ -260,10 +299,10 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         this._onDidChangeTreeData.fire(item);
     }
 
-    public refreshSolution(solution?:any): void {
-        if (solution && solution.solutionId) {
+    public refreshSolution(solutionPath?:string): void {
+        if (solutionPath) {
             TreeEntryCache.Instance.Items
-                .where(i => i.solutionId === solution.solutionId)
+                .where(i => i.id === solutionPath)
                 .forEach(i => this._onDidChangeTreeData.fire(i));
         }
     }
@@ -880,6 +919,20 @@ class TreeEntry extends vscode.TreeItem {
         }
        
         return undefined;
+    }
+
+    get solutionPath(): string { 
+        if (this.id)
+        {
+            const split = this.id.split("/");
+            const index = split.indexOf("Solutions");
+            
+            if (index >= 0) {
+                return split.slice(0, index + 2).join("/");
+            }        
+        }
+       
+        return undefined;        
     }
 }
 

@@ -144,7 +144,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.deleteEntryFromSolution",
+				"command": "cs.dynamics.controls.treeView.removeEntryFromSolution",
 				"title": "Remove from Solution",
 				"category": "UserInterface"
 			},
@@ -278,7 +278,7 @@
 					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Plugin|Entity|OptionSet|WebResource|Process)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.deleteEntryFromSolution",
+					"command": "cs.dynamics.controls.treeView.removeEntryFromSolution",
 					"group": "deployment@2",
 					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Plugin|Entity|OptionSet|WebResource|Process)$/"
 				},

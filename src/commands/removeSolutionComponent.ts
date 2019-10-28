@@ -6,7 +6,7 @@ import ApiRepository from '../repositories/apiRepository';
 import QuickPicker from '../helpers/QuickPicker';
 import Utilities from '../helpers/Utilities';
 
-export default class AddSolutionComponent implements IWireUpCommands {
+export default class RemoveSolutionComponent implements IWireUpCommands {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
     public wireUpCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
@@ -14,7 +14,7 @@ export default class AddSolutionComponent implements IWireUpCommands {
 
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.deployment.addSolutionComponent, async (config?:DynamicsWebApi.Config, solution?:any, componentId?:string, componentType?:DynamicsWebApi.SolutionComponent, addRequiredComponents?:boolean, doNotIncludeSubcomponents?:boolean, componentSettings?:string):Promise<any> => { 
+            vscode.commands.registerCommand(cs.dynamics.deployment.removeSolutionComponent, async (config?:DynamicsWebApi.Config, solution?:any, componentId?:string, componentType?:DynamicsWebApi.SolutionComponent):Promise<any> => { 
 				config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
@@ -24,12 +24,9 @@ export default class AddSolutionComponent implements IWireUpCommands {
                 if (Utilities.IsNullOrEmpty(componentId)) { return; }
                 if (Utilities.IsNullOrEmpty(componentType)) { return; }
 
-                addRequiredComponents = addRequiredComponents || await QuickPicker.pickBoolean("Add all dependent components?", "Yes", "No");
-                doNotIncludeSubcomponents = doNotIncludeSubcomponents || !await QuickPicker.pickBoolean("Include subcomponents?", "Yes", "No");
-
                 const api = new ApiRepository(config);
 
-                return api.addSolutionComponent(solution, componentId, componentType, addRequiredComponents, doNotIncludeSubcomponents, componentSettings)
+                return api.removeSolutionComponent(solution, componentId, componentType)
                     .then(() => solution);
             })
         );

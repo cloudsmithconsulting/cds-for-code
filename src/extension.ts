@@ -15,6 +15,7 @@ import ProjectTemplatesPlugin from './ProjectTemplatesPlugin';
 import DynamicsTerminal from './views/DynamicsTerminal';
 import IconLoader from './commands/iconLoader';
 import AddSolutionComponent from './commands/addSolutionComponent';
+import RemoveSolutionComponent from './commands/removeSolutionComponent';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -46,6 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
 		new PackDynamicsSolution(),
 		new UnpackDynamicsSolution(),
 		new AddSolutionComponent(),
+		new RemoveSolutionComponent()
 	].forEach(c => c.wireUpCommands(context, toolsConfig));
 
 	[   // templating engine.
