@@ -34,6 +34,7 @@
 		"onCommand:cs.dynamics.powerShell.packSolution",
 		"onCommand:cs.dynamics.powerShell.unpackSolution",
 		"onCommand:cs.dynamics.powerShell.unpackSolution.explorer",
+		"onCommand:cs.dynamics.controls.pluginStep.open",
 		"onCommand:cs.dynamics.controls.svcUtilConfig.configure"
 	],
 	"main": "./out/extension.js",
@@ -215,6 +216,11 @@
 				"command": "cs.dynamics.powerShell.generateEntities",
 				"title": "Generate entity code from metadata on a registered Dynamics server",
 				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.controls.pluginStep.open",
+				"title": "Dynamics 365 CE: Open plugin step",
+				"category": "Tools"
 			}
 		],
 		"viewsContainers": {

@@ -58,6 +58,7 @@ export namespace dynamics
         public static readonly _namespace:string = "cs.dynamics.views";
         public static readonly connectionView:string = `${viewContainers._namespace}.connectionView`;
         public static readonly jsonInspectorView:string = `${viewContainers._namespace}.jsonInspectorView`;
+        public static readonly pluginStepView:string = `${viewContainers._namespace}.pluginStepView`;
         public static readonly svcUtilConfigView:string = `${viewContainers._namespace}.svcUtilConfigView`;
     }
 
@@ -118,6 +119,12 @@ export namespace dynamics
         {
             public static readonly _namespace:string = "cs.dynamics.controls.jsonInspector";
             public static readonly inspect:string = `${jsonInspector._namespace}.inspect`;
+        }
+
+        export class pluginStep
+        {
+            public static readonly _namespace:string = "cs.dynamics.controls.pluginStep";
+            public static readonly open:string = `${pluginStep._namespace}.open`;
         }
 
         // tslint:disable-next-line: class-name

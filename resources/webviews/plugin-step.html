@@ -1,4 +1,8 @@
-<h1>Update Existing Step</h1>
+<img class="branding" src="#{images['cloudsmith-logo-only-50px.png']}" alt="CloudSmith Conulting" />
+
+<h1 id="title">
+    #{viewTitle}
+</h1>
 
 <p>General Configuration</p>
 
@@ -12,53 +16,129 @@
 <input type="hidden" id="Id" name="Id" value="" />
 
 <div class="field">
-    <label class="field__label" for="AuthType1">
+    <label class="field__label" for="Message">
         Message
     </label>
-    <input type="text" class="field__input" id="AuthType1" name="Message" />
+    <input type="text" class="field__input" id="Message" name="Message"/>
 </div>
 <div class="field">
-    <label class="field__label" for="AuthType2">
+    <label class="field__label" for="PrimaryEntity">
         Primary Entity
     </label>
-    <input type="text" class ="field_input" id="AuthType2" name="PrimaryEntity">
+    <input type="text" class ="field_input" id="PrimaryEntity" name="PrimaryEntity">
 </div>
 <div class="field">
-    <label class="field__label" for="AuthType3">
+    <label class="field__label" for="SecondEntity">
         Second Entity
     </label>
-    <input type="text" class="field__input" id="AuthType3" name="SecondEntity" />
+    <input type="text" class="field__input" id="SecondEntity" name="SecondEntity" />
 </div>
 <div class="field">
-    <label class="field__label" for="AuthType4">
+    <label class="field__label" for="FilteringAttributes">
         Filtering Attributes
     </label>
-    <input type="text" class="field__input" id="AuthType4" name="FilteringAttributes" />
+    <input type="text" class="field__input" id="FilteringAttributes" name="FilteringAttributes" />
 </div>
 <div class="field">
-    <label class="field__label" for="AuthType5">
+    <label class="field__label" for="EventHandler">
         Event Handler
     </label>
-    <input type="text" class="field__input" id="AuthType5" name="EventHandler" />
+    <input type="text" class="field__input" id="EventHandler" name="EventHandler" />
 </div>
 <div class="field">
-    <label class="field__label" for="AuthType6">
+    <label class="field__label" for="StepName">
         Step Name
     </label>
-    <input type="text" class="field__input" id="AuthType6" name="StepName" />
+    <input type="text" class="field__input" id="StepName" name="StepName" />
 </div>
 <div class="field">
-    <label class="field__label" for="AuthType7">
+    <label class="field__label" for="UserContext">
         Run in User's Context
     </label>
-    <input type="text" class="field__input" id="AuthType7" name="UserContext" />
+    <input type="text" class="field__input" id="UserContext" name="UserContext" />
 </div>
 <div class="field">
-    <label class="field__label" for="AuthType8">
+    <label class="field__label" for="ExecutionOrder">
         Execution Order
     </label>
-    <input type="password" class="field__input" id="AuthType8" name="Execution Order" />
+    <input type="password" class="field__input" id="ExecutionOrder" name="ExecutionOrder" />
 </div>
+
+<p>Event Pipeline Stage of Execution</p>
+
+<div class="field field--checkbox">
+    <input type="radio" class="field__input" id="PreValidation" name="ExecutionPipeline" value="PreValidation"/>
+    <label class="field__label" for="PreValidation">
+        Pre-validation
+    </label>
+</div>
+
+<div class="field field--checkbox">
+    <input type="radio" class="field__input" id="PreOperation" name="ExecutionPipeline" value="PreOperation"/>
+    <label class="field__label" for="PreOperation">
+        Pre-operation
+    </label>
+</div>
+
+<div class="field field--checkbox">
+        <input type="radio" class="field__input" id="PostOperation" name="ExecutionPipeline" value="PostOperation" checked="checked"/>
+        <label class="field__label" for="PostOperation">
+            Post-operation
+        </label>
+</div>
+
+<div class="field field--checkbox">
+        <input type="checkbox" class="field__input" id="StatusCode" name="StatusCode" value="true"/>
+        <label class="field__label" for="StatusCode">
+            Delete AsyncOperation if StatusCode = Successful
+        </label>
+</div>
+
+<p>Execution Mode</p>
+
+<div class="field field--checkbox">
+    <label class="field__label" for="Asynchronous">
+            Asynchronous
+    </label>
+    <input type="radio" class="field__input" id="Asynchronous" name="ExecutionMode" value="Asynchronous"/>
+    <label class="field__label" for="Synchronous">
+            Synchronous
+    </label>
+    <input type="radio" class="field__input" id="Synchronous" name="ExecutionMode" value="Synchronous" checked="checked"/>
+</div>
+
+<p>Deployment</p>
+
+<div class="field field--checkbox">
+        <input type="checkbox" class="field__input" id="Server" name="Server" value="true"/>
+        <label class="field__label" for="Server">
+            Server
+        </label>
+</div>
+
+<div class="field field--checkbox">
+        <input type="checkbox" class="field__input" id="Offline" name="Offline" value="true" />
+        <label class="field__label" for="Offline">
+            Offline
+        </label>
+</div>
+
+<br></br>
+
+<p>Unsecure Configuration</p>
+
+<textarea rows="4" cols="50" name="comment" form="usrform">
+        Enter text here...</textarea>
+
+<br></br>
+
+<p>Secure Configuration</p>
+
+<textarea rows="4" cols="50" name="comment" form="usrform">
+        Enter text here...</textarea>
+
+<br></br>
 <div class="field">
-    <button id="submitButton" class="button button--primary">Add Connection</button>
+    <button id="submitButton" class="button button--primary">Update Step</button>
+    <button id="cancelButton" class="button button--primary">Cancel</button>
 </div>
