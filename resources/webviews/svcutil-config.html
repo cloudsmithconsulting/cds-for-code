@@ -16,8 +16,11 @@
 <!-- changeTab() function comes from tabs.js -->
 <!-- viewRenderer.addScript('tabs.js') -->
 <ul class="tab" id="tabs">
-    <li class="tab__item tab__item--active" onclick="changeTab(event, 'Filtering')">
-        Filtering
+    <li class="tab__item tab__item--active" onclick="changeTab(event, 'WhiteList')">
+        White List
+    </li>
+    <li class="tab__item" onclick="changeTab(event, 'BlackList')">
+        Black List
     </li>
     <li class="tab__item" onclick="changeTab(event, 'Naming')">
         Naming
@@ -27,8 +30,114 @@
     </li>
 </ul>
 
-<div id="Filtering" class="tab__content">
-    <h3>Filtering</h3>
+<div id="WhiteList" class="tab__content">
+    <h2>White List</h2>
+
+    <h3>Add New</h3>
+
+    <div class="row row-column--4">
+        <div class="field">
+            <label class="field__label" for="RuleType">
+                Which rule type?
+            </label>
+            <select id="RuleType" name="RuleType" class="field__input">
+                <option>Entity</option>
+                <option>Attribute</option>
+                <option>OptionSet</option>
+                <option>Solution</option>
+                <option>Customization</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label class="field__label" for="Entity">
+                Which entity?
+            </label>
+            <select id="Entity" name="Entity" class="field__input">
+                <option value="*">All</option>
+                <option>Account</option>
+                <option>Contact</option>
+                <option>Lead</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label class="field__label" for="Attribute">
+                Which attribute?
+            </label>
+            <select id="Attribute" name="Attribute" class="field__input">
+                <option>name</option>
+                <option>description</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label class="field__label" for="OptionSet">
+                Which option set?
+            </label>
+            <select id="OptionSet" name="OptionSet" class="field__input">
+                <option>addresstype</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label class="field__label" for="FilterType">
+                Filter Type?
+            </label>
+            <select id="FilterType" name="FilterType" class="field__input">
+                <option>Entity</option>
+                <option>Atribute</option>
+                <option>OptionSet</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label class="field__label" for="Expression">
+                Regular Expression
+            </label>
+            <input type="text" class="field__input" id="Expression" name="Expression" value=".*" />
+        </div>
+
+        <div class="field field--checkbox">
+            <label class="field__label" for="IgnoreCase">
+                Ignore Case
+            </label>
+            <input type="checkbox" class="field__input" id="IgnoreCase" name="IgnoreCase" value="true" />
+        </div>
+
+        <div class="field">
+            <label class="field__label" for="CustomizationStrategy">
+                Customization Strategy?
+            </label>
+            <select id="CustomizationStrategy" name="CustomizationStrategy" class="field__input">
+                <option>Default</option>
+                <option>CustomOnly</option>
+                <option>UncustomizedOnly</option>
+            </select>
+        </div>
+
+        <div class="field field--buttons">
+            <button id="submitButton" class="button button--primary">Add Rule</button>
+        </div>
+    </div>
+
+    <hr/>
+
+    <h3>Existing</h3>
+
+    <h3>Entities</h3>
+
+    <h3>Attributes</h3>
+
+    <h3>OptionSets</h3>
+
+    <h3>Filters</h3>
+
+    <h3>Customization</h3>
+</div>
+
+<div id="BlackList" class="tab__content" hidden>
+    <h2>Black List</h2>
 </div>
 
 <div id="Naming" class="tab__content" hidden>

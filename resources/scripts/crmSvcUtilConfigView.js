@@ -3,10 +3,6 @@
 (function () {
     const vscode = acquireVsCodeApi();
 
-    // changeTab() comes from tabs.js
-    // viewRenderer.addScript('tabs.js');
-    changeTab(null, 'Filtering');
-
     // Handle messages sent from the extension to the webview
     window.addEventListener("message", event => {
         const message = event.data;
