@@ -35,7 +35,17 @@
         };
 
         if (!validateForm(config)) return;
+
+        vscode.postMessage({
+            command: 'saveSdkMessageProcessingStep',
+            settings
+        });
     });
+
+    function setInitialState(step) {
+        document.getElementById("Message").value = step.sdkmessageid.name;
+        document.getElementById("PrimaryEntity").value = step.sdkmessageid.filters[0].primaryEntity;
+    }
 
     function validateForm(config) {
         const messages = [];
@@ -68,8 +78,8 @@
         const message = event.data; 
 
         switch (message.command) {
-            case "open":
-                break;
+            case "load":
+                setInitialState(message.command.step);
         }
     });
 

@@ -155,6 +155,11 @@ export default class DynamicsTreeView implements IWireUpCommands {
                 {
                     case EntryType.Solutions:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config), retryFunction);
+
+                        break;
+                    case EntryType.PluginType:
+                        vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, {});
+
                         break;
                 }
             })   
@@ -184,7 +189,10 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         break;
                     case EntryType.View:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.context.savedqueryid, item.solutionId), retryFunction);
-                        break;                    
+                        break;     
+                    case EntryType.PluginStep:
+                        vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, item.context);
+                        break;
                 }
            }) // <-- no semi-colon, comma starts next command registration
         );

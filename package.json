@@ -93,6 +93,11 @@
 		},
 		"commands": [
 			{
+				"command": "cs.dynamics.controls.pluginStep.open",
+				"title": "Open plugin step",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.controls.treeView.refreshEntry",
 				"title": "Refresh",
 				"icon": {
@@ -222,11 +227,6 @@
 				"command": "cs.dynamics.powerShell.generateEntities",
 				"title": "Generate entity code from metadata on a registered Dynamics server",
 				"category": "Dynamics 365 CE"
-			},
-			{
-				"command": "cs.dynamics.controls.pluginStep.open",
-				"title": "Dynamics 365 CE: Open plugin step",
-				"category": "Tools"
 			}
 		],
 		"viewsContainers": {
@@ -280,17 +280,17 @@
 				{
 					"command": "cs.dynamics.controls.treeView.addEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Entries)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Entries|PluginType)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Connection|Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Entry)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Connection|Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Entry|PluginStep)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.inspectEntry",
 					"group": "group@2",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Entry)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solution|Entity|OptionSet|WebResource|Process|Plugin|PluginStep|PluginType|PluginStepImage|Attribute|Form|View|Entry)$/"
 				},
 				{
 					"command": "cs.dynamics.powerShell.unpackSolution.explorer",
@@ -315,7 +315,7 @@
 				{
 					"command": "cs.dynamics.controls.treeView.refreshEntry",
 					"group": "group@1",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Entries)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Plugin|Attributes|Forms|Views|Entries)$/"
 				}
 			]
 		}
