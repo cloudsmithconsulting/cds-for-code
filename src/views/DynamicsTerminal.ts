@@ -1,52 +1,21 @@
 import * as vscode from 'vscode';
 import IWireUpCommands from '../wireUpCommand';
 import * as cs from '../cs';
+import * as fs from 'fs';
+import * as child_process from 'child_process';
+import { SpawnOptions } from 'child_process';
 
-/* This entire terminal class is on hold right now...  Here are the missing package.json contributions:
-
-	{
-		"command": "cs.dynamics.extension.createTerminal",
-		"title": "Show the Dynamics terminal",
-		"category": "Dynamics 365 CE"
-	},
-	{
-		"command": "cs.dynamics.extension.clearTerminal",
-		"title": "Clear the Dynamics terminal",
-		"category": "Dynamics 365 CE"
-	},
-
-	in order for this to work, we need one of our APIs back!!!
-
-	This is the new API, but is only available when you use --enable-proposed-api switch on CL.
-
-	(<any>vscode.window).onDidWriteTerminalData((e: any) => {
-		vscode.window.showInformationMessage(`onDidWriteTerminalData listener attached, check the devtools console to see events`);
-		console.log('onDidWriteData', e);
-	});
-
-	This is the old API, which has been deprecated as of 9/13/19 - https://github.com/microsoft/vscode/issues/78574
-
-	vscode.window.onDidOpenTerminal(terminal => { 
-		terminal.processId.then(terminalId => { 
-			this._hiddenTerminal.processId.then(hiddenProcessId => {
-				if (terminalId === hiddenProcessId) {
-					(<any>terminal).onDidWriteData((data: any) => {
-						// ...
-					});
-				}
-			});
-		});
-	});
-	
-*/
 export class Terminal implements vscode.Terminal {
 	private _onDidWrite: vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
 	private _onDidOpen: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 	private _onDidClose: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 	private _onDidReceiveInput: vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
-	private _insideTerminal: vscode.Terminal;
-	private _hiddenTerminal: vscode.Terminal;
+	private _terminal: vscode.Terminal;
+	private _process;
 	private _isMasked: boolean = false;
+	private _inputCommand:string = "";
+	private _output:string[] = [];
+	private _error:string[] = [];
 
 	readonly onDidWrite: vscode.Event<string> = this._onDidWrite.event;
 	readonly onDidOpen: vscode.Event<void> = this._onDidOpen.event;
@@ -59,11 +28,11 @@ export class Terminal implements vscode.Terminal {
 	}
 
 	get name(): string {
-		return this._insideTerminal.name;
+		return this._terminal.name;
 	}
 
 	get processId(): Thenable<number> {
-		return this._insideTerminal.processId;
+		return this._process.pid;
 	}
 
 	constructor(options?:vscode.TerminalOptions, singleton:boolean = true) 
@@ -77,64 +46,69 @@ export class Terminal implements vscode.Terminal {
 	{
 		const index = vscode.window.terminals.findIndex(t => t.name === options.name);
 
-		if (index !== -1 && !singleton) {
-			vscode.window.terminals[index].dispose();
-		}
-
 		if (index === -1) {
-			this._hiddenTerminal = (<any>vscode.window).createTerminal({
-				name: `${options.name}_hidden` || `${Terminal.defaultTerminalName}_hidden`,
-				shellPath: options.shellPath,
-				shellArgs: options.shellArgs,
-				cwd: options.cwd,
-				env: options.env,
-				strictEnv: options.strictEnv,
-				//TODO: hard code this to yes.
-				hideFromUser: options.hideFromUser,
-				pty: {
-					onDidWrite: (data: string) => {
-						this.write(data);
-					},
-					open: () => console.log("Secure terminal opened."),
-					close: () => console.log("Secure terminal closed."),
-					handleInput: (data: string) => { }
-				}
-			});
+			let spawnOptions:SpawnOptions = {
+				cwd: options.cwd.toString(),				
+			};
 
-			this._insideTerminal = (<any>vscode.window).createTerminal({
+			this._terminal = (<any>vscode.window).createTerminal({
 				name: options.name || Terminal.defaultTerminalName,
-				hideFromUser: options.hideFromUser,
-				pty: {
-					onDidWrite: this.onDidWrite,
-					open: this._onDidOpen.fire(),
-					close: this._onDidClose.fire(),
-					handleInput: (data: string) => { 
-						if (data === '\r') {
-							this._hiddenTerminal.sendText(data, true);
-						} else {
-							this._hiddenTerminal.sendText(data, false);
+				pty:  {
+					onDidWrite: this._onDidWrite.event,
+					open: () => this._onDidOpen.fire(),
+					close: () => this._onDidClose.fire(),
+					handleInput: (data: string) => {
+						this._inputCommand += data;
+						if (this._process) { this._process.stdin.write(data); }
+
+						if (data === '\r') { // Enter
+							this.write(data);
+
+							this._output = [];
+							this._error = [];
+							this._inputCommand = '';
+							
+							return;
 						}
 
-						if (this.isMasked) {
-							this.write("*");
-						} else {
-							this.write(data);
+						if (data === '\x7f') { // Backspace
+							if (this._inputCommand.length === 0) {
+								return;
+							}
+
+							this._inputCommand = this._inputCommand.substr(0, this._inputCommand.length - 1);
+							// Move cursor backward
+							this.write('\x1b[D');
+							// Delete character
+							this.write('\x1b[P');
+
+							return;
 						}
 					}
-				}
+				}});
+
+
+			this._process = child_process.spawn(options.shellPath, spawnOptions);
+			this._process.stdout.on("data", data => {
+				this._output.push(data.toString());
+				this.write(data.toString());
+			});
+			this._process.stderr.on("data", data => {
+				this._error.push(data.toString());
+				this.writeColor(2, data.toString());
 			});
 		}
 	}
 
 	clear() {
-		if (this._insideTerminal) {
+		if (this._terminal) {
 			this.write('\x1b[2J\x1b[3J\x1b[;H');
 		}
 	}
 
 	sendText(text: string, addNewLine?: boolean): void {
-		if (this._insideTerminal) {
-			this._insideTerminal.sendText(text, addNewLine);
+		if (this._terminal) {
+			this._terminal.sendText(text, addNewLine);
 		}
 	}
 
@@ -146,24 +120,43 @@ export class Terminal implements vscode.Terminal {
 	}
 
 	show(preserveFocus?: boolean): void {
-		if (this._insideTerminal) {
-			this._insideTerminal.show(preserveFocus);
+		if (this._terminal) {
+			this._terminal.show(preserveFocus);
 		}
 	}
 
 	hide(): void {
-		if (this._insideTerminal) {
-			this._insideTerminal.hide();
+		if (this._terminal) {
+			this._terminal.hide();
 		}		
 	}
 
 	private write(value:string) {
-		this._onDidWrite.fire(value);
+		if (this._onDidWrite) { 
+			if (this._isMasked) {
+				this._onDidWrite.fire("*");
+			} else {
+				this._onDidWrite.fire(value); 
+			}
+		}
+	}
+
+
+	private writeColor(color: number, value: string) {
+		if (color > 6) { color = 6; }
+		if (color < 0) { color = 0; }
+
+		this._onDidWrite.fire(`\x1b[3${color}m${value}\x1b[0m`);
 	}
 
 	dispose(): void {
-		if (this._insideTerminal) {
-			this._insideTerminal.dispose();
+		if (this._terminal) {
+			this._terminal.dispose();
+		}
+
+		if (this._process) {
+			this._process.stdin.end();
+			this._process.dispose();
 		}
 	}
 }
@@ -171,19 +164,28 @@ export class Terminal implements vscode.Terminal {
 export default class DynamicsTerminal implements IWireUpCommands
 {
 	wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
-		const terminal = new Terminal();
+		let terminal:Terminal;
 
 		context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.extension.createTerminal, (folder:string) => {
+			if (!folder || !fs.existsSync(folder))
+			{
+				folder = context.globalStoragePath;
+			}
 
-			terminal.create({
+			terminal = new Terminal({
 				name: "CloudSmith Dynamics Terminal",
-				// make sure we get powershell
-				shellPath: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-				cwd: folder // current working directory
+				shellPath: "powershell.exe",
+				cwd: folder 
 			});
+
+			terminal.show();
 		}));
 
-		context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.extension.clearTerminal, () => {
+		context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.extension.clearTerminal, async () => {
+			if (!terminal) {
+				await vscode.commands.executeCommand(cs.dynamics.extension.createTerminal);
+			}
+
 			terminal.clear();
 		}));
 	}
