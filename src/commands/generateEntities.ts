@@ -25,7 +25,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                 config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
-				folder = folder || <string>await QuickPicker.pickAnyFolder(workspaceFolder ? workspaceFolder.uri : undefined, false, "Choose the folder where to generated code will go");
+				folder = folder || (<vscode.Uri>await QuickPicker.pickAnyFolder(workspaceFolder ? workspaceFolder.uri : undefined, false, "Choose the folder where to generated code will go")).fsPath;
                 if (Utilities.IsNullOrEmpty(folder)) { return; }
 
                 outputFileName = outputFileName || await QuickPicker.ask("Enter the output file name", undefined, "XrmEntities.cs");

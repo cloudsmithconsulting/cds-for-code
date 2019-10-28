@@ -78,16 +78,16 @@ export default class QuickPicker {
         return workspace;
     }
 
-    public static async pickAnyFolder(defaultUri?:vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<string | string[]> {
+    public static async pickAnyFolder(defaultUri?:vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<vscode.Uri | vscode.Uri[]> {
         return vscode.window
             .showOpenDialog({canSelectFolders: true, canSelectFiles: false, canSelectMany, openLabel, defaultUri, filters })
-            .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0].fsPath : pathUris.map(p => p.fsPath) : '');
+            .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0] : pathUris : null);
     }
 
-    public static async pickAnyFile(defaultUri?:vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<string | string[]> {
+    public static async pickAnyFile(defaultUri?:vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<vscode.Uri | vscode.Uri[]> {
         return vscode.window
             .showOpenDialog({canSelectFolders: false, canSelectFiles: true, canSelectMany, openLabel, defaultUri, filters })
-            .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0].fsPath : pathUris.map(p => p.fsPath) : '');
+            .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0] : pathUris : null);
     }
 
     public static async pickDynamicsSolution(config:DynamicsWebApi.Config, placeHolder?:string, ignoreFocusOut:boolean = true) : Promise<any> {
@@ -133,7 +133,8 @@ export default class QuickPicker {
                 break;
             case DynamicsWebApi.SolutionComponent.PluginAssembly:
                 await api.retrievePluginAssemblies(solution && solution.solutionid ? solution.solutionid : undefined)                
-                    .then(plugins => plugins.forEach(p => options.push(new QuickPickOption(p["name"], undefined, undefined, p["pluginassemblyid"]))));
+                    .then(plugins => plugins.forEach(p => options.push(new QuickPickOption(p["name"], undefined, undefined, p["pluginassemblyid"]))))
+                    .catch(error => console.error(error));
 
                 break;
             case DynamicsWebApi.SolutionComponent.WebResource:

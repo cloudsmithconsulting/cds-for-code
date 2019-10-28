@@ -8,6 +8,7 @@ export namespace dynamics
         public static readonly _namespace:string = "cs.dynamics.deployment";
         public static readonly addSolutionComponent:string = `${deployment._namespace}.addSolutionComponent`;
         public static readonly removeSolutionComponent:string = `${deployment._namespace}.removeSolutionComponent`;
+        public static readonly registerPluginAssembly:string = `${deployment._namespace}.registerPluginAssembly`;
     }
 
     // tslint:disable-next-line: class-name
@@ -28,6 +29,7 @@ export namespace dynamics
         {
             if (!this._output) {
                 this._output = vscode.window.createOutputChannel(extension.outputChannelName);
+                this._output.show(true);
             }
 
             return this._output;
@@ -114,6 +116,7 @@ export namespace dynamics
             public static readonly inspect:string = `${jsonInspector._namespace}.inspect`;
         }
 
+        // tslint:disable-next-line: class-name
         export class pluginStep
         {
             public static readonly _namespace:string = "cs.dynamics.controls.pluginStep";

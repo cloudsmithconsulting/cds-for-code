@@ -22,6 +22,7 @@
 		"onView:cs.dynamics.viewContainers.connections",
 		"onCommand:cs.dynamics.deployment.addSolutionComponent",
 		"onCommand:cs.dynamics.deployment.removeSolutionComponent",
+		"onCommand:cs.dynamics.deployment.registerPluginAssembly",
 		"onCommand:cs.dynamics.extension.clearTerminal",
 		"onCommand:cs.dynamics.extension.createProjectFromTemplate",
 		"onCommand:cs.dynamics.extension.createTerminal",
@@ -159,6 +160,11 @@
 			{
 				"command": "cs.dynamics.deployment.removeSolutionComponent",
 				"title": "Remove a component from a Dynamics 365 Solution",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.deployment.registerPluginAssembly",
+				"title": "Register or update a plugin assembly",
 				"category": "Dynamics 365 CE"
 			},
 			{
