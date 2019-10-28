@@ -97,7 +97,6 @@ table tr:nth-child(even) {
     justify-content: flex-end;
     flex-direction: row-reverse;
     align-items: center;
-    padding: 1.5em 0 0.5em 0 !important;
 }
 
 .field__label {
