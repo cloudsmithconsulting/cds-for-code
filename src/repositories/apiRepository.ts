@@ -116,6 +116,50 @@ export default class ApiRepository
                 .toArray() : []);
     }
 
+    public retrievePluginTypes(pluginAssemblyId:string) {
+        const request:DynamicsWebApi.RetrieveRequest = {
+            collection: "pluginassemblies",
+            id: pluginAssemblyId,
+            select: ['name', 'publickeytoken']
+        };
+
+        return this.webapi.retrieveRequest(request)
+            .then(response => {
+                return this.webapi.retrieveAllRequest({
+                    collection: "plugintypes",
+                    filter: `assemblyname eq '${response.name}'${response.publickeytoken ? " and publickeytoken eq '" + response.publickeytoken + "'" : ""}`
+                }).then(response => response.value);
+            });
+    }
+
+    public retrievePluginSteps(pluginTypeId:string) {
+        const request:DynamicsWebApi.RetrieveRequest = {
+            collection: "plugintypes",
+            id: pluginTypeId,
+            select: ['name', 'publickeytoken'],
+            expand: [ { property: "plugintypeid_sdkmessageprocessingstep"} ]
+        };
+
+        return this.webapi.retrieveRequest(request)
+            .then(response => {
+                return response && response.plugintypeid_sdkmessageprocessingstep && response.plugintypeid_sdkmessageprocessingstep.length > 0 ? response.plugintypeid_sdkmessageprocessingstep : null;
+            });
+    }
+
+    public retrievePluginStepImages(pluginStepId:string) {
+        const request:DynamicsWebApi.RetrieveRequest = {
+            collection: "sdkmessageprocessingsteps",
+            id: pluginStepId,
+            select: [],
+            expand: [ { property: "sdkmessageprocessingstepid_sdkmessageprocessingstepimage"} ]
+        };
+
+        return this.webapi.retrieveRequest(request)
+            .then(response => {
+                return response && response.sdkmessageprocessingstepid_sdkmessageprocessingstepimage && response.sdkmessageprocessingstepid_sdkmessageprocessingstepimage.length > 0 ? response.sdkmessageprocessingstepid_sdkmessageprocessingstepimage : null;
+            });
+    }
+
     public uploadPluginAssembly(assemblyUri:vscode.Uri, pluginAssemblyId?:string): Thenable<any> {
         const fs = vscode.workspace.fs;
         let fileContents;
