@@ -16,6 +16,7 @@ export class Terminal implements vscode.Terminal {
 	private _inputCommand:string = "";
 	private _output:string[] = [];
 	private _error:string[] = [];
+	private _position:number = 0;
 
 	readonly onDidWrite: vscode.Event<string> = this._onDidWrite.event;
 	readonly onDidOpen: vscode.Event<void> = this._onDidOpen.event;
@@ -42,7 +43,7 @@ export class Terminal implements vscode.Terminal {
 		}
 	}
 
-	create(options:vscode.TerminalOptions, singleton:boolean = true): void
+	create(options:vscode.TerminalOptions, singleton:boolean = true): Terminal
 	{
 		const index = vscode.window.terminals.findIndex(t => t.name === options.name);
 
@@ -59,20 +60,21 @@ export class Terminal implements vscode.Terminal {
 					close: () => this._onDidClose.fire(),
 					handleInput: (data: string) => {
 						this._inputCommand += data;
+						this._position++;
 						if (this._process) { this._process.stdin.write(data); }
 
 						if (data === '\r') { // Enter
-							this.write(data);
-
-							this._output = [];
-							this._error = [];
+							this.write('\r\n');
 							this._inputCommand = '';
+							this._position = 0;
 							
 							return;
 						}
 
 						if (data === '\x7f') { // Backspace
-							if (this._inputCommand.length === 0) {
+							this._position--;
+
+							if (this._inputCommand.length === 0 || this._position === 0) {
 								return;
 							}
 
@@ -98,12 +100,28 @@ export class Terminal implements vscode.Terminal {
 				this.writeColor(2, data.toString());
 			});
 		}
+
+		return this;
 	}
 
-	clear() {
+	clear(): Terminal {
 		if (this._terminal) {
 			this.write('\x1b[2J\x1b[3J\x1b[;H');
 		}
+
+		return this;
+	}
+
+	line(text:string): Terminal {
+		this.sendText(text, true);
+
+		return this;
+	}
+
+	text(text:string): Terminal {
+		this.sendText(text, false);
+
+		return this;
 	}
 
 	sendText(text: string, addNewLine?: boolean): void {
@@ -112,11 +130,19 @@ export class Terminal implements vscode.Terminal {
 		}
 	}
 
-	sendColorText(color: number, text: string, addNewLine?: boolean): void {
+	color(color: number): Terminal {
 		if (color > 6) { color = 6; }
 		if (color < 0) { color = 0; }
 
-		this.sendText(`\x1b[3${color}m${text}\x1b[0m`, addNewLine);
+		this.sendText(`\x1b[3${color}m`, false);
+
+		return this;
+	}
+
+	nocolor(): Terminal {
+		this.sendText(`\x1b[0m`);
+
+		return this;
 	}
 
 	show(preserveFocus?: boolean): void {
@@ -140,7 +166,6 @@ export class Terminal implements vscode.Terminal {
 			}
 		}
 	}
-
 
 	private writeColor(color: number, value: string) {
 		if (color > 6) { color = 6; }
