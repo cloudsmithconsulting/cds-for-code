@@ -54,6 +54,11 @@ table tr:nth-child(even) {
     to {opacity: 1;}
 }
 
+.grid--two-left-panel {
+    display: grid;
+    grid-template-columns: 25% 10% auto;
+}
+
 .grid--left-panel {
     display: grid;
     grid-template-columns: 30% auto;
@@ -62,6 +67,20 @@ table tr:nth-child(even) {
 .grid--right-panel {
     display: grid;
     grid-template-columns: auto 30%;
+}
+
+.button--panel {
+    position: relative;
+    height: 100%;
+}
+
+.button--panel button {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
 }
 
 .row-column--2 {

@@ -42,9 +42,9 @@
 
     <h3>Add <span class="form-type-label">Entities</span></h3>
 
-    <div class="grid grid--left-panel">
+    <div class="grid grid--two-left-panel">
         <div>
-            <div class="field-container" data-form="Entities,Attributes,OptionSets">
+            <div class="field-container" data-form="Entities,Attributes,OptionSets,Solutions">
                 <div class="field field--checkbox">
                     <label class="field__label" for="ByRule">
                         Add <span class="form-type-label">Entities</span> by selecting from a list
@@ -140,6 +140,11 @@
             </div>
         </div>
         <div>
+            <div class="button--panel">
+                <button id="AddRule" class="button button--primary">Add Rule &raquo;</button>
+            </div>
+        </div>
+        <div>
             <table>
                 <tr>
                     <th></th>
@@ -204,7 +209,7 @@
 
     <h3>Add <span class="form-type-label">Entities</span></h3>
 
-    <div class="grid grid--left-panel">
+    <div class="grid grid--two-left-panel">
         <div>
             <div class="field-container" data-form="Entities,Attributes,OptionSets">
                 <div class="field field--checkbox">
@@ -302,6 +307,11 @@
             </div>
         </div>
         <div>
+            <div class="button--panel">
+                <button id="AddRule2" class="button button--primary">Add Rule &raquo;</button>
+            </div>
+        </div>
+        <div>
             <table>
                 <tr>
                     <th></th>
@@ -314,40 +324,8 @@
                         <button class="button button--primary">Remove</button>
                     </td>
                     <td>Entities</td>
-                    <td>Exact Match</td>
-                    <td>Account</td>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="button button--primary">Remove</button>
-                    </td>
-                    <td>Entities</td>
                     <td>Regular Expression</td>
-                    <td>Contact*</td>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="button button--primary">Remove</button>
-                    </td>
-                    <td>Attributes</td>
-                    <td>Exact Match</td>
-                    <td>description (all entities)</td>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="button button--primary">Remove</button>
-                    </td>
-                    <td>OptionSets</td>
-                    <td>Exact Match</td>
-                    <td>addresstype</td>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="button button--primary">Remove</button>
-                    </td>
-                    <td>Solutions</td>
-                    <td>Exact Match</td>
-                    <td>My Custom Solution</td>
+                    <td>Sample*</td>
                 </tr>
             </table>
         </div>
@@ -441,7 +419,7 @@
         </select>
     </div>
 
-    <h4>Behaviors</h4>
+    <h4>Behaviors Rules</h4>
 
     <div class="field field--checkbox">
         <label class="field__label" for="TranslateOptionSetsAsEnums">
@@ -459,7 +437,7 @@
             placeholder="System.Linq,System.ComponentModel" />
     </div>
 
-    <h4>Files</h4>
+    <h4>Files Rules</h4>
 
     <div class="field">
         <label class="field__label" for="FileNameFormat">
@@ -471,7 +449,7 @@
 
     <div class="field">
         <label class="field__label" for="FileType">
-            Language
+            File Type
         </label>
         <select id="FileType" name="FileType" class="field__input">
             <option>Entities</option>
