@@ -1,10 +1,13 @@
 // This script will be run within the webview itself
 // It cannot access the main VS Code APIs directly.
 (function () {
-    const vscode = acquireVsCodeApi();
+    // You MUST set = window.vscodeApi for scripts in main.js to work properly
+    const vscode = window.vscodeApi = acquireVsCodeApi();
     const formElements = document.getElementsByClassName("field-container");
     const formTypeLabels = document.getElementsByClassName("form-type-label");
     const submitButton = document.getElementById("submitButton");
+    const addRuleButtons = document.querySelectorAll("button[id^='AddRule']");
+    window.currentTabId = "WhiteList";
     let currentView = window.currentView = "Entities";
 
     // changes the view in tabs
@@ -31,6 +34,20 @@
             el.innerHTML = viewName;
         }
     };
+
+    // wire up click for all add rule buttons
+    for (let i = 0; i < addRuleButtons.length; i++) {
+        const button = addRuleButtons[i];
+        button.addEventListener("click", event => {
+            event.preventDefault();
+            const buttonId = event.currentTarget.id;
+            // if we have a number, we want to suffix all the ids
+            // with the same number
+            const fieldSuffix = /\d/.test(buttonId)
+                ? buttonId.charAt(buttonId.length - 1)
+                : "";
+        });
+    }
 
     submitButton.addEventListener("click", event => {
         event.preventDefault();

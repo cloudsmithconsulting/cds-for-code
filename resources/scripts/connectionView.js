@@ -1,7 +1,8 @@
 // This script will be run within the webview itself
 // It cannot access the main VS Code APIs directly.
 (function () {
-    const vscode = acquireVsCodeApi();
+    // You MUST set = window.vscodeApi for scripts in main.js to work properly
+    const vscode = window.vscodeApi = acquireVsCodeApi();
 
     //const oldState = vscode.getState();
     let currentAuthType = 2; // default
@@ -68,9 +69,6 @@
         
         document.title = newTitle;
         document.getElementById("title").innerHTML = newTitle;
-
-        submitButton.innerHTML = submitButton.innerHTML
-            .replace('Add', 'Update');
         
         if (message.authType === 1) {
             currentAuthType = 1;

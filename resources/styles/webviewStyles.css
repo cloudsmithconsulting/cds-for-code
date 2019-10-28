@@ -2,6 +2,10 @@ body {
     font-size: 1em;
 }
 
+h2, h3, h4, h5, h6 {
+   text-decoration: underline;
+}
+
 table {
     margin: 0 auto;
     width: 95%;
@@ -64,6 +68,11 @@ table tr:nth-child(even) {
     grid-template-columns: 30% auto;
 }
 
+.grid--left-panel-large {
+    display: grid;
+    grid-template-columns: 35% auto;
+}
+
 .grid--right-panel {
     display: grid;
     grid-template-columns: auto 30%;
@@ -83,32 +92,17 @@ table tr:nth-child(even) {
     transform: translate(-50%, -50%);
 }
 
-.row-column--2 {
-    display: grid;
-    grid-template-columns: 15% auto;
-}
-
-.row-column--3 {
-    display: grid;
-    grid-template-columns: 15% 15% auto;
-}
-
-.row-column--4 {
-    display: grid;
-    grid-template-columns: 15% 15% 15% auto;
-}
-
-.row-column--5 {
-    display: grid;
-    grid-template-columns: 15% 15% 15% 15% auto;
-}
-
 .field {
     padding: 0.5em 0;
 }
 
 .field--buttons {
-    padding: 2em 0 0.5em 0 !important;
+    padding: 1em 0 0.5em 0 !important;
+}
+
+.field--buttons button,
+.field--buttons input[type="submit"] {
+    margin-right: 10px;
 }
 
 .field--checkbox {
@@ -154,13 +148,24 @@ table tr:nth-child(even) {
     cursor: pointer;
 }
 
+.button:hover {
+    background-color: var(--vscode-button-hoverBackground);
+}
+
+.button--danger {
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-inputValidation-errorBackground);
+    border: 1px solid var(--vscode-contrastBorder);
+}
+
+.button--danger:hover {
+    background-color: var(--vscode-inputValidation-errorBorder);
+}
+
 .button--primary {
     color: var(--vscode-button-foreground);
     background-color: var(--vscode-button-background);
-}
-
-.button--primary:hover {
-    background-color: var(--vscode-button-hoverBackground);
+    border: 1px solid var(--vscode-contrastBorder);
 }
 
 .panel_error {
