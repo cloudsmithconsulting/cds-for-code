@@ -13,128 +13,147 @@
 
 <div class="grid grid--left-panel-large">
     <div>
-        <h3>General Configuration</h3>
+        <fieldset>
+            <legend>General Configuration</legend>
 
-        <div class="field">
-            <label class="field__label" for="Message">
-                Message
-            </label>
-            <input type="text" class="field__input field__input--wide" id="Message" name="Message" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="PrimaryEntity">
-                Primary Entity
-            </label>
-            <input type="text" class="field__input field__input--wide" id="PrimaryEntity" name="PrimaryEntity" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="SecondEntity">
-                Second Entity
-            </label>
-            <input type="text" class="field__input field__input--wide" id="SecondEntity" name="SecondEntity" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="FilteringAttributes">
-                Filtering Attributes
-            </label>
-            <input type="text" class="field__input field__input--wide" id="FilteringAttributes"
-                name="FilteringAttributes" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="EventHandler">
-                Event Handler
-            </label>
-            <input type="text" class="field__input field__input--wide" id="EventHandler" name="EventHandler" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="StepName">
-                Step Name
-            </label>
-            <input type="text" class="field__input field__input--wide" id="StepName" name="StepName" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="UserContext">
-                Run in User's Context
-            </label>
-            <input type="text" class="field__input field__input--wide" id="UserContext" name="UserContext" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="ExecutionOrder">
-                Execution Order
-            </label>
-            <input type="text" class="field__input" id="ExecutionOrder" name="ExecutionOrder" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="Description">
-                Description
-            </label>
-            <input type="text" class="field__input field__input--wide" id="Description" name="Description" />
-        </div>
-
-        <h3>Event Pipeline Stage of Execution</h3>
-
-        <div class="field field--checkbox">
-            <label class="field__label" for="PreValidation">
-                Pre-validation
-            </label>
-            <input type="radio" class="field__input" id="PreValidation" name="ExecutionPipeline"
-                value="PreValidation" />
-            <label class="field__label" for="PreOperation">
-                Pre-operation
-            </label>
-            <input type="radio" class="field__input" id="PreOperation" name="ExecutionPipeline" value="PreOperation" />
-            <label class="field__label" for="PostOperation">
-                Post-operation
-            </label>
-            <input type="radio" class="field__input" id="PostOperation" name="ExecutionPipeline" value="PostOperation"
-                checked="checked" />
-        </div>
-
-        <div class="field field--checkbox">
-            <label class="field__label" for="StatusCode">
-                Delete AsyncOperation if StatusCode = Successful
-            </label>
-            <input type="checkbox" class="field__input" id="StatusCode" name="StatusCode" value="true" />
-        </div>
-
-        <h3>Execution Mode</h3>
-
-        <div class="field field--checkbox">
-            <label class="field__label" for="Asynchronous">
-                Asynchronous
-            </label>
-            <input type="radio" class="field__input" id="Asynchronous" name="ExecutionMode" value="Asynchronous" />
-            <label class="field__label" for="Synchronous">
-                Synchronous
-            </label>
-            <input type="radio" class="field__input" id="Synchronous" name="ExecutionMode" value="Synchronous"
-                checked="checked" />
-        </div>
-
-        <h3>Deployment</h3>
-
-        <div class="field field--checkbox">
-            <label class="field__label" for="Server">
-                Server
-            </label>
-            <input type="checkbox" class="field__input" id="Server" name="Server" value="true" />
-        </div>
-
-        <div class="field field--checkbox">
-            <label class="field__label" for="Offline">
-                Offline
-            </label>
-            <input type="checkbox" class="field__input" id="Offline" name="Offline" value="true" />
-        </div>
+            <div class="field">
+                <label class="field__label" for="Message">
+                    Message
+                </label>
+                <input type="text" class="field__input field__input--wide" id="Message" name="Message" />
+            </div>
+            <div class="field">
+                <label class="field__label" for="PrimaryEntity">
+                    Primary Entity
+                </label>
+                <input type="text" class="field__input field__input--wide" id="PrimaryEntity" name="PrimaryEntity" />
+            </div>
+            <div class="field">
+                <label class="field__label" for="SecondEntity">
+                    Second Entity
+                </label>
+                <input type="text" class="field__input field__input--wide" id="SecondEntity" name="SecondEntity" />
+            </div>
+            <div class="field">
+                <label class="field__label" for="FilteringAttributes">
+                    Filtering Attributes
+                </label>
+                <input type="text" class="field__input field__input--wide" id="FilteringAttributes"
+                    name="FilteringAttributes" />
+            </div>
+            <div class="field">
+                <label class="field__label" for="EventHandler">
+                    Event Handler
+                </label>
+                <input type="text" class="field__input field__input--wide" id="EventHandler" name="EventHandler" />
+            </div>
+            <div class="field">
+                <label class="field__label" for="StepName">
+                    Step Name
+                </label>
+                <input type="text" class="field__input field__input--wide" id="StepName" name="StepName" />
+            </div>
+            <div class="field">
+                <label class="field__label" for="UserContext">
+                    Run in User's Context
+                </label>
+                <input type="text" class="field__input field__input--wide" id="UserContext" name="UserContext" />
+            </div>
+            <div class="field">
+                <label class="field__label" for="ExecutionOrder">
+                    Execution Order
+                </label>
+                <input type="text" class="field__input" id="ExecutionOrder" name="ExecutionOrder" />
+            </div>
+            <div class="field">
+                <label class="field__label" for="Description">
+                    Description
+                </label>
+                <input type="text" class="field__input field__input--wide" id="Description" name="Description" />
+            </div>
+        </fieldset>
     </div>
     <div>
-        <h3>Unsecure Configuration</h3>
+        <fieldset>
+            <legend>Event Pipeline Stage of Execution</legend>
 
-        <textarea rows="4" cols="50" id="UnsecureConfiguration" name="UnsecureConfiguration"></textarea>
+            <div class="field field--checkbox">
+                <label class="field__label" for="PreValidation">
+                    Pre-validation
+                </label>
+                <input type="radio" class="field__input" id="PreValidation" name="ExecutionPipeline"
+                    value="PreValidation" />
+                <label class="field__label" for="PreOperation">
+                    Pre-operation
+                </label>
+                <input type="radio" class="field__input" id="PreOperation" name="ExecutionPipeline"
+                    value="PreOperation" />
+                <label class="field__label" for="PostOperation">
+                    Post-operation
+                </label>
+                <input type="radio" class="field__input" id="PostOperation" name="ExecutionPipeline"
+                    value="PostOperation" checked="checked" />
+            </div>
 
-        <h3>Secure Configuration</h3>
+            <div class="field field--checkbox">
+                <label class="field__label" for="StatusCode">
+                    Delete AsyncOperation if StatusCode = Successful
+                </label>
+                <input type="checkbox" class="field__input" id="StatusCode" name="StatusCode" value="true" />
+            </div>
+        </fieldset>
 
-        <textarea rows="4" cols="50" id="SecureConfiguration" name="UnsecureConfiguration"></textarea>
+        <fieldset>
+            <legend>Execution Mode</legend>
+
+            <div class="field field--checkbox">
+                <label class="field__label" for="Asynchronous">
+                    Asynchronous
+                </label>
+                <input type="radio" class="field__input" id="Asynchronous" name="ExecutionMode" value="Asynchronous" />
+                <label class="field__label" for="Synchronous">
+                    Synchronous
+                </label>
+                <input type="radio" class="field__input" id="Synchronous" name="ExecutionMode" value="Synchronous"
+                    checked="checked" />
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Deployment</legend>
+
+            <div class="field field--checkbox">
+                <label class="field__label" for="Server">
+                    Server
+                </label>
+                <input type="checkbox" class="field__input" id="Server" name="Server" value="true" />
+            </div>
+
+            <div class="field field--checkbox">
+                <label class="field__label" for="Offline">
+                    Offline
+                </label>
+                <input type="checkbox" class="field__input" id="Offline" name="Offline" value="true" />
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Other Configuration(s)</legend>
+
+            <div class="field">
+                <label class="field__label" for="UnsecureConfiguration">
+                    Unsecure Configuration
+                </label>
+                <textarea rows="4" cols="50" class="field__input" id="UnsecureConfiguration" name="UnsecureConfiguration"></textarea>
+            </div>
+
+            <div class="field">
+                <label class="field__label" for="SecureConfiguration">
+                    Secure Configuration
+                </label>
+                <textarea rows="4" cols="50" class="field__input" id="SecureConfiguration" name="UnsecureConfiguration"></textarea>
+            </div>
+        </fieldset>
     </div>
 </div>
 
