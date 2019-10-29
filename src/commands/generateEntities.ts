@@ -37,15 +37,17 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                 // build a powershell terminal
                 DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
                     .then(terminal => {
-                        terminal.sendText(`.\\Generate-XrmEntities.ps1 `
-                            + `-ToolsPath ${coreToolsRoot} `
-                            + `-Url "${Utilities.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `
-                            + `-Username "${config.username}" `
-                            + `-Password "${Utilities.PowerShellSafeString(config.password)}" `
-                            + (config.domain ? `-Domain "${config.domain}" ` : '')
-                            + `-Path "${folder}" `
-                            + `-OutputFile "${outputFileName}" `
-                            + (!Utilities.IsNull(namespace) ? `-Namespace "${namespace}" ` : ''), true);
+                        terminal.text(`.\\Generate-XrmEntities.ps1 `)
+                            .text(`-ToolsPath ${coreToolsRoot} `)
+                            .text(`-Url "${Utilities.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `)
+                            .text(`-Username "${config.username}" -Password "`)
+                            .sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
+                            .text(`" `)
+                            .text((config.domain ? `-Domain "${config.domain}" ` : ''))
+                            .text(`-Path "${folder}" `)
+                            .text(`-OutputFile "${outputFileName}" `)
+                            .text(!Utilities.IsNull(namespace) ? `-Namespace "${namespace}" ` : '')
+                            .enter();
                     });
             })
         );

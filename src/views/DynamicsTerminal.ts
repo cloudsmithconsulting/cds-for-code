@@ -79,7 +79,11 @@ export class Terminal implements vscode.Terminal {
 		const index = vscode.window.terminals.findIndex(t => t.name === options.name);
 
 		if (index !== -1 && singleton) {
-			return Promise.resolve(<Terminal>vscode.window.terminals[index]);
+			if (options.name === this.name) {
+				return Promise.resolve(this);
+			} else {
+				return Promise.resolve(<Terminal>vscode.window.terminals[index]);
+			}
 		}
 
 		if (index === -1) {
@@ -113,7 +117,7 @@ export class Terminal implements vscode.Terminal {
 									}
 
 									if (!Utilities.IsNullOrEmpty(this._inputCommand) && this._output.length > 0) {
-										this._onDidRunCommand.fire(new TerminalCommand(this._inputCommand, this._output.join("")));
+										 this._onDidRunCommand.fire(new TerminalCommand(this._inputCommand, this._output.join("")));
 
 										this._inputCommand = "";
 										this._output = [];
@@ -252,7 +256,7 @@ export class Terminal implements vscode.Terminal {
 		if (addNewLine) {
 			this.write("\r\n");
 
-			if (this._process) { this._process.stdin.write(text + "\r\n"); }
+			if (this._process) { this._process.stdin.write(this._inputCommand + "\r\n"); }
 		}
 	}
 
