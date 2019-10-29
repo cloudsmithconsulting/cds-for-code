@@ -5,15 +5,18 @@ import * as fs from 'fs';
 import * as child_process from 'child_process';
 import { SpawnOptions } from 'child_process';
 import Utilities from '../helpers/Utilities';
-import { throws } from 'assert';
+import QuickPicker, { QuickPickOption } from '../../out/helpers/QuickPicker';
+import { TS } from 'typescript-linq';
 
 export class TerminalCommand {
 	private _command:string;
+	private _display:string;
 	private _output:string;
 	private _error:string;
 
-	constructor(command: string, output?: string, error?:string) {
+	constructor(command: string, display: string, output?: string, error?:string) {
 		this._command = command;
+		this._display = display;
 		this._output = output;
 		this._error = error;
 	}
@@ -29,6 +32,10 @@ export class TerminalCommand {
 	get error():string {
 		return this._error;
 	}
+
+	get display():string {
+		return this._display;
+	}
 }
 export class Terminal implements vscode.Terminal {
 	private _onDidWrite: vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
@@ -43,6 +50,7 @@ export class Terminal implements vscode.Terminal {
 	private _process;
 	private _isMasked: boolean = false;
 	private _inputCommand:string = "";
+	private _maskedCommand:string = "";
 	private _outputBuffer:string[] = [];
 	private _errorBuffer:string[] = [];
 	private _cursorPosition:number = 0;
@@ -100,6 +108,35 @@ export class Terminal implements vscode.Terminal {
 		}
 	}
 
+	backspace(howMany:number = 1) {
+		for (let i = 0; i < howMany; i++) {
+			// Move cursor backward
+			this.write('\x1b[D');
+			// Delete character
+			this.write('\x1b[P');
+
+			this._cursorPosition--;
+		}
+
+		this._inputCommand = this._inputCommand.substr(0, this._inputCommand.length - howMany);
+		this._maskedCommand = this._maskedCommand.substr(0, this._maskedCommand.length - howMany);
+	}
+
+	clearCommand() {
+		if (this._inputCommand && this._inputCommand.length > 0) {
+			this.backspace(this._inputCommand.length);
+		}
+	}
+
+	async showComandBuffer(): Promise<TerminalCommand> {
+		const options = new TS.Linq.Enumerator(this._commandBuffer)
+			.where(c => !Utilities.IsNullOrEmpty(c.command))
+			.select(c => new QuickPickOption(c.command, undefined, undefined, c)).toArray();
+
+		return await QuickPicker.pick(undefined, ...options)
+			.then(o => o.context);
+	}
+
 	create<T extends vscode.Terminal>(options?:vscode.TerminalOptions, singleton:boolean = true): Promise<T>
 	{
 		options = options || this._options;
@@ -137,14 +174,31 @@ export class Terminal implements vscode.Terminal {
 							Terminal.ActiveTerminals.push(this);
 							this.show(true);
 
+							let slicedLinePosition:number = 0;
+
 							this._process = child_process.spawn(options.shellPath, spawnOptions);
 							this._process.stdout.on("data", data => {
-								this._outputBuffer.push(data.toString().replace(this._inputCommand, "").replace("\r", "").replace("\n", ""));
+								let dataString:string = data.toString();
+
+								if (this._inputCommand.startsWith(dataString) && slicedLinePosition === 0) {
+									if (dataString.length < this._inputCommand.length)
+									{
+										slicedLinePosition = dataString.length;
+										dataString = "";
+									}									
+								}
+								
+								if (dataString.indexOf(this._inputCommand.substr(slicedLinePosition)) > -1) {
+									dataString = dataString.replace(this._inputCommand.substr(slicedLinePosition), "");
+									slicedLinePosition = 0;
+								}
+
+								this._outputBuffer.push(dataString.replace(this._inputCommand, "").replace("\r", "").replace("\n", ""));
 
 								if (!Utilities.IsNullOrEmpty(this._inputCommand)) {
-									this.write(data.toString().replace(this._inputCommand, ""));
+									this.write(dataString.replace(this._inputCommand, ""));
 								} else {
-									this.write(data.toString());
+									this.write(dataString);
 								}
 
 								const prompt = /(PS )(.*)(> )/i.exec(data.toString());
@@ -158,6 +212,11 @@ export class Terminal implements vscode.Terminal {
 										this._outputBuffer.pop();
 									} else {
 										this._outputBuffer[this._outputBuffer.length - 1] = this._outputBuffer[this._outputBuffer.length - 1].replace(prompt[0], "");
+									}
+
+									if (this._inputCommand.trim() === "clear" || this._inputCommand.trim() === "cls") {
+										this.clear();
+										this.write(prompt[0]);
 									}
 
 									this.resolveIncomingCommand<T>(resolve, reject);
@@ -206,8 +265,20 @@ export class Terminal implements vscode.Terminal {
 						handleInput: (data: string) => {
 							this._onDidReceiveInput.fire(data);
 
+							if (data === '\x1b[A') { /// Up arrow 
+								this.showComandBuffer().then(c => {
+									if (c) {
+										this.show(true);
+										this.clearCommand();
+										this.sendTextWithMaskedString(c.command, c.display);
+									}
+								});
+
+								return;
+							}
+
 							if (data === '\r') { // Enter
-								this.write('\r\n');
+								this.write('\r');
 								this._cursorPosition = 0;
 
 								if (this._process) {
@@ -222,18 +293,14 @@ export class Terminal implements vscode.Terminal {
 									return;
 								}
 
-								this._cursorPosition--;
-								this._inputCommand = this._inputCommand.substr(0, this._inputCommand.length - 1);
-								// Move cursor backward
-								this.write('\x1b[D');
-								// Delete character
-								this.write('\x1b[P');
+								this.backspace(1);
 
 								return;
 							}
 
 							this.write(data);
 							this._inputCommand += data;
+							this._maskedCommand += data;
 							this._cursorPosition++;
 						}
 					}});
@@ -243,7 +310,7 @@ export class Terminal implements vscode.Terminal {
 
 	private resolveIncomingCommand<T extends vscode.Terminal>(resolve: (value?: T | PromiseLike<T>) => void, reject: (reason?: any) => void) {
 		if (!Utilities.IsNullOrEmpty(this._inputCommand) || this._outputBuffer.length > 0 || this._errorBuffer.length > 0) {
-			const command = new TerminalCommand(this._inputCommand, this._outputBuffer.join(""), this._errorBuffer.join(""));
+			const command = new TerminalCommand(this._inputCommand, this._maskedCommand, this._outputBuffer.join(""), this._errorBuffer.join(""));
 
 			this._onDidRunCommand.fire(command);
 			this._commandBuffer.push(command);
@@ -259,6 +326,7 @@ export class Terminal implements vscode.Terminal {
 				reject(<T><unknown>this);
 			}
 
+			this._maskedCommand = "";
 			this._inputCommand = "";
 			this._outputBuffer = [];
 			this._errorBuffer = [];
@@ -303,12 +371,27 @@ export class Terminal implements vscode.Terminal {
 		if (this._isMasked) {
 			for (let i = 0; i < text.length; i++) {
 				this.write("*");
-			}
+				this._maskedCommand += "*";
+			}			
 		} else {
 			this.write(text);
+			this._maskedCommand += text;
 		}
 
 		this._inputCommand += text;
+
+		if (addNewLine) {
+			this.write("\r\n");
+
+			if (this._process) { this._process.stdin.write(this._inputCommand + "\r\n"); }
+		}
+	}
+
+	private sendTextWithMaskedString(text: string, display: string, addNewLine?: boolean): void {
+		this._inputCommand += text;
+		this._maskedCommand += display;
+
+		this.write(this._maskedCommand);
 
 		if (addNewLine) {
 			this.write("\r\n");
