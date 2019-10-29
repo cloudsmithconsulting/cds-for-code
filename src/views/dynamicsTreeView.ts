@@ -153,6 +153,9 @@ export default class DynamicsTreeView implements IWireUpCommands {
 
                 switch (item.itemType)
                 {
+                    case EntryType.Entities:
+                            
+                        break;
                     case EntryType.Solutions:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config), retryFunction);
 
