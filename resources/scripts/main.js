@@ -12,4 +12,21 @@
             });
         });
     }
+
+    const CloudSmith = window.CloudSmith = {
+        Helpers: {
+            getRadioButtonValue: function(radioButtonName) {
+                const radioInputs = document.getElementsByName(radioButtonName);
+                for (let i = 0; i < radioInputs.length; i++) {
+                    const currentRadio = radioInputs[i];
+                    if (currentRadio.checked) { return currentRadio.value; }
+                }
+            }
+        },
+        Tabs: {
+            getCurrentTab: function (defaultTab) {
+                return window.currentTab || defaultTab;
+            }
+        }
+    };
 }());

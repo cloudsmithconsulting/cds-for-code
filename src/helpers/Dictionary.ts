@@ -28,6 +28,13 @@ export default class Dictionary<TKey, T> implements IDictionary<TKey, T> {
         this._values.push(value);
     }
 
+    insert(index: number, key: TKey, value: T) {
+        this[key.toString()] = value;
+
+        this._keys.splice(index, 0, key);
+        this._values.splice(index, 0, value);
+    }
+
     remove(key: TKey) {
         var index = this._keys.indexOf(key, 0);
 

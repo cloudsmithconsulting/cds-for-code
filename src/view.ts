@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as _ from 'lodash';
+import Dictionary from './helpers/Dictionary';
 
 export interface IViewOptions {
 	extensionPath: string;
@@ -12,9 +13,9 @@ export interface IViewOptions {
 
 export class ViewRenderer {
 	private readonly _view: View;
-	private _images: { [key: string]: vscode.Uri } = {};
-	private _scripts: { [key: string]: vscode.Uri } = {};
-	private _styleSheets: { [key: string]: vscode.Uri } = {};
+	private _images: Dictionary<string, vscode.Uri> = new Dictionary();
+	private _scripts: Dictionary<string, vscode.Uri> = new Dictionary();
+	private _styleSheets: Dictionary<string, vscode.Uri> = new Dictionary();
 
 	public readonly nonce: string;
 
@@ -24,15 +25,19 @@ export class ViewRenderer {
 	}
 
 	public addImage(imageName: string) {
-		this._images[imageName] = this.getFileUri('resources', 'images', imageName);
+		this._images.add(imageName, this.getFileUri('resources', 'images', imageName));
 	}
 
 	public addScript(scriptName: string) {
-		this._scripts[scriptName] = this.getFileUri('resources', 'scripts', scriptName);
+		this._scripts.add(scriptName, this.getFileUri('resources', 'scripts', scriptName));
+	}
+
+	private insertScriptAt(index: number, scriptName: string) {
+		this._scripts.insert(0, scriptName, this.getFileUri('resources', 'scripts', scriptName));
 	}
 
 	public addStyleSheet(styleSheetName: string) {
-		this._styleSheets[styleSheetName] = this.getFileUri('resources', 'styles', styleSheetName);
+		this._styleSheets.add(styleSheetName, this.getFileUri('resources', 'styles', styleSheetName));
 	}
 
 	private getFileUri(...paths: string[]): vscode.Uri {
@@ -81,17 +86,17 @@ export class ViewRenderer {
 
 	public renderHtml(htmlParial: string): string {
 		let cssHtml: string = '';
-		Object.keys(this._styleSheets).forEach(key => {
-			cssHtml += `<link rel="stylesheet" type="text/css" href="${this._styleSheets[key]}">`;
+		this._styleSheets.values.forEach(uri => {
+			cssHtml += `<link rel="stylesheet" type="text/css" href="${uri}">`;
 		});
-		
-		// auto add some scripts
-		this.addScript('main.js');
-		this.addScript('iconify.min.js');
+
+		// add some default scripts
+		this.insertScriptAt(0, 'main.js');
+		this.insertScriptAt(0, 'iconify.min.js');
 
 		let scriptHtml: string = '';
-		Object.keys(this._scripts).forEach(key => {
-			scriptHtml += `<script src="${this._scripts[key]}"></script>`;
+		this._scripts.values.forEach(uri => {
+			scriptHtml += `<script src="${uri}"></script>`;
 		});
 
 		return `<!DOCTYPE html>

@@ -46,8 +46,8 @@
                 ? buttonId.charAt(buttonId.length - 1)
                 : "";
 
-            const currentTabId = getCurrentTab();
-            const ruleType = getRuleTypeValue(`RuleType${fieldSuffix}`);
+            const currentTabId = CloudSmith.Tabs.getCurrentTab("WhiteList");
+            const ruleType = CloudSmith.Helpers.getRadioButtonValue(`RuleType${fieldSuffix}`);
 
             const rulesToAdd = [];
 
@@ -88,18 +88,5 @@
                 break;
         }
     });
-
-    function getCurrentTab() {
-        // exposed by tabs.js, "WhiteList" is our default
-        return window.currentTabId || "WhiteList";
-    }
-
-    function getRuleTypeValue(radioName) {
-        const radioInputs = document.querySelectorAll(`input[name=${radioName}]`);
-        for (let i = 0; i < radioInputs.length; i++) {
-            const radio = radioInputs[i];
-            if (radio.checked) { return radio.value; }
-        }
-    }
 
 }());
