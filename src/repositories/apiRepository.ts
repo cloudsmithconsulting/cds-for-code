@@ -4,6 +4,8 @@ import Utilities from '../helpers/Utilities';
 import ApiHelper from "../helpers/ApiHelper";
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { Response } from "node-fetch";
+import { TS } from "typescript-linq";
 
 export default class ApiRepository
 {
@@ -133,16 +135,23 @@ export default class ApiRepository
     }
 
     public retrievePluginSteps(pluginTypeId:string) {
-        const request:DynamicsWebApi.RetrieveRequest = {
-            collection: "plugintypes",
-            id: pluginTypeId,
-            select: ['name', 'publickeytoken'],
-            expand: [ { property: "plugintypeid_sdkmessageprocessingstep"} ]
+        const request:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "sdkmessageprocessingsteps",
+            expand: [ { property: "sdkmessageid" } ],
+            filter: `plugintypeid/plugintypeid eq ${pluginTypeId}`,
         };
 
         return this.webapi.retrieveRequest(request)
             .then(response => {
-                return response && response.plugintypeid_sdkmessageprocessingstep && response.plugintypeid_sdkmessageprocessingstep.length > 0 ? response.plugintypeid_sdkmessageprocessingstep : null;
+                return response && response.value ? response.value : null;
+            }).then(async response => {
+
+                await response.forEach(r => {
+                    r.sdkmessageid.filters = this.webapi.retrieveMultiple("sdkmessagefilters", [], `_sdkmessageid_value eq ${r.sdkmessageid}`)
+                        .then(r => new TS.Linq.Enumerator(r.value).toArray());
+                 });
+
+                 return response;
             });
     }
 

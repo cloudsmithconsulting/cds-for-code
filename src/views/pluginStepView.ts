@@ -7,7 +7,7 @@ export default class PluginStepViewManager implements IWireUpCommands {
 	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
-            vscode.commands.registerCommand(cs.dynamics.controls.pluginStep.open, async (item: any) => { // Match name of command to package.json command
+            vscode.commands.registerCommand(cs.dynamics.controls.pluginStep.open, async (step: any) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 const view = View.createOrShow(PluginStepView, {
@@ -18,8 +18,8 @@ export default class PluginStepViewManager implements IWireUpCommands {
                 });
 
                 // only do this if we are editing
-                if (item) {
-                    view.setInitialState(item);
+                if (step) {
+                    view.setInitialState(step);
                 }
             }) // <-- no semi-colon, comma starts next command registration
         );
@@ -41,14 +41,12 @@ class PluginStepView extends View {
     
     public onDidReceiveMessage(instance: PluginStepView, message: any): vscode.Event<any> {
         switch (message.command) {
-            case 'default':                
+            case 'saveSdkMessageProcessingStep':                
                 return;
         }
     }
 
-    public setInitialState(item?: any) {
-        if (item) {
-            this.panel.webview.postMessage({ command: 'open', message: item });
-        }
+    public setInitialState(step: any) {
+        this.panel.webview.postMessage({ command: 'load', step });
     }
 }
