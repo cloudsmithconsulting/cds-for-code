@@ -4,8 +4,9 @@ import Utilities from '../helpers/Utilities';
 import ApiHelper from "../helpers/ApiHelper";
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { Response } from "node-fetch";
+import fetch, { Response } from "node-fetch";
 import { TS } from "typescript-linq";
+import fetchQuery from "../api/FetchQuery";
 
 export default class ApiRepository
 {
@@ -134,6 +135,38 @@ export default class ApiRepository
             });
     }
 
+    // Gets a list of entities and their IDs
+    public retrieveEntityTypeCodes() : Promise<any[]>
+    {
+        let entitiesQuery:DynamicsWebApi.RetrieveMultipleRequest = {
+            select: [ "MetadataId", "LogicalName", "ObjectTypeCode" ]
+        };
+
+        return this.webapi.retrieveEntitiesRequest(entitiesQuery)
+            .then(response => response.value ? new TS.Linq.Enumerator(response.value).orderBy(e => e["LogicalName"]).toArray() : []);
+    }
+
+    // Lookup "Message" in plugin registration
+    public retrieveSdkMessages() {
+        const request:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "sdkmessages",
+            select: ["sdkmessageid", "name", "autotransact", "availability", "categoryname", "isactive", "ismanaged", "isprivate", "isreadonly", "template", "workflowsdkstepenabled"]
+        };
+
+        return this.webapi.retrieveAllRequest(request)
+            .then(response => response.value);
+    }
+
+    public retrieveSdkMessageDetails(sdkMessageId:string) {
+        const request:DynamicsWebApi.RetrieveRequest = {
+            collection: "sdkmessages",
+            id: sdkMessageId,
+            expand: [ { property: "sdkmessageid_sdkmessagefilter", select: [ "sdkmessagefilterid", "primaryobjecttypecode", "secondaryobjecttypecode" ] } ]
+        };
+
+        return this.webapi.retrieveRequest(request);
+    }
+    
     public retrievePluginSteps(pluginTypeId:string) {
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessageprocessingsteps",

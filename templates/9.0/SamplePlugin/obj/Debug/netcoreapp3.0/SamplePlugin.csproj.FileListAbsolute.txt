@@ -1,8 +1,0 @@
-C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\bin\Debug\netcoreapp3.0\SamplePlugin.deps.json
-C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\bin\Debug\netcoreapp3.0\SamplePlugin.dll
-C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\obj\Debug\netcoreapp3.0\SamplePlugin.csprojAssemblyReference.cache
-C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\obj\Debug\netcoreapp3.0\SamplePlugin.AssemblyInfoInputs.cache
-C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\obj\Debug\netcoreapp3.0\SamplePlugin.AssemblyInfo.cs
-C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\bin\Debug\netcoreapp3.0\SamplePlugin.pdb
-C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\obj\Debug\netcoreapp3.0\SamplePlugin.dll
-C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\obj\Debug\netcoreapp3.0\SamplePlugin.pdb
