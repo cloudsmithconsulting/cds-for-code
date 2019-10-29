@@ -1,5 +1,6 @@
 export interface IDictionary<TKey, T> {
     add(key: TKey, value: T): void;
+    insert(index: number, key: TKey, value: T);
     containsKey(key: TKey): boolean;
     get(key: TKey): T;
     getKey(value: T): TKey;
