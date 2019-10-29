@@ -85,6 +85,10 @@ export class ViewRenderer {
 			cssHtml += `<link rel="stylesheet" type="text/css" href="${this._styleSheets[key]}">`;
 		});
 		
+		// auto add some scripts
+		this.addScript('main.js');
+		this.addScript('iconify.min.js');
+
 		let scriptHtml: string = '';
 		Object.keys(this._scripts).forEach(key => {
 			scriptHtml += `<script src="${this._scripts[key]}"></script>`;
@@ -98,7 +102,11 @@ export class ViewRenderer {
 	Use a content security policy to only allow loading images from https or from our extension directory,
 	and only allow scripts that have a specific nonce.
 	-->
-	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${this._view.panel.webview.cspSource} https:; style-src ${this._view.panel.webview.cspSource}; script-src 'unsafe-inline' ${this._view.panel.webview.cspSource};">
+	<meta http-equiv="Content-Security-Policy" 
+		content="default-src 'none'; 
+		img-src ${this._view.panel.webview.cspSource} https:; 
+		style-src 'self' 'unsafe-inline' ${this._view.panel.webview.cspSource}; 
+		script-src 'unsafe-inline' ${this._view.panel.webview.cspSource} https://api.iconify.design;">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	${cssHtml}
 	<title>${this._view.viewOptions.viewTitle}</title>
@@ -207,7 +215,16 @@ export abstract class View {
 		);
 
 		// Handle messages from the webview
-		this.panel.webview.onDidReceiveMessage(m => this.onDidReceiveMessage(this, m));
+		this.panel.webview.onDidReceiveMessage(m => {
+			// if we receive a closeWindow command, just close it
+			if (m.command === "closeWindow") {
+				this.dispose();
+				return;
+			}
+
+			// give the message to the event handler
+			this.onDidReceiveMessage(this, m);
+		});
 	}
 
 	public dispose() {

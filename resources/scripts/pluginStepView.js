@@ -1,7 +1,8 @@
 // This script will be run within the webview itself
 // It cannot access the main VS Code APIs directly.
 (function () {
-    const vscode = acquireVsCodeApi();
+    // You MUST set = window.vscodeApi for scripts in main.js to work properly
+    const vscode = window.vscodeApi = acquireVsCodeApi();
 
     const excutionPipelineRadios = document.getElementById("ExecutionPipeline");
     const excutionModeRadios = document.getElementsByName("ExecutionMode");
