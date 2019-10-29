@@ -6,6 +6,16 @@ h2, h3, h4, h5, h6 {
    text-decoration: underline;
 }
 
+fieldset {
+    margin: 0 0.7em 0.7em 0;
+}
+
+legend {
+    padding: 5px 10px;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
 table {
     margin: 0 auto;
     width: 95%;
@@ -48,7 +58,8 @@ table tr:nth-child(even) {
     border-bottom-color: var(--vscode-panelTitle-activeForeground);
 }
 
-.tab__content {
+.tab__content,
+.field-container {
     animation: fadeEffect 1s; /* Fading effect takes 1 second */
 }
   
@@ -70,7 +81,7 @@ table tr:nth-child(even) {
 
 .grid--left-panel-large {
     display: grid;
-    grid-template-columns: 35% auto;
+    grid-template-columns: 30% 30% auto;
 }
 
 .grid--right-panel {
@@ -97,7 +108,7 @@ table tr:nth-child(even) {
 }
 
 .field--buttons {
-    padding: 1em 0 0.5em 0 !important;
+    padding: 0.5em 0 !important;
 }
 
 .field--buttons button,
@@ -185,4 +196,8 @@ table tr:nth-child(even) {
     border: none;
     border-width: 0;
     float: right;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
 }
