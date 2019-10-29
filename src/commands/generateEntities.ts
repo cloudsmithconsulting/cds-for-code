@@ -41,7 +41,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                             + `-ToolsPath ${coreToolsRoot} `
                             + `-Url "${Utilities.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `
                             + `-Username "${config.username}" `
-                            + `-Password !"${Utilities.PowerShellSafeString(config.password)}"! `
+                            + `-Password "${Utilities.PowerShellSafeString(config.password)}" `
                             + (config.domain ? `-Domain "${config.domain}" ` : '')
                             + `-Path "${folder}" `
                             + `-OutputFile "${outputFileName}" `
