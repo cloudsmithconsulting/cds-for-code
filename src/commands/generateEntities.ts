@@ -25,7 +25,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                 config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
-				folder = folder || <string>await QuickPicker.pickAnyFolder(workspaceFolder ? workspaceFolder.uri : undefined, false, "Choose the folder where to generated code will go");
+				folder = folder || (<vscode.Uri>await QuickPicker.pickAnyFolder(workspaceFolder ? workspaceFolder.uri : undefined, false, "Choose the folder where to generated code will go")).fsPath;
                 if (Utilities.IsNullOrEmpty(folder)) { return; }
 
                 outputFileName = outputFileName || await QuickPicker.ask("Enter the output file name", undefined, "XrmEntities.cs");
@@ -34,21 +34,20 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                 namespace = namespace || await QuickPicker.ask("Enter the namespace for the generated code", undefined, "XrmEntities");
                 if (Utilities.IsNullOrEmpty(namespace)) { return; }
 
-                // setup the command text
-                const commandToExecute = `.\\Generate-XrmEntities.ps1 `
-                    + `-ToolsPath ${coreToolsRoot} `
-                    + `-Url "${Utilities.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `
-                    + `-Username "${config.username}" `
-                    + `-Password "${Utilities.PowerShellSafeString(config.password)}" `
-                    + (config.domain ? `-Domain "${config.domain}" ` : '')
-                    + `-Path "${folder}" `
-                    + `-OutputFile "${outputFileName}" `
-                    + (!Utilities.IsNull(namespace) ? `-Namespace "${namespace}" ` : '');
-
                 // build a powershell terminal
-                const terminal = DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"));
-                // execute the command
-                terminal.sendText(commandToExecute);
+                DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
+                    .then(terminal => { terminal.text(`.\\Generate-XrmEntities.ps1 `)
+                            .text(`-ToolsPath ${coreToolsRoot} `)
+                            .text(`-Url "${Utilities.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `)
+                            .text(`-Username "${config.username}" -Password "`)
+                            .sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
+                            .text(`" `)
+                            .text((config.domain ? `-Domain "${config.domain}" ` : ''))
+                            .text(`-Path "${folder}" `)
+                            .text(`-OutputFile "${outputFileName}" `)
+                            .text(!Utilities.IsNull(namespace) ? `-Namespace "${namespace}" ` : '')
+                            .enter();
+                    });
             })
         );
     }

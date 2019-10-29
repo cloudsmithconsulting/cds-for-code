@@ -8,6 +8,7 @@ export namespace dynamics
         public static readonly _namespace:string = "cs.dynamics.deployment";
         public static readonly addSolutionComponent:string = `${deployment._namespace}.addSolutionComponent`;
         public static readonly removeSolutionComponent:string = `${deployment._namespace}.removeSolutionComponent`;
+        public static readonly registerPluginAssembly:string = `${deployment._namespace}.registerPluginAssembly`;
     }
 
     // tslint:disable-next-line: class-name
@@ -20,14 +21,15 @@ export namespace dynamics
         public static readonly saveProjectAsTemplate:string = `${extension._namespace}.saveProjectAsTemplate`;
         public static readonly deleteProjectTemplate:string = `${extension._namespace}.deleteProjectTemplate`;
         public static readonly createProjectFromTemplate:string = `${extension._namespace}.createProjectFromTemplate`;
-        public static readonly createTerminal:string = `${extension._namespace}.createTerminal`;
         public static readonly clearTerminal:string = `${extension._namespace}.clearTerminal`;
+        public static readonly createTerminal:string = `${extension._namespace}.createTerminal`;
         public static readonly outputChannelName:string = `${extension._namespace}.outputChannelName`;
         private static _output:vscode.OutputChannel;
         static get output()
         {
             if (!this._output) {
                 this._output = vscode.window.createOutputChannel(extension.outputChannelName);
+                this._output.show(true);
             }
 
             return this._output;
@@ -121,6 +123,7 @@ export namespace dynamics
             public static readonly inspect:string = `${jsonInspector._namespace}.inspect`;
         }
 
+        // tslint:disable-next-line: class-name
         export class pluginStep
         {
             public static readonly _namespace:string = "cs.dynamics.controls.pluginStep";

@@ -59,20 +59,18 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 					serverUrl = serverUrl.substring(0, serverUrl.length - 1);
 				}
 
-				// setup the command text
-				const commandToExecute = `.\\Get-XrmSolution.ps1 `
-					+ `-ServerUrl "${serverUrl}" `
-					+ `-OrgName "${orgName}" `
-					+ `-SolutionName "${solution.uniquename}" `
-					+ `-Path "${folder}" `
-					+ `-ToolsPath "${toolsPath}" `
-					+ `-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “${Utilities.PowerShellSafeString(config.password)}” -AsPlainText -Force))) `;
-
-				// build a powershell terminal
-				const terminal = DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"));
-				
-				// execute the command
-				terminal.sendText(commandToExecute);
+				DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
+					.then(terminal => { terminal.text(`.\\Get-XrmSolution.ps1 `)
+						.text(`-ServerUrl "${serverUrl}" `)
+						.text(`-OrgName "${orgName}" `)
+						.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
+						.text(`-Path "${folder}" `)
+						.text(`-ToolsPath "${toolsPath}" `)
+						.text(`-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “`)
+						.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
+						.text(`” -AsPlainText -Force))) `)
+						.enter();
+					});
 
 				// write this to our solution map.
 				SolutionMap.read()

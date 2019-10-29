@@ -1,0 +1,10 @@
+C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\bin\Debug\net462\SamplePlugin.dll
+C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\bin\Debug\net462\SamplePlugin.pdb
+C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\bin\Debug\net462\Microsoft.Crm.Sdk.Proxy.dll
+C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\bin\Debug\net462\Microsoft.Xrm.Sdk.dll
+C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\obj\Debug\net462\SamplePlugin.csprojAssemblyReference.cache
+C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\obj\Debug\net462\SamplePlugin.AssemblyInfoInputs.cache
+C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\obj\Debug\net462\SamplePlugin.AssemblyInfo.cs
+C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\obj\Debug\net462\SamplePlugin.csproj.CopyComplete
+C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\obj\Debug\net462\SamplePlugin.dll
+C:\Dev\Clients\MissionSupport\VsCode-Dynamics365-Toolkit\templates\SamplePlugin\obj\Debug\net462\SamplePlugin.pdb

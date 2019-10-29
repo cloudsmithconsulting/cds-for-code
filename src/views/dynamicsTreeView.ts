@@ -84,7 +84,13 @@ export default class DynamicsTreeView implements IWireUpCommands {
 
                     if (componentId && componentType) {
                         return vscode.commands.executeCommand(cs.dynamics.deployment.addSolutionComponent, item.config, undefined, componentId, componentType)
-                            .then(response => treeProvider.refreshSolution(item.solutionPath));
+                            .then(response => {
+                                const solutionPath = item.id.split("/").slice(0, 4);
+                                solutionPath.push("Solutions");
+                                solutionPath.push((<any>response).solutionid);
+
+                                treeProvider.refreshSolution(solutionPath.join("/")); 
+                            });
                     }
 
             }) // <-- no semi-colon, comma starts next command registration
@@ -149,6 +155,11 @@ export default class DynamicsTreeView implements IWireUpCommands {
                 {
                     case EntryType.Solutions:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config), retryFunction);
+
+                        break;
+                    case EntryType.PluginType:
+                        vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, {});
+
                         break;
                 }
             })   
@@ -178,7 +189,10 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         break;
                     case EntryType.View:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.context.savedqueryid, item.solutionId), retryFunction);
-                        break;                    
+                        break;     
+                    case EntryType.PluginStep:
+                        vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, item.context);
+                        break;
                 }
            }) // <-- no semi-colon, comma starts next command registration
         );
@@ -243,6 +257,12 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         
                             return innerFolders && innerFolders.length > 0 ? innerFolders : innerItems;
                     }
+                case EntryType.Plugin:
+                    return this.getPluginTypeDetails(element, commandPrefix, element.context);
+                case EntryType.PluginType:
+                    return this.getPluginStepDetails(element, commandPrefix, element.context);
+                case EntryType.PluginStep:
+                    return this.getPluginStepImageDetails(element, commandPrefix, element.context);
                 case EntryType.Entity:
                     return Promise.resolve(this.getEntityLevelDetails(element, commandPrefix, element.context));
                 case EntryType.Attributes:
@@ -527,7 +547,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             plugin => new TreeEntry(
                 plugin.name, 
                 EntryType.Plugin,
-                vscode.TreeItemCollapsibleState.None,
+                vscode.TreeItemCollapsibleState.Collapsed,
                 `v${plugin.version} (${plugin.publickeytoken})`, 
                 {
                     command: cs.dynamics.controls.treeView.clickEntry,
@@ -538,6 +558,72 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 plugin),
             `An error occurred while retrieving plug-in assemblies from ${element.config.webApiUrl}`,
             () => this.getPluginDetails(element, commandPrefix, solution));
+
+        return returnValue;
+    }
+
+    private getPluginTypeDetails(element: TreeEntry, commandPrefix?: string, plugin?: any): Thenable<TreeEntry[]> {
+		const api = new ApiRepository(element.config);
+        const returnValue = this.createTreeEntries(
+            api.retrievePluginTypes(plugin.pluginassemblyid), 
+            pluginType => new TreeEntry(
+                pluginType.friendlyname, 
+                EntryType.PluginType,
+                vscode.TreeItemCollapsibleState.Collapsed,
+                pluginType.name.replace(plugin.name + ".", ''),
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: pluginType.friendlyname,
+                    arguments: [`${commandPrefix || ''}/${pluginType.name}`]
+                },
+                element.config,
+                pluginType),
+            `An error occurred while retrieving plug-in types from ${element.config.webApiUrl}`,
+            () => this.getPluginTypeDetails(element, commandPrefix, plugin));
+
+        return returnValue;
+    }
+
+    private getPluginStepDetails(element: TreeEntry, commandPrefix?: string, pluginType?: any): Thenable<TreeEntry[]> {
+		const api = new ApiRepository(element.config);
+        const returnValue = this.createTreeEntries(
+            api.retrievePluginSteps(pluginType.plugintypeid), 
+            pluginStep => new TreeEntry(
+                pluginStep.name.replace(pluginType.name + ": ", ''), 
+                EntryType.PluginStep,
+                vscode.TreeItemCollapsibleState.Collapsed,
+                pluginStep.description,
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: pluginStep.name,
+                    arguments: [`${commandPrefix || ''}/${pluginStep.name}`]
+                },
+                element.config,
+                pluginStep),
+            `An error occurred while retrieving plug-in steps from ${element.config.webApiUrl}`,
+            () => this.getPluginStepDetails(element, commandPrefix, pluginType));
+
+        return returnValue;
+    }
+
+    private getPluginStepImageDetails(element: TreeEntry, commandPrefix?: string, pluginStep?: any): Thenable<TreeEntry[]> {
+		const api = new ApiRepository(element.config);
+        const returnValue = this.createTreeEntries(
+            api.retrievePluginStepImages(pluginStep.sdkmessageprocessingstepid), 
+            pluginImage => new TreeEntry(
+                pluginImage.name, 
+                EntryType.PluginStepImage,
+                vscode.TreeItemCollapsibleState.None,
+                pluginImage.description,
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: pluginImage.name,
+                    arguments: [`${commandPrefix || ''}/${pluginImage.name}`]
+                },
+                element.config,
+                pluginImage),
+            `An error occurred while retrieving plug-in step images from ${element.config.webApiUrl}`,
+            () => this.getPluginStepImageDetails(element, commandPrefix, pluginStep));
 
         return returnValue;
     }
@@ -843,6 +929,9 @@ class TreeEntry extends vscode.TreeItem {
         { key: "WebResource", value: new IconResolver("../../../resources/icons/default/webresource.light.svg", "../../../resources/icons/default/webresource.dark.svg") },
         { key: "Plugins", value: new IconResolver("../../../resources/icons/default/plugins.light.svg", "../../../resources/icons/default/plugins.dark.svg") },
         { key: "Plugin", value: new IconResolver("../../../resources/icons/default/plugin.light.svg", "../../../resources/icons/default/plugin.dark.svg") },
+        { key: "PluginStep", value: new IconResolver("../../../resources/icons/default/pluginstep.light.svg", "../../../resources/icons/default/pluginstep.dark.svg") },
+        { key: "PluginStepImage", value: new IconResolver("../../../resources/icons/default/pluginstepimage.light.svg", "../../../resources/icons/default/pluginstepimage.dark.svg") },
+        { key: "PluginType", value: new IconResolver("../../../resources/icons/default/plugintype.light.svg", "../../../resources/icons/default/plugintype.dark.svg") },
         { key: "Solutions", value: new IconResolver("../../../resources/icons/default/solutions.light.svg", "../../../resources/icons/default/solutions.dark.svg") },
         { key: "Solution", value: new IconResolver("../../../resources/icons/default/solution.light.svg", "../../../resources/icons/default/solution.dark.svg") },
         { key: "Folder", value: new IconResolver("../../../resources/icons/default/folder.light.svg", "../../../resources/icons/default/folder.dark.svg") },
@@ -949,6 +1038,9 @@ enum EntryType {
     OptionSet = "OptionSet",
     WebResource = "WebResource",
     Plugin = "Plugin",
+    PluginType = "PluginType",
+    PluginStep = "PluginStep",
+    PluginStepImage = "PluginStepImage",
     Process = "Process",
     Solution = "Solution",
     Attributes = "Attributes",

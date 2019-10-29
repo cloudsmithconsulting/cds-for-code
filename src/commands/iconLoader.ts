@@ -54,6 +54,9 @@ export class ExtensionIconTheme {
 			{ key: "Process", value: "vaadin-file-process" },
 			{ key: "Web Resource", value: "fa-file-code-o" },
 			{ key: "Plugin", value: "mdi-codepen" },
+			{ key: "PluginStep", value: "uil-processor" },
+			{ key: "PluginStepImage", value: "ic-baseline-image-search" },
+			{ key: "PluginType", value: "fe-prototype" },
 			{ key: "Solution", value: "ic-round-border-all" },
 			{ key: "Add", value: "ic-baseline-add" },
 			{ key: "Edit", value: "ic-twotone-edit" },
@@ -155,6 +158,9 @@ export type ExtensionIcon =
 	'Web Resource' |
 	'Plugins' |
 	'Plugin' |
+	'PluginStep' | 
+	'PluginStepImage' |
+	'PluginType' |
 	'Solutions' |
 	'Solution' |
 	'Add' |
