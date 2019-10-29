@@ -17,7 +17,7 @@ export default class ApiHelper
             return api.retrieveRequest(solutionQuery).then(solution => {
                 if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0)
                 {
-                    return null;
+                    return Promise.resolve(TS.Linq.Enumerator.Empty);
                 }
     
                 let components = new TS.Linq.Enumerator(solution.solution_solutioncomponent);
