@@ -344,6 +344,7 @@
 		"@types/node": "^10.14.19",
 		"@types/node-fetch": "^2.5.2",
 		"@types/vscode": "^1.38.0",
+		"@types/xml2js": "^0.4.5",
 		"glob": "^7.1.4",
 		"mocha": "^6.1.4",
 		"tslint": "^5.12.1",
@@ -351,7 +352,6 @@
 		"vscode-test": "^1.2.0"
 	},
 	"dependencies": {
-		"@types/xml2js": "^0.4.5",
 		"adal-node": "^0.2.1",
 		"httpntlm": "^1.7.6",
 		"jsoneditor": "^7.1.0",

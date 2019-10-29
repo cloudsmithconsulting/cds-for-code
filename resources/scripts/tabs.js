@@ -1,13 +1,11 @@
 // This script will be run within the webview itself
 // It cannot access the main VS Code APIs directly.
 (function () {
-    let currentTabId = window.currentTabId;
-
     const changeTab = window.changeTab = function(event, tabId) {
         if (!event) { return; } // only do this if event exists
 
         // set the current tab id
-        currentTabId = tabId;
+        window.currentTabId = tabId;
         
         // Get all elements with class="tabcontent" and hide them
         const tabcontent = document.getElementsByClassName("tab__content");
