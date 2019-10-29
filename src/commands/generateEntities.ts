@@ -34,21 +34,19 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                 namespace = namespace || await QuickPicker.ask("Enter the namespace for the generated code", undefined, "XrmEntities");
                 if (Utilities.IsNullOrEmpty(namespace)) { return; }
 
-                // setup the command text
-                const commandToExecute = `.\\Generate-XrmEntities.ps1 `
-                    + `-ToolsPath ${coreToolsRoot} `
-                    + `-Url "${Utilities.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `
-                    + `-Username "${config.username}" `
-                    + `-Password "${Utilities.PowerShellSafeString(config.password)}" `
-                    + (config.domain ? `-Domain "${config.domain}" ` : '')
-                    + `-Path "${folder}" `
-                    + `-OutputFile "${outputFileName}" `
-                    + (!Utilities.IsNull(namespace) ? `-Namespace "${namespace}" ` : '');
-
                 // build a powershell terminal
-                const terminal = DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"));
-                // execute the command
-                terminal.sendText(commandToExecute);
+                DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
+                    .then(terminal => {
+                        terminal.sendText(`.\\Generate-XrmEntities.ps1 `
+                            + `-ToolsPath ${coreToolsRoot} `
+                            + `-Url "${Utilities.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `
+                            + `-Username "${config.username}" `
+                            + `-Password !"${Utilities.PowerShellSafeString(config.password)}"! `
+                            + (config.domain ? `-Domain "${config.domain}" ` : '')
+                            + `-Path "${folder}" `
+                            + `-OutputFile "${outputFileName}" `
+                            + (!Utilities.IsNull(namespace) ? `-Namespace "${namespace}" ` : ''), true);
+                    });
             })
         );
     }

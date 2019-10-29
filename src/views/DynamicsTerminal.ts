@@ -10,6 +10,7 @@ export class Terminal implements vscode.Terminal {
 	private _onDidOpen: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 	private _onDidClose: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 	private _onDidReceiveInput: vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
+	private _onDidRunCommand: vscode.EventEmitter<string> = new vscode.EventEmitter<string>();
 	private _terminal: vscode.Terminal;
 	private _process;
 	private _isMasked: boolean = false;
@@ -18,10 +19,12 @@ export class Terminal implements vscode.Terminal {
 	private _error:string[] = [];
 	private _position:number = 0;
 
-	readonly onDidWrite: vscode.Event<string> = this._onDidWrite.event;
-	readonly onDidOpen: vscode.Event<void> = this._onDidOpen.event;
-	readonly onDidClose: vscode.Event<void> = this._onDidClose.event;
-	readonly onDidReceiveInput: vscode.Event<string> = this._onDidReceiveInput.event;
+	onDidWrite: vscode.Event<string> = this._onDidWrite.event;
+	onDidOpen: vscode.Event<void> = this._onDidOpen.event;
+	onDidClose: vscode.Event<void> = this._onDidClose.event;
+	onDidReceiveInput: vscode.Event<string> = this._onDidReceiveInput.event;
+	onDidRunCommand: vscode.Event<string> = this._onDidRunCommand.event;
+	
 	static readonly defaultTerminalName: string = "CloudSmith Terminal";
 
 	get isMasked(): boolean {
@@ -59,25 +62,27 @@ export class Terminal implements vscode.Terminal {
 					open: () => this._onDidOpen.fire(),
 					close: () => this._onDidClose.fire(),
 					handleInput: (data: string) => {
-						this._inputCommand += data;
-						this._position++;
+						this._onDidReceiveInput.fire(data);
+
 						if (this._process) { this._process.stdin.write(data); }
 
 						if (data === '\r') { // Enter
 							this.write('\r\n');
+							this._onDidRunCommand.fire(this._inputCommand);
 							this._inputCommand = '';
 							this._position = 0;
-							
+							this._output = [];
+							this._error = [];
+								
 							return;
 						}
 
 						if (data === '\x7f') { // Backspace
-							this._position--;
-
 							if (this._inputCommand.length === 0 || this._position === 0) {
 								return;
 							}
 
+							this._position--;
 							this._inputCommand = this._inputCommand.substr(0, this._inputCommand.length - 1);
 							// Move cursor backward
 							this.write('\x1b[D');
@@ -86,10 +91,13 @@ export class Terminal implements vscode.Terminal {
 
 							return;
 						}
+
+						this._inputCommand += data;
+						this._position++;
 					}
 				}});
 
-
+			//PS C:\Users\BrandonKelly\AppData\Roaming\Code\User\globalStorage\cloudsmith.dynamics-365-toolkit> 
 			this._process = child_process.spawn(options.shellPath, spawnOptions);
 			this._process.stdout.on("data", data => {
 				this._output.push(data.toString());
@@ -97,7 +105,7 @@ export class Terminal implements vscode.Terminal {
 			});
 			this._process.stderr.on("data", data => {
 				this._error.push(data.toString());
-				this.writeColor(2, data.toString());
+				this.writeColor(1, data.toString());
 			});
 		}
 
@@ -106,7 +114,7 @@ export class Terminal implements vscode.Terminal {
 
 	clear(): Terminal {
 		if (this._terminal) {
-			this.write('\x1b[2J\x1b[3J\x1b[;H');
+			this.write('\x1b[2J\x1b[3J\x1b[;H\r');
 		}
 
 		return this;
@@ -124,9 +132,33 @@ export class Terminal implements vscode.Terminal {
 		return this;
 	}
 
+	enter(): Terminal {
+		this.sendText("", true);
+
+		return this;
+	}
+	sensitive(text:string): Terminal {
+		this._isMasked = true;
+		this.sendText(text, false);
+		this._isMasked = false;
+
+		return this;
+	}
+
 	sendText(text: string, addNewLine?: boolean): void {
-		if (this._terminal) {
-			this._terminal.sendText(text, addNewLine);
+		if (this._isMasked) {
+			for (let i = 0; i < text.length; i++) {
+				if (this._onDidWrite) { this._onDidWrite.fire("*"); }
+			}
+		} else {
+			this.write(text);
+		}
+
+		if (this._process) { this._process.stdin.write(text); }
+
+		if (addNewLine) {
+			this.write("\r\n");
+			if (this._process) { this._process.stdin.write("\r\n\r\n"); }
 		}
 	}
 
@@ -159,11 +191,7 @@ export class Terminal implements vscode.Terminal {
 
 	private write(value:string) {
 		if (this._onDidWrite) { 
-			if (this._isMasked) {
-				this._onDidWrite.fire("*");
-			} else {
-				this._onDidWrite.fire(value); 
-			}
+			this._onDidWrite.fire(value); 
 		}
 	}
 
@@ -192,18 +220,27 @@ export default class DynamicsTerminal implements IWireUpCommands
 		let terminal:Terminal;
 
 		context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.extension.createTerminal, (folder:string) => {
-			if (!folder || !fs.existsSync(folder))
-			{
+			if (!folder || !fs.existsSync(folder)) {
 				folder = context.globalStoragePath;
 			}
 
-			terminal = new Terminal({
-				name: "CloudSmith Dynamics Terminal",
+			const isNew:boolean = !terminal;
+
+			terminal = terminal || new Terminal({
+				name: Terminal.defaultTerminalName,
 				shellPath: "powershell.exe",
 				cwd: folder 
 			});
 
 			terminal.show();
+			terminal.onDidClose(() => {
+				terminal.dispose();
+				terminal = null;
+			});
+
+			if (isNew) { terminal.sendText(`cd ${folder}`, true); }
+
+			return terminal;
 		}));
 
 		context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.extension.clearTerminal, async () => {
@@ -212,33 +249,12 @@ export default class DynamicsTerminal implements IWireUpCommands
 			}
 
 			terminal.clear();
+
+			return terminal;
 		}));
 	}
 
-    public static showTerminal(path: string): vscode.Terminal {
-        const terminalName = 'CloudSmith: Dynamics PowerShell';
-		//see if our terminal is open all ready
-		const index = vscode.window.terminals.findIndex(t => t.name === terminalName);
-		if (index === -1) {
-			// index wasn't found, return new terminal
-			const result = vscode.window.createTerminal({
-				name: terminalName,
-				// make sure we get powershell
-				shellPath: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-				cwd: path // current working directory
-			});
-			// show it
-			result.show();
-			// return it
-			return result;
-		}
-		// get terminal with name at index
-		const result = vscode.window.terminals[index];
-		// change cwd
-		result.sendText(`cd ${path}`);
-		// show it
-		result.show();
-		// return it
-		return result;
+    public static showTerminal(path: string): Thenable<Terminal> {
+		return vscode.commands.executeCommand(cs.dynamics.extension.createTerminal, path);
 	}
 }
