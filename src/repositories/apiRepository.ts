@@ -45,7 +45,7 @@ export default class ApiRepository
 
         if (solutionId)
         {
-            request.filter = ` and solutionid eq ${solutionId}`;
+            request.filter = `${request.filter} and solutionid eq ${solutionId}`;
         }
 
         return this.webapi.retrieveAllRequest(request)
