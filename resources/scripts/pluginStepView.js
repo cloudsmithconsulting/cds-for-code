@@ -3,18 +3,7 @@
 (function () {
     // You MUST set = window.vscodeApi for scripts in main.js to work properly
     const vscode = window.vscodeApi = acquireVsCodeApi();
-
-    const excutionPipelineRadios = document.getElementById("ExecutionPipeline");
-    const excutionModeRadios = document.getElementsByName("ExecutionMode");
     const submitButton = document.getElementById("submitButton");
-    let currentExeutionMode = "Synchronous";
-
-    excutionModeRadios.forEach(el => {
-        el.addEventListener("change", event => {
-            const value = event.currentTarget.value;
-            currentExeutionMode = value;
-        });
-    });
 
     submitButton.addEventListener("click", event => {
         event.preventDefault();
@@ -28,9 +17,9 @@
             stepName: document.getElementById("StepName").value,
             userContext: document.getElementById("UserContext").value,
             executionOrder: document.getElementById("ExecutionOrder").value,
-            excutionPipeline: excutionPipelineRadios,
+            excutionPipeline: CloudSmith.Controls.getRadioButtonValue("ExecutionPipeline"),
             statusCode: document.getElementById("StatusCode").value && document.getElementById("StatusCode").value.length > 0,
-            executionMode: currentExeutionMode,
+            executionMode: CloudSmith.Controls.getRadioButtonValue("ExecutionMode"),
             server: document.getElementById("Server").value && document.getElementById("Server").value.length > 0,
             offline: document.getElementById("Offline").value && document.getElementById("Offline").value.length > 0
         };
@@ -52,14 +41,14 @@
         const messages = [];
 
         // put validations in here
-        if (isNullOrEmpty(config.message)) { messages.push('The Message is required'); }
-        if (isNullOrEmpty(config.primaryEntity)) { messages.push('The Primary Entity is required'); }
-        if (isNullOrEmpty(config.secondEntity)) { messages.push('The Second Entity is required'); }
-        if (isNullOrEmpty(config.filteringAttributes)) { messages.push('The Filtering Attributes is required'); }
-        if (isNullOrEmpty(config.eventHandler)) { messages.push('The Event Handler is required'); }
-        if (isNullOrEmpty(config.stepName)) { messages.push('The Step Name is required'); }
-        if (isNullOrEmpty(config.userContext)) { messages.push('The User Context is required'); }
-        if (isNullOrEmpty(config.executionOrder)) { messages.push('The Execution Order is required'); }
+        if (CloudSmith.Utilities.isNullOrEmpty(config.message)) { messages.push('The Message is required'); }
+        if (CloudSmith.Utilities.isNullOrEmpty(config.primaryEntity)) { messages.push('The Primary Entity is required'); }
+        if (CloudSmith.Utilities.isNullOrEmpty(config.secondEntity)) { messages.push('The Second Entity is required'); }
+        if (CloudSmith.Utilities.isNullOrEmpty(config.filteringAttributes)) { messages.push('The Filtering Attributes is required'); }
+        if (CloudSmith.Utilities.isNullOrEmpty(config.eventHandler)) { messages.push('The Event Handler is required'); }
+        if (CloudSmith.Utilities.isNullOrEmpty(config.stepName)) { messages.push('The Step Name is required'); }
+        if (CloudSmith.Utilities.isNullOrEmpty(config.userContext)) { messages.push('The User Context is required'); }
+        if (CloudSmith.Utilities.isNullOrEmpty(config.executionOrder)) { messages.push('The Execution Order is required'); }
 
         if (messages.length > 0) {
             // build and inject error message
@@ -83,9 +72,5 @@
                 setInitialState(message.command.step);
         }
     });
-
-    function isNullOrEmpty(str) {
-        return (!str || str.replace(/\s/gi, "").length === 0);
-    }
 
 }());

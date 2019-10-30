@@ -14,7 +14,7 @@
     }
 
     const CloudSmith = window.CloudSmith = {
-        Helpers: {
+        Controls: {
             getRadioButtonValue: function(radioButtonName) {
                 const radioInputs = document.getElementsByName(radioButtonName);
                 for (let i = 0; i < radioInputs.length; i++) {
@@ -26,6 +26,11 @@
         Tabs: {
             getCurrentTab: function (defaultTab) {
                 return window.currentTab || defaultTab;
+            }
+        },
+        Utilities: {
+            isNullOrEmpty: function(str) {
+                return (!str || str.replace(/\s/gi, "").length === 0);
             }
         }
     };

@@ -47,7 +47,7 @@
                 : "";
 
             const currentTabId = CloudSmith.Tabs.getCurrentTab("WhiteList");
-            const ruleType = CloudSmith.Helpers.getRadioButtonValue(`RuleType${fieldSuffix}`);
+            const ruleType = CloudSmith.Controls.getRadioButtonValue(`RuleType${fieldSuffix}`);
 
             const rulesToAdd = [];
 
