@@ -6,9 +6,9 @@
 	"version": "0.1.0",
 	"preview": true,
 	"engines": {
-		"vscode": "^1.34.0"
+		"vscode": "^1.38.0"
 	},
-	"icon": "images/cloudsmith-logo-only-50px.png",
+	"icon": "resources/images/cloudsmith-logo-only-200px.png",
 	"categories": [
 		"Extension Packs",
 		"Other"
