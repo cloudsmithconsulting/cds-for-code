@@ -6,7 +6,6 @@ import ApiRepository from '../repositories/apiRepository';
 import QuickPicker from '../helpers/QuickPicker';
 import DynamicsTerminal from '../views/DynamicsTerminal';
 import * as path from 'path';
-import { Terminal } from '../../out/views/DynamicsTerminal';
 import { TS } from 'typescript-linq';
 
 export default class RegisterPluginAssembly implements IWireUpCommands {
@@ -44,8 +43,7 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
                                         assemblyId = pluginAssemblyId;
 
                                         if (!pluginAssembly && solution) {
-                                            return api.addSolutionComponent(solution, pluginAssemblyId, DynamicsWebApi.SolutionComponent.PluginAssembly, false, true)
-                                                .catch(error => console.error(error));
+                                            return api.addSolutionComponent(solution, pluginAssemblyId, DynamicsWebApi.SolutionComponent.PluginAssembly, false, true);
                                         }                        
                                     })
                                     .then(response => {
@@ -54,8 +52,8 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
                                         for (let i = 0; i < types.length; i++) {
                                             promises.push(api.upsertPluginType(assemblyId, types[i].Name));
                                         }
-
-                                        return promises;
+                                        
+                                        return Promise.all(promises);
                                     });
                             }
                         });
