@@ -117,6 +117,7 @@ export namespace dynamics
             public static readonly configure:string = `${svcUtilConfig._namespace}.configure`;
         }
         
+        // tslint:disable-next-line: class-name
         export class jsonInspector
         {
             public static readonly _namespace:string = "cs.dynamics.controls.jsonInspector";
