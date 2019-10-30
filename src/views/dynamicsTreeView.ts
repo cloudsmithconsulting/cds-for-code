@@ -139,7 +139,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         return vscode.commands.executeCommand(cs.dynamics.deployment.removeSolutionComponent, item.config, solutions[0].context, componentId, componentType)
                             .then(response => treeProvider.refreshSolution(item.solutionPath));
                     }
-                }
+                 }
             }) // <-- no semi-colon, comma starts next command registration
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item)

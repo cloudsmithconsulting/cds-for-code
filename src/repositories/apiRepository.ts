@@ -7,6 +7,7 @@ import * as path from 'path';
 import fetch, { Response } from "node-fetch";
 import { TS } from "typescript-linq";
 import fetchQuery from "../api/FetchQuery";
+import { type } from "os";
 
 export default class ApiRepository
 {
@@ -133,6 +134,33 @@ export default class ApiRepository
                     filter: `assemblyname eq '${response.name}'${response.publickeytoken ? " and publickeytoken eq '" + response.publickeytoken + "'" : ""}`
                 }).then(response => response.value);
             });
+    }
+
+    public upsertPluginType(pluginAssemblyId:string, typeName:string, name:string = typeName, friendlyName:string = typeName, description?:string) {        
+        return this.webapi.retrieveMultipleRequest({
+            collection: "plugintypes",
+            select: ["plugintypeid"],
+            filter: `_pluginassemblyid_value eq ${pluginAssemblyId} and typename eq '${typeName}'`
+        }).then(response => {
+            let updateObject:any = {};
+
+            if (response && response.value && response.value.length > 0) {
+                updateObject = response.value[0];
+            }
+
+            updateObject["pluginassemblyid@odata.bind"] = "pluginassemblies(" + pluginAssemblyId + ")";
+            updateObject.typename = typeName;
+            updateObject.name = name;
+            updateObject.friendlyname = friendlyName;
+            updateObject.description = description;
+
+            if (response.value && response.value.length > 0) {
+                this.webapi.update(updateObject.plugintypeid, "plugintypes", updateObject);
+            } else {
+                this.webapi.create(updateObject, "plugintypes");
+            }
+        });
+        
     }
 
     // Gets a list of entities and their IDs

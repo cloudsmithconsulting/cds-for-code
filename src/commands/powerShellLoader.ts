@@ -8,6 +8,8 @@ import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import DynamicsTerminal from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import GlobalState from '../config/GlobalState';
+import ProjectTemplatesPlugin from "../ProjectTemplatesPlugin";
+import * as FileSystem from "../helpers/FileSystem";
 
 export default class PowerShellLoader implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -26,17 +28,20 @@ export default class PowerShellLoader implements IWireUpCommands {
 
     private static runScriptCheck(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
 		// get local storage folder
-		const folder = path.join(context.globalStoragePath, "/scripts/");
+		const scriptsFolder = path.join(context.globalStoragePath, "/scripts/");
+		const appsFolder = path.join(context.globalStoragePath, "/tools/");
 		
 		// Checks to see if folder exist
-		if (!fs.existsSync(folder)) {
-			console.log(`[CloudSmith] Creating folder '${folder}' as it does not exist.`);
-			// first check if ext dir exists
-			if (!fs.existsSync(context.globalStoragePath)) {
-				fs.mkdirSync(context.globalStoragePath);
-			}
-			fs.mkdirSync(folder);
-		}
+		FileSystem.MakeFolderSync(scriptsFolder);
+		FileSystem.MakeFolderSync(appsFolder);
+
+		const appsToFetch = [
+			"releases/download/beta/CloudSmith.Dynamics365.AssemblyScanner.zip",
+			"releases/download/beta/CloudSmith.Dynamics365.SamplePlugin.v8.0.zip",
+			"releases/download/beta/CloudSmith.Dynamics365.SamplePlugin.v8.1.zip",
+			"releases/download/beta/CloudSmith.Dynamics365.SamplePlugin.v8.2.zip",
+			"releases/download/beta/CloudSmith.Dynamics365.SamplePlugin.v9.0.zip"
+		];
 
 		// Array that stores script names
 		const scriptsToFetch = [
@@ -61,15 +66,16 @@ export default class PowerShellLoader implements IWireUpCommands {
 				}
 
 				const currentVersion = GlobalState.Instance(context).PowerShellScriptVersion;
+				const templateManager = new ProjectTemplatesPlugin(context);
 
-				// For loop to iterate through the array
+				// For loop to iterate through the array of scripts
 				for (var i = 0; i < scriptsToFetch.length; i++ ) {
 					// hold the file name for this iteration
 					const fileName = scriptsToFetch[i];
 					// uri containing remote file location
 					const remoteFilePath = `${remoteFolderPath}${fileName}`;
 					// local file location
-					const localFilePath = path.join(folder, fileName.replace("CloudSmith.Dynamics365.SampleScripts/", ""));
+					const localFilePath = path.join(scriptsFolder, path.basename(fileName));
 					// see if file exists & if our current version is less than the new version.
 					if ((!fs.existsSync(localFilePath))
 						|| (!currentVersion || parseFloat(currentVersion.toString()) < version))
@@ -91,13 +97,45 @@ export default class PowerShellLoader implements IWireUpCommands {
 										fs.mkdirSync(sdkInstallPath);
 									}
 
-									const commandToExecute = `.\\Scripts\\Install-Sdk.ps1 `
-										+ `-Path ${sdkInstallPath} `;
-									const terminal = DynamicsTerminal.showTerminal(context.globalStoragePath);
-
-									// execute the command
-									terminal.sendText(commandToExecute);
+									DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
+										.then(terminal => { terminal.text(`.\\Install-Sdk.ps1 `)
+											.text(`-Path ${sdkInstallPath} `)
+											.enter(); 
+									});
 								}
+							});
+					}
+
+					GlobalState.Instance(context).PowerShellScriptVersion = version;
+				}
+
+				// For loop to iterate through the array of "apps"
+				for (var j = 0; j < appsToFetch.length; j++ ) {
+					// hold the file name for this iteration
+					const fileName = appsToFetch[j];
+					// uri containing remote file location
+					const remoteFilePath = `https://github.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/${fileName}`;
+					// local file location
+					const localFilePath = path.join(appsFolder, path.basename(fileName));
+					// see if file exists & if our current version is less than the new version.
+					if ((!fs.existsSync(localFilePath))
+						|| (!currentVersion || parseFloat(currentVersion.toString()) < version))
+					{
+						// file doesn't exist, get it from remote location
+						PowerShellLoader.downloadZip(remoteFilePath, localFilePath)
+							.then(async localPath => {
+								let extractPath = localPath.replace(path.extname(localPath), "");
+
+								// Sample projects are templates
+								if (path.basename(fileName).startsWith("CloudSmith.Dynamics365.Sample")) {
+									extractPath = path.join(await templateManager.getTemplatesDir(), path.basename(fileName).replace(path.extname(fileName), ""));
+								}
+
+								return { zipFile: localPath, extractPath };
+							})
+							.then(options => {
+								FileSystem.Unzip(options.zipFile, options.extractPath)
+									.then(count => vscode.window.showInformationMessage(`${count} items extracted from ${options.zipFile} into ${options.extractPath}`));
 							});
 					}
 
@@ -111,7 +149,6 @@ export default class PowerShellLoader implements IWireUpCommands {
         return fetch(remoteFilePath, {
             method: 'get',
             headers: {
-                'Content-Type': 'text/plain',
                 'Accepts': 'text/plain'
 			}
         })
@@ -129,11 +166,31 @@ export default class PowerShellLoader implements IWireUpCommands {
 	}
 
 	//TODO: remove dependence on fetch.
+	private static downloadZip(remoteFilePath: string, localFilePath: string): Promise<string> {
+		return fetch(remoteFilePath, {
+			method: 'get',
+			headers: {
+				'Accepts': 'application/zip'
+			}
+		})
+		.then(res => res.buffer())
+		.then(body => {
+			fs.writeFileSync(localFilePath, body);
+
+			return localFilePath;
+		})
+		.catch(err => {
+			console.error(err);
+
+			return "";
+		});
+	}
+	
+	//TODO: remove dependence on fetch.
     private static checkVersion(remoteFilePath: string, channel: string): Promise<number> {
         return fetch(`${Utilities.EnforceTrailingSlash(remoteFilePath)}${channel}.version`, {
             method: 'get',
             headers: {
-                'Content-Type': 'text/plain',
                 'Accepts': 'text/plain'
 			}
         })

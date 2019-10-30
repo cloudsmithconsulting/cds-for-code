@@ -9,6 +9,7 @@ import IWireUpCommands from '../wireUpCommand';
 import SolutionMap from '../config/SolutionMap';
 import { TS } from 'typescript-linq';
 import { DynamicsWebApi } from '../api/Types';
+import * as FileSystem from "../helpers/FileSystem";
 
 export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;
@@ -48,6 +49,8 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 					 return; 
 				}
 				
+				FileSystem.MakeFolderSync(folder);
+				
 				toolsPath = toolsPath || coreToolsRoot;
 				if (Utilities.IsNull(toolsPath)) { return; }
 
@@ -60,22 +63,23 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				}
 
 				DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
-					.then(terminal => { terminal.text(`.\\Get-XrmSolution.ps1 `)
-						.text(`-ServerUrl "${serverUrl}" `)
-						.text(`-OrgName "${orgName}" `)
-						.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
-						.text(`-Path "${folder}" `)
-						.text(`-ToolsPath "${toolsPath}" `)
-						.text(`-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “`)
-						.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
-						.text(`” -AsPlainText -Force))) `)
-						.enter();
+					.then(terminal => { 
+						terminal.text(`.\\Get-XrmSolution.ps1 `)
+							.text(`-ServerUrl "${serverUrl}" `)
+							.text(`-OrgName "${orgName}" `)
+							.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
+							.text(`-Path "${folder}" `)
+							.text(`-ToolsPath "${toolsPath}" `)
+							.text(`-Credential (New-Object System.Management.Automation.PSCredential ("${config.username}", (ConvertTo-SecureString "`)
+							.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
+							.text(`" -AsPlainText -Force))) `)
+							.enter();
+					}).then(response => {
+						// write this to our solution map.
+						SolutionMap.read()
+							.then(map => map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename)))
+							.then(map => map.save());
 					});
-
-				// write this to our solution map.
-				SolutionMap.read()
-					.then(map => map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename)))
-					.then(map => map.save());
 			})
 		);
 	}
