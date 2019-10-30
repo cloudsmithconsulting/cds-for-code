@@ -1,12 +1,22 @@
-# dynamics-crm-toolkit README
+# ![Cloudsmith Consulting LLC](https://cloudsmithstatics.azureedge.net/web/cloudsmith-notagline-450x103.png "Cloudsmith Consulting")<br> Welcome to the Dynamics 365 Development tools for VSCode
+This extension is designed to help developers with a simple development loop for Microsoft Dynamics 365 using Visual Studio Code.  Many developers do not have access to a full Visual Studio license in order to use Microsoft's Dynamics CRM Development Toolkit.  This sample solution is designed to get you started.
 
-This is the README for your extension "dynamics-crm-toolkit". After writing up a brief description, we recommend including the following sections.
+---
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+The VsCode addin handles these tasks in your development loop.
 
-For example if there is an image subfolder under your extension project workspace:
+- [X] Connect to Dynamics 365 servers (8.0+)
+- [X] Vew and inspect metadata on each server connection
+- [X] Package and deploy Dynamics solutions from server into version control
+- [X] Package and deploy Dynamics solution from version control into server
+- [X] Generate entities using CrmSvcUtil
+- [ ] Customize the CrmSvcUtil experience (coming soon)
+- [X] Author web resources with VsCode
+- [X] Put Dynamics solution assets into version control
+- [x] Build and deploy plugins using VsCode
+- [x] Deploy assets into solution using pre-made templates
 
 \!\[feature X\]\(images/feature-x.png\)
 
