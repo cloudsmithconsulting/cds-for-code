@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import * as child_process from 'child_process';
 import { SpawnOptions } from 'child_process';
 import Utilities from '../helpers/Utilities';
-import QuickPicker, { QuickPickOption } from '../../out/helpers/QuickPicker';
+import QuickPicker, { QuickPickOption } from '../helpers/QuickPicker';
 import { TS } from 'typescript-linq';
 
 export class TerminalCommand {
