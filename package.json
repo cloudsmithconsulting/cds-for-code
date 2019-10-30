@@ -8,7 +8,7 @@
 	"engines": {
 		"vscode": "^1.38.0"
 	},
-	"icon": "https://cloudsmithprodstorage.blob.core.windows.net/statics/web/cloudsmith-logo-only-200px.png",
+	"icon": "resources/images/cloudsmith-logo-only-200px.png",
 	"categories": [
 		"Extension Packs",
 		"Other"
