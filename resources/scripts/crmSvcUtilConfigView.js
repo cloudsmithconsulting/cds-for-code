@@ -7,7 +7,6 @@
     const formTypeLabels = document.getElementsByClassName("form-type-label");
     const submitButton = document.getElementById("submitButton");
     const addRuleButtons = document.querySelectorAll("button[id^='AddRule']");
-    window.currentTabId = "WhiteList";
     let currentView = window.currentView = "Entities";
 
     // changes the view in tabs
@@ -46,6 +45,33 @@
             const fieldSuffix = /\d/.test(buttonId)
                 ? buttonId.charAt(buttonId.length - 1)
                 : "";
+
+            const currentTabId = CloudSmith.Tabs.getCurrentTab("WhiteList");
+            const ruleType = CloudSmith.Controls.getRadioButtonValue(`RuleType${fieldSuffix}`);
+
+            const rulesToAdd = [];
+
+            if (ruleType === "ByRule") {
+                const entitiesSelect = document.getElementById(`EntityList${fieldSuffix}`);
+                for (let i = 0; i < entitiesSelect.selectedOptions.length; i++) {
+                    const option = entitiesSelect.selectedOptions[i];
+                    rulesToAdd.push({
+                        list: currentTabId,
+                        objectType: currentView,
+                        ruleType: "Exact Match",
+                        appliesTo: option.value
+                    });  
+                }
+            } else if (ruleType === "ByRegex") {
+                rulesToAdd.push({
+                    list: currentTabId,
+                    objectType: currentView,
+                    ruleType: "Regular Expression",
+                    appliesTo: ""
+                });
+            }
+
+            console.log(rulesToAdd);
         });
     }
 

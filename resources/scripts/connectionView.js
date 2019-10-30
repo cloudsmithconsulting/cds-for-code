@@ -3,29 +3,12 @@
 (function () {
     // You MUST set = window.vscodeApi for scripts in main.js to work properly
     const vscode = window.vscodeApi = acquireVsCodeApi();
-
     //const oldState = vscode.getState();
-    let currentAuthType = 2; // default
 
     const errorPanel = document.getElementById("errorPanel");
     const errorMessage = document.getElementById("errorMessage");
-    const authTypeRadios = document.getElementsByName("AuthType");
     const accessTokenField = document.getElementById("accessTokenField");
-    const accessTokenInput = document.getElementById("AccessToken");
     const submitButton = document.getElementById("submitButton");
-
-    authTypeRadios.forEach(el => {
-        el.addEventListener("change", event => {
-            const value = parseInt(event.currentTarget.value);
-            currentAuthType = value;
-            if (currentAuthType === 2) {
-                accessTokenField.removeAttribute("hidden");
-            } else {
-                accessTokenField.setAttribute("hidden", "hidden");
-                accessTokenInput.value = ""; // clear it out
-            }
-        });
-    });
 
     submitButton.addEventListener("click", event => {
         event.preventDefault();
@@ -33,7 +16,7 @@
         const id = document.getElementById("Id").value;
         const settings = {
             id: (id.length > 0) ? id: null, // pass the id or null
-            authType: currentAuthType,
+            authType: CloudSmith.Controls.getRadioButtonValue("AuthType"),
             webApiVersion: document.getElementById("WebApiVersion").value,
             name: document.getElementById("Name").value,
             webApiUrl: document.getElementById("ServerUrl").value,
@@ -65,13 +48,12 @@
 
     function setEditMode(message) {
         const newTitle = document.getElementById("title").innerHTML
-            .replace('New', 'Edit');
+            .replace("New", "Edit");
         
         document.title = newTitle;
         document.getElementById("title").innerHTML = newTitle;
         
         if (message.authType === 1) {
-            currentAuthType = 1;
             document.getElementById("AuthType1").checked = true;
             accessTokenField.setAttribute("hidden", "hidden");
         }
@@ -97,26 +79,26 @@
     function validateForm(settings) {
         const messages = [];
 
-        if (isNullOrEmpty(settings.webApiUrl))
+        if (CloudSmith.Utilities.isNullOrEmpty(settings.webApiUrl))
             messages.push("The Server URL is required");
         if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.webApiUrl))
             messages.push("The Server URL is invalid");
-        if (isNullOrEmpty(settings.domain))
+        if (CloudSmith.Utilities.isNullOrEmpty(settings.domain))
             messages.push("The Domain is required");
 
         if (settings.authType === 1) {
-            if (isNullOrEmpty(settings.username))
+            if (CloudSmith.Utilities.isNullOrEmpty(settings.username))
                 messages.push("The Username is required");
-            if (isNullOrEmpty(settings.password))
+            if (CloudSmith.Utilities.isNullOrEmpty(settings.password))
                 messages.push('The Password is required');
         } else {
-            if (isNullOrEmpty(settings.accessToken) 
-                && isNullOrEmpty(settings.username)) {
+            if (CloudSmith.Utilities.isNullOrEmpty(settings.accessToken) 
+                && CloudSmith.Utilities.isNullOrEmpty(settings.username)) {
                     messages.push("Access Token or Username and Password is required");
             }
-            if (isNullOrEmpty(settings.accessToken)
-                && !isNullOrEmpty(settings.username)
-                && isNullOrEmpty(settings.password)) {
+            if (CloudSmith.Utilities.isNullOrEmpty(settings.accessToken)
+                && !CloudSmith.Utilities.isNullOrEmpty(settings.username)
+                && CloudSmith.Utilities.isNullOrEmpty(settings.password)) {
                     messages.push('The Password is required');
             }
         }
@@ -132,9 +114,5 @@
         }
 
         return messages.length === 0;
-    }
-
-    function isNullOrEmpty(str) {
-        return (!str || str.replace(/\s/gi, "").length === 0);
     }
 }());

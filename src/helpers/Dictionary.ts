@@ -1,5 +1,6 @@
 export interface IDictionary<TKey, T> {
     add(key: TKey, value: T): void;
+    insert(index: number, key: TKey, value: T);
     containsKey(key: TKey): boolean;
     get(key: TKey): T;
     getKey(value: T): TKey;
@@ -26,6 +27,13 @@ export default class Dictionary<TKey, T> implements IDictionary<TKey, T> {
 
         this._keys.push(key);
         this._values.push(value);
+    }
+
+    insert(index: number, key: TKey, value: T) {
+        this[key.toString()] = value;
+
+        this._keys.splice(index, 0, key);
+        this._values.splice(index, 0, value);
     }
 
     remove(key: TKey) {
