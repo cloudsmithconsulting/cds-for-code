@@ -10,6 +10,18 @@
     const accessTokenField = document.getElementById("accessTokenField");
     const submitButton = document.getElementById("submitButton");
 
+    const authTypeRadios = document.getElementsByName("AuthType");
+    authTypeRadios.forEach(el => {
+        el.addEventListener("change", event => {
+            if (event.currentTarget.value === "2") {
+                accessTokenField.removeAttribute("hidden");
+            } else {
+                accessTokenField.setAttribute("hidden", "hidden");
+                accessTokenInput.value = ""; // clear it out
+            }
+        });
+    });
+
     submitButton.addEventListener("click", event => {
         event.preventDefault();
 
