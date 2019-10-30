@@ -27,7 +27,7 @@ export default class DynamicsUrlResolver
         return this.parseUriString(uriString, solutionId);
     }
 
-    public static getManageEntityUri(config:DynamicsWebApi.Config, entityId:string, solutionId?:string):vscode.Uri
+    public static getManageEntityUri(config:DynamicsWebApi.Config, entityId?:string, solutionId?:string):vscode.Uri
     {
         let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}tools/systemcustomization/entities/manageentity.aspx?`;
 
@@ -49,27 +49,29 @@ export default class DynamicsUrlResolver
         return this.parseUriString(uriString, solutionId);
     }
 
-    /*
     public static getManageEntityFormUri(config:DynamicsWebApi.Config, entityTypeCode:string, formType:DynamicsWebApi.DynamicsForm, formId?:string, solutionId?:string):vscode.Uri
     {
         let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?etc=${entityTypeCode}&extraqs=`;
-        let options = { formtype: formType, formId: Utilities.TrimGuid(formId), action: -1 };
 
-        uriString += encodeURIComponent(Utilities.ObjectToQuerystring(options));
+        if (formId) {
+            let options = { formtype: formType, formId: Utilities.TrimGuid(formId), action: -1 };
+
+            uriString += encodeURIComponent(Utilities.ObjectToQuerystring(options));
+        }
+
         uriString += "&pagetype=formeditor";
-
-        console.log(uriString);
 
         return this.parseUriString(uriString, solutionId);
     }
-    */
 
-    public static getManageEntityViewUri(config:DynamicsWebApi.Config, entityId:string, viewId?:string, solutionId?:string):vscode.Uri
+    public static getManageEntityViewUri(config:DynamicsWebApi.Config, entityId:string, entityTypeCode?:string, viewId?:string, solutionId?:string):vscode.Uri
     {
         let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}tools/vieweditor/viewManager.aspx?entityId=%7B${Utilities.TrimGuid(entityId)}%7D`;
 
         if (viewId) {
             uriString += `&id=%7B${Utilities.TrimGuid(viewId)}%7D`;
+        } else {
+            uriString += `&mode=new&objectTypeCode=${entityTypeCode}`;
         }
 
         return this.parseUriString(uriString, solutionId);
@@ -104,6 +106,34 @@ export default class DynamicsUrlResolver
         }
 
         return uri;
+    }
+
+    public static getManageWebResourceUri(config:DynamicsWebApi.Config, webResourceId?:string, solutionId?:string):vscode.Uri {
+        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?etc=9333&pagetype=webresourceedit`;
+
+        if (webResourceId) {
+            uriString += `&id=%7B${Utilities.TrimGuid(webResourceId)}%7D`;
+        }
+
+        return this.parseUriString(uriString, solutionId);
+    }
+
+    public static getManageOptionSetUri(config:DynamicsWebApi.Config, entityId?:string, entityTypeCode?:string, optionSetId?:string, solutionId?:string): vscode.Uri {
+        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}tools/systemcustomization/optionset/optionset.aspx?`;
+
+        if (entityId) {
+            uriString += `&_CreateFromId=%7b${Utilities.TrimGuid(entityId)}%7d`;
+        }
+
+        if (entityTypeCode) {
+            uriString += `&_CreateFromType=${entityTypeCode}`;
+        }
+
+        if (optionSetId) {
+            uriString += `&id=%7B${Utilities.TrimGuid(optionSetId)}%7D`;
+        }
+
+        return this.parseUriString(uriString, solutionId);
     }
 
     private static parseUriString(uriString:string, solutionId?:string):vscode.Uri

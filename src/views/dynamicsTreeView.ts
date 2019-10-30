@@ -153,16 +153,32 @@ export default class DynamicsTreeView implements IWireUpCommands {
 
                 switch (item.itemType)
                 {
-                    case EntryType.Entities:
-                            
-                        break;
                     case EntryType.Solutions:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config), retryFunction);
-
+                        break;
+                    case EntryType.Entities:
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityUri(item.config, undefined, item.solutionId), retryFunction);
+                        break;
+                    case EntryType.Attributes:
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageAttributeUri(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
+                        break;       
+                    case EntryType.OptionSets:
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageOptionSetUri(item.config, item.parent ? item.parent.context.MetadataId : undefined, item.parent ? item.parent.context.ObjectTypeCode : undefined, undefined, item.solutionId), retryFunction);
+                        break;
+                    case EntryType.Processes:                 
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, DynamicsWebApi.ProcessType.Workflow, undefined, item.solutionId), retryFunction);
+                        break;
+                    case EntryType.Forms:                 
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
+                        break;
+                    case EntryType.Views:
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.context.MetadataId, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
+                        break;
+                    case EntryType.WebResources:
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, undefined, item.solutionId), retryFunction);
                         break;
                     case EntryType.PluginType:
                         vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, {});
-
                         break;
                 }
             })   
@@ -180,19 +196,25 @@ export default class DynamicsTreeView implements IWireUpCommands {
                     case EntryType.Entity:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityUri(item.config, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
-                    case EntryType.Process:
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, DynamicsUrlResolver.parseProcessType(item.context.category), item.context.workflowid, item.solutionId), retryFunction);
-                        break;
                     case EntryType.Attribute:
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
+                        break;
+                    case EntryType.OptionSet:
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageOptionSetUri(item.config, item.parent ? item.parent.context.MetadataId : undefined, item.parent ? item.parent.context.ObjectTypeCode : undefined, item.context.MetadataId, item.solutionId), retryFunction);
+                        break;
+                    case EntryType.Process:
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, DynamicsUrlResolver.parseProcessType(item.context.category), item.context.workflowid, item.solutionId), retryFunction);
                         break;
                     case EntryType.Form:
                         vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml })
                             .then(d => vscode.window.showTextDocument(d));
                         break;
                     case EntryType.View:
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.context.savedqueryid, item.solutionId), retryFunction);
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.parent.context.ObjectTypeCode, item.context.savedqueryid, item.solutionId), retryFunction);
                         break;     
+                    case EntryType.WebResources:
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, item.context.webresourceid, item.solutionId), retryFunction);
+                        break;
                     case EntryType.PluginStep:
                         vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, item.context);
                         break;
