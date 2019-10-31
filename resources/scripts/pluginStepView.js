@@ -32,9 +32,10 @@
         });
     });
 
-    function setInitialState(step) {
-        document.getElementById("Message").value = step.sdkmessageid.name;
-        document.getElementById("PrimaryEntity").value = step.sdkmessageid.filters[0].primaryEntity;
+    function setInitialState(viewModel) {
+        if (viewModel.step) {
+            document.getElementById("Message").value = viewModel.step.sdkmessageid.name;
+        }
     }
 
     function validateForm(config) {
@@ -69,7 +70,8 @@
 
         switch (message.command) {
             case "load":
-                setInitialState(message.command.step);
+                setInitialState(message.viewModel);
+                break;
         }
     });
 

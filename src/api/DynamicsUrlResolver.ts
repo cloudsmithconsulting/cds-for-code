@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import Utilities from '../helpers/Utilities';
 import { DynamicsWebApi } from './Types';
-import { urlToOptions } from 'vscode-test/out/util';
 
 export default class DynamicsUrlResolver
 {

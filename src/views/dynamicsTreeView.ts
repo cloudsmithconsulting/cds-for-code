@@ -216,7 +216,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, item.context.webresourceid, item.solutionId), retryFunction);
                         break;
                     case EntryType.PluginStep:
-                        vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, item.context);
+                        vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, item.context, item.config);
                         break;
                 }
            }) // <-- no semi-colon, comma starts next command registration
