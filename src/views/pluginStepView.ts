@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { View, ViewRenderer } from '../view';
 import * as cs from '../cs';
 import IWireUpCommands from '../wireUpCommand';
-import ApiRepository from '../../out/repositories/apiRepository';
+import ApiRepository from '../repositories/apiRepository';
 import { DynamicsWebApi } from '../api/Types';
 
 export default class PluginStepViewManager implements IWireUpCommands {
