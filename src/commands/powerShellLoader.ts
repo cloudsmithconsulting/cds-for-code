@@ -5,7 +5,7 @@ import * as cs from '../cs';
 import fetch from 'node-fetch';
 import IWireUpCommands from '../wireUpCommand';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import DynamicsTerminal from '../views/DynamicsTerminal';
+import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import GlobalState from '../config/GlobalState';
 import ProjectTemplatesPlugin from "../ProjectTemplatesPlugin";
@@ -98,9 +98,9 @@ export default class PowerShellLoader implements IWireUpCommands {
 									}
 
 									DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
-										.then(terminal => { terminal.text(`.\\Install-Sdk.ps1 `)
-											.text(`-Path ${sdkInstallPath} `)
-											.enter(); 
+										.then(terminal => { 
+											terminal.run(new TerminalCommand(`.\\Install-Sdk.ps1 `)
+												.text(`-Path ${sdkInstallPath} `));
 									});
 								}
 							});

@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import QuickPicker, { QuickPickOption } from '../helpers/QuickPicker';
-import DynamicsTerminal from '../views/DynamicsTerminal';
+import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import IWireUpCommands from '../wireUpCommand';
 import SolutionMap from '../config/SolutionMap';
@@ -97,17 +97,17 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 				}
 				
                 DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
-                    .then(terminal => { terminal.text(`.\\Deploy-XrmSolution.ps1 `)
-						.text(`-ServerUrl "${serverUrl}" `)
-						.text(`-OrgName "${orgName}" `)
-						.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
-						.text(`-Path "${folder}" `)
-						.text(`-ToolsPath "${toolsPath}" `)
-						.text(`-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “`)
-						.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
-						.text(`” -AsPlainText -Force))) `)
-						.text(managed ? `-Managed ` : '')
-						.enter();
+                    .then(terminal => { 
+						return terminal.run(new TerminalCommand(`.\\Deploy-XrmSolution.ps1 `)
+							.text(`-ServerUrl "${serverUrl}" `)
+							.text(`-OrgName "${orgName}" `)
+							.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
+							.text(`-Path "${folder}" `)
+							.text(`-ToolsPath "${toolsPath}" `)
+							.text(`-Credential (New-Object System.Management.Automation.PSCredential ("${config.username}", (ConvertTo-SecureString "`)
+							.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
+							.text(`" -AsPlainText -Force))) `)
+							.text(managed ? `-Managed ` : ''));
 					});
 			})
 		);

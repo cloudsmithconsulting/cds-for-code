@@ -6,6 +6,7 @@ import ApiRepository from "../repositories/apiRepository";
 import MetadataRepository from "../repositories/metadataRepository";
 import { DynamicsWebApi } from "../api/Types";
 import Utilities from "./Utilities";
+import Dictionary from "./Dictionary";
 
 export default class QuickPicker {
     /**
@@ -88,6 +89,17 @@ export default class QuickPicker {
         return vscode.window
             .showOpenDialog({canSelectFolders: false, canSelectFiles: true, canSelectMany, openLabel, defaultUri, filters })
             .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0] : pathUris : null);
+    }
+
+    public static async pickDictionaryEntry<TKey, TItem>(dictionary:Dictionary<TKey, TItem>, placeHolder?:string): Promise<TItem> {
+        if (dictionary && dictionary.keys.length > 0) {
+            const options:QuickPickOption[] = [];
+        
+            dictionary.keys.forEach(k => options.push(new QuickPickOption(k.toString(), undefined, undefined, dictionary.get(k))));
+
+            return await this.pick(placeHolder, ...options)
+                .then(p => p.context);
+        }
     }
 
     public static async pickDynamicsSolution(config:DynamicsWebApi.Config, placeHolder?:string, ignoreFocusOut:boolean = true) : Promise<any> {
