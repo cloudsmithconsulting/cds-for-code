@@ -25,12 +25,12 @@ export class TerminalCommand {
 		this._masker = new Masker();
 
 		this._command = command || "";
-		this._output = output;
-		this._error = error;
+		this._output = output || "";
+		this._error = error || "";
 	}
 
 	get command():string { 
-		return this._masker.unmaskText(this._command);
+		return this._masker.unencodeText(this._command);
 	}
 
 	get output():string {
@@ -133,14 +133,16 @@ class Masker {
 		return this.maskBytes(new TextEncoder().encode(text));
 	}
 
-	maskBytes(bytes:Uint8Array): string {
+	maskBytes(bytes:Uint8Array, includeHidden:boolean = false): string {
 		let returnLength:number = 0;
 		let newPosition:number = 0;
 		let isHidden:boolean = false;
 
 		for (let i = 0; i < bytes.length; i++) {
-			if (bytes[i] !== Masker.maskSeperatorByte && !isHidden) {
-				returnLength++;
+			if (bytes[i] !== Masker.maskSeperatorByte) {
+				if (!isHidden || (isHidden && includeHidden)) {
+					returnLength++;
+				}
 			}
 
 			if (bytes[i] === Masker.hiddenSeperatorByte) {
@@ -160,7 +162,7 @@ class Masker {
 			} else if (byte === Masker.hiddenSeperatorByte) {
 				isHidden = !isHidden;
 			} else {
-				if (!isHidden) {
+				if (!isHidden || (isHidden && includeHidden)) {
 					returnBytes.set([ isMasked ? Masker.maskReplacementByte : byte ], newPosition);
 					newPosition++;
 				}
@@ -170,11 +172,11 @@ class Masker {
 		return new TextDecoder("utf-8").decode(returnBytes);
 	}
 
-	unmaskText(text:string): string {
-		return this.unmaskBytes(new TextEncoder().encode(text));
+	unencodeText(text:string): string {
+		return this.unencodeBytes(new TextEncoder().encode(text));
 	}
 
-	unmaskBytes(bytes:Uint8Array): string {
+	unencodeBytes(bytes:Uint8Array): string {
 		let returnLength:number = 0;
 		let newPosition:number = 0;
 
@@ -201,7 +203,6 @@ class Masker {
 
 class MaskedBuffer {
 	private _autoFlush: boolean;
-	private _displayBuffer:string[];
 	private _masker:Masker;
 	private readonly _onDidFlush: vscode.EventEmitter<{ raw:string, masked:string }>;
 	private _rawBuffer:string[];
@@ -212,7 +213,6 @@ class MaskedBuffer {
 
 	constructor(autoFlush:boolean = true) {
 		this._autoFlush = autoFlush;
-		this._displayBuffer = [];
 		this._rawBuffer = [];
 		this._masker = new Masker();
 		this._onDidFlush = new vscode.EventEmitter<{ raw:string, masked:string }>();
@@ -243,7 +243,6 @@ class MaskedBuffer {
 		const returnValue = { raw, masked };
 
 		this._onDidFlush.fire(returnValue);
-		this._displayBuffer = [];
 		this._rawBuffer = [];
 
 		return returnValue;
@@ -251,7 +250,6 @@ class MaskedBuffer {
 
 	public push(bytes:Uint8Array): void {
 		if (bytes && bytes.length > 0) {
-			this._displayBuffer.push(this._masker.maskBytes(bytes));
 			this._rawBuffer.push(bytes.toString());
 
 			if (this.autoFlush && this.onDidFlush) {
@@ -265,7 +263,7 @@ class MaskedBuffer {
 	}
 
 	public toMaskedString(): string { 
-		return this._displayBuffer.join("");
+		return this._masker.maskText(this._rawBuffer.join(""));
 	}
 
 	public toString(): string {
@@ -389,7 +387,7 @@ export class Terminal implements vscode.Terminal {
 			.select(c => new QuickPickOption(c.masked, undefined, undefined, c)).toArray();
 
 		return await QuickPicker.pick("", ...options)
-			.then(o => o.context);
+			.then(o => o ? o.context : null);
 	}
 
 	create(options?:vscode.TerminalOptions): void {
@@ -517,8 +515,8 @@ export class Terminal implements vscode.Terminal {
 
 	run(command:TerminalCommand): Promise<TerminalCommand> {
 		if (command) {
-			command.output = null;
-			command.error = null;
+			command.output = "";
+			command.error = "";
 
 			return new Promise<TerminalCommand>((resolve, reject) => {
 				this._promiseInfo = new PromiseInfo(resolve, reject);
@@ -604,21 +602,11 @@ export class Terminal implements vscode.Terminal {
 
 	private resolveIncomingCommand(outputBuffer:string, errorBuffer:string) {
 		if (!Utilities.IsNullOrEmpty(this._inputCommand.command) || outputBuffer || errorBuffer) {
-			if (outputBuffer) { this._inputCommand.output = outputBuffer.replace(this._inputCommand.command, "").replace(this._prompt, ""); }
-			if (errorBuffer) { this._inputCommand.error = errorBuffer.replace(this._inputCommand.command, "").replace(this._prompt, ""); }
+			if (outputBuffer) { this._inputCommand.output += outputBuffer.replace(this._inputCommand.command, "").replace(this._prompt, ""); }
+			if (errorBuffer) { this._inputCommand.error += errorBuffer.replace(this._inputCommand.command, "").replace(this._prompt, ""); }
 
 			// Remove all crlf as this command is complete.
 			this._inputCommand.join();
-
-			if (this._promiseInfo) {
-				if (errorBuffer && errorBuffer.length > 0) {
-					this._promiseInfo.reject(errorBuffer);
-				} else {
-					this._promiseInfo.resolve(this._inputCommand);
-				}
-
-				this._promiseInfo = null;
-			}
 
 			this._onDidRunCommand.fire(this._inputCommand);
 
@@ -630,7 +618,16 @@ export class Terminal implements vscode.Terminal {
 				this._commandBuffer.splice(0, this._commandBuffer.length - Terminal.maximumCommandBufferSize);
 			}
 
-			this.createInputCommand(new TerminalCommand());
+			if (this._promiseInfo) {
+				if (errorBuffer && errorBuffer.length > 0) {
+					this._promiseInfo.reject(errorBuffer);
+				} else {
+					this._promiseInfo.resolve(this._inputCommand);
+				}
+
+				this._promiseInfo = null;
+				this.createInputCommand(new TerminalCommand());
+			}
 		}
 	}
 
