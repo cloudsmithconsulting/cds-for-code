@@ -18,7 +18,7 @@ export default class IconLoader implements IWireUpCommands {
         // now wire a command into the context
         context.subscriptions.push(
             vscode.commands.registerCommand(cs.dynamics.extension.downloadRequiredIcons, () => { // Downloads scripts from the Internet.
-                IconLoader.downloadIconTheme(context, config);
+                return IconLoader.downloadIconTheme(context, config);
             })
         );
     }
@@ -27,7 +27,7 @@ export default class IconLoader implements IWireUpCommands {
 		// get local storage folder
 		const folder = path.join(context.extensionPath, "/resources/icons/");
 		
-		ExtensionIconTheme.defaultTheme.download(folder);
+		return ExtensionIconTheme.defaultTheme.download(folder);
 	}
 }
 
@@ -83,7 +83,7 @@ export class ExtensionIconTheme {
 	mappings:Dictionary<ExtensionIcon, string>;
 
 	//TODO: remove dependence on fetch.
-	download(folder: string): void {
+	download(folder: string): string {
 		const destination = path.join(folder, this.name.replace(`${cs.dynamics.configuration.iconThemes._namespace}.`, ''));
 
 		this.icons.forEach(icon => {
@@ -112,7 +112,7 @@ export class ExtensionIconTheme {
 			});
 		});
 
-		return;
+		return destination;
 	}
 	
 	private static getIcons(mappings:Dictionary<ExtensionIcon, string>, lightColor?:string, darkColor?:string): IconOptions[] {

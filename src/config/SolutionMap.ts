@@ -4,6 +4,8 @@ import QuickPicker from "../helpers/QuickPicker";
 import * as path from 'path';
 import * as FileSystem from '../helpers/FileSystem';
 import { TS } from "typescript-linq";
+import { ExtensionContext } from "vscode";
+import WorkspaceState from "./WorkspaceState";
 
 export default class SolutionMap
 {
@@ -48,6 +50,16 @@ export default class SolutionMap
         return SolutionMap.write(this, filename);
     }
 
+    public saveToWorkspace(context: ExtensionContext) : SolutionMap {
+        WorkspaceState.Instance(context).SolutionMap = this;
+
+        return this;
+    }
+
+    public static loadFromWorkspace(context: ExtensionContext) : SolutionMap {
+        return WorkspaceState.Instance(context).SolutionMap;
+    }
+    
     public static async read(filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap>
     {
         const workspacePath = await QuickPicker.pickWorkspacePath(undefined, "Choose a location where your .dynamics folder will go.", true);

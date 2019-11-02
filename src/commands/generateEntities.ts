@@ -35,7 +35,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                 if (Utilities.IsNullOrEmpty(namespace)) { return; }
 
                 // build a powershell terminal
-                DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
+                return DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
                     .then(terminal => {
                         return terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
                             .text(`-ToolsPath ${coreToolsRoot} `)
