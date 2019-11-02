@@ -68,6 +68,17 @@
 					],
 					"description": "The update channel to use"
 				},
+				"cs.dynamics.configuration.iconThemes.selectedTheme": {
+					"type": "string",
+					"default": "default",
+					"enum": [
+						"default"
+					],
+					"enumDescriptions": [
+						"Default Theme"
+					],
+					"description": "The icon set to use in explorer views"
+				},
 				"cs.dynamics.configuration.explorer.showDefaultSolution": {
 					"type": "boolean",
 					"default": "true",

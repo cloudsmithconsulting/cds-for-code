@@ -30,9 +30,9 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
 
                 const api = new ApiRepository(config);
 
-                DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Tools\\CloudSmith.Dynamics365.AssemblyScanner\\"))
+                return DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Tools\\CloudSmith.Dynamics365.AssemblyScanner\\"))
                     .then(terminal => { 
-                        terminal.run(new TerminalCommand(`.\\CloudSmith.Dynamics365.AssemblyScanner.exe "${file.fsPath}"`))
+                        return terminal.run(new TerminalCommand(`.\\CloudSmith.Dynamics365.AssemblyScanner.exe "${file.fsPath}"`))
                             .then(tc => {
                                 if (tc.command.indexOf("CloudSmith.Dynamics365.AssemblyScanner.exe") !== -1) {
                                     const assemblyInfo = JSON.parse(tc.output);
