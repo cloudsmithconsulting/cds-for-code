@@ -51,6 +51,10 @@ export class TerminalCommand {
 		return this._masker.maskText(this._command);
 	}
 
+	get raw():string {
+		return this._command;
+	}
+
 	backspace(): TerminalCommand {
 		if (this._command.length > 0) {
 			if (this._command.charCodeAt(this._command.length) === Masker.maskSeperatorByte 
@@ -289,7 +293,7 @@ export class Terminal implements vscode.Terminal {
 	private _errorBuffer:MaskedBuffer;
 	private _cursorPosition:number = 0;
 	private _promiseInfo:PromiseInfo<TerminalCommand>;
-	private _isOpen:boolean = false;
+	private _isAlreadyInitialized:boolean = false;
 
 	public onDidWrite: vscode.Event<string> = this._onDidWrite.event;
 	public onDidOpen: vscode.Event<void> = this._onDidOpen.event;
@@ -305,7 +309,7 @@ export class Terminal implements vscode.Terminal {
 	{ 
 		this._outputBuffer = new MaskedBuffer();
 		this._errorBuffer = new MaskedBuffer();
-		this.createInputCommand(new TerminalCommand());
+		this.createInputCommand();
 
 		if (options) {
 			this.create(options);
@@ -413,9 +417,9 @@ export class Terminal implements vscode.Terminal {
 							const prompt = /(PS )(.*)(> )/i.exec(flushData.raw);
 							let displayText = flushData.masked;
 
-							// The first time a terminal is opened, the window doens't appear befor ethe command is sent.
-							if (!this._isOpen && displayText.indexOf(this._inputCommand.command) !== -1) {
-								this._isOpen = true;
+							// The first time a terminal is opened, there will be a prompt (initial) as well as the command output.
+							// As such, our parsing logic is a little different.
+							if (!this._isAlreadyInitialized && displayText.indexOf(this._inputCommand.command) !== -1) {
 								displayText = displayText.replace(this._inputCommand.command, this._inputCommand.masked);
 							} else {
 								displayText = displayText.replace(this._inputCommand.command, "");
@@ -432,10 +436,20 @@ export class Terminal implements vscode.Terminal {
 									return;
 								}
 
-								if (!isError) {
-									this.resolveIncomingCommand(flushData.raw, undefined);
+								if (this._isAlreadyInitialized) {
+									if (!isError) {
+										this.resolveIncomingCommand(flushData.raw, undefined);
+									} else {
+										this.resolveIncomingCommand(undefined, flushData.raw);	
+									}
 								} else {
-									this.resolveIncomingCommand(undefined, flushData.raw);	
+									this._isAlreadyInitialized = true;
+									
+									if (!isError) {
+										this._inputCommand.output = flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, "");
+									} else {
+										this._inputCommand.error = flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, "");
+									}
 								}
 							}
 
@@ -515,12 +529,10 @@ export class Terminal implements vscode.Terminal {
 
 	run(command:TerminalCommand): Promise<TerminalCommand> {
 		if (command) {
-			command.output = "";
-			command.error = "";
+			this.createInputCommand(command);
 
 			return new Promise<TerminalCommand>((resolve, reject) => {
 				this._promiseInfo = new PromiseInfo(resolve, reject);
-				this.createInputCommand(command);
 				this._inputCommand.enter();
 			});
 		}
@@ -585,17 +597,16 @@ export class Terminal implements vscode.Terminal {
 		});
 	}
 
-	private createInputCommand(command:TerminalCommand): TerminalCommand {
-		if (command) {
-			this._inputCommand = command;
-			this._inputCommand.onLineCompleted(line => {
-				this.write(line.masked);
-	
-				if (this.process) {
-					this.process.stdin.write(line.raw); 
-				}
-			});
-		}
+	private createInputCommand(command?:TerminalCommand): TerminalCommand {
+		this._inputCommand = command ? new TerminalCommand(command.raw) : new TerminalCommand();
+		
+		this._inputCommand.onLineCompleted(line => {
+			this.write(line.masked);
+
+			if (this.process) {
+				this.process.stdin.write(line.raw); 
+			}
+		});
 
 		return this._inputCommand;
 	}
@@ -626,7 +637,7 @@ export class Terminal implements vscode.Terminal {
 				}
 
 				this._promiseInfo = null;
-				this.createInputCommand(new TerminalCommand());
+				this.createInputCommand();
 			}
 		}
 	}
