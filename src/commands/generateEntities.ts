@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import * as cs from '../cs';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import QuickPicker from '../helpers/QuickPicker';
-import DynamicsTerminal from '../views/DynamicsTerminal';
+import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import IWireUpCommands from '../wireUpCommand';
 import { DynamicsWebApi } from '../api/Types';
@@ -36,7 +36,8 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
 
                 // build a powershell terminal
                 DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
-                    .then(terminal => { terminal.text(`.\\Generate-XrmEntities.ps1 `)
+                    .then(terminal => {
+                        return terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
                             .text(`-ToolsPath ${coreToolsRoot} `)
                             .text(`-Url "${Utilities.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `)
                             .text(`-Username "${config.username}" -Password "`)
@@ -45,8 +46,7 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
                             .text((config.domain ? `-Domain "${config.domain}" ` : ''))
                             .text(`-Path "${folder}" `)
                             .text(`-OutputFile "${outputFileName}" `)
-                            .text(!Utilities.IsNull(namespace) ? `-Namespace "${namespace}" ` : '')
-                            .enter();
+                            .text(!Utilities.IsNull(namespace) ? `-Namespace "${namespace}" ` : ''));
                     });
             })
         );

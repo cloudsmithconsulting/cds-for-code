@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import * as cs from '../cs';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import QuickPicker from '../helpers/QuickPicker';
-import DynamicsTerminal from '../views/DynamicsTerminal';
+import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import IWireUpCommands from '../wireUpCommand';
 import SolutionMap from '../config/SolutionMap';
@@ -64,7 +64,13 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 
 				DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
 					.then(terminal => { 
-						terminal.text(`.\\Get-XrmSolution.ps1 `)
+                        terminal.onDidRunCommand(tc => { 
+							SolutionMap.read()
+							.then(map => map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename)))
+							.then(map => map.save());
+						});
+
+						return terminal.run(new TerminalCommand(`.\\Get-XrmSolution.ps1 `)
 							.text(`-ServerUrl "${serverUrl}" `)
 							.text(`-OrgName "${orgName}" `)
 							.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
@@ -72,13 +78,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 							.text(`-ToolsPath "${toolsPath}" `)
 							.text(`-Credential (New-Object System.Management.Automation.PSCredential ("${config.username}", (ConvertTo-SecureString "`)
 							.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
-							.text(`" -AsPlainText -Force))) `)
-							.enter();
-					}).then(response => {
-						// write this to our solution map.
-						SolutionMap.read()
-							.then(map => map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename)))
-							.then(map => map.save());
+							.text(`" -AsPlainText -Force))) `));
 					});
 			})
 		);
