@@ -15,6 +15,8 @@ export class TerminalCommand {
 	private readonly _onLineCompleted: vscode.EventEmitter<{ raw:string, masked:string }>;
 	private _output:string;
 	private _error:string;
+	private _hideFlag:boolean = false;
+	private _maskFlag:boolean = false;
 
 	public onLineCompleted: vscode.Event<{ raw:string, masked:string }>;
 	public static readonly lineSeperator:string = "\r\n";
@@ -65,9 +67,12 @@ export class TerminalCommand {
 
 	backspace(): TerminalCommand {
 		if (this._command.length > 0) {
-			if (this._command.charCodeAt(this._command.length) === Masker.maskSeperatorByte 
-				|| this._command.charCodeAt(this._command.length) === Masker.hiddenSeperatorByte) {
+			if (this._command.charCodeAt(this._command.length - 1) === Masker.maskSeperatorByte) {
 				this._command = this._command.substring(0, this._command.length - 2);
+				this._maskFlag = !this._maskFlag;
+			} else if (this._command.charCodeAt(this._command.length - 1) === Masker.hiddenSeperatorByte) {
+				this._command = this._command.substring(0, this._command.length - 2);
+				this._hideFlag = !this._hideFlag;
 			} else {
 				this._command = this._command.substring(0, this._command.length - 1);
 			}
@@ -78,11 +83,23 @@ export class TerminalCommand {
 
 	clear(): TerminalCommand { 
 		this._command = "";
+		this._maskFlag = false;
+		this._hideFlag = false;
 
 		return this;
 	}
 
 	line(text:string): TerminalCommand {
+		if (this._maskFlag) {
+			this._command += Masker.maskSeperator;
+			this._maskFlag = !this._maskFlag;
+		}
+
+		if (this._hideFlag) {
+			this._command += Masker.hiddenSeperator;
+			this._hideFlag = !this._hideFlag;
+		}
+
 		this._command += text += TerminalCommand.lineSeperator;
 		this._onLineCompleted.fire({ raw: this.command, masked: this.masked });
 
@@ -90,12 +107,32 @@ export class TerminalCommand {
 	}
 
 	text(text:string): TerminalCommand {
+		if (this._maskFlag) {
+			this._command += Masker.maskSeperator;
+			this._maskFlag = !this._maskFlag;
+		}
+
+		if (this._hideFlag) {
+			this._command += Masker.hiddenSeperator;
+			this._hideFlag = !this._hideFlag;
+		}
+
 		this._command += text.replace(TerminalCommand.lineSeperator, "");
 
 		return this;
 	}
 
 	enter(): TerminalCommand {		
+		if (this._maskFlag) {
+			this._command += Masker.maskSeperator;
+			this._maskFlag = !this._maskFlag;
+		}
+
+		if (this._hideFlag) {
+			this._command += Masker.hiddenSeperator;
+			this._hideFlag = !this._hideFlag;
+		}
+
 		this._command += TerminalCommand.lineSeperator;
 		this._onLineCompleted.fire({ raw: this.command, masked: this.masked });
 
@@ -103,13 +140,23 @@ export class TerminalCommand {
 	}
 
 	sensitive(text:string): TerminalCommand {
-		this._command += Masker.maskSeperator + text.replace(TerminalCommand.lineSeperator, "") + Masker.maskSeperator;
+		if (!this._maskFlag) {
+			this._command += Masker.maskSeperator;
+			this._maskFlag = !this._maskFlag;
+		}
+		
+		this._command += text.replace(TerminalCommand.lineSeperator, "");
 
 		return this;
 	}
 
 	hide(text:string): TerminalCommand {
-		this._command += Masker.hiddenSeperator + text.replace(TerminalCommand.lineSeperator, "") + Masker.hiddenSeperator;
+		if (!this._hideFlag) {
+			this._command += Masker.hiddenSeperator;
+			this._hideFlag = !this._hideFlag;
+		}
+
+		this._command += text.replace(TerminalCommand.lineSeperator, "");
 
 		return this;
 	}
@@ -216,18 +263,18 @@ class Masker {
 class MaskedBuffer {
 	private _autoFlush: boolean;
 	private _masker:Masker;
-	private readonly _onDidFlush: vscode.EventEmitter<{ raw:string, masked:string }>;
+	private readonly _onDidFlush: vscode.EventEmitter<{ bytes:Uint8Array, raw:string, masked:string }>;
 	private _rawBuffer:string[];
 	private _timeout:NodeJS.Timeout;
 
 	public static readonly autoFlushDelay:number = 400;
-	public onDidFlush: vscode.Event<{ raw:string, masked:string }>;
+	public onDidFlush: vscode.Event<{ bytes:Uint8Array, raw:string, masked:string }>;
 
 	constructor(autoFlush:boolean = true) {
 		this._autoFlush = autoFlush;
 		this._rawBuffer = [];
 		this._masker = new Masker();
-		this._onDidFlush = new vscode.EventEmitter<{ raw:string, masked:string }>();
+		this._onDidFlush = new vscode.EventEmitter<{ bytes:Uint8Array, raw:string, masked:string }>();
 
 		this.onDidFlush = this._onDidFlush.event;
 	}
@@ -251,8 +298,9 @@ class MaskedBuffer {
 		}
 
 		const raw = this.toString();
+		const bytes = new TextEncoder().encode(raw);
 		const masked = this.toMaskedString();
-		const returnValue = { raw, masked };
+		const returnValue = { bytes, raw, masked };
 
 		this._onDidFlush.fire(returnValue);
 		this._rawBuffer = [];
@@ -378,15 +426,17 @@ export class Terminal implements vscode.Terminal {
 
 	backspace(howMany:number = 1) {
 		for (let i = 0; i < howMany; i++) {
-			// Move cursor backward
-			this.write('\x1b[D');
-			// Delete character
-			this.write('\x1b[P');
+			if (this._cursorPosition > 0) {
+				// Move cursor backward
+				this.write('\x1b[D');
+				// Delete character
+				this.write('\x1b[P');
 
-			this._cursorPosition--;
+				this._cursorPosition--;
+			}
+
+			this._inputCommand.backspace();
 		}
-
-		this._inputCommand.backspace();
 	}
 
 	clearCommand() {
@@ -516,6 +566,9 @@ export class Terminal implements vscode.Terminal {
 							return;
 						}
 
+						if (data === '\x09') { // Tab
+						}
+						
 						this.write(data);
 						this._inputCommand.hide(data);
 						this._cursorPosition++;
@@ -525,6 +578,10 @@ export class Terminal implements vscode.Terminal {
 	}
 
 	clear(): Terminal {
+		this._outputBuffer.flush();
+		this._errorBuffer.flush();
+		this._inputCommand.clear();
+
 		if (this._terminal) {
 			this.write('\x1b[2J\x1b[3J\x1b[;H\r');
 		}
