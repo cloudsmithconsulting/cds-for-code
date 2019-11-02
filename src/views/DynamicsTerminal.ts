@@ -229,7 +229,10 @@ class MaskedBuffer {
 	}
 
 	public flush(): { raw:string, masked:string } {
-		this._timeout = undefined;
+		if (this._timeout) {
+			clearTimeout(this._timeout);
+			this._timeout = undefined;
+		}
 
 		if (this.length === 0) {
 			return null;
@@ -334,12 +337,12 @@ export class Terminal implements vscode.Terminal {
 		return this._path;
 	}
 
-	async setPath(value:string) { 
+	setPath(value:string): Promise<TerminalCommand> { 
 		if (value && !value.endsWith("\\")) { value = `${value}\\`; }
 		if (this._path && !this._path.endsWith("\\")) { this._path = `${this._path}\\`; }
 
 		if (value && value.toLocaleLowerCase() !== this._path.toLocaleLowerCase()) {
-			await this.run(new TerminalCommand(`cd '${value}'`));
+			return this.run(new TerminalCommand(`cd '${value}'`));
 		}
 	}
 
@@ -470,7 +473,7 @@ export class Terminal implements vscode.Terminal {
 						if (data === '\x1b[A') { /// Up arrow 
 							this.showComandBuffer().then(c => {
 								if (c) {
-									this.show(true);
+									//this.show(true);
 									this.run(c);
 								}
 							});
@@ -512,12 +515,12 @@ export class Terminal implements vscode.Terminal {
 		return this;
 	}
 
-	async run(command:TerminalCommand): Promise<TerminalCommand> {
+	run(command:TerminalCommand): Promise<TerminalCommand> {
 		if (command) {
 			command.output = null;
 			command.error = null;
 
-			return await new Promise<TerminalCommand>((resolve, reject) => {
+			return new Promise<TerminalCommand>((resolve, reject) => {
 				this._promiseInfo = new PromiseInfo(resolve, reject);
 				this.createInputCommand(command);
 				this._inputCommand.enter();
@@ -601,8 +604,10 @@ export class Terminal implements vscode.Terminal {
 
 	private resolveIncomingCommand(outputBuffer:string, errorBuffer:string) {
 		if (!Utilities.IsNullOrEmpty(this._inputCommand.command) || outputBuffer || errorBuffer) {
-			if (outputBuffer) { this._inputCommand.output = outputBuffer.replace(this._inputCommand.command, ""); }
-			if (errorBuffer) { this._inputCommand.error = errorBuffer.replace(this._inputCommand.command, ""); }
+			if (outputBuffer) { this._inputCommand.output = outputBuffer.replace(this._inputCommand.command, "").replace(this._prompt, ""); }
+			if (errorBuffer) { this._inputCommand.error = errorBuffer.replace(this._inputCommand.command, "").replace(this._prompt, ""); }
+
+			// Remove all crlf as this command is complete.
 			this._inputCommand.join();
 
 			if (this._promiseInfo) {
