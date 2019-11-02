@@ -4,27 +4,74 @@ import { TS } from 'typescript-linq/TS';
 
 export default class ApiHelper
 {
-    public static filterSolutionComponents(api: DynamicsWebApiClient, response:any, solutionId?:string, componentType?:DynamicsWebApi.SolutionComponent, keySelector?:(item:unknown) => any): Promise<TS.Linq.Enumerator<any>>
+    public static isOuterJoin(componentType:DynamicsWebApi.SolutionComponent | DynamicsWebApi.SolutionComponent[]) {
+        const innerFunction = (type:DynamicsWebApi.SolutionComponent) => {
+            switch (type) {
+                case DynamicsWebApi.SolutionComponent.Form:
+                case DynamicsWebApi.SolutionComponent.SystemForm:
+                case DynamicsWebApi.SolutionComponent.SavedQuery:
+                case DynamicsWebApi.SolutionComponent.SavedQueryVisualization:
+                    return true;
+            }
+    
+            return false;
+        };
+
+        if (!(componentType instanceof Array)) {
+            return innerFunction(<DynamicsWebApi.SolutionComponent>componentType);
+        } else {
+            (<DynamicsWebApi.SolutionComponent[]>componentType).forEach(c => {
+                if (innerFunction(c)) {
+                    return true;
+                }
+            });
+
+            return false;
+        }
+    }
+
+    public static filterSolutionComponents(api: DynamicsWebApiClient, response:any, solutionId?:string, componentType?:DynamicsWebApi.SolutionComponent | DynamicsWebApi.SolutionComponent[], keySelector?:(item:unknown) => any): Promise<TS.Linq.Enumerator<any>>
     {
         if (solutionId && componentType && keySelector) {
+            const getSolutionComponentFilter = () => {
+                if (!(componentType instanceof Array)) {
+                    return `componenttype eq ${DynamicsWebApi.CodeMappings.getSolutionComponentCode(<DynamicsWebApi.SolutionComponent>componentType)}`;
+                } else {
+                    const filterString = new TS.Linq.Enumerator(<DynamicsWebApi.SolutionComponent[]>componentType)
+                        .select(c => `'${DynamicsWebApi.CodeMappings.getSolutionComponentCode(c)}'`)
+                        .toArray()
+                        .join(",");
+
+                    return `Microsoft.Dynamics.CRM.In(PropertyName='componenttype',PropertyValues=[${filterString}])`;
+                }
+            };
+
             let solutionQuery:DynamicsWebApi.RetrieveRequest = {
                 collection: "solutions",
                 id: solutionId,
                 select: [ "solutionid", "uniquename" ],
-                expand: [ { property: "solution_solutioncomponent", filter: `componenttype eq ${DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType)}` } ]
+                expand: [ { property: "solution_solutioncomponent", filter: getSolutionComponentFilter() } ]
             };    
             
             return api.retrieveRequest(solutionQuery).then(solution => {
                 if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0)
                 {
-                    return Promise.resolve(TS.Linq.Enumerator.Empty);
+                    // For certain components, exclusion from systemcomponent means "select *" (take all subcomponents)
+                    if (this.isOuterJoin(componentType)) {
+                        return Promise.resolve(new TS.Linq.Enumerator(response.value));
+                    } else {
+                        return Promise.resolve(TS.Linq.Enumerator.Empty);
+                    }
                 }
     
-                let components = new TS.Linq.Enumerator(solution.solution_solutioncomponent);
-                let filteredList = components
-                    .join(new TS.Linq.Enumerator(response.value), c => c["objectid"], keySelector, (c, o) => o);
+                let filteredList = new TS.Linq.Enumerator(response.value)
+                    .join(new TS.Linq.Enumerator(solution.solution_solutioncomponent), keySelector, c => c["objectid"], (o, c) => o);
     
-                return filteredList;
+                if (filteredList.toArray().length === 0 && this.isOuterJoin(componentType)) {
+                    return Promise.resolve(new TS.Linq.Enumerator(response.value));
+                } else {
+                    return filteredList;
+                }
             });           
         } else {
             return Promise.resolve(new TS.Linq.Enumerator(response.value));

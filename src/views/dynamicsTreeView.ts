@@ -293,9 +293,9 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 case EntryType.Attributes:
                     return this.getEntityAttributeDetails(element, commandPrefix, element.context);
                 case EntryType.Views:
-                    return this.getEntityViewDetails(element, commandPrefix, element.context);
+                    return this.getEntityViewDetails(element, commandPrefix, element.solutionId, element.context);
                 case EntryType.Forms:
-                    return this.getEntityFormDetails(element, commandPrefix, element.context);
+                    return this.getEntityFormDetails(element, commandPrefix, element.solutionId, element.context);
             }
 
             return; //return nothing if type falls through
@@ -804,10 +804,10 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return returnValue;
     }
 
-    private getEntityViewDetails(element: TreeEntry, commandPrefix?: string, entity?:any): Thenable<TreeEntry[]> {
+    private getEntityViewDetails(element: TreeEntry, commandPrefix?: string, solutionId?:string, entity?:any): Thenable<TreeEntry[]> {
         const api = new MetadataRepository(element.config);
         const returnValue = this.createTreeEntries(
-            api.retrieveViews(entity.LogicalName), 
+            api.retrieveViews(entity.LogicalName, solutionId), 
             query => new TreeEntry(
                 query.name,
                 EntryType.View,
@@ -826,10 +826,10 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return returnValue;
     }
 
-    private getEntityFormDetails(element: TreeEntry, commandPrefix?: string, entity?:any): Thenable<TreeEntry[]> {
+    private getEntityFormDetails(element: TreeEntry, commandPrefix?: string, solutionId?:string, entity?:any): Thenable<TreeEntry[]> {
         const api = new MetadataRepository(element.config);
         const returnValue = this.createTreeEntries(
-            api.retrieveForms(entity.LogicalName), 
+            api.retrieveForms(entity.LogicalName, solutionId), 
             form => new TreeEntry(
                 form.name,
                 EntryType.Form,
