@@ -47,6 +47,10 @@ export class TerminalCommand {
 		this._error = value;
 	}
 
+	get hidden():string { 
+		return this._masker.maskText(this._command, true);
+	}
+
 	get masked():string {
 		return this._masker.maskText(this._command);
 	}
@@ -100,7 +104,7 @@ export class TerminalCommand {
 		return this;
 	}
 
-	hidden(text:string): TerminalCommand {
+	hide(text:string): TerminalCommand {
 		this._command += Masker.hiddenSeperator + text.replace(TerminalCommand.lineSeperator, "") + Masker.hiddenSeperator;
 
 		return this;
@@ -133,8 +137,8 @@ class Masker {
 	public static readonly maskSeperator:string = String.fromCharCode(Masker.maskSeperatorByte);
 	public static readonly hiddenSeperator:string = String.fromCharCode(Masker.hiddenSeperatorByte);
 
-	maskText(text:string): string {
-		return this.maskBytes(new TextEncoder().encode(text));
+	maskText(text:string, includeHidden?:boolean): string {
+		return this.maskBytes(new TextEncoder().encode(text), includeHidden);
 	}
 
 	maskBytes(bytes:Uint8Array, includeHidden:boolean = false): string {
@@ -388,7 +392,7 @@ export class Terminal implements vscode.Terminal {
 	async showComandBuffer(): Promise<TerminalCommand> {
 		const options = new TS.Linq.Enumerator(this._commandBuffer)
 			.where(c => !Utilities.IsNullOrEmpty(c.command))
-			.select(c => new QuickPickOption(c.masked, undefined, undefined, c)).toArray();
+			.select(c => new QuickPickOption(c.hidden, undefined, undefined, c)).toArray();
 
 		return await QuickPicker.pick("", ...options)
 			.then(o => o ? o.context : null);
@@ -435,27 +439,25 @@ export class Terminal implements vscode.Terminal {
 
 									return;
 								}
-
-								if (this._isAlreadyInitialized) {
-									if (!isError) {
-										this.resolveIncomingCommand(flushData.raw, undefined);
-									} else {
-										this.resolveIncomingCommand(undefined, flushData.raw);	
-									}
-								} else {
-									this._isAlreadyInitialized = true;
-									
-									if (!isError) {
-										this._inputCommand.output = flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, "");
-									} else {
-										this._inputCommand.error = flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, "");
-									}
-								}
 							}
 
 							if (!isError) {
+								if (this._isAlreadyInitialized) {
+									this.resolveIncomingCommand(flushData.raw, undefined);
+								} else {
+									this._inputCommand.output = flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, "");
+									this._isAlreadyInitialized = true;
+								}
+
 								this.write(displayText);
 							} else {
+								if (this._isAlreadyInitialized) {
+									this.resolveIncomingCommand(undefined, flushData.raw);	
+								} else {
+									this._inputCommand.error = flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, "");
+									this._isAlreadyInitialized = true;
+								}
+								
 								this.writeColor(4, displayText);
 							}
 						};
@@ -512,7 +514,7 @@ export class Terminal implements vscode.Terminal {
 						}
 
 						this.write(data);
-						this._inputCommand.hidden(data);
+						this._inputCommand.hide(data);
 						this._cursorPosition++;
 					}
 				}});
@@ -619,9 +621,11 @@ export class Terminal implements vscode.Terminal {
 			// Remove all crlf as this command is complete.
 			this._inputCommand.join();
 
-			this._onDidRunCommand.fire(this._inputCommand);
+			const hasError = !Utilities.IsNullOrEmpty(this._inputCommand.error);
+			const hasOutput = !Utilities.IsNullOrEmpty(this._inputCommand.output);
+			const readyToProcess = !hasError || (hasError && hasOutput);
 
-			if (this._inputCommand.command.trim() !== "") {
+			if (this._inputCommand.command.trim() !== "" && readyToProcess) {
 				this._commandBuffer.push(this._inputCommand);
 			}
 
@@ -629,14 +633,20 @@ export class Terminal implements vscode.Terminal {
 				this._commandBuffer.splice(0, this._commandBuffer.length - Terminal.maximumCommandBufferSize);
 			}
 
-			if (this._promiseInfo) {
-				if (errorBuffer && errorBuffer.length > 0) {
-					this._promiseInfo.reject(errorBuffer);
+			if (this._promiseInfo && readyToProcess) {
+				if (!Utilities.IsNullOrEmpty(this._inputCommand.error)) {
+					this._promiseInfo.reject(this._inputCommand.error);
 				} else {
 					this._promiseInfo.resolve(this._inputCommand);
 				}
 
 				this._promiseInfo = null;
+			}
+
+			if (readyToProcess) {
+				this._onDidRunCommand.fire(this._inputCommand);
+
+				// Reset our input command as we're all done.
 				this.createInputCommand();
 			}
 		}
