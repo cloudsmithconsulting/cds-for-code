@@ -51,6 +51,10 @@ export class TerminalCommand {
 		return this._masker.maskText(this._command, true);
 	}
 
+	get isHidden(): boolean { 
+		return this.masked === this.hidden;
+	}
+
 	get masked():string {
 		return this._masker.maskText(this._command);
 	}
@@ -147,7 +151,7 @@ class Masker {
 		let isHidden:boolean = false;
 
 		for (let i = 0; i < bytes.length; i++) {
-			if (bytes[i] !== Masker.maskSeperatorByte) {
+			if (bytes[i] !== Masker.maskSeperatorByte && bytes[i] !== Masker.hiddenSeperatorByte) {
 				if (!isHidden || (isHidden && includeHidden)) {
 					returnLength++;
 				}
@@ -418,7 +422,7 @@ export class Terminal implements vscode.Terminal {
 					onDidWrite: this._onDidWrite.event,
 					open: () => {
 						const resolveBufferFlush = (flushData, isError) => {
-							const prompt = /(PS )(.*)(> )/i.exec(flushData.raw);
+							const prompt =  /(PS )(.*)(> )/i.exec(flushData.raw);
 							let displayText = flushData.masked;
 
 							// The first time a terminal is opened, there will be a prompt (initial) as well as the command output.
@@ -487,8 +491,7 @@ export class Terminal implements vscode.Terminal {
 						if (data === '\x1b[A') { /// Up arrow 
 							this.showComandBuffer().then(c => {
 								if (c) {
-									//this.show(true);
-									this.run(c);
+									this.run(c);									
 								}
 							});
 
@@ -535,6 +538,7 @@ export class Terminal implements vscode.Terminal {
 
 			return new Promise<TerminalCommand>((resolve, reject) => {
 				this._promiseInfo = new PromiseInfo(resolve, reject);
+				this.write(this._inputCommand.hidden);
 				this._inputCommand.enter();
 			});
 		}
