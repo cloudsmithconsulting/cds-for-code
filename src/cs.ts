@@ -71,6 +71,7 @@ export namespace dynamics
         {
             public static readonly _namespace:string = "cs.dynamics.configuration.iconThemes";
             public static readonly default:string = `${iconThemes._namespace}.default`;
+            public static readonly selectedTheme:string = `${iconThemes._namespace}.selectedTheme`;
         }
 
         // tslint:disable-next-line: class-name
