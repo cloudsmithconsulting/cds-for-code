@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import { TS } from 'typescript-linq/TS';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import ApiRepository from '../repositories/apiRepository';
@@ -11,6 +10,7 @@ import DynamicsUrlResolver from '../api/DynamicsUrlResolver';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import { DynamicsWebApi } from '../api/Types';
 import { ExtensionIconThemes } from '../commands/iconLoader';
+import QuickPicker from '../helpers/QuickPicker';
 
 
 export default class DynamicsTreeView implements IWireUpCommands {
@@ -142,7 +142,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                     }
                  }
             }) // <-- no semi-colon, comma starts next command registration
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, (item: TreeEntry) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, async (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item)
                 {
                     vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection);
@@ -172,8 +172,13 @@ export default class DynamicsTreeView implements IWireUpCommands {
                     case "Keys":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityKeyUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
                         break;
-                    case "Forms":                 
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
+                    case "Forms":   
+                        let formType = await QuickPicker.pickEnum(DynamicsWebApi.DynamicsForm);
+
+                        if (formType) {
+                            Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.context.ObjectTypeCode, formType, undefined, item.solutionId), retryFunction);
+                        }
+
                         break;
                     case "Views":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.context.MetadataId, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
@@ -189,7 +194,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         break;
                 }
             })   
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.editEntry, (item: TreeEntry) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.editEntry, async (item: TreeEntry) => { // Match name of command to package.json command
                 let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.treeView.editEntry, item);
 
                 switch (item.itemType)
@@ -216,8 +221,12 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityKeyUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case "Form":
+                        /*
                         vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml })
                             .then(d => vscode.window.showTextDocument(d));
+                            */
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, item.context.type, item.context.formid, item.solutionId), retryFunction);
+
                         break;
                     case "View":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.parent.context.ObjectTypeCode, item.context.savedqueryid, item.solutionId), retryFunction);

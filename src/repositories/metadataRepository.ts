@@ -81,7 +81,7 @@ export default class MetadataRepository
     public retrieveKeys(entityKey:string) : Promise<any[]>
     {
         return this.webapi.retrieveEntity(entityKey, ["MetadataId"], [ { property: "Keys" } ])
-            .then(response => response.value);
+            .then(response => response.Keys);
     }
 
 }

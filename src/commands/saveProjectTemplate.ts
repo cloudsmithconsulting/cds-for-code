@@ -13,7 +13,7 @@ import QuickPicker from "../helpers/QuickPicker";
  */
 export default async function run(templateManager: ProjectTemplatesPlugin, args: any) {
 	// get workspace folder
-	let workspace = await QuickPicker.pickWorkspacePath(args);
+	let workspace = await QuickPicker.pickWorkspaceRoot(args);
 
     if (!workspace) {
 		vscode.window.showErrorMessage("No workspace selected");

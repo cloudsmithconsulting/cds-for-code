@@ -48,17 +48,17 @@ export default class DynamicsUrlResolver
         return this.parseUriString(uriString, solutionId);
     }
 
-    public static getManageEntityFormUri(config:DynamicsWebApi.Config, entityTypeCode:string, formType:DynamicsWebApi.DynamicsForm, formId?:string, solutionId?:string):vscode.Uri
-    {
-        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?etc=${entityTypeCode}&extraqs=`;
+    public static getManageEntityFormUri(config:DynamicsWebApi.Config, entityTypeCode:string, formType:DynamicsWebApi.DynamicsForm = DynamicsWebApi.DynamicsForm.Main, formId?:string, solutionId?:string):vscode.Uri {
+        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?pagetype=formeditor&etc=${entityTypeCode}`;
+        let options;
 
         if (formId) {
-            let options = { formtype: formType, formId: Utilities.TrimGuid(formId), action: -1 };
-
-            uriString += encodeURIComponent(Utilities.ObjectToQuerystring(options));
+            options = { formtype: formType, formId: Utilities.TrimGuid(formId) };
+        } else {
+            options = { formtype: formType };
         }
 
-        uriString += "&pagetype=formeditor";
+        uriString += `&extraqs=${Utilities.ObjectToQuerystring(options)}`;
 
         return this.parseUriString(uriString, solutionId);
     }
@@ -76,22 +76,22 @@ export default class DynamicsUrlResolver
     }
 
     public static getManageEntityChartUrl(config:DynamicsWebApi.Config, entityTypeCode?:string, chartId?:string, solutionId?:string): vscode.Uri {
-        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?pagetypevizdesigner`;
+        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?pagetype=vizdesigner`;
         let options;
 
         if (chartId) {
-            options = { etc: entityTypeCode, id: `{${Utilities.TrimGuid(chartId)}}` };
+            options = { etc: entityTypeCode, id: `${Utilities.TrimGuid(chartId)}` };
         } else {
             options = { etc: entityTypeCode };
         }
         
-        uriString += `&extraqs=${encodeURIComponent(Utilities.ObjectToQuerystring(options))}`;        
+        uriString += `&extraqs=${Utilities.ObjectToQuerystring(options)}`;        
 
         return this.parseUriString(uriString, solutionId);
     }
 
     public static getManageEntityKeyUrl(config:DynamicsWebApi.Config, entityId?:string, keyId?:string, solutionId?:string): vscode.Uri {
-        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}systemcustomization/AlternateKeys/manageAlternateKeys.aspx?entityId=%7B${Utilities.TrimGuid(entityId)}%7D`;
+        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}tools/systemcustomization/AlternateKeys/manageAlternateKeys.aspx?entityId=%7B${Utilities.TrimGuid(entityId)}%7D`;
 
         if (keyId) {
             uriString += `&entityKeyId=%7B${Utilities.TrimGuid(keyId)}%7D`;

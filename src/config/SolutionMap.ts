@@ -62,7 +62,7 @@ export default class SolutionMap
     
     public static async read(filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap>
     {
-        const workspacePath = await QuickPicker.pickWorkspacePath(undefined, "Choose a location where your .dynamics folder will go.", true);
+        const workspacePath = await QuickPicker.pickWorkspaceRoot(undefined, "Choose a location where your .dynamics folder will go.", true);
         const file  = path.join(workspacePath, filename);
 
         if (fs.existsSync(file))
@@ -80,7 +80,7 @@ export default class SolutionMap
 
     public static async write(map:SolutionMap, filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap>
     {
-        const workspacePath = await QuickPicker.pickWorkspacePath(undefined, "Choose a location where your .dynamics folder will go.", true);
+        const workspacePath = await QuickPicker.pickWorkspaceRoot(undefined, "Choose a location where your .dynamics folder will go.", true);
         const folder  = path.join(workspacePath, path.dirname(filename));
 
         if (!fs.existsSync(folder))

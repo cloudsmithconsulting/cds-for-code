@@ -42,7 +42,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 					}
 				} 
 
-				folder = folder || await QuickPicker.pickWorkspacePath(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true);
+				folder = folder || await QuickPicker.pickWorkspaceRoot(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true);
 				if (Utilities.IsNullOrEmpty(folder)) {
 					vscode.window.showInformationMessage("You must have at least one workspace open to unpack solutions.");
 
