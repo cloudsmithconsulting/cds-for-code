@@ -16,26 +16,26 @@
 <!-- changeTab() function comes from tabs.js -->
 <!-- viewRenderer.addScript('tabs.js') -->
 <ul class="tab" id="tabs">
-    <li class="tab__item tab__item--active" onclick="changeTab(event, 'WhiteList')">
+    <li class="tab__item tab__item--active" data-tab="WhiteList">
         White List
     </li>
-    <li class="tab__item" onclick="changeTab(event, 'BlackList')">
+    <li class="tab__item" data-tab="BlackList">
         Black List
     </li>
-    <li class="tab__item" onclick="changeTab(event, 'Naming')">
+    <li class="tab__item" data-tab="Naming">
         Naming
     </li>
-    <li class="tab__item" onclick="changeTab(event, 'Code-Generation')">
+    <li class="tab__item" data-tab="Code-Generation">
         Code Generation
     </li>
 </ul>
 
 <div id="WhiteList" class="tab__content">
     <div class="row mb-10">
-        <a href="javascript:;" onclick="changeView(event, 'Entities')" title="Add Entity">Add Entity</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="javascript:;" onclick="changeView(event, 'Attributes')" title="Add Attribute">Add Attribute</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="javascript:;" onclick="changeView(event, 'OptionSets')" title="Add Option Set">Add Option Set</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="javascript:;" onclick="changeView(event, 'Solutions')" title="Add Solution">Add Solution</a>
+        <a href="javascript:;" class="view__item view__item--active" data-view="Entities" title="Add Entity">Add Entity</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" class="view__item" data-view="Attributes" title="Add Attribute">Add Attribute</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" class="view__item" data-view="OptionSets" title="Add Option Set">Add Option Set</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" class="view__item" data-view="Solutions" title="Add Solution">Add Solution</a>
     </div>
 
     <div class="grid grid--two-left-panel">
@@ -58,7 +58,6 @@
                 <div class="field-container" data-form="Attributes,OptionSets" hidden>
                     <div class="field">
                         <select id="EntitySelect" name="EntitySelect" class="field__input">
-                            <option value="">- Select Entity -</option>
                             <option>Account</option>
                             <option>Contact</option>
                             <option>Lead</option>
@@ -213,10 +212,10 @@
 
 <div id="BlackList" class="tab__content" hidden>
     <div class="row mb-10">
-        <a href="javascript:;" onclick="changeView(event, 'Entities')" title="Add Entity">Add Entity</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="javascript:;" onclick="changeView(event, 'Attributes')" title="Add Attribute">Add Attribute</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="javascript:;" onclick="changeView(event, 'OptionSets')" title="Add Option Set">Add Option Set</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="javascript:;" onclick="changeView(event, 'Solutions')" title="Add Solution">Add Solution</a>
+        <a href="javascript:;" class="view__item" data-view="Entities" title="Add Entity">Add Entity</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" class="view__item" data-view="Attributes" title="Add Attribute">Add Attribute</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" class="view__item" data-view="OptionSets" title="Add Option Set">Add Option Set</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="javascript:;" class="view__item" data-view="Solutions" title="Add Solution">Add Solution</a>
     </div>
 
     <div class="grid grid--two-left-panel">
@@ -239,7 +238,6 @@
                 <div class="field-container" data-form="Attributes,OptionSets" hidden>
                     <div class="field">
                         <select id="EntitySelect2" name="EntitySelect2" class="field__input">
-                            <option value="">- Select Entity -</option>
                             <option>Account</option>
                             <option>Contact</option>
                             <option>Lead</option>

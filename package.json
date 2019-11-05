@@ -20,6 +20,7 @@
 	],
 	"activationEvents": [
 		"onView:cs.dynamics.viewContainers.connections",
+		"onCommand:cs.dynamics.controls.treeView.editConnection",
 		"onCommand:cs.dynamics.deployment.addSolutionComponent",
 		"onCommand:cs.dynamics.deployment.removeSolutionComponent",
 		"onCommand:cs.dynamics.deployment.registerPluginAssembly",
@@ -163,7 +164,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.openConnection",
+				"command": "cs.dynamics.controls.treeView.editConnection",
 				"title": "Open",
 				"category": "UserInterface"
 			},

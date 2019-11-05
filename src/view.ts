@@ -93,6 +93,8 @@ export class ViewRenderer {
 		// add some default scripts
 		this.insertScriptAt(0, 'main.js');
 		this.insertScriptAt(0, 'iconify.min.js');
+		this.insertScriptAt(0, 'mustache.min.js');
+		this.insertScriptAt(0, 'jquery.min.js');
 
 		let scriptHtml: string = '';
 		this._scripts.values.forEach(uri => {

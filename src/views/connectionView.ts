@@ -9,7 +9,7 @@ export default class ConnectionViewManager implements IWireUpCommands {
 	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
-            vscode.commands.registerCommand(cs.dynamics.controls.treeView.openConnection, async (config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
+            vscode.commands.registerCommand(cs.dynamics.controls.treeView.editConnection, async (config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 const view = ConnectionView.createOrShow<ConnectionView>(ConnectionView, {
