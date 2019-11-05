@@ -169,11 +169,17 @@ export default class DynamicsTreeView implements IWireUpCommands {
                     case "Processes":                 
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, DynamicsWebApi.ProcessType.Workflow, undefined, item.solutionId), retryFunction);
                         break;
+                    case "Keys":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityKeyUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
+                        break;
                     case "Forms":                 
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
                         break;
                     case "Views":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.context.MetadataId, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
+                        break;
+                    case "Charts":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityChartUrl(item.config, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
                         break;
                     case "WebResources":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, undefined, item.solutionId), retryFunction);
@@ -206,12 +212,18 @@ export default class DynamicsTreeView implements IWireUpCommands {
                     case "Process":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, DynamicsUrlResolver.parseProcessType(item.context.category), item.context.workflowid, item.solutionId), retryFunction);
                         break;
+                    case "Key":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityKeyUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
+                        break;
                     case "Form":
                         vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml })
                             .then(d => vscode.window.showTextDocument(d));
                         break;
                     case "View":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.parent.context.ObjectTypeCode, item.context.savedqueryid, item.solutionId), retryFunction);
+                        break;     
+                    case "Chart":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityChartUrl(item.config, item.parent.context.ObjectTypeCode, item.context.savedqueryvisualizationid, item.solutionId), retryFunction);
                         break;     
                     case "WebResources":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, item.context.webresourceid, item.solutionId), retryFunction);
@@ -291,10 +303,14 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     return this.getPluginStepImageDetails(element, commandPrefix, element.context);
                 case "Entity":
                     return Promise.resolve(this.getEntityLevelDetails(element, commandPrefix, element.context));
+                case "Keys":
+                    return this.getEntityKeyDetails(element, commandPrefix, element.context);
                 case "Attributes":
                     return this.getEntityAttributeDetails(element, commandPrefix, element.context);
                 case "Views":
                     return this.getEntityViewDetails(element, commandPrefix, element.solutionId, element.context);
+                case "Charts":
+                    return this.getEntityChartDetails(element, commandPrefix, element.solutionId, element.context);
                 case "Forms":
                     return this.getEntityFormDetails(element, commandPrefix, element.solutionId, element.context);
             }
@@ -498,7 +514,21 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getEntityLevelDetails(element: TreeEntry, commandPrefix?:string, context?:any) : TreeEntry[] {
         let returnObject = [];
-        
+
+        returnObject.push(new TreeEntry(
+            'Keys',
+            "Keys",
+            vscode.TreeItemCollapsibleState.Collapsed, 
+            null,
+            {
+                command: cs.dynamics.controls.treeView.clickEntry,
+                title: 'Keys',
+                arguments: [`${commandPrefix || ''}/Keys`]
+            },
+            element.config,
+            element.itemType === "Entity" ? element.context : undefined
+        ));
+
         returnObject.push(new TreeEntry(
             'Attributes',
             "Attributes",
@@ -522,6 +552,20 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 command: cs.dynamics.controls.treeView.clickEntry,
                 title: 'Views',
                 arguments: [`${commandPrefix || ''}/Views`]
+            },
+            element.config,
+            element.itemType === "Entity" ? element.context : undefined
+        ));
+
+        returnObject.push(new TreeEntry(
+            'Charts',
+            "Charts",
+            vscode.TreeItemCollapsibleState.Collapsed, 
+            null,
+            {
+                command: cs.dynamics.controls.treeView.clickEntry,
+                title: 'Charts',
+                arguments: [`${commandPrefix || ''}/Charts`]
             },
             element.config,
             element.itemType === "Entity" ? element.context : undefined
@@ -827,6 +871,28 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return returnValue;
     }
 
+    private getEntityChartDetails(element: TreeEntry, commandPrefix?: string, solutionId?:string, entity?:any): Thenable<TreeEntry[]> {
+        const api = new MetadataRepository(element.config);
+        const returnValue = this.createTreeEntries(
+            api.retrieveCharts(entity.LogicalName, solutionId), 
+            queryvisualization => new TreeEntry(
+                queryvisualization.name,
+                "Chart",
+                vscode.TreeItemCollapsibleState.None,
+                queryvisualization.description, 
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: queryvisualization.name,
+                    arguments: [`${commandPrefix || ''}/${queryvisualization.savedqueryvisualizationid}`]
+                },
+                element.config,
+                queryvisualization),
+            `An error occurred while retrieving charts from ${element.config.webApiUrl}`,
+            () => this.getEntityChartDetails(element, commandPrefix, entity));
+            
+        return returnValue;
+    }
+
     private getEntityFormDetails(element: TreeEntry, commandPrefix?: string, solutionId?:string, entity?:any): Thenable<TreeEntry[]> {
         const api = new MetadataRepository(element.config);
         const returnValue = this.createTreeEntries(
@@ -846,6 +912,32 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             `An error occurred while retrieving forms from ${element.config.webApiUrl}`,
             () => this.getEntityFormDetails(element, commandPrefix, entity));
 
+        return returnValue;
+    }
+
+    private getEntityKeyDetails(element: TreeEntry, commandPrefix?: string, entity?:any): Thenable<TreeEntry[]> {
+        const api = new MetadataRepository(element.config);
+        const returnValue = this.createTreeEntries(
+            api.retrieveKeys(entity.MetadataId), 
+            key => {
+                let displayName = key.DisplayName && key.DisplayName.LocalizedLabels && key.DisplayName.LocalizedLabels.length > 0 ? key.DisplayName.LocalizedLabels[0].Label : "";
+
+                return new TreeEntry(
+                    displayName,
+                    "Key",
+                    vscode.TreeItemCollapsibleState.None,
+                    key.LogicalName, 
+                    {
+                        command: cs.dynamics.controls.treeView.clickEntry,
+                        title: key.name,
+                        arguments: [`${commandPrefix || ''}/${key.savedqueryvisualizationid}`]
+                    },
+                    element.config,
+                    key); 
+            },
+            `An error occurred while retrieving key definitions from ${element.config.webApiUrl}`,
+            () => this.getEntityKeyDetails(element, commandPrefix, entity));
+            
         return returnValue;
     }
 
@@ -1030,9 +1122,13 @@ export type EntryType =
     "Solution" |
     "Attributes" |
     "Views" |
+    "Charts" |
+    "Keys" |
     "Forms" |
     "Attribute" |
     "View" |
+    "Chart" |
+    "Key" |
     "Form" |
     "Entry" |
     "Entries" |

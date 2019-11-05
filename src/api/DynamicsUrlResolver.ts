@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import Utilities from '../helpers/Utilities';
 import { DynamicsWebApi } from './Types';
-import { urlToOptions } from 'vscode-test/out/util';
 
 export default class DynamicsUrlResolver
 {
@@ -64,8 +63,7 @@ export default class DynamicsUrlResolver
         return this.parseUriString(uriString, solutionId);
     }
 
-    public static getManageEntityViewUri(config:DynamicsWebApi.Config, entityId:string, entityTypeCode?:string, viewId?:string, solutionId?:string):vscode.Uri
-    {
+    public static getManageEntityViewUri(config:DynamicsWebApi.Config, entityId:string, entityTypeCode?:string, viewId?:string, solutionId?:string): vscode.Uri {
         let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}tools/vieweditor/viewManager.aspx?entityId=%7B${Utilities.TrimGuid(entityId)}%7D`;
 
         if (viewId) {
@@ -77,8 +75,32 @@ export default class DynamicsUrlResolver
         return this.parseUriString(uriString, solutionId);
     }
 
-    public static getManageBusinessProcessUri(config:DynamicsWebApi.Config, processType:DynamicsWebApi.ProcessType, processId?:string, solutionId?:string):vscode.Uri
-    {
+    public static getManageEntityChartUrl(config:DynamicsWebApi.Config, entityTypeCode?:string, chartId?:string, solutionId?:string): vscode.Uri {
+        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?pagetypevizdesigner`;
+        let options;
+
+        if (chartId) {
+            options = { etc: entityTypeCode, id: `{${Utilities.TrimGuid(chartId)}}` };
+        } else {
+            options = { etc: entityTypeCode };
+        }
+        
+        uriString += `&extraqs=${encodeURIComponent(Utilities.ObjectToQuerystring(options))}`;        
+
+        return this.parseUriString(uriString, solutionId);
+    }
+
+    public static getManageEntityKeyUrl(config:DynamicsWebApi.Config, entityId?:string, keyId?:string, solutionId?:string): vscode.Uri {
+        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}systemcustomization/AlternateKeys/manageAlternateKeys.aspx?entityId=%7B${Utilities.TrimGuid(entityId)}%7D`;
+
+        if (keyId) {
+            uriString += `&entityKeyId=%7B${Utilities.TrimGuid(keyId)}%7D`;
+        } 
+
+        return this.parseUriString(uriString, solutionId);
+    }
+
+    public static getManageBusinessProcessUri(config:DynamicsWebApi.Config, processType:DynamicsWebApi.ProcessType, processId?:string, solutionId?:string): vscode.Uri {
         let uriString:string;
         let uri:vscode.Uri;
 

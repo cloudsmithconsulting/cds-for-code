@@ -4,10 +4,7 @@ import Utilities from '../helpers/Utilities';
 import ApiHelper from "../helpers/ApiHelper";
 import * as vscode from 'vscode';
 import * as path from 'path';
-import fetch, { Response } from "node-fetch";
 import { TS } from "typescript-linq";
-import fetchQuery from "../api/FetchQuery";
-import { type } from "os";
 
 export default class ApiRepository
 {
@@ -159,8 +156,7 @@ export default class ApiRepository
             } else {
                 this.webapi.create(updateObject, "plugintypes");
             }
-        });
-        
+        });        
     }
 
     // Gets a list of entities and their IDs

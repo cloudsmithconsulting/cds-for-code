@@ -304,17 +304,17 @@
 				{
 					"command": "cs.dynamics.controls.treeView.addEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Entries|PluginType)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Charts|Keys|Entries|PluginType)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Connection|Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Entry|PluginStep)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Connection|Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Chart|Key|Entry|PluginStep)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.inspectEntry",
 					"group": "group@2",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solution|Entity|OptionSet|WebResource|Process|Plugin|PluginStep|PluginType|PluginStepImage|Attribute|Form|View|Entry)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solution|Entity|OptionSet|WebResource|Process|Plugin|PluginStep|PluginType|PluginStepImage|Attribute|Form|View|Chart|Key|Entry)$/"
 				},
 				{
 					"command": "cs.dynamics.powerShell.unpackSolution.explorer",
@@ -339,7 +339,7 @@
 				{
 					"command": "cs.dynamics.controls.treeView.refreshEntry",
 					"group": "group@1",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Plugin|Attributes|Forms|Views|Entries)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Plugin|Attributes|Forms|Views|Charts|Keys|Entries)$/"
 				}
 			]
 		}

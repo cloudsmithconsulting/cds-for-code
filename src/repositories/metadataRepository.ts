@@ -52,7 +52,7 @@ export default class MetadataRepository
             .then(response => response.toArray());
     }
 
-    public retrieveViews(entityLogicalName:number, solutionId?:string) : Promise<any[]>
+    public retrieveViews(entityLogicalName:string, solutionId?:string) : Promise<any[]>
     {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "savedqueries",
@@ -64,4 +64,24 @@ export default class MetadataRepository
             .then(savedQueryResponse => ApiHelper.filterSolutionComponents(this.webapi, savedQueryResponse, solutionId, DynamicsWebApi.SolutionComponent.SavedQuery, q => q["savedqueryid"]))
             .then(response => response.toArray());
     }
+
+    public retrieveCharts(entityLogicalName:string, solutionId?:string) : Promise<any[]>
+    {
+        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "savedqueryvisualizations",
+            filter: `primaryentitytypecode eq '${entityLogicalName}'`,
+            orderBy: ["name"]
+        };
+
+        return this.webapi.retrieveRequest(request)
+            .then(savedQueryResponse => ApiHelper.filterSolutionComponents(this.webapi, savedQueryResponse, solutionId, DynamicsWebApi.SolutionComponent.SavedQueryVisualization, q => q["savedqueryvisualizationid"]))
+            .then(response => response.toArray());
+    }
+
+    public retrieveKeys(entityKey:string) : Promise<any[]>
+    {
+        return this.webapi.retrieveEntity(entityKey, ["MetadataId"], [ { property: "Keys" } ])
+            .then(response => response.value);
+    }
+
 }
