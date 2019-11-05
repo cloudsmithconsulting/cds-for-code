@@ -1,41 +1,32 @@
 // This script will be run within the webview itself
 // It cannot access the main VS Code APIs directly.
-(function () {
+$(function () {
     // You MUST set = window.vscodeApi for scripts in main.js to work properly
     const vscode = window.vscodeApi = acquireVsCodeApi();
     //const oldState = vscode.getState();
 
-    const errorPanel = document.getElementById("errorPanel");
-    const errorMessage = document.getElementById("errorMessage");
-    const accessTokenField = document.getElementById("accessTokenField");
-    const submitButton = document.getElementById("submitButton");
-
-    const authTypeRadios = document.getElementsByName("AuthType");
-    authTypeRadios.forEach(el => {
-        el.addEventListener("change", event => {
-            if (event.currentTarget.value === "2") {
-                accessTokenField.removeAttribute("hidden");
-            } else {
-                accessTokenField.setAttribute("hidden", "hidden");
-                accessTokenInput.value = ""; // clear it out
-            }
-        });
+    $("[name='AuthType']").click(function() {
+        const authType = this.value;
+        $accessTokenField = $("#accessTokenField");
+        if (authType === "2") {
+            $accessTokenField.show();
+        } else {
+            $accessTokenField.hide();
+        }
     });
 
-    submitButton.addEventListener("click", event => {
-        event.preventDefault();
-
-        const id = document.getElementById("Id").value;
+    $("#submitButton").click(function() {
+        const id = $("#Id").val();
         const settings = {
             id: (id.length > 0) ? id: null, // pass the id or null
-            authType: CloudSmith.Controls.getRadioButtonValue("AuthType"),
-            webApiVersion: document.getElementById("WebApiVersion").value,
-            name: document.getElementById("Name").value,
-            webApiUrl: document.getElementById("ServerUrl").value,
-            domain: document.getElementById("Domain").value,
-            accessToken: document.getElementById("AccessToken").value,
-            username: document.getElementById("Username").value,
-            password: document.getElementById("Password").value
+            authType: parseInt($("[name='AuthType']:checked").val()),
+            webApiVersion: $("#WebApiVersion").val(),
+            name: $("#Name").val(),
+            webApiUrl: $("#ServerUrl").val(),
+            domain: $("#Domain").val(),
+            accessToken: $("#AccessToken").val(),
+            username: $("#Username").val(),
+            password: $("#Password").val()
         };
 
         if (!validateForm(settings)) return;
@@ -45,48 +36,6 @@
             settings
         });
     });
-
-    // Handle messages sent from the extension to the webview
-    window.addEventListener("message", event => {
-        const message = event.data; // The json data that the extension sent
-        switch (message.command) {
-            case "connectionEdit":
-                setEditMode(message.message);
-                break;
-            case "connectionError":
-                showConnectionError(message.message);
-        }
-    });
-
-    function setEditMode(message) {
-        const newTitle = document.getElementById("title").innerHTML
-            .replace("New", "Edit");
-        
-        document.title = newTitle;
-        document.getElementById("title").innerHTML = newTitle;
-        
-        if (message.authType === 1) {
-            document.getElementById("AuthType1").checked = true;
-            accessTokenField.setAttribute("hidden", "hidden");
-        }
-
-        document.getElementById("Id").value = message.id || "";
-        document.getElementById("WebApiVersion").value = message.webApiVersion || "";
-        document.getElementById("Name").value = message.name || "";
-        document.getElementById("ServerUrl").value = message.webApiUrl || "";
-        document.getElementById("Domain").value = message.domain || "";
-        document.getElementById("AccessToken").value = message.accessToken || "";
-        document.getElementById("Username").value = message.username || "";
-        document.getElementById("Password").value = message.password || "";
-    }
-
-    function showConnectionError(message) {
-        // build and inject error message
-        const errorHtml = message;
-        errorMessage.innerHTML = errorHtml;
-        // show this panel
-        errorPanel.removeAttribute('hidden');
-    }
 
     function validateForm(settings) {
         const messages = [];
@@ -117,14 +66,52 @@
         
         if (messages.length > 0) {
             // build and inject error message
-            const errorHtml = `&nbsp;&nbsp;-&nbsp;${messages.join("<br/>&nbsp;&nbsp;-&nbsp;")}`
-            errorMessage.innerHTML = errorHtml;
-            // show this panel
-            errorPanel.removeAttribute("hidden");
+            const errorMessage = `&nbsp;&nbsp;-&nbsp;${messages.join("<br/>&nbsp;&nbsp;-&nbsp;")}`
+            showErrorMessage(errorMessage);
         } else {
-            errorPanel.setAttribute("hidden", "hidden");
+            // no errors, hide the panel
+            $("#errorPanel").hide();
         }
 
         return messages.length === 0;
     }
-}());
+
+    function showErrorMessage(message) {
+        // build and inject error message
+        $("#errorMessage").html(message);
+        // show this panel
+        $("#errorPanel").show();
+    }
+
+    function setInitialState(message) {
+        const $title = $("#title");
+        $title.html($title.html().replace("New", "Edit"));
+        document.title = $title.text();
+        
+        if (message.authType === 1) {
+            $("#AuthType1").prop("checked", true);
+            $("#accessTokenField").hide();
+        }
+
+        $("#Id").val(message.id || "");
+        $("#WebApiVersion").val(message.webApiVersion || "");
+        $("#Name").val(message.name || "");
+        $("#ServerUrl").val(message.webApiUrl || "");
+        $("#Domain").val(message.domain || "");
+        $("#AccessToken").val(message.accessToken || "");
+        $("#Username").val(message.username || "");
+        $("#Password").val(message.password || "");
+    }
+
+    // Handle messages sent from the extension to the webview
+    window.addEventListener("message", event => {
+        const message = event.data; // The json data that the extension sent
+        switch (message.command) {
+            case "connectionEdit":
+                setInitialState(message.message);
+                break;
+            case "connectionError":
+                showErrorMessage(message.message);
+        }
+    });
+});

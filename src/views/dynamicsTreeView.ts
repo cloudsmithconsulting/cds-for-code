@@ -145,7 +145,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item)
                 {
-                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection);
+                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.editConnection);
 
                     return;
                 }
@@ -189,7 +189,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                 switch (item.itemType)
                 {
                     case "Connection":
-                        vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection, item.config);
+                        vscode.commands.executeCommand(cs.dynamics.controls.treeView.editConnection, item.config);
                         break;
                     case "Solution":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config, item.context.solutionid), retryFunction);
