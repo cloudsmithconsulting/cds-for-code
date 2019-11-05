@@ -4,6 +4,7 @@ import * as cs from '../cs';
 import IWireUpCommands from '../wireUpCommand';
 import ApiRepository from '../repositories/apiRepository';
 import { DynamicsWebApi } from '../api/Types';
+import QuickPicker from '../helpers/QuickPicker';
 
 export default class PluginStepViewManager implements IWireUpCommands {
 	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -11,6 +12,9 @@ export default class PluginStepViewManager implements IWireUpCommands {
 
             vscode.commands.registerCommand(cs.dynamics.controls.pluginStep.open, async (step?: any, config?:DynamicsWebApi.Config) => { // Match name of command to package.json command
                 // Run command code
+                config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
+				if (!config) { return; }
+
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 const view = View.createOrShow(PluginStepView, {
                     extensionPath: context.extensionPath,
@@ -19,19 +23,18 @@ export default class PluginStepViewManager implements IWireUpCommands {
                     viewType: cs.dynamics.views.pluginStepView
                 });
 
-                if (config) {
-                    const api = new ApiRepository(config);
-                    const entityTypeCodes = await api.retrieveEntityTypeCodes();
-                    const sdkMessages = await api.retrieveSdkMessages();
-                    const sdkMessageDetails = step ? await api.retrieveSdkMessageDetails(step.sdkmessageid.sdkmessageid) : null;
-                    const viewModel = {
-                        entityTypeCodes,
-                        sdkMessageDetails,
-                        sdkMessages,
-                        step
-                    };
-                    view.setInitialState(viewModel);
-                }
+                const api = new ApiRepository(config);
+                const entityTypeCodes = await api.retrieveEntityTypeCodes();
+                const sdkMessages = await api.retrieveSdkMessages();
+                const sdkMessageDetails = step ? await api.retrieveSdkMessageDetails(step.sdkmessageid.sdkmessageid) : null;
+                const viewModel = {
+                    entityTypeCodes,
+                    sdkMessageDetails,
+                    sdkMessages,
+                    step
+                };
+
+                view.setInitialState(viewModel);
             }) // <-- no semi-colon, comma starts next command registration
         );
     }
