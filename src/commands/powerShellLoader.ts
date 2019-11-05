@@ -5,7 +5,7 @@ import * as cs from '../cs';
 import fetch from 'node-fetch';
 import IWireUpCommands from '../wireUpCommand';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import DynamicsTerminal from '../views/DynamicsTerminal';
+import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import GlobalState from '../config/GlobalState';
 import ProjectTemplatesPlugin from "../ProjectTemplatesPlugin";
@@ -57,7 +57,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 		const remoteFolderPath:string = Utilities.EnforceTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateSource));
 		const updateChannel:string = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateChannel);
 		
-		this.checkVersion(remoteFolderPath, updateChannel)
+		return this.checkVersion(remoteFolderPath, updateChannel)
 			.then(version => {
 				if (version === -1) {
 					vscode.window.showErrorMessage(`The Dynamics 365 extension could not check for updates in the ${updateChannel} channel.  Please check the configuration updateSource and updateChannel to ensure they are set correctly.`);
@@ -88,8 +88,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 								);
 
 								return localPath;
-							})
-							.then(localPath => {
+							}).then(localPath => {
 								if (localPath.endsWith("Install-Sdk.ps1")) {
 									const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
 
@@ -98,15 +97,15 @@ export default class PowerShellLoader implements IWireUpCommands {
 									}
 
 									DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
-										.then(terminal => { terminal.text(`.\\Install-Sdk.ps1 `)
-											.text(`-Path ${sdkInstallPath} `)
-											.enter(); 
+										.then(terminal => { 
+											terminal.run(new TerminalCommand(`.\\Install-Sdk.ps1 `)
+												.text(`-Path ${sdkInstallPath} `));
 									});
 								}
+							}).then(() => {
+								GlobalState.Instance(context).PowerShellScriptVersion = version;
 							});
 					}
-
-					GlobalState.Instance(context).PowerShellScriptVersion = version;
 				}
 
 				// For loop to iterate through the array of "apps"
@@ -136,10 +135,11 @@ export default class PowerShellLoader implements IWireUpCommands {
 							.then(options => {
 								FileSystem.Unzip(options.zipFile, options.extractPath)
 									.then(count => vscode.window.showInformationMessage(`${count} items extracted from ${options.zipFile} into ${options.extractPath}`));
+							})
+							.then(() => {
+								GlobalState.Instance(context).PowerShellScriptVersion = version;
 							});
 					}
-
-					GlobalState.Instance(context).PowerShellScriptVersion = version;
 				}
 			});
     }

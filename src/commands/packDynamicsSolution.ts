@@ -4,13 +4,14 @@ import * as fs from 'fs';
 import * as path from 'path';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import QuickPicker, { QuickPickOption } from '../helpers/QuickPicker';
-import DynamicsTerminal from '../views/DynamicsTerminal';
+import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import IWireUpCommands from '../wireUpCommand';
 import SolutionMap from '../config/SolutionMap';
 import XmlParser from '../helpers/XmlParser';
 import { TS } from 'typescript-linq/TS';
 import { DynamicsWebApi } from '../api/Types';
+import WorkspaceState from '../config/WorkspaceState';
 
 export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;
@@ -43,7 +44,7 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 					if (!fs.existsSync(solutionFile)) { 
 						solutionFile = ''; 
 
-						const solutionMap:SolutionMap = await SolutionMap.read();
+						const solutionMap:SolutionMap = WorkspaceState.Instance(context).SolutionMap;
 						const solutionFolders = new TS.Linq.Enumerator(solutionMap.mappings)
 							.where(m => m.path.startsWith(folder))
 							.select(m => new QuickPickOption(m.path, null))
@@ -64,19 +65,19 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 					}
 
 					if (fs.existsSync(solutionFile)) {
-						const solutionFileObject = await XmlParser.parseFile(solutionFile);
+						const solutionFileXml = await XmlParser.parseFile(solutionFile);
 						
-						if (!solutionFileObject 
-							|| !solutionFileObject.ImportExportXml 
-							|| !solutionFileObject.ImportExportXml.SolutionManifest 
-							|| solutionFileObject.ImportExportXml.SolutionManifest.length === 0 
-							|| !solutionFileObject.ImportExportXml.SolutionManifest[0].UniqueName) {
+						if (!solutionFileXml 
+							|| !solutionFileXml.ImportExportXml 
+							|| !solutionFileXml.ImportExportXml.SolutionManifest 
+							|| solutionFileXml.ImportExportXml.SolutionManifest.length === 0 
+							|| !solutionFileXml.ImportExportXml.SolutionManifest[0].UniqueName) {
 							vscode.window.showErrorMessage(`The solution file ${solutionFile} is not a valid Dynamics 365 solution manifest.`); 
 
 							return;
 						}
 
-						solution = solutionFileObject.ImportExportXml.SolutionManifest[0].UniqueName.toString();
+						solution = solutionFileXml.ImportExportXml.SolutionManifest[0].UniqueName.toString();
 					} 
 					else {
 						return;
@@ -96,18 +97,18 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 					serverUrl = serverUrl.substring(0, serverUrl.length - 1);
 				}
 				
-                DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
-                    .then(terminal => { terminal.text(`.\\Deploy-XrmSolution.ps1 `)
-						.text(`-ServerUrl "${serverUrl}" `)
-						.text(`-OrgName "${orgName}" `)
-						.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
-						.text(`-Path "${folder}" `)
-						.text(`-ToolsPath "${toolsPath}" `)
-						.text(`-Credential (New-Object System.Management.Automation.PSCredential (“${config.username}”, (ConvertTo-SecureString “`)
-						.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
-						.text(`” -AsPlainText -Force))) `)
-						.text(managed ? `-Managed ` : '')
-						.enter();
+                return DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
+                    .then(terminal => { 
+						return terminal.run(new TerminalCommand(`.\\Deploy-XrmSolution.ps1 `)
+							.text(`-ServerUrl "${serverUrl}" `)
+							.text(`-OrgName "${orgName}" `)
+							.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
+							.text(`-Path "${folder}" `)
+							.text(`-ToolsPath "${toolsPath}" `)
+							.text(`-Credential (New-Object System.Management.Automation.PSCredential ("${config.username}", (ConvertTo-SecureString "`)
+							.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
+							.text(`" -AsPlainText -Force))) `)
+							.text(managed ? `-Managed ` : ''));
 					});
 			})
 		);

@@ -13,6 +13,10 @@ export default class Utilities
         return typeof value === "undefined" || value === null;
     }
 
+    public static NormalizeLineBreaks(value: string): string {
+        return value.replace("\r\n", "\n").replace("\n\r", "\n").replace("\n", "\r\n");
+    }
+    
     //https://stackoverflow.com/a/8809472
     public static NewGuid() : string 
     {

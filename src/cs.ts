@@ -71,6 +71,7 @@ export namespace dynamics
         {
             public static readonly _namespace:string = "cs.dynamics.configuration.iconThemes";
             public static readonly default:string = `${iconThemes._namespace}.default`;
+            public static readonly selectedTheme:string = `${iconThemes._namespace}.selectedTheme`;
         }
 
         // tslint:disable-next-line: class-name
@@ -79,6 +80,13 @@ export namespace dynamics
             public static readonly _namespace:string = "cs.dynamics.configuration.globalState";
             public static readonly dynamicsConnections:string = `${globalState._namespace}:dynamicsConnections`;
             public static readonly powerShellScriptVersion:string = `${globalState._namespace}:powerShellScriptVersion`;
+        }
+
+        // tslint:disable-next-line: class-name
+        export class workspaceState
+        {
+            public static readonly _namespace:string = "cs.dynamics.configuration.workspaceState";
+            public static readonly solutionMap:string = `${workspaceState._namespace}:solutionMap`;
         }
 
         // tslint:disable-next-line: class-name
@@ -117,6 +125,7 @@ export namespace dynamics
             public static readonly configure:string = `${svcUtilConfig._namespace}.configure`;
         }
         
+        // tslint:disable-next-line: class-name
         export class jsonInspector
         {
             public static readonly _namespace:string = "cs.dynamics.controls.jsonInspector";
