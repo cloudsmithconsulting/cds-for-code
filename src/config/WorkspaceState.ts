@@ -15,7 +15,7 @@ export default class WorkspaceState
         if (this._context) {
             const value = this._context.workspaceState.get<SolutionMap>(cs.dynamics.configuration.workspaceState.solutionMap);
 
-            if (value) { return value; }
+            if (value && value instanceof SolutionMap) { return <SolutionMap>value; }
         }
 
         return new SolutionMap();
