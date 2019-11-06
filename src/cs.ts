@@ -156,9 +156,11 @@ export namespace dynamics
             public static readonly addEntryToSolution:string = `${treeView._namespace}.addEntryToSolution`;
             public static readonly clickEntry:string = `${treeView._namespace}.clickEntry`;
             public static readonly deleteEntry:string = `${treeView._namespace}.deleteEntry`;
+            public static readonly editConnection:string = `${treeView._namespace}.editConnection`;
             public static readonly editEntry:string = `${treeView._namespace}.editEntry`;
             public static readonly inspectEntry:string = `${treeView._namespace}.inspectEntry`;
-            public static readonly editConnection:string = `${treeView._namespace}.editConnection`;
+            public static readonly openInBrowser:string = `${treeView._namespace}.openInBrowser`;
+            public static readonly openInEditor:string = `${treeView._namespace}.openInEditor`;
             public static readonly refreshEntry:string = `${treeView._namespace}.refreshEntry`;
             public static readonly removeEntryFromSolution:string = `${treeView._namespace}.removeEntryFromSolution`;
         }

@@ -109,8 +109,8 @@
 		"commands": [
 			{
 				"command": "cs.dynamics.controls.pluginStep.open",
-				"title": "Open plugin step",
-				"category": "UserInterface"
+				"title": "Configure or modify a plugin step",
+				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.controls.svcUtilConfig.configure",
@@ -176,6 +176,16 @@
 			{
 				"command": "cs.dynamics.controls.treeView.removeEntryFromSolution",
 				"title": "Remove from Solution",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.treeView.openInBrowser",
+				"title": "Open in Browser",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.treeView.openInEditor",
+				"title": "Open in Text Editor",
 				"category": "UserInterface"
 			},
 			{
@@ -305,42 +315,52 @@
 				{
 					"command": "cs.dynamics.controls.treeView.addEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Entries|PluginType)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canAddItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Connection|Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Entry|PluginStep)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canEditItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.inspectEntry",
 					"group": "group@2",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solution|Entity|OptionSet|WebResource|Process|Plugin|PluginStep|PluginType|PluginStepImage|Attribute|Form|View|Entry)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canInspectItem)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.treeView.openInBrowser",
+					"group": "group@3",
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canOpenInBrowser)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.treeView.openInEditor",
+					"group": "group@4",
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.powerShell.unpackSolution.explorer",
 					"group": "deployment@3",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solution)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.deleteEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Connection)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.addEntryToSolution",
 					"group": "deployment@1",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Plugin|Entity|OptionSet|WebResource|Process)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canAddToSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.removeEntryFromSolution",
 					"group": "deployment@2",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Plugin|Entity|OptionSet|WebResource|Process)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.refreshEntry",
 					"group": "group@1",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Plugin|Attributes|Forms|Views|Entries)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
 				}
 			]
 		}

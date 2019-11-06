@@ -9,7 +9,6 @@ import Dictionary from '../helpers/Dictionary';
 import * as FileSystem from '../helpers/FileSystem';
 import * as DynamicsTreeView from '../views/DynamicsTreeView';
 import { TS } from 'typescript-linq';
-import { S_IROTH } from 'constants';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
 
 export default class IconLoader implements IWireUpCommands {
@@ -135,19 +134,27 @@ export class ExtensionIconTheme {
 		cs.dynamics.configuration.iconThemes.default, new Dictionary<ExtensionIcon, string>([
 			{ key: "Connection", value: 'uil-cloud-data-connection' },
 			{ key: "Organization", value: 'jam-building-f' },
-			{ key: "Entities", value: "mdi-folder-outline" },
-			{ key: "Attributes", value: "mdi-folder-outline" },
-			{ key: "Views", value: "mdi-folder-outline" },
-			{ key: "Forms", value: "mdi-folder-outline" },
-			{ key: "OptionSets", value: "mdi-folder-outline" },
-			{ key: "Processes", value: "mdi-folder-outline" },
-			{ key: "WebResources", value: "mdi-folder-outline" },
-			{ key: "Plugins", value: "mdi-folder-outline" },
-			{ key: "Solutions", value: "mdi-folder-outline" },
-			{ key: "Folder", value: "mdi-folder-outline" },
+			{ key: "Entities", value: "ant-design:folder-open-twotone" },
+			{ key: "Attributes", value: "ant-design:folder-open-twotone" },
+			{ key: "Views", value: "ant-design:folder-open-twotone" },
+			{ key: "Charts", value: "ant-design:folder-open-twotone" },
+			{ key: "Keys", value: "ant-design:folder-open-twotone" },
+			{ key: "Relationships", value: "ant-design:folder-open-twotone" },
+			{ key: "Forms", value: "ant-design:folder-open-twotone" },
+			{ key: "OptionSets", value: "ant-design:folder-open-twotone" },
+			{ key: "Processes", value: "ant-design:folder-open-twotone" },
+			{ key: "WebResources", value: "ant-design:folder-open-twotone" },
+			{ key: "Plugins", value: "ant-design:folder-open-twotone" },
+			{ key: "Solutions", value: "ant-design:folder-open-twotone" },
+			{ key: "Folder", value: "ant-design:folder-open-twotone" },
 			{ key: "Entity", value: 'fe-table'},
 			{ key: "Attribute", value: 'whh-twocolumnsrightalt'},
 			{ key: "View", value: "ic-baseline-pageview" },
+			{ key: "Chart", value: "ant-design:area-chart-outline"},
+			{ key: "Key", value: "ion-key-sharp" },
+			{ key: "OneToManyRelationship", value: "emojione-monotone:right-arrow" },
+			{ key: "ManyToOneRelationship", value: "emojione-monotone:left-arrow" },
+			{ key: "ManyToManyRelationship", value: "emojione-monotone:left-right-arrow" },
 			{ key: "Form", value: "dashicons-format-aside"},
 			{ key: "OptionSet", value: "ion-options-outline"},
 			{ key: "Process", value: "vaadin-file-process" },

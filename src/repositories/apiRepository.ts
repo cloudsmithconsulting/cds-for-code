@@ -4,10 +4,7 @@ import Utilities from '../helpers/Utilities';
 import ApiHelper from "../helpers/ApiHelper";
 import * as vscode from 'vscode';
 import * as path from 'path';
-import fetch, { Response } from "node-fetch";
 import { TS } from "typescript-linq";
-import fetchQuery from "../api/FetchQuery";
-import { type } from "os";
 
 export default class ApiRepository
 {
@@ -42,16 +39,20 @@ export default class ApiRepository
             .then(response => response.value);
     }
 
-    public retrieveProcesses(solutionId?:string) : Promise<any[]> {
+    public retrieveProcesses(entityName?:string, solutionId?:string) : Promise<any[]> {
+        // documentation of the attributes for workflow: https://docs.microsoft.com/en-us/dynamics365/customer-engagement/web-api/workflow?view=dynamics-ce-odata-9        
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "workflows",
-            filter: "componentstate ne 2 and componentstate ne 3 and type eq 1",
+            filter: `componentstate ne 2 and componentstate ne 3 and type eq 1`,
             orderBy: ["name"]
         };
 
-        if (solutionId)
-        {
-            request.filter = `${request.filter} and solutionid eq ${solutionId}`;
+        if (solutionId) {
+            request.filter += ` and solutionid eq ${solutionId}`;
+        }
+
+        if (entityName) { 
+            request.filter += ` and primaryentity eq '${entityName}'`;
         }
 
         return this.webapi.retrieveAllRequest(request)
@@ -159,8 +160,7 @@ export default class ApiRepository
             } else {
                 this.webapi.create(updateObject, "plugintypes");
             }
-        });
-        
+        });        
     }
 
     // Gets a list of entities and their IDs

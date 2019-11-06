@@ -12,17 +12,17 @@ import Dictionary from '../helpers/Dictionary';
 export class TerminalCommand {
 	private _command:string;
 	private _masker:Masker;
-	private readonly _onLineCompleted: vscode.EventEmitter<{ raw:string, masked:string }>;
+	private readonly _onLineCompleted: vscode.EventEmitter<{ raw:string, masked:string, hidden:string }>;
 	private _output:string;
 	private _error:string;
 	private _hideFlag:boolean = false;
 	private _maskFlag:boolean = false;
 
-	public onLineCompleted: vscode.Event<{ raw:string, masked:string }>;
+	public onLineCompleted: vscode.Event<{ raw:string, masked:string, hidden:string }>;
 	public static readonly lineSeperator:string = "\r\n";
 
 	constructor(command?: string, output?: string, error?:string) {
-		this._onLineCompleted = new vscode.EventEmitter<{ raw:string, masked:string }>();
+		this._onLineCompleted = new vscode.EventEmitter<{ raw:string, masked:string, hidden:string }>();
 		this.onLineCompleted = this._onLineCompleted.event;
 		this._masker = new Masker();
 
@@ -53,8 +53,8 @@ export class TerminalCommand {
 		return this._masker.maskText(this._command, true);
 	}
 
-	get isHidden(): boolean { 
-		return this.masked === this.hidden;
+	get hasHiddenText(): boolean { 
+		return this.masked !== this.hidden;
 	}
 
 	get masked():string {
@@ -101,7 +101,7 @@ export class TerminalCommand {
 		}
 
 		this._command += text += TerminalCommand.lineSeperator;
-		this._onLineCompleted.fire({ raw: this.command, masked: this.masked });
+		this._onLineCompleted.fire({ raw: this.command, masked: this.masked, hidden: this.hidden });
 
 		return this;
 	}
@@ -134,7 +134,7 @@ export class TerminalCommand {
 		}
 
 		this._command += TerminalCommand.lineSeperator;
-		this._onLineCompleted.fire({ raw: this.command, masked: this.masked });
+		this._onLineCompleted.fire({ raw: this.command, masked: this.masked, hidden: this.hidden });
 
 		return this;
 	}
@@ -452,7 +452,7 @@ export class Terminal implements vscode.Terminal {
 			.then(o => o ? o.context : null);
 	}
 
-	create(options?:vscode.TerminalOptions): void {
+	create(options?:vscode.TerminalOptions): void | Promise<TerminalCommand> {
 		options = options || this._options;
 
 		this._options = options;
@@ -463,7 +463,7 @@ export class Terminal implements vscode.Terminal {
 			this._terminal = vscode.window.terminals[index];
 			
 			if (options.cwd) {
-				this.setPath(options.cwd.toString());
+				return this.setPath(options.cwd.toString());
 			}
 		} else {
 			this._terminal = (<any>vscode.window).createTerminal({
@@ -499,7 +499,7 @@ export class Terminal implements vscode.Terminal {
 								if (this._isAlreadyInitialized) {
 									this.resolveIncomingCommand(flushData.raw, undefined);
 								} else {
-									this._inputCommand.output = flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, "");
+									this._inputCommand.output += flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, "");
 									this._isAlreadyInitialized = true;
 								}
 
@@ -508,7 +508,7 @@ export class Terminal implements vscode.Terminal {
 								if (this._isAlreadyInitialized) {
 									this.resolveIncomingCommand(undefined, flushData.raw);	
 								} else {
-									this._inputCommand.error = flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, "");
+									this._inputCommand.error += flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, "");
 									this._isAlreadyInitialized = true;
 								}
 								
@@ -595,7 +595,6 @@ export class Terminal implements vscode.Terminal {
 
 			return new Promise<TerminalCommand>((resolve, reject) => {
 				this._promiseInfo = new PromiseInfo(resolve, reject);
-				this.write(this._inputCommand.hidden);
 				this._inputCommand.enter();
 			});
 		}
@@ -664,7 +663,7 @@ export class Terminal implements vscode.Terminal {
 		this._inputCommand = command ? new TerminalCommand(command.raw) : new TerminalCommand();
 		
 		this._inputCommand.onLineCompleted(line => {
-			this.write(line.masked);
+			this.write(line.hidden);
 
 			if (this.process) {
 				this.process.stdin.write(line.raw); 
@@ -732,7 +731,7 @@ export default class DynamicsTerminal implements IWireUpCommands
 	wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
 		let terminals:Dictionary<string, Terminal> = new Dictionary<string, Terminal>();
 
-		context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.extension.createTerminal, (folder:string, name:string): Terminal => {
+		context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.extension.createTerminal, async (folder:string, name:string): Promise<Terminal> => {
 			if (!folder || !fs.existsSync(folder)) {
 				folder = context.globalStoragePath;
 			}
@@ -750,7 +749,8 @@ export default class DynamicsTerminal implements IWireUpCommands
 				terminals.add(name, terminal);
 			} else {
 				terminals[name].show(true);
-				terminals[name].setPath(folder);
+
+				await terminals[name].setPath(folder);
 			}
 
 			return terminals[name];
