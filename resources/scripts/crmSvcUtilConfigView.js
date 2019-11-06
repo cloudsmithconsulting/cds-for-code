@@ -17,33 +17,45 @@
         });
     });
 
+    const removeRule = window.removeRule = function(button) {
+        const $button = $(button);
+        $button.parent("td").parent("tr").remove();
+    }
+
     // this part starts on document ready
     $(function () {
         // wire up view change events
         $(".view__item").click(function() {
             // get the clicked link element
             const $viewLink = $(this);
+            // get the parent div that is the tab
+            const $tabContainer = $viewLink.parents(".tab__content:first");
             // remove active class
-            $(".view__item").removeClass("view__item--active");
+            $(".view__item", $tabContainer).removeClass("view__item--active");
             // get the selected view
             const currentView = $viewLink.attr("data-view");
             // show or hide fields based on current view
-            $(".field-container").each(function(index) {
-                const $formContainer = $(this);
+            $(".field-container", $tabContainer).each(function(index) {
+                const $fieldContainer = $(this);
                 // show all the elements that have the current view in the 
                 // comma delimited list in the data-form attribute
-                if ($formContainer.attr("data-form").indexOf(currentView) !== -1) {
-                    $formContainer.show();
+                if ($fieldContainer.attr("data-form").indexOf(currentView) !== -1) {
+                    $fieldContainer.show();
                 } else {
-                    $formContainer.hide();
+                    $fieldContainer.hide();
                 }
             });
             // set the active class
             $viewLink.addClass("view__item--active");
             // set the form labels to correct view
-            $(".form-type-label").html(currentView);
+            $(".form-type-label", $tabContainer).html(currentView);
         });
     
+        // cache html for mustache template
+        const listRowTemplate = $("#listRowTemplate").html();
+        // cache template in mustache
+        Mustache.parse(listRowTemplate);
+
         // wire up add rule buttons
         $("button[id^='AddRule']").click(function() {
             // get the id of the clicked button
@@ -151,19 +163,49 @@
                     objectType,
                     ruleType,
                     appliesTo,
+                    entity,
                     allEntities,
                     ignoreCase
                 });
             }
+
+            for (let i = 0; i < rulesToAdd.length; i++) {
+                const rule = rulesToAdd[i];
+                // add display for the ruleType
+                rule.ruleTypeDisplay = (rule.ruleType === "ByRule")
+                    ? "Exact Match"
+                    : "Regular Expression";
+                // add display for the appliesTo
+                let ruleTypeDisplay = rule.appliesTo;
+                if (ruleType === "ByRegex") {
+                    if (rule.ignoreCase) {
+                        ruleTypeDisplay = `${appliesTo} (ignore case)`;
+                    }
+                } else {
+                    if ("Attributes,OptionSets".indexOf(rule.objectType) >= 0) {
+                        if (rule.allEntities) {
+                            ruleTypeDisplay = `${appliesTo} (all entities)`;
+                        } else {
+                            ruleTypeDisplay = `${appliesTo} (${rule.entity})`;
+                        }
+                    }
+                }
+                rule.appliesToDisplay = ruleTypeDisplay; 
+            }
     
-            console.log(rulesToAdd);
+            // add any rules to the table
+            const rendered = Mustache.render(listRowTemplate, {rulesToAdd});
+            $(`#${listType}Table>tbody`).append(rendered);
         });
 
-        // cache all select options on ready
-        const $selectOptions = $("select[multiple='multiple']>option");
         // wire up search functionality to the text box
-        $("#SearchList").keyup(function() {
-            const searchText = this.value;
+        $(".field__search").keyup(function() {
+            const $searchBox = $(this);
+            const searchText = $searchBox.val();
+            // get the parent div that is the tab
+            const $tabContainer = $searchBox.parents(".tab__content:first");
+            // get the select options in the container
+            const $selectOptions = $("select[multiple='multiple']>option", $tabContainer);
             // show all options
             $selectOptions.show();
             // if this is empty, do nothing and return
@@ -174,10 +216,20 @@
                 const $option = $(this);
                 // make sure it isn't selected
                 $option[0].selected = false;
-                if ($option.val().toLowerCase().indexOf(searchText.toLowerCase()) === -1) {
-                    $option.hide();
-                } else {
+                // see if the search text is within the option text
+                if ($option.text().toLowerCase().indexOf(searchText.toLowerCase()) >= 0) {
                     $option.show();
+                } else {
+                    $option.hide();
+                }
+            });
+
+            // find any select list with only one visible element
+            // and select the only visible element
+            $("select[multiple='multiple']", $tabContainer).each(function() {
+                const $options = $("option:visible", $(this));
+                if ($options.length === 1) {
+                    $options[0].selected = true;
                 }
             });
         });

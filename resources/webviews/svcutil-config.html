@@ -66,8 +66,7 @@
                 </div>
 
                 <div class="field">
-                    <input type="text" class="field__input field__input--wide" id="SearchList" name="SearchList"
-                        placeholder="Search" />
+                    <input type="text" class="field__input field__input--wide field__search" id="SearchList" name="SearchList" placeholder="Search" />
                 </div>
 
                 <div class="field-container" data-form="Entities">
@@ -148,63 +147,67 @@
             </div>
         </div>
         <div>
-            <table>
-                <tr>
-                    <th></th>
-                    <th>Object Type</th>
-                    <th>Rule</th>
-                    <th>Applies To</th>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="button button--danger">
-                            <span class="iconify" data-icon="fa:trash"></span>
-                        </button>
-                    </td>
-                    <td>Entities</td>
-                    <td>Exact Match</td>
-                    <td>Account</td>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="button button--danger">
-                            <span class="iconify" data-icon="fa:trash"></span>
-                        </button>
-                    </td>
-                    <td>Entities</td>
-                    <td>Regular Expression</td>
-                    <td>Contact*</td>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="button button--danger">
-                            <span class="iconify" data-icon="fa:trash"></span>
-                        </button>
-                    </td>
-                    <td>Attributes</td>
-                    <td>Exact Match</td>
-                    <td>description (all entities)</td>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="button button--danger">
-                            <span class="iconify" data-icon="fa:trash"></span>
-                        </button>
-                    </td>
-                    <td>OptionSets</td>
-                    <td>Exact Match</td>
-                    <td>addresstype</td>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="button button--danger">
-                            <span class="iconify" data-icon="fa:trash"></span>
-                        </button>
-                    </td>
-                    <td>Solutions</td>
-                    <td>Exact Match</td>
-                    <td>My Custom Solution</td>
-                </tr>
+            <table id="WhiteListTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Object Type</th>
+                        <th>Rule</th>
+                        <th>Applies To</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr>
+                        <td>
+                            <button class="button button--danger">
+                                <span class="iconify" data-icon="fa:trash"></span>
+                            </button>
+                        </td>
+                        <td>Entities</td>
+                        <td>Exact Match</td>
+                        <td>Account</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="button button--danger">
+                                <span class="iconify" data-icon="fa:trash"></span>
+                            </button>
+                        </td>
+                        <td>Entities</td>
+                        <td>Regular Expression</td>
+                        <td>Contact*</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="button button--danger">
+                                <span class="iconify" data-icon="fa:trash"></span>
+                            </button>
+                        </td>
+                        <td>Attributes</td>
+                        <td>Exact Match</td>
+                        <td>description (all entities)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="button button--danger">
+                                <span class="iconify" data-icon="fa:trash"></span>
+                            </button>
+                        </td>
+                        <td>OptionSets</td>
+                        <td>Exact Match</td>
+                        <td>addresstype</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="button button--danger">
+                                <span class="iconify" data-icon="fa:trash"></span>
+                            </button>
+                        </td>
+                        <td>Solutions</td>
+                        <td>Exact Match</td>
+                        <td>My Custom Solution</td>
+                    </tr> -->
+                </tbody>
             </table>
         </div>
     </div>
@@ -246,8 +249,7 @@
                 </div>
 
                 <div class="field">
-                    <input type="text" class="field__input field__input--wide" id="SearchList2" name="SearchList2"
-                        placeholder="Search" />
+                    <input type="text" class="field__input field__input--wide field__search" id="SearchList2" name="SearchList2" placeholder="Search" />
                 </div>
 
                 <div class="field-container" data-form="Entities">
@@ -293,7 +295,7 @@
 
                 <div class="field-container" data-form="Attributes,OptionSets" hidden>
                     <div class="field field--checkbox">
-                        <label class="field__label" for="AllEntities">
+                        <label class="field__label" for="AllEntities2">
                             Apply rule to all entities
                         </label>
                         <input type="checkbox" class="field__input" id="AllEntities2" name="AllEntities2"
@@ -329,23 +331,27 @@
             </div>
         </div>
         <div>
-            <table>
-                <tr>
-                    <th></th>
-                    <th>Object Type</th>
-                    <th>Rule</th>
-                    <th>Applies To</th>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="button button--danger">
-                            <span class="iconify" data-icon="fa:trash"></span>
-                        </button>
-                    </td>
-                    <td>Entities</td>
-                    <td>Regular Expression</td>
-                    <td>Sample*</td>
-                </tr>
+            <table id="BlackListTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Object Type</th>
+                        <th>Rule</th>
+                        <th>Applies To</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr>
+                        <td>
+                            <button class="button button--danger">
+                                <span class="iconify" data-icon="fa:trash"></span>
+                            </button>
+                        </td>
+                        <td>Entities</td>
+                        <td>Regular Expression</td>
+                        <td>Sample*</td>
+                    </tr> -->
+                </tbody>
             </table>
         </div>
     </div>
@@ -370,9 +376,8 @@
                 <legend>Mapping Rules</legend>
 
                 <div class="row">
-                    <a href="javascript:;" onclick="changeView(event, 'Entities')">Add
-                        Entity</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                    <a href="javascript:;" onclick="changeView(event, 'Attributes')">Add Attribute</a>
+                    <a href="javascript:;" class="view__item" data-view="Entities" title="Add Entity">Add Entity</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="javascript:;" class="view__item" data-view="Attributes" title="Add Attribute">Add Attribute</a>
                 </div>
 
                 <div class="field-container" data-form="Attributes" hidden>
@@ -387,8 +392,7 @@
                 </div>
 
                 <div class="field">
-                    <input type="text" class="field__input field__input--wide" id="SearchList3" name="SearchList3"
-                        placeholder="Search" />
+                    <input type="text" class="field__input field__input--wide field__search" id="SearchList3" name="SearchList3" placeholder="Search" />
                 </div>
 
                 <div class="field-container" data-form="Entities">
@@ -517,3 +521,18 @@
         Cancel
     </button>
 </div>
+
+<script id="listRowTemplate" type="x-tmpl-mustache">
+    {{#rulesToAdd}}
+    <tr class="crmsvcutil-row">
+        <td>
+            <button class="button button--danger" onclick="removeRule(this)">
+                <span class="iconify" data-icon="fa:trash"></span>
+            </button>
+        </td>
+        <td>{{objectType}}</td>
+        <td>{{ruleTypeDisplay}}</td>
+        <td>{{appliesToDisplay}}</td>
+    </tr>
+    {{/rulesToAdd}}
+</script>
