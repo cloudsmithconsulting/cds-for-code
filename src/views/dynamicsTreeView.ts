@@ -12,7 +12,6 @@ import { DynamicsWebApi } from '../api/Types';
 import { ExtensionIconThemes } from '../commands/iconLoader';
 import QuickPicker from '../helpers/QuickPicker';
 
-
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
 
@@ -145,7 +144,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, async (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item)
                 {
-                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.editConnection);
+                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection);
 
                     return;
                 }
@@ -177,6 +176,9 @@ export default class DynamicsTreeView implements IWireUpCommands {
                     case "Keys":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityKeyUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
                         break;
+                    case "Relationships":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityRelationshipUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
+                        break;
                     case "Forms":   
                         let formType = await QuickPicker.pickEnum(DynamicsWebApi.DynamicsForm);
 
@@ -205,7 +207,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                 switch (item.itemType)
                 {
                     case "Connection":
-                        vscode.commands.executeCommand(cs.dynamics.controls.treeView.editConnection, item.config);
+                        vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection, item.config);
                         break;
                     case "Solution":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config, item.context.solutionid), retryFunction);
@@ -224,6 +226,11 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         break;
                     case "Key":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityKeyUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
+                        break;
+                    case "OneToManyRelationship":
+                    case "ManyToOneRelationship":
+                    case "ManyToManyRelationship":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityRelationshipUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case "Form":
                         /*
@@ -327,6 +334,8 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     return this.getEntityChartDetails(element, commandPrefix, element.solutionId, element.context);
                 case "Forms":
                     return this.getEntityFormDetails(element, commandPrefix, element.solutionId, element.context);
+                case "Relationships":
+                    return this.getEntityRelationshipDetails(element, commandPrefix, element.context);
             }
 
             return; //return nothing if type falls through
@@ -552,6 +561,20 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 command: cs.dynamics.controls.treeView.clickEntry,
                 title: 'Attributes',
                 arguments: [`${commandPrefix || ''}/Attributes`]
+            },
+            element.config,
+            element.itemType === "Entity" ? element.context : undefined
+        ));
+
+        returnObject.push(new TreeEntry(
+            'Relationships',
+            "Relationships",
+            vscode.TreeItemCollapsibleState.Collapsed, 
+            null,
+            {
+                command: cs.dynamics.controls.treeView.clickEntry,
+                title: 'Relationships',
+                arguments: [`${commandPrefix || ''}/Relationships`]
             },
             element.config,
             element.itemType === "Entity" ? element.context : undefined
@@ -969,6 +992,72 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return returnValue;
     }
 
+    private getEntityRelationshipDetails(element: TreeEntry, commandPrefix?:string, entity?:any): Thenable<TreeEntry[]> {
+        const api = new MetadataRepository(element.config);
+
+        return api.retrieveRelationships(entity.MetadataId)
+            .then(returnValue => {
+                const result : TreeEntry[] = new Array();
+
+                if (returnValue && returnValue.oneToMany && returnValue.oneToMany.length > 0) {
+                    returnValue.oneToMany.forEach(r => {
+                        result.push(new TreeEntry(
+                            r.SchemaName,
+                            'OneToManyRelationship',
+                            vscode.TreeItemCollapsibleState.None,
+                            r.RelationshipType, 
+                            {
+                                command: cs.dynamics.controls.treeView.clickEntry,
+                                title: r.SchemaName,
+                                arguments: [`${commandPrefix || ''}/${r.SchemaName}`]
+                            },
+                            element.config,
+                            r));
+                    });
+                }
+
+                if (returnValue && returnValue.manyToOne && returnValue.manyToOne.length > 0) {
+                    returnValue.manyToOne.forEach(r => {
+                        result.push(new TreeEntry(
+                            r.SchemaName,
+                            'ManyToOneRelationship',
+                            vscode.TreeItemCollapsibleState.None,
+                            r.RelationshipType, 
+                            {
+                                command: cs.dynamics.controls.treeView.clickEntry,
+                                title: r.SchemaName,
+                                arguments: [`${commandPrefix || ''}/${r.SchemaName}`]
+                            },
+                            element.config,
+                            r));
+                    });
+                }
+
+                if (returnValue && returnValue.manyToOne && returnValue.manyToOne.length > 0) {
+                    returnValue.manyToMany.forEach(r => {
+                        result.push(new TreeEntry(
+                            r.SchemaName,
+                            'ManyToManyRelationship',
+                            vscode.TreeItemCollapsibleState.None,
+                            r.RelationshipType, 
+                            {
+                                command: cs.dynamics.controls.treeView.clickEntry,
+                                title: r.SchemaName,
+                                arguments: [`${commandPrefix || ''}/${r.SchemaName}`]
+                            },
+                            element.config,
+                            r));
+                    });
+                }
+
+                return new TS.Linq.Enumerator(result).orderBy(r => r.label).toArray();
+            }).catch(error => {
+                Utilities.RetryWithMessage(`An error occurred while retrieving relationships from ${element.config.webApiUrl}`, () => this.getEntityRelationshipDetails(element, commandPrefix, entity));
+
+                return null;
+            });
+    }
+
     private createTreeEntries(whenComplete: Promise<any[]>, parser: (item: any) => TreeEntry, errorMessage?:string, retryFunction?:any): Promise<TreeEntry[]>
     {
         return whenComplete
@@ -1152,11 +1241,15 @@ export type EntryType =
     "Views" |
     "Charts" |
     "Keys" |
+    "Relationships" |
     "Forms" |
     "Attribute" |
     "View" |
     "Chart" |
     "Key" |
+    "OneToManyRelationship" |
+    "ManyToOneRelationship" |
+    "ManyToManyRelationship" |
     "Form" |
     "Entry" |
     "Entries" |

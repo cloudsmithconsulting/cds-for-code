@@ -109,8 +109,8 @@
 		"commands": [
 			{
 				"command": "cs.dynamics.controls.pluginStep.open",
-				"title": "Open plugin step",
-				"category": "UserInterface"
+				"title": "Configure or modify a plugin step",
+				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.controls.svcUtilConfig.configure",
@@ -305,17 +305,17 @@
 				{
 					"command": "cs.dynamics.controls.treeView.addEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Charts|Keys|Entries|PluginType)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Attributes|Forms|Views|Charts|Keys|Relationships|Entries|PluginType)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Connection|Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Chart|Key|Entry|PluginStep)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Connection|Solution|Entity|OptionSet|WebResource|Process|Attribute|Form|View|Chart|Key|OneToManyRelationship|ManyToOneRelationship|ManyToManyRelationship|Entry|PluginStep)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.inspectEntry",
 					"group": "group@2",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solution|Entity|OptionSet|WebResource|Process|Plugin|PluginStep|PluginType|PluginStepImage|Attribute|Form|View|Chart|Key|Entry)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solution|Entity|OptionSet|WebResource|Process|Plugin|PluginStep|PluginType|PluginStepImage|Attribute|Form|View|Chart|Key|OneToManyRelationship|ManyToOneRelationship|ManyToManyRelationship|Entry)$/"
 				},
 				{
 					"command": "cs.dynamics.powerShell.unpackSolution.explorer",
@@ -330,17 +330,17 @@
 				{
 					"command": "cs.dynamics.controls.treeView.addEntryToSolution",
 					"group": "deployment@1",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Plugin|Entity|OptionSet|WebResource|Process)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Plugin|Entity|OptionSet|WebResource|Process|Form|View|Chart)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.removeEntryFromSolution",
 					"group": "deployment@2",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Plugin|Entity|OptionSet|WebResource|Process)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Plugin|Entity|OptionSet|WebResource|Process|Form|View|Chart)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.refreshEntry",
 					"group": "group@1",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Plugin|Attributes|Forms|Views|Charts|Keys|Entries)$/"
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(Solutions|Plugins|Entities|OptionSets|WebResources|Processes|Plugin|Attributes|Forms|Views|Charts|Keys|Relationships|Entries)$/"
 				}
 			]
 		}

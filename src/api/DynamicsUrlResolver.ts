@@ -100,6 +100,18 @@ export default class DynamicsUrlResolver
         return this.parseUriString(uriString, solutionId);
     }
 
+    public static getManageEntityRelationshipUrl(config:DynamicsWebApi.Config, entityId?:string, relationshipId?:string, solutionId?:string): vscode.Uri {
+        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}tools/systemcustomization/relationships/manageRelationship.aspx?entityId=%7B${Utilities.TrimGuid(entityId)}%7D`;
+
+        if (relationshipId) {
+            uriString += `&entityRelationshipId=%7B${Utilities.TrimGuid(relationshipId)}%7D`;
+        } 
+
+        uriString += "&entityRole=referenced";
+
+        return this.parseUriString(uriString, solutionId);
+    }
+
     public static getManageBusinessProcessUri(config:DynamicsWebApi.Config, processType:DynamicsWebApi.ProcessType, entityTypeCode?:number, processId?:string, solutionId?:string): vscode.Uri {
         let uriString:string;
         let uri:vscode.Uri;
@@ -107,7 +119,6 @@ export default class DynamicsUrlResolver
         switch (processType)
         {
             case DynamicsWebApi.ProcessType.BusinessRule:
-                //http://win-oi4mlu9323r/test/tools/systemcustomization/businessrules/businessRulesDesigner.aspx?BRlaunchpoint=BRGrid&appSolutionId=%7b309DFAE2-14F4-E911-8B82-00155D936D01%7d&otc=1&templateId=0
                 uriString = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}tools/systemcustomization/businessrules/businessRulesDesigner.aspx?BRLaunchpoint=BRGrid&otc=${entityTypeCode}&templateId=0`;
 
                 if (processId) {
