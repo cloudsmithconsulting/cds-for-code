@@ -259,7 +259,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
 
                         break;
                     case "View":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityViewUri(item.config, item.parent.context.ObjectTypeCode, item.context.savedqueryid), retryFunction);
+                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityViewUri(item.config, item.parent.context.LogicalName, item.context.savedqueryid), retryFunction);
 
                         break;
                 }

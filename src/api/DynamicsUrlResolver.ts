@@ -81,8 +81,8 @@ export default class DynamicsUrlResolver
         return this.parseUriString(uriString, solutionId);
     }
 
-    public static getOpenEntityViewUri(config:DynamicsWebApi.Config, entityTypeCode:string, viewId:string, showNavigationBar:boolean = true, showCommandBar:boolean = true) {
-        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?pagetype=entitylist&etc=${entityTypeCode}&viewid=%7B${Utilities.TrimGuid(viewId)}%7D&viewtype=1039`;
+    public static getOpenEntityViewUri(config:DynamicsWebApi.Config, entityLogicalName:string, viewId:string, showNavigationBar:boolean = true, showCommandBar:boolean = true) {
+        let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?pagetype=entitylist&etn=${entityLogicalName}&viewid=%7B${Utilities.TrimGuid(viewId)}%7D&viewtype=1039`;
 
         if (!showNavigationBar) {
             uriString += "&navbar=off";
