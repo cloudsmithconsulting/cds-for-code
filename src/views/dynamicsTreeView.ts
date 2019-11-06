@@ -1223,7 +1223,6 @@ class TreeEntry extends vscode.TreeItem {
         public readonly context?: any
 	) {
         super(label, collapsibleState);
-        this.contextValue = this.capabilities.join(",");
         
         const resolver = ExtensionIconThemes.selected.resolve("../../../Resources/icons/", itemType);
 
@@ -1234,6 +1233,8 @@ class TreeEntry extends vscode.TreeItem {
         if (command && command.arguments && command.arguments.length > 0) {
             this.id = command.arguments[0].toString();
         }
+
+        this.contextValue = this.capabilities.join(",");
 
         TreeEntryCache.Instance.AddEntry(this);
     }
