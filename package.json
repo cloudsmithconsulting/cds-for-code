@@ -179,6 +179,16 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.dynamics.controls.treeView.openInBrowser",
+				"title": "Open in Browser",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.treeView.openInEditor",
+				"title": "Open in Text Editor",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.deployment.addSolutionComponent",
 				"title": "Add component to a Dynamics 365 Solution",
 				"category": "Dynamics 365 CE"
@@ -316,6 +326,16 @@
 					"command": "cs.dynamics.controls.treeView.inspectEntry",
 					"group": "group@2",
 					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canInspectItem)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.treeView.openInBrowser",
+					"group": "group@3",
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canOpenInBrowser)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.treeView.openInEditor",
+					"group": "group@4",
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.powerShell.unpackSolution.explorer",

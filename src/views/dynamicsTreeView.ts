@@ -28,22 +28,19 @@ export default class DynamicsTreeView implements IWireUpCommands {
         context.subscriptions.push(
             vscode.commands.registerCommand(cs.dynamics.controls.treeView.refreshEntry, (item?: TreeEntry) => {
                 treeProvider.refresh(item);
-            }) // <-- no semi-colon, comma starts next command registration
+            })
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addConnection, (config: DynamicsWebApi.Config) => {
-                // add the connection and refresh treeview
                 treeProvider.addConnection(config);
-            }) // <-- no semi-colon, comma starts next command registration
+            })
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.clickEntry, (label?: string) => { // Match name of command to package.json command
-                // Run command code
                 vscode.window.showInformationMessage(`Clicked ${label || ''}`);
-            }) // <-- no semi-colon, comma starts next command registration
+            }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.deleteEntry, (item: TreeEntry) => { // Match name of command to package.json command
-                // Run command code
-                treeProvider.removeConnection(item.config);
-            }) // <-- no semi-colon, comma starts next command registration
+               treeProvider.removeConnection(item.config);
+            }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.inspectEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 vscode.commands.executeCommand(cs.dynamics.controls.jsonInspector.inspect, item.context);
-            }) // <-- no semi-colon, comma starts next command registration
+            }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntryToSolution, (item: TreeEntry) => { // Match name of command to package.json command
                 if (item.solutionId) {
                     vscode.window.showInformationMessage(`The component ${item.label} is already a part of a solution.`);
@@ -93,7 +90,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                             });
                     }
 
-            }) // <-- no semi-colon, comma starts next command registration
+            }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.removeEntryFromSolution, (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item.solutionId) {
                     vscode.window.showInformationMessage(`The component ${item.label} is not part of a solution.`);
@@ -140,7 +137,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                             .then(response => treeProvider.refreshSolution(item.solutionPath));
                     }
                  }
-            }) // <-- no semi-colon, comma starts next command registration
+            }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, async (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item) {
                     vscode.commands.executeCommand(cs.dynamics.controls.treeView.editConnection);
@@ -232,10 +229,6 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityRelationshipUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case "Form":
-                        /*
-                        vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml })
-                            .then(d => vscode.window.showTextDocument(d));
-                            */
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, item.context.type, item.context.formid, item.solutionId), retryFunction);
 
                         break;
@@ -252,7 +245,44 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, item.context);
                         break;
                 }
-           }) // <-- no semi-colon, comma starts next command registration
+           }) 
+           , vscode.commands.registerCommand(cs.dynamics.controls.treeView.openInBrowser, async (item: TreeEntry) => {
+                let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.treeView.openInBrowser, item);
+
+                switch (item.itemType) {
+                    case "Entity":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityFormUri(item.config, item.context.LogicalName), retryFunction);
+
+                        break;
+                    case "Form":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityFormUri(item.config, item.parent.context.LogicalName, item.context.formid), retryFunction);
+
+                        break;
+                    case "View":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityViewUri(item.config, item.parent.context.ObjectTypeCode, item.context.savedqueryid), retryFunction);
+
+                        break;
+                }
+           })
+           , vscode.commands.registerCommand(cs.dynamics.controls.treeView.openInEditor, async (item: TreeEntry) => {
+                switch (item.itemType) {
+                    case "Form":
+                        vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml })
+                            .then(d => vscode.window.showTextDocument(d));
+
+                        break;
+                    case "View":
+                        vscode.workspace.openTextDocument({ language:"xml", content:item.context.layoutxml })
+                            .then(d => vscode.window.showTextDocument(d));
+
+                        break;
+                    case "Chart":
+                        vscode.workspace.openTextDocument({ language:"xml", content:item.context.presentationdescription })
+                            .then(d => vscode.window.showTextDocument(d));
+
+                        break;
+                }
+           })
         );
     }
 }
@@ -1134,6 +1164,8 @@ class TreeEntry extends vscode.TreeItem {
     private static readonly canDeleteEntryTypes:EntryType[] = [ "Connection" ];
     private static readonly canInspectEntryTypes:EntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
     private static readonly canUnpackSolutionEntryTypes:EntryType[] = [ "Solution" ];
+    private static readonly canOpenInBrowserEntryTypes:EntryType[] = [ "Form", "View", "Entity" ];
+    private static readonly canOpenInEditorEntryTypes:EntryType[] = [ "Form", "View", "Chart" ];
     private static readonly canAddToSolutionEntryTypes:EntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart" ];
     private static readonly canRemoveFromSolutionEntryTypes:EntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart" ];
 
@@ -1236,6 +1268,8 @@ class TreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canUnpackSolution", TreeEntry.canUnpackSolutionEntryTypes);
         this.addCapability(returnValue, "canAddToSolution", TreeEntry.canAddToSolutionEntryTypes);
         this.addCapability(returnValue, "canRemoveFromSolution", TreeEntry.canRemoveFromSolutionEntryTypes);
+        this.addCapability(returnValue, "canOpenInBrowser", TreeEntry.canOpenInBrowserEntryTypes);
+        this.addCapability(returnValue, "canOpenInEditor", TreeEntry.canOpenInEditorEntryTypes);
 
         return returnValue;
     }
