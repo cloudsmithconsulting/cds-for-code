@@ -22,7 +22,7 @@ table {
     border: 1px solid var(--vscode-dropdown-border);
 }
 
-table tr:nth-child(even) {
+table>tbody>tr:nth-child(odd) {
     background: var(--vscode-input-background);
     color: var(--vscode-input-foreground);
 }
@@ -59,7 +59,8 @@ table tr:nth-child(even) {
 }
 
 .tab__content,
-.field-container {
+.field-container,
+.crmsvcutil-row {
     animation: fadeEffect 1s; /* Fading effect takes 1 second */
 }
   
