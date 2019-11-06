@@ -393,6 +393,7 @@
 		"lodash": "^4.17.15",
 		"node-fetch": "^2.6.0",
 		"node-stream-zip": "^1.8.2",
+		"opn": "^6.0.0",
 		"typescript-linq": "^1.0.6",
 		"xml2js": "^0.4.22"
 	}

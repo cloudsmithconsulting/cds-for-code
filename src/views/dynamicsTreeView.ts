@@ -183,6 +183,14 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         }
 
                         break;
+                    case "Dashboards":
+                        let layoutType = await QuickPicker.pickEnum(DynamicsWebApi.InteractiveDashboardLayout);
+
+                        if (layoutType) {
+                            Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityDashboardUri(item.config, item.context.ObjectTypeCode, layoutType, "1030", undefined, item.solutionId), retryFunction);
+                        }
+
+                        break;
                     case "Views":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.context.MetadataId, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
                         break;
@@ -229,8 +237,10 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityRelationshipUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case "Form":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, item.context.type, item.context.formid, item.solutionId), retryFunction);
-
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, DynamicsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId), retryFunction);
+                        break;
+                    case "Dashboard":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityDashboardUri(item.config, undefined, undefined, "1032", item.context.formid, item.solutionId), retryFunction);
                         break;
                     case "View":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.parent.context.ObjectTypeCode, item.context.savedqueryid, item.solutionId), retryFunction);
@@ -252,34 +262,30 @@ export default class DynamicsTreeView implements IWireUpCommands {
                 switch (item.itemType) {
                     case "Entity":
                         Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityFormUri(item.config, item.context.LogicalName), retryFunction);
-
                         break;
                     case "Form":
+                    case "Dashboard":
                         Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityFormUri(item.config, item.parent.context.LogicalName, item.context.formid), retryFunction);
-
                         break;
                     case "View":
                         Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityViewUri(item.config, item.parent.context.LogicalName, item.context.savedqueryid), retryFunction);
-
                         break;
                 }
            })
            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.openInEditor, async (item: TreeEntry) => {
                 switch (item.itemType) {
                     case "Form":
+                    case "Dashboard":
                         vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml })
                             .then(d => vscode.window.showTextDocument(d));
-
                         break;
                     case "View":
                         vscode.workspace.openTextDocument({ language:"xml", content:item.context.layoutxml })
                             .then(d => vscode.window.showTextDocument(d));
-
                         break;
                     case "Chart":
                         vscode.workspace.openTextDocument({ language:"xml", content:item.context.presentationdescription })
                             .then(d => vscode.window.showTextDocument(d));
-
                         break;
                 }
            })
@@ -363,6 +369,8 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     return this.getEntityChartDetails(element, commandPrefix, element.solutionId, element.context);
                 case "Forms":
                     return this.getEntityFormDetails(element, commandPrefix, element.solutionId, element.context);
+                case "Dashboards":
+                    return this.getEntityDashboardDetails(element, commandPrefix, element.solutionId, element.context);
                 case "Relationships":
                     return this.getEntityRelationshipDetails(element, commandPrefix, element.context);
             }
@@ -646,6 +654,20 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 command: cs.dynamics.controls.treeView.clickEntry,
                 title: 'Forms',
                 arguments: [`${commandPrefix || ''}/Forms`]
+            },
+            element.config,
+            element.itemType === "Entity" ? element.context : undefined
+        ));
+
+        returnObject.push(new TreeEntry(
+            'Dashboards',
+            "Dashboards",
+            vscode.TreeItemCollapsibleState.Collapsed, 
+            null,
+            {
+                command: cs.dynamics.controls.treeView.clickEntry,
+                title: 'Dashboards',
+                arguments: [`${commandPrefix || ''}/Dashboards`]
             },
             element.config,
             element.itemType === "Entity" ? element.context : undefined
@@ -995,6 +1017,28 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return returnValue;
     }
 
+    private getEntityDashboardDetails(element: TreeEntry, commandPrefix?: string, solutionId?:string, entity?:any): Thenable<TreeEntry[]> {
+        const api = new MetadataRepository(element.config);
+        const returnValue = this.createTreeEntries(
+            api.retrieveDashboards(entity.LogicalName, solutionId), 
+            dashboard => new TreeEntry(
+                dashboard.name,
+                "Dashboard",
+                vscode.TreeItemCollapsibleState.None,
+                dashboard.description, 
+                {
+                    command: cs.dynamics.controls.treeView.clickEntry,
+                    title: dashboard.name,
+                    arguments: [`${commandPrefix || ''}/${dashboard.formid}`]
+                },
+                element.config,
+                dashboard),
+            `An error occurred while retrieving dashboards from ${element.config.webApiUrl}`,
+            () => this.getEntityDashboardDetails(element, commandPrefix, entity));
+
+        return returnValue;
+    }
+
     private getEntityKeyDetails(element: TreeEntry, commandPrefix?: string, entity?:any): Thenable<TreeEntry[]> {
         const api = new MetadataRepository(element.config);
         const returnValue = this.createTreeEntries(
@@ -1158,16 +1202,16 @@ class TreeEntryCache
 }
 
 class TreeEntry extends vscode.TreeItem {
-    private static readonly canRefreshEntryTypes:EntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Plugins", "Attributes", "Forms", "Views", "Charts", "Keys", "Relationships", "Entries" ];
-    private static readonly canAddEntryTypes:EntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Keys", "Relationships", "Entries", "PluginType" ];
-    private static readonly canEditEntryTypes:EntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
+    private static readonly canRefreshEntryTypes:EntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Plugins", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries" ];
+    private static readonly canAddEntryTypes:EntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries", "PluginType" ];
+    private static readonly canEditEntryTypes:EntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
     private static readonly canDeleteEntryTypes:EntryType[] = [ "Connection" ];
-    private static readonly canInspectEntryTypes:EntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
+    private static readonly canInspectEntryTypes:EntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
     private static readonly canUnpackSolutionEntryTypes:EntryType[] = [ "Solution" ];
-    private static readonly canOpenInBrowserEntryTypes:EntryType[] = [ "Form", "View", "Entity" ];
-    private static readonly canOpenInEditorEntryTypes:EntryType[] = [ "Form", "View", "Chart" ];
-    private static readonly canAddToSolutionEntryTypes:EntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart" ];
-    private static readonly canRemoveFromSolutionEntryTypes:EntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart" ];
+    private static readonly canOpenInBrowserEntryTypes:EntryType[] = [ "Form", "View", "Entity", "Dashboard" ];
+    private static readonly canOpenInEditorEntryTypes:EntryType[] = [ "Form", "View", "Chart", "Dashboard" ];
+    private static readonly canAddToSolutionEntryTypes:EntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart", "Dashboard" ];
+    private static readonly canRemoveFromSolutionEntryTypes:EntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart", "Dashboard" ];
 
     constructor(
         public label: string,
@@ -1266,16 +1310,16 @@ class TreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canDeleteItem", TreeEntry.canDeleteEntryTypes);
         this.addCapability(returnValue, "canInspectItem", TreeEntry.canInspectEntryTypes);
         this.addCapability(returnValue, "canUnpackSolution", TreeEntry.canUnpackSolutionEntryTypes);
-        this.addCapability(returnValue, "canAddToSolution", TreeEntry.canAddToSolutionEntryTypes);
-        this.addCapability(returnValue, "canRemoveFromSolution", TreeEntry.canRemoveFromSolutionEntryTypes);
+        this.addCapability(returnValue, "canAddToSolution", TreeEntry.canAddToSolutionEntryTypes, () => !this.solutionId);
+        this.addCapability(returnValue, "canRemoveFromSolution", TreeEntry.canRemoveFromSolutionEntryTypes, () => this.solutionId);
         this.addCapability(returnValue, "canOpenInBrowser", TreeEntry.canOpenInBrowserEntryTypes);
         this.addCapability(returnValue, "canOpenInEditor", TreeEntry.canOpenInEditorEntryTypes);
 
         return returnValue;
     }
 
-    private addCapability(returnList:string[], capabilityName:string, constrain:EntryType[]): void {
-        if (constrain.indexOf(this.itemType) !== -1) {
+    private addCapability(returnList:string[], capabilityName:string, constrain:EntryType[], additionalCheck?:() => boolean): void {
+        if (constrain.indexOf(this.itemType) !== -1 && (!additionalCheck || additionalCheck())) {
             returnList.push(capabilityName);
         }
     }
@@ -1302,12 +1346,14 @@ export type EntryType =
     "Attributes" |
     "Views" |
     "Charts" |
+    "Dashboards" |
     "Keys" |
     "Relationships" |
     "Forms" |
     "Attribute" |
     "View" |
     "Chart" |
+    "Dashboard" |
     "Key" |
     "OneToManyRelationship" |
     "ManyToOneRelationship" |
