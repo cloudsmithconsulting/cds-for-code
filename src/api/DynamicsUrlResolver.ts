@@ -100,12 +100,24 @@ export default class DynamicsUrlResolver
         return this.parseUriString(uriString, solutionId);
     }
 
-    public static getManageBusinessProcessUri(config:DynamicsWebApi.Config, processType:DynamicsWebApi.ProcessType, processId?:string, solutionId?:string): vscode.Uri {
+    public static getManageBusinessProcessUri(config:DynamicsWebApi.Config, processType:DynamicsWebApi.ProcessType, entityTypeCode?:number, processId?:string, solutionId?:string): vscode.Uri {
         let uriString:string;
         let uri:vscode.Uri;
 
         switch (processType)
         {
+            case DynamicsWebApi.ProcessType.BusinessRule:
+                //http://win-oi4mlu9323r/test/tools/systemcustomization/businessrules/businessRulesDesigner.aspx?BRlaunchpoint=BRGrid&appSolutionId=%7b309DFAE2-14F4-E911-8B82-00155D936D01%7d&otc=1&templateId=0
+                uriString = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}tools/systemcustomization/businessrules/businessRulesDesigner.aspx?BRLaunchpoint=BRGrid&otc=${entityTypeCode}&templateId=0`;
+
+                if (processId) {
+                    uriString += `&id=%7b${processId}%7d`;                    
+                }
+
+                uri = this.parseUriString(uriString);
+                break;
+            case DynamicsWebApi.ProcessType.Flow:
+                break;
             case DynamicsWebApi.ProcessType.BusinessProcessFlow:
                 uriString = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}Tools/ProcessControl/UnifiedProcessDesigner.aspx?`;
 
@@ -115,6 +127,7 @@ export default class DynamicsUrlResolver
 
                 uri = this.parseUriString(uriString);
                 break;
+            case DynamicsWebApi.ProcessType.Dialog:
             case DynamicsWebApi.ProcessType.Action:
             case DynamicsWebApi.ProcessType.Workflow:
                 uriString = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}sfa/workflow/edit.aspx?`;
