@@ -1,6 +1,12 @@
 // this will happen when the script is loaded
 (function() {
+    let currentVsCodeApi;
+    // cloudsmith utilities
     const CloudSmith = window.CloudSmith = {
+        acquireVsCodeApi: function() {
+            currentVsCodeApi = currentVsCodeApi || acquireVsCodeApi();
+            return currentVsCodeApi;
+        },
         Controls: {
             getRadioButtonValue: function(radioButtonName) {
                 return $(`[name="${radioButtonName}"]:checked`).val();
@@ -23,7 +29,7 @@
         // wire up cancel button event for default behavior
         $("#cancelButton").click(function() {
             // get the vscode api
-            const vscode = window.vscodeApi;
+            const vscode = CloudSmith.acquireVsCodeApi();
             if (!vscode) throw "vscode was undefined";
             // call default "closeWindow"
             vscode.postMessage({

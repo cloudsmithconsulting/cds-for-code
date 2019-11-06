@@ -2,8 +2,7 @@
 // It cannot access the main VS Code APIs directly.
 (function() {
     // this stuff will be available on script load
-    // You MUST set = window.vscodeApi for scripts in main.js to work properly
-    const vscode = window.vscodeApi = acquireVsCodeApi();
+    const vscode = CloudSmith.acquireVsCodeApi();
     //const oldState = vscode.getState();
 
     // Handle messages sent from the extension to the webview
@@ -165,8 +164,6 @@
         // wire up search functionality to the text box
         $("#SearchList").keyup(function() {
             const searchText = this.value;
-            // unselect all options
-            $selectOptions.removeAttr("selected");
             // show all options
             $selectOptions.show();
             // if this is empty, do nothing and return
@@ -175,6 +172,8 @@
             // entities select filter
             $selectOptions.each(function() {
                 const $option = $(this);
+                // make sure it isn't selected
+                $option[0].selected = false;
                 if ($option.val().toLowerCase().indexOf(searchText.toLowerCase()) === -1) {
                     $option.hide();
                 } else {
