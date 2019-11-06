@@ -49,7 +49,17 @@ export default class DynamicsUrlResolver
         return this.addSolutionToUri(uriString, solutionId);
     }
 
-    public static getOpenEntityFormUri(config:DynamicsWebApi.Config, entityLogicalName:string, formId?:string, showNavigationBar:boolean = true, showCommandBar:boolean = true) {
+    public static getOpenEntityUsingAppUrl(entityLogicalName:string, entityId?:string): string {
+        let uriString:string = `ms-dynamicsxrm://?pagetype=${entityId ? "entity" : "create"}&etn=${entityLogicalName}`;
+
+        if (entityId) {
+            uriString += `&id=${Utilities.TrimGuid(entityId)}`;
+        }
+
+        return uriString;
+    }
+
+    public static getOpenEntityFormUri(config:DynamicsWebApi.Config, entityLogicalName:string, formId?:string, showNavigationBar:boolean = true, showCommandBar:boolean = true): string {
         let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?pagetype=entityrecord&etn=${entityLogicalName}`;
 
         if (!showNavigationBar) {
@@ -83,7 +93,17 @@ export default class DynamicsUrlResolver
         return this.addSolutionToUri(uriString, solutionId);
     }
 
-    public static getOpenEntityViewUri(config:DynamicsWebApi.Config, entityLogicalName:string, viewId:string, showNavigationBar:boolean = true, showCommandBar:boolean = true) {
+    public static getOpenEntityViewUsingAppUrl(entityLogicalName:string, viewId?:string): string {
+        let uriString:string = `ms-dynamicsxrm://?pagetype=view&etn=${entityLogicalName}`;
+
+        if (viewId) {
+            uriString += `&id=${Utilities.TrimGuid(viewId)}`;
+        }
+
+        return uriString;
+    }
+
+    public static getOpenEntityViewUri(config:DynamicsWebApi.Config, entityLogicalName:string, viewId:string, showNavigationBar:boolean = true, showCommandBar:boolean = true): string {
         let uriString:string = `${Utilities.EnforceTrailingSlash(config.webApiUrl)}main.aspx?pagetype=entitylist&etn=${entityLogicalName}&viewid=${DynamicsUrlResolver.crmGuid(viewId)}&viewtype=1039`;
 
         if (!showNavigationBar) {
@@ -107,6 +127,12 @@ export default class DynamicsUrlResolver
         }
 
         return this.addSolutionToUri(uriString, solutionId);
+    }
+
+    public static getOpenEntityDashboardUsingAppUrl(dashboardId:string): string {
+        let uriString:string = `ms-dynamicsxrm://?pagetype=dashboard&id=${Utilities.TrimGuid(dashboardId)}`;
+
+        return uriString;
     }
 
     public static getManageEntityDashboardUri(config:DynamicsWebApi.Config, entityTypeCode?:string, layoutType?:DynamicsWebApi.InteractiveDashboardLayout, dashboardType?:string, dashboardId?:string, solutionId?:string): string {

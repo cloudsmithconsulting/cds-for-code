@@ -256,6 +256,21 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         break;
                 }
            }) 
+           , vscode.commands.registerCommand(cs.dynamics.controls.treeView.openInApp, async (item: TreeEntry) => {
+                let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.treeView.openInApp, item);
+
+                switch (item.itemType) {
+                    case "Entity":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityUsingAppUrl(item.context.LogicalName), retryFunction);
+                        break;
+                    case "Dashboard":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityDashboardUsingAppUrl(item.context.formid), retryFunction);
+                        break;
+                    case "View":
+                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityViewUsingAppUrl(item.parent.context.LogicalName, item.context.savedqueryid), retryFunction);
+                        break;
+                }
+           })
            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.openInBrowser, async (item: TreeEntry) => {
                 let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.treeView.openInBrowser, item);
 
@@ -1131,8 +1146,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             });
     }
 
-    private createTreeEntries(whenComplete: Promise<any[]>, parser: (item: any) => TreeEntry, errorMessage?:string, retryFunction?:any): Promise<TreeEntry[]>
-    {
+    private createTreeEntries(whenComplete: Promise<any[]>, parser: (item: any) => TreeEntry, errorMessage?:string, retryFunction?:any): Promise<TreeEntry[]> {
         return whenComplete
             .then(items => {
                 const result : TreeEntry[] = new Array();
@@ -1208,6 +1222,7 @@ class TreeEntry extends vscode.TreeItem {
     private static readonly canDeleteEntryTypes:EntryType[] = [ "Connection" ];
     private static readonly canInspectEntryTypes:EntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
     private static readonly canUnpackSolutionEntryTypes:EntryType[] = [ "Solution" ];
+    private static readonly canOpenInAppEntryTypes:EntryType[] = [ "View", "Entity", "Dashboard" ];
     private static readonly canOpenInBrowserEntryTypes:EntryType[] = [ "Form", "View", "Entity", "Dashboard" ];
     private static readonly canOpenInEditorEntryTypes:EntryType[] = [ "Form", "View", "Chart", "Dashboard" ];
     private static readonly canAddToSolutionEntryTypes:EntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart", "Dashboard" ];
@@ -1313,6 +1328,7 @@ class TreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canUnpackSolution", TreeEntry.canUnpackSolutionEntryTypes);
         this.addCapability(returnValue, "canAddToSolution", TreeEntry.canAddToSolutionEntryTypes, () => !this.solutionId);
         this.addCapability(returnValue, "canRemoveFromSolution", TreeEntry.canRemoveFromSolutionEntryTypes, () => this.solutionId);
+        this.addCapability(returnValue, "canOpenInApp", TreeEntry.canOpenInAppEntryTypes);
         this.addCapability(returnValue, "canOpenInBrowser", TreeEntry.canOpenInBrowserEntryTypes);
         this.addCapability(returnValue, "canOpenInEditor", TreeEntry.canOpenInEditorEntryTypes);
 
