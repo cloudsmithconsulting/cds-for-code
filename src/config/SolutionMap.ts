@@ -9,6 +9,12 @@ import WorkspaceState from "./WorkspaceState";
 
 export default class SolutionMap
 {
+    constructor (map?:SolutionMap) {
+        if (map) {
+            this.mappings = map.mappings;
+        }
+    }
+
     public mappings:SolutionWorkspaceMapping[] = [];
 
     public map(organizationId:string, solutionId:string, path:string): SolutionMap {

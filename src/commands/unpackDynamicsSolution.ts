@@ -26,7 +26,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
                 const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
-				const map = SolutionMap.loadFromWorkspace(context);
+				const map:SolutionMap = SolutionMap.loadFromWorkspace(context);
 
 				config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
@@ -39,6 +39,10 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 
 					if (mapping && mapping.path) {
 						folder = mapping.path;
+					}
+
+					if (folder.endsWith(solution.uniquename)) {
+						folder = path.join(folder, "..");
 					}
 				} 
 

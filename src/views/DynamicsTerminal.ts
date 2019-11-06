@@ -473,6 +473,8 @@ export class Terminal implements vscode.Terminal {
 					open: () => {
 						const resolveBufferFlush = (flushData, isError) => {
 							const prompt =  /(PS )(.*)(> )/i.exec(flushData.raw);
+							//TODO: finish this :)
+							const linefeeds = /^.+?(?!\r)\n/g.exec(flushData.masked);
 							let displayText = flushData.masked;
 
 							// The first time a terminal is opened, there will be a prompt (initial) as well as the command output.
