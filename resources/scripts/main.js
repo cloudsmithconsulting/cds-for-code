@@ -1,17 +1,5 @@
-// This script will be run within the webview itself
-// It cannot access the main VS Code APIs directly.
-$(function () {
-    // wire up cancel button event for default behavior
-    $("#cancelButton").click(function() {
-        // get the vscode api
-        const vscode = window.vscodeApi;
-        if (!vscode) throw "vscode was undefined";
-        // call default "closeWindow"
-        vscode.postMessage({
-            command: "closeWindow"
-        });
-    })
-
+// this will happen when the script is loaded
+(function() {
     const CloudSmith = window.CloudSmith = {
         Controls: {
             getRadioButtonValue: function(radioButtonName) {
@@ -29,4 +17,18 @@ $(function () {
             }
         }
     };
-});
+
+    // this will happen on document ready
+    $(function () {
+        // wire up cancel button event for default behavior
+        $("#cancelButton").click(function() {
+            // get the vscode api
+            const vscode = window.vscodeApi;
+            if (!vscode) throw "vscode was undefined";
+            // call default "closeWindow"
+            vscode.postMessage({
+                command: "closeWindow"
+            });
+        });
+    });
+}());
