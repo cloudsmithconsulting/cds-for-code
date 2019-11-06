@@ -142,9 +142,8 @@ export default class DynamicsTreeView implements IWireUpCommands {
                  }
             }) // <-- no semi-colon, comma starts next command registration
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, async (item: TreeEntry) => { // Match name of command to package.json command
-                if (!item)
-                {
-                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection);
+                if (!item) {
+                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.editConnection);
 
                     return;
                 }
@@ -207,7 +206,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                 switch (item.itemType)
                 {
                     case "Connection":
-                        vscode.commands.executeCommand(cs.dynamics.controls.treeView.openConnection, item.config);
+                        vscode.commands.executeCommand(cs.dynamics.controls.treeView.editConnection, item.config);
                         break;
                     case "Solution":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config, item.context.solutionid), retryFunction);
@@ -1129,7 +1128,16 @@ class TreeEntryCache
 }
 
 class TreeEntry extends vscode.TreeItem {
-	constructor(
+    private static readonly canRefreshEntryTypes:EntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Plugins", "Attributes", "Forms", "Views", "Charts", "Keys", "Relationships", "Entries" ];
+    private static readonly canAddEntryTypes:EntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Keys", "Relationships", "Entries", "PluginType" ];
+    private static readonly canEditEntryTypes:EntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
+    private static readonly canDeleteEntryTypes:EntryType[] = [ "Connection" ];
+    private static readonly canInspectEntryTypes:EntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
+    private static readonly canUnpackSolutionEntryTypes:EntryType[] = [ "Solution" ];
+    private static readonly canAddToSolutionEntryTypes:EntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart" ];
+    private static readonly canRemoveFromSolutionEntryTypes:EntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart" ];
+
+    constructor(
         public label: string,
         public readonly itemType: EntryType,
         public collapsibleState: vscode.TreeItemCollapsibleState,
@@ -1139,7 +1147,7 @@ class TreeEntry extends vscode.TreeItem {
         public readonly context?: any
 	) {
         super(label, collapsibleState);
-        this.contextValue = itemType.toString();
+        this.contextValue = this.capabilities.join(",");
         
         const resolver = ExtensionIconThemes.selected.resolve("../../../Resources/icons/", itemType);
 
@@ -1147,8 +1155,7 @@ class TreeEntry extends vscode.TreeItem {
             this.iconPath = resolver.iconPath;
         }
 
-        if (command && command.arguments && command.arguments.length > 0)
-        {
+        if (command && command.arguments && command.arguments.length > 0) {
             this.id = command.arguments[0].toString();
         }
 
@@ -1216,6 +1223,27 @@ class TreeEntry extends vscode.TreeItem {
         }
        
         return undefined;        
+    }
+
+    get capabilities(): string[] {
+        const returnValue = [];
+        
+        this.addCapability(returnValue, "canRefreshItem", TreeEntry.canRefreshEntryTypes);
+        this.addCapability(returnValue, "canAddItem", TreeEntry.canAddEntryTypes);
+        this.addCapability(returnValue, "canEditItem", TreeEntry.canEditEntryTypes);
+        this.addCapability(returnValue, "canDeleteItem", TreeEntry.canDeleteEntryTypes);
+        this.addCapability(returnValue, "canInspectItem", TreeEntry.canInspectEntryTypes);
+        this.addCapability(returnValue, "canUnpackSolution", TreeEntry.canUnpackSolutionEntryTypes);
+        this.addCapability(returnValue, "canAddToSolution", TreeEntry.canAddToSolutionEntryTypes);
+        this.addCapability(returnValue, "canRemoveFromSolution", TreeEntry.canRemoveFromSolutionEntryTypes);
+
+        return returnValue;
+    }
+
+    private addCapability(returnList:string[], capabilityName:string, constrain:EntryType[]): void {
+        if (constrain.indexOf(this.itemType) !== -1) {
+            returnList.push(capabilityName);
+        }
     }
 }
 
