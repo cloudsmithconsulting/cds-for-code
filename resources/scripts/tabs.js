@@ -4,7 +4,7 @@ $(function () {
     // handle tab item click
     $(".tab__item").click(function() {
         // get current tab item
-        $tabItem = $(this);
+        const $tabItem = $(this);
         // get the current tabid
         const tabId = $tabItem.attr("data-tab");
         // hide all tabs
