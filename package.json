@@ -2,8 +2,8 @@
 	"name": "dynamics-365-toolkit",
 	"displayName": "dynamics-365-toolkit",
 	"publisher": "cloudsmith",
-	"description": "A toolkit for working with Dynamics 365 within VSCode by CloudSmith Consulting LLC.",
-	"version": "0.1.0",
+	"description": "A toolkit for working with Dynamics 365 within VSCode written by CloudSmith Consulting LLC",
+	"version": "0.1.1",
 	"preview": true,
 	"engines": {
 		"vscode": "^1.38.0"
@@ -16,13 +16,17 @@
 	"keywords": [
 		"Dynamics",
 		"Dynamics 365",
+		"Dynamics 365 Customer Engagement",
+		"XRM",
 		"CRM"
 	],
 	"activationEvents": [
 		"onView:cs.dynamics.viewContainers.connections",
 		"onCommand:cs.dynamics.controls.treeView.editConnection",
-		"onCommand:cs.dynamics.controls.explorer.registerPluginFile",
+		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFolder",
+		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFile",
 		"onCommand:cs.dynamics.controls.explorer.packSolutionFromFolder",
+		"onCommand:cs.dynamics.controls.explorer.registerPluginFile",
 		"onCommand:cs.dynamics.controls.explorer.unpackSolutionToFolder",
 		"onCommand:cs.dynamics.deployment.addSolutionComponent",
 		"onCommand:cs.dynamics.deployment.removeSolutionComponent",
@@ -117,6 +121,16 @@
 				"command": "cs.dynamics.controls.svcUtilConfig.configure",
 				"title": "Configure entity code generation from the CrmSvcUtil",
 				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
+				"title": "Generate Dynamics entity classes",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
+				"title": "Generate Dynamics entity classes",
+				"category": "UserInterface"
 			},
 			{
 				"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
@@ -308,6 +322,16 @@
 					"command": "cs.dynamics.extension.saveProjectAsTemplate",
 					"when": "explorerResourceIsFolder",
 					"group": "projectTemplates@2"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
+					"when": "explorerResourceIsFolder != true && resourceLangId == csharp || resourceLangId == vb",
+					"group": "generateCode@1"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
+					"when": "explorerResourceIsFolder",
+					"group": "generateCode@2"
 				},
 				{
 					"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",

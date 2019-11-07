@@ -16,7 +16,13 @@ export default class GenerateEntitiesCommand implements IWireUpCommands {
 
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.powerShell.generateEntities, async (config?:DynamicsWebApi.Config, folder?:string, outputFileName?: string, namespace?: string) => { 
+            vscode.commands.registerCommand(cs.dynamics.controls.explorer.generateEntityCodeToFile, async (file?:vscode.Uri, ...arg2:any) => {
+                vscode.commands.executeCommand(cs.dynamics.powerShell.generateEntities, undefined, path.dirname(file.fsPath), path.basename(file.fsPath), undefined);
+            })
+            ,vscode.commands.registerCommand(cs.dynamics.controls.explorer.generateEntityCodeToFolder, async (folder?:vscode.Uri, ...arg2:any) => {
+                vscode.commands.executeCommand(cs.dynamics.powerShell.generateEntities, undefined, folder.fsPath, undefined, undefined);
+            })
+            ,vscode.commands.registerCommand(cs.dynamics.powerShell.generateEntities, async (config?:DynamicsWebApi.Config, folder?:string, outputFileName?: string, namespace?: string) => { 
                 // setup configurations
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
                 const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;

@@ -127,8 +127,10 @@ export namespace dynamics
         export class explorer
         {
             public static readonly _namespace:string = "cs.dynamics.controls.explorer";
-            public static readonly registerPluginFile:string = `${explorer._namespace}.registerPluginFile`;
+            public static readonly generateEntityCodeToFolder:string = `${explorer._namespace}.generateEntityCodeToFolder`;
+            public static readonly generateEntityCodeToFile:string = `${explorer._namespace}.generateEntityCodeToFile`;
             public static readonly packSolutionFromFolder:string = `${explorer._namespace}.packSolutionFromFolder`;
+            public static readonly registerPluginFile:string = `${explorer._namespace}.registerPluginFile`;
             public static readonly unpackSolutionToFolder:string = `${explorer._namespace}.unpackSolutionToFolder`;
         }
 
