@@ -43,12 +43,25 @@ export default class MetadataRepository
     {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "systemforms",
-            filter: `objecttypecode eq '${entityLogicalName}' and formactivationstate eq 1`,  
+            filter: `objecttypecode eq '${entityLogicalName}' and type ne 10 and formactivationstate eq 1`,  
             orderBy: ["name"]
         };
 
         return this.webapi.retrieveRequest(request)
             .then(systemFormResponse => ApiHelper.filterSolutionComponents(this.webapi, systemFormResponse, solutionId, DynamicsWebApi.SolutionComponent.Form, f => f["formid"]))
+            .then(response => response.toArray());
+    }
+
+    public retrieveDashboards(entityLogicalName:string, solutionId?:string) : Promise<any[]>
+    {
+        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "systemforms",
+            filter: `objecttypecode eq '${entityLogicalName}' and type eq 10 and formactivationstate eq 1`,  
+            orderBy: ["name"]
+        };
+
+        return this.webapi.retrieveRequest(request)
+            .then(systemFormResponse => ApiHelper.filterSolutionComponents(this.webapi, systemFormResponse, solutionId, DynamicsWebApi.SolutionComponent.SystemForm, f => f["formid"]))
             .then(response => response.toArray());
     }
 

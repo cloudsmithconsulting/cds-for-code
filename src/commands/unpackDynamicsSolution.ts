@@ -26,7 +26,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
                 const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
-				const solutionMap = SolutionMap.loadFromWorkspace(context);
+				const map:SolutionMap = SolutionMap.loadFromWorkspace(context);
 
 				config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
@@ -34,11 +34,15 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a Solution to unpack", true);
 				if (!solution) { return; }
 
-				if (!folder && solutionMap) {
-					const mapping = solutionMap.getPath(config.orgId, solution.solutionid);
+				if (!folder && map) {
+					const mapping = map.getPath(config.orgId, solution.solutionid);
 
-					if (mapping) {
+					if (mapping && mapping.path) {
 						folder = mapping.path;
+					}
+
+					if (folder && folder.endsWith(solution.uniquename)) {
+						folder = path.join(folder, "..");
 					}
 				} 
 
@@ -74,8 +78,8 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 							.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
 							.text(`" -AsPlainText -Force))) `))
 							.then(tc => { 
-									solutionMap.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename));
-									solutionMap.saveToWorkspace(context);
+									map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename));
+									map.saveToWorkspace(context);
 							});
 					});
 			})
