@@ -21,6 +21,7 @@
 		"CRM"
 	],
 	"activationEvents": [
+		"onFileSystem:file",
 		"onView:cs.dynamics.viewContainers.connections",
 		"onCommand:cs.dynamics.controls.treeView.editConnection",
 		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFolder",
@@ -91,6 +92,11 @@
 					"default": "true",
 					"description": "Show the Default Solution in the Dynamics explorer pane"
 				},
+				"cs.dynamics.configuration.explorer.showWelcomeExperience": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Show the welcome experience for Dynamics when you open a new workspace"
+				},
 				"cs.dynamics.configuration.templates.templatesDirectory": {
 					"type": "string",
 					"description": "Directory to read/store project template folders"
@@ -102,8 +108,8 @@
 				},
 				"cs.dynamics.configuration.templates.placeholderRegExp": {
 					"type": "string",
-					"default": "#{(\\w+)?}",
-					"description": "Regular expression for detecting placeholders (e.g. \"#{(\\w+?)}\").  The first capture group dictates the placeholder key."
+					"default": "${(\\w+)?}",
+					"description": "Regular expression for detecting placeholders (e.g. \"${(\\w+?)}\").  The first capture group dictates the placeholder key."
 				},
 				"cs.dynamics.configuration.templates.placeholders": {
 					"type": "object",
@@ -137,6 +143,11 @@
 				"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
 				"title": "Download Dynamics 365 solution here",
 				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.newWorkspace.open",
+				"title": "Get started in a new workspace",
+				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.controls.pluginStep.open",

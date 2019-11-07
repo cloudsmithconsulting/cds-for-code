@@ -20,6 +20,7 @@ import PluginStepViewManager from './views/pluginStepView';
 import RegisterPluginAssembly from './commands/registerPluginAssembly';
 import SvcUtilConfigViewManager from './views/svcUtilConfigView';
 import SolutionMap from './config/SolutionMap';
+import NewWorkspaceViewManager from './views/NewWorkspaceView';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -45,6 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
 		new SvcUtilConfigViewManager(),
 		new DynamicsTerminal(),
 		new PluginStepViewManager(),
+		new NewWorkspaceViewManager(),
 		
 		// our commands
 		new PowerShellLoader(),

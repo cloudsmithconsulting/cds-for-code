@@ -59,6 +59,7 @@ export namespace dynamics
         public static readonly _namespace:string = "cs.dynamics.views";
         public static readonly connectionView:string = `${viewContainers._namespace}.connectionView`;
         public static readonly jsonInspectorView:string = `${viewContainers._namespace}.jsonInspectorView`;
+        public static readonly newWorkspaceView:string = `${viewContainers._namespace}.newWorkspaceView`;
         public static readonly pluginStepView:string = `${viewContainers._namespace}.pluginStepView`;
         public static readonly svcUtilConfigView:string = `${viewContainers._namespace}.svcUtilConfigView`;
     }
@@ -70,6 +71,7 @@ export namespace dynamics
         {
             public static readonly _namespace:string = "cs.dynamics.configuration.explorer";
             public static readonly showDefaultSolution:string = `${explorer._namespace}.showDefaultSolution`;
+            public static readonly showWelcomeExperience:string = `${explorer._namespace}.showWelcomeExperience`;
         }
 
         // tslint:disable-next-line: class-name
@@ -133,6 +135,13 @@ export namespace dynamics
         {
             public static readonly _namespace:string = "cs.dynamics.controls.jsonInspector";
             public static readonly inspect:string = `${jsonInspector._namespace}.inspect`;
+        }
+
+        // tslint:disable-next-line: class-name
+        export class newWorkspace
+        {
+            public static readonly _namespace:string = "cs.dynamics.controls.newWorkspace";
+            public static readonly open:string = `${jsonInspector._namespace}.open`;
         }
 
         // tslint:disable-next-line: class-name

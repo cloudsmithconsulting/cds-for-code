@@ -1338,7 +1338,7 @@ class TreeEntry extends vscode.TreeItem {
     }
 
     get solutionMapping(): SolutionWorkspaceMapping {
-        if (this.id && this.itemType == "Solution") {
+        if (this.id && this.itemType === "Solution") {
             return TreeEntryCache.Instance.SolutionMap.getPath(this.config.orgId, this.context.solutionid);
         }
 
