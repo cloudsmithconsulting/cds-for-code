@@ -25,7 +25,7 @@ export namespace dynamics
         public static readonly createTerminal:string = `${extension._namespace}.createTerminal`;
         public static readonly outputChannelName:string = `${extension._namespace}.outputChannelName`;
         private static _output:vscode.OutputChannel;
-        static get output()
+        static get output():vscode.OutputChannel
         {
             if (!this._output) {
                 this._output = vscode.window.createOutputChannel(extension.outputChannelName);
@@ -42,9 +42,7 @@ export namespace dynamics
         public static readonly _namespace:string = "cs.dynamics.powerShell";
         public static readonly generateEntities:string = `${powerShell._namespace}.generateEntities`;
         public static readonly packSolution:string = `${powerShell._namespace}.packSolution`;
-        public static readonly packSolutionFromExplorer:string = `${powerShell.packSolution}.explorer`;
         public static readonly unpackSolution:string = `${powerShell._namespace}.unpackSolution`;
-        public static readonly unpackSolutionFromExplorer:string = `${powerShell.unpackSolution}.explorer`;
     }
 
     // tslint:disable-next-line: class-name
@@ -124,7 +122,16 @@ export namespace dynamics
             public static readonly _namespace:string = "cs.dynamics.controls.svcUtilConfig";
             public static readonly configure:string = `${svcUtilConfig._namespace}.configure`;
         }
-        
+
+        // tslint:disable-next-line: class-name
+        export class explorer
+        {
+            public static readonly _namespace:string = "cs.dynamics.controls.explorer";
+            public static readonly registerPluginFile:string = `${explorer._namespace}.registerPluginFile`;
+            public static readonly packSolutionFromFolder:string = `${explorer._namespace}.packSolutionFromFolder`;
+            public static readonly unpackSolutionToFolder:string = `${explorer._namespace}.unpackSolutionToFolder`;
+        }
+
         // tslint:disable-next-line: class-name
         export class jsonInspector
         {
@@ -164,6 +171,7 @@ export namespace dynamics
             public static readonly openInEditor:string = `${treeView._namespace}.openInEditor`;
             public static readonly refreshEntry:string = `${treeView._namespace}.refreshEntry`;
             public static readonly removeEntryFromSolution:string = `${treeView._namespace}.removeEntryFromSolution`;
+            public static readonly unpackSolution:string = `${treeView._namespace}.unpackSolution`;
         }
     }
 }

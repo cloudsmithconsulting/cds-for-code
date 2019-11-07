@@ -21,6 +21,9 @@
 	"activationEvents": [
 		"onView:cs.dynamics.viewContainers.connections",
 		"onCommand:cs.dynamics.controls.treeView.editConnection",
+		"onCommand:cs.dynamics.controls.explorer.registerPluginFile",
+		"onCommand:cs.dynamics.controls.explorer.packSolutionFromFolder",
+		"onCommand:cs.dynamics.controls.explorer.unpackSolutionToFolder",
 		"onCommand:cs.dynamics.deployment.addSolutionComponent",
 		"onCommand:cs.dynamics.deployment.removeSolutionComponent",
 		"onCommand:cs.dynamics.deployment.registerPluginAssembly",
@@ -32,10 +35,8 @@
 		"onCommand:cs.dynamics.extension.openProjectTemplatesFolder",
 		"onCommand:cs.dynamics.extension.saveProjectAsTemplate",
 		"onCommand:cs.dynamics.powerShell.generateEntities",
-		"onCommand:cs.dynamics.powerShell.packSolution.explorer",
 		"onCommand:cs.dynamics.powerShell.packSolution",
 		"onCommand:cs.dynamics.powerShell.unpackSolution",
-		"onCommand:cs.dynamics.powerShell.unpackSolution.explorer",
 		"onCommand:cs.dynamics.controls.pluginStep.open",
 		"onCommand:cs.dynamics.controls.svcUtilConfig.configure"
 	],
@@ -109,13 +110,28 @@
 		"commands": [
 			{
 				"command": "cs.dynamics.controls.pluginStep.open",
-				"title": "Configure or modify a plugin step",
+				"title": "Create a new plugin processing step",
 				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.controls.svcUtilConfig.configure",
 				"title": "Configure entity code generation from the CrmSvcUtil",
 				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
+				"title": "Deploy solution to Dynamics 365",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.registerPluginFile",
+				"title": "Deploy assembly to Dynamics 365",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
+				"title": "Download Dynamics 365 solution here",
+				"category": "UserInterface"
 			},
 			{
 				"command": "cs.dynamics.controls.treeView.refreshEntry",
@@ -194,6 +210,11 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.dynamics.controls.treeView.unpackSolution",
+				"title": "Export into workspace",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.deployment.addSolutionComponent",
 				"title": "Add component to a Dynamics 365 Solution",
 				"category": "Dynamics 365 CE"
@@ -249,18 +270,8 @@
 				"category": "Dynamics 365 CE"
 			},
 			{
-				"command": "cs.dynamics.powerShell.unpackSolution.explorer",
-				"title": "Export to workspace",
-				"category": "Dynamics 365 CE"
-			},
-			{
 				"command": "cs.dynamics.powerShell.packSolution",
 				"title": "Pack & deploy solution to a registerd Dynamics server",
-				"category": "Dynamics 365 CE"
-			},
-			{
-				"command": "cs.dynamics.powerShell.packSolution.explorer",
-				"title": "Deploy to Dynamics 365",
 				"category": "Dynamics 365 CE"
 			},
 			{
@@ -299,8 +310,18 @@
 					"group": "projectTemplates@2"
 				},
 				{
-					"command": "cs.dynamics.powerShell.packSolution.explorer",
+					"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
 					"when": "explorerResourceIsFolder",
+					"group": "zzz_azuretools_deploy@3"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
+					"when": "explorerResourceIsFolder",
+					"group": "zzz_azuretools_deploy@4"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.registerPluginFile",
+					"when": "explorerResourceIsFolder != true && resourceExtname == .dll",
 					"group": "zzz_azuretools_deploy@3"
 				}
 			],
@@ -348,23 +369,23 @@
 					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.powerShell.unpackSolution.explorer",
-					"group": "deployment@3",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
-				},
-				{
 					"command": "cs.dynamics.controls.treeView.deleteEntry",
 					"group": "inline",
 					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.addEntryToSolution",
+					"command": "cs.dynamics.controls.treeView.unpackSolution",
 					"group": "deployment@1",
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.treeView.addEntryToSolution",
+					"group": "deployment@2",
 					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canAddToSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.removeEntryFromSolution",
-					"group": "deployment@2",
+					"group": "deployment@3",
 					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
 				},
 				{
