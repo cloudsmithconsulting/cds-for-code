@@ -55,6 +55,8 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
                                             }
                                             
                                             return Promise.all(promises);
+                                        }).then(responses => {
+                                            vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, {});
                                         });
                                 }
                             });                      
