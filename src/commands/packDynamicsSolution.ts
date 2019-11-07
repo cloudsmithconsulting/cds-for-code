@@ -31,7 +31,7 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
                 const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 
-				folder = folder || await QuickPicker.pickWorkspaceRoot(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder containing the solution to pack", true);
+				folder = folder || await QuickPicker.pickWorkspaceRoot(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder containing the solution to pack", true).then(uri => uri ? uri.fsPath : null);
 				if (Utilities.IsNullOrEmpty(folder)) { return; }
 				
 				config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);

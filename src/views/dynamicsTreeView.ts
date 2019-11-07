@@ -11,6 +11,7 @@ import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import { DynamicsWebApi } from '../api/Types';
 import { ExtensionIconThemes } from '../commands/iconLoader';
 import QuickPicker from '../helpers/QuickPicker';
+import SolutionMap from '../config/SolutionMap';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
@@ -40,6 +41,9 @@ export default class DynamicsTreeView implements IWireUpCommands {
             }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.inspectEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 vscode.commands.executeCommand(cs.dynamics.controls.jsonInspector.inspect, item.context);
+            }) 
+            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.moveSolution, (item: TreeEntry) => { // Match name of command to package.json command
+                vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, item.solutionMapping);
             }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntryToSolution, (item: TreeEntry) => { // Match name of command to package.json command
                 if (item.solutionId) {
@@ -129,12 +133,12 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         break;
                 }
 
-                if (!Utilities.IsNullOrEmpty(item.solutionPath)) {
-                    const solutions = TreeEntryCache.Instance.Items.where(i => i.id === item.solutionPath).toArray();
+                if (!Utilities.IsNullOrEmpty(item.solutionIdPath)) {
+                    const solutions = TreeEntryCache.Instance.Items.where(i => i.id === item.solutionIdPath).toArray();
                     
                     if (solutions && solutions.length > 0 && componentId && componentType) {
                         return vscode.commands.executeCommand(cs.dynamics.deployment.removeSolutionComponent, item.config, solutions[0].context, componentId, componentType)
-                            .then(response => treeProvider.refreshSolution(item.solutionPath));
+                            .then(response => treeProvider.refreshSolution(item.solutionIdPath));
                     }
                  }
             }) 
@@ -1177,16 +1181,15 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
     }
 }
 
-class TreeEntryCache
-{
+class TreeEntryCache {
     private static _instance:TreeEntryCache;
     private _items:TreeEntry[] = [];
+    private _solutionMap:SolutionMap;
 
     private constructor() { 
     }
 
-    static get Instance(): TreeEntryCache
-    {
+    static get Instance(): TreeEntryCache {
         if (!this._instance) {
             this._instance = new TreeEntryCache();
         }
@@ -1194,23 +1197,27 @@ class TreeEntryCache
         return this._instance;
     }
 
-    AddEntry(entry:TreeEntry): void
-    {
+    AddEntry(entry:TreeEntry): void {
         this._items.push(entry);
     }
 
-    Clear(): void
-    {
+    Clear(): void {
         this._items = [];
     }
 
-    get Items(): TS.Linq.Enumerator<TreeEntry>
-    {
+    get Items(): TS.Linq.Enumerator<TreeEntry> {
         return new TS.Linq.Enumerator(this._items);
     }
 
-    Under(path:string): TS.Linq.Enumerator<TreeEntry>
-    {
+    get SolutionMap(): SolutionMap {
+        if (!this._solutionMap) {
+            this._solutionMap = SolutionMap.loadFromWorkspace();
+        }
+
+        return this._solutionMap;
+    }
+
+    Under(path:string): TS.Linq.Enumerator<TreeEntry> {
         return this.Items.where(item => item.id.startsWith(path));
     }
 }
@@ -1222,6 +1229,7 @@ class TreeEntry extends vscode.TreeItem {
     private static readonly canDeleteEntryTypes:EntryType[] = [ "Connection" ];
     private static readonly canInspectEntryTypes:EntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
     private static readonly canUnpackSolutionEntryTypes:EntryType[] = [ "Solution" ];
+    private static readonly canMoveSolutionEntryTypes:EntryType[] = [ "Solution" ];
     private static readonly canOpenInAppEntryTypes:EntryType[] = [ "View", "Entity", "Dashboard" ];
     private static readonly canOpenInBrowserEntryTypes:EntryType[] = [ "Form", "View", "Entity", "Dashboard" ];
     private static readonly canOpenInEditorEntryTypes:EntryType[] = [ "Form", "View", "Chart", "Dashboard" ];
@@ -1300,10 +1308,10 @@ class TreeEntry extends vscode.TreeItem {
             }        
         }
        
-        return undefined;
+        return null;
     }
 
-    get solutionPath(): string { 
+    get solutionIdPath(): string { 
         if (this.id)
         {
             const split = this.id.split("/");
@@ -1314,7 +1322,15 @@ class TreeEntry extends vscode.TreeItem {
             }        
         }
        
-        return undefined;        
+        return null;
+    }
+
+    get solutionMapping(): SolutionWorkspaceMapping {
+        if (this.id && this.itemType == "Solution") {
+            return TreeEntryCache.Instance.SolutionMap.getPath(this.config.orgId, this.context.solutionid);
+        }
+
+        return null;
     }
 
     get capabilities(): string[] {
@@ -1328,6 +1344,7 @@ class TreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canUnpackSolution", TreeEntry.canUnpackSolutionEntryTypes);
         this.addCapability(returnValue, "canAddToSolution", TreeEntry.canAddToSolutionEntryTypes, () => !this.solutionId);
         this.addCapability(returnValue, "canRemoveFromSolution", TreeEntry.canRemoveFromSolutionEntryTypes, () => !Utilities.IsNullOrEmpty(this.solutionId));
+        this.addCapability(returnValue, "canMoveSolution", TreeEntry.canMoveSolutionEntryTypes, () => this.solutionMapping.path);
         this.addCapability(returnValue, "canOpenInApp", TreeEntry.canOpenInAppEntryTypes);
         this.addCapability(returnValue, "canOpenInBrowser", TreeEntry.canOpenInBrowserEntryTypes);
         this.addCapability(returnValue, "canOpenInEditor", TreeEntry.canOpenInEditorEntryTypes);
