@@ -125,7 +125,7 @@ export default class QuickPicker {
     public static async pickDynamicsOrganization(context:vscode.ExtensionContext, placeHolder?:string, ignoreFocusOut: boolean = true) : Promise<DynamicsWebApi.Config> {
         return DiscoveryRepository.getOrgConnections(context)
             .then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(org.name, undefined, undefined, org)).toArray())
-            .then(options => vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }))
+            .then(options => options && options.length === 1 ? options[0] : vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }))
             .then(chosen => <DynamicsWebApi.Config>chosen.context);
     }
 

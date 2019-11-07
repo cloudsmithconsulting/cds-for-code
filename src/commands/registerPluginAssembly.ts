@@ -16,6 +16,10 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
 
         // now wire a command into the context
         context.subscriptions.push(
+			vscode.commands.registerCommand(cs.dynamics.controls.explorer.registerPluginFile, async (file?:vscode.Uri, ...arg2:any) => {
+				vscode.commands.executeCommand(cs.dynamics.deployment.registerPluginAssembly, undefined, undefined, file);
+			}),
+
             vscode.commands.registerCommand(cs.dynamics.deployment.registerPluginAssembly, async (config?:DynamicsWebApi.Config, pluginAssembly?:any, file?:vscode.Uri, solution?:any):Promise<any> => { 
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 
@@ -39,6 +43,12 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
                                     const types:any[] = new TS.Linq.Enumerator(assemblyInfo.Types).where(t => new TS.Linq.Enumerator((<any>t).Interfaces).any(i => i === "Microsoft.Xrm.Sdk.IPlugin")).toArray();
                                     let assemblyId:string;
     
+                                    if (!types || types.length === 0) {
+                                        vscode.window.showWarningMessage(`The plugin assembly could not find any valid Plugin classes when scanning '${file.fsPath}'`);
+
+                                        return;
+                                    }
+
                                     return api.uploadPluginAssembly(file, pluginAssembly ? pluginAssembly.pluginassemblyid : null)
                                         .then(pluginAssemblyId => {
                                             assemblyId = pluginAssemblyId;

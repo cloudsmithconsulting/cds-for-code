@@ -21,7 +21,7 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 
 		// now wire a command into the context
 		context.subscriptions.push(
-			vscode.commands.registerCommand(cs.dynamics.powerShell.packSolutionFromExplorer, async (folder?:vscode.Uri, arg2?:any) => {
+			vscode.commands.registerCommand(cs.dynamics.controls.explorer.packSolutionFromFolder, async (folder?:vscode.Uri, ...arg2:any) => {
 				vscode.commands.executeCommand(cs.dynamics.powerShell.packSolution, undefined, folder.fsPath);
 			}),
 
