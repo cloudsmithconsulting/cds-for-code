@@ -3,8 +3,7 @@
 // This script will be run within the webview itself
 // It cannot access the main VS Code APIs directly.
 (function () {
-    // You MUST set = window.vscodeApi for scripts in main.js to work properly
-    const vscode = window.vscodeApi = acquireVsCodeApi();
+    const vscode = CloudSmith.acquireVsCodeApi();
     const submitButton = document.getElementById("submitButton");
 
     // Wire up our save handler.

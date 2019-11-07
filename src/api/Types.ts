@@ -205,8 +205,14 @@ export namespace DynamicsWebApi {
         };
     }
 
-    export enum DynamicsForm
-    {
+    export enum InteractiveDashboardLayout {
+        _4ColumnOverview = "4 Column Overview Dashboard",
+        _3ColumnOverview = "3 Column Overview Dashboard",
+        _3ColumnOverviewVariableWidth = "3 Column Overview Dashboard with variable-width charts",
+        _2ColumnOverview = "2 Column Overview Dashboard"
+    }
+
+    export enum DynamicsForm {
         Dashboard = "dashboard",
         AppointmentBook = "appointmentbook",
         Main = "main",
@@ -226,8 +232,7 @@ export namespace DynamicsWebApi {
         PowerBIDashboard = "powerbi"
     }
     
-    export enum ProcessType
-    {
+    export enum ProcessType {
         Workflow = "Workflow",
         Dialog = "Dialog",
         BusinessRule = "Business Rule",
@@ -236,8 +241,7 @@ export namespace DynamicsWebApi {
         Flow = "Flow"
     }
     
-    export enum SolutionComponent
-    {
+    export enum SolutionComponent {
         Entity = "Entity",
         Attribute = "Attribute",
         Relationship = "Relationship",
@@ -325,6 +329,10 @@ export namespace DynamicsWebApi {
             return this.DynamicsForms.getKey(form);
         }
 
+        public static getInteractiveDashboardLayout(layout: InteractiveDashboardLayout) {
+            return this.InteractiveDashboardLayouts.getKey(layout);
+        }
+
         public static getProcessTypeCode(processType: ProcessType): number {
             return this.ProcessTypes.getKey(processType);
         }
@@ -332,6 +340,13 @@ export namespace DynamicsWebApi {
         public static getSolutionComponentCode(componentType: SolutionComponent): number {
             return this.SolutionComponents.getKey(componentType);
         }
+
+        public static InteractiveDashboardLayouts = new Dictionary<number, InteractiveDashboardLayout>([
+            { key: 7, value: InteractiveDashboardLayout._4ColumnOverview },
+            { key: 8, value: InteractiveDashboardLayout._3ColumnOverview },
+            { key: 9, value: InteractiveDashboardLayout._2ColumnOverview },
+            { key: 10, value: InteractiveDashboardLayout._3ColumnOverviewVariableWidth }
+        ]);
 
         public static DynamicsForms = new Dictionary<number, DynamicsForm>([
             { key: 0, value: DynamicsForm.Dashboard },

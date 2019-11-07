@@ -6,6 +6,7 @@ import ApiRepository from "../repositories/apiRepository";
 import MetadataRepository from "../repositories/metadataRepository";
 import { DynamicsWebApi } from "../api/Types";
 import Utilities from "./Utilities";
+import Dictionary from "./Dictionary";
 
 export default class QuickPicker {
     /**
@@ -55,7 +56,7 @@ export default class QuickPicker {
      * or for multi-root will present a chooser to select a workspace.
      * @param args 
      */
-    public static async pickWorkspacePath(args?: any, placeHolder?: string, ignoreFocusOut: boolean = true) : Promise<string> {
+    public static async pickWorkspaceRoot(args?: any, placeHolder?: string, ignoreFocusOut: boolean = true) : Promise<string> {
         let workspace : string = "";
 
         // check arguments
@@ -88,6 +89,30 @@ export default class QuickPicker {
         return vscode.window
             .showOpenDialog({canSelectFolders: false, canSelectFiles: true, canSelectMany, openLabel, defaultUri, filters })
             .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0] : pathUris : null);
+    }
+
+    public static async pickEnum<T>(enumObject:T, placeHolder?:string): Promise<any> {
+        let enumOptions:QuickPickOption[] = [];
+
+        for (let value in enumObject) {
+            if (typeof enumObject[value] === 'number' || typeof enumObject[value] === 'string') {
+                enumOptions.push(new QuickPickOption(value, undefined, undefined, enumObject[value]));
+            }
+        }
+
+        return await this.pick(placeHolder, ...enumOptions)
+            .then(p => p.context);
+    }
+
+    public static async pickDictionaryEntry<TKey, TItem>(dictionary:Dictionary<TKey, TItem>, placeHolder?:string): Promise<TItem> {
+        if (dictionary && dictionary.keys.length > 0) {
+            const options:QuickPickOption[] = [];
+        
+            dictionary.keys.forEach(k => options.push(new QuickPickOption(k.toString(), undefined, undefined, dictionary.get(k))));
+
+            return await this.pick(placeHolder, ...options)
+                .then(p => p.context);
+        }
     }
 
     public static async pickDynamicsSolution(config:DynamicsWebApi.Config, placeHolder?:string, ignoreFocusOut:boolean = true) : Promise<any> {

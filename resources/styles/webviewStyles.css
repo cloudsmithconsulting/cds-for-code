@@ -22,7 +22,7 @@ table {
     border: 1px solid var(--vscode-dropdown-border);
 }
 
-table tr:nth-child(even) {
+table>tbody>tr:nth-child(odd) {
     background: var(--vscode-input-background);
     color: var(--vscode-input-foreground);
 }
@@ -59,7 +59,8 @@ table tr:nth-child(even) {
 }
 
 .tab__content,
-.field-container {
+.field-container,
+.crmsvcutil-row {
     animation: fadeEffect 1s; /* Fading effect takes 1 second */
 }
   
@@ -71,22 +72,22 @@ table tr:nth-child(even) {
 
 .grid--two-left-panel {
     display: grid;
-    grid-template-columns: 25% 10% auto;
+    grid-template-columns: 39% 10% auto;
 }
 
 .grid--left-panel {
     display: grid;
-    grid-template-columns: 30% auto;
+    grid-template-columns: 35% auto;
 }
 
 .grid--left-panel-large {
     display: grid;
-    grid-template-columns: 30% 30% auto;
+    grid-template-columns: 49% 49%;
 }
 
 .grid--right-panel {
     display: grid;
-    grid-template-columns: auto 30%;
+    grid-template-columns: auto 35%;
 }
 
 .button--panel {

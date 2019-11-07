@@ -1,6 +1,7 @@
 import { performance } from "perf_hooks";
 import * as vscode from 'vscode';
 import { TextEncoder } from "util";
+import * as opn from "opn";
 
 export default class Utilities
 {
@@ -13,6 +14,10 @@ export default class Utilities
         return typeof value === "undefined" || value === null;
     }
 
+    public static NormalizeLineBreaks(value: string): string {
+        return value.replace("\r\n", "\n").replace("\n\r", "\n").replace("\n", "\r\n");
+    }
+    
     //https://stackoverflow.com/a/8809472
     public static NewGuid() : string 
     {
@@ -101,19 +106,20 @@ export default class Utilities
         return <T>target;
     }
 
-    public static OpenWindow(uri:vscode.Uri, retryFunction?:any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close"): void
-    {
-        vscode.env.openExternal(uri).then(opened =>
-        {
-            if (!opened && retryFunction)
-            {
-                this.RetryWithMessage("There was a problem opening the Dynamics 365 browser window", retryFunction, tryAgainMessage, closeMessage);
-            }
-        });
+    public static OpenWindow(uri:vscode.Uri | string, retryFunction?:any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close"): void {
+        if (uri instanceof vscode.Uri) {
+            vscode.env.openExternal(<vscode.Uri>uri).then(opened => {
+                if (!opened && retryFunction) {
+                    this.RetryWithMessage("There was a problem opening the Dynamics 365 browser window", retryFunction, tryAgainMessage, closeMessage);
+                }
+            });
+        } else {
+            // Cross platform, and cross browser me, please :)
+            opn(<string>uri);
+        }
     }
 
-    public static RetryWithMessage(errorMessage:string, retryFunction:any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close"): void
-    {
+    public static RetryWithMessage(errorMessage:string, retryFunction:any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close"): void {
         vscode.window
             .showErrorMessage(errorMessage, tryAgainMessage, closeMessage)
             .then(selectedItem =>

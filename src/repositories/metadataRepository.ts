@@ -39,19 +39,33 @@ export default class MetadataRepository
             .then(response => response.orderBy(o => o["Name"]).toArray());
     }
 
-    public retrieveForms(entityLogicalName:string) : Promise<any[]>
+    public retrieveForms(entityLogicalName:string, solutionId?:string) : Promise<any[]>
     {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "systemforms",
-            filter: `objecttypecode eq '${entityLogicalName}' and formactivationstate eq 1`,
+            filter: `objecttypecode eq '${entityLogicalName}' and type ne 10 and formactivationstate eq 1`,  
             orderBy: ["name"]
         };
 
         return this.webapi.retrieveRequest(request)
-            .then(response => response.value);
+            .then(systemFormResponse => ApiHelper.filterSolutionComponents(this.webapi, systemFormResponse, solutionId, DynamicsWebApi.SolutionComponent.Form, f => f["formid"]))
+            .then(response => response.toArray());
     }
 
-    public retrieveViews(entityLogicalName:number) : Promise<any[]>
+    public retrieveDashboards(entityLogicalName:string, solutionId?:string) : Promise<any[]>
+    {
+        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "systemforms",
+            filter: `objecttypecode eq '${entityLogicalName}' and type eq 10 and formactivationstate eq 1`,  
+            orderBy: ["name"]
+        };
+
+        return this.webapi.retrieveRequest(request)
+            .then(systemFormResponse => ApiHelper.filterSolutionComponents(this.webapi, systemFormResponse, solutionId, DynamicsWebApi.SolutionComponent.SystemForm, f => f["formid"]))
+            .then(response => response.toArray());
+    }
+
+    public retrieveViews(entityLogicalName:string, solutionId?:string) : Promise<any[]>
     {
         let request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "savedqueries",
@@ -60,6 +74,32 @@ export default class MetadataRepository
         };
 
         return this.webapi.retrieveRequest(request)
-            .then(response => response.value);
+            .then(savedQueryResponse => ApiHelper.filterSolutionComponents(this.webapi, savedQueryResponse, solutionId, DynamicsWebApi.SolutionComponent.SavedQuery, q => q["savedqueryid"]))
+            .then(response => response.toArray());
+    }
+
+    public retrieveCharts(entityLogicalName:string, solutionId?:string) : Promise<any[]>
+    {
+        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "savedqueryvisualizations",
+            filter: `primaryentitytypecode eq '${entityLogicalName}'`,
+            orderBy: ["name"]
+        };
+
+        return this.webapi.retrieveRequest(request)
+            .then(savedQueryResponse => ApiHelper.filterSolutionComponents(this.webapi, savedQueryResponse, solutionId, DynamicsWebApi.SolutionComponent.SavedQueryVisualization, q => q["savedqueryvisualizationid"]))
+            .then(response => response.toArray());
+    }
+
+    public retrieveKeys(entityKey:string) : Promise<any[]>
+    {
+        return this.webapi.retrieveEntity(entityKey, ["MetadataId"], [ { property: "Keys" } ])
+            .then(response => response.Keys);
+    }
+
+    public retrieveRelationships(entityKey:string) : Promise<{ oneToMany:any[], manyToOne:any[], manyToMany:any[] }>
+    {
+        return this.webapi.retrieveEntity(entityKey, ["MetadataId"], [ { property: "OneToManyRelationships" }, { property: "ManyToOneRelationships" }, { property: "ManyToManyRelationships" } ])
+            .then(response => response ? { oneToMany: response.OneToManyRelationships, manyToOne: response.ManyToOneRelationships, manyToMany: response.ManyToManyRelationships } : null);
     }
 }

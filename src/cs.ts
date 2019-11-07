@@ -71,6 +71,7 @@ export namespace dynamics
         {
             public static readonly _namespace:string = "cs.dynamics.configuration.iconThemes";
             public static readonly default:string = `${iconThemes._namespace}.default`;
+            public static readonly selectedTheme:string = `${iconThemes._namespace}.selectedTheme`;
         }
 
         // tslint:disable-next-line: class-name
@@ -79,6 +80,13 @@ export namespace dynamics
             public static readonly _namespace:string = "cs.dynamics.configuration.globalState";
             public static readonly dynamicsConnections:string = `${globalState._namespace}:dynamicsConnections`;
             public static readonly powerShellScriptVersion:string = `${globalState._namespace}:powerShellScriptVersion`;
+        }
+
+        // tslint:disable-next-line: class-name
+        export class workspaceState
+        {
+            public static readonly _namespace:string = "cs.dynamics.configuration.workspaceState";
+            public static readonly solutionMap:string = `${workspaceState._namespace}:solutionMap`;
         }
 
         // tslint:disable-next-line: class-name
@@ -148,9 +156,12 @@ export namespace dynamics
             public static readonly addEntryToSolution:string = `${treeView._namespace}.addEntryToSolution`;
             public static readonly clickEntry:string = `${treeView._namespace}.clickEntry`;
             public static readonly deleteEntry:string = `${treeView._namespace}.deleteEntry`;
+            public static readonly editConnection:string = `${treeView._namespace}.editConnection`;
             public static readonly editEntry:string = `${treeView._namespace}.editEntry`;
             public static readonly inspectEntry:string = `${treeView._namespace}.inspectEntry`;
-            public static readonly openConnection:string = `${treeView._namespace}.openConnection`;
+            public static readonly openInApp:string = `${treeView._namespace}.openInApp`;
+            public static readonly openInBrowser:string = `${treeView._namespace}.openInBrowser`;
+            public static readonly openInEditor:string = `${treeView._namespace}.openInEditor`;
             public static readonly refreshEntry:string = `${treeView._namespace}.refreshEntry`;
             public static readonly removeEntryFromSolution:string = `${treeView._namespace}.removeEntryFromSolution`;
         }

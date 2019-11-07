@@ -39,16 +39,20 @@ export default class ApiRepository
             .then(response => response.value);
     }
 
-    public retrieveProcesses(solutionId?:string) : Promise<any[]> {
+    public retrieveProcesses(entityName?:string, solutionId?:string) : Promise<any[]> {
+        // documentation of the attributes for workflow: https://docs.microsoft.com/en-us/dynamics365/customer-engagement/web-api/workflow?view=dynamics-ce-odata-9        
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "workflows",
-            filter: "componentstate ne 2 and componentstate ne 3 and type eq 1",
+            filter: `componentstate ne 2 and componentstate ne 3 and type eq 1`,
             orderBy: ["name"]
         };
 
-        if (solutionId)
-        {
-            request.filter = `${request.filter} and solutionid eq ${solutionId}`;
+        if (solutionId) {
+            request.filter += ` and solutionid eq ${solutionId}`;
+        }
+
+        if (entityName) { 
+            request.filter += ` and primaryentity eq '${entityName}'`;
         }
 
         return this.webapi.retrieveAllRequest(request)
@@ -156,8 +160,7 @@ export default class ApiRepository
             } else {
                 this.webapi.create(updateObject, "plugintypes");
             }
-        });
-        
+        });        
     }
 
     // Gets a list of entities and their IDs
@@ -203,7 +206,6 @@ export default class ApiRepository
             .then(response => {
                 return response && response.value ? response.value : null;
             }).then(async response => {
-
                 await response.forEach(r => {
                     r.sdkmessageid.filters = this.webapi.retrieveMultiple("sdkmessagefilters", [], `_sdkmessageid_value eq ${r.sdkmessageid}`)
                         .then(r => new TS.Linq.Enumerator(r.value).toArray());
@@ -285,8 +287,7 @@ export default class ApiRepository
             IncludedComponentSettingsValues: componentSettings || null
         };
 
-        return this.webapi.executeUnboundAction("AddSolutionComponent", actionParams)
-            .then(response => response.value || null);
+        return this.webapi.executeUnboundAction("AddSolutionComponent", actionParams);
     }
 
     public getSolutionComponent(componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
@@ -315,8 +316,6 @@ export default class ApiRepository
 
                 return returnObject;
             })
-            .then(params => this.webapi.executeUnboundAction("RemoveSolutionComponent", params))
-            .catch(error => console.error(error))
-            .then(response => response.value || null);
+            .then(params => this.webapi.executeUnboundAction("RemoveSolutionComponent", params));
     }
 }

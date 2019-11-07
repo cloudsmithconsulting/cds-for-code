@@ -3,11 +3,10 @@ import * as vscode from 'vscode';
 import * as cs from '../cs';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import QuickPicker from '../helpers/QuickPicker';
-import DynamicsTerminal from '../views/DynamicsTerminal';
+import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import IWireUpCommands from '../wireUpCommand';
 import SolutionMap from '../config/SolutionMap';
-import { TS } from 'typescript-linq';
 import { DynamicsWebApi } from '../api/Types';
 import * as FileSystem from "../helpers/FileSystem";
 
@@ -27,6 +26,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
                 const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
+				const map:SolutionMap = SolutionMap.loadFromWorkspace(context);
 
 				config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
@@ -34,15 +34,19 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a Solution to unpack", true);
 				if (!solution) { return; }
 
-				folder = folder || await SolutionMap.read().then(map => {
-			  		const results = new TS.Linq.Enumerator(map.mappings)
-						.where(m => m.solutionId === solution.solutionid && m.organizationId === config.orgId)
-						.toArray();
+				if (!folder && map) {
+					const mapping = map.getPath(config.orgId, solution.solutionid);
 
-					if (results && results.length > 0) { return results[0].path; } else { return undefined; }
-				});
+					if (mapping && mapping.path) {
+						folder = mapping.path;
+					}
 
-				folder = folder || await QuickPicker.pickWorkspacePath(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true);
+					if (folder && folder.endsWith(solution.uniquename)) {
+						folder = path.join(folder, "..");
+					}
+				} 
+
+				folder = folder || await QuickPicker.pickWorkspaceRoot(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true);
 				if (Utilities.IsNullOrEmpty(folder)) {
 					vscode.window.showInformationMessage("You must have at least one workspace open to unpack solutions.");
 
@@ -62,9 +66,9 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 					serverUrl = serverUrl.substring(0, serverUrl.length - 1);
 				}
 
-				DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
+				return DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
 					.then(terminal => { 
-						terminal.text(`.\\Get-XrmSolution.ps1 `)
+						return terminal.run(new TerminalCommand(`.\\Get-XrmSolution.ps1 `)
 							.text(`-ServerUrl "${serverUrl}" `)
 							.text(`-OrgName "${orgName}" `)
 							.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
@@ -72,13 +76,11 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 							.text(`-ToolsPath "${toolsPath}" `)
 							.text(`-Credential (New-Object System.Management.Automation.PSCredential ("${config.username}", (ConvertTo-SecureString "`)
 							.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
-							.text(`" -AsPlainText -Force))) `)
-							.enter();
-					}).then(response => {
-						// write this to our solution map.
-						SolutionMap.read()
-							.then(map => map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename)))
-							.then(map => map.save());
+							.text(`" -AsPlainText -Force))) `))
+							.then(tc => { 
+									map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename));
+									map.saveToWorkspace(context);
+							});
 					});
 			})
 		);
