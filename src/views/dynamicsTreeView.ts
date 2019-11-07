@@ -11,7 +11,7 @@ import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import { DynamicsWebApi } from '../api/Types';
 import { ExtensionIconThemes } from '../commands/iconLoader';
 import QuickPicker from '../helpers/QuickPicker';
-import SolutionMap from '../config/SolutionMap';
+import SolutionMap, { SolutionWorkspaceMapping } from '../config/SolutionMap';
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
@@ -21,6 +21,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
         const treeProvider = isNew ? new DynamicsServerTreeProvider(context) : DynamicsTreeView.Instance;
 
         if (isNew) {
+            TreeEntryCache.Context = context;
             DynamicsTreeView.Instance = treeProvider;
             vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.connections, treeProvider);        
         }
@@ -43,7 +44,8 @@ export default class DynamicsTreeView implements IWireUpCommands {
                 vscode.commands.executeCommand(cs.dynamics.controls.jsonInspector.inspect, item.context);
             }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.moveSolution, (item: TreeEntry) => { // Match name of command to package.json command
-                vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, item.solutionMapping);
+                vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, item.solutionMapping, item.config)
+                    .then(result => TreeEntryCache.Instance.ClearMap());
             }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntryToSolution, (item: TreeEntry) => { // Match name of command to package.json command
                 if (item.solutionId) {
@@ -1183,6 +1185,8 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
 class TreeEntryCache {
     private static _instance:TreeEntryCache;
+    private static _context:vscode.ExtensionContext;
+
     private _items:TreeEntry[] = [];
     private _solutionMap:SolutionMap;
 
@@ -1197,6 +1201,10 @@ class TreeEntryCache {
         return this._instance;
     }
 
+    static set Context(value:vscode.ExtensionContext) {
+        TreeEntryCache._context = value;
+    }
+    
     AddEntry(entry:TreeEntry): void {
         this._items.push(entry);
     }
@@ -1205,13 +1213,17 @@ class TreeEntryCache {
         this._items = [];
     }
 
+    ClearMap(): void { 
+        this._solutionMap = null;
+    }
+
     get Items(): TS.Linq.Enumerator<TreeEntry> {
         return new TS.Linq.Enumerator(this._items);
     }
 
     get SolutionMap(): SolutionMap {
-        if (!this._solutionMap) {
-            this._solutionMap = SolutionMap.loadFromWorkspace();
+        if (!this._solutionMap && TreeEntryCache._context) {
+            this._solutionMap = SolutionMap.loadFromWorkspace(TreeEntryCache._context);
         }
 
         return this._solutionMap;
@@ -1344,7 +1356,7 @@ class TreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canUnpackSolution", TreeEntry.canUnpackSolutionEntryTypes);
         this.addCapability(returnValue, "canAddToSolution", TreeEntry.canAddToSolutionEntryTypes, () => !this.solutionId);
         this.addCapability(returnValue, "canRemoveFromSolution", TreeEntry.canRemoveFromSolutionEntryTypes, () => !Utilities.IsNullOrEmpty(this.solutionId));
-        this.addCapability(returnValue, "canMoveSolution", TreeEntry.canMoveSolutionEntryTypes, () => this.solutionMapping.path);
+        this.addCapability(returnValue, "canMoveSolution", TreeEntry.canMoveSolutionEntryTypes, () => !Utilities.IsNullOrEmpty(this.solutionMapping.path));
         this.addCapability(returnValue, "canOpenInApp", TreeEntry.canOpenInAppEntryTypes);
         this.addCapability(returnValue, "canOpenInBrowser", TreeEntry.canOpenInBrowserEntryTypes);
         this.addCapability(returnValue, "canOpenInEditor", TreeEntry.canOpenInEditorEntryTypes);

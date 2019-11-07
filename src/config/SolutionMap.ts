@@ -21,7 +21,7 @@ export default class SolutionMap implements IWireUpCommands
 
     public wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.deployment.updateSolutionMapping, async (config?:DynamicsWebApi.Config, item?: SolutionWorkspaceMapping, folder?: string) => {
+            vscode.commands.registerCommand(cs.dynamics.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string) => {
                 let solutionId;
                 let organizationId;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
