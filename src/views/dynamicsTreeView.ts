@@ -1327,7 +1327,7 @@ class TreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canInspectItem", TreeEntry.canInspectEntryTypes);
         this.addCapability(returnValue, "canUnpackSolution", TreeEntry.canUnpackSolutionEntryTypes);
         this.addCapability(returnValue, "canAddToSolution", TreeEntry.canAddToSolutionEntryTypes, () => !this.solutionId);
-        this.addCapability(returnValue, "canRemoveFromSolution", TreeEntry.canRemoveFromSolutionEntryTypes, () => this.solutionId);
+        this.addCapability(returnValue, "canRemoveFromSolution", TreeEntry.canRemoveFromSolutionEntryTypes, () => !Utilities.IsNullOrEmpty(this.solutionId));
         this.addCapability(returnValue, "canOpenInApp", TreeEntry.canOpenInAppEntryTypes);
         this.addCapability(returnValue, "canOpenInBrowser", TreeEntry.canOpenInBrowserEntryTypes);
         this.addCapability(returnValue, "canOpenInEditor", TreeEntry.canOpenInEditorEntryTypes);

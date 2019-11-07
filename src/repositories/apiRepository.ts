@@ -206,7 +206,6 @@ export default class ApiRepository
             .then(response => {
                 return response && response.value ? response.value : null;
             }).then(async response => {
-
                 await response.forEach(r => {
                     r.sdkmessageid.filters = this.webapi.retrieveMultiple("sdkmessagefilters", [], `_sdkmessageid_value eq ${r.sdkmessageid}`)
                         .then(r => new TS.Linq.Enumerator(r.value).toArray());
@@ -288,8 +287,7 @@ export default class ApiRepository
             IncludedComponentSettingsValues: componentSettings || null
         };
 
-        return this.webapi.executeUnboundAction("AddSolutionComponent", actionParams)
-            .then(response => response.value || null);
+        return this.webapi.executeUnboundAction("AddSolutionComponent", actionParams);
     }
 
     public getSolutionComponent(componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
@@ -318,8 +316,6 @@ export default class ApiRepository
 
                 return returnObject;
             })
-            .then(params => this.webapi.executeUnboundAction("RemoveSolutionComponent", params))
-            .catch(error => console.error(error))
-            .then(response => response.value || null);
+            .then(params => this.webapi.executeUnboundAction("RemoveSolutionComponent", params));
     }
 }

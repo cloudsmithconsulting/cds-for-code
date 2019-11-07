@@ -498,24 +498,26 @@ export class Terminal implements vscode.Terminal {
 							}
 
 							if (!isError) {
-								if (this._isAlreadyInitialized) {
-									this.resolveIncomingCommand(flushData.raw, undefined);
+								if (this._isAlreadyInitialized || flushData.raw.endsWith(this._prompt)) {
+									this.resolveIncomingCommand(flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, ""), undefined);
 								} else {
-									this._inputCommand.output += flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, "");
-									this._isAlreadyInitialized = true;
+									this._inputCommand.output += flushData.raw;
+									this._inputCommand.output = this._inputCommand.output.replace(this._inputCommand.command, "").replace(this._prompt, "");
 								}
 
 								this.write(displayText);
 							} else {
-								if (this._isAlreadyInitialized) {
-									this.resolveIncomingCommand(undefined, flushData.raw);	
+								if (this._isAlreadyInitialized || flushData.raw.endsWith(this._prompt)) {
+									this.resolveIncomingCommand(undefined, flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, ""));	
 								} else {
-									this._inputCommand.error += flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, "");
-									this._isAlreadyInitialized = true;
+									this._inputCommand.error += flushData.raw;
+									this._inputCommand.error = this._inputCommand.output.replace(this._inputCommand.command, "").replace(this._prompt, "");
 								}
 								
 								this.writeColor(4, displayText);
 							}
+
+							this._isAlreadyInitialized = true;
 						};
 
 						this.createChildProcess(options, { cwd: options.cwd.toString() });
@@ -542,6 +544,8 @@ export class Terminal implements vscode.Terminal {
 
 						if (data === '\x1b[A') { /// Up arrow 
 							this.showComandBuffer().then(c => {
+								this.show(false);
+
 								if (c) {
 									this.run(c);									
 								}
@@ -646,7 +650,13 @@ export class Terminal implements vscode.Terminal {
 	private createChildProcess(options: vscode.TerminalOptions, spawnOptions: child_process.SpawnOptions) {
 		if (this._process) { return; }
 
-		this._process = child_process.spawn(options.shellPath, spawnOptions);
+		const args:string[] = [];
+
+		if (options.shellPath.endsWith("powershell.exe")) {
+			args.push("-NoLogo");
+		}
+
+		this._process = child_process.spawn(options.shellPath, args, spawnOptions);
 
 		if (spawnOptions && spawnOptions.cwd) {
 			this._path = spawnOptions.cwd;
@@ -677,8 +687,12 @@ export class Terminal implements vscode.Terminal {
 
 	private resolveIncomingCommand(outputBuffer:string, errorBuffer:string) {
 		if (!Utilities.IsNullOrEmpty(this._inputCommand.command) || outputBuffer || errorBuffer) {
-			if (outputBuffer) { this._inputCommand.output += outputBuffer.replace(this._inputCommand.command, "").replace(this._prompt, ""); }
-			if (errorBuffer) { this._inputCommand.error += errorBuffer.replace(this._inputCommand.command, "").replace(this._prompt, ""); }
+			if (outputBuffer) { this._inputCommand.output += outputBuffer; }
+			if (errorBuffer) { this._inputCommand.error += errorBuffer; }
+
+			// Sanitize the output text to remove prompts, the echo'd command text, etc.
+			this._inputCommand.output = this._inputCommand.output.replace(this._inputCommand.command, "").replace(this._prompt, "");
+			this._inputCommand.error = this._inputCommand.error.replace(this._inputCommand.command, "").replace(this._prompt, "");
 
 			// Remove all crlf as this command is complete.
 			this._inputCommand.join();
@@ -747,10 +761,10 @@ export default class DynamicsTerminal implements IWireUpCommands
 					terminal.dispose();
 				});
 
-				terminal.show(true);
+				terminal.show(false);
 				terminals.add(name, terminal);
 			} else {
-				terminals[name].show(true);
+				terminals[name].show(false);
 
 				await terminals[name].setPath(folder);
 			}

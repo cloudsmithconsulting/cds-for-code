@@ -31,8 +31,8 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
                 const api = new ApiRepository(config);
 
                 return DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Tools\\CloudSmith.Dynamics365.AssemblyScanner\\"))
-                    .then(terminal => { 
-                        return terminal.run(new TerminalCommand(`.\\CloudSmith.Dynamics365.AssemblyScanner.exe "${file.fsPath}"`))
+                    .then(async terminal => { 
+                        return await terminal.run(new TerminalCommand(`.\\CloudSmith.Dynamics365.AssemblyScanner.exe "${file.fsPath}"`))
                             .then(tc => {
                                 if (tc.command.indexOf("CloudSmith.Dynamics365.AssemblyScanner.exe") !== -1) {
                                     const assemblyInfo = JSON.parse(tc.output);
@@ -44,7 +44,7 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
                                             assemblyId = pluginAssemblyId;
     
                                             if (!pluginAssembly && solution) {
-                                                return api.addSolutionComponent(solution, pluginAssemblyId, DynamicsWebApi.SolutionComponent.PluginAssembly, false, true);
+                                                return api.addSolutionComponent(solution, pluginAssemblyId, DynamicsWebApi.SolutionComponent.PluginAssembly, true, false);
                                             }                        
                                         })
                                         .then(response => {

@@ -41,7 +41,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 						folder = mapping.path;
 					}
 
-					if (folder.endsWith(solution.uniquename)) {
+					if (folder && folder.endsWith(solution.uniquename)) {
 						folder = path.join(folder, "..");
 					}
 				} 
