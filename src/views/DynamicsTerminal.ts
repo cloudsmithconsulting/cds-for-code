@@ -506,7 +506,7 @@ export class Terminal implements vscode.Terminal {
 							}
 
 							if (!isError) {
-								if (this._isAlreadyInitialized || flushData.raw.endsWith(this._prompt)) {
+								if (this._isAlreadyInitialized && flushData.raw.endsWith(this._prompt)) {
 									this.resolveIncomingCommand(flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, ""), undefined);
 								} else {
 									this._inputCommand.output += flushData.raw;
@@ -515,7 +515,7 @@ export class Terminal implements vscode.Terminal {
 
 								this.write(displayText);
 							} else {
-								if (this._isAlreadyInitialized || flushData.raw.endsWith(this._prompt)) {
+								if (this._isAlreadyInitialized && flushData.raw.endsWith(this._prompt)) {
 									this.resolveIncomingCommand(undefined, flushData.raw.replace(this._inputCommand.command, "").replace(this._prompt, ""));	
 								} else {
 									this._inputCommand.error += flushData.raw;
