@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import IWireUpCommands from '../wireUpCommand';
 import * as cs from '../cs';
 import * as fs from 'fs';
+import * as eol from 'eol';
 import * as child_process from 'child_process';
 import Utilities from '../helpers/Utilities';
 import QuickPicker, { QuickPickOption } from '../helpers/QuickPicker';
@@ -481,9 +482,8 @@ export class Terminal implements vscode.Terminal {
 					open: () => {
 						const resolveBufferFlush = (flushData, isError) => {
 							const prompt =  /(PS )(.*)(> )/i.exec(flushData.raw);
-							//TODO: finish this :)
-							const linefeeds = /^.+?(?!\r)\n/g.exec(flushData.masked);
-							let displayText = flushData.masked;
+							// Our terminal needs normalized line endings.
+							let displayText = eol.crlf(flushData.masked);
 
 							// The first time a terminal is opened, there will be a prompt (initial) as well as the command output.
 							// As such, our parsing logic is a little different.

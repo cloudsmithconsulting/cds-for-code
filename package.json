@@ -470,6 +470,7 @@
 	},
 	"dependencies": {
 		"adal-node": "^0.2.1",
+		"eol": "^0.9.1",
 		"httpntlm": "^1.7.6",
 		"jsoneditor": "^7.1.0",
 		"lodash": "^4.17.15",
