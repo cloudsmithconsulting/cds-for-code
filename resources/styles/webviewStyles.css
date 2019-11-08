@@ -60,7 +60,8 @@ table>tbody>tr:nth-child(odd) {
 
 .tab__content,
 .field-container,
-.crmsvcutil-row {
+.crmsvcutil-row,
+.field {
     animation: fadeEffect 1s; /* Fading effect takes 1 second */
 }
   

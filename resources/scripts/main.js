@@ -1,15 +1,29 @@
 // this will happen when the script is loaded
 (function() {
     let currentVsCodeApi;
+    
     // cloudsmith utilities
     const CloudSmith = window.CloudSmith = {
         acquireVsCodeApi: function() {
             currentVsCodeApi = currentVsCodeApi || acquireVsCodeApi();
             return currentVsCodeApi;
         },
-        Controls: {
-            getRadioButtonValue: function(radioButtonName) {
-                return $(`[name="${radioButtonName}"]:checked`).val();
+        ErrorPanel: {
+            hide: function () {
+                $("#errorPanel").hide();
+            },
+            showError: function(messages) {
+                if (messages.length > 0) {
+                    // build and inject error message
+                    const errorMessage = `&nbsp;&nbsp;-&nbsp;${messages.join("<br/>&nbsp;&nbsp;-&nbsp;")}`
+                    // build and inject error message
+                    $("#errorMessage").html(errorMessage);
+                    // show this panel
+                    $("#errorPanel").show();
+                } else {
+                    // no errors, hide the panel
+                    $("#errorPanel").hide();
+                }
             }
         },
         Tabs: {

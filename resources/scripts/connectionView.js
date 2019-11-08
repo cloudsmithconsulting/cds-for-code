@@ -15,17 +15,10 @@
                     setInitialState(message.message);
                     break;
                 case "connectionError":
-                    showErrorMessage(message.message);
+                    CloudSmith.ErrorPanel.showError([`${message.message}`]);
             }
         });
     });
-
-    function showErrorMessage(message) {
-        // build and inject error message
-        $("#errorMessage").html(message);
-        // show this panel
-        $("#errorPanel").show();
-    }
 
     function setInitialState(message) {
         const $title = $("#title");
@@ -86,15 +79,10 @@
                 }
             }
             
-            if (messages.length > 0) {
-                // build and inject error message
-                const errorMessage = `&nbsp;&nbsp;-&nbsp;${messages.join("<br/>&nbsp;&nbsp;-&nbsp;")}`
-                showErrorMessage(errorMessage);
-            } else {
-                // no errors, hide the panel
-                $("#errorPanel").hide();
-            }
-    
+            // show errors
+            CloudSmith.ErrorPanel.showError(messages);
+
+            // if false, we have errors
             return messages.length === 0;
         }
 

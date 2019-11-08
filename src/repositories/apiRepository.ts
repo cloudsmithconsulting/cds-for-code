@@ -178,11 +178,11 @@ export default class ApiRepository
     public retrieveSdkMessages() {
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessages",
-            select: ["sdkmessageid", "name", "autotransact", "availability", "categoryname", "isactive", "ismanaged", "isprivate", "isreadonly", "template", "workflowsdkstepenabled"]
+            select: ["sdkmessageid", "name", "autotransact", "availability", "categoryname", "isactive", "isprivate", "isreadonly", "template", "workflowsdkstepenabled"]
         };
 
         return this.webapi.retrieveAllRequest(request)
-            .then(response => response.value);
+            .then(response => response.value ? new TS.Linq.Enumerator(response.value).orderBy(e => e["name"]).toArray() : []);
     }
 
     public retrieveSdkMessageDetails(sdkMessageId:string) {
