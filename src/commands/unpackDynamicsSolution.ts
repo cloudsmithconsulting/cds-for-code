@@ -25,7 +25,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				vscode.commands.executeCommand(cs.dynamics.powerShell.unpackSolution, undefined, folder.fsPath);
 			}),
 
-			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolution, async (config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string) => { // Match name of command to package.json command
+			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolution, async (config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string, logFile?:string, mappingFile?:string, templateResourceCode?:string, includeResourceFiles?:boolean, allowDelete:boolean = true) => { // Match name of command to package.json command
                 // setup configurations
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
                 const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
@@ -38,10 +38,10 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a Solution to unpack", true);
 				if (!solution) { return; }
 
-				if (!folder && map) {
+				if (map) {
 					const mapping = map.getPath(config.orgId, solution.solutionid);
 
-					if (mapping && mapping.path) {
+					if (mapping && mapping.path && !folder) {
 						folder = mapping.path;
 					}
 
@@ -50,7 +50,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 					}
 				} 
 
-				folder = folder || await QuickPicker.pickWorkspaceRoot(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true);
+				folder = folder || await QuickPicker.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true);
 				if (Utilities.IsNullOrEmpty(folder)) {
 					vscode.window.showInformationMessage("You must have at least one workspace open to unpack solutions.");
 
@@ -61,6 +61,16 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				
 				toolsPath = toolsPath || coreToolsRoot;
 				if (Utilities.IsNull(toolsPath)) { return; }
+
+				if (Utilities.IsNullOrEmpty(logFile)) { 
+					if ((await QuickPicker.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
+						let dateString = new Date().toISOString();
+						dateString = dateString.substr(0, dateString.length - 5);
+						dateString = dateString.replace("T","-").replace(":","").replace(":", "");
+	
+						logFile = path.join(context.globalStoragePath, `/logs/unpack-${solution}-${dateString}.log`); 
+					}
+				}
 
 				const splitUrl = Utilities.RemoveTrailingSlash(config.webApiUrl).split("/");
 				const orgName = config.domain ? splitUrl[splitUrl.length - 1] : config.orgName;
@@ -80,10 +90,20 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 							.text(`-ToolsPath "${toolsPath}" `)
 							.text(`-Credential (New-Object System.Management.Automation.PSCredential ("${config.username}", (ConvertTo-SecureString "`)
 							.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
-							.text(`" -AsPlainText -Force))) `))
+							.text(`" -AsPlainText -Force)))`)
+							.if(() => !Utilities.IsNullOrEmpty(mappingFile), c => c.text(` -MapFile "${mappingFile}"`))
+							.if(() => !Utilities.IsNullOrEmpty(logFile), c => c.text(` -LogFile "${logFile}"`))
+							.if(() => !Utilities.IsNullOrEmpty(templateResourceCode), c => c.text(` -TemplateResourceLanguageCode "${templateResourceCode}"`))
+							.if(() => includeResourceFiles, c => c.text(` -IncludeResourceFiles`))
+							.if(() => allowDelete, c => c.text(` -AllowDelete`)))
 							.then(tc => { 
-									map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename));
-									map.saveToWorkspace(context);
+								map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename));
+								map.saveToWorkspace(context);
+							}).then(() => {
+								if (logFile) {
+									vscode.workspace.openTextDocument(logFile)
+										.then(d => vscode.window.showTextDocument(d));	
+								}
 							});
 					});
 			})

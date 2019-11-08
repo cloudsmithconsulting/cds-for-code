@@ -1,0 +1,58 @@
+<img class="branding" src="#{images['cloudsmith-logo-only-50px.png']}" alt="CloudSmith Conulting" />
+
+<h1 id="title">
+    #{viewTitle}
+</h1>
+
+<blockquote class="panel_error" id="errorPanel" hidden>
+    <div class="panel__text">
+        <h4>Oops! Slight problem</h4>
+        <span id="errorMessage"></span>
+    </div>
+</blockquote>
+
+<!-- Tab styles come from the default webViewStyles.css -->
+<!-- viewRenderer.addStyleSheet('webviewStyles.css') -->
+<!-- changeTab() function comes from tabs.js -->
+<!-- viewRenderer.addScript('tabs.js') -->
+<ul class="tab" id="tabs">
+    <li class="tab__item tab__item--active" data-tab="GettingStarted">
+        Getting Started
+    </li>
+    <li class="tab__item" data-tab="Plugins">
+        Plugins
+    </li>
+    <li class="tab__item" data-tab="WebResources">
+        Web Resources
+    </li>
+    <li class="tab__item" data-tab="CodeGeneration">
+        Code Generation
+    </li>
+</ul>
+
+<div id="GettingStarted" class="tab__content">
+    <h2>Getting started</h2>
+    <p>
+        This extension for Code allows developers to work with their solutions and data in Dynamics 365 Customer Engagement.  You'll want to do these things to get started.
+    </p>
+    <ol>
+        <li>
+            <a id="ConnectLink" href="#">Connect to a Dynamics 365 instance</a>
+        </li>
+        <li>
+            <a id="OpenWorkspaceLink" href="#">Open a workspace</a>
+        </li>
+    </ol>
+</div>
+
+<div id="Plugins" class="tab__content" hidden>
+
+</div>
+
+<div id="WebResources" class="tab__content" hidden>
+
+</div>
+
+<div id="CodeGeneration" class="tab__content" hidden>
+
+</div>

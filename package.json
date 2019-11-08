@@ -1,9 +1,9 @@
 {
 	"name": "dynamics-365-toolkit",
-	"displayName": "dynamics-365-toolkit",
+	"displayName": "Dynamics365 for Code",
 	"publisher": "cloudsmith",
-	"description": "A toolkit for working with Dynamics 365 within VSCode by CloudSmith Consulting LLC.",
-	"version": "0.1.0",
+	"description": "Code extension providing development capabilities for Dynamics 365 written by CloudSmith Consulting LLC",
+	"version": "0.1.1",
 	"preview": true,
 	"engines": {
 		"vscode": "^1.38.0"
@@ -16,17 +16,23 @@
 	"keywords": [
 		"Dynamics",
 		"Dynamics 365",
+		"Dynamics 365 Customer Engagement",
+		"XRM",
 		"CRM"
 	],
 	"activationEvents": [
+		"onFileSystem:file",
 		"onView:cs.dynamics.viewContainers.connections",
 		"onCommand:cs.dynamics.controls.treeView.editConnection",
-		"onCommand:cs.dynamics.controls.explorer.registerPluginFile",
+		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFolder",
+		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFile",
 		"onCommand:cs.dynamics.controls.explorer.packSolutionFromFolder",
+		"onCommand:cs.dynamics.controls.explorer.registerPluginFile",
 		"onCommand:cs.dynamics.controls.explorer.unpackSolutionToFolder",
 		"onCommand:cs.dynamics.deployment.addSolutionComponent",
 		"onCommand:cs.dynamics.deployment.removeSolutionComponent",
 		"onCommand:cs.dynamics.deployment.registerPluginAssembly",
+		"onCommand:cs.dynamics.deployment.updateSolutionMapping",
 		"onCommand:cs.dynamics.extension.clearTerminal",
 		"onCommand:cs.dynamics.extension.createProjectFromTemplate",
 		"onCommand:cs.dynamics.extension.createTerminal",
@@ -44,7 +50,7 @@
 	"contributes": {
 		"configuration": {
 			"type": "object",
-			"title": "Dynamics 365 CE VSCode Toolkit",
+			"title": "Dynamics 365 for Code",
 			"properties": {
 				"cs.dynamics.configuration.tools.sdkInstallPath": {
 					"type": "string",
@@ -86,6 +92,11 @@
 					"default": "true",
 					"description": "Show the Default Solution in the Dynamics explorer pane"
 				},
+				"cs.dynamics.configuration.explorer.showWelcomeExperience": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Show the welcome experience for Dynamics when you open a new workspace"
+				},
 				"cs.dynamics.configuration.templates.templatesDirectory": {
 					"type": "string",
 					"description": "Directory to read/store project template folders"
@@ -97,8 +108,8 @@
 				},
 				"cs.dynamics.configuration.templates.placeholderRegExp": {
 					"type": "string",
-					"default": "#{(\\w+)?}",
-					"description": "Regular expression for detecting placeholders (e.g. \"#{(\\w+?)}\").  The first capture group dictates the placeholder key."
+					"default": "${(\\w+)?}",
+					"description": "Regular expression for detecting placeholders (e.g. \"${(\\w+?)}\").  The first capture group dictates the placeholder key."
 				},
 				"cs.dynamics.configuration.templates.placeholders": {
 					"type": "object",
@@ -109,14 +120,14 @@
 		},
 		"commands": [
 			{
-				"command": "cs.dynamics.controls.pluginStep.open",
-				"title": "Create a new plugin processing step",
-				"category": "Dynamics 365 CE"
+				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
+				"title": "Generate Dynamics entity classes",
+				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.svcUtilConfig.configure",
-				"title": "Configure entity code generation from the CrmSvcUtil",
-				"category": "Dynamics 365 CE"
+				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
+				"title": "Generate Dynamics entity classes",
+				"category": "UserInterface"
 			},
 			{
 				"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
@@ -132,6 +143,21 @@
 				"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
 				"title": "Download Dynamics 365 solution here",
 				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.newWorkspace.open",
+				"title": "Get started in a new workspace",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.controls.pluginStep.open",
+				"title": "Create a new plugin processing step",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.controls.svcUtilConfig.configure",
+				"title": "Configure entity code generation from the CrmSvcUtil",
+				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.controls.treeView.refreshEntry",
@@ -195,6 +221,11 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.dynamics.controls.treeView.moveSolution",
+				"title": "Change local workspace folder",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.controls.treeView.openInApp",
 				"title": "Open in App",
 				"category": "UserInterface"
@@ -227,6 +258,11 @@
 			{
 				"command": "cs.dynamics.deployment.registerPluginAssembly",
 				"title": "Register or update a plugin assembly",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.deployment.updateSolutionMapping",
+				"title": "Create or update where Dynamics solutions are stored in this workspace",
 				"category": "Dynamics 365 CE"
 			},
 			{
@@ -310,6 +346,16 @@
 					"group": "projectTemplates@2"
 				},
 				{
+					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
+					"when": "explorerResourceIsFolder != true && resourceLangId == csharp || resourceLangId == vb",
+					"group": "generateCode@1"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
+					"when": "explorerResourceIsFolder",
+					"group": "generateCode@2"
+				},
+				{
 					"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
 					"when": "explorerResourceIsFolder",
 					"group": "zzz_azuretools_deploy@3"
@@ -377,6 +423,11 @@
 					"command": "cs.dynamics.controls.treeView.unpackSolution",
 					"group": "deployment@1",
 					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.treeView.moveSolution",
+					"group": "deployment@1",
+					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canMoveSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.addEntryToSolution",

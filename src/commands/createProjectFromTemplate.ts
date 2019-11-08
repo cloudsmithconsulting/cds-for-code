@@ -17,7 +17,7 @@ export default async function run(templateManager: ProjectTemplatesPlugin, args:
     let workspace = await QuickPicker.pickWorkspaceRoot(args);
 
     if (!workspace) {
-        vscode.window.showErrorMessage("No workspace selected");
+        vscode.window.showErrorMessage("You must select a workspace before you can create a project");
 
         return;
     }
@@ -26,7 +26,7 @@ export default async function run(templateManager: ProjectTemplatesPlugin, args:
     ExtensionConfiguration.updateConfiguration(cs.dynamics.configuration.templates._namespace);
 
     // create project
-    templateManager.createFromTemplate(workspace).then(
+    templateManager.createFromTemplate(workspace.fsPath).then(
         (template : string | undefined) => {
             if (template) {
                 vscode.window.showInformationMessage("Created project from template '" + template + "'");

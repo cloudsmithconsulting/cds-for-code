@@ -24,7 +24,7 @@ export default async function run(templateManager: ProjectTemplatesPlugin, args:
 	// load latest configuration
 	ExtensionConfiguration.updateConfiguration(cs.dynamics.configuration.templates._namespace);
 
-    templateManager.saveAsTemplate(workspace).then(
+    templateManager.saveAsTemplate(workspace.fsPath).then(
 		(template : string | undefined) => { 
 			if (template) {
 				vscode.window.showInformationMessage("Saved template '" + template + "'");

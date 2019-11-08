@@ -7,8 +7,9 @@ export namespace dynamics
     {
         public static readonly _namespace:string = "cs.dynamics.deployment";
         public static readonly addSolutionComponent:string = `${deployment._namespace}.addSolutionComponent`;
-        public static readonly removeSolutionComponent:string = `${deployment._namespace}.removeSolutionComponent`;
         public static readonly registerPluginAssembly:string = `${deployment._namespace}.registerPluginAssembly`;
+        public static readonly removeSolutionComponent:string = `${deployment._namespace}.removeSolutionComponent`;
+        public static readonly updateSolutionMapping:string = `${deployment._namespace}.updateSolutionMapping`;
     }
 
     // tslint:disable-next-line: class-name
@@ -44,7 +45,7 @@ export namespace dynamics
         public static readonly packSolution:string = `${powerShell._namespace}.packSolution`;
         public static readonly unpackSolution:string = `${powerShell._namespace}.unpackSolution`;
     }
-
+    
     // tslint:disable-next-line: class-name
     export class viewContainers
     {
@@ -58,6 +59,7 @@ export namespace dynamics
         public static readonly _namespace:string = "cs.dynamics.views";
         public static readonly connectionView:string = `${viewContainers._namespace}.connectionView`;
         public static readonly jsonInspectorView:string = `${viewContainers._namespace}.jsonInspectorView`;
+        public static readonly newWorkspaceView:string = `${viewContainers._namespace}.newWorkspaceView`;
         public static readonly pluginStepView:string = `${viewContainers._namespace}.pluginStepView`;
         public static readonly svcUtilConfigView:string = `${viewContainers._namespace}.svcUtilConfigView`;
     }
@@ -65,11 +67,11 @@ export namespace dynamics
     export namespace configuration
     {
         // tslint:disable-next-line: class-name
-        export class iconThemes 
+        export class explorer
         {
-            public static readonly _namespace:string = "cs.dynamics.configuration.iconThemes";
-            public static readonly default:string = `${iconThemes._namespace}.default`;
-            public static readonly selectedTheme:string = `${iconThemes._namespace}.selectedTheme`;
+            public static readonly _namespace:string = "cs.dynamics.configuration.explorer";
+            public static readonly showDefaultSolution:string = `${explorer._namespace}.showDefaultSolution`;
+            public static readonly showWelcomeExperience:string = `${explorer._namespace}.showWelcomeExperience`;
         }
 
         // tslint:disable-next-line: class-name
@@ -81,17 +83,11 @@ export namespace dynamics
         }
 
         // tslint:disable-next-line: class-name
-        export class workspaceState
+        export class iconThemes 
         {
-            public static readonly _namespace:string = "cs.dynamics.configuration.workspaceState";
-            public static readonly solutionMap:string = `${workspaceState._namespace}:solutionMap`;
-        }
-
-        // tslint:disable-next-line: class-name
-        export class explorer
-        {
-            public static readonly _namespace:string = "cs.dynamics.configuration.explorer";
-            public static readonly showDefaultSolution:string = `${explorer._namespace}.showDefaultSolution`;
+            public static readonly _namespace:string = "cs.dynamics.configuration.iconThemes";
+            public static readonly default:string = `${iconThemes._namespace}.default`;
+            public static readonly selectedTheme:string = `${iconThemes._namespace}.selectedTheme`;
         }
 
         // tslint:disable-next-line: class-name
@@ -112,23 +108,25 @@ export namespace dynamics
             public static readonly updateSource:string = `${tools._namespace}.updateSource`;
             public static readonly updateChannel:string = `${tools._namespace}.updateChannel`;
         }
+
+        // tslint:disable-next-line: class-name
+        export class workspaceState
+        {
+            public static readonly _namespace:string = "cs.dynamics.configuration.workspaceState";
+            public static readonly solutionMap:string = `${workspaceState._namespace}:solutionMap`;
+        }
     }
 
     export namespace controls
     {
         // tslint:disable-next-line: class-name
-        export class svcUtilConfig
-        {
-            public static readonly _namespace:string = "cs.dynamics.controls.svcUtilConfig";
-            public static readonly configure:string = `${svcUtilConfig._namespace}.configure`;
-        }
-
-        // tslint:disable-next-line: class-name
         export class explorer
         {
             public static readonly _namespace:string = "cs.dynamics.controls.explorer";
-            public static readonly registerPluginFile:string = `${explorer._namespace}.registerPluginFile`;
+            public static readonly generateEntityCodeToFolder:string = `${explorer._namespace}.generateEntityCodeToFolder`;
+            public static readonly generateEntityCodeToFile:string = `${explorer._namespace}.generateEntityCodeToFile`;
             public static readonly packSolutionFromFolder:string = `${explorer._namespace}.packSolutionFromFolder`;
+            public static readonly registerPluginFile:string = `${explorer._namespace}.registerPluginFile`;
             public static readonly unpackSolutionToFolder:string = `${explorer._namespace}.unpackSolutionToFolder`;
         }
 
@@ -137,6 +135,13 @@ export namespace dynamics
         {
             public static readonly _namespace:string = "cs.dynamics.controls.jsonInspector";
             public static readonly inspect:string = `${jsonInspector._namespace}.inspect`;
+        }
+
+        // tslint:disable-next-line: class-name
+        export class newWorkspace
+        {
+            public static readonly _namespace:string = "cs.dynamics.controls.newWorkspace";
+            public static readonly open:string = `${jsonInspector._namespace}.open`;
         }
 
         // tslint:disable-next-line: class-name
@@ -155,6 +160,13 @@ export namespace dynamics
         }
 
         // tslint:disable-next-line: class-name
+        export class svcUtilConfig
+        {
+            public static readonly _namespace:string = "cs.dynamics.controls.svcUtilConfig";
+            public static readonly configure:string = `${svcUtilConfig._namespace}.configure`;
+        }
+
+        // tslint:disable-next-line: class-name
         export class treeView
         {
             public static readonly _namespace:string = "cs.dynamics.controls.treeView";
@@ -166,6 +178,7 @@ export namespace dynamics
             public static readonly editConnection:string = `${treeView._namespace}.editConnection`;
             public static readonly editEntry:string = `${treeView._namespace}.editEntry`;
             public static readonly inspectEntry:string = `${treeView._namespace}.inspectEntry`;
+            public static readonly moveSolution:string = `${treeView._namespace}.moveSolution`;
             public static readonly openInApp:string = `${treeView._namespace}.openInApp`;
             public static readonly openInBrowser:string = `${treeView._namespace}.openInBrowser`;
             public static readonly openInEditor:string = `${treeView._namespace}.openInEditor`;

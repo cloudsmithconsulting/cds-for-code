@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import * as cs from '../cs';
+import * as path from 'path';
 import DiscoveryRepository from "../repositories/discoveryRepository";
 import { TS } from 'typescript-linq';
 import ApiRepository from "../repositories/apiRepository";
@@ -54,29 +55,92 @@ export default class QuickPicker {
      * Selects a workspace folder.  If args contains an fsPath, then it uses
      * that.  Otherwise, for single root workspaces it will select the root directory,
      * or for multi-root will present a chooser to select a workspace.
-     * @param args 
+     * @param defaultUri 
      */
-    public static async pickWorkspaceRoot(args?: any, placeHolder?: string, ignoreFocusOut: boolean = true) : Promise<string> {
-        let workspace : string = "";
+    public static async pickWorkspaceRoot(defaultUri?: any, placeHolder?: string, ignoreFocusOut: boolean = true) : Promise<vscode.Uri> {
+        let workspace: vscode.Uri;
 
         // check arguments
-        if (args && args.fsPath) {
-            workspace = args.fsPath;
+        if (defaultUri && defaultUri.fsPath) {
+            workspace = defaultUri;
         } else if (vscode.workspace.workspaceFolders) {
             // single or multi-root
             if (vscode.workspace.workspaceFolders.length === 1) {
-                workspace = vscode.workspace.workspaceFolders[0].uri.fsPath;
+                workspace = vscode.workspace.workspaceFolders[0].uri;
             } else if (vscode.workspace.workspaceFolders.length > 1) {
                 // choose workspace
                 let ws = await vscode.window.showWorkspaceFolderPick({ placeHolder, ignoreFocusOut });
 
                 if (ws) {
-                    workspace = ws.uri.fsPath;
+                    workspace = ws.uri;
                 }
             }
         }
 
         return workspace;
+    }
+
+    /**
+     * Selects a file within a workspace folder.  If args contains an fsPath, then it uses
+     * that.  Otherwise, for single root workspaces it will select the root directory,
+     * or for multi-root will present a chooser to select a workspace.
+     * @param defaultUri 
+     */
+    public static async pickWorkspaceFile(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true): Promise<string> {
+        return this.pickWorkspaceFileOrfolder(defaultUri, placeHolder, ignoreFocusOut, true, false);
+    }
+
+    public static async pickWorkspaceFolder(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true): Promise<string> {
+        return this.pickWorkspaceFileOrfolder(defaultUri, placeHolder, ignoreFocusOut, false, true);
+    }
+
+    private static async pickWorkspaceFileOrfolder(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canPickFiles:boolean = true, canPickFolders:boolean = true): Promise<string> {
+        defaultUri = defaultUri || await this.pickWorkspaceRoot(undefined, placeHolder, ignoreFocusOut);
+        if (!defaultUri) { return; }
+
+        let choices:QuickPickOption[] = [];
+
+        if (canPickFolders) {
+            choices.push(new QuickPickOption(".", undefined, "Use current folder", defaultUri));
+        }
+
+        if (!new TS.Linq.Enumerator(vscode.workspace.workspaceFolders).any(f => f.uri.fsPath === defaultUri.fsPath)) {
+            choices.push(new QuickPickOption("..", undefined, "Use parent folder", defaultUri));
+        }
+
+        return await vscode.workspace.fs.readDirectory(defaultUri)
+            .then(results => {
+                results.forEach(r => {
+                    if ((canPickFiles && r[1] === vscode.FileType.File) || (r[1] === vscode.FileType.Directory)) { 
+                        choices.push(new QuickPickOption(r[0], undefined, undefined, r)); 
+                    } 
+                }); 
+
+                return new TS.Linq.Enumerator(choices).orderBy(c => c.label.toLowerCase()).toArray();
+            }).then(choices => {
+                return this.pick(placeHolder, ...choices);
+            }).then(choice => {
+                if (choice) {
+                    let newUri;
+                    if (choice.label === ".") {
+                        return defaultUri.fsPath;
+                    } else if (choice.label === "..") {
+                        newUri = defaultUri.with({ path: defaultUri.path.substr(0, defaultUri.path.lastIndexOf("/")) });
+                    } else {
+                        newUri = defaultUri.with({ path: `${defaultUri.path.endsWith("/") ? defaultUri.path : defaultUri.path + "/" }${choice.label}` }); 
+                    }
+
+                    if (newUri) {
+                        if (choice.context[1] === vscode.FileType.Directory || choice.label === "..") {
+                            return this.pickWorkspaceFileOrfolder(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders);
+                        } else {
+                            return newUri.fsPath;
+                        }
+                    }
+                }
+
+                return null;
+            });
     }
 
     public static async pickAnyFolder(defaultUri?:vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<vscode.Uri | vscode.Uri[]> {
