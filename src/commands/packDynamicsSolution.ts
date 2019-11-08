@@ -90,11 +90,13 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 				managed = managed || false;
 
 				if (Utilities.IsNullOrEmpty(logFile)) { 
-					let dateString = new Date().toISOString();
-					dateString = dateString.substr(0, dateString.length - 5);
-					dateString = dateString.replace("T","-").replace(":","").replace(":", "");
-
-					logFile = path.join(context.globalStoragePath, `/logs/deploy-${solution}-${dateString}.log`); 
+					if ((await QuickPicker.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
+						let dateString = new Date().toISOString();
+						dateString = dateString.substr(0, dateString.length - 5);
+						dateString = dateString.replace("T","-").replace(":","").replace(":", "");
+	
+						logFile = path.join(context.globalStoragePath, `/logs/deploy-${solution}-${dateString}.log`); 
+					}
 				}
 
 				const splitUrl = Utilities.RemoveTrailingSlash(config.webApiUrl).split("/");
@@ -105,7 +107,7 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 					serverUrl = serverUrl.substring(0, serverUrl.length - 1);
 				}
 				
-                await DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
+                return DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
                     .then(async terminal => { 
 						return await terminal.run(new TerminalCommand(`.\\Deploy-XrmSolution.ps1 `)
 							.text(`-ServerUrl "${serverUrl}" `)
@@ -120,13 +122,14 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 							.if(() => !Utilities.IsNullOrEmpty(logFile), c => c.text(` -LogFile "${logFile}"`))
 							.if(() => includeResourceFiles, c => c.text(` -IncludeResourceFiles`))
 							.if(() => !Utilities.IsNullOrEmpty(solutionPath), c => c.text(` -SaveSolution "${solutionPath}"`))
-							.if(() => managed, c => c.text(` -Managed`)));
+							.if(() => managed, c => c.text(` -Managed`)))
+							.then(() => {
+								if (logFile) {
+									vscode.workspace.openTextDocument(logFile)
+										.then(d => vscode.window.showTextDocument(d));	
+								}
+							});
 					});
-
-				if (logFile) {
-					vscode.workspace.openTextDocument(logFile)
-						.then(d => vscode.window.showTextDocument(d));	
-				}
 			})
 		);
 	}

@@ -38,10 +38,10 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a Solution to unpack", true);
 				if (!solution) { return; }
 
-				if (!folder && map) {
+				if (map) {
 					const mapping = map.getPath(config.orgId, solution.solutionid);
 
-					if (mapping && mapping.path) {
+					if (mapping && mapping.path && !folder) {
 						folder = mapping.path;
 					}
 
@@ -63,11 +63,13 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				if (Utilities.IsNull(toolsPath)) { return; }
 
 				if (Utilities.IsNullOrEmpty(logFile)) { 
-					let dateString = new Date().toISOString();
-					dateString = dateString.substr(0, dateString.length - 5);
-					dateString = dateString.replace("T","-").replace(":","").replace(":", "");
-
-					logFile = path.join(context.globalStoragePath, `/logs/unpack-${solution.uniquename}-${dateString}.log`); 
+					if ((await QuickPicker.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
+						let dateString = new Date().toISOString();
+						dateString = dateString.substr(0, dateString.length - 5);
+						dateString = dateString.replace("T","-").replace(":","").replace(":", "");
+	
+						logFile = path.join(context.globalStoragePath, `/logs/unpack-${solution}-${dateString}.log`); 
+					}
 				}
 
 				const splitUrl = Utilities.RemoveTrailingSlash(config.webApiUrl).split("/");
@@ -78,7 +80,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 					serverUrl = serverUrl.substring(0, serverUrl.length - 1);
 				}
 
-				await DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
+				return DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
 					.then(async terminal => { 
 						return await terminal.run(new TerminalCommand(`.\\Get-XrmSolution.ps1 `)
 							.text(`-ServerUrl "${serverUrl}" `)
@@ -97,13 +99,13 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 							.then(tc => { 
 								map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename));
 								map.saveToWorkspace(context);
+							}).then(() => {
+								if (logFile) {
+									vscode.workspace.openTextDocument(logFile)
+										.then(d => vscode.window.showTextDocument(d));	
+								}
 							});
 					});
-
-					if (logFile) {
-						vscode.workspace.openTextDocument(logFile)
-							.then(d => vscode.window.showTextDocument(d));	
-					}
 			})
 		);
 	}
