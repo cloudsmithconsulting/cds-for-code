@@ -349,7 +349,8 @@ export default class WebApiRequest
                 workstation: options.config.workstation || '',
                 domain: options.config.domain || '',
                 body: data,
-                headers: headers
+                headers: headers,
+                timeout: options.config.timeout
             }, function (error, res){               
                 console.log(`WebAPI: [${method}] ${uri}: return ${res.statusCode} - ${res.body.length} byte(s)`);
 

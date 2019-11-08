@@ -141,6 +141,9 @@ class ConnectionView extends View {
             config.password = null;
         }
         
+        // set a timeout if it doesn't exist
+        config.timeout = config.timeout || (1000 * 3); // 3 seconds
+        // construct the api repo
         const api = new DiscoveryRepository(config);
         
         // try a discovery request
