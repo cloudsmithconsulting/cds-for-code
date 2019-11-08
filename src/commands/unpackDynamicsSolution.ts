@@ -17,8 +17,12 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 		this.workspaceConfiguration = config;
 		
 		context.subscriptions.push(
-			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolutionFromExplorer, async (item:any) => {
+			vscode.commands.registerCommand(cs.dynamics.controls.treeView.unpackSolution, async (item:any) => {
 				vscode.commands.executeCommand(cs.dynamics.powerShell.unpackSolution, item.config, undefined, item.context);
+			}),
+
+			vscode.commands.registerCommand(cs.dynamics.controls.explorer.unpackSolutionToFolder, async (folder?:vscode.Uri, ...arg2:any) => {
+				vscode.commands.executeCommand(cs.dynamics.powerShell.unpackSolution, undefined, folder.fsPath);
 			}),
 
 			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolution, async (config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string) => { // Match name of command to package.json command
@@ -67,8 +71,8 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				}
 
 				return DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
-					.then(terminal => { 
-						return terminal.run(new TerminalCommand(`.\\Get-XrmSolution.ps1 `)
+					.then(async terminal => { 
+						return await terminal.run(new TerminalCommand(`.\\Get-XrmSolution.ps1 `)
 							.text(`-ServerUrl "${serverUrl}" `)
 							.text(`-OrgName "${orgName}" `)
 							.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
