@@ -106,6 +106,14 @@ export class TerminalCommand {
 		return this;
 	}
 
+	if(expression:() => boolean, action: (command:TerminalCommand) => void): TerminalCommand {
+		if (expression()) {
+			action(this);
+		}
+
+		return this;
+	}
+
 	text(text:string): TerminalCommand {
 		if (this._maskFlag) {
 			this._command += Masker.maskSeperator;
