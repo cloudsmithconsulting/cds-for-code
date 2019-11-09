@@ -204,7 +204,7 @@ export default class RequestConverter {
             url = baseUrl + url;
 
             if (request._additionalUrl) {
-                if (url) {
+                if (url && !url.endsWith("/")) {
                     url += '/';
                 }
 
