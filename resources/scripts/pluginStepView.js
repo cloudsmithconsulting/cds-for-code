@@ -1,10 +1,9 @@
-// import { arrayify } from "tslint/lib/utils";
-
 // This script will be run within the webview itself
 // It cannot access the main VS Code APIs directly.
 (function () {
     const vscode = CloudSmith.acquireVsCodeApi();
     window.sdkMessages = [];
+    window.entityTypeCodes = [];
 
     // Handle messages sent from the extension to the webview
     window.addEventListener("message", event => {
@@ -17,42 +16,33 @@
         }
     });
 
-    function setMessageAutoComplete(sdkMessages) {
-        window.sdkMessages = _.map(sdkMessages, m => m.name);
-    };
-
-    function setInitialState(viewModel) {
-        setMessageAutoComplete(viewModel.sdkMessages);
-        
-        if (viewModel.step) {
-            
-        }
-    }
-
-    $(function() {
-        const $autocompleteItems = $(".autocomplete-items");
-        let currentFocus = -1;
-        $("#Message").keyup(function(e) {
+    let currentFocus = {};
+    function initializeAutoComplete($textInput, selectionArray) {
+        const inputId = $textInput.attr("id");
+        currentFocus[inputId] = -1;
+        $textInput.keyup(function(e) {
             const lookup = this.value;
+            // find the items div
+            const $autocompleteItems = $textInput.next(".autocomplete-items")
             // clear all previous items
             $("div", $autocompleteItems).remove();
             // get out if there's no work to do
             if (CloudSmith.Utilities.isNullOrEmpty(lookup)) {
-                currentFocus = -1;
+                currentFocus[inputId] = -1;
                 return; 
             }
             // find all the matching items and append them to the
             // autocomplete
-            _.each(window.sdkMessages, message => {
+            _.each(selectionArray, selection => {
                 // see if we have a match
-                if (message.substr(0, lookup.length).toLowerCase() === lookup.toLowerCase()) {
+                if (selection.substr(0, lookup.length).toLowerCase() === lookup.toLowerCase()) {
                     const $button = $("<button class='button button--primary'>");
-                    $button.val(message);
+                    $button.val(selection);
                     $button.append("<span class='iconify' data-icon='fa:envelope'></span>");
-                    $button.append(`&nbsp;<strong>${message.substr(0, lookup.length)}</strong>${message.substr(lookup.length)}`);
+                    $button.append(`&nbsp;<strong>${selection.substr(0, lookup.length)}</strong>${selection.substr(lookup.length)}`);
 
                     $button.click(function() {
-                        $("#Message").val(this.value);
+                        $textInput.val(this.value);
                         // clear all previous items
                         $("div", $autocompleteItems).remove();
                     });
@@ -66,25 +56,56 @@
             if (e.keyCode == 40) {
                 /*If the arrow DOWN key is pressed,
                 increase the currentFocus variable:*/
-                currentFocus++;
+                currentFocus[inputId]++;
                 /*and and make the current item more visible:*/
                 $("button", $autocompleteItems).removeClass("button--active");
-                $("button", $autocompleteItems).eq(currentFocus).addClass("button--active");
-              } else if (e.keyCode == 38) { //up
+                $("button", $autocompleteItems).eq(currentFocus[inputId]).addClass("button--active");
+                } else if (e.keyCode == 38) { //up
                 /*If the arrow UP key is pressed,
                 decrease the currentFocus variable:*/
-                currentFocus--;
+                currentFocus[inputId]--;
                 /*and and make the current item more visible:*/
                 $("button", $autocompleteItems).removeClass("button--active");
-                $("button", $autocompleteItems).eq(currentFocus).addClass("button--active");
-              } else if (e.keyCode == 13) {
+                $("button", $autocompleteItems).eq(currentFocus[inputId]).addClass("button--active");
+                } else if (e.keyCode == 13) {
                 /*If the ENTER key is pressed, prevent the form from being submitted,*/
                 e.preventDefault();
-                if (currentFocus > -1) {
-                  /*and simulate a click on the "active" item:*/
-                  $("button", $autocompleteItems).eq(currentFocus).click();
+                if (currentFocus[inputId] > -1) {
+                    /*and simulate a click on the "active" item:*/
+                    $("button", $autocompleteItems).eq(currentFocus[inputId]).click();
                 }
-              }
+            }
+        });
+    }
+
+    function setInitialState(viewModel) {
+        window.sdkMessages = _.map(viewModel.sdkMessages, m => m.name);
+        window.entityTypeCodes = _.map(viewModel.entityTypeCodes, e => e.LogicalName);
+
+        // initialize autocomplete for the text boxes
+        initializeAutoComplete($("#Message"), window.sdkMessages);
+        initializeAutoComplete($("#PrimaryEntity"), window.entityTypeCodes);
+        
+        if (viewModel.step) {
+            
+        }
+    }
+
+    $(function() {
+        // wire change of inputs that name and describe step automatically
+        $("#Message,#PrimaryEntity,#EventHandler").change(function() {
+            // doing this vanilla js so we don't incur the jquery overhead
+            const message = document.getElementById("Message").value;
+            const primaryEntity = document.getElementById("PrimaryEntity").value;
+            const eventHandler = document.getElementById("EventHandler").value;
+
+            if (!CloudSmith.Utilities.isNullOrEmpty(message) 
+                && !CloudSmith.Utilities.isNullOrEmpty(primaryEntity)
+                && !CloudSmith.Utilities.isNullOrEmpty(eventHandler)) {
+                    const stepName = `${eventHandler.replace("(Plugin) ", "")}: ${message} of ${primaryEntity}`;
+                    document.getElementById("StepName").value = stepName;
+                    document.getElementById("Description").value = stepName;
+                }
         });
 
         function validateForm(settings) {
@@ -92,8 +113,9 @@
 
             // put validations in here
             if (CloudSmith.Utilities.isNullOrEmpty(settings.message)) { messages.push('The Message is required'); }
-            if (window.sdkMessages.indexOf(cofig.message) === -1) { messages.push('The Message has to exist in message selection'); }
+            if (window.sdkMessages.indexOf(settings.message) === -1) { messages.push('The Message has to exist in message selection'); }
             if (CloudSmith.Utilities.isNullOrEmpty(settings.primaryEntity)) { messages.push('The Primary Entity is required'); }
+            if (window.entityTypeCodes.indexOf(settings.primaryEntity) === -1) { messages.push('The Primary Entity has to exist in message selection'); }
             if (CloudSmith.Utilities.isNullOrEmpty(settings.secondEntity)) { messages.push('The Second Entity is required'); }
             if (CloudSmith.Utilities.isNullOrEmpty(settings.filteringAttributes)) { messages.push('The Filtering Attributes is required'); }
             if (CloudSmith.Utilities.isNullOrEmpty(settings.eventHandler)) { messages.push('The Event Handler is required'); }
@@ -120,6 +142,7 @@
                 stepName: $("#StepName").val(),
                 userContext: $("#UserContext").val(),
                 executionOrder: $("#ExecutionOrder").val(),
+                description: $("#Description").val(),
                 executionPipeline: $(`[name="ExecutionPipeline"]:checked`).val(),
                 statusCode: $("#StatusCode").val() && $("#StatusCode").val().length > 0,
                 executionMode: $(`[name="ExecutionMode"]:checked`).val(),
