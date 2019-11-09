@@ -36,39 +36,41 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
 
                 return DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Tools\\CloudSmith.Dynamics365.AssemblyScanner\\"))
                     .then(async terminal => { 
-                        return await terminal.run(new TerminalCommand(`.\\CloudSmith.Dynamics365.AssemblyScanner.exe "${file.fsPath}"`))
+                        return await terminal.run(new TerminalCommand(`.\\AssemblyScanner.exe "${file.fsPath}"`))
                             .then(tc => {
-                                if (tc.command.indexOf("CloudSmith.Dynamics365.AssemblyScanner.exe") !== -1) {
-                                    const assemblyInfo = JSON.parse(tc.output);
-                                    const types:any[] = new TS.Linq.Enumerator(assemblyInfo.Types).where(t => new TS.Linq.Enumerator((<any>t).Interfaces).any(i => i === "Microsoft.Xrm.Sdk.IPlugin")).toArray();
-                                    let assemblyId:string;
-    
-                                    if (!types || types.length === 0) {
-                                        vscode.window.showWarningMessage(`The plugin assembly could not find any valid Plugin classes when scanning '${file.fsPath}'`);
+                                const assemblyInfo = JSON.parse(tc.output);
+                                const types:any[] = new TS.Linq.Enumerator(assemblyInfo.Types).where(t => new TS.Linq.Enumerator((<any>t).Interfaces).any(i => i === "Microsoft.Xrm.Sdk.IPlugin")).toArray();
+                                let assemblyId:string;
 
-                                        return;
-                                    }
+                                if (!types || types.length === 0) {
+                                    vscode.window.showWarningMessage(`The plugin assembly could not find any valid Plugin classes when scanning '${file.fsPath}'`);
 
-                                    return api.uploadPluginAssembly(file, pluginAssembly ? pluginAssembly.pluginassemblyid : null)
-                                        .then(pluginAssemblyId => {
-                                            assemblyId = pluginAssemblyId;
-    
-                                            if (!pluginAssembly && solution) {
-                                                return api.addSolutionComponent(solution, pluginAssemblyId, DynamicsWebApi.SolutionComponent.PluginAssembly, true, false);
-                                            }                        
-                                        })
-                                        .then(response => {
-                                            const promises:Promise<void>[] = [];
-    
-                                            for (let i = 0; i < types.length; i++) {
-                                                promises.push(api.upsertPluginType(assemblyId, types[i].Name));
-                                            }
-                                            
-                                            return Promise.all(promises);
-                                        }).then(responses => {
-                                            vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, {});
-                                        });
+                                    return;
                                 }
+
+                                return api.uploadPluginAssembly(file, pluginAssembly ? pluginAssembly.pluginassemblyid : null)
+                                    .then(pluginAssemblyId => {
+                                        assemblyId = pluginAssemblyId;
+
+                                        if (!pluginAssembly && solution) {
+                                            return api.addSolutionComponent(solution, pluginAssemblyId, DynamicsWebApi.SolutionComponent.PluginAssembly, true, false);
+                                        }                        
+                                    })
+                                    .then(response => {
+                                        const promises:Promise<void>[] = [];
+
+                                        for (let i = 0; i < types.length; i++) {
+                                            promises.push(api.upsertPluginType(assemblyId, types[i].Name));
+                                        }
+                                        
+                                        return Promise.all(promises);
+                                    }).then(responses => {
+                                        if (!pluginAssembly) {
+                                            vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, {});
+                                        }
+                                    }).then(() => {
+                                        vscode.window.showInformationMessage(`The plugin assembly '${file.fsPath}' has been registered on the Dynamics 365 server.`);
+                                    });
                             });                      
                     });
             })
