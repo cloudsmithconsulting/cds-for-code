@@ -2,8 +2,12 @@ body {
     font-size: 1em;
 }
 
-h2, h3, h4, h5, h6 {
-   text-decoration: underline;
+h2,
+h3,
+h4,
+h5,
+h6 {
+    text-decoration: underline;
 }
 
 fieldset {
@@ -35,8 +39,8 @@ table>tbody>tr:nth-child(odd) {
 
 .tab {
     border-bottom: 1px solid var(--vscode-dropdown-border);
-    display:flex;
-    padding:0;
+    display: flex;
+    padding: 0;
 }
 
 .tab__item {
@@ -62,13 +66,19 @@ table>tbody>tr:nth-child(odd) {
 .field-container,
 .crmsvcutil-row,
 .field {
-    animation: fadeEffect 1s; /* Fading effect takes 1 second */
+    animation: fadeEffect 1s;
+    /* Fading effect takes 1 second */
 }
-  
+
 /* Go from zero to full opacity */
 @keyframes fadeEffect {
-    from {opacity: 0;}
-    to {opacity: 1;}
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .grid--two-left-panel {
@@ -181,6 +191,10 @@ table>tbody>tr:nth-child(odd) {
     border: 1px solid var(--vscode-contrastBorder);
 }
 
+.button--active {
+    background-color: var(--vscode-button-hoverBackground)
+}
+
 .panel_error {
     margin: 0 7px 10px 5px;
     padding: 0 10px 10px 10px;
@@ -190,7 +204,7 @@ table>tbody>tr:nth-child(odd) {
     border-color: var(--vscode-inputValidation-errorBorder);
 }
 
-.panel__text{
+.panel__text {
     line-height: 1.5em;
 }
 
@@ -202,4 +216,30 @@ table>tbody>tr:nth-child(odd) {
 
 .mb-10 {
     margin-bottom: 10px;
+}
+
+.autocomplete {
+    /*the container must be positioned relative:*/
+    position: relative;
+    display: inline-block;
+}
+
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid var(--vscode-dropdown-border);
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 350px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.autocomplete-items button {
+    width: 100%;
+    text-align: left;
 }
