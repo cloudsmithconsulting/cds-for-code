@@ -8,25 +8,29 @@
     // Handle messages sent from the extension to the webview
     window.addEventListener("message", event => {
         // wait for document ready
-        $(document).ready(function() { 
+        $(document).ready(() => { 
             const message = event.data;
+
             switch (message.command) {
-                case "configure":
+                case "load":
+                    window.initializeState(message.parameters);
                     break;
             }
         });
     });
 
-    window.welcomeExperience = function() {
-
+    window.initializeState = (viewModel) => {
+        $("#ShowWelcomeExperienceCheckbox").attr("checked", viewModel.showWelcomeExperience);
     }
 
     // this part starts on document ready
     $(function () {
-        $("#ConnectLink").click(function() {
-            vscode.postMessage({
-                command: 'openConnectionView'
-            });
+        $("#ShowWelcomeExperienceCheckbox").click(() => {
+            vscode.postMessage({ command: 'updateWelcomeExperienceConfig', value: $("#ShowWelcomeExperienceCheckbox").is(':checked') });
+        })
+
+        $("#ConnectLink").click(() => {
+            vscode.postMessage({ command: 'openConnectionView' });
         })
     });
 }());

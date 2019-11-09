@@ -28,50 +28,49 @@ export default class ExtensionConfiguration {
         return this._configurations[namespace];
     }
 
-    public static getConfigurationValue<T>(...value:string[]): T
-    {
-        const parsedKey = this.parseConfigurationString(...value);
+    public static getConfigurationValue<T>(...config:string[]): T {
+        const parsedKey = this.parseConfigurationString(...config);
 
-        if (parsedKey.namespace && this.getConfiguration(parsedKey.namespace))
-        {
+        if (parsedKey.namespace && this.getConfiguration(parsedKey.namespace)) {
             return this.getConfiguration(parsedKey.namespace).get(parsedKey.configKey) as T;
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
 
-    public static getConfigurationValueOrDefault<T>(value:string, defaultValue:T): T
-    {
-        const returnValue:T = this.getConfigurationValue(value);
+    public static setConfigurationValue<T>(config:string, value:T, configurationTarget?:boolean | vscode.ConfigurationTarget): Thenable<void> {
+        const parsedKey = this.parseConfigurationString(...config);
 
-        if (returnValue === null) {
-            return defaultValue;
+        if (parsedKey.namespace && this.getConfiguration(parsedKey.namespace)) {
+            return this.getConfiguration(parsedKey.namespace).update(parsedKey.configKey, value, configurationTarget);
         } else {
-            return returnValue;
+            return null;
         }
+    }
+
+    public static getConfigurationValueOrDefault<T>(config:string, defaultValue:T): T {
+        const returnValue:T = this.getConfigurationValue(config);
+
+        return returnValue || defaultValue;
     }
 
     // can be called 2 ways:
     // parseConfigurationValue<string>(config, "root.namespace", "value");
     // parseConfigurationValue<string>(config, "root.namespace.value");
-    public static parseConfigurationValue<T>(config:vscode.WorkspaceConfiguration, ...value:string[]): T
-    {
-        const parsedKey = this.parseConfigurationString(...value);
+    public static parseConfigurationValue<T>(workspaceConfig:vscode.WorkspaceConfiguration, ...config:string[]): T {
+        const parsedKey = this.parseConfigurationString(...config);
 
-        return config.get(parsedKey.configKey) as T;
+        return workspaceConfig.get(parsedKey.configKey) as T;
     }
 
-    private static validateConfiguration(namespace:string, config:vscode.WorkspaceConfiguration): boolean
-    {
+    private static validateConfiguration(namespace:string, workspaceConfig:vscode.WorkspaceConfiguration): boolean {
         let returnValue:boolean = true;
 
         switch (namespace)
         {
             case cs.dynamics.configuration.tools._namespace:
                 // Check SDK Install Path
-                const sdkInstallPath = this.parseConfigurationValue<string>(config, cs.dynamics.configuration.tools.sdkInstallPath);
+                const sdkInstallPath = this.parseConfigurationValue<string>(workspaceConfig, cs.dynamics.configuration.tools.sdkInstallPath);
 
                 if (!sdkInstallPath
                     || sdkInstallPath === undefined
@@ -88,27 +87,24 @@ export default class ExtensionConfiguration {
         return returnValue;
     }
 
-    private static parseConfigurationString(...value:string[]): { namespace:string, configKey:string }
-    {
+    private static parseConfigurationString(...config:string[]): { namespace:string, configKey:string } {
         let namespace:string, configKey:string;
 
-        if (value.length === 1) {
-            const splitValues = value[0].split(".");
+        if (config.length === 1) {
+            const splitValues = config[0].split(".");
             
             if (splitValues.length < 2) {
-                throw new Error(`The parameter '${value[0]}' supplied to parseConfigurationString() does not contain a namespace and configuration value.`);
+                throw new Error(`The parameter '${config[0]}' supplied to parseConfigurationString() does not contain a namespace and configuration value.`);
             }
             else {
                 configKey = splitValues[splitValues.length - 1];
-                namespace = value[0].replace(`.${configKey}`, "");
+                namespace = config[0].replace(`.${configKey}`, "");
             }
-        }
-        else if (value.length === 2) {
-            configKey = value[1];
-            namespace = value[0];
-        }
-        else {
-            throw new Error(`The parameter '${value.join(", ")}' supplied to parseConfigurationString() has too many elements.`);
+        } else if (config.length === 2) {
+            configKey = config[1];
+            namespace = config[0];
+        } else {
+            throw new Error(`The parameter '${config.join(", ")}' supplied to parseConfigurationString() has too many elements.`);
         }
 
         return { namespace, configKey };

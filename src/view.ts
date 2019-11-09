@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import Dictionary from './helpers/Dictionary';
 
 export interface IViewOptions {
+	preserveFocus?: boolean;
 	extensionPath: string;
 	viewTitle: string;
 	viewType: string;
@@ -157,7 +158,7 @@ export abstract class View {
 		const panel = vscode.window.createWebviewPanel(
 			viewOptions.viewType,
 			viewOptions.viewTitle,
-			column || vscode.ViewColumn.One,
+			{ viewColumn: column || vscode.ViewColumn.One, preserveFocus: viewOptions.preserveFocus || true },
 			{
 				// Enable javascript in the webview
 				enableScripts: true,
