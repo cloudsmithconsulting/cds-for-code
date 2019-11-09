@@ -481,7 +481,9 @@ export class Terminal implements vscode.Terminal {
 					onDidWrite: this._onDidWrite.event,
 					open: () => {
 						const resolveBufferFlush = (flushData, isError) => {
-							const prompt =  /(PS )(.*)(> )/i.exec(flushData.raw);
+							const promptExpression = /(PS .*> )/i;
+							const prompt =  promptExpression.exec(flushData.raw);
+
 							// Our terminal needs normalized line endings.
 							let displayText = eol.crlf(flushData.masked);
 
@@ -493,9 +495,12 @@ export class Terminal implements vscode.Terminal {
 								displayText = displayText.replace(this._inputCommand.command, "");
 							}
 
-							if (prompt && prompt.length > 2) {
-								this._path = prompt[2];
+							if (prompt && prompt.length > 0) {
+								this._path = prompt[0].substr(3, prompt[0].length - 5);
 								this._prompt = prompt[0];
+
+								// If we got 2 prompts it means that we completed the command and flushed the buffer in one pass.
+								if (prompt.length === 2 && !this._isAlreadyInitialized) { this._isAlreadyInitialized = true; }
 
 								if (this._inputCommand.command.trim() === "clear" || this._inputCommand.command.trim() === "cls") {
 									this.clear();

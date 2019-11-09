@@ -267,12 +267,10 @@ export default class ApiRepository
             }).then(pluginAssembly => {
                 if (!pluginAssemblyId) {
                     return this.webapi.create(pluginAssembly, "pluginassemblies")
-                        .then(assemblyId => pluginAssemblyId)
-                        .catch(error => console.error(error));
+                        .then(assemblyId => assemblyId);
                 } else { 
                     return this.webapi.update(pluginAssemblyId, "pluginassemblies", pluginAssembly)
-                        .then(assemblyId => pluginAssemblyId)
-                        .catch(error => console.error(error));
+                        .then(assemblyId => pluginAssemblyId);
                 }
             });
     }

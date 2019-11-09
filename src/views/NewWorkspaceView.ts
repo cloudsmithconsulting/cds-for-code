@@ -2,7 +2,8 @@ import * as vscode from 'vscode';
 import { View, ViewRenderer } from '../view';
 import * as cs from '../cs';
 import IWireUpCommands from '../wireUpCommand';
-import ExtensionConfiguration from '../../out/config/ExtensionConfiguration';
+import ExtensionConfiguration from '../config/ExtensionConfiguration';
+import DiscoveryRepository from '../repositories/discoveryRepository';
 
 export default class NewWorkspaceViewManager implements IWireUpCommands {
     private static _initialized:boolean = false;
@@ -28,14 +29,16 @@ export default class NewWorkspaceViewManager implements IWireUpCommands {
                     extensionPath: context.extensionPath,
                     iconPath: './resources/images/cloudsmith-logo-only-50px.png',
                     viewTitle: 'Welcome to Dynamics 365 for Code',
-                    viewType: cs.dynamics.views.newWorkspaceView
+                    viewType: cs.dynamics.views.newWorkspaceView,
+                    preserveFocus: true
+                });
+
+                view.postMessage("load", {
+                    showWelcomeExperience: ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience),
+                    connections: DiscoveryRepository.getOrgConnections(context)
                 });
             }) // <-- no semi-colon, comma starts next command registration
         );
-
-        vscode.workspace.onDidChangeWorkspaceFolders(e => {
-            if (e.added) { this.showWelcomeExperience(); }
-        });
 
         this.showWelcomeExperience();
     }
@@ -58,15 +61,18 @@ class NewWorkspaceView extends View {
     
     public onDidReceiveMessage(instance: NewWorkspaceView, message: any): vscode.Event<any> {
         switch (message.command) {
+            case 'updateWelcomeExperienceConfig':
+                ExtensionConfiguration.setConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience, message.value);
+                return;
             case 'openConnectionView':
                 vscode.commands.executeCommand(cs.dynamics.controls.treeView.editConnection);
                 return;
         }
     }
 
-    public postMessage(command:string, message?: any) {
-        if (command && message) {
-            this.panel.webview.postMessage({ command, message });
+    public postMessage(command:string, parameters?: any) {
+        if (command) {
+            this.panel.webview.postMessage({ command, parameters });
         }
     }
 }
