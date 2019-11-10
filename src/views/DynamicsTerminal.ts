@@ -107,9 +107,11 @@ export class TerminalCommand {
 		return this;
 	}
 
-	if(expression:() => boolean, action: (command:TerminalCommand) => void): TerminalCommand {
+	if(expression:() => boolean, action: (command:TerminalCommand) => void, otherwise?: (command:TerminalCommand) => void): TerminalCommand {
 		if (expression()) {
 			action(this);
+		} else {
+			if (otherwise) { otherwise(this); }
 		}
 
 		return this;
