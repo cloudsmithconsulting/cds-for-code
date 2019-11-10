@@ -131,8 +131,7 @@ export default class SolutionMap implements IWireUpCommands
             .then(solutionMap => { this.mappings = solutionMap.mappings; return this; }));
     }
 
-    public async save(filename?:string): Promise<SolutionMap>
-    {
+    public async save(filename?:string): Promise<SolutionMap> {
         return SolutionMap.write(this, filename);
     }
 
