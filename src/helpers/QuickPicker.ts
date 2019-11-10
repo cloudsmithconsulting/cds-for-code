@@ -86,19 +86,23 @@ export default class QuickPicker {
      * or for multi-root will present a chooser to select a workspace.
      * @param defaultUri 
      */
-    public static async pickWorkspaceFile(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true): Promise<string> {
-        return this.pickWorkspaceFileOrfolder(defaultUri, placeHolder, ignoreFocusOut, true, false);
+    public static async pickWorkspaceFile(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canAddNewItem:boolean = false): Promise<string> {
+        return this.pickWorkspaceFileOrfolder(defaultUri, placeHolder, ignoreFocusOut, true, false, canAddNewItem);
     }
 
-    public static async pickWorkspaceFolder(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true): Promise<string> {
-        return this.pickWorkspaceFileOrfolder(defaultUri, placeHolder, ignoreFocusOut, false, true);
+    public static async pickWorkspaceFolder(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canAddNewItem:boolean = false): Promise<string> {
+        return this.pickWorkspaceFileOrfolder(defaultUri, placeHolder, ignoreFocusOut, false, true, canAddNewItem);
     }
 
-    private static async pickWorkspaceFileOrfolder(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canPickFiles:boolean = true, canPickFolders:boolean = true): Promise<string> {
+    private static async pickWorkspaceFileOrfolder(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canPickFiles:boolean = true, canPickFolders:boolean = true, canAddNewItem:boolean = false): Promise<string> {
         defaultUri = defaultUri || await this.pickWorkspaceRoot(undefined, placeHolder, ignoreFocusOut);
         if (!defaultUri) { return; }
 
         let choices:QuickPickOption[] = [];
+
+        if (canAddNewItem) {
+            choices.push(new QuickPickOption("+", undefined, `New ${canPickFiles && !canPickFolders ? "File" : canPickFolders && !canPickFiles ? "Folder" : "Item" }`, defaultUri));
+        }
 
         if (canPickFolders) {
             choices.push(new QuickPickOption(".", undefined, "Use current folder", defaultUri));
@@ -119,20 +123,28 @@ export default class QuickPicker {
                 return new TS.Linq.Enumerator(choices).orderBy(c => c.label.toLowerCase()).toArray();
             }).then(choices => {
                 return this.pick(placeHolder, ...choices);
-            }).then(choice => {
+            }).then(async choice => {
                 if (choice) {
                     let newUri;
                     if (choice.label === ".") {
                         return defaultUri.fsPath;
                     } else if (choice.label === "..") {
                         newUri = defaultUri.with({ path: defaultUri.path.substr(0, defaultUri.path.lastIndexOf("/")) });
+                    } else if (choice.label === "+") {
+                        const input = await QuickPicker.ask(`What is the name of the new ${canPickFiles && !canPickFolders ? "File" : canPickFolders && !canPickFiles ? "Folder" : "Item" }?`);
+
+                        if (input) {
+                            const newPath = defaultUri.path.endsWith("/") ? defaultUri.path + input : defaultUri.path + "/" + input;
+
+                            newUri = defaultUri.with({ path: newPath });
+                        }
                     } else {
                         newUri = defaultUri.with({ path: `${defaultUri.path.endsWith("/") ? defaultUri.path : defaultUri.path + "/" }${choice.label}` }); 
                     }
 
                     if (newUri) {
                         if (choice.context[1] === vscode.FileType.Directory || choice.label === "..") {
-                            return this.pickWorkspaceFileOrfolder(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders);
+                            return this.pickWorkspaceFileOrfolder(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canAddNewItem);
                         } else {
                             return newUri.fsPath;
                         }

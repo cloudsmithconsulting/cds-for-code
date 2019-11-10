@@ -5,17 +5,19 @@ import QuickPicker from "../helpers/QuickPicker";
 import * as path from 'path';
 import * as FileSystem from '../helpers/FileSystem';
 import { TS } from "typescript-linq";
-import { ExtensionContext } from "vscode";
-import WorkspaceState from "./WorkspaceState";
+import { ExtensionContext, RelativePattern } from "vscode";
 import IWireUpCommands from "../wireUpCommand";
 import { DynamicsWebApi } from "../api/Types";
 import Utilities from "../helpers/Utilities";
+import { DynamicsWatcher } from "../helpers/FileManager";
 
 export default class SolutionMap implements IWireUpCommands
 {
-    constructor (map?:SolutionMap) {
-        if (map) {
+    private constructor (map?:SolutionMap) {
+        if (map && map.mappings) {
             this.mappings = map.mappings;
+        } else {
+            this.mappings = [];
         }
     }
 
@@ -66,7 +68,7 @@ export default class SolutionMap implements IWireUpCommands
         );
     }
 
-    public mappings:SolutionWorkspaceMapping[] = [];
+    public mappings:SolutionWorkspaceMapping[];
 
     public map(organizationId:string, solutionId:string, path:string): SolutionMap {
         let existing = this.hasPathMap(path) ? this.getMapping(path) : this.hasSolutionMap(organizationId, solutionId) ? this.getPath(organizationId, solutionId) : null;
@@ -87,9 +89,9 @@ export default class SolutionMap implements IWireUpCommands
         return this;
     }
 
-    public hasPathMap(path:string): boolean {
+    public hasPathMap(path:string, organizationId?:string): boolean {
         return new TS.Linq.Enumerator(this.mappings)
-            .where(m => m.path && m.path === path)
+            .where(m => m.path && m.path === path && (!organizationId || organizationId && organizationId === m.organizationId))
             .toArray()
             .length > 0;
     }
@@ -125,10 +127,12 @@ export default class SolutionMap implements IWireUpCommands
         return new SolutionWorkspaceMapping(organizationId, solutionId, undefined);
     }
 
-    public async load(filename?:string): Promise<SolutionMap>
-    {
-        return (SolutionMap.read(filename)
-            .then(solutionMap => { this.mappings = solutionMap.mappings; return this; }));
+    public static from(map:SolutionMap) {
+        return new SolutionMap(map);
+    }
+
+    public async load(filename?:string): Promise<SolutionMap> {
+        return (SolutionMap.read(filename).then(solutionMap => SolutionMap.from(solutionMap)));
     }
 
     public async save(filename?:string): Promise<SolutionMap> {
@@ -136,7 +140,9 @@ export default class SolutionMap implements IWireUpCommands
     }
 
     public saveToWorkspace(context: ExtensionContext) : SolutionMap {
-        WorkspaceState.Instance(context).SolutionMap = this;
+        if (context) {
+            context.workspaceState.update(cs.dynamics.configuration.workspaceState.solutionMap, this);
+        }
 
         return this;
     }
@@ -148,7 +154,15 @@ export default class SolutionMap implements IWireUpCommands
     }
 
     public static loadFromWorkspace(context: ExtensionContext) : SolutionMap {
-        return WorkspaceState.Instance(context).SolutionMap;
+        if (context) {
+            const value = context.workspaceState.get<SolutionMap>(cs.dynamics.configuration.workspaceState.solutionMap);
+
+            if (value) {
+                return new SolutionMap(value);
+            }
+        }
+
+        return new SolutionMap();
     }
     
     public static async read(filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap> {
@@ -164,8 +178,7 @@ export default class SolutionMap implements IWireUpCommands
                 if (returnObject && returnObject instanceof SolutionMap) {
                     return <SolutionMap>returnObject;
                 }
-            }
-            catch (error) {
+            } catch (error) {
                 vscode.window.showErrorMessage(`The file '${filename}' file was found but could not be parsed.  A new file will be created.${error ? '  The error returned was: ' + error : ''}`);
             }
         }
@@ -187,8 +200,7 @@ export default class SolutionMap implements IWireUpCommands
 
         try {
             fs.writeFileSync(file, JSON.stringify(map), 'utf8');
-        }
-        catch (error) {
+        } catch (error) {
             vscode.window.showErrorMessage(`The file '${filename}' could not be saved to the workspace.${error ? '  The error returned was: ' + error : ''}`);
         }
 
@@ -208,4 +220,8 @@ export class SolutionWorkspaceMapping
     public solutionId:string;
     public organizationId:string;
     public path:string;
+
+    get solutionWatcherPattern():vscode.GlobPattern { 
+        return new RelativePattern(this.path, "*.xml");
+    }
 }

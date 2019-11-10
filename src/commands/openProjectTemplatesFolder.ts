@@ -1,5 +1,5 @@
 import vscode = require("vscode");
-import filemanager = require("../helpers/FileManager");
+import * as fs from "../helpers/FileSystem";
 import TemplatesManager from "../projectTemplatesPlugin";
 import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
@@ -20,5 +20,5 @@ export default async function run(templateManager: TemplatesManager, args: any) 
 	await templateManager.createTemplatesDirIfNotExists();
 
 	// open template directory
-	filemanager.openFolderInExplorer(await templateManager.getTemplatesDir());
+	fs.openFolderInExplorer(await templateManager.getTemplatesDir());
 }

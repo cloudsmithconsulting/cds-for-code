@@ -30,6 +30,13 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
                 const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
+				const solutionMap:SolutionMap = WorkspaceState.Instance(context).SolutionMap;
+
+				if (solution && config && !folder) {
+					if (solutionMap.hasSolutionMap(config.orgId, solution.solutionid))					 {
+						folder = solutionMap.getPath(config.orgId, solution.solutionid).path;
+					}
+				}
 
 				folder = folder || await QuickPicker.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder containing the solution to pack", true);
 				if (Utilities.IsNullOrEmpty(folder)) { return; }
@@ -42,26 +49,9 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 					let solutionFile = path.join(solutionFolder, "Other/Solution.xml");
 
 					if (!fs.existsSync(solutionFile)) { 
-						solutionFile = ''; 
+						solution = await QuickPicker.pickDynamicsSolution(config, "Choose a Dynamics 365 Solution to pack", true);
 
-						const solutionMap:SolutionMap = WorkspaceState.Instance(context).SolutionMap;
-						const solutionFolders = new TS.Linq.Enumerator(solutionMap.mappings)
-							.where(m => m.path.startsWith(folder))
-							.select(m => new QuickPickOption(m.path, null))
-							.toArray();
-	
-						if (solutionFolders && solutionFolders.length > 0) {
-							if (solutionFolders.length > 1) {
-								let pickValue = await QuickPicker.pick("Choose the folder containing the solution to pack", ...solutionFolders);
-	
-								if (pickValue) { solutionFolder = pickValue.label; } else { return; }
-							} else { 
-								solutionFolder = solutionFolders[0].label; 
-							}
-	
-							folder = solutionFolder;
-							solutionFile = path.join(solutionFolder, "Other/Solution.xml");
-						}
+						if (!solution) { return; }
 					}
 
 					if (fs.existsSync(solutionFile)) {
