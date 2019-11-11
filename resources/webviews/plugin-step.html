@@ -20,19 +20,25 @@
                 <label class="field__label" for="Message">
                     Message
                 </label>
-                <input type="text" class="field__input field__input--wide" id="Message" name="Message" />
+                <div class="autocomplete">
+                    <input type="text" class="field__input field__input--wide" id="Message" name="Message" />
+                    <div class="autocomplete-items"></div>
+                </div>
             </div>
             <div class="field">
                 <label class="field__label" for="PrimaryEntity">
                     Primary Entity
                 </label>
-                <input type="text" class="field__input field__input--wide" id="PrimaryEntity" name="PrimaryEntity" />
+                <div class="autocomplete">
+                    <input type="text" class="field__input field__input--wide" id="PrimaryEntity" name="PrimaryEntity" />
+                    <div class="autocomplete-items"></div>
+                </div>
             </div>
             <div class="field">
                 <label class="field__label" for="SecondEntity">
                     Second Entity
                 </label>
-                <input type="text" class="field__input field__input--wide" id="SecondEntity" name="SecondEntity" />
+                <input type="text" class="field__input field__input--wide" id="SecondEntity" name="SecondEntity" value="none" />
             </div>
             <div class="field">
                 <label class="field__label" for="FilteringAttributes">
@@ -45,7 +51,12 @@
                 <label class="field__label" for="EventHandler">
                     Event Handler
                 </label>
-                <input type="text" class="field__input field__input--wide" id="EventHandler" name="EventHandler" />
+                <select id="EventHandler" name="EventHandler" class="field__input field__input--wide">
+                    <option>(Plugin) ActivityFeeds.Plugins.AutoCreatePostConfigRows</option>
+                    <option>(Plugin) ActivityFeeds.Plugins.PreConfigurationValidator</option>
+                    <option>(Plugin) ActivityFeeds.Plugins.WallSavedQuery</option>
+                    <option>(Plugin) ActivityFeeds.Plugins.WallSavedQueryUserSettings</option>
+                </select>
             </div>
             <div class="field">
                 <label class="field__label" for="StepName">
@@ -57,13 +68,17 @@
                 <label class="field__label" for="UserContext">
                     Run in User's Context
                 </label>
-                <input type="text" class="field__input field__input--wide" id="UserContext" name="UserContext" />
+                <select id="UserContext" name="UserContext" class="field__input field__input--wide">
+                    <option>Calling User</option>
+                    <option>First name Last name</option>
+                    <option>SYSTEM</option>
+                </select>
             </div>
             <div class="field">
                 <label class="field__label" for="ExecutionOrder">
                     Execution Order
                 </label>
-                <input type="text" class="field__input" id="ExecutionOrder" name="ExecutionOrder" />
+                <input type="text" class="field__input" id="ExecutionOrder" name="ExecutionOrder" value="1" />
             </div>
             <div class="field">
                 <label class="field__label" for="Description">
@@ -126,7 +141,7 @@
                 <label class="field__label" for="Server">
                     Server
                 </label>
-                <input type="checkbox" class="field__input" id="Server" name="Server" value="true" />
+                <input type="checkbox" class="field__input" id="Server" name="Server" value="true" checked="checked" />
             </div>
 
             <div class="field field--checkbox">
