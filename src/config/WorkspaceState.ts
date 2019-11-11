@@ -12,16 +12,10 @@ export default class WorkspaceState
     }
 
     get SolutionMap(): SolutionMap {
-        if (this._context) {
-            const value = this._context.workspaceState.get<SolutionMap>(cs.dynamics.configuration.workspaceState.solutionMap);
-
-            if (value) { return new SolutionMap(value); }
-        }
-
-        return new SolutionMap();
+        return SolutionMap.loadFromWorkspace(this._context);
     }
     set SolutionMap(value: SolutionMap) {
-        this._context.workspaceState.update(cs.dynamics.configuration.workspaceState.solutionMap, value);
+        value.saveToWorkspace(this._context);
     }
 
     public static Instance(context: ExtensionContext): WorkspaceState

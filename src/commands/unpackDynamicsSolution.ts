@@ -50,11 +50,16 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 					}
 				} 
 
-				folder = folder || await QuickPicker.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true);
+				folder = folder || await QuickPicker.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true, true);
 				if (Utilities.IsNullOrEmpty(folder)) {
-					vscode.window.showInformationMessage("You must have at least one workspace open to unpack solutions.");
+					vscode.window.showInformationMessage("You must select a workspace folder to unpack a solution.");
 
 					 return; 
+				}
+
+				// If we're asked to unpack into a path with the solution name, use the parent, as this script will already do so.
+				if (folder.endsWith(solution.uniquename) || folder.endsWith(solution.uniquename + "/") || folder.endsWith(solution.uniquename + "\\")) { 
+					folder = path.join(folder, "../");
 				}
 				
 				FileSystem.MakeFolderSync(folder);
@@ -68,7 +73,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 						dateString = dateString.substr(0, dateString.length - 5);
 						dateString = dateString.replace("T","-").replace(":","").replace(":", "");
 	
-						logFile = path.join(context.globalStoragePath, `/logs/unpack-${solution}-${dateString}.log`); 
+						logFile = path.join(context.globalStoragePath, `/logs/unpack-${solution.uniquename}-${dateString}.log`); 
 					}
 				}
 

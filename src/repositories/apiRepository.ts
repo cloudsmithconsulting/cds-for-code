@@ -36,7 +36,11 @@ export default class ApiRepository
         };
 
         return this.webapi.retrieveAllRequest(request)
-            .then(response => response.value);
+            .then(response => {
+                return response.value;
+            }).catch(error => {
+                throw error;
+            });
     }
 
     public retrieveProcesses(entityName?:string, solutionId?:string) : Promise<any[]> {

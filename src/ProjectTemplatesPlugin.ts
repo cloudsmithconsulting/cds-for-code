@@ -5,7 +5,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import * as fsutils from './helpers/FileSystem';
-import * as fmutils from './helpers/FileManager';
 import * as EnvironmentVariables from './helpers/EnvironmentVariables';
 import ExtensionConfiguration from './config/ExtensionConfiguration';
 import IWireUpCommands from './wireUpCommand';
@@ -170,7 +169,7 @@ export default class ProjectTemplatesPlugin implements IWireUpCommands {
                     return;
                 }
 
-                fmutils.openFolderInExplorer(templateRoot);
+                fsutils.openFolderInExplorer(templateRoot);
             });
 
             return undefined;
