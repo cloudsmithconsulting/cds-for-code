@@ -56,6 +56,11 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 
 					 return; 
 				}
+
+				// If we're asked to unpack into a path with the solution name, use the parent, as this script will already do so.
+				if (folder.endsWith(solution.uniquename) || folder.endsWith(solution.uniquename + "/") || folder.endsWith(solution.uniquename + "\\")) { 
+					folder = path.join(folder, "../");
+				}
 				
 				FileSystem.MakeFolderSync(folder);
 				

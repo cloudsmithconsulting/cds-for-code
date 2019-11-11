@@ -11,9 +11,9 @@ import QuickPicker from "../helpers/QuickPicker";
  * @param {ProjectTemplatesPlugin} templateManager
  * @param {*} args
  */
-export default async function run(templateManager: ProjectTemplatesPlugin, args: any) {
+export default async function run(templateManager: ProjectTemplatesPlugin) {
 	// get workspace folder
-	let workspace = await QuickPicker.pickWorkspaceRoot(args);
+	let workspace = await QuickPicker.pickWorkspaceFolder(undefined, "Choose a workspace folder containing the template");
 
     if (!workspace) {
 		vscode.window.showErrorMessage("No workspace selected");
@@ -24,7 +24,7 @@ export default async function run(templateManager: ProjectTemplatesPlugin, args:
 	// load latest configuration
 	ExtensionConfiguration.updateConfiguration(cs.dynamics.configuration.templates._namespace);
 
-    templateManager.saveAsTemplate(workspace.fsPath).then(
+    templateManager.saveAsTemplate(workspace).then(
 		(template : string | undefined) => { 
 			if (template) {
 				vscode.window.showInformationMessage("Saved template '" + template + "'");
