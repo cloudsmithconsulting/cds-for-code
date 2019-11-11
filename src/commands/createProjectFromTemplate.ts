@@ -11,10 +11,10 @@ import QuickPicker from "../helpers/QuickPicker";
  * @param {ProjectTemplatesPlugin} templateManager
  * @param {*} args
  */
-export default async function run(templateManager: ProjectTemplatesPlugin) {
+export default async function run(templateManager: ProjectTemplatesPlugin, defaultPath?: vscode.Uri) {
 
     // get workspace folder
-    let workspace = await QuickPicker.pickWorkspaceFolder(undefined, "Choose a workspace folder where templated files go");
+    let workspace = await QuickPicker.pickWorkspaceFolder(defaultPath, "Choose a workspace folder where templated files go", undefined, true);
 
     if (!workspace) {
         vscode.window.showErrorMessage("You must select a workspace before you can create a project");
