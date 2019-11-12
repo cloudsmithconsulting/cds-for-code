@@ -123,7 +123,7 @@ export default class QuickPicker {
         return await vscode.workspace.fs.readDirectory(defaultUri)
             .then(results => {
                 results.forEach(r => {
-                    if ((canPickFiles && r[1] === vscode.FileType.File) || ((canPickFiles || canPickFolders) && r[1] === vscode.FileType.Directory) || (canPickLinks && r[1] === vscode.FileType.SymbolicLink)) { 
+                    if ((canPickFiles && r[1] === vscode.FileType.File) || (r[1] === vscode.FileType.Directory) || (canPickLinks && r[1] === vscode.FileType.SymbolicLink)) { 
                         choices.push(new QuickPickOption(r[1] === vscode.FileType.SymbolicLink ? ">> " + r[0] : r[0], undefined, undefined, r)); 
                     } 
                 }); 
@@ -157,7 +157,7 @@ export default class QuickPicker {
                                 FileSystem.MakeFolderSync(newUri.fsPath);
                             }
 
-                            return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canAddNewItem);
+                            return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem);
                         }
                     } else {
                         newUri = defaultUri.with({ path: `${defaultUri.path.endsWith("/") ? defaultUri.path : defaultUri.path + "/" }${choice.label}` }); 
@@ -165,7 +165,7 @@ export default class QuickPicker {
 
                     if (newUri) {
                         if (choice.context[1] === vscode.FileType.Directory || choice.label === "..") {
-                            return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canAddNewItem);
+                            return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem);
                         } else {
                             return new WorkspaceFileItem(newUri.fsPath, itemType);
                         }
