@@ -39,10 +39,10 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 				if (!solution) { return; }
 
 				if (map) {
-					const mapping = map.getPath(config.orgId, solution.solutionid);
+					const mapping = map.getBySolutionId(solution.solutionid, config.orgId);
 
-					if (mapping && mapping.path && !folder) {
-						folder = mapping.path;
+					if (mapping && mapping.length > 0 && mapping[0].path && !folder) {
+						folder = mapping[0].path;
 					}
 
 					if (folder && folder.endsWith(solution.uniquename)) {
