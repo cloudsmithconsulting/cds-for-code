@@ -2,6 +2,7 @@ import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as StreamZip from 'node-stream-zip';
+import * as vscode from 'vscode';
 
 /**
  * Recursively copy folder from src to dest
@@ -57,15 +58,18 @@ export async function CopyFolder(source: string, destination: string): Promise<b
 	return Promise.resolve(true);
 }
 
+export function Exists(path:string): boolean {
+	return fs.existsSync(path);
+}
+
 /**
  * Recursively delete a directory and all contained contents
  * @param folder directory to delete
  */
 export async function DeleteFolder(folder: string): Promise<boolean> {
-
 	if (fs.existsSync(folder) && fs.lstatSync(folder).isDirectory()) {
 		let promises = fs.readdirSync(folder).map(
-			function(entry : string) {
+			(entry:string) => {
 				let fn = path.join(folder, entry);
 
                 if (fs.lstatSync(fn).isDirectory()) {
@@ -143,8 +147,7 @@ export function MakeFolderSync(destination: string, mode: string | number | null
     return true;
 }
 
-export function Unzip(archive:string, destination:string): Promise<number>
-{
+export function Unzip(archive:string, destination:string): Promise<number> {
 	const zip = new StreamZip({
 		file: archive,
 		storeEntries: true

@@ -27,6 +27,7 @@ export default class SolutionMap implements IWireUpCommands
 
     wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         // load default map as it will force filesystemwatchers to intialize.
+        vscode.workspace.workspaceFolders.forEach(f => WorkspaceFileSystemWatcher.Instance.openWorkspace(f));
         SolutionMap.loadFromWorkspace(context);
 
         context.subscriptions.push(
@@ -61,11 +62,16 @@ export default class SolutionMap implements IWireUpCommands
                 item = item || map.hasSolutionMap(solutionId, organizationId) ? map.getBySolutionId(solutionId, organizationId)[0] : null;
                 
                 if (item && item.path && item.path !== folder) {
-                    folder = path.join(folder, path.basename(item.path));
+                    // If we're moving into a new folder that's not called the solution name, let's add it.
+                    if (!folder.endsWith(path.basename(item.path))) {
+                        folder = path.join(folder, path.basename(item.path));
+                    }
 
                     if (item.path !== folder) {
-                        await FileSystem.CopyFolder(item.path, folder)
-                            .then(() => FileSystem.DeleteFolder(item.path));
+                        if (FileSystem.Exists(item.path)) {
+                            await FileSystem.CopyFolder(item.path, folder)
+                                .then(() => FileSystem.DeleteFolder(item.path));
+                        }
                     }
                 }
 
@@ -78,7 +84,13 @@ export default class SolutionMap implements IWireUpCommands
     mappings:SolutionWorkspaceMapping[];
 
     map(organizationId:string, solutionId:string, path:string): SolutionMap {
-        let workspaceMapping = this.hasPathMap(path) ? this.getByPath(path)[0] : this.hasSolutionMap(solutionId, organizationId) ? this.getBySolutionId(solutionId, organizationId)[0] : null;
+        const items = new TS.Linq.Enumerator(this.mappings)
+            .where(m => organizationId ? m.organizationId === organizationId : false)
+            .where(m => solutionId ? m.solutionId === solutionId : false)
+            .where(m => path ? m.path === path || m.path === path + "/" || m.path === path + "\\" : false)
+            .toArray();
+        
+        let workspaceMapping = items.length > 0 ? items[0] : undefined;
         const isNew = (!workspaceMapping);
 
         if (isNew) {
@@ -101,7 +113,7 @@ export default class SolutionMap implements IWireUpCommands
         const items = new TS.Linq.Enumerator(this.mappings)
             .where(m => organizationId ? m.organizationId === organizationId : true)
             .where(m => solutionId ? m.solutionId === solutionId : true)
-            .where(m => path ? m.path === path : true)
+            .where(m => path ? m.path === path || m.path === path + "/" || m.path === path + "\\" : true)
             .toArray();
 
         if (items && items.length > 0) {
@@ -126,7 +138,7 @@ export default class SolutionMap implements IWireUpCommands
 
     getByPath(path:string, organizationId?:string): SolutionWorkspaceMapping[] {
         return new TS.Linq.Enumerator(this.mappings)
-            .where(m => m.path && m.path === path && (!organizationId || organizationId && m.organizationId === organizationId))
+            .where(m => m.path && (m.path === path || m.path === path + "/" || m.path === path + "\\") && (!organizationId || organizationId && m.organizationId === organizationId))
             .toArray();
     }
 
@@ -136,7 +148,7 @@ export default class SolutionMap implements IWireUpCommands
             .toArray();
     }
 
-    static from(map:SolutionMap) {
+    static from(map:SolutionMap): SolutionMap {
         return new SolutionMap(map);
     }
 
@@ -148,7 +160,7 @@ export default class SolutionMap implements IWireUpCommands
         return SolutionMap.write(this, filename);
     }
 
-    saveToWorkspace(context: ExtensionContext) : SolutionMap {
+    saveToWorkspace(context: ExtensionContext): SolutionMap {
         if (context) {
             context.workspaceState.update(cs.dynamics.configuration.workspaceState.solutionMap, this);
         }
@@ -163,7 +175,7 @@ export default class SolutionMap implements IWireUpCommands
         return this;
     }
 
-    static loadFromWorkspace(context: ExtensionContext) : SolutionMap {
+    static loadFromWorkspace(context: ExtensionContext): SolutionMap {
         if (context) {
             const value = context.workspaceState.get<SolutionMap>(cs.dynamics.configuration.workspaceState.solutionMap);
 
@@ -202,7 +214,7 @@ export default class SolutionMap implements IWireUpCommands
 
         const folder  = path.join(workspacePath, path.dirname(filename));
 
-        if (!fs.existsSync(folder)) {
+        if (!FileSystem.Exists(folder)) {
             FileSystem.MakeFolderSync(folder);
         }
 
@@ -219,11 +231,17 @@ export default class SolutionMap implements IWireUpCommands
 
     private monitorMappedFolders(mapping?:SolutionWorkspaceMapping): void {
         const toMonitor:SolutionWorkspaceMapping[] = mapping ? [ mapping ] : this.mappings;
-
+        
         toMonitor.forEach(m => {
-            WorkspaceFileSystemWatcher.Instance.watch(SolutionWorkspaceMapping.getSolutionWatcherPattern(m), "Create", "Modify", "Delete")
-                .then((pattern, uri, event) => {
-                    console.log(pattern, uri, event);
+            const pattern = SolutionWorkspaceMapping.getSolutionWatcherPattern(m);
+
+            WorkspaceFileSystemWatcher.Instance.watch(SolutionMap.patternName(pattern), pattern, "Create", "Modify", "Delete", "Move")
+                .then(change => {
+                    if (change.event === "Move") {
+                        this.getByPath(change.sourceUri.fsPath).forEach(async m => {
+                            await vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, m, undefined, change.targetUri.fsPath);
+                        });
+                    }
                 });
         });
     }
@@ -232,8 +250,18 @@ export default class SolutionMap implements IWireUpCommands
         const toUnmonitor:SolutionWorkspaceMapping[] = mapping ? [ mapping ] : this.mappings;
 
         toUnmonitor.forEach(m => {
-            WorkspaceFileSystemWatcher.Instance.stopWatching(SolutionWorkspaceMapping.getSolutionWatcherPattern(m), "Create", "Modify", "Delete");
+            const pattern = SolutionWorkspaceMapping.getSolutionWatcherPattern(m);
+
+            WorkspaceFileSystemWatcher.Instance.stopWatching(SolutionMap.patternName(pattern));
         });
+    }
+
+    private static patternName(pattern:vscode.GlobPattern) {
+        if (pattern instanceof vscode.RelativePattern) {
+            return `SolutionMap:${(<vscode.RelativePattern>pattern).base}${(<vscode.RelativePattern>pattern).pattern}`;
+        }
+
+        return `SolutionMap:${pattern}`;
     }
 }
 
@@ -251,10 +279,10 @@ export class SolutionWorkspaceMapping
     public path:string;
 
     static getSolutionWatcherPattern(mapping:SolutionWorkspaceMapping):vscode.GlobPattern { 
-        return new RelativePattern(mapping.path, "/**/Other/Solution.xml");
+        return new RelativePattern(mapping.path, "*");
     }
 
     static getWebResourceWatcherPattern(mapping:SolutionWorkspaceMapping):vscode.GlobPattern { 
-        return new RelativePattern(mapping.path, "/**/WebResources/*.*");
+        return new RelativePattern(mapping.path, "**/WebResources/*.*");
     }
 }
