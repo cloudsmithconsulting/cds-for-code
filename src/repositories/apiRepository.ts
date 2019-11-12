@@ -279,6 +279,14 @@ export default class ApiRepository
             });
     }
 
+    public upsertPluginStep(step: any) {
+        if (step.sdkmessageprocessingstepid) {
+            this.webapi.update(step.sdkmessageprocessingstepid, "sdkmessageprocessingsteps", step);
+        } else {
+            this.webapi.create(step, "sdkmessageprocessingsteps");
+        }
+    }
+
     public addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
         const actionParams = { 
             ComponentId: componentId,

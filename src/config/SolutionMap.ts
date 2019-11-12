@@ -13,7 +13,7 @@ import { DynamicsWatcher } from "../helpers/FileManager";
 
 export default class SolutionMap implements IWireUpCommands
 {
-    private constructor (map?:SolutionMap) {
+    public constructor (map?:SolutionMap) {
         if (map && map.mappings) {
             this.mappings = map.mappings;
         } else {

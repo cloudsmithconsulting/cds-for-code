@@ -34,13 +34,15 @@ export default class PluginStepViewManager implements IWireUpCommands {
                     step
                 };
 
-                view.setInitialState(viewModel);
+                view.setInitialState(viewModel, config);
             }) // <-- no semi-colon, comma starts next command registration
         );
     }
 }
 
 class PluginStepView extends View {
+    public config: DynamicsWebApi.Config;
+
     public getHtmlForWebview(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('pluginStepView.js');
@@ -51,16 +53,23 @@ class PluginStepView extends View {
 
         // return rendered html
         return viewRenderer.renderPartialFile('plugin-step.html');
-    }    
+    }
+
+    private saveSdkMessageProcessingStep(step :any) {
+        const api = new ApiRepository(this.config);
+        api.upsertPluginStep(step);
+    }
     
     public onDidReceiveMessage(instance: PluginStepView, message: any): vscode.Event<any> {
         switch (message.command) {
             case 'saveSdkMessageProcessingStep':                
+                instance.saveSdkMessageProcessingStep(message.settings);
                 return;
         }
     }
 
-    public setInitialState(viewModel: any) {
+    public setInitialState(viewModel: any, config: DynamicsWebApi.Config) {
+        this.config = config;
         this.panel.webview.postMessage({ command: 'load', viewModel });
     }
 }

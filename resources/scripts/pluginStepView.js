@@ -16,6 +16,20 @@
         }
     });
 
+    function updateStepNameAndDescription() {
+        // doing this vanilla js so we don't incur the jquery overhead
+        const message = document.getElementById("Message").value;
+        const primaryEntity = document.getElementById("PrimaryEntity").value;
+        const eventHandler = document.getElementById("EventHandler").value;
+
+        if (!CloudSmith.Utilities.isNullOrEmpty(message) 
+            && !CloudSmith.Utilities.isNullOrEmpty(primaryEntity)
+            && !CloudSmith.Utilities.isNullOrEmpty(eventHandler)) {
+                const stepName = `${eventHandler.replace("(Plugin) ", "")}: ${message} of ${primaryEntity}`;
+                $("#StepName,#Description").val(stepName);
+        }
+    }
+
     let currentFocus = {};
     function initializeAutoComplete($textInput, selectionArray) {
         const inputId = $textInput.attr("id");
@@ -43,6 +57,8 @@
 
                     $button.click(function() {
                         $textInput.val(this.value);
+                        // update the stepname
+                        updateStepNameAndDescription();
                         // clear all previous items
                         $("div", $autocompleteItems).remove();
                     });
@@ -60,17 +76,17 @@
                 /*and and make the current item more visible:*/
                 $("button", $autocompleteItems).removeClass("button--active");
                 $("button", $autocompleteItems).eq(currentFocus[inputId]).addClass("button--active");
-                } else if (e.keyCode == 38) { //up
+            } else if (e.keyCode == 38) { //up
                 /*If the arrow UP key is pressed,
                 decrease the currentFocus variable:*/
                 currentFocus[inputId]--;
                 /*and and make the current item more visible:*/
                 $("button", $autocompleteItems).removeClass("button--active");
                 $("button", $autocompleteItems).eq(currentFocus[inputId]).addClass("button--active");
-                } else if (e.keyCode == 13) {
+            } else if (e.keyCode == 13) {
                 /*If the ENTER key is pressed, prevent the form from being submitted,*/
                 e.preventDefault();
-                if (currentFocus[inputId] > -1) {
+            if (currentFocus[inputId] > -1) {
                     /*and simulate a click on the "active" item:*/
                     $("button", $autocompleteItems).eq(currentFocus[inputId]).click();
                 }
@@ -86,26 +102,29 @@
         initializeAutoComplete($("#Message"), window.sdkMessages);
         initializeAutoComplete($("#PrimaryEntity"), window.entityTypeCodes);
         
-        if (viewModel.step) {
+        if (viewModel.step && viewModel.sdkMessageDetails) {
+            $("#Message").val(viewModel.step.sdkmessageid.name);
             
+            // $("#PrimaryEntity").val(),
+            // $("#SecondEntity").val(),
+            // $("#FilteringAttributes").val(),
+            // $("#EventHandler").val(),
+            // $("#StepName").val(),
+            // $("#UserContext").val(),
+            // $("#ExecutionOrder").val(),
+            // $("#Description").val(),
+            // $(`[name="ExecutionPipeline"]:checked`).val(),
+            // $("#StatusCode").val(),
+            // $(`[name="ExecutionMode"]:checked`).val(),
+            // $("#Server").val(),
+            // $("#Offline").val()
         }
     }
 
     $(function() {
         // wire change of inputs that name and describe step automatically
-        $("#Message,#PrimaryEntity,#EventHandler").change(function() {
-            // doing this vanilla js so we don't incur the jquery overhead
-            const message = document.getElementById("Message").value;
-            const primaryEntity = document.getElementById("PrimaryEntity").value;
-            const eventHandler = document.getElementById("EventHandler").value;
-
-            if (!CloudSmith.Utilities.isNullOrEmpty(message) 
-                && !CloudSmith.Utilities.isNullOrEmpty(primaryEntity)
-                && !CloudSmith.Utilities.isNullOrEmpty(eventHandler)) {
-                    const stepName = `${eventHandler.replace("(Plugin) ", "")}: ${message} of ${primaryEntity}`;
-                    document.getElementById("StepName").value = stepName;
-                    document.getElementById("Description").value = stepName;
-                }
+        $("#EventHandler").change(function() {
+           updateStepNameAndDescription(); 
         });
 
         function validateForm(settings) {
@@ -117,7 +136,6 @@
             if (CloudSmith.Utilities.isNullOrEmpty(settings.primaryEntity)) { messages.push('The Primary Entity is required'); }
             if (window.entityTypeCodes.indexOf(settings.primaryEntity) === -1) { messages.push('The Primary Entity has to exist in message selection'); }
             if (CloudSmith.Utilities.isNullOrEmpty(settings.secondEntity)) { messages.push('The Second Entity is required'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.filteringAttributes)) { messages.push('The Filtering Attributes is required'); }
             if (CloudSmith.Utilities.isNullOrEmpty(settings.eventHandler)) { messages.push('The Event Handler is required'); }
             if (CloudSmith.Utilities.isNullOrEmpty(settings.stepName)) { messages.push('The Step Name is required'); }
             if (CloudSmith.Utilities.isNullOrEmpty(settings.userContext)) { messages.push('The User Context is required'); }
