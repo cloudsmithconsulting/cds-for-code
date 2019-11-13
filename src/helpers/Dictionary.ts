@@ -37,7 +37,7 @@ export default class Dictionary<TKey, T> implements IDictionary<TKey, T> {
     }
 
     remove(key: TKey) {
-        var index = this._keys.indexOf(key, 0);
+        const index = this._keys.indexOf(key, 0);
 
         this._keys.splice(index, 1);
         this._values.splice(index, 1);
@@ -50,9 +50,13 @@ export default class Dictionary<TKey, T> implements IDictionary<TKey, T> {
     }
 
     getKey(value: T): TKey {
-        var index = this._values.indexOf(value, 0);
+        const index = this._values.indexOf(value);
 
-        return this._keys[index];
+        if (index > -1) {
+            return this._keys[index];
+        }
+
+        return undefined;
     }
 
     get keys(): TKey[] {

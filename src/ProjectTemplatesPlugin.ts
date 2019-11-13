@@ -228,14 +228,14 @@ export default class ProjectTemplatesPlugin implements IWireUpCommands {
 
     /**
      * Saves a workspace as a new template
-     * @param  workspace absolute path of workspace
+     * @param  folder absolute path of workspace
      * @returns  name of template
      */
-    public async saveAsTemplate(workspace : string) {
+    public async saveAsTemplate(folder: string) {
         // ensure templates directory exists
         await this.createTemplatesDirIfNotExists();
 
-        let projectName = path.basename(workspace);
+        let projectName = path.basename(folder);
 
         // ask for project name
         let inputOptions = <vscode.InputBoxOptions> {
@@ -266,7 +266,7 @@ export default class ProjectTemplatesPlugin implements IWireUpCommands {
                                 if (choice === "Yes") {
                                     // delete original and copy new template folder
                                     await fsutils.DeleteFolder(templateDir);
-                                    await fsutils.CopyFolder(workspace, templateDir);
+                                    await fsutils.CopyFolder(folder, templateDir);
                                 }
                             },
                             (reason) => {
@@ -274,7 +274,7 @@ export default class ProjectTemplatesPlugin implements IWireUpCommands {
                             });
                 } else {
                     // copy current workspace to new template folder
-                    await fsutils.CopyFolder(workspace, templateDir);
+                    await fsutils.CopyFolder(folder, templateDir);
                 }
 
                 return template;
@@ -375,9 +375,9 @@ export default class ProjectTemplatesPlugin implements IWireUpCommands {
 
     /**
      * Populates a workspace folder with the contents of a template
-     * @param workspace current workspace folder to populate
+     * @param folder current workspace folder to populate
      */
-    public async createFromTemplate(workspace: string) {
+    public async createFromTemplate(folder: string) {
         await this.createTemplatesDirIfNotExists();
 
         // choose a template
@@ -432,7 +432,7 @@ export default class ProjectTemplatesPlugin implements IWireUpCommands {
 
                     // if it is not a file, cannot overwrite
                     if (!fs.lstatSync(dest).isFile()) {
-                        let reldest = path.relative(workspace, dest);
+                        let reldest = path.relative(folder, dest);
                         
                         let variableInput = <vscode.InputBoxOptions> {
                             prompt: `Cannot overwrite "${reldest}".  Please enter a new filename"`,
@@ -451,13 +451,13 @@ export default class ProjectTemplatesPlugin implements IWireUpCommands {
 
                         // if not absolute path, make workspace-relative
                         if (!path.isAbsolute(dest)) {
-                            dest = path.join(workspace, dest);
+                            dest = path.join(folder, dest);
                         }
 
                     } else {
                         
                         // ask if user wants to replace, otherwise prompt for new filename
-                        let reldest = path.relative(workspace, dest);
+                        let reldest = path.relative(folder, dest);
                         let choice = await vscode.window.showQuickPick(["Overwrite", "Rename", "Skip", "Abort"], { 
                             placeHolder: `Destination file "${reldest}" already exists.  What would you like to do?`
                         });
@@ -484,7 +484,7 @@ export default class ProjectTemplatesPlugin implements IWireUpCommands {
 
                             // if not absolute path, make workspace-relative
                             if (!path.isAbsolute(dest)) {
-                                dest = path.join(workspace, dest);
+                                dest = path.join(folder, dest);
                             }
                         } else if (choice === "Skip") {
                             // skip
@@ -514,7 +514,7 @@ export default class ProjectTemplatesPlugin implements IWireUpCommands {
         };  // copy function
         
         // actually copy the file recursively
-        await this.recursiveApplyInDir(templateDir, workspace, copyFunc);    
+        await this.recursiveApplyInDir(templateDir, folder, copyFunc);    
         
         return template;
     }

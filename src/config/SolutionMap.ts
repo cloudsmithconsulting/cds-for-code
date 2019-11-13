@@ -9,7 +9,7 @@ import { ExtensionContext, RelativePattern } from "vscode";
 import IWireUpCommands from "../wireUpCommand";
 import { DynamicsWebApi } from "../api/Types";
 import Utilities from "../helpers/Utilities";
-import { DynamicsWatcher } from "../helpers/FileManager";
+import { WorkspaceFileSystemWatcher } from "../helpers/FileManager";
 
 export default class SolutionMap implements IWireUpCommands
 {
@@ -19,11 +19,22 @@ export default class SolutionMap implements IWireUpCommands
         } else {
             this.mappings = [];
         }
+
+        if (this.mappings && this.mappings.length > 0) {
+            this.monitorMappedFolders();
+        }
     }
 
-    public wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
+    wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
+        // load default map as it will force filesystemwatchers to intialize.
+        if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+            vscode.workspace.workspaceFolders.forEach(f => WorkspaceFileSystemWatcher.Instance.openWorkspace(f));
+        }
+
+        SolutionMap.loadFromWorkspace(context);
+
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string) => {
+            vscode.commands.registerCommand(cs.dynamics.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> => {
                 let solutionId;
                 let organizationId;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
@@ -47,99 +58,110 @@ export default class SolutionMap implements IWireUpCommands
                     solutionId = solution.solutionid;
                 }
 
-				folder = folder || await QuickPicker.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a workplace folder where solution items will be placed.");
+				folder = folder || await QuickPicker.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a workplace folder containing solution items.");
                 if (Utilities.IsNullOrEmpty(folder)) { return; }
                 
                 const map = SolutionMap.loadFromWorkspace(context);
-                item = item || map.hasSolutionMap(organizationId, solutionId) ? map.getPath(organizationId, solutionId) : null;
+                item = item || map.hasSolutionMap(solutionId, organizationId) ? map.getBySolutionId(solutionId, organizationId)[0] : null;
                 
                 if (item && item.path && item.path !== folder) {
-                    folder = path.join(folder, path.basename(item.path));
+                    // If we're moving into a new folder that's not called the solution name, let's add it (assuming you didn't just rename it).
+                    if (!folder.endsWith(path.basename(item.path)) 
+                        && (item.path.indexOf("\\") === -1 || item.path.substring(0, item.path.lastIndexOf("\\")) !== folder.substring(0, folder.lastIndexOf("\\"))) 
+                        && (item.path.indexOf("/") === -1 || item.path.substring(0, item.path.lastIndexOf("/")) !== folder.substring(0, folder.lastIndexOf("/")))) {
+                        folder = path.join(folder, path.basename(item.path));
+                    }
 
                     if (item.path !== folder) {
-                        await FileSystem.CopyFolder(item.path, folder)
-                            .then(() => FileSystem.DeleteFolder(item.path));
+                        if (FileSystem.Exists(item.path)) {
+                            await FileSystem.CopyFolder(item.path, folder)
+                                .then(() => FileSystem.DeleteFolder(item.path));
+                        }
                     }
                 }
 
                 map.map(organizationId, solutionId, folder);
                 map.saveToWorkspace(context);
+
+                return map.getByPath(folder, organizationId);
             })
         );
     }
 
-    public mappings:SolutionWorkspaceMapping[];
+    mappings:SolutionWorkspaceMapping[];
 
-    public map(organizationId:string, solutionId:string, path:string): SolutionMap {
-        let existing = this.hasPathMap(path) ? this.getMapping(path) : this.hasSolutionMap(organizationId, solutionId) ? this.getPath(organizationId, solutionId) : null;
-        const isNew = (!existing);
+    map(organizationId:string, solutionId:string, path:string): SolutionMap {
+        let workspaceMapping = this.hasPathMap(path) ? this.getByPath(path)[0] : this.hasSolutionMap(solutionId, organizationId) ? this.getBySolutionId(solutionId, organizationId)[0] : null;
+        const isNew = (!workspaceMapping);
 
         if (isNew) {
-             existing = new SolutionWorkspaceMapping(organizationId, solutionId, path); 
+             workspaceMapping = new SolutionWorkspaceMapping(organizationId, solutionId, path); 
         } else {
-            existing.solutionId = solutionId;
-            existing.organizationId = organizationId;
-            existing.path = path;
+            workspaceMapping.solutionId = solutionId;
+            workspaceMapping.organizationId = organizationId;
+            workspaceMapping.path = path;
         }
 
         if (isNew) {
-            this.mappings.push(new SolutionWorkspaceMapping(organizationId, solutionId, path));
+            this.mappings.push(workspaceMapping);
+            this.monitorMappedFolders(workspaceMapping);
         } 
         
         return this;
     }
 
-    public hasPathMap(path:string, organizationId?:string): boolean {
-        return new TS.Linq.Enumerator(this.mappings)
-            .where(m => m.path && m.path === path && (!organizationId || organizationId && organizationId === m.organizationId))
-            .toArray()
-            .length > 0;
-    }
-
-    public hasSolutionMap(organizationId:string, solutionId:string): boolean {
-        return new TS.Linq.Enumerator(this.mappings)
-            .where(m => m.organizationId && m.organizationId === organizationId && m.solutionId && m.solutionId === solutionId)
-            .toArray()
-            .length > 0;
-    }
-
-    public getMapping(path:string): SolutionWorkspaceMapping {
-        let items = new TS.Linq.Enumerator(this.mappings)
-            .where(m => m.path && m.path === path)
+    unmap(organizationId?:string, solutionId?:string, path?:string): boolean {
+        const items = new TS.Linq.Enumerator(this.mappings)
+            .where(m => organizationId ? m.organizationId === organizationId : true)
+            .where(m => solutionId ? m.solutionId === solutionId : true)
+            .where(m => path ? m.path === path || m.path === path + "/" || m.path === path + "\\" : true)
             .toArray();
 
-        if (items.length > 0) {
-            return items[0];
+        if (items && items.length > 0) {
+            items.forEach(i => {
+                this.unmonitorMappedFolders(i);
+                this.mappings.slice(this.mappings.indexOf(i), 1);
+            });
+
+            return true;
         }
-    
-        return new SolutionWorkspaceMapping(undefined, undefined, path);
+
+        return false;
     }
 
-    public getPath(organizationId:string, solutionId:string): SolutionWorkspaceMapping {
-        let items = new TS.Linq.Enumerator(this.mappings)
-            .where(m => m.organizationId && m.organizationId === organizationId && m.solutionId && m.solutionId === solutionId)
+    hasPathMap(path:string, organizationId?:string): boolean {
+        return this.getByPath(path, organizationId).length > 0;
+    }
+
+    hasSolutionMap(solutionId:string, organizationId?:string): boolean {
+        return this.getBySolutionId(solutionId, organizationId).length > 0;
+    }
+
+    getByPath(path:string, organizationId?:string): SolutionWorkspaceMapping[] {
+        return new TS.Linq.Enumerator(this.mappings)
+            .where(m => m.path && (m.path === path || m.path === path + "/" || m.path === path + "\\") && (!organizationId || organizationId && m.organizationId === organizationId))
             .toArray();
-
-        if (items.length > 0) {
-            return items[0];
-        }
-        
-        return new SolutionWorkspaceMapping(organizationId, solutionId, undefined);
     }
 
-    public static from(map:SolutionMap) {
+    getBySolutionId(solutionId:string, organizationId?:string): SolutionWorkspaceMapping[] {
+        return new TS.Linq.Enumerator(this.mappings)
+            .where(m => m.solutionId && m.solutionId === solutionId && (!organizationId || organizationId && m.organizationId === organizationId))
+            .toArray();
+    }
+
+    static from(map:SolutionMap): SolutionMap {
         return new SolutionMap(map);
     }
 
-    public async load(filename?:string): Promise<SolutionMap> {
+    async load(filename?:string): Promise<SolutionMap> {
         return (SolutionMap.read(filename).then(solutionMap => SolutionMap.from(solutionMap)));
     }
 
-    public async save(filename?:string): Promise<SolutionMap> {
+    async save(filename?:string): Promise<SolutionMap> {
         return SolutionMap.write(this, filename);
     }
 
-    public saveToWorkspace(context: ExtensionContext) : SolutionMap {
+    saveToWorkspace(context: ExtensionContext): SolutionMap {
         if (context) {
             context.workspaceState.update(cs.dynamics.configuration.workspaceState.solutionMap, this);
         }
@@ -147,13 +169,14 @@ export default class SolutionMap implements IWireUpCommands
         return this;
     }
 
-    public clear(): SolutionMap { 
+    clear(): SolutionMap { 
+        this.unmonitorMappedFolders();
         this.mappings = [];
 
         return this;
     }
 
-    public static loadFromWorkspace(context: ExtensionContext) : SolutionMap {
+    static loadFromWorkspace(context: ExtensionContext): SolutionMap {
         if (context) {
             const value = context.workspaceState.get<SolutionMap>(cs.dynamics.configuration.workspaceState.solutionMap);
 
@@ -165,7 +188,7 @@ export default class SolutionMap implements IWireUpCommands
         return new SolutionMap();
     }
     
-    public static async read(filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap> {
+    static async read(filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap> {
         const workspacePath = await QuickPicker.pickWorkspaceRoot(undefined, "Choose a location that houses your .dynamics folder.", true).then(uri => uri ? uri.fsPath : null);
         if (!workspacePath) { return; }
 
@@ -186,13 +209,13 @@ export default class SolutionMap implements IWireUpCommands
         return new SolutionMap();
     }
 
-    public static async write(map:SolutionMap, filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap> {
+    static async write(map:SolutionMap, filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap> {
         const workspacePath = await QuickPicker.pickWorkspaceRoot(undefined, "Choose a location where your .dynamics folder will go.", true).then(uri => uri ? uri.fsPath : null);
         if (!workspacePath) { return; }
 
         const folder  = path.join(workspacePath, path.dirname(filename));
 
-        if (!fs.existsSync(folder)) {
+        if (!FileSystem.Exists(folder)) {
             FileSystem.MakeFolderSync(folder);
         }
 
@@ -205,6 +228,45 @@ export default class SolutionMap implements IWireUpCommands
         }
 
         return map;
+    }
+
+    private monitorMappedFolders(mapping?:SolutionWorkspaceMapping): void {
+        const toMonitor:SolutionWorkspaceMapping[] = mapping ? [ mapping ] : this.mappings;
+        
+        toMonitor.forEach(m => {
+            const pattern = SolutionWorkspaceMapping.getSolutionWatcherPattern(m);
+
+            WorkspaceFileSystemWatcher.Instance.watch(SolutionMap.patternName(pattern), pattern, "Create", "Modify", "Delete", "Move", "Rename")
+                .then(change => {
+                    if (change.event === "Move" || change.event === "Rename") {
+                        this.getByPath(change.sourceUri.fsPath).forEach(async m => {
+                            this.unmonitorMappedFolders(m);
+
+                            const mappedItems = <SolutionWorkspaceMapping[]>await vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, m, undefined, change.targetUri.fsPath);
+
+                            mappedItems.forEach(m => this.monitorMappedFolders(m));
+                        });
+                    }
+                });
+        });
+    }
+
+    private unmonitorMappedFolders(mapping?:SolutionWorkspaceMapping): void {
+        const toUnmonitor:SolutionWorkspaceMapping[] = mapping ? [ mapping ] : this.mappings;
+
+        toUnmonitor.forEach(m => {
+            const pattern = SolutionWorkspaceMapping.getSolutionWatcherPattern(m);
+
+            WorkspaceFileSystemWatcher.Instance.stopWatching(SolutionMap.patternName(pattern));
+        });
+    }
+
+    private static patternName(pattern:vscode.GlobPattern) {
+        if (pattern instanceof vscode.RelativePattern) {
+            return `SolutionMap:${(<vscode.RelativePattern>pattern).base}${(<vscode.RelativePattern>pattern).pattern}`;
+        }
+
+        return `SolutionMap:${pattern}`;
     }
 }
 
@@ -221,7 +283,11 @@ export class SolutionWorkspaceMapping
     public organizationId:string;
     public path:string;
 
-    get solutionWatcherPattern():vscode.GlobPattern { 
-        return new RelativePattern(this.path, "*.xml");
+    static getSolutionWatcherPattern(mapping:SolutionWorkspaceMapping):vscode.GlobPattern { 
+        return new RelativePattern(mapping.path, "*");
+    }
+
+    static getWebResourceWatcherPattern(mapping:SolutionWorkspaceMapping):vscode.GlobPattern { 
+        return new RelativePattern(mapping.path, "**/WebResources/*.*");
     }
 }
