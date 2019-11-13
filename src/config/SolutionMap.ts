@@ -35,7 +35,32 @@ export default class SolutionMap implements IWireUpCommands
         }
 
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> => {
+            vscode.commands.registerCommand(cs.dynamics.deployment.removeSolutionMapping, async (item?: SolutionWorkspaceMapping): Promise<boolean> => {
+                const map = SolutionMap.loadFromWorkspace(context);
+                let returnValue = false;
+
+                if (!item) { 
+                    map.clear();
+                } else {
+                    if (item && item.path) {
+                        if (FileSystem.Exists(item.path)) {
+                            returnValue = true;
+                            await FileSystem.DeleteFolder(item.path);
+                        }
+                    }
+
+                    const itemIndex = map.mappings.indexOf(item);
+
+                    if (itemIndex > -1) {
+                        map.mappings.slice(itemIndex, 1);
+                    }
+                }
+                
+                map.saveToWorkspace(context);
+
+                return returnValue;
+            })
+            , vscode.commands.registerCommand(cs.dynamics.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> => {
                 let solutionId;
                 let organizationId;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
@@ -246,6 +271,12 @@ export default class SolutionMap implements IWireUpCommands
                             const mappedItems = <SolutionWorkspaceMapping[]>await vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, m, undefined, change.targetUri.fsPath);
 
                             mappedItems.forEach(m => this.monitorMappedFolders(m));
+                        });
+                    } else if (change.event === "Delete") {
+                        this.getByPath(change.sourceUri.fsPath).forEach(async m => {
+                            this.unmonitorMappedFolders(m);
+
+                            await vscode.commands.executeCommand(cs.dynamics.deployment.removeSolutionMapping, m);
                         });
                     }
                 });

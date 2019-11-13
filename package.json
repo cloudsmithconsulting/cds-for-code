@@ -1,7 +1,7 @@
 {
-	"name": "dynamics-365-toolkit",
+	"name": "dynamics-365-for-code",
 	"displayName": "Dynamics365 for Code",
-	"publisher": "cloudsmith",
+	"publisher": "CloudSmith",
 	"description": "Code extension providing development capabilities for Dynamics 365 written by CloudSmith Consulting LLC",
 	"version": "0.1.1",
 	"preview": true,
@@ -108,13 +108,13 @@
 				},
 				"cs.dynamics.configuration.templates.placeholderRegExp": {
 					"type": "string",
-					"default": "${(\\w+)?}",
-					"description": "Regular expression for detecting placeholders (e.g. \"${(\\w+?)}\").  The first capture group dictates the placeholder key."
+					"default": "#{([\\s\\S]+?)}",
+					"description": "Regular expression for detecting placeholders (e.g. \"#{([\\s\\S]+?)}\").  The first capture group dictates the placeholder key."
 				},
 				"cs.dynamics.configuration.templates.placeholders": {
 					"type": "object",
 					"default": {},
-					"description": "List of placeholders, in key-value string pairs."
+					"description": "List of built in placeholders, in key-value string pairs."
 				}
 			}
 		},
@@ -251,13 +251,18 @@
 				"category": "Dynamics 365 CE"
 			},
 			{
+				"command": "cs.dynamics.deployment.registerPluginAssembly",
+				"title": "Register or update a plugin assembly",
+				"category": "Dynamics 365 CE"
+			},
+			{
 				"command": "cs.dynamics.deployment.removeSolutionComponent",
 				"title": "Remove a component from a Dynamics 365 Solution",
 				"category": "Dynamics 365 CE"
 			},
 			{
-				"command": "cs.dynamics.deployment.registerPluginAssembly",
-				"title": "Register or update a plugin assembly",
+				"command": "cs.dynamics.deployment.removeSolutionMapping",
+				"title": "Remove remembered locations where Dynamics solutions are stored in this workspace",
 				"category": "Dynamics 365 CE"
 			},
 			{

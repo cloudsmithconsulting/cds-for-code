@@ -410,7 +410,7 @@ export default class ProjectTemplatesPlugin implements IWireUpCommands {
         }
 
         // recursively copy files, replacing placeholders as necessary
-		let copyFunc = async (src : string, dest : string) => {
+		let copyFunc = async (src: string, dest: string) => {
 
             // maybe replace placeholders in filename
             if (usePlaceholders) {

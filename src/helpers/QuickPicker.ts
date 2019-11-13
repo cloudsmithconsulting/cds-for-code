@@ -8,6 +8,8 @@ import { DynamicsWebApi } from "../api/Types";
 import Utilities from "./Utilities";
 import Dictionary from "./Dictionary";
 import * as FileSystem from "../helpers/FileSystem";
+import { Octicon } from "../extension/Octicon";
+import * as path from 'path';
 
 export default class QuickPicker {
     /**
@@ -47,8 +49,8 @@ export default class QuickPicker {
 	 * @param options options to choose from
 	 */
 	public static async pickBoolean(placeHolder: string, trueValue:string = "True", falseValue:string = "False"): Promise<boolean> {
-        return await vscode.window.showQuickPick([new QuickPickOption(trueValue, undefined), new QuickPickOption(falseValue, undefined)], { placeHolder, ignoreFocusOut: true, canPickMany: false })
-            .then(value => value.label === trueValue ? true : value.label === falseValue ? false : null);
+        return await vscode.window.showQuickPick([new QuickPickOption(`${Octicon.check} ${trueValue}`, undefined), new QuickPickOption(`${Octicon.x} ${falseValue}`, undefined)], { placeHolder, ignoreFocusOut: true, canPickMany: false })
+            .then(value => value.label.startsWith(`${Octicon.check}`) ? true : value.label.startsWith(`${Octicon.x}`) ? false : null);
 	}    
 
     /**
@@ -107,42 +109,40 @@ export default class QuickPicker {
         let choices:QuickPickOption[] = [];
 
         if (canAddNewItem) {
-            choices.push(new QuickPickOption("+", undefined, `New ${canPickFiles && !canPickFolders ? "File" : canPickFolders && !canPickFiles ? "Folder" : "Item" }`, defaultUri));
+            choices.push(new QuickPickOption(`${Octicon.file_directory_create}`, undefined, `New ${canPickFiles && !canPickFolders ? "File" : canPickFolders && !canPickFiles ? "Folder" : "Item" }`, defaultUri, true));
         }
 
         if (canPickFolders) {
-            choices.push(new QuickPickOption(".", undefined, defaultUri.fsPath, defaultUri));
+            choices.push(new QuickPickOption(`${Octicon.file_symlink_directory} .`, undefined, defaultUri.fsPath, defaultUri, true));
         }
 
         if (!new TS.Linq.Enumerator(vscode.workspace.workspaceFolders).any(f => f.uri.fsPath === defaultUri.fsPath)) {
             const folderNoSlash = defaultUri.path.endsWith("/") ? defaultUri.path.substr(0, defaultUri.path.length - 1) : defaultUri.path;
 
-            choices.push(new QuickPickOption("..", undefined, defaultUri.with({ path: folderNoSlash.substr(0, folderNoSlash.lastIndexOf("/")) }).fsPath, defaultUri));
+            choices.push(new QuickPickOption(`${Octicon.file_symlink_directory} ..`, undefined, defaultUri.with({ path: folderNoSlash.substr(0, folderNoSlash.lastIndexOf("/")) }).fsPath, defaultUri, true));
         }
 
         return await vscode.workspace.fs.readDirectory(defaultUri)
             .then(results => {
-                results.forEach(r => {
+                new TS.Linq.Enumerator(results).orderBy(r => r[0]).forEach(r => {
                     if ((canPickFiles && r[1] === vscode.FileType.File) || (r[1] === vscode.FileType.Directory) || (canPickLinks && r[1] === vscode.FileType.SymbolicLink)) { 
-                        choices.push(new QuickPickOption(r[1] === vscode.FileType.SymbolicLink ? ">> " + r[0] : r[0], undefined, undefined, r)); 
+                        choices.push(new QuickPickOption(r[1] === vscode.FileType.SymbolicLink ? `${Octicon.file_symlink_file} ${r[0]}` : r[1] === vscode.FileType.Directory ? `${Octicon.file_directory} ${r[0]}` : `${Octicon.file} ${r[0]}`, undefined, undefined, r)); 
                     } 
                 }); 
 
-                return new TS.Linq.Enumerator(choices).orderBy(c => c.label.toLowerCase()).toArray();
-            }).then(choices => {
                 return this.pick(placeHolder, ...choices);
             }).then(async choice => {
                 if (choice) {
                     let newUri;
                     let itemType = choice.context[1];
 
-                    if (choice.label === ".") {
+                    if (choice.label === `${Octicon.file_symlink_directory} .`) {
                         return new WorkspaceFileItem(defaultUri.fsPath, defaultUri.fsPath.endsWith("/") ? vscode.FileType.Directory : vscode.FileType.File);
-                    } else if (choice.label.startsWith(">> ")) {
-                        return new WorkspaceFileItem(defaultUri.fsPath, vscode.FileType.SymbolicLink);
-                    } else if (choice.label === "..") {
+                    } else if (choice.label.startsWith(`${Octicon.file_symlink_file} `)) {
+                        return new WorkspaceFileItem(choice.context[0], vscode.FileType.SymbolicLink);
+                    } else if (choice.label === `${Octicon.file_symlink_directory} ..`) {
                         newUri = defaultUri.with({ path: defaultUri.path.substr(0, defaultUri.path.lastIndexOf("/")) });
-                    } else if (choice.label === "+") {
+                    } else if (choice.label === `${Octicon.file_directory_create}`) {
                         const input = await QuickPicker.ask(`What is the name of the new ${canPickFiles && !canPickFolders ? "File" : canPickFolders && !canPickFiles ? "Folder" : "Item" }?`);
 
                         if (input) {
@@ -160,11 +160,11 @@ export default class QuickPicker {
                             return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem);
                         }
                     } else {
-                        newUri = defaultUri.with({ path: `${defaultUri.path.endsWith("/") ? defaultUri.path : defaultUri.path + "/" }${choice.label}` }); 
+                        newUri = defaultUri.with({ path: `${defaultUri.path.endsWith("/") ? defaultUri.path : defaultUri.path + "/" }${path.basename(choice.context[0])}` }); 
                     }
 
                     if (newUri) {
-                        if (choice.context[1] === vscode.FileType.Directory || choice.label === "..") {
+                        if (choice.context[1] === vscode.FileType.Directory || choice.label.startsWith(`${Octicon.file_symlink_directory} ..`)) {
                             return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem);
                         } else {
                             return new WorkspaceFileItem(newUri.fsPath, itemType);
@@ -214,14 +214,14 @@ export default class QuickPicker {
 
     public static async pickDynamicsSolution(config:DynamicsWebApi.Config, placeHolder?:string, ignoreFocusOut:boolean = true) : Promise<any> {
         return new ApiRepository(config).retrieveSolutions()
-            .then(solutions => new TS.Linq.Enumerator(solutions).select(solution => new QuickPickOption(solution.friendlyname, undefined, undefined, solution)).toArray())
+            .then(solutions => new TS.Linq.Enumerator(solutions).select(solution => new QuickPickOption(`${Octicon.circuit_board} ${solution.friendlyname}`, undefined, undefined, solution)).toArray())
             .then(options => vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }))
             .then(chosen => chosen.context);
     }
 
     public static async pickDynamicsOrganization(context:vscode.ExtensionContext, placeHolder?:string, ignoreFocusOut: boolean = true) : Promise<DynamicsWebApi.Config> {
         return DiscoveryRepository.getOrgConnections(context)
-            .then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(org.name, undefined, undefined, org)).toArray())
+            .then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(`${Octicon.database} ${org.name}`, undefined, undefined, org)).toArray())
             .then(options => options && options.length === 1 ? options[0] : vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }))
             .then(chosen => <DynamicsWebApi.Config>chosen.context);
     }
@@ -288,11 +288,12 @@ export class QuickPickOption implements vscode.QuickPickItem {
     public picked?: boolean;
     public alwaysShow?: boolean;
 
-	constructor(label: string, command: string, description: string='', context?: any) {
+	constructor(label: string, command: string, description: string='', context?: any, alwaysShow?:boolean) {
 		this.label = label;
 		this.command = command;
         this.description = description;
         this.context = context;
+        this.alwaysShow = alwaysShow;
     }
     
     public invokeCommand<T>(...options:any[]): Thenable<T>

@@ -9,6 +9,7 @@ export namespace dynamics
         public static readonly addSolutionComponent:string = `${deployment._namespace}.addSolutionComponent`;
         public static readonly registerPluginAssembly:string = `${deployment._namespace}.registerPluginAssembly`;
         public static readonly removeSolutionComponent:string = `${deployment._namespace}.removeSolutionComponent`;
+        public static readonly removeSolutionMapping:string = `${deployment._namespace}.removeSolutionMapping`;
         public static readonly updateSolutionMapping:string = `${deployment._namespace}.updateSolutionMapping`;
     }
 
