@@ -282,7 +282,7 @@ export default class QuickPicker {
         }
 
         if (options && options.length > 0) {
-            return await this.pick(placeHolder, ...options).then(p => p.context);
+            return await this.pick(placeHolder, ...options).then(p => p ? p.context : undefined);
         }
 
         return null;

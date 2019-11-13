@@ -1,12 +1,15 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
+import * as FileSystem from '../helpers/FileSystem';
 import IWireUpCommands from '../wireUpCommand';
 import { DynamicsWebApi } from '../api/Types';
 import ApiRepository from '../repositories/apiRepository';
-import QuickPicker from '../helpers/QuickPicker';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import * as path from 'path';
 import { TS } from 'typescript-linq';
+import VisualStudioProjectCommands from './visualStudioProjectCommands';
+import { Octicon } from "../extension/Octicon";
+import QuickPicker, { QuickPickOption } from '..//helpers/QuickPicker';
 
 export default class RegisterPluginAssembly implements IWireUpCommands {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;
@@ -22,16 +25,50 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
 
             vscode.commands.registerCommand(cs.dynamics.deployment.registerPluginAssembly, async (config?:DynamicsWebApi.Config, pluginAssembly?:any, file?:vscode.Uri, solution?:any):Promise<any> => { 
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
+                let defaultFolder = workspaceFolder ? workspaceFolder.uri : undefined;
 
-                file = file || <vscode.Uri>await QuickPicker.pickAnyFile(workspaceFolder ? workspaceFolder.uri : undefined, false, "Choose the plugin assembly", { 'Assemblies': ['dll'] });
+                if (file) {
+                    if (FileSystem.Stats(file.fsPath).isDirectory()) {
+                        defaultFolder = file;
+                        file = undefined;
+                    } else {
+                        // If we didn't specify a project file, return.
+                        if (!VisualStudioProjectCommands.fileIsProject(file)) { file = undefined; } 
+                    }
+                }
+
+                const fileTypes = VisualStudioProjectCommands.projectFileTypes;
+                fileTypes.push(".dll");
+
+                file = file || await QuickPicker.pickWorkspaceFile(defaultFolder, "Choose a projet to build or assembly to upload", undefined, false, fileTypes).then(r => vscode.Uri.file(r));
                 if (!file) { return; }
+
+                if (VisualStudioProjectCommands.fileIsProject(file)) {
+                    await vscode.commands.executeCommand(cs.dynamics.deployment.dotNetBuild, file, undefined, "!")
+                        .then(() => FileSystem.Walk(path.dirname(file.fsPath), item => {
+                            return item.endsWith(path.basename(file.fsPath, path.extname(file.fsPath)) + ".dll" );
+                        }))
+                        .then(async results => { 
+                            if (results.length === 0) {
+                                vscode.window.showErrorMessage(`No build output was found when building ${file}`);
+
+                                return;
+                            } else {
+                                let option = await QuickPicker.pick("Choose the output assembly to deploy", ...results.map(r => new QuickPickOption(`${Octicon.file_binary} ${r}`, undefined, undefined, r)));
+                                
+                                if (option) {
+                                    file = vscode.Uri.file(option.context);
+                                }
+                            }
+                        });
+                }
 
                 config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
 				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a solution", true);
                 pluginAssembly = pluginAssembly || await QuickPicker.pickDynamicsSolutionComponent(config, solution, DynamicsWebApi.SolutionComponent.PluginAssembly, "Choose a plugin assembly to update (or none for new)");
-
+               
                 const api = new ApiRepository(config);
 
                 return DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Tools\\CloudSmith.Dynamics365.AssemblyScanner\\"))

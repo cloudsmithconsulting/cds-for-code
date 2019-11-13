@@ -5,8 +5,6 @@ import * as FileSystem from '../helpers/FileSystem';
 import QuickPicker from '../helpers/QuickPicker';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import * as path from 'path';
-import * as xml2js from 'xml2js';
-import { TS } from 'typescript-linq';
 import XmlParser from '../helpers/XmlParser';
 
 export default class VisualStudioProjectCommands implements IWireUpCommands {
@@ -14,16 +12,17 @@ export default class VisualStudioProjectCommands implements IWireUpCommands {
 
     public static projectFileTypes:string[] = [".csproj", ".vbproj"];
 
+    public static fileIsProject(file:vscode.Uri):boolean {
+        let fileIsProject = false;
+
+        VisualStudioProjectCommands.projectFileTypes.forEach(t => { if (file.path.endsWith(t)) { fileIsProject = true; } });   
+
+        return fileIsProject;
+    }
+
     public wireUpCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
         this.workspaceConfiguration = wconfig;
 
-        const fileIsProject = (file:vscode.Uri) => {
-            let fileIsProject = false;
-
-            VisualStudioProjectCommands.projectFileTypes.forEach(t => { if (file.path.endsWith(t)) { fileIsProject = true; } });   
-
-            return fileIsProject;
-        };
         const incrementBuild = (build:string) => {
             const parts = build.split(".");
             if (parts.length < 4) {
@@ -57,7 +56,7 @@ export default class VisualStudioProjectCommands implements IWireUpCommands {
                         file = undefined;
                     } else {
                         // If we didn't specify a project file, return.
-                        if (!fileIsProject(file)) { file = undefined; } 
+                        if (!VisualStudioProjectCommands.fileIsProject(file)) { file = undefined; } 
                     }
                 }
 
@@ -92,7 +91,7 @@ export default class VisualStudioProjectCommands implements IWireUpCommands {
                     }
                 }
 
-                if (!logFile) {
+                if (!logFile || logFile !== "!") {
                     if ((await QuickPicker.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
                         let dateString = new Date().toISOString();
                         dateString = dateString.substr(0, dateString.length - 5);
@@ -101,6 +100,8 @@ export default class VisualStudioProjectCommands implements IWireUpCommands {
                         logFile = path.join(context.globalStoragePath, `/logs/build-${path.basename(file.path)}-${dateString}.log`); 
                     }
                 }
+
+                if (logFile && logFile === "!") { logFile = undefined; }
 
                 return DynamicsTerminal.showTerminal(path.parse(file.fsPath).dir)
                     .then(async terminal => { 
@@ -133,7 +134,7 @@ export default class VisualStudioProjectCommands implements IWireUpCommands {
                         file = undefined;
                     } else {
                         // If we didn't specify a project file, return.
-                        if (!fileIsProject(file)) { file = undefined; } 
+                        if (!VisualStudioProjectCommands.fileIsProject(file)) { file = undefined; } 
                     }
                 }
 
