@@ -28,26 +28,26 @@ export default class DynamicsTreeView implements IWireUpCommands {
         
         // setup commands
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.controls.treeView.refreshEntry, (item?: TreeEntry) => {
+            vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.refreshEntry, (item?: TreeEntry) => {
                 treeProvider.refresh(item);
             })
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addConnection, (config: DynamicsWebApi.Config) => {
+            , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.addConnection, (config: DynamicsWebApi.Config) => {
                 treeProvider.addConnection(config);
             })
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.clickEntry, (label?: string) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.clickEntry, (label?: string) => { // Match name of command to package.json command
                 vscode.window.showInformationMessage(`Clicked ${label || ''}`);
             }) 
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.deleteEntry, (item: TreeEntry) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.deleteEntry, (item: TreeEntry) => { // Match name of command to package.json command
                treeProvider.removeConnection(item.config);
             }) 
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.inspectEntry, (item: TreeEntry) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.inspectEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 vscode.commands.executeCommand(cs.dynamics.controls.jsonInspector.inspect, item.context);
             }) 
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.moveSolution, (item: TreeEntry) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.moveSolution, (item: TreeEntry) => { // Match name of command to package.json command
                 vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, item.solutionMapping, item.config)
                     .then(result => TreeEntryCache.Instance.ClearMap());
             }) 
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntryToSolution, (item: TreeEntry) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.addEntryToSolution, (item: TreeEntry) => { // Match name of command to package.json command
                 if (item.solutionId) {
                     vscode.window.showInformationMessage(`The component ${item.label} is already a part of a solution.`);
 
@@ -97,7 +97,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                     }
 
             }) 
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.removeEntryFromSolution, (item: TreeEntry) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.removeEntryFromSolution, (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item.solutionId) {
                     vscode.window.showInformationMessage(`The component ${item.label} is not part of a solution.`);
 
@@ -144,14 +144,14 @@ export default class DynamicsTreeView implements IWireUpCommands {
                     }
                  }
             }) 
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.addEntry, async (item: TreeEntry) => { // Match name of command to package.json command
+            , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.addEntry, async (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item) {
-                    vscode.commands.executeCommand(cs.dynamics.controls.treeView.editConnection);
+                    vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editConnection);
 
                     return;
                 }
 
-                let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.treeView.addEntry, item);
+                let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.addEntry, item);
 
                 switch (item.itemType)
                 {
@@ -211,13 +211,13 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         break;
                 }
             })   
-            , vscode.commands.registerCommand(cs.dynamics.controls.treeView.editEntry, async (item: TreeEntry) => { // Match name of command to package.json command
-                let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.treeView.editEntry, item);
+            , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.editEntry, async (item: TreeEntry) => { // Match name of command to package.json command
+                let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editEntry, item);
 
                 switch (item.itemType)
                 {
                     case "Connection":
-                        vscode.commands.executeCommand(cs.dynamics.controls.treeView.editConnection, item.config);
+                        vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editConnection, item.config);
                         break;
                     case "Solution":
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config, item.context.solutionid), retryFunction);
@@ -262,8 +262,8 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         break;
                 }
            }) 
-           , vscode.commands.registerCommand(cs.dynamics.controls.treeView.openInApp, async (item: TreeEntry) => {
-                let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.treeView.openInApp, item);
+           , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.openInApp, async (item: TreeEntry) => {
+                let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.openInApp, item);
 
                 switch (item.itemType) {
                     case "Entity":
@@ -277,8 +277,8 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         break;
                 }
            })
-           , vscode.commands.registerCommand(cs.dynamics.controls.treeView.openInBrowser, async (item: TreeEntry) => {
-                let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.treeView.openInBrowser, item);
+           , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.openInBrowser, async (item: TreeEntry) => {
+                let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.openInBrowser, item);
 
                 switch (item.itemType) {
                     case "Entity":
@@ -293,7 +293,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         break;
                 }
            })
-           , vscode.commands.registerCommand(cs.dynamics.controls.treeView.openInEditor, async (item: TreeEntry) => {
+           , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.openInEditor, async (item: TreeEntry) => {
                 switch (item.itemType) {
                     case "Form":
                     case "Dashboard":
@@ -464,7 +464,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed, 
                 connection.workstation || connection.domain,
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: connection.webApiUrl,
                     arguments: [connection.webApiUrl]
                 },
@@ -485,7 +485,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed,
                 org.Version, 
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: org.FriendlyName,
                     arguments: [`${commandPrefix || ''}/${org.Id}`]
                 },
@@ -508,7 +508,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed, 
                 null,
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: 'Entities',
                     arguments: [`${commandPrefix || ''}/Entities`]
                 },
@@ -522,7 +522,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed, 
                 null,
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: 'OptionSets',
                     arguments: [`${commandPrefix || ''}/OptionSets`]
                 },
@@ -536,7 +536,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed, 
                 null,
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: 'Processes',
                     arguments: [`${commandPrefix || ''}/Processes`]
                 },
@@ -550,7 +550,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed, 
                 null,
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: 'Web Resources',
                     arguments: [`${commandPrefix || ''}/WebResources`]
                 },
@@ -564,7 +564,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed, 
                 null,
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: 'Plugins',
                     arguments: [`${commandPrefix || ''}/Plugins`]
                 },
@@ -582,7 +582,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     vscode.TreeItemCollapsibleState.Collapsed, 
                     null,
                     {
-                        command: cs.dynamics.controls.treeView.clickEntry,
+                        command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                         title: 'Solutions',
                         arguments: [`${commandPrefix || ''}/Solutions`]
                     },
@@ -602,7 +602,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             vscode.TreeItemCollapsibleState.Collapsed, 
             null,
             {
-                command: cs.dynamics.controls.treeView.clickEntry,
+                command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                 title: 'Keys',
                 arguments: [`${commandPrefix || ''}/Keys`]
             },
@@ -616,7 +616,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             vscode.TreeItemCollapsibleState.Collapsed, 
             null,
             {
-                command: cs.dynamics.controls.treeView.clickEntry,
+                command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                 title: 'Attributes',
                 arguments: [`${commandPrefix || ''}/Attributes`]
             },
@@ -630,7 +630,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             vscode.TreeItemCollapsibleState.Collapsed, 
             null,
             {
-                command: cs.dynamics.controls.treeView.clickEntry,
+                command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                 title: 'Relationships',
                 arguments: [`${commandPrefix || ''}/Relationships`]
             },
@@ -644,7 +644,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             vscode.TreeItemCollapsibleState.Collapsed, 
             null,
             {
-                command: cs.dynamics.controls.treeView.clickEntry,
+                command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                 title: 'Views',
                 arguments: [`${commandPrefix || ''}/Views`]
             },
@@ -658,7 +658,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             vscode.TreeItemCollapsibleState.Collapsed, 
             null,
             {
-                command: cs.dynamics.controls.treeView.clickEntry,
+                command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                 title: 'Charts',
                 arguments: [`${commandPrefix || ''}/Charts`]
             },
@@ -672,7 +672,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             vscode.TreeItemCollapsibleState.Collapsed, 
             null,
             {
-                command: cs.dynamics.controls.treeView.clickEntry,
+                command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                 title: 'Forms',
                 arguments: [`${commandPrefix || ''}/Forms`]
             },
@@ -686,7 +686,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             vscode.TreeItemCollapsibleState.Collapsed, 
             null,
             {
-                command: cs.dynamics.controls.treeView.clickEntry,
+                command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                 title: 'Dashboards',
                 arguments: [`${commandPrefix || ''}/Dashboards`]
             },
@@ -700,7 +700,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             vscode.TreeItemCollapsibleState.Collapsed, 
             null,
             {
-                command: cs.dynamics.controls.treeView.clickEntry,
+                command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                 title: 'Processes',
                 arguments: [`${commandPrefix || ''}/Processes`]
             },
@@ -721,7 +721,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed,
                 `v${solution.version} (${solution.ismanaged ? "Managed" :  "Unmanaged"})`, 
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: solution.friendlyname,
                     arguments: [`${commandPrefix || ''}/${solution.solutionid}`]
                 },
@@ -743,7 +743,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed,
                 `v${plugin.version} (${plugin.publickeytoken})`, 
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: plugin.friendlyname,
                     arguments: [`${commandPrefix || ''}/${plugin.pluginassemblyid}`]
                 },
@@ -765,7 +765,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed,
                 pluginType.name.replace(plugin.name + ".", ''),
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: pluginType.friendlyname,
                     arguments: [`${commandPrefix || ''}/${pluginType.name}`]
                 },
@@ -787,7 +787,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed,
                 pluginStep.description,
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: pluginStep.name,
                     arguments: [`${commandPrefix || ''}/${pluginStep.name}`]
                 },
@@ -809,7 +809,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.None,
                 pluginImage.description,
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: pluginImage.name,
                     arguments: [`${commandPrefix || ''}/${pluginImage.name}`]
                 },
@@ -831,7 +831,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.Collapsed,
                 '', 
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: container,
                     arguments: [`${commandPrefix || ''}/${container}`]
                 },
@@ -853,7 +853,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.None,
                 webresource.displayname, 
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: webresource.displayname,
                     arguments: [`${commandPrefix || ''}/${webresource.webresourceid}`]
                 },
@@ -882,7 +882,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.None,
                 DynamicsUrlResolver.parseProcessType(process.category).toString(), 
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: process.displayname,
                     arguments: [`${commandPrefix || ''}/${process.workflowid}`]
                 },
@@ -907,7 +907,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     vscode.TreeItemCollapsibleState.Collapsed,
                     optionSet.Name, 
                     {
-                        command: cs.dynamics.controls.treeView.clickEntry,
+                        command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                         title: displayName,
                         arguments: [`${commandPrefix || ''}/${optionSet.Name}`]
                     },
@@ -933,7 +933,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     vscode.TreeItemCollapsibleState.Collapsed,
                     entity.LogicalName, 
                     {
-                        command: cs.dynamics.controls.treeView.clickEntry,
+                        command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                         title: displayName,
                         arguments: [`${commandPrefix || ''}/${entity.LogicalName}`]
                     },
@@ -959,7 +959,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     vscode.TreeItemCollapsibleState.None,
                     attribute.LogicalName, 
                     {
-                        command: cs.dynamics.controls.treeView.clickEntry,
+                        command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                         title: displayName,
                         arguments: [`${commandPrefix || ''}/${attribute.LogicalName}`]
                     },
@@ -982,7 +982,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.None,
                 query.description, 
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: query.name,
                     arguments: [`${commandPrefix || ''}/${query.savedqueryid}`]
                 },
@@ -1004,7 +1004,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.None,
                 queryvisualization.description, 
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: queryvisualization.name,
                     arguments: [`${commandPrefix || ''}/${queryvisualization.savedqueryvisualizationid}`]
                 },
@@ -1026,7 +1026,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.None,
                 form.description, 
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: form.name,
                     arguments: [`${commandPrefix || ''}/${form.formid}`]
                 },
@@ -1048,7 +1048,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 vscode.TreeItemCollapsibleState.None,
                 dashboard.description, 
                 {
-                    command: cs.dynamics.controls.treeView.clickEntry,
+                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: dashboard.name,
                     arguments: [`${commandPrefix || ''}/${dashboard.formid}`]
                 },
@@ -1073,7 +1073,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     vscode.TreeItemCollapsibleState.None,
                     key.LogicalName, 
                     {
-                        command: cs.dynamics.controls.treeView.clickEntry,
+                        command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                         title: key.name,
                         arguments: [`${commandPrefix || ''}/${key.savedqueryvisualizationid}`]
                     },
@@ -1101,7 +1101,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                             vscode.TreeItemCollapsibleState.None,
                             r.RelationshipType, 
                             {
-                                command: cs.dynamics.controls.treeView.clickEntry,
+                                command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                                 title: r.SchemaName,
                                 arguments: [`${commandPrefix || ''}/${r.SchemaName}`]
                             },
@@ -1118,7 +1118,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                             vscode.TreeItemCollapsibleState.None,
                             r.RelationshipType, 
                             {
-                                command: cs.dynamics.controls.treeView.clickEntry,
+                                command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                                 title: r.SchemaName,
                                 arguments: [`${commandPrefix || ''}/${r.SchemaName}`]
                             },
@@ -1135,7 +1135,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                             vscode.TreeItemCollapsibleState.None,
                             r.RelationshipType, 
                             {
-                                command: cs.dynamics.controls.treeView.clickEntry,
+                                command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                                 title: r.SchemaName,
                                 arguments: [`${commandPrefix || ''}/${r.SchemaName}`]
                             },

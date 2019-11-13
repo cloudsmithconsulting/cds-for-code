@@ -8,7 +8,7 @@ import { DynamicsWebApi } from "../api/Types";
 import Utilities from "./Utilities";
 import Dictionary from "./Dictionary";
 import * as FileSystem from "../helpers/FileSystem";
-import { Octicon } from "../extension/Octicon";
+import { Octicon } from "../core/Octicon";
 import * as path from 'path';
 
 export default class QuickPicker {

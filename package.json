@@ -23,7 +23,7 @@
 	"activationEvents": [
 		"onFileSystem:file",
 		"onView:cs.dynamics.viewContainers.dynamicsExplorer",
-		"onCommand:cs.dynamics.controls.treeView.editConnection",
+		"onCommand:cs.dynamics.controls.dynamicsTreeView.editConnection",
 		"onCommand:cs.dynamics.controls.explorer.dotNetBuild",
 		"onCommand:cs.dynamics.controls.explorer.dotNetTest",
 		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFolder",
@@ -172,7 +172,7 @@
 				"category": "Dynamics 365 CE"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.refreshEntry",
+				"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
 				"title": "Refresh",
 				"icon": {
 					"light": "resources/icons/default/refresh.light.svg",
@@ -181,7 +181,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.addEntry",
+				"command": "cs.dynamics.controls.dynamicsTreeView.addEntry",
 				"title": "New",
 				"icon": {
 					"light": "resources/icons/default/add.light.svg",
@@ -190,7 +190,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.editEntry",
+				"command": "cs.dynamics.controls.dynamicsTreeView.editEntry",
 				"title": "Edit",
 				"icon": {
 					"light": "resources/icons/default/edit.light.svg",
@@ -199,7 +199,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.deleteEntry",
+				"command": "cs.dynamics.controls.dynamicsTreeView.deleteEntry",
 				"title": "Delete",
 				"icon": {
 					"light": "resources/icons/default/delete.light.svg",
@@ -208,53 +208,94 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.clickEntry",
+				"command": "cs.dynamics.controls.dynamicsTreeView.clickEntry",
 				"title": "Click",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.inspectEntry",
+				"command": "cs.dynamics.controls.dynamicsTreeView.inspectEntry",
 				"title": "Inspect",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.editConnection",
+				"command": "cs.dynamics.controls.dynamicsTreeView.editConnection",
 				"title": "Open",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.addEntryToSolution",
+				"command": "cs.dynamics.controls.dynamicsTreeView.addEntryToSolution",
 				"title": "Add to Solution",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.removeEntryFromSolution",
+				"command": "cs.dynamics.controls.dynamicsTreeView.removeEntryFromSolution",
 				"title": "Remove from Solution",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.moveSolution",
+				"command": "cs.dynamics.controls.dynamicsTreeView.moveSolution",
 				"title": "Change local workspace folder",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.openInApp",
+				"command": "cs.dynamics.controls.dynamicsTreeView.openInApp",
 				"title": "Open in App",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.openInBrowser",
+				"command": "cs.dynamics.controls.dynamicsTreeView.openInBrowser",
 				"title": "Open in Browser",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.openInEditor",
+				"command": "cs.dynamics.controls.dynamicsTreeView.openInEditor",
 				"title": "Open in Text Editor",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.treeView.unpackSolution",
+				"command": "cs.dynamics.controls.dynamicsTreeView.unpackSolution",
 				"title": "Export into workspace",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
+				"title": "Refresh",
+				"icon": {
+					"light": "resources/icons/default/refresh.light.svg",
+					"dark": "resources/icons/default/refresh.dark.svg"
+				},
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.templateTreeView.addEntry",
+				"title": "New",
+				"icon": {
+					"light": "resources/icons/default/add.light.svg",
+					"dark": "resources/icons/default/add.dark.svg"
+				},
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.templateTreeView.editEntry",
+				"title": "Edit",
+				"icon": {
+					"light": "resources/icons/default/edit.light.svg",
+					"dark": "resources/icons/default/edit.dark.svg"
+				},
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.templateTreeView.deleteEntry",
+				"title": "Delete",
+				"icon": {
+					"light": "resources/icons/default/delete.light.svg",
+					"dark": "resources/icons/default/delete.dark.svg"
+				},
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.templateTreeView.clickEntry",
+				"title": "Click",
 				"category": "UserInterface"
 			},
 			{
@@ -356,7 +397,13 @@
 			"dynamics365-explorer": [
 				{
 					"id": "cs.dynamics.viewContainers.dynamicsExplorer",
-					"name": "Explorer"
+					"name": "Dynamics Explorer"
+				}
+			], 
+			"explorer": [
+				{
+					"id": "cs.dynamics.viewContainers.templateExplorer",
+					"name": "Template Explorer"
 				}
 			]
 		},
@@ -410,74 +457,74 @@
 			],
 			"view/title": [
 				{
-					"command": "cs.dynamics.controls.treeView.refreshEntry",
+					"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
 					"group": "navigation",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.addEntry",
+					"command": "cs.dynamics.controls.dynamicsTreeView.addEntry",
 					"group": "navigation",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer"
 				}
 			],
 			"view/item/context": [
 				{
-					"command": "cs.dynamics.controls.treeView.addEntry",
+					"command": "cs.dynamics.controls.dynamicsTreeView.addEntry",
 					"group": "inline",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.editEntry",
+					"command": "cs.dynamics.controls.dynamicsTreeView.editEntry",
 					"group": "inline",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.inspectEntry",
+					"command": "cs.dynamics.controls.dynamicsTreeView.inspectEntry",
 					"group": "group@2",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canInspectItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.openInApp",
+					"command": "cs.dynamics.controls.dynamicsTreeView.openInApp",
 					"group": "group@3",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canOpenInApp)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.openInBrowser",
+					"command": "cs.dynamics.controls.dynamicsTreeView.openInBrowser",
 					"group": "group@4",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canOpenInBrowser)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.openInEditor",
+					"command": "cs.dynamics.controls.dynamicsTreeView.openInEditor",
 					"group": "group@5",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.deleteEntry",
+					"command": "cs.dynamics.controls.dynamicsTreeView.deleteEntry",
 					"group": "inline",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.unpackSolution",
+					"command": "cs.dynamics.controls.dynamicsTreeView.unpackSolution",
 					"group": "deployment@1",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.moveSolution",
+					"command": "cs.dynamics.controls.dynamicsTreeView.moveSolution",
 					"group": "deployment@1",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canMoveSolution)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.addEntryToSolution",
+					"command": "cs.dynamics.controls.dynamicsTreeView.addEntryToSolution",
 					"group": "deployment@2",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canAddToSolution)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.removeEntryFromSolution",
+					"command": "cs.dynamics.controls.dynamicsTreeView.removeEntryFromSolution",
 					"group": "deployment@3",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.treeView.refreshEntry",
+					"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
 					"group": "group@1",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
 				}

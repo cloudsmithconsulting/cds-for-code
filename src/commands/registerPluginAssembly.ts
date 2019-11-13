@@ -8,7 +8,7 @@ import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import * as path from 'path';
 import { TS } from 'typescript-linq';
 import VisualStudioProjectCommands from './visualStudioProjectCommands';
-import { Octicon } from "../extension/Octicon";
+import { Octicon } from "../core/Octicon";
 import QuickPicker, { QuickPickOption } from '..//helpers/QuickPicker';
 
 export default class RegisterPluginAssembly implements IWireUpCommands {

@@ -22,6 +22,7 @@ import SvcUtilConfigViewManager from './views/svcUtilConfigView';
 import SolutionMap from './config/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
 import VisualStudioProjectCommands from './commands/visualStudioProjectCommands';
+import TemplateTreeView from './views/TemplateTreeView';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -42,6 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// Setup any scripts that require tools configuration, then templating.
 	[   // our views
 		new DynamicsTreeView(),
+		new TemplateTreeView(),
 		new ConnectionViewManager(),
 		new JsonInspectorViewManager(),
 		new SvcUtilConfigViewManager(),

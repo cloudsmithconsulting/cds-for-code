@@ -17,7 +17,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 		this.workspaceConfiguration = config;
 		
 		context.subscriptions.push(
-			vscode.commands.registerCommand(cs.dynamics.controls.treeView.unpackSolution, async (item:any) => {
+			vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.unpackSolution, async (item:any) => {
 				vscode.commands.executeCommand(cs.dynamics.powerShell.unpackSolution, item.config, undefined, item.context);
 			}),
 
