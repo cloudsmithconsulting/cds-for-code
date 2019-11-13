@@ -2,11 +2,7 @@
 // It cannot access the main VS Code APIs directly.
 (function () {
     const vscode = CloudSmith.acquireVsCodeApi();
-    window.entityTypeCodes = [];
-    window.sdkMessageFilters = [];
-    window.primaryObjectTypes = [];
-    window.secondaryObjectTypes = [];
-    window.sdkMessages = [];
+    window.dataCache = {};
 
     // Handle messages sent from the extension to the webview
     window.addEventListener("message", event => {
@@ -100,12 +96,18 @@
     }
 
     function setInitialState(viewModel) {
-        window.entityTypeCodes = _.map(viewModel.entityTypeCodes, i => i.LogicalName);
-        window.sdkMessageFilters = viewModel.sdkMessageFilters;
-        window.sdkMessages = _.map(viewModel.sdkMessages, i => i.name);
+        window.dataCache = {
+            entityTypeCodes: viewModel.entityTypeCodes,
+            sdkMessageFilters: viewModel.sdkMessageFilters,
+            sdkMessages: viewModel.sdkMessages,
+            sdkMessagesMap: _.map(viewModel.sdkMessages, i => i.name),
+            currentMessageFilters: [],
+            primaryEntityMap: [],
+            secondEntityMap: []
+        };
 
         // initialize autocomplete for the text boxes
-        initializeAutoComplete($("#Message"), window.sdkMessages);
+        initializeAutoComplete($("#Message"), window.dataCache.sdkMessagesMap);
         
         if (viewModel.step && viewModel.sdkMessageDetails) {
             $("#Message").val(viewModel.step.sdkmessageid.name);
@@ -130,27 +132,27 @@
     $(function() {
         // get the message value after change
         $("#Message").change(function() {
-            window.primaryObjectTypes = _.map(window.sdkmessageFilters, i => {
-                if (i._sdkmessageid_value === _.find(window.sdkMessages, i => i.name === this.value).sdkmessageid) {
-                    return i.primaryobjecttypecode;
-                }
-            });
+            // get the message from cache
+            const currentMessage = _.find(window.dataCache.sdkMessages, i => i.name === this.value);
+            // if we didnt find a message, get out of here
+            if (!currentMessage) { return; }
+            // get the message id
+            const currentMessageId = currentMessage.sdkmessageid;
+            // get only applicable message filters
+            window.dataCache.currentMessageFilters = _.filter(window.dataCache.sdkMessageFilters, i => i._sdkmessageid_value === currentMessageId);
+            // maps for autocomplete
+            window.dataCache.primaryEntityMap = _.map(window.dataCache.currentMessageFilters, i => i.primaryobjecttypecode);
+            window.dataCache.secondEntityMap = _.uniq(_.map(window.dataCache.currentMessageFilters, i => i.secondaryobjecttypecode));
 
-            window.secondaryObjectTypes = _.map(window.sdkmessageFilters, i => {
-                if (i._sdkmessageid_value === _.find(window.sdkMessages, i => i.name === this.value).sdkmessageid) {
-                    return i.secondaryobjecttypecode;
-                }
-            });
+            initializeAutoComplete($("#PrimaryEntity"), window.dataCache.primaryEntityMap);
+            initializeAutoComplete($("#SecondEntity"), window.dataCache.secondEntityMap);
 
-            initializeAutoComplete($("#PrimaryEntity"), window.primaryObjectTypes);
-            initializeAutoComplete($("#SecondaryEntity"), window.secondaryObjectTypes);
-
-            if (window.primaryObjectTypes.length === 1) { 
-                $("#PrimaryEntity").val(window.primaryObjectTypes[0]);
+            if (window.dataCache.primaryEntityMap.length === 1) { 
+                $("#PrimaryEntity").val(window.dataCache.primaryEntityMap[0]);
             }
 
-            if (window.secondaryObjectTypes.length === 1) { 
-                $("#SecondaryEntity").val(window.secondaryObjectTypes[0]);
+            if (window.dataCache.secondEntityMap.length === 1) { 
+                $("#SecondEntity").val(window.dataCache.secondEntityMap[0]);
             }
         });
 
