@@ -182,18 +182,27 @@ export default class ApiRepository
     public retrieveSdkMessages() {
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessages",
-            select: ["sdkmessageid", "name", "autotransact", "availability", "categoryname", "isactive", "isprivate", "isreadonly", "template", "workflowsdkstepenabled"]
+            select: ["sdkmessageid", "name", "autotransact", "availability", "categoryname", "isactive", "isprivate", "isreadonly", "template", "workflowsdkstepenabled"],
         };
 
         return this.webapi.retrieveAllRequest(request)
             .then(response => response.value ? new TS.Linq.Enumerator(response.value).orderBy(e => e["name"]).toArray() : []);
     }
 
+    public retrieveSdkMessageFilters() {
+        const request: DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "sdkmessagefilters",
+            select: [ "sdkmessagefilterid", "_sdkmessageid_value", "primaryobjecttypecode", "secondaryobjecttypecode" ]
+        };
+
+        return this.webapi.retrieveAllRequest(request)
+            .then(response => response.value ? new TS.Linq.Enumerator(response.value).orderBy(e => e["primaryobjecttypecode"]).toArray() : []);
+    }
+
     public retrieveSdkMessageDetails(sdkMessageId:string) {
         const request:DynamicsWebApi.RetrieveRequest = {
             collection: "sdkmessages",
-            id: sdkMessageId,
-            expand: [ { property: "sdkmessageid_sdkmessagefilter", select: [ "sdkmessagefilterid", "primaryobjecttypecode", "secondaryobjecttypecode" ] } ]
+            id: sdkMessageId
         };
 
         return this.webapi.retrieveRequest(request);

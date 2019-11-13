@@ -2,8 +2,11 @@
 // It cannot access the main VS Code APIs directly.
 (function () {
     const vscode = CloudSmith.acquireVsCodeApi();
-    window.sdkMessages = [];
     window.entityTypeCodes = [];
+    window.sdkMessageFilters = [];
+    window.primaryObjectTypes = [];
+    window.secondaryObjectTypes = [];
+    window.sdkMessages = [];
 
     // Handle messages sent from the extension to the webview
     window.addEventListener("message", event => {
@@ -59,6 +62,8 @@
                         $textInput.val(this.value);
                         // update the stepname
                         updateStepNameAndDescription();
+                        // call message change
+                        $("#Message").change();
                         // clear all previous items
                         $("div", $autocompleteItems).remove();
                     });
@@ -95,15 +100,16 @@
     }
 
     function setInitialState(viewModel) {
-        window.sdkMessages = _.map(viewModel.sdkMessages, m => m.name);
-        window.entityTypeCodes = _.map(viewModel.entityTypeCodes, e => e.LogicalName);
+        window.entityTypeCodes = _.map(viewModel.entityTypeCodes, i => i.LogicalName);
+        window.sdkMessageFilters = viewModel.sdkMessageFilters;
+        window.sdkMessages = _.map(viewModel.sdkMessages, i => i.name);
 
         // initialize autocomplete for the text boxes
         initializeAutoComplete($("#Message"), window.sdkMessages);
-        initializeAutoComplete($("#PrimaryEntity"), window.entityTypeCodes);
         
         if (viewModel.step && viewModel.sdkMessageDetails) {
             $("#Message").val(viewModel.step.sdkmessageid.name);
+            $("#Message").change();
             
             // $("#PrimaryEntity").val(),
             // $("#SecondEntity").val(),
@@ -122,6 +128,32 @@
     }
 
     $(function() {
+        // get the message value after change
+        $("#Message").change(function() {
+            window.primaryObjectTypes = _.map(window.sdkmessageFilters, i => {
+                if (i._sdkmessageid_value === _.find(window.sdkMessages, i => i.name === this.value).sdkmessageid) {
+                    return i.primaryobjecttypecode;
+                }
+            });
+
+            window.secondaryObjectTypes = _.map(window.sdkmessageFilters, i => {
+                if (i._sdkmessageid_value === _.find(window.sdkMessages, i => i.name === this.value).sdkmessageid) {
+                    return i.secondaryobjecttypecode;
+                }
+            });
+
+            initializeAutoComplete($("#PrimaryEntity"), window.primaryObjectTypes);
+            initializeAutoComplete($("#SecondaryEntity"), window.secondaryObjectTypes);
+
+            if (window.primaryObjectTypes.length === 1) { 
+                $("#PrimaryEntity").val(window.primaryObjectTypes[0]);
+            }
+
+            if (window.secondaryObjectTypes.length === 1) { 
+                $("#SecondaryEntity").val(window.secondaryObjectTypes[0]);
+            }
+        });
+
         // wire change of inputs that name and describe step automatically
         $("#EventHandler").change(function() {
            updateStepNameAndDescription(); 
