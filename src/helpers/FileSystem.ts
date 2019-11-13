@@ -2,7 +2,7 @@ import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as StreamZip from 'node-stream-zip';
-import * as vscode from 'vscode';
+import { FileStat } from 'vscode';
 
 /**
  * Recursively copy folder from src to dest
@@ -60,6 +60,14 @@ export async function CopyFolder(source: string, destination: string): Promise<b
 
 export function Exists(path:string): boolean {
 	return fs.existsSync(path);
+}
+
+export function Stats(item:string): fs.Stats {
+	if (fs.existsSync(item)) {
+		return fs.lstatSync(item);
+	}
+
+	return null;
 }
 
 /**
@@ -145,6 +153,14 @@ export function MakeFolderSync(destination: string, mode: string | number | null
 	fs.mkdirSync(destination, mode);
 
     return true;
+}
+
+export function ReadFileSync(source: string): any {
+	return fs.readFileSync(source, 'utf8');
+}
+
+export function WriteFileSync(destination: string, data: any): void {
+	fs.writeFileSync(destination, data, 'utf8');
 }
 
 export function Unzip(archive:string, destination:string): Promise<number> {

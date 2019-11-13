@@ -83,13 +83,17 @@ export default class QuickPicker {
     }
 
     /**
-     * Selects a file within a workspace folder.  If args contains an fsPath, then it uses
-     * that.  Otherwise, for single root workspaces it will select the root directory,
+     * Selects a file within a workspace folder.  If defaultUri contains a fsPath, then it uses
+     * that as the root.  Otherwise, for single root workspaces it will select the root directory,
      * or for multi-root will present a chooser to select a workspace.
-     * @param defaultUri 
+     * @param defaultUri The root path to use when selecting a file
+     * @param placeHolder Placeholder text to render when asking the user to pick a file
+     * @param ignoreFocusOut boolean indicating if the picker should maintain focus when the user clicks outside
+     * @param canAddNewItem boolean indicating if the "Add new" option should be allowed
+     * @param allowedFileTypes array of file type extensions that are allowed.
      */
-    public static async pickWorkspaceFile(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canAddNewItem:boolean = false): Promise<string> {
-        return this.pickWorkspaceFsItem(defaultUri, placeHolder, ignoreFocusOut, true, false, false, canAddNewItem)
+    public static async pickWorkspaceFile(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canAddNewItem:boolean = false, allowedFileTypes?:string[]): Promise<string> {
+        return this.pickWorkspaceFsItem(defaultUri, placeHolder, ignoreFocusOut, true, false, false, canAddNewItem, allowedFileTypes)
             .then(r => r.fsPath);
     }
 
@@ -98,11 +102,11 @@ export default class QuickPicker {
             .then(r => r.fsPath);
     }
 
-    public static async pickWorkspaceAny(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canAddNewItem:boolean = false): Promise<WorkspaceFileItem> {
-        return this.pickWorkspaceFsItem(defaultUri, placeHolder, ignoreFocusOut, true, true, true, canAddNewItem);
+    public static async pickWorkspaceAny(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canAddNewItem:boolean = false, allowedFileTypes?:string[]): Promise<WorkspaceFileItem> {
+        return this.pickWorkspaceFsItem(defaultUri, placeHolder, ignoreFocusOut, true, true, true, canAddNewItem, allowedFileTypes);
     }
 
-    private static async pickWorkspaceFsItem(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canPickFiles:boolean = true, canPickFolders:boolean = true, canPickLinks:boolean = true, canAddNewItem:boolean = false): Promise<WorkspaceFileItem> {
+    private static async pickWorkspaceFsItem(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canPickFiles:boolean = true, canPickFolders:boolean = true, canPickLinks:boolean = true, canAddNewItem:boolean = false, allowedFileTypes?:string[]): Promise<WorkspaceFileItem> {
         defaultUri = defaultUri || await this.pickWorkspaceRoot(undefined, placeHolder, ignoreFocusOut);
         if (!defaultUri) { return; }
 
@@ -126,6 +130,12 @@ export default class QuickPicker {
             .then(results => {
                 new TS.Linq.Enumerator(results).orderBy(r => r[0]).forEach(r => {
                     if ((canPickFiles && r[1] === vscode.FileType.File) || (r[1] === vscode.FileType.Directory) || (canPickLinks && r[1] === vscode.FileType.SymbolicLink)) { 
+                        if (allowedFileTypes && allowedFileTypes.length > 0 && r[1] === vscode.FileType.File) {
+                            if (!new TS.Linq.Enumerator(allowedFileTypes).any(a => r[0].endsWith(a))) {
+                                return;
+                            }
+                        }
+
                         choices.push(new QuickPickOption(r[1] === vscode.FileType.SymbolicLink ? `${Octicon.file_symlink_file} ${r[0]}` : r[1] === vscode.FileType.Directory ? `${Octicon.file_directory} ${r[0]}` : `${Octicon.file} ${r[0]}`, undefined, undefined, r)); 
                     } 
                 }); 
@@ -157,7 +167,7 @@ export default class QuickPicker {
                                 FileSystem.MakeFolderSync(newUri.fsPath);
                             }
 
-                            return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem);
+                            return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem, allowedFileTypes);
                         }
                     } else {
                         newUri = defaultUri.with({ path: `${defaultUri.path.endsWith("/") ? defaultUri.path : defaultUri.path + "/" }${path.basename(choice.context[0])}` }); 
@@ -165,7 +175,7 @@ export default class QuickPicker {
 
                     if (newUri) {
                         if (choice.context[1] === vscode.FileType.Directory || choice.label.startsWith(`${Octicon.file_symlink_directory} ..`)) {
-                            return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem);
+                            return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem, allowedFileTypes);
                         } else {
                             return new WorkspaceFileItem(newUri.fsPath, itemType);
                         }

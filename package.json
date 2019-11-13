@@ -22,8 +22,10 @@
 	],
 	"activationEvents": [
 		"onFileSystem:file",
-		"onView:cs.dynamics.viewContainers.connections",
+		"onView:cs.dynamics.viewContainers.dynamicsExplorer",
 		"onCommand:cs.dynamics.controls.treeView.editConnection",
+		"onCommand:cs.dynamics.controls.explorer.dotNetBuild",
+		"onCommand:cs.dynamics.controls.explorer.dotNetTest",
 		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFolder",
 		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFile",
 		"onCommand:cs.dynamics.controls.explorer.packSolutionFromFolder",
@@ -119,6 +121,16 @@
 			}
 		},
 		"commands": [
+			{
+				"command": "cs.dynamics.controls.explorer.dotNetBuild",
+				"title": "Build project",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.dotNetTest",
+				"title": "Test project",
+				"category": "UserInterface"
+			},
 			{
 				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
 				"title": "Generate Dynamics entity classes",
@@ -251,6 +263,16 @@
 				"category": "Dynamics 365 CE"
 			},
 			{
+				"command": "cs.dynamics.deployment.dotNetBuild",
+				"title": "Build a .Net Core project in the current workspace",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.deployment.dotNetTest",
+				"title": "Build and Test a .Net Core project in the current workspace",
+				"category": "Dynamics 365 CE"
+			},
+			{
 				"command": "cs.dynamics.deployment.registerPluginAssembly",
 				"title": "Register or update a plugin assembly",
 				"category": "Dynamics 365 CE"
@@ -324,17 +346,17 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "view-container",
+					"id": "dynamics365-explorer",
 					"title": "Dynamics 365 CE",
 					"icon": "resources/images/dynamics.png"
 				}
 			]
 		},
 		"views": {
-			"view-container": [
+			"dynamics365-explorer": [
 				{
-					"id": "cs.dynamics.viewContainers.connections",
-					"name": "Connections"
+					"id": "cs.dynamics.viewContainers.dynamicsExplorer",
+					"name": "Explorer"
 				}
 			]
 		},
@@ -349,6 +371,16 @@
 					"command": "cs.dynamics.extension.saveProjectAsTemplate",
 					"when": "explorerResourceIsFolder",
 					"group": "projectTemplates@2"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.dotNetBuild",
+					"when": "explorerResourceIsFolder == true || resourceExtname == .csproj || resourceExtname == .vbproj",
+					"group": "build@1"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.dotNetTest",
+					"when": "explorerResourceIsFolder == true || resourceExtname == .csproj || resourceExtname == .vbproj",
+					"group": "build@2"
 				},
 				{
 					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
@@ -372,7 +404,7 @@
 				},
 				{
 					"command": "cs.dynamics.controls.explorer.registerPluginFile",
-					"when": "explorerResourceIsFolder != true && resourceExtname == .dll",
+					"when": "explorerResourceIsFolder != true && resourceExtname == .csproj || resourceExtname == .vbproj || resourceExtname == .dll",
 					"group": "zzz_azuretools_deploy@3"
 				}
 			],
@@ -380,74 +412,74 @@
 				{
 					"command": "cs.dynamics.controls.treeView.refreshEntry",
 					"group": "navigation",
-					"when": "view == cs.dynamics.viewContainers.connections"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.addEntry",
 					"group": "navigation",
-					"when": "view == cs.dynamics.viewContainers.connections"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer"
 				}
 			],
 			"view/item/context": [
 				{
 					"command": "cs.dynamics.controls.treeView.addEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canAddItem)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.editEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canEditItem)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.inspectEntry",
 					"group": "group@2",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canInspectItem)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canInspectItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.openInApp",
 					"group": "group@3",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canOpenInApp)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canOpenInApp)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.openInBrowser",
 					"group": "group@4",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canOpenInBrowser)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canOpenInBrowser)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.openInEditor",
 					"group": "group@5",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.deleteEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.unpackSolution",
 					"group": "deployment@1",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.moveSolution",
 					"group": "deployment@1",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canMoveSolution)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canMoveSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.addEntryToSolution",
 					"group": "deployment@2",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canAddToSolution)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canAddToSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.removeEntryFromSolution",
 					"group": "deployment@3",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.treeView.refreshEntry",
 					"group": "group@1",
-					"when": "view == cs.dynamics.viewContainers.connections && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
 				}
 			]
 		}
