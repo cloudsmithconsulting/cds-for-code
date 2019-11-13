@@ -160,7 +160,8 @@ table>tbody>tr:nth-child(odd) {
 }
 
 .field__input--wide {
-    width: 300px;
+    width: 70%;
+    min-width: 300px;
 }
 
 .button {
@@ -220,6 +221,7 @@ table>tbody>tr:nth-child(odd) {
 
 .autocomplete {
     /*the container must be positioned relative:*/
+    width: 100%;
     position: relative;
     display: inline-block;
 }

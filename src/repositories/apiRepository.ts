@@ -233,10 +233,14 @@ export default class ApiRepository
         return this.webapi.retrieveRequest(request)
             .then(response => {
                 return response && response.value ? response.value : null;
-            }).then(async response => {
-                await response.forEach(r => {
-                    r.sdkmessageid.filters = this.webapi.retrieveMultiple("sdkmessagefilters", [], `_sdkmessageid_value eq ${r.sdkmessageid}`)
-                        .then(r => new TS.Linq.Enumerator(r.value).toArray());
+            })
+            .then(async response => {
+                await response.forEach(async r => {
+                    // here we are getting some basic stuff the api would normally expand
+                    // but since we're in a collection we have to do it manually
+                    //r.sdkmessagefilterid = await this.webapi.retrieve(r._sdkmessagefilterid_value, "sdkmessagefilters");
+                    r.eventhandler_plugintype = await this.webapi.retrieve(r._eventhandler_value, "plugintypes");
+                    //r.sdkmessageprocessingstepsecureconfigid = await this.webapi.retrieve(r._sdkmessageprocessingstepsecureconfigid_value, "sdkmessageprocessingstepsecureconfigs");
                  });
 
                  return response;

@@ -2,6 +2,7 @@
 // It cannot access the main VS Code APIs directly.
 (function () {
     const vscode = CloudSmith.acquireVsCodeApi();
+    window.initializeComplete = false;
     window.dataCache = {};
 
     // Handle messages sent from the extension to the webview
@@ -16,10 +17,12 @@
     });
 
     function updateStepNameAndDescription() {
+        if (!window.initializeComplete) { return; }
         // doing this vanilla js so we don't incur the jquery overhead
         const message = document.getElementById("Message").value;
         const primaryEntity = document.getElementById("PrimaryEntity").value;
-        const eventHandler = document.getElementById("EventHandler").value;
+        const $eventHandler = $("#EventHandler>option:selected");
+        const eventHandler = $.trim($eventHandler.text());
 
         if (!CloudSmith.Utilities.isNullOrEmpty(message) 
             && !CloudSmith.Utilities.isNullOrEmpty(primaryEntity)
@@ -102,7 +105,9 @@
 
     function setInitialState(viewModel) {
         window.dataCache = {
+            step: viewModel.step,
             entityTypeCodes: viewModel.entityTypeCodes,
+            pluginTypes: viewModel.pluginTypes,
             sdkMessageFilters: viewModel.sdkMessageFilters,
             sdkMessages: viewModel.sdkMessages,
             sdkMessagesMap: _.map(viewModel.sdkMessages, i => i.name),
@@ -113,6 +118,23 @@
 
         // initialize autocomplete for the text boxes
         initializeAutoComplete($("#Message"), window.dataCache.sdkMessagesMap, "mdi-message-settings-variant-outline");
+
+        // fill in the plugin event dropdown
+        const $eventHandelerSelect = $("#EventHandler");
+        // remove prior options if they exist
+        $("option", $eventHandelerSelect).remove();
+        // add selections back
+        _.forEach(viewModel.pluginTypes, i => {
+            const $option = $(`<option value="${i.plugintypeid}">(Plugin) ${i.name}</option>`);
+            // see if it should be selected
+            if (viewModel.step 
+                && viewModel.step.eventhandler_plugintype 
+                && viewModel.step.eventhandler_plugintype.plugintypeid
+                && viewModel.step.eventhandler_plugintype.plugintypeid === i.plugintypeid) {
+                    $option.attr("selected", "selected");
+                }
+            $eventHandelerSelect.append($option);
+        });
         
         if (viewModel.step) {
             const step = viewModel.step;
@@ -129,17 +151,19 @@
             $("#FilteringAttributes").val(step.filteringattributes);
             $("#Asynchronous").prop("checked", step.mode === 1);
             $("#Synchronous").prop("checked", step.mode === 0);
-            $("#Name").val(step.name);
+            $("#StepName").val(step.name);
             $("#PreValidation").prop("checked", step.stage === 10);
             $("#PreOperation").prop("checked", step.stage === 20);
             $("#PostOperation").prop("checked", step.stage === 40);
             $("#Server").prop("checked", step.supporteddeployment === 0 || step.supporteddeployment === 3);
             $("#Offline").prop("checked", step.supporteddeployment === 1 || step.supporteddeployment === 3);
 
-            if (step.sdkmessageprocessingstepsecureconfigid) {
+            if (step.sdkmessageprocessingstepsecureconfigid && step.sdkmessageprocessingstepsecureconfigid.secureconfig) {
                 $("#SecureConfiguration").val(step.sdkmessageprocessingstepsecureconfigid.secureconfig);
             }
         }
+
+        window.initializeComplete = true;
     }
 
     $(function() {

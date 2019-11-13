@@ -10,7 +10,7 @@ export default class PluginStepViewManager implements IWireUpCommands {
 	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
-            vscode.commands.registerCommand(cs.dynamics.controls.pluginStep.open, async (step?: any, config?:DynamicsWebApi.Config) => { // Match name of command to package.json command
+            vscode.commands.registerCommand(cs.dynamics.controls.pluginStep.open, async (pluginAssemblyId:string, step?: any, config?:DynamicsWebApi.Config) => { // Match name of command to package.json command
                 // Run command code
                 config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
@@ -24,18 +24,12 @@ export default class PluginStepViewManager implements IWireUpCommands {
                 });
 
                 const api = new ApiRepository(config);
-                if (step) {
-                    // get more complete step data
-                    step = await api.retrievePluginStep(step.sdkmessageprocessingstepid);
-                }
-                const entityTypeCodes = await api.retrieveEntityTypeCodes();
-                const sdkMessageFilters = await api.retrieveSdkMessageFilters();
-                const sdkMessages = await api.retrieveSdkMessages();
                 const viewModel = {
-                    entityTypeCodes,
-                    sdkMessageFilters,
-                    sdkMessages,
-                    step
+                    entityTypeCodes: await api.retrieveEntityTypeCodes(),
+                    pluginTypes: await api.retrievePluginTypes(pluginAssemblyId),
+                    sdkMessageFilters: await api.retrieveSdkMessageFilters(),
+                    sdkMessages: await api.retrieveSdkMessages(),
+                    step: step && step.sdkmessageprocessingstepid ? await api.retrievePluginStep(step.sdkmessageprocessingstepid)  : null
                 };
 
                 view.setInitialState(viewModel, config);
