@@ -31,7 +31,7 @@ export default class SolutionMap implements IWireUpCommands
         SolutionMap.loadFromWorkspace(context);
 
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string) => {
+            vscode.commands.registerCommand(cs.dynamics.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> => {
                 let solutionId;
                 let organizationId;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
@@ -63,7 +63,9 @@ export default class SolutionMap implements IWireUpCommands
                 
                 if (item && item.path && item.path !== folder) {
                     // If we're moving into a new folder that's not called the solution name, let's add it.
-                    if (!folder.endsWith(path.basename(item.path))) {
+                    if (!folder.endsWith(path.basename(item.path)) 
+                        && !(item.path.substring(0, item.path.lastIndexOf("\\")) === folder.substring(0, folder.lastIndexOf("\\")) 
+                            || item.path.substring(0, item.path.lastIndexOf("/")) === folder.substring(0, folder.lastIndexOf("/")))) {
                         folder = path.join(folder, path.basename(item.path));
                     }
 
@@ -77,6 +79,8 @@ export default class SolutionMap implements IWireUpCommands
 
                 map.map(organizationId, solutionId, folder);
                 map.saveToWorkspace(context);
+
+                return map.getByPath(folder, organizationId);
             })
         );
     }
@@ -84,13 +88,7 @@ export default class SolutionMap implements IWireUpCommands
     mappings:SolutionWorkspaceMapping[];
 
     map(organizationId:string, solutionId:string, path:string): SolutionMap {
-        const items = new TS.Linq.Enumerator(this.mappings)
-            .where(m => organizationId ? m.organizationId === organizationId : false)
-            .where(m => solutionId ? m.solutionId === solutionId : false)
-            .where(m => path ? m.path === path || m.path === path + "/" || m.path === path + "\\" : false)
-            .toArray();
-        
-        let workspaceMapping = items.length > 0 ? items[0] : undefined;
+        let workspaceMapping = this.hasPathMap(path) ? this.getByPath(path)[0] : this.hasSolutionMap(solutionId, organizationId) ? this.getBySolutionId(solutionId, organizationId)[0] : null;
         const isNew = (!workspaceMapping);
 
         if (isNew) {
@@ -235,11 +233,15 @@ export default class SolutionMap implements IWireUpCommands
         toMonitor.forEach(m => {
             const pattern = SolutionWorkspaceMapping.getSolutionWatcherPattern(m);
 
-            WorkspaceFileSystemWatcher.Instance.watch(SolutionMap.patternName(pattern), pattern, "Create", "Modify", "Delete", "Move")
+            WorkspaceFileSystemWatcher.Instance.watch(SolutionMap.patternName(pattern), pattern, "Create", "Modify", "Delete", "Move", "Rename")
                 .then(change => {
-                    if (change.event === "Move") {
+                    if (change.event === "Move" || change.event === "Rename") {
                         this.getByPath(change.sourceUri.fsPath).forEach(async m => {
-                            await vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, m, undefined, change.targetUri.fsPath);
+                            this.unmonitorMappedFolders(m);
+
+                            const mappedItems = <SolutionWorkspaceMapping[]>await vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, m, undefined, change.targetUri.fsPath);
+
+                            mappedItems.forEach(m => this.monitorMappedFolders(m));
                         });
                     }
                 });

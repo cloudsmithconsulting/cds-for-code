@@ -203,17 +203,29 @@ export class WorkspaceFileSystemWatcher {
         changesToProcess.forEach(c => {
             // Create into this folder means we have a corresponding create/modify pair.
             if (c.event === "Create" && workspaceContains(c.sourceUri, "Create", "Delete")) {
-                const sourceEvent = workspaceFilter(undefined, "Delete").first();
+                const sourceUri = workspaceFilter(undefined, "Delete").first().sourceUri;
 
-                returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Move", sourceEvent ? sourceEvent.sourceUri : undefined, c.sourceUri));
+                // If source + target = same path, it's a rename.
+                if (sourceUri.path.substr(0, sourceUri.path.lastIndexOf("/")) === c.sourceUri.path.substr(0, c.sourceUri.path.lastIndexOf("/"))) {
+                    returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Rename", sourceUri, c.sourceUri));
+                }
+                else {
+                    returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Move", sourceUri, c.sourceUri));
+                }
+
                 return;
             }
 
             // Delete into this folder means we have a corresponding delete/modify pair.
             if (c.event === "Delete" && workspaceContains(c.sourceUri, "Create", "Delete")) {
-                const targetEvent = workspaceFilter(undefined, "Create").first();
+                const targetUri = workspaceFilter(undefined, "Create").first().sourceUri;
 
-                returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Move", c.sourceUri, targetEvent ? targetEvent.sourceUri : undefined));
+                if (targetUri.path.substr(0, targetUri.path.lastIndexOf("/")) === c.sourceUri.path.substr(0, c.sourceUri.path.lastIndexOf("/"))) {
+                    returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Rename", c.sourceUri, targetUri));
+                } else {
+                    returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Move", c.sourceUri, targetUri));
+                }
+
                 return;
             }
 
@@ -248,4 +260,5 @@ export type ChangeEvent =
     "Create" |
     "Modify" | 
     "Delete" | 
+    "Rename" |
     "Move";
