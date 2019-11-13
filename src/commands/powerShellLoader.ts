@@ -8,7 +8,7 @@ import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import GlobalState from '../config/GlobalState';
-import ProjectTemplatesPlugin from "../ProjectTemplatesPlugin";
+import ProjectTemplatesPlugin from "../controls/Templates/ProjectTemplatesPlugin";
 import * as FileSystem from "../helpers/FileSystem";
 
 export default class PowerShellLoader implements IWireUpCommands {

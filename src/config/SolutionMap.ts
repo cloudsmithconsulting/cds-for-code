@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import * as fs from 'fs';
 import * as cs from '../cs';
 import QuickPicker from "../helpers/QuickPicker";
 import * as path from 'path';
@@ -13,7 +12,7 @@ import { WorkspaceFileSystemWatcher } from "../helpers/FileManager";
 
 export default class SolutionMap implements IWireUpCommands
 {
-    private constructor (map?:SolutionMap) {
+    public constructor (map?:SolutionMap) {
         if (map && map.mappings) {
             this.mappings = map.mappings;
         } else {
@@ -28,13 +27,39 @@ export default class SolutionMap implements IWireUpCommands
     wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         // load default map as it will force filesystemwatchers to intialize.
         if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+            // Watch the files in the workspace for changes.
             vscode.workspace.workspaceFolders.forEach(f => WorkspaceFileSystemWatcher.Instance.openWorkspace(f));
+            // Load the solution map from the workspace.
+            SolutionMap.loadFromWorkspace(context);
         }
 
-        SolutionMap.loadFromWorkspace(context);
-
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> => {
+            vscode.commands.registerCommand(cs.dynamics.deployment.removeSolutionMapping, async (item?: SolutionWorkspaceMapping): Promise<boolean> => {
+                const map = SolutionMap.loadFromWorkspace(context);
+                let returnValue = false;
+
+                if (!item) { 
+                    map.clear();
+                } else {
+                    if (item && item.path) {
+                        if (FileSystem.Exists(item.path)) {
+                            returnValue = true;
+                            await FileSystem.DeleteFolder(item.path);
+                        }
+                    }
+
+                    const itemIndex = map.mappings.indexOf(item);
+
+                    if (itemIndex > -1) {
+                        map.mappings.slice(itemIndex, 1);
+                    }
+                }
+                
+                map.saveToWorkspace(context);
+
+                return returnValue;
+            })
+            , vscode.commands.registerCommand(cs.dynamics.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> => {
                 let solutionId;
                 let organizationId;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
@@ -192,11 +217,11 @@ export default class SolutionMap implements IWireUpCommands
         const workspacePath = await QuickPicker.pickWorkspaceRoot(undefined, "Choose a location that houses your .dynamics folder.", true).then(uri => uri ? uri.fsPath : null);
         if (!workspacePath) { return; }
 
-        const file  = path.join(workspacePath, filename);
+        const file = path.join(workspacePath, filename);
 
-        if (fs.existsSync(file)) {
+        if (FileSystem.Exists(file)) {
             try {
-                let returnObject = JSON.parse(fs.readFileSync(file, 'utf8'));
+                let returnObject = JSON.parse(FileSystem.ReadFileSync(file));
 
                 if (returnObject && returnObject instanceof SolutionMap) {
                     return <SolutionMap>returnObject;
@@ -222,7 +247,7 @@ export default class SolutionMap implements IWireUpCommands
         const file = path.join(workspacePath, filename);
 
         try {
-            fs.writeFileSync(file, JSON.stringify(map), 'utf8');
+            FileSystem.WriteFileSync(file, JSON.stringify(map));
         } catch (error) {
             vscode.window.showErrorMessage(`The file '${filename}' could not be saved to the workspace.${error ? '  The error returned was: ' + error : ''}`);
         }
@@ -245,6 +270,12 @@ export default class SolutionMap implements IWireUpCommands
                             const mappedItems = <SolutionWorkspaceMapping[]>await vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, m, undefined, change.targetUri.fsPath);
 
                             mappedItems.forEach(m => this.monitorMappedFolders(m));
+                        });
+                    } else if (change.event === "Delete") {
+                        this.getByPath(change.sourceUri.fsPath).forEach(async m => {
+                            this.unmonitorMappedFolders(m);
+
+                            await vscode.commands.executeCommand(cs.dynamics.deployment.removeSolutionMapping, m);
                         });
                     }
                 });

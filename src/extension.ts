@@ -11,7 +11,7 @@ import DynamicsTreeView from './views/DynamicsTreeView';
 import PackDynamicsSolution from './commands/packDynamicsSolution';
 import UnpackDynamicsSolution from './commands/unpackDynamicsSolution';
 import JsonInspectorViewManager from './views/JsonInspectorView';
-import ProjectTemplatesPlugin from './ProjectTemplatesPlugin';
+import ProjectTemplatesPlugin from './controls/Templates/ProjectTemplatesPlugin';
 import DynamicsTerminal from './views/DynamicsTerminal';
 import IconLoader from './commands/iconLoader';
 import AddSolutionComponent from './commands/addSolutionComponent';
@@ -21,6 +21,7 @@ import RegisterPluginAssembly from './commands/registerPluginAssembly';
 import SvcUtilConfigViewManager from './views/svcUtilConfigView';
 import SolutionMap from './config/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
+import VisualStudioProjectCommands from './commands/visualStudioProjectCommands';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -57,7 +58,8 @@ export function activate(context: vscode.ExtensionContext) {
 		new UnpackDynamicsSolution(),
 		new AddSolutionComponent(),
 		new RemoveSolutionComponent(),
-		new RegisterPluginAssembly()
+		new RegisterPluginAssembly(),
+		new VisualStudioProjectCommands()
 	].forEach(c => c.wireUpCommands(context, toolsConfig));
 
 	[   // templating engine.

@@ -2,7 +2,6 @@ import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as StreamZip from 'node-stream-zip';
-import * as vscode from 'vscode';
 
 /**
  * Recursively copy folder from src to dest
@@ -28,7 +27,6 @@ export async function CopyFolder(source: string, destination: string): Promise<b
     let promises : Promise<boolean>[] = [];
     
     for(let entry of entries) {
-		
 		// full path of src/dest
 		const srcPath = path.join(source,entry);
 		const destPath = path.join(destination,entry);
@@ -60,6 +58,60 @@ export async function CopyFolder(source: string, destination: string): Promise<b
 
 export function Exists(path:string): boolean {
 	return fs.existsSync(path);
+}
+
+export function Stats(item:string): fs.Stats {
+	if (fs.existsSync(item)) {
+		return fs.lstatSync(item);
+	}
+
+	return null;
+}
+
+export function Walk(item:string, predicate?:(item:string) => boolean): Promise<any[]> {
+	return new Promise((resolve, reject) => {
+		_walk(item, predicate, (error, result) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(result);
+			}
+		});
+	});
+}
+
+function _walk(dir: string, predicate?:(item:string) => boolean, done?: (error:any, result:any[]) => void) {
+	let results = [];
+	const applyPredicate = (results:any[]) => {
+		if (results && predicate) {
+			results = results.filter(predicate);
+		}
+
+		return results;
+	};
+
+	fs.readdir(dir, (err, list) => {
+		if (err) { return done ? done(err, null) : undefined; }
+
+		let pending = list.length;
+		if (!pending) { return done ? done(null, results) : undefined; }
+
+		list.forEach(file => {
+			file = path.resolve(dir, file);
+
+			fs.stat(file, (err, stat) => {
+				if (stat && stat.isDirectory()) {
+					_walk(file, predicate, (err, res) => {
+						results = results.concat(res);
+						if (!--pending && done) { done(null, applyPredicate(results)); }
+					});
+				} else {
+					results.push(file);
+					if (!--pending && done) { done(null, applyPredicate(results)); }
+				}
+			});
+		});
+	});
 }
 
 /**
@@ -145,6 +197,14 @@ export function MakeFolderSync(destination: string, mode: string | number | null
 	fs.mkdirSync(destination, mode);
 
     return true;
+}
+
+export function ReadFileSync(source: string): any {
+	return fs.readFileSync(source, 'utf8');
+}
+
+export function WriteFileSync(destination: string, data: any): void {
+	fs.writeFileSync(destination, data, 'utf8');
 }
 
 export function Unzip(archive:string, destination:string): Promise<number> {

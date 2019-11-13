@@ -1,0 +1,20 @@
+{
+    "name": "sample-name",
+    "type": "Project",
+    "displayName": "Sample template",
+    "publisher": "CloudSmith Consulting LLC",
+    "description": "Template does some stuff",
+    "items": [
+        { 
+            "path": ".\\", 
+            "rule": "Include" 
+        }
+    ],
+    "placeholders": [
+        {
+            "name": "namespace",
+            "displayName": "Namespace to use for this project",
+            "type": "string"
+        }
+    ]
+}
