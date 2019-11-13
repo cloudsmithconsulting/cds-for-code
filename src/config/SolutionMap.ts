@@ -27,7 +27,10 @@ export default class SolutionMap implements IWireUpCommands
 
     wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         // load default map as it will force filesystemwatchers to intialize.
-        vscode.workspace.workspaceFolders.forEach(f => WorkspaceFileSystemWatcher.Instance.openWorkspace(f));
+        if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+            vscode.workspace.workspaceFolders.forEach(f => WorkspaceFileSystemWatcher.Instance.openWorkspace(f));
+        }
+
         SolutionMap.loadFromWorkspace(context);
 
         context.subscriptions.push(
@@ -62,10 +65,10 @@ export default class SolutionMap implements IWireUpCommands
                 item = item || map.hasSolutionMap(solutionId, organizationId) ? map.getBySolutionId(solutionId, organizationId)[0] : null;
                 
                 if (item && item.path && item.path !== folder) {
-                    // If we're moving into a new folder that's not called the solution name, let's add it.
+                    // If we're moving into a new folder that's not called the solution name, let's add it (assuming you didn't just rename it).
                     if (!folder.endsWith(path.basename(item.path)) 
-                        && !(item.path.substring(0, item.path.lastIndexOf("\\")) === folder.substring(0, folder.lastIndexOf("\\")) 
-                            || item.path.substring(0, item.path.lastIndexOf("/")) === folder.substring(0, folder.lastIndexOf("/")))) {
+                        && (item.path.indexOf("\\") === -1 || item.path.substring(0, item.path.lastIndexOf("\\")) !== folder.substring(0, folder.lastIndexOf("\\"))) 
+                        && (item.path.indexOf("/") === -1 || item.path.substring(0, item.path.lastIndexOf("/")) !== folder.substring(0, folder.lastIndexOf("/")))) {
                         folder = path.join(folder, path.basename(item.path));
                     }
 
