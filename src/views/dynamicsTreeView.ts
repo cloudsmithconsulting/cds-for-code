@@ -23,7 +23,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
         if (isNew) {
             TreeEntryCache.Context = context;
             DynamicsTreeView.Instance = treeProvider;
-            vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.connections, treeProvider);        
+            vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.dynamicsExplorer, treeProvider);        
         }
         
         // setup commands

@@ -7,8 +7,11 @@ export namespace dynamics
     {
         public static readonly _namespace:string = "cs.dynamics.deployment";
         public static readonly addSolutionComponent:string = `${deployment._namespace}.addSolutionComponent`;
+        public static readonly dotNetBuild:string = `${deployment._namespace}.dotNetBuild`;
+        public static readonly dotNetTest:string = `${deployment._namespace}.dotNetTest`;
         public static readonly registerPluginAssembly:string = `${deployment._namespace}.registerPluginAssembly`;
         public static readonly removeSolutionComponent:string = `${deployment._namespace}.removeSolutionComponent`;
+        public static readonly removeSolutionMapping:string = `${deployment._namespace}.removeSolutionMapping`;
         public static readonly updateSolutionMapping:string = `${deployment._namespace}.updateSolutionMapping`;
     }
 
@@ -50,7 +53,7 @@ export namespace dynamics
     export class viewContainers
     {
         public static readonly _namespace:string = "cs.dynamics.viewContainers";
-        public static readonly connections:string = `${viewContainers._namespace}.connections`;
+        public static readonly dynamicsExplorer:string = `${viewContainers._namespace}.dynamicsExplorer`;
     }
 
     // tslint:disable-next-line: class-name
@@ -123,6 +126,8 @@ export namespace dynamics
         export class explorer
         {
             public static readonly _namespace:string = "cs.dynamics.controls.explorer";
+            public static readonly dotNetBuild:string = `${explorer._namespace}.dotNetBuild`;
+            public static readonly dotNetTest:string = `${explorer._namespace}.dotNetTest`;
             public static readonly generateEntityCodeToFolder:string = `${explorer._namespace}.generateEntityCodeToFolder`;
             public static readonly generateEntityCodeToFile:string = `${explorer._namespace}.generateEntityCodeToFile`;
             public static readonly packSolutionFromFolder:string = `${explorer._namespace}.packSolutionFromFolder`;
