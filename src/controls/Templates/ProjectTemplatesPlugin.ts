@@ -1,18 +1,18 @@
 import * as vscode from 'vscode';
 
-import * as cs from './cs';
+import * as cs from '../../cs';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as fsutils from './helpers/FileSystem';
-import * as EnvironmentVariables from './helpers/EnvironmentVariables';
-import ExtensionConfiguration from './config/ExtensionConfiguration';
-import IWireUpCommands from './wireUpCommand';
+import * as fsutils from '../../helpers/FileSystem';
+import * as EnvironmentVariables from '../../helpers/EnvironmentVariables';
+import ExtensionConfiguration from '../../config/ExtensionConfiguration';
+import IWireUpCommands from '../../wireUpCommand';
 
-import CreateProjectFromTemplateCommand from './commands/createProjectFromTemplate';
-import DeleteProjectTemplateCommand from './commands/deleteProjectTemplate';
-import OpenProjectTemplatesFolderCommand from './commands/openProjectTemplatesFolder';
-import SaveProjectAsTemplateCommand from './commands/saveProjectTemplate';
+import CreateProjectFromTemplateCommand from '../../commands/createProjectFromTemplate';
+import DeleteProjectTemplateCommand from '../../commands/deleteProjectTemplate';
+import OpenProjectTemplatesFolderCommand from '../../commands/openProjectTemplatesFolder';
+import SaveProjectAsTemplateCommand from '../../commands/saveProjectTemplate';
 
 /**
  * Main class to handle the logic of the Project Templates

@@ -1,5 +1,5 @@
 import vscode = require("vscode");
-import ProjectTemplatesPlugin from "../projectTemplatesPlugin";
+import ProjectTemplatesPlugin from "../controls/Templates/ProjectTemplatesPlugin";
 import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
 import QuickPicker from "../helpers/QuickPicker";

@@ -13,7 +13,7 @@ import { WorkspaceFileSystemWatcher } from "../helpers/FileManager";
 
 export default class SolutionMap implements IWireUpCommands
 {
-    private constructor (map?:SolutionMap) {
+    public constructor (map?:SolutionMap) {
         if (map && map.mappings) {
             this.mappings = map.mappings;
         } else {
@@ -28,10 +28,11 @@ export default class SolutionMap implements IWireUpCommands
     wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         // load default map as it will force filesystemwatchers to intialize.
         if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+            // Watch the files in the workspace for changes.
             vscode.workspace.workspaceFolders.forEach(f => WorkspaceFileSystemWatcher.Instance.openWorkspace(f));
+            // Load the solution map from the workspace.
+            SolutionMap.loadFromWorkspace(context);
         }
-
-        SolutionMap.loadFromWorkspace(context);
 
         context.subscriptions.push(
             vscode.commands.registerCommand(cs.dynamics.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> => {

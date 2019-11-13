@@ -11,7 +11,7 @@ import DynamicsTreeView from './views/DynamicsTreeView';
 import PackDynamicsSolution from './commands/packDynamicsSolution';
 import UnpackDynamicsSolution from './commands/unpackDynamicsSolution';
 import JsonInspectorViewManager from './views/JsonInspectorView';
-import ProjectTemplatesPlugin from './ProjectTemplatesPlugin';
+import ProjectTemplatesPlugin from './controls/Templates/ProjectTemplatesPlugin';
 import DynamicsTerminal from './views/DynamicsTerminal';
 import IconLoader from './commands/iconLoader';
 import AddSolutionComponent from './commands/addSolutionComponent';
