@@ -1164,8 +1164,9 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
                 for (let i = 0; i < items.length; i++) {
                     const item: any = items[i];
+                    const treeItem = parser(item);
 
-                    result.push(parser(item));
+                    result.push(treeItem);
                 }
 
                 return result;
@@ -1267,6 +1268,13 @@ class TreeEntry extends vscode.TreeItem {
 
         if (command && command.arguments && command.arguments.length > 0) {
             this.id = command.arguments[0].toString();
+
+            // We can't have duplicate ids in the treeview.
+            const count = TreeEntryCache.Instance.Items.count(t => t.id === this.id || t.id.startsWith(this.id + "_"));
+            
+            if (count > 0) {
+                this.id += `_${count}`;
+            }
         }
 
         this.contextValue = this.capabilities.join(",");
@@ -1339,7 +1347,11 @@ class TreeEntry extends vscode.TreeItem {
 
     get solutionMapping(): SolutionWorkspaceMapping {
         if (this.id && this.itemType === "Solution") {
-            return TreeEntryCache.Instance.SolutionMap.getPath(this.config.orgId, this.context.solutionid);
+            const maps = TreeEntryCache.Instance.SolutionMap.getBySolutionId(this.context.solutionid, this.config.orgId);
+
+            if (maps && maps.length > 0) {
+                return maps[0];
+            }            
         }
 
         return null;
@@ -1356,7 +1368,7 @@ class TreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canUnpackSolution", TreeEntry.canUnpackSolutionEntryTypes);
         this.addCapability(returnValue, "canAddToSolution", TreeEntry.canAddToSolutionEntryTypes, () => !this.solutionId);
         this.addCapability(returnValue, "canRemoveFromSolution", TreeEntry.canRemoveFromSolutionEntryTypes, () => !Utilities.IsNullOrEmpty(this.solutionId));
-        this.addCapability(returnValue, "canMoveSolution", TreeEntry.canMoveSolutionEntryTypes, () => !Utilities.IsNullOrEmpty(this.solutionMapping.path));
+        this.addCapability(returnValue, "canMoveSolution", TreeEntry.canMoveSolutionEntryTypes, () => this.solutionMapping && !Utilities.IsNullOrEmpty(this.solutionMapping.path));
         this.addCapability(returnValue, "canOpenInApp", TreeEntry.canOpenInAppEntryTypes);
         this.addCapability(returnValue, "canOpenInBrowser", TreeEntry.canOpenInBrowserEntryTypes);
         this.addCapability(returnValue, "canOpenInEditor", TreeEntry.canOpenInEditorEntryTypes);

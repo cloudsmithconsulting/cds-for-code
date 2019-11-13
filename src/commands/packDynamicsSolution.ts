@@ -33,8 +33,8 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 				const solutionMap:SolutionMap = WorkspaceState.Instance(context).SolutionMap;
 
 				if (solution && config && !folder) {
-					if (solutionMap.hasSolutionMap(config.orgId, solution.solutionid))					 {
-						folder = solutionMap.getPath(config.orgId, solution.solutionid).path;
+					if (solutionMap.hasSolutionMap(solution.solutionid, config.orgId))					 {
+						folder = solutionMap.getBySolutionId(solution.solutionid, config.orgId)[0].path;
 					}
 				}
 
