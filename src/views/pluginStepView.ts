@@ -24,13 +24,15 @@ export default class PluginStepViewManager implements IWireUpCommands {
                 });
 
                 const api = new ApiRepository(config);
+                if (step) {
+                    // get more complete step data
+                    step = await api.retrievePluginStep(step.sdkmessageprocessingstepid);
+                }
                 const entityTypeCodes = await api.retrieveEntityTypeCodes();
                 const sdkMessageFilters = await api.retrieveSdkMessageFilters();
-                const sdkMessageDetails = step ? await api.retrieveSdkMessageDetails(step.sdkmessageid.sdkmessageid) : null;
                 const sdkMessages = await api.retrieveSdkMessages();
                 const viewModel = {
                     entityTypeCodes,
-                    sdkMessageDetails,
                     sdkMessageFilters,
                     sdkMessages,
                     step

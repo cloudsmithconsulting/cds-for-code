@@ -30,10 +30,11 @@
     }
 
     let currentFocus = {};
-    function initializeAutoComplete($textInput, selectionArray) {
+    function initializeAutoComplete($textInput, selectionArray, icon) {
         const inputId = $textInput.attr("id");
         currentFocus[inputId] = -1;
-        $textInput.keyup(function(e) {
+        // create keyup event to attach to $textInput
+        const keyupEvent = _.debounce(function(e) {
             const lookup = this.value;
             // find the items div
             const $autocompleteItems = $textInput.next(".autocomplete-items")
@@ -51,7 +52,7 @@
                 if (selection.substr(0, lookup.length).toLowerCase() === lookup.toLowerCase()) {
                     const $button = $("<button class='button button--primary'>");
                     $button.val(selection);
-                    $button.append("<span class='iconify' data-icon='fa:envelope'></span>");
+                    $button.append(`<span class='iconify' data-icon='${icon ? icon : "fa:envelope"}'></span>`);
                     $button.append(`&nbsp;<strong>${selection.substr(0, lookup.length)}</strong>${selection.substr(lookup.length)}`);
 
                     $button.click(function() {
@@ -62,6 +63,8 @@
                         $("#Message").change();
                         // clear all previous items
                         $("div", $autocompleteItems).remove();
+                        // reset focus
+                        currentFocus[inputId] = -1;
                     });
 
                     const $div = $("<div></div>").append($button)
@@ -92,7 +95,9 @@
                     $("button", $autocompleteItems).eq(currentFocus[inputId]).click();
                 }
             }
-        });
+        }, 150); // <- debounce this event this many ms
+        // wire the event up
+        $textInput.keyup(keyupEvent);
     }
 
     function setInitialState(viewModel) {
@@ -107,25 +112,33 @@
         };
 
         // initialize autocomplete for the text boxes
-        initializeAutoComplete($("#Message"), window.dataCache.sdkMessagesMap);
+        initializeAutoComplete($("#Message"), window.dataCache.sdkMessagesMap, "mdi-message-settings-variant-outline");
         
-        if (viewModel.step && viewModel.sdkMessageDetails) {
-            $("#Message").val(viewModel.step.sdkmessageid.name);
-            $("#Message").change();
+        if (viewModel.step) {
+            const step = viewModel.step;
             
-            // $("#PrimaryEntity").val(),
-            // $("#SecondEntity").val(),
-            // $("#FilteringAttributes").val(),
-            // $("#EventHandler").val(),
-            // $("#StepName").val(),
-            // $("#UserContext").val(),
-            // $("#ExecutionOrder").val(),
-            // $("#Description").val(),
-            // $(`[name="ExecutionPipeline"]:checked`).val(),
-            // $("#StatusCode").val(),
-            // $(`[name="ExecutionMode"]:checked`).val(),
-            // $("#Server").val(),
-            // $("#Offline").val()
+            $("#Message").val(step.sdkmessageid.name);
+            $("#Message").change();
+
+            $("#Id").val(step.sdkmessageprocessingstepid)
+            $("#PrimaryEntity").val(step.sdkmessagefilterid.primaryobjecttypecode);
+            $("#SecondEntity").val(step.sdkmessagefilterid.secondaryobjecttypecode);
+            $("#AsyncAutoDelete").prop("checked", step.asyncautodelete);
+            $("#UnsecureConfiguration").val(step.configuration);
+            $("#Description").val(step.description);
+            $("#FilteringAttributes").val(step.filteringattributes);
+            $("#Asynchronous").prop("checked", step.mode === 1);
+            $("#Synchronous").prop("checked", step.mode === 0);
+            $("#Name").val(step.name);
+            $("#PreValidation").prop("checked", step.stage === 10);
+            $("#PreOperation").prop("checked", step.stage === 20);
+            $("#PostOperation").prop("checked", step.stage === 40);
+            $("#Server").prop("checked", step.supporteddeployment === 0 || step.supporteddeployment === 3);
+            $("#Offline").prop("checked", step.supporteddeployment === 1 || step.supporteddeployment === 3);
+
+            if (step.sdkmessageprocessingstepsecureconfigid) {
+                $("#SecureConfiguration").val(step.sdkmessageprocessingstepsecureconfigid.secureconfig);
+            }
         }
     }
 
@@ -144,8 +157,8 @@
             window.dataCache.primaryEntityMap = _.map(window.dataCache.currentMessageFilters, i => i.primaryobjecttypecode);
             window.dataCache.secondEntityMap = _.uniq(_.map(window.dataCache.currentMessageFilters, i => i.secondaryobjecttypecode));
 
-            initializeAutoComplete($("#PrimaryEntity"), window.dataCache.primaryEntityMap);
-            initializeAutoComplete($("#SecondEntity"), window.dataCache.secondEntityMap);
+            initializeAutoComplete($("#PrimaryEntity"), window.dataCache.primaryEntityMap, "fa:table");
+            initializeAutoComplete($("#SecondEntity"), window.dataCache.secondEntityMap, "fa:table");
 
             if (window.dataCache.primaryEntityMap.length === 1) { 
                 $("#PrimaryEntity").val(window.dataCache.primaryEntityMap[0]);

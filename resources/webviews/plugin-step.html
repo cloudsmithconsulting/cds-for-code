@@ -16,6 +16,7 @@
         <fieldset>
             <legend>General Configuration</legend>
 
+            <input type="hidden" id="Id" name="Id" value="" />
             <div class="field">
                 <label class="field__label" for="Message">
                     Message
@@ -100,24 +101,24 @@
                     Pre-validation
                 </label>
                 <input type="radio" class="field__input" id="PreValidation" name="ExecutionPipeline"
-                    value="PreValidation" />
+                    value="10" />
                 <label class="field__label" for="PreOperation">
                     Pre-operation
                 </label>
                 <input type="radio" class="field__input" id="PreOperation" name="ExecutionPipeline"
-                    value="PreOperation" />
+                    value="20" />
                 <label class="field__label" for="PostOperation">
                     Post-operation
                 </label>
                 <input type="radio" class="field__input" id="PostOperation" name="ExecutionPipeline"
-                    value="PostOperation" checked="checked" />
+                    value="40" checked="checked" />
             </div>
 
             <div class="field field--checkbox">
-                <label class="field__label" for="StatusCode">
+                <label class="field__label" for="AsyncAutoDelete">
                     Delete AsyncOperation if StatusCode = Successful
                 </label>
-                <input type="checkbox" class="field__input" id="StatusCode" name="StatusCode" value="true" />
+                <input type="checkbox" class="field__input" id="AsyncAutoDelete" name="AsyncAutoDelete" value="true" />
             </div>
         </fieldset>
 
@@ -128,11 +129,11 @@
                 <label class="field__label" for="Asynchronous">
                     Asynchronous
                 </label>
-                <input type="radio" class="field__input" id="Asynchronous" name="ExecutionMode" value="Asynchronous" />
+                <input type="radio" class="field__input" id="Asynchronous" name="ExecutionMode" value="1" />
                 <label class="field__label" for="Synchronous">
                     Synchronous
                 </label>
-                <input type="radio" class="field__input" id="Synchronous" name="ExecutionMode" value="Synchronous"
+                <input type="radio" class="field__input" id="Synchronous" name="ExecutionMode" value="0"
                     checked="checked" />
             </div>
         </fieldset>

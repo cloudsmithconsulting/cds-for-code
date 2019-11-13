@@ -207,6 +207,21 @@ export default class ApiRepository
 
         return this.webapi.retrieveRequest(request);
     }
+
+    public retrievePluginStep(sdkmessageprocessingstepid:string) {
+        const request:DynamicsWebApi.RetrieveRequest = {
+            collection: "sdkmessageprocessingsteps",
+            id: sdkmessageprocessingstepid,
+            expand: [ 
+                { property: "sdkmessageid" },
+                { property: "sdkmessagefilterid", select: [ "sdkmessagefilterid", "_sdkmessageid_value", "primaryobjecttypecode", "secondaryobjecttypecode" ] },
+                { property: "eventhandler_plugintype" },
+                { property: "sdkmessageprocessingstepsecureconfigid" }
+            ]
+        };
+
+        return this.webapi.retrieveRequest(request);
+    }
     
     public retrievePluginSteps(pluginTypeId:string) {
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
