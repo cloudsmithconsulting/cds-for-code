@@ -217,7 +217,8 @@ export default class ApiRepository
                 { property: "sdkmessageid", select: ["sdkmessageid", "name"] },
                 { property: "sdkmessagefilterid", select: [ "sdkmessagefilterid", "_sdkmessageid_value", "primaryobjecttypecode", "secondaryobjecttypecode" ] },
                 { property: "eventhandler_plugintype", select: ["plugintypeid", "_pluginassemblyid_value", "name"] },
-                { property: "sdkmessageprocessingstepsecureconfigid", select: ["sdkmessageprocessingstepsecureconfigid", "secureconfig"] }
+                { property: "sdkmessageprocessingstepsecureconfigid", select: ["sdkmessageprocessingstepsecureconfigid", "secureconfig"] },
+                { property: "impersonatinguserid", select: [ "systemuserid", "fullname", "isdisabled" ] }
             ]
         };
 

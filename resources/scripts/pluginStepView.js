@@ -103,6 +103,21 @@
         $textInput.keyup(keyupEvent);
     }
 
+    function bindSelect($select, selectionArray, noSelectionOption) {
+        // remove prior options if they exist
+        $("option", $select).remove();
+        if (noSelectionOption) {
+            $select.append(`<option>${noSelectionOption}</option>`);
+        }
+        // add selections back
+        _.forEach(selectionArray, i => {
+            // create the dropdown option
+            const $option = $(`<option value="${i.value}">${i.text}</option>`);
+            // append this to the select list
+            $select.append($option);
+        });
+    }
+
     function setInitialState(viewModel) {
         window.dataCache = {
             step: viewModel.step,
@@ -120,34 +135,20 @@
         // initialize autocomplete for the text boxes
         initializeAutoComplete($("#Message"), window.dataCache.sdkMessagesMap, "mdi-message-settings-variant-outline");
 
-        // fill in the plugin event dropdown
-        const $eventHandelerSelect = $("#EventHandler");
-        // remove prior options if they exist
-        $("option", $eventHandelerSelect).remove();
-        // add selections back
-        _.forEach(viewModel.pluginTypes, i => {
-            const $option = $(`<option value="${i.plugintypeid}">(Plugin) ${i.name}</option>`);
-            // see if it should be selected
-            if (viewModel.step 
-                && viewModel.step.eventhandler_plugintype 
-                && viewModel.step.eventhandler_plugintype.plugintypeid
-                && viewModel.step.eventhandler_plugintype.plugintypeid === i.plugintypeid) {
-                    $option.attr("selected", "selected");
-                }
-            $eventHandelerSelect.append($option);
-        });
+        // bind select lists
+        bindSelect($("#EventHandler"), _.map(viewModel.pluginTypes, i => {
+            return { 
+                value: i.plugintypeid,
+                text: i.name
+             }
+        }));
 
-        // fill in the users dropdown
-        const $userContextSelect = $("#UserContext");
-        // remove prior options if they exist
-        $("option", $userContextSelect).remove();
-        // put empty value in
-        $userContextSelect.append("<option value=''>Calling User</option>");
-        // add selections
-        _.forEach(viewModel.users, i => {
-            const $option = $(`<option value="${i.systemuserid}">${i.fullname}${i.isdisabled ? ' (Disabled)' : ''}</option>`);
-            $userContextSelect.append($option);
-        });
+        bindSelect($("#UserContext"), _.map(viewModel.users, i => {
+            return {
+                value: i.systemuserid,
+                text: i.fullname
+            }
+        }), "Calling User");
         
         if (viewModel.step) {
             const step = viewModel.step;
@@ -168,9 +169,18 @@
             $("#Server").prop("checked", step.supporteddeployment === 0 || step.supporteddeployment === 3);
             $("#Offline").prop("checked", step.supporteddeployment === 1 || step.supporteddeployment === 3);
 
-            if (step.sdkmessageprocessingstepsecureconfigid && step.sdkmessageprocessingstepsecureconfigid.secureconfig) {
-                $("#SecureConfiguration").val(step.sdkmessageprocessingstepsecureconfigid.secureconfig);
+            if (step && step.eventhandler_plugintype) {
+                $("#EventHandler").val(step.eventhandler_plugintype.plugintypeid);
             }
+
+            if (step && step.impersonatinguserid) {
+                $("#UserContext").val(step.impersonatinguserid.systemuserid);
+            }
+
+            if (step.sdkmessageprocessingstepsecureconfigid 
+                && step.sdkmessageprocessingstepsecureconfigid.secureconfig) {
+                    $("#SecureConfiguration").val(step.sdkmessageprocessingstepsecureconfigid.secureconfig);
+                }
 
             $("#Message").val(step.sdkmessageid.name);
             $("#Message").change();
