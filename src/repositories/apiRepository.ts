@@ -129,14 +129,15 @@ export default class ApiRepository
         const request:DynamicsWebApi.RetrieveRequest = {
             collection: "pluginassemblies",
             id: pluginAssemblyId,
-            select: ['name', 'publickeytoken']
+            select: ["name", "publickeytoken"]
         };
 
         return this.webapi.retrieveRequest(request)
             .then(response => {
                 return this.webapi.retrieveAllRequest({
                     collection: "plugintypes",
-                    filter: `assemblyname eq '${response.name}'${response.publickeytoken ? " and publickeytoken eq '" + response.publickeytoken + "'" : ""}`
+                    filter: `assemblyname eq '${response.name}'${response.publickeytoken ? " and publickeytoken eq '" + response.publickeytoken + "'" : ""}`,
+                    select: ["plugintypeid", "name", "friendlyname", "assemblyname", "typename", "solutionid", "_pluginassemblyid_value"]
                 }).then(response => response.value);
             });
     }
@@ -182,18 +183,42 @@ export default class ApiRepository
     public retrieveSdkMessages() {
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessages",
-            select: ["sdkmessageid", "name", "autotransact", "availability", "categoryname", "isactive", "isprivate", "isreadonly", "template", "workflowsdkstepenabled"]
+            select: ["sdkmessageid", "name", "autotransact", "availability", "categoryname", "isactive", "isprivate", "isreadonly", "template", "workflowsdkstepenabled"],
         };
 
         return this.webapi.retrieveAllRequest(request)
             .then(response => response.value ? new TS.Linq.Enumerator(response.value).orderBy(e => e["name"]).toArray() : []);
     }
 
+    public retrieveSdkMessageFilters() {
+        const request: DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "sdkmessagefilters",
+            select: [ "sdkmessagefilterid", "_sdkmessageid_value", "primaryobjecttypecode", "secondaryobjecttypecode" ]
+        };
+
+        return this.webapi.retrieveAllRequest(request)
+            .then(response => response.value ? new TS.Linq.Enumerator(response.value).orderBy(e => e["primaryobjecttypecode"]).toArray() : []);
+    }
+
     public retrieveSdkMessageDetails(sdkMessageId:string) {
         const request:DynamicsWebApi.RetrieveRequest = {
             collection: "sdkmessages",
-            id: sdkMessageId,
-            expand: [ { property: "sdkmessageid_sdkmessagefilter", select: [ "sdkmessagefilterid", "primaryobjecttypecode", "secondaryobjecttypecode" ] } ]
+            id: sdkMessageId
+        };
+
+        return this.webapi.retrieveRequest(request);
+    }
+
+    public retrievePluginStep(sdkmessageprocessingstepid:string) {
+        const request:DynamicsWebApi.RetrieveRequest = {
+            collection: "sdkmessageprocessingsteps",
+            id: sdkmessageprocessingstepid,
+            expand: [ 
+                { property: "sdkmessageid", select: ["sdkmessageid", "name"] },
+                { property: "sdkmessagefilterid", select: [ "sdkmessagefilterid", "_sdkmessageid_value", "primaryobjecttypecode", "secondaryobjecttypecode" ] },
+                { property: "eventhandler_plugintype", select: ["plugintypeid", "_pluginassemblyid_value", "name"] },
+                { property: "sdkmessageprocessingstepsecureconfigid", select: ["sdkmessageprocessingstepsecureconfigid", "secureconfig"] }
+            ]
         };
 
         return this.webapi.retrieveRequest(request);
@@ -209,10 +234,14 @@ export default class ApiRepository
         return this.webapi.retrieveRequest(request)
             .then(response => {
                 return response && response.value ? response.value : null;
-            }).then(async response => {
-                await response.forEach(r => {
-                    r.sdkmessageid.filters = this.webapi.retrieveMultiple("sdkmessagefilters", [], `_sdkmessageid_value eq ${r.sdkmessageid}`)
-                        .then(r => new TS.Linq.Enumerator(r.value).toArray());
+            })
+            .then(async response => {
+                await response.forEach(async r => {
+                    // here we are getting some basic stuff the api would normally expand
+                    // but since we're in a collection we have to do it manually
+                    //r.sdkmessagefilterid = await this.webapi.retrieve(r._sdkmessagefilterid_value, "sdkmessagefilters");
+                    r.eventhandler_plugintype = await this.webapi.retrieve(r._eventhandler_value, "plugintypes", ["plugintypeid", "_pluginassemblyid_value", "name"]);
+                    //r.sdkmessageprocessingstepsecureconfigid = await this.webapi.retrieve(r._sdkmessageprocessingstepsecureconfigid_value, "sdkmessageprocessingstepsecureconfigs");
                  });
 
                  return response;
@@ -231,6 +260,18 @@ export default class ApiRepository
             .then(response => {
                 return response && response.sdkmessageprocessingstepid_sdkmessageprocessingstepimage && response.sdkmessageprocessingstepid_sdkmessageprocessingstepimage.length > 0 ? response.sdkmessageprocessingstepid_sdkmessageprocessingstepimage : null;
             });
+    }
+
+    public retrieveSystemUsers() {
+        const request: DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "systemusers",
+            select: [ "systemuserid", "fullname", "isdisabled" ],
+            filter: "fullname ne 'INTEGRATION'",
+            orderBy: [ "fullname" ]
+        };
+
+        return this.webapi.retrieveAllRequest(request)
+            .then(response => response.value || []);
     }
 
     public uploadPluginAssembly(assemblyUri:vscode.Uri, pluginAssemblyId?:string): Thenable<any> {
@@ -277,6 +318,14 @@ export default class ApiRepository
                         .then(assemblyId => pluginAssemblyId);
                 }
             });
+    }
+
+    public upsertPluginStep(step: any) {
+        if (step.sdkmessageprocessingstepid) {
+            this.webapi.update(step.sdkmessageprocessingstepid, "sdkmessageprocessingsteps", step);
+        } else {
+            this.webapi.create(step, "sdkmessageprocessingsteps");
+        }
     }
 
     public addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {

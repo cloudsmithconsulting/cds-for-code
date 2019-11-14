@@ -11,11 +11,19 @@
     </div>
 </blockquote>
 
+<blockquote class="panel_info" id="loadingPanel">
+    <div class="panel__text">
+        <h4>Hang tight</h4>
+        We're loading some data behind the scenes here. This message will go away when the form is ready.
+    </div>
+</blockquote>
+
 <div class="grid grid--left-panel-large">
     <div>
         <fieldset>
             <legend>General Configuration</legend>
 
+            <input type="hidden" id="Id" name="Id" value="" />
             <div class="field">
                 <label class="field__label" for="Message">
                     Message
@@ -38,7 +46,10 @@
                 <label class="field__label" for="SecondEntity">
                     Second Entity
                 </label>
-                <input type="text" class="field__input field__input--wide" id="SecondEntity" name="SecondEntity" value="none" />
+                <div class="autocomplete">
+                    <input type="text" class="field__input field__input--wide" id="SecondEntity" name="SecondEntity" />
+                    <div class="autocomplete-items"></div>
+                </div>
             </div>
             <div class="field">
                 <label class="field__label" for="FilteringAttributes">
@@ -52,10 +63,6 @@
                     Event Handler
                 </label>
                 <select id="EventHandler" name="EventHandler" class="field__input field__input--wide">
-                    <option>(Plugin) ActivityFeeds.Plugins.AutoCreatePostConfigRows</option>
-                    <option>(Plugin) ActivityFeeds.Plugins.PreConfigurationValidator</option>
-                    <option>(Plugin) ActivityFeeds.Plugins.WallSavedQuery</option>
-                    <option>(Plugin) ActivityFeeds.Plugins.WallSavedQueryUserSettings</option>
                 </select>
             </div>
             <div class="field">
@@ -69,9 +76,6 @@
                     Run in User's Context
                 </label>
                 <select id="UserContext" name="UserContext" class="field__input field__input--wide">
-                    <option>Calling User</option>
-                    <option>First name Last name</option>
-                    <option>SYSTEM</option>
                 </select>
             </div>
             <div class="field">
@@ -97,24 +101,24 @@
                     Pre-validation
                 </label>
                 <input type="radio" class="field__input" id="PreValidation" name="ExecutionPipeline"
-                    value="PreValidation" />
+                    value="10" />
                 <label class="field__label" for="PreOperation">
                     Pre-operation
                 </label>
                 <input type="radio" class="field__input" id="PreOperation" name="ExecutionPipeline"
-                    value="PreOperation" />
+                    value="20" />
                 <label class="field__label" for="PostOperation">
                     Post-operation
                 </label>
                 <input type="radio" class="field__input" id="PostOperation" name="ExecutionPipeline"
-                    value="PostOperation" checked="checked" />
+                    value="40" checked="checked" />
             </div>
 
             <div class="field field--checkbox">
-                <label class="field__label" for="StatusCode">
+                <label class="field__label" for="AsyncAutoDelete">
                     Delete AsyncOperation if StatusCode = Successful
                 </label>
-                <input type="checkbox" class="field__input" id="StatusCode" name="StatusCode" value="true" />
+                <input type="checkbox" class="field__input" id="AsyncAutoDelete" name="AsyncAutoDelete" value="true" />
             </div>
         </fieldset>
 
@@ -125,11 +129,11 @@
                 <label class="field__label" for="Asynchronous">
                     Asynchronous
                 </label>
-                <input type="radio" class="field__input" id="Asynchronous" name="ExecutionMode" value="Asynchronous" />
+                <input type="radio" class="field__input" id="Asynchronous" name="ExecutionMode" value="1" />
                 <label class="field__label" for="Synchronous">
                     Synchronous
                 </label>
-                <input type="radio" class="field__input" id="Synchronous" name="ExecutionMode" value="Synchronous"
+                <input type="radio" class="field__input" id="Synchronous" name="ExecutionMode" value="0"
                     checked="checked" />
             </div>
         </fieldset>
@@ -159,14 +163,14 @@
                 <label class="field__label" for="UnsecureConfiguration">
                     Unsecure Configuration
                 </label>
-                <textarea rows="4" cols="50" class="field__input" id="UnsecureConfiguration" name="UnsecureConfiguration"></textarea>
+                <textarea rows="4" cols="50" class="field__input field__input--wide" id="UnsecureConfiguration" name="UnsecureConfiguration"></textarea>
             </div>
 
             <div class="field">
                 <label class="field__label" for="SecureConfiguration">
                     Secure Configuration
                 </label>
-                <textarea rows="4" cols="50" class="field__input" id="SecureConfiguration" name="UnsecureConfiguration"></textarea>
+                <textarea rows="4" cols="50" class="field__input field__input--wide" id="SecureConfiguration" name="UnsecureConfiguration"></textarea>
             </div>
         </fieldset>
     </div>
