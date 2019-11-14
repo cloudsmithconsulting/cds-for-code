@@ -15,6 +15,7 @@ import SaveProjectAsTemplateCommand from '../../commands/saveProjectTemplate';
 import { TS } from 'typescript-linq/TS';
 import QuickPicker from '../../helpers/QuickPicker';
 import Dictionary from '../../helpers/Dictionary';
+import Utilities from '../../../out/helpers/Utilities';
 
 /**
  * Main class to handle the logic of the Project Templates
@@ -476,11 +477,24 @@ export default class TemplateManager implements IWireUpCommands {
             let placeholderItem;
 
             if (templateInfo.placeholders && templateInfo.placeholders.length > 0) {
-                placeholderItem = templateInfo.placeholders.find(p => p.name === key);
+                placeholderItem = <TemplatePlaceholder>templateInfo.placeholders.find(p => p.name === key);
             }
 
-            val = val || await QuickPicker.ask(placeholderItem ? placeholderItem.displayName : `Please enter the desired value for "${match[0]}"`)
-                .then(value => { if (value) { placeholders[key] = value; } return value; });
+            let attempts:number = 0;
+            let cancel:boolean = false;
+
+            while ((!val && attempts === 0) || (!val && placeholderItem && placeholderItem.required) || !cancel) {
+                if (attempts >= 1) {
+                    await QuickPicker.inform(`The template requires a response for the placeholder '${match[0]}'.`, false, "Try Again", undefined, "Cancel", () => cancel = true);
+                }
+
+                val = val || await QuickPicker.ask(placeholderItem ? placeholderItem.displayName : `Please enter the desired value for "${match[0]}"`)
+                    .then(value => { if (value) { placeholders[key] = value; } return value; });
+
+                if (Utilities.IsNullOrEmpty(val)) { val = undefined; }
+
+                attempts++;
+            }
 
             ++nmatches;
         }
@@ -530,7 +544,20 @@ export class TemplateCatalog {
         return this;
     }
 
-    query(query:(queryable:TS.Linq.Enumerator<TemplateItem>) => TS.Linq.Enumerator<TemplateItem>):TemplateItem[] {
+    queryPublishersByType(type?:TemplateType): string[] { 
+        return this.query(c => c
+            .where(i => type ? i.type === type : i.type === i.type)
+            .select(i => i.publisher)
+            .distinct());
+    }
+
+    queryByPublisher(type?:TemplateType, publisher?:string): TemplateItem[] { 
+        return this.query(c => c
+            .where(i => type ? i.type === type : i.type === i.type)
+            .where(i => publisher ? i.publisher === publisher : i.publisher === i.publisher));
+    }
+
+    query<T>(query:(queryable:TS.Linq.Enumerator<TemplateItem>) => TS.Linq.Enumerator<T>):T[] {
         return query(new TS.Linq.Enumerator(this.items)).toArray();
     }
 
@@ -550,7 +577,7 @@ export class TemplateCatalog {
                 let returnObject = JSON.parse(FileSystem.readFileSync(file));
 
                 if (returnObject) {
-                    return returnObject as TemplateCatalog;
+                    return new TemplateCatalog(returnObject);
                 }
             } catch (error) {
                 vscode.window.showErrorMessage(`The template catalog '${filename}' was found but could not be parsed.  A new file will be created.${error ? '  The error returned was: ' + error : ''}`);
@@ -606,9 +633,12 @@ export class TemplateItem {
 export class TemplatePlaceholder {
     constructor(name?:string) {
         if (name) { this.name = name; }
+
+        this.required = false;
     }
 
     name: string;
     displayName: string;
+    required: boolean;
     type: string;
 }

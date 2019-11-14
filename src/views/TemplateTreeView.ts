@@ -2,9 +2,9 @@ import * as vscode from 'vscode';
 import { TS } from 'typescript-linq/TS';
 import * as cs from '../cs';
 import IWireUpCommands from '../wireUpCommand';
-import { DynamicsWebApi } from '../api/Types';
 import { ExtensionIconThemes } from '../commands/iconLoader';
 import Utilities from '../helpers/Utilities';
+import TemplateManager, { TemplateItem, TemplateType } from '../controls/Templates/TemplateManager';
 
 export default class TemplateTreeView implements IWireUpCommands {
     public static Instance:TemplateTreeViewProvider;
@@ -43,9 +43,26 @@ class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEntry> {
 	public async getChildren(element?: TreeEntry): Promise<TreeEntry[]> {
         if (element && element.itemType) {
             const commandPrefix:string = Utilities.RemoveTrailingSlash(((element.command && element.command.arguments) || '').toString());
+            const catalog = await TemplateManager.getTemplateCatalog();
 
             switch (element.itemType) {
                 case "Folder":
+                    const templateTypeFilter = commandPrefix.indexOf("/ProjectTemplates") > -1 ? TemplateType.ProjectTemplate : commandPrefix.indexOf("/ItemTemplates") > -1 ? TemplateType.ItemTemplate : undefined;
+                    const templatePublisherFilter = commandPrefix.split("/").length >= 3 ? commandPrefix.split("/")[2] : undefined;
+
+                    if (commandPrefix === "/ProjectTemplates" || commandPrefix === "/ItemTemplates") {
+                        return Promise.resolve(catalog.queryPublishersByType(templateTypeFilter)
+                            .map(i => new TreeEntry(
+                                i, 
+                                "Folder", 
+                                vscode.TreeItemCollapsibleState.Collapsed, 
+                                undefined, 
+                                { command: cs.dynamics.controls.templateTreeView.clickEntry, title: i, arguments: [`${commandPrefix}/${i}` ] })
+                            ));
+                    } else if (commandPrefix.startsWith("/ProjectTemplates") || commandPrefix.startsWith("/ItemTemplates")) {
+                        return Promise.resolve(catalog.queryByPublisher(templateTypeFilter, templatePublisherFilter).map(i => TreeEntry.parse(i, commandPrefix)));
+                    }
+
                     return;
             }
         }
@@ -129,6 +146,21 @@ class TreeEntry extends vscode.TreeItem {
     private static readonly canAddEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
     private static readonly canEditEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
     private static readonly canDeleteEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+
+    static parse(item: TemplateItem, commandPrefix: string): TreeEntry {
+        return new TreeEntry(
+            item.displayName, 
+            item.type === TemplateType.ProjectTemplate ? "ProjectTemplate" : item.type === TemplateType.ItemTemplate ? "ItemTemplate" : undefined,
+            vscode.TreeItemCollapsibleState.None,
+            item.description,
+            {
+                command: cs.dynamics.controls.templateTreeView.clickEntry,
+                title: item.description,
+                arguments: [`${commandPrefix}/${item.name}`]
+            },
+            item
+        );
+    }
 
     constructor(
         public label: string,

@@ -47,8 +47,8 @@ export default class QuickPicker {
         if (secondaryOption) { secondary = { title: secondaryOption, isCloseAffordance: true }; }
 
         await vscode.window.showInformationMessage(message, { modal }, primary, secondary)
-            .then(response => { if (response && response.title === primaryOption) { primaryAction(); } return response; })
-            .then(response => { if (response && response.title === secondaryOption) { secondaryAction(); } return response; });
+            .then(response => { if (response && response.title === primaryOption) { if (primaryAction) { primaryAction(); } } return response; })
+            .then(response => { if (response && response.title === secondaryOption) { if (secondaryAction) { secondaryAction(); } } return response; });
     }
 
     /**
@@ -72,8 +72,8 @@ export default class QuickPicker {
         if (secondaryOption) { secondary = { title: secondaryOption, isCloseAffordance: true }; }
 
         await vscode.window.showWarningMessage(message, { modal }, primary, secondary)
-            .then(response => { if (response && response.title === primaryOption) { primaryAction(); } return response; })
-            .then(response => { if (response && response.title === secondaryOption) { secondaryAction(); } return response; });
+            .then(response => { if (response && response.title === primaryOption) { if (primaryAction) { primaryAction(); } } return response; })
+            .then(response => { if (response && response.title === secondaryOption) { if (secondaryAction) { secondaryAction(); } } return response; });
     }
 
     /**
@@ -97,8 +97,8 @@ export default class QuickPicker {
         if (secondaryOption) { secondary = { title: secondaryOption, isCloseAffordance: true }; }
 
         await vscode.window.showErrorMessage(message, { modal }, primary, secondary)
-            .then(response => { if (response && response.title === primaryOption) { primaryAction(); } return response; })
-            .then(response => { if (response && response.title === secondaryOption) { secondaryAction(); } return response; });
+            .then(response => { if (response && response.title === primaryOption) { if (primaryAction) { primaryAction(); } } return response; })
+            .then(response => { if (response && response.title === secondaryOption) { if (secondaryAction) { secondaryAction(); } } return response; });
     }
 
     /**
