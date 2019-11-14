@@ -8,10 +8,10 @@ import * as EnvironmentVariables from '../../helpers/EnvironmentVariables';
 import ExtensionConfiguration from '../../config/ExtensionConfiguration';
 import IWireUpCommands from '../../wireUpCommand';
 
-import CreateProjectFromTemplateCommand from '../../commands/createProjectFromTemplate';
-import DeleteProjectTemplateCommand from '../../commands/deleteProjectTemplate';
-import OpenProjectTemplatesFolderCommand from '../../commands/openProjectTemplatesFolder';
-import SaveProjectAsTemplateCommand from '../../commands/saveProjectTemplate';
+import createProjectFromTemplate from '../../commands/cs.dynamics.extension.createProjectFromTemplate';
+import deleteProjectTemplate from '../../commands/cs.dynamics.extension.deleteProjectTemplate';
+import openProjectTemplatesFolder from '../../commands/cs.dynamics.extension.openProjectTemplatesFolder';
+import saveProjectAsTemplate from '../../commands/cs.dynamics.extension.saveProjectAsTemplate';
 import { TS } from 'typescript-linq/TS';
 import QuickPicker from '../../helpers/QuickPicker';
 import Dictionary from '../../helpers/Dictionary';
@@ -36,10 +36,10 @@ export default class TemplateManager implements IWireUpCommands {
     wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.extension.createProjectFromTemplate, CreateProjectFromTemplateCommand.bind(undefined, this)),
-            vscode.commands.registerCommand(cs.dynamics.extension.deleteProjectTemplate, DeleteProjectTemplateCommand.bind(undefined, this)),
-            vscode.commands.registerCommand(cs.dynamics.extension.openProjectTemplatesFolder, OpenProjectTemplatesFolderCommand.bind(undefined, this)),
-            vscode.commands.registerCommand(cs.dynamics.extension.saveProjectAsTemplate, SaveProjectAsTemplateCommand.bind(undefined, this)),
+            vscode.commands.registerCommand(cs.dynamics.extension.createProjectFromTemplate, createProjectFromTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.extension.deleteProjectTemplate, deleteProjectTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.extension.openProjectTemplatesFolder, openProjectTemplatesFolder.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.extension.saveProjectAsTemplate, saveProjectAsTemplate.bind(this)),
         );
     }
 
@@ -81,6 +81,10 @@ export default class TemplateManager implements IWireUpCommands {
         const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
         const placeholders = ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.dynamics.configuration.templates.placeholders, new Dictionary<string, string>());
 
+        let overwriteAll:boolean = false;
+        let skipAll:boolean = false;
+        let renameAll:boolean = false;
+
         // recursively copy files, replacing placeholders as necessary
 		const copyInternal = async (source: string, destination: string) => {
             // maybe replace placeholders in filename
@@ -114,14 +118,25 @@ export default class TemplateManager implements IWireUpCommands {
                     } else {
                         // ask if user wants to replace, otherwise prompt for new filename
                         let reldest = path.relative(folder, destination);
+                        let action;
 
-                        switch((await QuickPicker.pick(`Destination file "${reldest}" already exists.  What would you like to do?`, "Overwrite", "Rename", "Skip", "Abort")).label) {
+                        if (overwriteAll) { action = "Overwrite"; } else if (skipAll) { action = "Skip"; } else if (renameAll) { action = "Rename"; } else {
+                            action = (await QuickPicker.pick(`Destination file "${reldest}" already exists.  What would you like to do?`, "Overwrite", "Overwrite All", "Rename", "Rename All", "Skip", "Skip All", "Abort")).label;
+                        }
+
+                        overwriteAll = overwriteAll || action === "Overwrite All";
+                        skipAll = skipAll || action === "Skip All";
+                        renameAll = renameAll || action === "Rename All";
+
+                        switch(action) {
                             case "Overwrite":
+                            case "Overwrite All":
                                 // delete existing file
                                 fs.unlinkSync(destination);
 
                                 break;
                             case "Rename":
+                            case "Rename All":
                                 // get user's input
                                 destination = await QuickPicker
                                     .ask("Please enter a new filename", undefined, reldest)
@@ -134,6 +149,7 @@ export default class TemplateManager implements IWireUpCommands {
 
                                 break;
                             case "Skip":
+                            case "Skip All":
                                 // skip
                                 return true;
                             default:
@@ -161,7 +177,18 @@ export default class TemplateManager implements IWireUpCommands {
         };  // copy function
         
         // actually copy the file recursively
-        await FileSystem.recurse(templateDir, folder, copyInternal);    
+        try {
+            await FileSystem.recurse(templateDir, folder, copyInternal);
+        } catch (error) {
+            if (error.name && error.name === cs.dynamics.errors.userCancelledAction) {
+                // User initiated cancel of this template, remove the files that have been copied.
+                FileSystem.deleteFolder(folder);
+
+                return null;
+            }
+
+            throw error;
+        }
         
         return template;
     }
@@ -190,48 +217,77 @@ export default class TemplateManager implements IWireUpCommands {
         return false;
     }
 
-    async openTemplateFolderInExplorer(): Promise<void> {
-        FileSystem.openFolderInExplorer(await TemplateManager.getTemplatesFolder());
+    async openTemplateFolderInExplorer(template: TemplateItem): Promise<void> {
+        const folder = template && template.location && FileSystem.exists(template.location) 
+            ? template.location 
+            : await TemplateManager.getTemplatesFolder();
+
+        FileSystem.openFolderInExplorer(folder);
     }
 
     /**
      * Saves a workspace as a new template
-     * @param  folder absolute path of workspace
+     * @param  fsPath absolute path of workspace folder/item
+     * @param type the type of template to store.
      * @returns  name of template
      */
-    async saveToFilesystem(folder: string) {
+    async saveToFilesystem(fsPath: string, type: TemplateType) {
         // ensure templates directory exists
         await TemplateManager.createTemplatesDirIfNotExists();
 
-        let projectName = path.basename(folder);
+        type = type || TemplateType.ProjectTemplate;
+        const fsBaseName = path.basename(fsPath);
 
         // prompt user
-        return await QuickPicker.ask("Enter the desired template name", undefined, projectName)
-            .then(async folder => {
+        return await QuickPicker.ask("Enter the desired template name", undefined, fsBaseName)
+            .then(async templateName => {
                 // empty filename exits
-                if (!folder) {
+                if (!templateName) {
                     return undefined;
                 }
 
                 // determine template dir
-                let template = path.basename(folder);
-                let templateDir = path.join(await TemplateManager.getTemplatesFolder(), template);
+                const templatesDir = await TemplateManager.getTemplatesFolder();
+                const templateDir = path.join(templatesDir, templateName);
     
                 // check if exists
                 if (fs.existsSync(templateDir)) {
-                    await QuickPicker.pickBoolean(`Template '${template}' aleady exists.  Do you wish to overwrite?`, "Yes", "No")
+                    await QuickPicker.pickBoolean(`Template '${templateName}' aleady exists.  Do you wish to overwrite?`, "Yes", "No")
                         .then(async choice => { 
                             if (choice) { 
                                 await FileSystem.deleteFolder(templateDir); 
-                                await FileSystem.copyFolder(folder, templateDir); 
+                            } else {
+                                return;
                             }
                         });
                 } else {
-                    // copy current workspace to new template folder
-                    await FileSystem.copyFolder(folder, templateDir);
+                    // Make the folder.
+                    FileSystem.makeFolderSync(templateDir);
                 }
 
-                return template;
+                if (type === TemplateType.ProjectTemplate) {
+                    // copy current workspace to new template folder
+                    await FileSystem.copyFolder(fsPath, templateDir);
+                } else {
+                    await FileSystem.copyItem(fsPath, templateDir);
+                }
+
+                // Check to see if this template exists in the catalog.
+                const templateCatalog = await TemplateManager.getTemplateCatalog();
+                
+                if (templateCatalog && templateCatalog.query(c => c.where(i => i.name === templateName)).length === 0) {
+                    const templateItem = new TemplateItem();
+                    templateItem.name = templateName;
+                    templateItem.location = path.relative(templatesDir, templateDir);
+                    templateItem.displayName = await QuickPicker.ask(`What should we call the display name for '${templateName}'`, undefined, templateName);
+                    templateItem.publisher = await QuickPicker.ask(`Who is the publisher name for '${templateItem.displayName}'`);
+                    templateItem.type = type;
+
+                    templateCatalog.add(templateItem);
+                    templateCatalog.save();
+                }
+
+                return templateName;
             }
         );
     }
@@ -486,12 +542,20 @@ export default class TemplateManager implements IWireUpCommands {
             while ((!val && attempts === 0) || (!val && placeholderItem && placeholderItem.required) || !cancel) {
                 if (attempts >= 1) {
                     await QuickPicker.inform(`The template requires a response for the placeholder '${match[0]}'.`, false, "Try Again", undefined, "Cancel", () => cancel = true);
+                    
+                    if (cancel) {
+                        const error = new Error(`The user has requested to cancel template processing${templateInfo ? " for '" + templateInfo.name : "'"}`);
+                        error.name = cs.dynamics.errors.userCancelledAction;
+
+                        throw error;
+                    }
                 }
 
                 val = val || await QuickPicker.ask(placeholderItem ? placeholderItem.displayName : `Please enter the desired value for "${match[0]}"`)
                     .then(value => { if (value) { placeholders[key] = value; } return value; });
 
                 if (Utilities.IsNullOrEmpty(val)) { val = undefined; }
+                if (val) { cancel = true; }
 
                 attempts++;
             }

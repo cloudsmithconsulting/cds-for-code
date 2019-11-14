@@ -1,10 +1,8 @@
 import * as vscode from "vscode";
 
-export namespace dynamics
-{
+export namespace dynamics {
     // tslint:disable-next-line: class-name
-    export class deployment
-    {
+    export class deployment {
         public static readonly _namespace:string = "cs.dynamics.deployment";
         public static readonly addSolutionComponent:string = `${deployment._namespace}.addSolutionComponent`;
         public static readonly dotNetBuild:string = `${deployment._namespace}.dotNetBuild`;
@@ -16,8 +14,14 @@ export namespace dynamics
     }
 
     // tslint:disable-next-line: class-name
-    export class extension
-    {
+    export class errors {
+        public static readonly _namespace:string = "cs.dynamics.errors";
+        public static readonly userCancelledAction:string = `${errors._namespace}.userCancelledAction`;
+        public static readonly webApiResponseError:string = `${errors._namespace}.webApiResponseError`;
+    } 
+
+    // tslint:disable-next-line: class-name
+    export class extension {
         public static readonly _namespace:string = "cs.dynamics.extension";
         public static readonly downloadRequiredIcons:string = `${extension._namespace}.downloadRequiredIcons`;
         public static readonly downloadRequiredScripts:string = `${extension._namespace}.downloadRequiredScripts`;
