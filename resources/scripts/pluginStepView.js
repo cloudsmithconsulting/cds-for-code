@@ -111,6 +111,7 @@
             sdkMessageFilters: viewModel.sdkMessageFilters,
             sdkMessages: viewModel.sdkMessages,
             sdkMessagesMap: _.map(viewModel.sdkMessages, i => i.name),
+            users: viewModel.users,
             currentMessageFilters: [],
             primaryEntityMap: [],
             secondEntityMap: []
@@ -134,6 +135,18 @@
                     $option.attr("selected", "selected");
                 }
             $eventHandelerSelect.append($option);
+        });
+
+        // fill in the users dropdown
+        const $userContextSelect = $("#UserContext");
+        // remove prior options if they exist
+        $("option", $userContextSelect).remove();
+        // put empty value in
+        $userContextSelect.append("<option value=''>Calling User</option>");
+        // add selections
+        _.forEach(viewModel.users, i => {
+            const $option = $(`<option value="${i.systemuserid}">${i.fullname}${i.isdisabled ? ' (Disabled)' : ''}</option>`);
+            $userContextSelect.append($option);
         });
         
         if (viewModel.step) {

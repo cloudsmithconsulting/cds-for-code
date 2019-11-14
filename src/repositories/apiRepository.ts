@@ -262,6 +262,18 @@ export default class ApiRepository
             });
     }
 
+    public retrieveSystemUsers() {
+        const request: DynamicsWebApi.RetrieveMultipleRequest = {
+            collection: "systemusers",
+            select: [ "systemuserid", "fullname", "isdisabled" ],
+            filter: "fullname ne 'INTEGRATION'",
+            orderBy: [ "fullname" ]
+        };
+
+        return this.webapi.retrieveAllRequest(request)
+            .then(response => response.value || []);
+    }
+
     public uploadPluginAssembly(assemblyUri:vscode.Uri, pluginAssemblyId?:string): Thenable<any> {
         const fs = vscode.workspace.fs;
         let fileContents;
