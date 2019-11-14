@@ -8,7 +8,7 @@ import * as StreamZip from 'node-stream-zip';
  * @param source source folder
  * @param destination destination folder
  */
-export async function CopyFolder(source: string, destination: string): Promise<boolean> {
+export async function copyFolder(source: string, destination: string): Promise<boolean> {
 	// read contents of source directory
 	const entries : string[] = fs.readdirSync(source);
 
@@ -33,7 +33,7 @@ export async function CopyFolder(source: string, destination: string): Promise<b
 		
 		// if directory, recursively copy, otherwise copy file
         if(fs.lstatSync(srcPath).isDirectory()) {
-            promises.push(CopyFolder(srcPath, destPath));
+            promises.push(copyFolder(srcPath, destPath));
         } else {
 			try {
 				fs.copyFileSync(srcPath, destPath);
@@ -56,11 +56,11 @@ export async function CopyFolder(source: string, destination: string): Promise<b
 	return Promise.resolve(true);
 }
 
-export function Exists(path:string): boolean {
+export function exists(path:string): boolean {
 	return fs.existsSync(path);
 }
 
-export function Stats(item:string): fs.Stats {
+export function stats(item:string): fs.Stats {
 	if (fs.existsSync(item)) {
 		return fs.lstatSync(item);
 	}
@@ -68,7 +68,7 @@ export function Stats(item:string): fs.Stats {
 	return null;
 }
 
-export function Walk(item:string, predicate?:(item:string) => boolean): Promise<any[]> {
+export function walk(item:string, predicate?:(item:string) => boolean): Promise<any[]> {
 	return new Promise((resolve, reject) => {
 		_walk(item, predicate, (error, result) => {
 			if (error) {
@@ -80,7 +80,62 @@ export function Walk(item:string, predicate?:(item:string) => boolean): Promise<
 	});
 }
 
-function _walk(dir: string, predicate?:(item:string) => boolean, done?: (error:any, result:any[]) => void) {
+export function walkSync(item: string): string[] {
+	let list = []
+		, files = fs.readdirSync(item)
+		, stats;
+
+	files.forEach(file => {
+		stats = fs.lstatSync(path.join(item, file));
+		if (stats.isDirectory()) {
+			list = list.concat(walkSync(path.join(item, file)));
+		} else {
+			list.push(path.join(item, file));
+		}
+	});
+
+	return list;
+}
+
+/**
+ * Recursively apply a function on a pair of files or directories from source to dest.
+ * 
+ * @param source source file or folder
+ * @param destination destination file or folder
+ * @param func function to apply between src and dest
+ * @return if recursion should continue
+ * @throws Error if function fails
+ */
+export async function recurse(source: string, destination: string, func: (src: string, dest: string) => Promise<boolean>): Promise<boolean> {
+	// apply function between src/dest
+	let success = await func(source, destination);
+
+	if (!success) {
+		return false;
+	}
+
+	if (fs.lstatSync(source).isDirectory()) {
+		// read contents of source directory and iterate
+		const entries: string[] = fs.readdirSync(source);
+
+		for (let entry of entries) {
+			// full path of src/dest
+			const srcPath = path.join(source, entry);
+			const destPath = path.join(destination, entry);
+
+			// if directory, recursively copy, otherwise copy file
+			success = await this.recurse(srcPath, destPath, func);
+
+			if (!success) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+async function _walk(dir: string, predicate?:(item:string) => boolean, done?: (error:any, result:any[]) => void) {
 	let results = [];
 	const applyPredicate = (results:any[]) => {
 		if (results && predicate) {
@@ -118,14 +173,14 @@ function _walk(dir: string, predicate?:(item:string) => boolean, done?: (error:a
  * Recursively delete a directory and all contained contents
  * @param folder directory to delete
  */
-export async function DeleteFolder(folder: string): Promise<boolean> {
+export async function deleteFolder(folder: string): Promise<boolean> {
 	if (fs.existsSync(folder) && fs.lstatSync(folder).isDirectory()) {
 		let promises = fs.readdirSync(folder).map(
 			(entry:string) => {
 				let fn = path.join(folder, entry);
 
                 if (fs.lstatSync(fn).isDirectory()) {
-					return DeleteFolder(fn);
+					return deleteFolder(fn);
 				} else {
 					try {
 						fs.unlinkSync(fn);
@@ -171,7 +226,7 @@ export async function DeleteFolder(folder: string): Promise<boolean> {
  * Recursively make directories
  * @param path destination path
  */
-export function MakeFolderSync(destination: string, mode: string | number | null | undefined = undefined): boolean {
+export function makeFolderSync(destination: string, mode: string | number | null | undefined = undefined): boolean {
 	// check if exists
 	if (fs.existsSync(destination)) {
 		if (fs.lstatSync(destination).isDirectory()) {
@@ -189,7 +244,7 @@ export function MakeFolderSync(destination: string, mode: string | number | null
 	// ensure existence of parent
 	let parent = path.dirname(destination);
 
-    if (!MakeFolderSync(parent, mode)) {
+    if (!makeFolderSync(parent, mode)) {
 		return false;
 	}
 
@@ -199,15 +254,15 @@ export function MakeFolderSync(destination: string, mode: string | number | null
     return true;
 }
 
-export function ReadFileSync(source: string): any {
+export function readFileSync(source: string): any {
 	return fs.readFileSync(source, 'utf8');
 }
 
-export function WriteFileSync(destination: string, data: any): void {
+export function writeFileSync(destination: string, data: any): void {
 	fs.writeFileSync(destination, data, 'utf8');
 }
 
-export function Unzip(archive:string, destination:string): Promise<number> {
+export function unzip(archive:string, destination:string): Promise<number> {
 	const zip = new StreamZip({
 		file: archive,
 		storeEntries: true
@@ -215,7 +270,7 @@ export function Unzip(archive:string, destination:string): Promise<number> {
 
 	return new Promise((resolve, reject) => {
 		zip.on('ready', () => {
-			MakeFolderSync(destination);
+			makeFolderSync(destination);
 			zip.extract(null, destination, (err, count) => {
 				zip.close();
 

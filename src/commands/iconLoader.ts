@@ -10,6 +10,7 @@ import * as FileSystem from '../helpers/FileSystem';
 import * as DynamicsTreeView from '../views/DynamicsTreeView';
 import { TS } from 'typescript-linq';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
+import * as TemplateTreeView from '../views/TemplateTreeView';
 
 export default class IconLoader implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -36,6 +37,7 @@ export default class IconLoader implements IWireUpCommands {
 
 export type ExtensionIcon =
 	DynamicsTreeView.EntryType |
+	TemplateTreeView.EntryType |
 	'Add' |
 	'Edit' |
 	'Delete' |
@@ -166,6 +168,8 @@ export class ExtensionIconTheme {
 			{ key: "PluginStepImage", value: "ic-baseline-image-search" },
 			{ key: "PluginType", value: "fe-prototype" },
 			{ key: "Solution", value: "ic-round-border-all" },
+			{ key: "ProjectTemplate", value: "icomoon-free:insert-template" },
+			{ key: "ItemTemplate", value: "icomoon-free:insert-template" },
 			{ key: "Add", value: "ic-baseline-add" },
 			{ key: "Edit", value: "ic-twotone-edit" },
 			{ key: "Refresh", value: "ic-round-refresh" },
@@ -207,7 +211,7 @@ export class ExtensionIconTheme {
 		this.icons.forEach(icon => {
 			const localPath = path.join(destination, icon.mappedOutputFile);
 
-			FileSystem.MakeFolderSync(path.dirname(localPath));
+			FileSystem.makeFolderSync(path.dirname(localPath));
 
 			if (fs.existsSync(localPath)) { return; }
 

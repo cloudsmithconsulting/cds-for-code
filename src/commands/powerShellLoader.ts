@@ -8,7 +8,7 @@ import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import GlobalState from '../config/GlobalState';
-import ProjectTemplatesPlugin from "../controls/Templates/ProjectTemplatesPlugin";
+import TemplateManager from "../controls/Templates/TemplateManager";
 import * as FileSystem from "../helpers/FileSystem";
 
 export default class PowerShellLoader implements IWireUpCommands {
@@ -32,8 +32,8 @@ export default class PowerShellLoader implements IWireUpCommands {
 		const appsFolder = path.join(context.globalStoragePath, "/tools/");
 		
 		// Checks to see if folder exist
-		FileSystem.MakeFolderSync(scriptsFolder);
-		FileSystem.MakeFolderSync(appsFolder);
+		FileSystem.makeFolderSync(scriptsFolder);
+		FileSystem.makeFolderSync(appsFolder);
 
 		const appsToFetch = [
 			"releases/download/beta/CloudSmith.Dynamics365.AssemblyScanner.zip",
@@ -66,7 +66,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 				}
 
 				const currentVersion = GlobalState.Instance(context).PowerShellScriptVersion;
-				const templateManager = new ProjectTemplatesPlugin(context);
+				const templateManager = new TemplateManager(context);
 
 				// For loop to iterate through the array of scripts
 				for (var i = 0; i < scriptsToFetch.length; i++ ) {
@@ -127,13 +127,13 @@ export default class PowerShellLoader implements IWireUpCommands {
 
 								// Sample projects are templates
 								if (path.basename(fileName).startsWith("CloudSmith.Dynamics365.Sample")) {
-									extractPath = path.join(await templateManager.getTemplatesDir(), path.basename(fileName).replace(path.extname(fileName), ""));
+									extractPath = path.join(await TemplateManager.getTemplatesFolder(), path.basename(fileName).replace(path.extname(fileName), ""));
 								}
 
 								return { zipFile: localPath, extractPath };
 							})
 							.then(options => {
-								FileSystem.Unzip(options.zipFile, options.extractPath)
+								FileSystem.unzip(options.zipFile, options.extractPath)
 									.then(count => vscode.window.showInformationMessage(`${count} items extracted from ${options.zipFile} into ${options.extractPath}`));
 							})
 							.then(() => {

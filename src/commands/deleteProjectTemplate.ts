@@ -1,21 +1,22 @@
 import vscode = require("vscode");
-import ProjectTemplatesPlugin from "../controls/Templates/ProjectTemplatesPlugin";
+import TemplateManager, { TemplateType } from "../controls/Templates/TemplateManager";
 import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
+import QuickPicker from "..//helpers/QuickPicker";
 
 /**
  * Main command to delete an existing template.
  * This command can be invoked by the Command Palette or in a folder context menu on the explorer view.
  * @export
- * @param {ProjectTemplatesPlugin} templateManager
+ * @param {TemplateManager} templateManager
  * @param {*} args
  */
-export default async function run(templateManager: ProjectTemplatesPlugin, args: any) {
+export default async function run(templateManager: TemplateManager, args: any) {
     // load latest configuration
     ExtensionConfiguration.updateConfiguration(cs.dynamics.configuration.templates._namespace);
 
     // choose a template then delete
-    templateManager.chooseTemplate().then( 
+    QuickPicker.pickTemplate("Choose the template you would like to delete").then( 
         template => {
             // no template chosen, simply exit
             if (!template) {
@@ -23,14 +24,13 @@ export default async function run(templateManager: ProjectTemplatesPlugin, args:
             }
 
             // delete template
-            templateManager.deleteTemplate(template).then(
-                (deleted : boolean) => { 
+            templateManager.deleteFromFilesystem(template.location)
+                .then(deleted => { 
                     if (deleted) {
-                        vscode.window.showInformationMessage("Deleted template '" + template + "'");
-                    }
-                },
-                (reason : any) => { 
-                    vscode.window.showErrorMessage("Failed to delete template '" + template + "': " + reason);
+                        QuickPicker.inform(`Template '${template.name}' was removed from the library.`);
+                    } 
+                }, (reason) => { 
+                    QuickPicker.error(`There was an error deleting the template '${template.name}': ${reason}`);
                 }
             );
         }

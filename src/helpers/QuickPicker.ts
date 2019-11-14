@@ -8,8 +8,9 @@ import { DynamicsWebApi } from "../api/Types";
 import Utilities from "./Utilities";
 import Dictionary from "./Dictionary";
 import * as FileSystem from "../helpers/FileSystem";
-import { Octicon } from "../extension/Octicon";
+import { Octicon } from "../core/Octicon";
 import * as path from 'path';
+import TemplateManager, { TemplateItem, TemplateType, TemplateCatalog } from "../controls/Templates/TemplateManager";
 
 export default class QuickPicker {
     /**
@@ -26,12 +27,99 @@ export default class QuickPicker {
     }
 
     /**
+     * Quickly informs you of information and optionally gives you primary/secondary actions.
+     *
+     * @static
+     * @param {string} message The message to inform
+     * @param {boolean} [modal=false] Boolean indicating if the information should be displayed in a modal box.
+     * @param {string} [primaryOption] Text to display in a button if the "primary" action is offered.
+     * @param {() => void} [primaryAction] Action to perform if the "primary" action is selected.
+     * @param {string} [secondaryOption] Text to display in a button if the "secondary" action is offered.
+     * @param {() => void} [secondaryAction] Action to perform if the "secondary" action is selected or ESC is pressed
+     * @returns {Promise<void>} empty promise
+     * @memberof QuickPicker
+     */
+    public static async inform(message: string, modal:boolean = false, primaryOption?:string, primaryAction?:() => void, secondaryOption?:string, secondaryAction?:() => void): Promise<void> {
+        let primary:vscode.MessageItem;
+        let secondary:vscode.MessageItem;
+
+        if (primaryOption) { primary = { title: primaryOption, isCloseAffordance: false }; }
+        if (secondaryOption) { secondary = { title: secondaryOption, isCloseAffordance: true }; }
+
+        await vscode.window.showInformationMessage(message, { modal }, primary, secondary)
+            .then(response => { if (response && response.title === primaryOption) { primaryAction(); } return response; })
+            .then(response => { if (response && response.title === secondaryOption) { secondaryAction(); } return response; });
+    }
+
+    /**
+     * Quickly warns you of information and optionally gives you primary/secondary actions.
+     *
+     * @static
+     * @param {string} message The message to inform
+     * @param {boolean} [modal=false] Boolean indicating if the information should be displayed in a modal box.
+     * @param {string} [primaryOption] Text to display in a button if the "primary" action is offered.
+     * @param {() => void} [primaryAction] Action to perform if the "primary" action is selected.
+     * @param {string} [secondaryOption] Text to display in a button if the "secondary" action is offered.
+     * @param {() => void} [secondaryAction] Action to perform if the "secondary" action is selected or ESC is pressed
+     * @returns {Promise<void>} empty promise
+     * @memberof QuickPicker
+     */
+    public static async warn(message: string, modal:boolean = false, primaryOption?:string, primaryAction?:() => void, secondaryOption?:string, secondaryAction?:() => void): Promise<void> {
+        let primary:vscode.MessageItem;
+        let secondary:vscode.MessageItem;
+
+        if (primaryOption) { primary = { title: primaryOption, isCloseAffordance: false }; }
+        if (secondaryOption) { secondary = { title: secondaryOption, isCloseAffordance: true }; }
+
+        await vscode.window.showWarningMessage(message, { modal }, primary, secondary)
+            .then(response => { if (response && response.title === primaryOption) { primaryAction(); } return response; })
+            .then(response => { if (response && response.title === secondaryOption) { secondaryAction(); } return response; });
+    }
+
+    /**
+     * Quickly shows you error information.
+     *
+     * @static
+     * @param {string} message The message to inform
+     * @param {boolean} [modal=false] Boolean indicating if the information should be displayed in a modal box.
+     * @param {string} [primaryOption] Text to display in a button if the "primary" action is offered.
+     * @param {() => void} [primaryAction] Action to perform if the "primary" action is selected.
+     * @param {string} [secondaryOption] Text to display in a button if the "secondary" action is offered.
+     * @param {() => void} [secondaryAction] Action to perform if the "secondary" action is selected or ESC is pressed
+     * @returns {Promise<void>} empty promise
+     * @memberof QuickPicker
+     */
+    public static async error(message: string, modal:boolean = false, primaryOption?:string, primaryAction?:() => void, secondaryOption?:string, secondaryAction?:() => void): Promise<void> {
+        let primary:vscode.MessageItem;
+        let secondary:vscode.MessageItem;
+
+        if (primaryOption) { primary = { title: primaryOption, isCloseAffordance: false }; }
+        if (secondaryOption) { secondary = { title: secondaryOption, isCloseAffordance: true }; }
+
+        await vscode.window.showErrorMessage(message, { modal }, primary, secondary)
+            .then(response => { if (response && response.title === primaryOption) { primaryAction(); } return response; })
+            .then(response => { if (response && response.title === secondaryOption) { secondaryAction(); } return response; });
+    }
+
+    /**
 	 * shows a QuickPick-Panel in the VS Code Window
 	 * @param placeHolder text to display when nothing was chosen
 	 * @param options options to choose from
 	 */
-	public static async pick(placeHolder: string, ...options: QuickPickOption[]): Promise<QuickPickOption> {
-		return await vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut: true, canPickMany: false });
+	public static async pick(placeHolder: string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption> {
+        if (options.length > 0) {
+            let quickPickOptions:QuickPickOption[];
+
+            if (options[0] instanceof QuickPickOption) {
+                quickPickOptions = <QuickPickOption[]>options;
+            } else {
+                quickPickOptions = (<string[]>options).map(i => new QuickPickOption(i));
+            }
+
+            return await vscode.window.showQuickPick(quickPickOptions, { placeHolder, ignoreFocusOut: true, canPickMany: false });
+        }
+
+        return null;
 	}    
 
     /**
@@ -52,6 +140,51 @@ export default class QuickPicker {
         return await vscode.window.showQuickPick([new QuickPickOption(`${Octicon.check} ${trueValue}`, undefined), new QuickPickOption(`${Octicon.x} ${falseValue}`, undefined)], { placeHolder, ignoreFocusOut: true, canPickMany: false })
             .then(value => value.label.startsWith(`${Octicon.check}`) ? true : value.label.startsWith(`${Octicon.x}`) ? false : null);
 	}    
+
+    public static async pickTemplate(placeHolder: string, templateType?:TemplateType, canAddNewItem:boolean = false): Promise<TemplateItem> {
+        return await TemplateManager.getTemplateCatalog()
+            .then(catalog => {
+                let choices:QuickPickOption[] = [];
+
+                if (canAddNewItem) {
+                    choices.push(new QuickPickOption(`${Octicon.file_add}`, undefined, `New template`, undefined, true));
+                }
+
+                let items:TemplateItem[];
+
+                if (templateType) {
+                    items = catalog.query(c => c.where(i => i.type === templateType));
+                } else {
+                    items = catalog.items;
+                }
+                
+                items.forEach(i => choices.push(new QuickPickOption(Utilities.IsNullOrEmpty(i.displayName) ? i.location : i.displayName, undefined, i.description, i))); 
+
+                if (choices.length === 0) {
+                    QuickPicker.warn(
+                        "You do not have any templates configured.  Add some by copying files or using the Template Explorer.", 
+                        undefined, 
+                        "Open template folder", 
+                        async () => FileSystem.openFolderInExplorer(await TemplateManager.getTemplatesFolder()));
+                }
+
+                return choices;
+            }).then(async items => {
+                if (items && items.length > 0) {
+                    return await this.pick(placeHolder, ...items);
+                }
+            }).then(async item => {
+                if (item.context) {
+                    return item.context;
+                }
+
+                //TODO: complete this workflow.
+                const template = new TemplateItem();
+                template.name = await QuickPicker.ask("What would you like to call the new template?");
+                
+                return template;
+            });
+    }
 
     /**
      * Selects a workspace folder.  If args contains an fsPath, then it uses
@@ -164,7 +297,7 @@ export default class QuickPicker {
                             newUri = defaultUri.with({ path: newPath });
 
                             if (isFolder) {
-                                FileSystem.MakeFolderSync(newUri.fsPath);
+                                FileSystem.makeFolderSync(newUri.fsPath);
                             }
 
                             return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem, allowedFileTypes);
@@ -290,15 +423,7 @@ export default class QuickPicker {
 }
 
 export class QuickPickOption implements vscode.QuickPickItem {
-	public label: string;
-	public command: string;
-	public description: string;
-    public context: any;
-    public detail: string;
-    public picked?: boolean;
-    public alwaysShow?: boolean;
-
-	constructor(label: string, command: string, description: string='', context?: any, alwaysShow?:boolean) {
+	constructor(label: string, command?: string, description?: string, context?: any, alwaysShow?:boolean) {
 		this.label = label;
 		this.command = command;
         this.description = description;
@@ -306,10 +431,17 @@ export class QuickPickOption implements vscode.QuickPickItem {
         this.alwaysShow = alwaysShow;
     }
     
-    public invokeCommand<T>(...options:any[]): Thenable<T>
-    {
+	label: string;
+	command?: string;
+	description?: string;
+    context?: any;
+    detail?: string;
+    picked?: boolean;
+    alwaysShow?: boolean;
+
+    invokeCommand<T>(...rest:any[]): Thenable<T> {
         if (this.command) {
-            return vscode.commands.executeCommand(this.command, options);
+            return vscode.commands.executeCommand(this.command, rest);
         }
 
         return null;
@@ -325,6 +457,6 @@ export class WorkspaceFileItem {
         this.itemType = itemType;
     }
 
-    public fsPath: string;
-    public itemType: vscode.FileType;
+    fsPath: string;
+    itemType: vscode.FileType;
 }
