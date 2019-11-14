@@ -122,56 +122,6 @@
 		},
 		"commands": [
 			{
-				"command": "cs.dynamics.controls.explorer.dotNetBuild",
-				"title": "Build project",
-				"category": "UserInterface"
-			},
-			{
-				"command": "cs.dynamics.controls.explorer.dotNetTest",
-				"title": "Test project",
-				"category": "UserInterface"
-			},
-			{
-				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
-				"title": "Generate Dynamics entity classes",
-				"category": "UserInterface"
-			},
-			{
-				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
-				"title": "Generate Dynamics entity classes",
-				"category": "UserInterface"
-			},
-			{
-				"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
-				"title": "Deploy solution to Dynamics 365",
-				"category": "UserInterface"
-			},
-			{
-				"command": "cs.dynamics.controls.explorer.registerPluginFile",
-				"title": "Deploy assembly to Dynamics 365",
-				"category": "UserInterface"
-			},
-			{
-				"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
-				"title": "Download Dynamics 365 solution here",
-				"category": "UserInterface"
-			},
-			{
-				"command": "cs.dynamics.controls.newWorkspace.open",
-				"title": "Get started in a new workspace",
-				"category": "Dynamics 365 CE"
-			},
-			{
-				"command": "cs.dynamics.controls.pluginStep.open",
-				"title": "Create a new plugin processing step",
-				"category": "Dynamics 365 CE"
-			},
-			{
-				"command": "cs.dynamics.controls.svcUtilConfig.configure",
-				"title": "Configure entity code generation from the CrmSvcUtil",
-				"category": "Dynamics 365 CE"
-			},
-			{
 				"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
 				"title": "Refresh",
 				"icon": {
@@ -256,6 +206,56 @@
 				"command": "cs.dynamics.controls.dynamicsTreeView.unpackSolution",
 				"title": "Export into workspace",
 				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.dotNetBuild",
+				"title": "Build project",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.dotNetTest",
+				"title": "Test project",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
+				"title": "Generate Dynamics entity classes",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
+				"title": "Generate Dynamics entity classes",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
+				"title": "Deploy solution to Dynamics 365",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.registerPluginFile",
+				"title": "Deploy assembly to Dynamics 365",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
+				"title": "Download Dynamics 365 solution here",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.newWorkspace.open",
+				"title": "Get started in a new workspace",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.controls.pluginStep.open",
+				"title": "Create a new plugin processing step",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.controls.svcUtilConfig.configure",
+				"title": "Configure entity code generation from the CrmSvcUtil",
+				"category": "Dynamics 365 CE"
 			},
 			{
 				"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
@@ -465,6 +465,16 @@
 					"command": "cs.dynamics.controls.dynamicsTreeView.addEntry",
 					"group": "navigation",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
+					"group": "navigation",
+					"when": "view == cs.dynamics.viewContainers.templateExplorer"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.addEntry",
+					"group": "navigation",
+					"when": "view == cs.dynamics.viewContainers.templateExplorer"
 				}
 			],
 			"view/item/context": [
@@ -477,6 +487,16 @@
 					"command": "cs.dynamics.controls.dynamicsTreeView.editEntry",
 					"group": "inline",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.deleteEntry",
+					"group": "inline",
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
+					"group": "group@1",
+					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.inspectEntry",
@@ -499,11 +519,6 @@
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.deleteEntry",
-					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
-				},
-				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.unpackSolution",
 					"group": "deployment@1",
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
@@ -524,9 +539,24 @@
 					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
+					"command": "cs.dynamics.controls.templateTreeView.addEntry",
+					"group": "inline",
+					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.editEntry",
+					"group": "inline",
+					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.deleteEntry",
+					"group": "inline",
+					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
 					"group": "group@1",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
 				}
 			]
 		}

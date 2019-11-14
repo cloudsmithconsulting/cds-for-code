@@ -11,7 +11,7 @@ import DynamicsTreeView from './views/DynamicsTreeView';
 import PackDynamicsSolution from './commands/packDynamicsSolution';
 import UnpackDynamicsSolution from './commands/unpackDynamicsSolution';
 import JsonInspectorViewManager from './views/JsonInspectorView';
-import ProjectTemplatesPlugin from './controls/Templates/ProjectTemplatesPlugin';
+import TemplateManager from './controls/Templates/TemplateManager';
 import DynamicsTerminal from './views/DynamicsTerminal';
 import IconLoader from './commands/iconLoader';
 import AddSolutionComponent from './commands/addSolutionComponent';
@@ -65,7 +65,7 @@ export function activate(context: vscode.ExtensionContext) {
 	].forEach(c => c.wireUpCommands(context, toolsConfig));
 
 	[   // templating engine.
-		new ProjectTemplatesPlugin(context)
+		new TemplateManager(context)
 	].forEach(c => c.wireUpCommands(context, templatesConfig));
 }
 

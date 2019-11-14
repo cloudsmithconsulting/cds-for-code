@@ -131,12 +131,12 @@ class TreeEntry extends vscode.TreeItem {
     private static readonly canDeleteEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
 
     constructor(
-        label: string,
-        readonly itemType: EntryType,
-        collapsibleState: vscode.TreeItemCollapsibleState,
-        readonly subtext?: string,
-        readonly command?: vscode.Command,
-        readonly context?: any
+        public label: string,
+        public readonly itemType: EntryType,
+        public collapsibleState: vscode.TreeItemCollapsibleState,
+        public readonly subtext?: string,
+        public readonly command?: vscode.Command,
+        public readonly context?: any
 	) {
         super(label, collapsibleState);
         

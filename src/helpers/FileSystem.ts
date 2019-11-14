@@ -80,6 +80,44 @@ export function Walk(item:string, predicate?:(item:string) => boolean): Promise<
 	});
 }
 
+/**
+ * Recursively apply a function on a pair of files or directories from source to dest.
+ * 
+ * @param source source file or folder
+ * @param destination destination file or folder
+ * @param func function to apply between src and dest
+ * @return if recursion should continue
+ * @throws Error if function fails
+ */
+export async function Recurse(source: string, destination: string, func: (src: string, dest: string) => Promise<boolean>): Promise<boolean> {
+	// apply function between src/dest
+	let success = await func(source, destination);
+
+	if (!success) {
+		return false;
+	}
+
+	if (fs.lstatSync(source).isDirectory()) {
+		// read contents of source directory and iterate
+		const entries: string[] = fs.readdirSync(source);
+
+		for (let entry of entries) {
+			// full path of src/dest
+			const srcPath = path.join(source, entry);
+			const destPath = path.join(destination, entry);
+
+			// if directory, recursively copy, otherwise copy file
+			success = await this.recursiveApplyInDir(srcPath, destPath, func);
+
+			if (!success) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
 function _walk(dir: string, predicate?:(item:string) => boolean, done?: (error:any, result:any[]) => void) {
 	let results = [];
 	const applyPredicate = (results:any[]) => {
