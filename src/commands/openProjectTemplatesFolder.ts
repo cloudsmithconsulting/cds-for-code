@@ -1,6 +1,4 @@
-import vscode = require("vscode");
-import * as fs from "../helpers/FileSystem";
-import TemplatesManager from "../controls/Templates/ProjectTemplatesPlugin";
+import TemplatesManager from "../controls/Templates/TemplateManager";
 import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
 
@@ -16,9 +14,6 @@ export default async function run(templateManager: TemplatesManager, args: any) 
 	// load latest configuration
 	ExtensionConfiguration.updateConfiguration(cs.dynamics.configuration.templates._namespace);
 
-	// create template directory
-	await templateManager.createTemplatesDirIfNotExists();
-
 	// open template directory
-	fs.openFolderInExplorer(await templateManager.getTemplatesDir());
+	await templateManager.openTemplateFolderInExplorer();
 }

@@ -51,7 +51,7 @@ export default class VisualStudioProjectCommands implements IWireUpCommands {
                 let defaultFolder = workspaceFolder ? workspaceFolder.uri : undefined;
 
                 if (file) {
-                    if (FileSystem.Stats(file.fsPath).isDirectory()) {
+                    if (FileSystem.stats(file.fsPath).isDirectory()) {
                         defaultFolder = file;
                         file = undefined;
                     } else {
@@ -87,7 +87,7 @@ export default class VisualStudioProjectCommands implements IWireUpCommands {
                             propertyGroup.FileVersion = { _:incrementBuild(value) };
                         }
 
-                        FileSystem.WriteFileSync(file.fsPath, await XmlParser.createXml(projectFileXml));
+                        FileSystem.writeFileSync(file.fsPath, await XmlParser.createXml(projectFileXml));
                     }
                 }
 
@@ -110,11 +110,11 @@ export default class VisualStudioProjectCommands implements IWireUpCommands {
                                 if (logFile) {
                                     const folder = path.dirname(logFile);
 
-                                    if (!FileSystem.Exists(folder)) {
-                                        FileSystem.MakeFolderSync(folder);
+                                    if (!FileSystem.exists(folder)) {
+                                        FileSystem.makeFolderSync(folder);
                                     }
 
-                                    FileSystem.WriteFileSync(logFile, tc.output);
+                                    FileSystem.writeFileSync(logFile, tc.output);
 
                                     vscode.workspace.openTextDocument(logFile)
                                         .then(d => vscode.window.showTextDocument(d));	
@@ -129,7 +129,7 @@ export default class VisualStudioProjectCommands implements IWireUpCommands {
                 let defaultFolder = workspaceFolder ? workspaceFolder.uri : undefined;
 
                 if (file) {
-                    if (FileSystem.Stats(file.fsPath).isDirectory()) {
+                    if (FileSystem.stats(file.fsPath).isDirectory()) {
                         defaultFolder = file;
                         file = undefined;
                     } else {
@@ -158,11 +158,11 @@ export default class VisualStudioProjectCommands implements IWireUpCommands {
                                 if (logFile) {
                                     const folder = path.dirname(logFile);
 
-                                    if (!FileSystem.Exists(folder)) {
-                                        FileSystem.MakeFolderSync(folder);
+                                    if (!FileSystem.exists(folder)) {
+                                        FileSystem.makeFolderSync(folder);
                                     }
 
-                                    FileSystem.WriteFileSync(logFile, tc.output);
+                                    FileSystem.writeFileSync(logFile, tc.output);
 
                                     vscode.workspace.openTextDocument(logFile)
                                         .then(d => vscode.window.showTextDocument(d));	

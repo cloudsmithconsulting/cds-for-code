@@ -54,6 +54,7 @@ export namespace dynamics
     {
         public static readonly _namespace:string = "cs.dynamics.viewContainers";
         public static readonly dynamicsExplorer:string = `${viewContainers._namespace}.dynamicsExplorer`;
+        public static readonly templateExplorer:string = `${viewContainers._namespace}.templateExplorer`;
     }
 
     // tslint:disable-next-line: class-name
@@ -172,24 +173,35 @@ export namespace dynamics
         }
 
         // tslint:disable-next-line: class-name
-        export class treeView
+        export class dynamicsTreeView
         {
-            public static readonly _namespace:string = "cs.dynamics.controls.treeView";
-            public static readonly addConnection:string = `${treeView._namespace}.addConnection`;
-            public static readonly addEntry:string = `${treeView._namespace}.addEntry`;
-            public static readonly addEntryToSolution:string = `${treeView._namespace}.addEntryToSolution`;
-            public static readonly clickEntry:string = `${treeView._namespace}.clickEntry`;
-            public static readonly deleteEntry:string = `${treeView._namespace}.deleteEntry`;
-            public static readonly editConnection:string = `${treeView._namespace}.editConnection`;
-            public static readonly editEntry:string = `${treeView._namespace}.editEntry`;
-            public static readonly inspectEntry:string = `${treeView._namespace}.inspectEntry`;
-            public static readonly moveSolution:string = `${treeView._namespace}.moveSolution`;
-            public static readonly openInApp:string = `${treeView._namespace}.openInApp`;
-            public static readonly openInBrowser:string = `${treeView._namespace}.openInBrowser`;
-            public static readonly openInEditor:string = `${treeView._namespace}.openInEditor`;
-            public static readonly refreshEntry:string = `${treeView._namespace}.refreshEntry`;
-            public static readonly removeEntryFromSolution:string = `${treeView._namespace}.removeEntryFromSolution`;
-            public static readonly unpackSolution:string = `${treeView._namespace}.unpackSolution`;
+            public static readonly _namespace:string = "cs.dynamics.controls.dynamicsTreeView";
+            public static readonly addConnection:string = `${dynamicsTreeView._namespace}.addConnection`;
+            public static readonly addEntry:string = `${dynamicsTreeView._namespace}.addEntry`;
+            public static readonly addEntryToSolution:string = `${dynamicsTreeView._namespace}.addEntryToSolution`;
+            public static readonly clickEntry:string = `${dynamicsTreeView._namespace}.clickEntry`;
+            public static readonly deleteEntry:string = `${dynamicsTreeView._namespace}.deleteEntry`;
+            public static readonly editConnection:string = `${dynamicsTreeView._namespace}.editConnection`;
+            public static readonly editEntry:string = `${dynamicsTreeView._namespace}.editEntry`;
+            public static readonly inspectEntry:string = `${dynamicsTreeView._namespace}.inspectEntry`;
+            public static readonly moveSolution:string = `${dynamicsTreeView._namespace}.moveSolution`;
+            public static readonly openInApp:string = `${dynamicsTreeView._namespace}.openInApp`;
+            public static readonly openInBrowser:string = `${dynamicsTreeView._namespace}.openInBrowser`;
+            public static readonly openInEditor:string = `${dynamicsTreeView._namespace}.openInEditor`;
+            public static readonly refreshEntry:string = `${dynamicsTreeView._namespace}.refreshEntry`;
+            public static readonly removeEntryFromSolution:string = `${dynamicsTreeView._namespace}.removeEntryFromSolution`;
+            public static readonly unpackSolution:string = `${dynamicsTreeView._namespace}.unpackSolution`;
+        }
+
+        // tslint:disable-next-line: class-name
+        export class templateTreeView
+        {
+            public static readonly _namespace:string = "cs.dynamics.controls.templateTreeView";
+            public static readonly addEntry:string = `${templateTreeView._namespace}.addEntry`;
+            public static readonly clickEntry:string = `${templateTreeView._namespace}.clickEntry`;
+            public static readonly deleteEntry:string = `${templateTreeView._namespace}.deleteEntry`;
+            public static readonly editEntry:string = `${templateTreeView._namespace}.editEntry`;
+            public static readonly refreshEntry:string = `${templateTreeView._namespace}.refreshEntry`;
         }
     }
 }

@@ -42,9 +42,9 @@ export default class SolutionMap implements IWireUpCommands
                     map.clear();
                 } else {
                     if (item && item.path) {
-                        if (FileSystem.Exists(item.path)) {
+                        if (FileSystem.exists(item.path)) {
                             returnValue = true;
-                            await FileSystem.DeleteFolder(item.path);
+                            await FileSystem.deleteFolder(item.path);
                         }
                     }
 
@@ -98,9 +98,9 @@ export default class SolutionMap implements IWireUpCommands
                     }
 
                     if (item.path !== folder) {
-                        if (FileSystem.Exists(item.path)) {
-                            await FileSystem.CopyFolder(item.path, folder)
-                                .then(() => FileSystem.DeleteFolder(item.path));
+                        if (FileSystem.exists(item.path)) {
+                            await FileSystem.copyFolder(item.path, folder)
+                                .then(() => FileSystem.deleteFolder(item.path));
                         }
                     }
                 }
@@ -219,9 +219,9 @@ export default class SolutionMap implements IWireUpCommands
 
         const file = path.join(workspacePath, filename);
 
-        if (FileSystem.Exists(file)) {
+        if (FileSystem.exists(file)) {
             try {
-                let returnObject = JSON.parse(FileSystem.ReadFileSync(file));
+                let returnObject = JSON.parse(FileSystem.readFileSync(file));
 
                 if (returnObject && returnObject instanceof SolutionMap) {
                     return <SolutionMap>returnObject;
@@ -240,14 +240,14 @@ export default class SolutionMap implements IWireUpCommands
 
         const folder  = path.join(workspacePath, path.dirname(filename));
 
-        if (!FileSystem.Exists(folder)) {
-            FileSystem.MakeFolderSync(folder);
+        if (!FileSystem.exists(folder)) {
+            FileSystem.makeFolderSync(folder);
         }
 
         const file = path.join(workspacePath, filename);
 
         try {
-            FileSystem.WriteFileSync(file, JSON.stringify(map));
+            FileSystem.writeFileSync(file, JSON.stringify(map));
         } catch (error) {
             vscode.window.showErrorMessage(`The file '${filename}' could not be saved to the workspace.${error ? '  The error returned was: ' + error : ''}`);
         }

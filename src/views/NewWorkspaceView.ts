@@ -65,7 +65,7 @@ class NewWorkspaceView extends View {
                 ExtensionConfiguration.setConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience, message.value);
                 return;
             case 'openConnectionView':
-                vscode.commands.executeCommand(cs.dynamics.controls.treeView.editConnection);
+                vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editConnection);
                 return;
         }
     }
