@@ -129,7 +129,7 @@ export default class ApiRepository
         const request:DynamicsWebApi.RetrieveRequest = {
             collection: "pluginassemblies",
             id: pluginAssemblyId,
-            select: ['name', 'publickeytoken']
+            select: ["name", "publickeytoken"]
         };
 
         return this.webapi.retrieveRequest(request)
@@ -239,7 +239,7 @@ export default class ApiRepository
                     // here we are getting some basic stuff the api would normally expand
                     // but since we're in a collection we have to do it manually
                     //r.sdkmessagefilterid = await this.webapi.retrieve(r._sdkmessagefilterid_value, "sdkmessagefilters");
-                    r.eventhandler_plugintype = await this.webapi.retrieve(r._eventhandler_value, "plugintypes");
+                    r.eventhandler_plugintype = await this.webapi.retrieve(r._eventhandler_value, "plugintypes", ["plugintypeid", "_pluginassemblyid_value", "name"]);
                     //r.sdkmessageprocessingstepsecureconfigid = await this.webapi.retrieve(r._sdkmessageprocessingstepsecureconfigid_value, "sdkmessageprocessingstepsecureconfigs");
                  });
 

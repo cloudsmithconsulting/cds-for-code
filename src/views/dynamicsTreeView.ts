@@ -207,6 +207,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, undefined, item.solutionId), retryFunction);
                         break;
                     case "PluginType":
+                        if (!item.context._pluginassemblyid_value) { return; }
                         vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, item.context._pluginassemblyid_value);
                         break;
                 }
@@ -258,6 +259,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, item.context.webresourceid, item.solutionId), retryFunction);
                         break;
                     case "PluginStep":
+                        if (!item.context.eventhandler_plugintype) { return; }
                         vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, item.context.eventhandler_plugintype._pluginassemblyid_value, item.context);
                         break;
                 }
