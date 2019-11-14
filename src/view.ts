@@ -138,7 +138,7 @@ export abstract class View {
 
 	public static createOrShow<T extends View>(
 		c: new(viewOptions: IViewOptions, panel: vscode.WebviewPanel) => T, 
-		viewOptions: IViewOptions): T {
+		viewOptions: IViewOptions, alwaysNew?: boolean): T {
 		
 		const column = vscode.window.activeTextEditor
 			? vscode.window.activeTextEditor.viewColumn
@@ -183,7 +183,9 @@ export abstract class View {
 		const result: T = new c(viewOptions, panel);
 		
 		// cache this
-		View.openPanels[viewOptions.viewType] = result;
+		if (!alwaysNew) {
+			View.openPanels[viewOptions.viewType] = result;
+		}
 		
 		return result;
 	}

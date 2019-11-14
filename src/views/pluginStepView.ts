@@ -21,7 +21,7 @@ export default class PluginStepViewManager implements IWireUpCommands {
                     iconPath: './resources/images/cloudsmith-logo-only-50px.png',
                     viewTitle: 'Configure Plugin Step - Dynamics 365 CE',
                     viewType: cs.dynamics.views.pluginStepView
-                });
+                }, true); // always new
 
                 const api = new ApiRepository(config);
                 const viewModel = {

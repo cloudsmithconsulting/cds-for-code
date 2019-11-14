@@ -136,7 +136,8 @@ export default class ApiRepository
             .then(response => {
                 return this.webapi.retrieveAllRequest({
                     collection: "plugintypes",
-                    filter: `assemblyname eq '${response.name}'${response.publickeytoken ? " and publickeytoken eq '" + response.publickeytoken + "'" : ""}`
+                    filter: `assemblyname eq '${response.name}'${response.publickeytoken ? " and publickeytoken eq '" + response.publickeytoken + "'" : ""}`,
+                    select: ["plugintypeid", "name", "friendlyname", "assemblyname", "typename", "solutionid", "_pluginassemblyid_value"]
                 }).then(response => response.value);
             });
     }
@@ -213,10 +214,10 @@ export default class ApiRepository
             collection: "sdkmessageprocessingsteps",
             id: sdkmessageprocessingstepid,
             expand: [ 
-                { property: "sdkmessageid" },
+                { property: "sdkmessageid", select: ["sdkmessageid", "name"] },
                 { property: "sdkmessagefilterid", select: [ "sdkmessagefilterid", "_sdkmessageid_value", "primaryobjecttypecode", "secondaryobjecttypecode" ] },
-                { property: "eventhandler_plugintype" },
-                { property: "sdkmessageprocessingstepsecureconfigid" }
+                { property: "eventhandler_plugintype", select: ["plugintypeid", "_pluginassemblyid_value", "name"] },
+                { property: "sdkmessageprocessingstepsecureconfigid", select: ["sdkmessageprocessingstepsecureconfigid", "secureconfig"] }
             ]
         };
 

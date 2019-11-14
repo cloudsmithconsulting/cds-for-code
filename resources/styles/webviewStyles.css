@@ -205,6 +205,15 @@ table>tbody>tr:nth-child(odd) {
     border-color: var(--vscode-inputValidation-errorBorder);
 }
 
+.panel_info {
+    margin: 0 7px 10px 5px;
+    padding: 0 10px 10px 10px;
+    border-left-width: 5px;
+    border-left-style: solid;
+    background: var(--vscode-textBlockQuote-background);
+    border-color: var(--vscode-inputValidation-infoBorder);
+}
+
 .panel__text {
     line-height: 1.5em;
 }

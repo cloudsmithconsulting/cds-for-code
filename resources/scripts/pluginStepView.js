@@ -138,9 +138,6 @@
         
         if (viewModel.step) {
             const step = viewModel.step;
-            
-            $("#Message").val(step.sdkmessageid.name);
-            $("#Message").change();
 
             $("#Id").val(step.sdkmessageprocessingstepid)
             $("#PrimaryEntity").val(step.sdkmessagefilterid.primaryobjecttypecode);
@@ -161,9 +158,14 @@
             if (step.sdkmessageprocessingstepsecureconfigid && step.sdkmessageprocessingstepsecureconfigid.secureconfig) {
                 $("#SecureConfiguration").val(step.sdkmessageprocessingstepsecureconfigid.secureconfig);
             }
+
+            $("#Message").val(step.sdkmessageid.name);
+            $("#Message").change();
         }
 
         window.initializeComplete = true;
+        // hide initialize info box
+        $("#loadingPanel").hide();
     }
 
     $(function() {
