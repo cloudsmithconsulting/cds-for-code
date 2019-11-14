@@ -29,6 +29,7 @@ export default class PluginStepViewManager implements IWireUpCommands {
                     pluginTypes: await api.retrievePluginTypes(pluginAssemblyId),
                     sdkMessageFilters: await api.retrieveSdkMessageFilters(),
                     sdkMessages: await api.retrieveSdkMessages(),
+                    users: await api.retrieveSystemUsers(),
                     step: step && step.sdkmessageprocessingstepid ? await api.retrievePluginStep(step.sdkmessageprocessingstepid) : null
                 };
 
