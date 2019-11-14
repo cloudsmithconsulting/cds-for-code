@@ -28,7 +28,7 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
                 let defaultFolder = workspaceFolder ? workspaceFolder.uri : undefined;
 
                 if (file) {
-                    if (FileSystem.Stats(file.fsPath).isDirectory()) {
+                    if (FileSystem.stats(file.fsPath).isDirectory()) {
                         defaultFolder = file;
                         file = undefined;
                     } else {
@@ -45,7 +45,7 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
 
                 if (VisualStudioProjectCommands.fileIsProject(file)) {
                     await vscode.commands.executeCommand(cs.dynamics.deployment.dotNetBuild, file, undefined, "!")
-                        .then(() => FileSystem.Walk(path.dirname(file.fsPath), item => {
+                        .then(() => FileSystem.walk(path.dirname(file.fsPath), item => {
                             return item.endsWith(path.basename(file.fsPath, path.extname(file.fsPath)) + ".dll" );
                         }))
                         .then(async results => { 

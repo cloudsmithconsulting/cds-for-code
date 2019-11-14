@@ -297,7 +297,7 @@ export default class QuickPicker {
                             newUri = defaultUri.with({ path: newPath });
 
                             if (isFolder) {
-                                FileSystem.MakeFolderSync(newUri.fsPath);
+                                FileSystem.makeFolderSync(newUri.fsPath);
                             }
 
                             return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem, allowedFileTypes);

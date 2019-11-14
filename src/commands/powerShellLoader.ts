@@ -32,8 +32,8 @@ export default class PowerShellLoader implements IWireUpCommands {
 		const appsFolder = path.join(context.globalStoragePath, "/tools/");
 		
 		// Checks to see if folder exist
-		FileSystem.MakeFolderSync(scriptsFolder);
-		FileSystem.MakeFolderSync(appsFolder);
+		FileSystem.makeFolderSync(scriptsFolder);
+		FileSystem.makeFolderSync(appsFolder);
 
 		const appsToFetch = [
 			"releases/download/beta/CloudSmith.Dynamics365.AssemblyScanner.zip",
@@ -133,7 +133,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 								return { zipFile: localPath, extractPath };
 							})
 							.then(options => {
-								FileSystem.Unzip(options.zipFile, options.extractPath)
+								FileSystem.unzip(options.zipFile, options.extractPath)
 									.then(count => vscode.window.showInformationMessage(`${count} items extracted from ${options.zipFile} into ${options.extractPath}`));
 							})
 							.then(() => {

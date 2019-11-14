@@ -62,7 +62,7 @@ export default class UnpackDynamicsSolutionCommand implements IWireUpCommands {
 					folder = path.join(folder, "../");
 				}
 				
-				FileSystem.MakeFolderSync(folder);
+				FileSystem.makeFolderSync(folder);
 				
 				toolsPath = toolsPath || coreToolsRoot;
 				if (Utilities.IsNull(toolsPath)) { return; }

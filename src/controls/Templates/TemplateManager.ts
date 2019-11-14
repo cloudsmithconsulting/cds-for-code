@@ -45,38 +45,227 @@ export default class TemplateManager implements IWireUpCommands {
     getTemplates(): Promise<TemplateItem[]> {
         return TemplateManager.getTemplateCatalog().then(c => c.items);
     }
-    
+
+    /**
+     * Populates a workspace folder with the contents of a template
+     * @param folder current workspace folder to populate
+     */
+    async createFromFilesystem(folder: string) {
+        await TemplateManager.createTemplatesDirIfNotExists();
+
+        // choose a template
+        let template = await QuickPicker.pickTemplate("Choose a template that you would like to create.");
+
+        if (!template) {
+            return;
+        }
+
+        if (folder && template.outputPath && !path.isAbsolute(template.outputPath)) {
+            folder = path.join(folder, template.outputPath);
+        } else if (template.outputPath && path.isAbsolute(template.outputPath)) {
+            folder = template.outputPath;
+        }
+
+        // get template folder
+        let templateDir = path.isAbsolute(template.location) ? template.location : path.join(await TemplateManager.getTemplatesFolder(), template.location);
+
+        if (!fs.existsSync(templateDir) || !fs.lstatSync(templateDir).isDirectory()) {
+            QuickPicker.error(`Cannot extract this template as ${templateDir} is not a valid path.`);
+
+            return undefined;
+        }
+
+        // update placeholder configuration
+        const usePlaceholders = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.usePlaceholders, false);
+        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
+        const placeholders = ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.dynamics.configuration.templates.placeholders, new Dictionary<string, string>());
+
+        // recursively copy files, replacing placeholders as necessary
+		const copyInternal = async (source: string, destination: string) => {
+            // maybe replace placeholders in filename
+            if (usePlaceholders) {
+                destination = await this.resolvePlaceholders(destination, placeholderRegExp, placeholders, template) as string;
+            }
+
+			if (fs.lstatSync(source).isDirectory()) {
+                // create directory if doesn't exist
+				if (!fs.existsSync(destination)) {
+					fs.mkdirSync(destination);
+				} else if (!fs.lstatSync(destination).isDirectory()) {
+                    // fail if file exists
+					throw new Error(`Failed to create directory "${destination}": A file with same name exists.`);
+				}
+            } else {
+                // ask before overwriting existing file
+                while (fs.existsSync(destination)) {
+                    // if it is not a file, cannot overwrite
+                    if (!fs.lstatSync(destination).isFile()) {
+                        let reldest = path.relative(folder, destination);
+       
+                        // get user's input
+                        destination = await QuickPicker.ask(`Cannot overwrite "${reldest}".  Please enter a new filename"`, undefined, reldest)
+                            .then(value => value ? value : destination);
+
+                        // if not absolute path, make workspace-relative
+                        if (!path.isAbsolute(destination)) {
+                            destination = path.join(folder, destination);
+                        }
+                    } else {
+                        // ask if user wants to replace, otherwise prompt for new filename
+                        let reldest = path.relative(folder, destination);
+
+                        switch((await QuickPicker.pick(`Destination file "${reldest}" already exists.  What would you like to do?`, "Overwrite", "Rename", "Skip", "Abort")).label) {
+                            case "Overwrite":
+                                // delete existing file
+                                fs.unlinkSync(destination);
+
+                                break;
+                            case "Rename":
+                                // get user's input
+                                destination = await QuickPicker
+                                    .ask("Please enter a new filename", undefined, reldest)
+                                    .then(value => value ? value : destination);
+
+                                // if not absolute path, make workspace-relative
+                                if (!path.isAbsolute(destination)) {
+                                    destination = path.join(folder, destination);
+                                }
+
+                                break;
+                            case "Skip":
+                                // skip
+                                return true;
+                            default:
+                                // abort
+                                return false;
+                        }
+                    }  // if file
+                } // while file exists
+
+                // get src file contents
+                let fileContents : Buffer = fs.readFileSync(source);
+                if (usePlaceholders) {
+                    fileContents = await this.resolvePlaceholders(fileContents, placeholderRegExp, placeholders, template) as Buffer;
+                }
+
+                // ensure directories exist
+                let parent = path.dirname(destination);
+                FileSystem.makeFolderSync(parent);
+
+                // write file contents to destination
+                fs.writeFileSync(destination, fileContents);
+            }
+
+            return true;
+        };  // copy function
+        
+        // actually copy the file recursively
+        await FileSystem.recurse(templateDir, folder, copyInternal);    
+        
+        return template;
+    }
+
+    /**
+     * Deletes a template from the template root directory
+     * @param template name of template
+     * @returns success or failure
+     */
+    async deleteFromFilesystem(template: string) {
+        // no template, cancel
+        if (!template) {
+            return false;
+        }
+            
+        let templateRoot = await TemplateManager.getTemplatesFolder();
+        let templateDir : string = path.join(templateRoot, template);
+
+        if (fs.existsSync(templateDir) && fs.lstatSync(templateDir).isDirectory()) {
+            QuickPicker.pickBoolean(`Are you sure you want to delete the project template '${template}'?`, "Yes", "No")
+                .then(async (choice) => choice ? await FileSystem.deleteFolder(templateDir) : false);
+
+            return true;
+        }
+
+        return false;
+    }
+
     async openTemplateFolderInExplorer(): Promise<void> {
         FileSystem.openFolderInExplorer(await TemplateManager.getTemplatesFolder());
     }
+
+    /**
+     * Saves a workspace as a new template
+     * @param  folder absolute path of workspace
+     * @returns  name of template
+     */
+    async saveToFilesystem(folder: string) {
+        // ensure templates directory exists
+        await TemplateManager.createTemplatesDirIfNotExists();
+
+        let projectName = path.basename(folder);
+
+        // prompt user
+        return await QuickPicker.ask("Enter the desired template name", undefined, projectName)
+            .then(async folder => {
+                // empty filename exits
+                if (!folder) {
+                    return undefined;
+                }
+
+                // determine template dir
+                let template = path.basename(folder);
+                let templateDir = path.join(await TemplateManager.getTemplatesFolder(), template);
     
+                // check if exists
+                if (fs.existsSync(templateDir)) {
+                    await QuickPicker.pickBoolean(`Template '${template}' aleady exists.  Do you wish to overwrite?`, "Yes", "No")
+                        .then(async choice => { 
+                            if (choice) { 
+                                await FileSystem.deleteFolder(templateDir); 
+                                await FileSystem.copyFolder(folder, templateDir); 
+                            }
+                        });
+                } else {
+                    // copy current workspace to new template folder
+                    await FileSystem.copyFolder(folder, templateDir);
+                }
+
+                return template;
+            }
+        );
+    }
+
     static async getTemplateCatalog(filename?:string): Promise<TemplateCatalog> {
         const templatesDir = await TemplateManager.getDefaultTemplatesDir();
         if (!filename) { filename = path.join(templatesDir, "catalog.json"); }
 
-        if (filename && FileSystem.Exists(filename)) {
+        if (filename && FileSystem.exists(filename)) {
             return TemplateCatalog.read(filename);
         } else {
             const catalog = new TemplateCatalog();
 
             // Load the catalog with all items by default.
-            await this.getTemplateFolderItems().then(items => {
-                items.forEach(i => {
-                    if (path.basename(i.name) !== path.basename(filename)) {
-                        const templateItem = new TemplateItem(); 
-    
-                        templateItem.name = i.name;
-                        templateItem.type = i.type === vscode.FileType.Directory ? TemplateType.ProjectTemplate : TemplateType.ItemTemplate;
-                        templateItem.location = i.name;
-                        
-                        catalog.add(templateItem);
-                    }
+            return await this.getTemplateFolderItems()
+                .then(items => {
+                    items.forEach(async i => {
+                        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
+
+                        if (path.basename(i.name) !== path.basename(filename)) {
+                            const templateItem = new TemplateItem(); 
+        
+                            templateItem.name = i.name;
+                            templateItem.type = i.type === vscode.FileType.Directory ? TemplateType.ProjectTemplate : TemplateType.ItemTemplate;
+                            templateItem.location = i.name;
+                            templateItem.placeholders = this.getPlaceholders(path.join(templatesDir, i.name), placeholderRegExp, i.type === vscode.FileType.Directory).map(i => new TemplatePlaceholder(i));
+                            
+                            catalog.add(templateItem);
+                        }
+                    });
+                }).then(() => {
+                    catalog.save(filename);
+
+                    return catalog;
                 });
-            });
-
-            catalog.save(filename);
-
-            return catalog;
         }
     }
 
@@ -178,7 +367,7 @@ export default class TemplateManager implements IWireUpCommands {
 		
 		if (templatesDir && !fs.existsSync(templatesDir)) {
 			try {
-                FileSystem.MakeFolderSync(templatesDir, 0o775);
+                FileSystem.makeFolderSync(templatesDir, 0o775);
 				fs.mkdirSync(templatesDir);
 			} catch (err) {
 				if (err.code !== 'EEXIST') {
@@ -188,186 +377,59 @@ export default class TemplateManager implements IWireUpCommands {
 		}
     }
 
-    /**
-     * Deletes a template from the template root directory
-     * @param template name of template
-     * @returns success or failure
-     */
-    async deleteFromFilesystem(template: string) {
-        // no template, cancel
-        if (!template) {
-            return false;
-        }
-            
-        let templateRoot = await TemplateManager.getTemplatesFolder();
-        let templateDir : string = path.join(templateRoot, template);
-
-        if (fs.existsSync(templateDir) && fs.lstatSync(templateDir).isDirectory()) {
-            QuickPicker.pickBoolean(`Are you sure you want to delete the project template '${template}'?`, "Yes", "No")
-                .then(async (choice) => choice ? await FileSystem.DeleteFolder(templateDir) : false);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Saves a workspace as a new template
-     * @param  folder absolute path of workspace
-     * @returns  name of template
-     */
-    async saveToFilesystem(folder: string) {
-        // ensure templates directory exists
-        await TemplateManager.createTemplatesDirIfNotExists();
-
-        let projectName = path.basename(folder);
-
-        // prompt user
-        return await QuickPicker.ask("Enter the desired template name", undefined, projectName)
-            .then(async folder => {
-                // empty filename exits
-                if (!folder) {
-                    return undefined;
-                }
-
-                // determine template dir
-                let template = path.basename(folder);
-                let templateDir = path.join(await TemplateManager.getTemplatesFolder(), template);
+    private static getPlaceholders(fsItem: string, placeholderRegExp: string, isFolder:boolean): string[] {
+        const returnValue: string[] = [];
+        const _getPlaceholders:(data: string | Buffer) => string[] = (data) => {
+            // resolve each placeholder
+            const regex = RegExp(placeholderRegExp, 'g');
+            const returnValue: string[] = [];
     
-                // check if exists
-                if (fs.existsSync(templateDir)) {
-                    await QuickPicker.pickBoolean(`Template '${template}' aleady exists.  Do you wish to overwrite?`, "Yes", "No")
-                        .then(async choice => { 
-                            if (choice) { 
-                                await FileSystem.DeleteFolder(templateDir); 
-                                await FileSystem.CopyFolder(folder, templateDir); 
-                            }
-                        });
-                } else {
-                    // copy current workspace to new template folder
-                    await FileSystem.CopyFolder(folder, templateDir);
+            // collect set of expressions and their replacements
+            let match;
+            let str: string;
+            let encoding: string = "utf8";
+    
+            if (Buffer.isBuffer(data)) {
+                // get default encoding
+                encoding = vscode.workspace.getConfiguration('files').get("files.encoding", "utf8");
+    
+                try {
+                    str = data.toString(encoding);
+                } catch(error) {
+                    // cannot decipher text from encoding, assume raw data
+                    return null;
                 }
-
-                return template;
+            } else {
+                str = data;
             }
-        );
+    
+            while (match = regex.exec(str)) {
+                const key = match[1];
+                
+                if (returnValue.indexOf(key) === -1) {
+                    returnValue.push(key);
+                }
+            }
+    
+            return returnValue;
+        };
+
+        if (isFolder) {
+            const paths = FileSystem.walkSync(fsItem);
+
+            paths.forEach(p => {
+                _getPlaceholders(p).forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
+                _getPlaceholders(FileSystem.readFileSync(p)).forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
+            });        
+        } else {
+            _getPlaceholders(fsItem).forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
+            _getPlaceholders(FileSystem.readFileSync(fsItem)).forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
+        }
+
+        return returnValue;
     }
 
     /**
-     * Populates a workspace folder with the contents of a template
-     * @param folder current workspace folder to populate
-     */
-    async createFromFilesystem(folder: string) {
-        await TemplateManager.createTemplatesDirIfNotExists();
-
-        // choose a template
-        let template = await QuickPicker.pickTemplate("Choose a template that you would like to create.");
-
-        if (!template) {
-            return;
-        }
-
-        // get template folder
-        let templateDir = template.location;
-
-        if (!fs.existsSync(templateDir) || !fs.lstatSync(templateDir).isDirectory()) {
-            QuickPicker.error(`Cannot extract this template as ${templateDir} is not a valid path.`);
-
-            return undefined;
-        }
-
-        // update placeholder configuration
-        const usePlaceholders = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.usePlaceholders, false);
-        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
-        const placeholders = ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.dynamics.configuration.templates.placeholders, new Dictionary<string, string>());
-
-        // recursively copy files, replacing placeholders as necessary
-		const copyInternal = async (source: string, destination: string) => {
-            // maybe replace placeholders in filename
-            if (usePlaceholders) {
-                destination = await this.resolvePlaceholders(destination, placeholderRegExp, placeholders, template) as string;
-            }
-
-			if (fs.lstatSync(source).isDirectory()) {
-                // create directory if doesn't exist
-				if (!fs.existsSync(destination)) {
-					fs.mkdirSync(destination);
-				} else if (!fs.lstatSync(destination).isDirectory()) {
-                    // fail if file exists
-					throw new Error(`Failed to create directory "${destination}": A file with same name exists.`);
-				}
-            } else {
-                // ask before overwriting existing file
-                while (fs.existsSync(destination)) {
-                    // if it is not a file, cannot overwrite
-                    if (!fs.lstatSync(destination).isFile()) {
-                        let reldest = path.relative(folder, destination);
-       
-                        // get user's input
-                        destination = await QuickPicker.ask(`Cannot overwrite "${reldest}".  Please enter a new filename"`, undefined, reldest)
-                            .then(value => value ? value : destination);
-
-                        // if not absolute path, make workspace-relative
-                        if (!path.isAbsolute(destination)) {
-                            destination = path.join(folder, destination);
-                        }
-                    } else {
-                        // ask if user wants to replace, otherwise prompt for new filename
-                        let reldest = path.relative(folder, destination);
-
-                        switch((await QuickPicker.pick(`Destination file "${reldest}" already exists.  What would you like to do?`, "Overwrite", "Rename", "Skip", "Abort")).label) {
-                            case "Overwrite":
-                                // delete existing file
-                                fs.unlinkSync(destination);
-
-                                break;
-                            case "Rename":
-                                // get user's input
-                                destination = await QuickPicker
-                                    .ask("Please enter a new filename", undefined, reldest)
-                                    .then(value => value ? value : destination);
-
-                                // if not absolute path, make workspace-relative
-                                if (!path.isAbsolute(destination)) {
-                                    destination = path.join(folder, destination);
-                                }
-
-                                break;
-                            case "Skip":
-                                // skip
-                                return true;
-                            default:
-                                // abort
-                                return false;
-                        }
-                    }  // if file
-                } // while file exists
-
-                // get src file contents
-                let fileContents : Buffer = fs.readFileSync(source);
-                if (usePlaceholders) {
-                    fileContents = await this.resolvePlaceholders(fileContents, placeholderRegExp, placeholders, template) as Buffer;
-                }
-
-                // ensure directories exist
-                let parent = path.dirname(destination);
-                FileSystem.MakeFolderSync(parent);
-
-                // write file contents to destination
-                fs.writeFileSync(destination, fileContents);
-            }
-
-            return true;
-        };  // copy function
-        
-        // actually copy the file recursively
-        await FileSystem.Recurse(templateDir, folder, copyInternal);    
-        
-        return template;
-    }
-
-        /**
      * Replaces any placeholders found within the input data.  Will use a 
      * dictionary of values from the user's workspace settings, or will prompt
      * if value is not known.
@@ -391,17 +453,16 @@ export default class TemplateManager implements IWireUpCommands {
         // collect set of expressions and their replacements
         let match;
         let nmatches = 0;
-        let str : string;
-        let encoding : string = "utf8";
+        let str: string;
+        let encoding: string = "utf8";
 
         if (Buffer.isBuffer(data)) {
             // get default encoding
-            let fconfig = vscode.workspace.getConfiguration('files');
-            encoding = fconfig.get("files.encoding", "utf8");
+            encoding = vscode.workspace.getConfiguration('files').get("files.encoding", "utf8");
 
             try {
                 str = data.toString(encoding);
-            } catch(Err) {
+            } catch(error) {
                 // cannot decipher text from encoding, assume raw data
                 return data;
             }
@@ -412,8 +473,13 @@ export default class TemplateManager implements IWireUpCommands {
         while (match = regex.exec(str)) {
             let key = match[1];
             let val : string | undefined = placeholders[key];
+            let placeholderItem;
 
-            val = val || await QuickPicker.ask(templateInfo.placeholder(match[0]) ? templateInfo.placeholder(match[0]).displayName : `Please enter the desired value for "${match[0]}"`)
+            if (templateInfo.placeholders && templateInfo.placeholders.length > 0) {
+                placeholderItem = templateInfo.placeholders.find(p => p.name === key);
+            }
+
+            val = val || await QuickPicker.ask(placeholderItem ? placeholderItem.displayName : `Please enter the desired value for "${match[0]}"`)
                 .then(value => { if (value) { placeholders[key] = value; } return value; });
 
             ++nmatches;
@@ -477,14 +543,14 @@ export class TemplateCatalog {
     }
 
     static async read(filename:string = "catalog.json"): Promise<TemplateCatalog> {
-        const file = path.join(await TemplateManager.getTemplatesFolder(), filename);
+        const file = path.isAbsolute(filename) ? filename : path.join(await TemplateManager.getTemplatesFolder(), filename);
 
-        if (FileSystem.Exists(file)) {
+        if (FileSystem.exists(file)) {
             try {
-                let returnObject = JSON.parse(FileSystem.ReadFileSync(file));
+                let returnObject = JSON.parse(FileSystem.readFileSync(file));
 
-                if (returnObject && returnObject instanceof TemplateCatalog) {
-                    return <TemplateCatalog>returnObject;
+                if (returnObject) {
+                    return returnObject as TemplateCatalog;
                 }
             } catch (error) {
                 vscode.window.showErrorMessage(`The template catalog '${filename}' was found but could not be parsed.  A new file will be created.${error ? '  The error returned was: ' + error : ''}`);
@@ -495,16 +561,16 @@ export class TemplateCatalog {
     }
 
     static async write(catalog:TemplateCatalog, filename:string = "catalog.json"): Promise<TemplateCatalog> {
-        const folder = path.join(await TemplateManager.getTemplatesFolder(), path.dirname(filename));
+        const folder = path.isAbsolute(filename) ? path.dirname(filename) : path.join(await TemplateManager.getTemplatesFolder(), path.dirname(filename));
 
-        if (!FileSystem.Exists(folder)) {
-            FileSystem.MakeFolderSync(folder);
+        if (!FileSystem.exists(folder)) {
+            FileSystem.makeFolderSync(folder);
         }
 
-        const file = path.join(folder, filename);
+        const file = path.isAbsolute(filename) ? filename : path.join(folder, filename);
 
         try {
-            FileSystem.WriteFileSync(file, JSON.stringify(catalog));
+            FileSystem.writeFileSync(file, JSON.stringify(catalog));
         } catch (error) {
             vscode.window.showErrorMessage(`The template catalog '${filename}' could not be saved to the templates folder.${error ? '  The error returned was: ' + error : ''}`);
         }
@@ -532,16 +598,9 @@ export class TemplateItem {
     description: string;
     publisher: string;
     location: string;
+    outputPath: string;
     categories: string[];
     placeholders: TemplatePlaceholder[] = [];
-
-    placeholder(name:string): TemplatePlaceholder {
-        if (this.placeholders && this.placeholders.length > 0) {
-            return this.placeholders.find(i => i.name === name);
-        }
-
-        return null;
-    }
 }
 
 export class TemplatePlaceholder {

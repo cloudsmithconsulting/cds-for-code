@@ -211,7 +211,7 @@ export class ExtensionIconTheme {
 		this.icons.forEach(icon => {
 			const localPath = path.join(destination, icon.mappedOutputFile);
 
-			FileSystem.MakeFolderSync(path.dirname(localPath));
+			FileSystem.makeFolderSync(path.dirname(localPath));
 
 			if (fs.existsSync(localPath)) { return; }
 
