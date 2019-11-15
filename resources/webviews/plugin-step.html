@@ -35,6 +35,7 @@
             <legend>General Configuration</legend>
 
             <input type="hidden" id="Id" name="Id" value="" />
+            <input type="hidden" id="SecureConfigId" name="SecureConfigId" value="" />
             <div class="field">
                 <label class="field__label" for="Message">
                     Message
@@ -124,13 +125,6 @@
                 <input type="radio" class="field__input" id="PostOperation" name="ExecutionPipeline"
                     value="40" checked="checked" />
             </div>
-
-            <div class="field field--checkbox">
-                <label class="field__label" for="AsyncAutoDelete">
-                    Delete AsyncOperation if StatusCode = Successful
-                </label>
-                <input type="checkbox" class="field__input" id="AsyncAutoDelete" name="AsyncAutoDelete" value="true" />
-            </div>
         </fieldset>
 
         <fieldset>
@@ -146,6 +140,13 @@
                 </label>
                 <input type="radio" class="field__input" id="Synchronous" name="ExecutionMode" value="0"
                     checked="checked" />
+            </div>
+
+            <div class="field field--checkbox">
+                <label class="field__label" for="AsyncAutoDelete">
+                    Delete AsyncOperation if StatusCode = Successful
+                </label>
+                <input type="checkbox" class="field__input" id="AsyncAutoDelete" name="AsyncAutoDelete" value="true" />
             </div>
         </fieldset>
 

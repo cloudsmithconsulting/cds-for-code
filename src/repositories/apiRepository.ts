@@ -321,11 +321,49 @@ export default class ApiRepository
             });
     }
 
-    public upsertPluginStep(step: any) {
+    public async upsertPluginStep(step: any) {
+        // see if we have a secure configration
+        let secureConfig = null;
+        if (step.sdkmessageprocessingstepsecureconfigid) {
+            // transfer to a new object
+            secureConfig = step.sdkmessageprocessingstepsecureconfigid;
+            // delete from step, it will error in the update if not
+            delete step.sdkmessageprocessingstepsecureconfigid;
+        }
+
+        // insert or update secure config
+        if (secureConfig) {
+            if (!secureConfig.sdkmessageprocessingstepsecureconfigid) {
+                await this.webapi.createRequest({
+                    collection: "sdkmessageprocessingstepsecureconfigs",
+                    entity: secureConfig
+                })
+                .then(result => {
+                    // after create, associate it to the plugin step
+                    step["sdkmessageprocessingstepsecureconfigid@odata.bind"] = `sdkmessageprocessingstepsecureconfigs(${result})`;
+                });
+            } else {
+                await this.webapi.updateRequest({
+                    id: secureConfig.sdkmessageprocessingstepsecureconfigid,
+                    collection: "sdkmessageprocessingstepsecureconfigs",
+                    entity: secureConfig
+                });
+            }
+        }
+
+        // see if we need to update or create the step
         if (step.sdkmessageprocessingstepid) {
-            this.webapi.update(step.sdkmessageprocessingstepid, "sdkmessageprocessingsteps", step);
+            return this.webapi.updateRequest({
+                id: step.sdkmessageprocessingstepid,
+                collection: "sdkmessageprocessingsteps",
+                entity: step
+            });
         } else {
-            this.webapi.create(step, "sdkmessageprocessingsteps");
+            delete step.sdkmessageprocessingstepid;
+            return this.webapi.createRequest({
+                collection: "sdkmessageprocessingsteps",
+                entity: step
+            });
         }
     }
 

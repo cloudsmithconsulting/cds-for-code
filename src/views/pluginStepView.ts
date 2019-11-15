@@ -75,16 +75,24 @@ class PluginStepView extends View {
 
     private saveSdkMessageProcessingStep(step :any) {
         const api = new ApiRepository(this.config);
-        //api.upsertPluginStep(step);
-        this.dispose();
+        api.upsertPluginStep(step)
+            .then(() => this.dispose())
+            .catch(err => {
+                this.sendErrorMessage(err.message);
+                console.error(err);
+            });
     }
     
     public onDidReceiveMessage(instance: PluginStepView, message: any): vscode.Event<any> {
         switch (message.command) {
             case 'saveSdkMessageProcessingStep':                
-                instance.saveSdkMessageProcessingStep(message.settings);
+                instance.saveSdkMessageProcessingStep(message.step);
                 return;
         }
+    }
+
+    public sendErrorMessage(message: string) {
+        this.panel.webview.postMessage({ command: 'pluginStepError', message: message });
     }
 
     public setInitialState(viewModel: any, config: DynamicsWebApi.Config) {
