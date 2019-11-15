@@ -34,8 +34,10 @@ export default class DynamicsTreeView implements IWireUpCommands {
             , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.addConnection, (config: DynamicsWebApi.Config) => {
                 treeProvider.addConnection(config);
             })
-            , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.clickEntry, (label?: string) => { // Match name of command to package.json command
-                vscode.window.showInformationMessage(`Clicked ${label || ''}`);
+            , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.clickEntry, (item?: TreeEntry) => { // Match name of command to package.json command
+                if (item.collapsibleState === vscode.TreeItemCollapsibleState.Collapsed) {
+                    item.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
+                }            
             }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.deleteEntry, (item: TreeEntry) => { // Match name of command to package.json command
                treeProvider.removeConnection(item.config);
@@ -168,7 +170,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, undefined, item.solutionId), retryFunction);
                         break;
                     case "Processes":                 
-                        let processType = await QuickPicker.pickEnum(DynamicsWebApi.ProcessType);
+                        let processType = await QuickPicker.pickEnum<DynamicsWebApi.ProcessType>(DynamicsWebApi.ProcessType);
 
                         if (processType) {
                             Utilities.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, processType, item.parent && item.parent.context && item.parent.context.ObjectTypeCode ? item.parent.context.ObjectTypeCode : undefined, item.solutionId), retryFunction);
@@ -182,7 +184,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityRelationshipUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
                         break;
                     case "Forms":   
-                        let formType = await QuickPicker.pickEnum(DynamicsWebApi.DynamicsForm);
+                        let formType = await QuickPicker.pickEnum<DynamicsWebApi.DynamicsForm>(DynamicsWebApi.DynamicsForm);
 
                         if (formType) {
                             Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.context.ObjectTypeCode, formType, undefined, item.solutionId), retryFunction);
@@ -190,7 +192,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
 
                         break;
                     case "Dashboards":
-                        let layoutType = await QuickPicker.pickEnum(DynamicsWebApi.InteractiveDashboardLayout);
+                        let layoutType = await QuickPicker.pickEnum<DynamicsWebApi.InteractiveDashboardLayout>(DynamicsWebApi.InteractiveDashboardLayout);
 
                         if (layoutType) {
                             Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityDashboardUri(item.config, item.context.ObjectTypeCode, layoutType, "1030", undefined, item.solutionId), retryFunction);

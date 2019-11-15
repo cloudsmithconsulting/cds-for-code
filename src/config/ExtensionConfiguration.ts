@@ -3,22 +3,36 @@ import * as cs from '../cs';
 
 export default class ExtensionConfiguration {
     private static _configurations: { [key: string]: vscode.WorkspaceConfiguration } = {};
+    private static _notifiers: { [key: string]: (config: vscode.WorkspaceConfiguration) => void } = {};
     private static _validConfigurations: { [key: string]: boolean } = {};
 
     static extensionPath:string = "";
     
-    public static updateConfiguration(namespace:string): void
-    {
+    public static updateConfiguration(namespace:string): void {
         if (this._configurations && this._configurations[namespace]) {
             delete this._configurations[namespace];
         }
     }
 
     public static getConfiguration(namespace:string): vscode.WorkspaceConfiguration {
-        if (!this._configurations || !this._configurations[namespace] || !this._validConfigurations || !this._validConfigurations[namespace])
-        {
+        if (!this._configurations || !this._configurations[namespace] || !this._validConfigurations || !this._validConfigurations[namespace]) {
             // get root config
             const config = vscode.workspace.getConfiguration(namespace);
+            
+            // Auto-update configuration.
+            vscode.workspace.onDidChangeConfiguration(e => {                
+                if (e.affectsConfiguration(namespace) && this._configurations[namespace]) {
+                    if (this._notifiers[namespace]) {
+                        this._notifiers[namespace](vscode.workspace.getConfiguration(namespace));
+                    }
+
+                    delete this._configurations[namespace];
+                }
+            });
+
+            if (this._notifiers[namespace]) {
+                delete this._notifiers[namespace];
+            }
 
             this._configurations[namespace] = config;
             this._validConfigurations[namespace] = this.validateConfiguration(namespace, config);
@@ -28,24 +42,46 @@ export default class ExtensionConfiguration {
         return this._configurations[namespace];
     }
 
-    public static getConfigurationValue<T>(...config:string[]): T {
+    public static getConfigurationInfo<T>(...config:string[]): { key: string; defaultValue?: T; globalValue?: T; workspaceValue?: T, workspaceFolderValue?: T } | undefined {
         const parsedKey = this.parseConfigurationString(...config);
 
-        if (parsedKey.namespace && this.getConfiguration(parsedKey.namespace)) {
-            return this.getConfiguration(parsedKey.namespace).get(parsedKey.configKey) as T;
-        } else {
-            return null;
+        if (parsedKey && parsedKey.namespace) {
+            const configuration = this.getConfiguration(parsedKey.namespace);
+
+            if (configuration) {
+                return configuration.inspect(parsedKey.configKey);
+            }
         }
+
+        return undefined;
     }
 
-    public static setConfigurationValue<T>(config:string, value:T, configurationTarget?:boolean | vscode.ConfigurationTarget): Thenable<void> {
+    public static getConfigurationValue<T>(...config:string[]): T | undefined {
         const parsedKey = this.parseConfigurationString(...config);
 
-        if (parsedKey.namespace && this.getConfiguration(parsedKey.namespace)) {
-            return this.getConfiguration(parsedKey.namespace).update(parsedKey.configKey, value, configurationTarget);
-        } else {
-            return null;
+        if (parsedKey && parsedKey.namespace) {
+            const configuration = this.getConfiguration(parsedKey.namespace);
+
+            if (configuration && configuration.has(parsedKey.configKey)) {
+                return configuration.get(parsedKey.configKey, undefined);
+            }
         }
+
+        return undefined;
+    }
+
+    public static setConfigurationValue<T>(config:string, value?:T, configurationTarget:vscode.ConfigurationTarget = vscode.ConfigurationTarget.Global): Thenable<void> {
+        const parsedKey = this.parseConfigurationString(...config);
+
+        if (parsedKey && parsedKey.namespace) {
+            const configuration = this.getConfiguration(parsedKey.namespace);
+
+            if (configuration && value) {
+                configuration.update(parsedKey.configKey, value, configurationTarget);
+            }
+        } 
+
+        return undefined;
     }
 
     public static getConfigurationValueOrDefault<T>(config:string, defaultValue:T): T {
@@ -61,6 +97,18 @@ export default class ExtensionConfiguration {
         const parsedKey = this.parseConfigurationString(...config);
 
         return workspaceConfig.get(parsedKey.configKey) as T;
+    }
+
+    public static notify(namespace:string, notify?:(config:vscode.WorkspaceConfiguration) => void) {
+        if (namespace && notify) {
+            this._notifiers[namespace] = notify;
+        }
+    }
+
+    public static unnotify(namespace:string) {
+        if (this._notifiers[namespace]) {
+            delete this._notifiers[namespace];
+        }
     }
 
     private static validateConfiguration(namespace:string, workspaceConfig:vscode.WorkspaceConfiguration): boolean {
@@ -89,22 +137,12 @@ export default class ExtensionConfiguration {
 
     private static parseConfigurationString(...config:string[]): { namespace:string, configKey:string } {
         let namespace:string, configKey:string;
-
-        if (config.length === 1) {
-            const splitValues = config[0].split(".");
-            
-            if (splitValues.length < 2) {
-                throw new Error(`The parameter '${config[0]}' supplied to parseConfigurationString() does not contain a namespace and configuration value.`);
-            }
-            else {
-                configKey = splitValues[splitValues.length - 1];
-                namespace = config[0].replace(`.${configKey}`, "");
-            }
-        } else if (config.length === 2) {
-            configKey = config[1];
-            namespace = config[0];
-        } else {
-            throw new Error(`The parameter '${config.join(", ")}' supplied to parseConfigurationString() has too many elements.`);
+        // Join and split, in case one of the config array items includes "." as in ... parseConfigurationString("ns.something", "somethingElse", "oneMore");
+        const splitValues = config.join(".").split(".");
+        configKey = splitValues[splitValues.length - 1];
+        
+        if (splitValues.length > 1) {
+            namespace = splitValues.splice(0, splitValues.length - 1).join(".");
         }
 
         return { namespace, configKey };

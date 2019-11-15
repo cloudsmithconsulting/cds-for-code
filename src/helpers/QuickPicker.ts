@@ -122,14 +122,94 @@ export default class QuickPicker {
         return null;
 	}    
 
+    public static async pickOrNew(placeHolder:string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption> {
+        if (options.length > 0) {
+            let quickPickOptions:QuickPickOption[];
+
+            if (!(options[0] instanceof QuickPickOption) || !(<QuickPickOption[]>options).find(i => i.label === `${Octicon.plus}`)) {
+                quickPickOptions.push(new QuickPickOption(`${Octicon.plus}`, undefined, 'New Item', undefined, true));
+            }
+
+            if (options[0] instanceof QuickPickOption) {
+                quickPickOptions = <QuickPickOption[]>options;
+            } else {
+                quickPickOptions = (<string[]>options).map(i => new QuickPickOption(i));
+            }
+
+            const option = await vscode.window.showQuickPick(quickPickOptions, { placeHolder, ignoreFocusOut: true, canPickMany: false });
+
+            if (option && option.label === `${Octicon.plus}`) {
+                const newItem = await QuickPicker.ask("What is the name of the new item?");
+
+                if (newItem) {
+                    quickPickOptions.push(new QuickPickOption(newItem));
+
+                    return this.pickOrNew(placeHolder, ...quickPickOptions);
+                }
+            } else {
+                return option;
+            }
+        }
+    }
+
     /**
 	 * shows a QuickPick-Panel in the VS Code Window
 	 * @param placeHolder text to display when nothing was chosen
 	 * @param options options to choose from
 	 */
-	public static async pickAny(placeHolder: string, ...options: QuickPickOption[]): Promise<QuickPickOption[]> {
-		return await vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut: true, canPickMany: true });
+	public static async pickAny(placeHolder: string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption[]> {
+        if (options.length > 0) {
+            let quickPickOptions:QuickPickOption[];
+
+            if (options[0] instanceof QuickPickOption) {
+                quickPickOptions = <QuickPickOption[]>options;
+            } else {
+                quickPickOptions = (<string[]>options).map(i => new QuickPickOption(i));
+            }
+
+            return await vscode.window.showQuickPick(quickPickOptions, { placeHolder, ignoreFocusOut: true, canPickMany: true });
+        }
+
+        return null;
 	}    
+
+    public static async pickAnyOrNew(placeHolder:string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption[]> {
+        if (options && options.length > 0) {
+            let quickPickOptions:QuickPickOption[] = [];
+
+            if (!(options[0] instanceof QuickPickOption) || !(<QuickPickOption[]>options).find(i => i.label === `${Octicon.plus}`)) {
+                quickPickOptions.push(new QuickPickOption(`${Octicon.plus}`, undefined, 'New Item', undefined, true));
+            }
+
+            if (options[0] instanceof QuickPickOption) {
+                quickPickOptions.push(...<QuickPickOption[]>options);
+            } else {
+                quickPickOptions.push(...(<string[]>options).map(i => new QuickPickOption(i)));
+            }
+
+            const option = await vscode.window.showQuickPick(quickPickOptions, { placeHolder, ignoreFocusOut: true, canPickMany: true });
+
+            quickPickOptions.forEach(o => {
+                if (o.label !== `${Octicon.plus}` && option.find(op => op.label === o.label)) {
+                    o.picked = true;
+                }
+            });
+
+            if (option && option.find(o => o.label === `${Octicon.plus}`)) {
+                const newItem = await QuickPicker.ask("What is the name of the new item?");
+
+                if (newItem) {
+                    const newOption = new QuickPickOption(newItem);
+                    newOption.picked = true;
+                    quickPickOptions.push(newOption);
+
+                    return this.pickAnyOrNew(placeHolder, ...quickPickOptions);
+                }
+            } else {
+                return option;
+            }
+        }
+    }
 
         /**
 	 * shows a QuickPick-Panel in the VS Code Window
@@ -162,7 +242,7 @@ export default class QuickPicker {
 
                 if (choices.length === 0) {
                     QuickPicker.warn(
-                        "You do not have any templates configured.  Add some by copying files or using the Template Explorer.", 
+                        "You do not have any templates configured.  Add some by using the Template Explorer.", 
                         undefined, 
                         "Open template folder", 
                         async () => FileSystem.openFolderInExplorer(await TemplateManager.getTemplatesFolder()));
@@ -177,12 +257,8 @@ export default class QuickPicker {
                 if (item.context) {
                     return item.context;
                 }
-
-                //TODO: complete this workflow.
-                const template = new TemplateItem();
-                template.name = await QuickPicker.ask("What would you like to call the new template?");
                 
-                return template;
+                return await vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, undefined, templateType);
             });
     }
 
@@ -331,17 +407,17 @@ export default class QuickPicker {
             .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0] : pathUris : null);
     }
 
-    public static async pickEnum<T>(enumObject:T, placeHolder?:string): Promise<any> {
+    public static async pickEnum<T>(enumObject:any, placeHolder?:string): Promise<T> {
         let enumOptions:QuickPickOption[] = [];
 
         for (let value in enumObject) {
             if (typeof enumObject[value] === 'number' || typeof enumObject[value] === 'string') {
-                enumOptions.push(new QuickPickOption(value, undefined, undefined, enumObject[value]));
+                enumOptions.push(new QuickPickOption(typeof enumObject[value] === 'string' ? enumObject[value].toString() : value, undefined, undefined, value));
             }
         }
 
         return await this.pick(placeHolder, ...enumOptions)
-            .then(p => p.context);
+            .then(p => p.context as T);
     }
 
     public static async pickDictionaryEntry<TKey, TItem>(dictionary:Dictionary<TKey, TItem>, placeHolder?:string): Promise<TItem> {

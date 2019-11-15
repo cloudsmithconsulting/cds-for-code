@@ -1,6 +1,7 @@
 import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
 import { TemplateItem } from "../controls/Templates/TemplateManager";
+import TemplateManager from "../controls/Templates/TemplateManager";
 
 /**
  * This command can be invoked by the Command Palette or by the template tree view and reveals 
@@ -11,9 +12,5 @@ import { TemplateItem } from "../controls/Templates/TemplateManager";
  * @returns void
  */
 export default async function run(template: TemplateItem) {
-	// load latest configuration
-	ExtensionConfiguration.updateConfiguration(cs.dynamics.configuration.templates._namespace);
-
-	// open template directory
-	await this.openTemplateFolderInExplorer(template);
+	await TemplateManager.openTemplateFolderInExplorer(template);
 }

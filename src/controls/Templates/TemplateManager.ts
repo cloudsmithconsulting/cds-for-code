@@ -5,17 +5,22 @@ import * as path from 'path';
 import * as os from 'os';
 import * as FileSystem from '../../helpers/FileSystem';
 import * as EnvironmentVariables from '../../helpers/EnvironmentVariables';
+import { TS } from 'typescript-linq/TS';
 import ExtensionConfiguration from '../../config/ExtensionConfiguration';
 import IWireUpCommands from '../../wireUpCommand';
-
-import createProjectFromTemplate from '../../commands/cs.dynamics.extension.createProjectFromTemplate';
-import deleteProjectTemplate from '../../commands/cs.dynamics.extension.deleteProjectTemplate';
-import openProjectTemplatesFolder from '../../commands/cs.dynamics.extension.openProjectTemplatesFolder';
-import saveProjectAsTemplate from '../../commands/cs.dynamics.extension.saveProjectAsTemplate';
-import { TS } from 'typescript-linq/TS';
 import QuickPicker from '../../helpers/QuickPicker';
 import Dictionary from '../../helpers/Dictionary';
-import Utilities from '../../../out/helpers/Utilities';
+import Utilities from '../../helpers/Utilities';
+
+import createFromItemTemplate from "../../commands/cs.dynamics.controls.explorer.createFromItemTemplate";
+import createFromProjectTemplate from "../../commands/cs.dynamics.controls.explorer.createFromProjectTemplate";
+import createTemplate from '../../commands/cs.dynamics.templates.createFromTemplate';
+import deleteTemplate from '../../commands/cs.dynamics.templates.deleteTemplate';
+import editTemplateCatalog from '../../commands/cs.dynamics.templates.editTemplateCatalog';
+import openTemplateFolder from '../../commands/cs.dynamics.templates.openTemplateFolder';
+import saveTemplate from '../../commands/cs.dynamics.templates.saveTemplate';
+import saveTemplateFile from "../../commands/cs.dynamics.controls.explorer.saveTemplateFile";
+import saveTemplateFolder from "../../commands/cs.dynamics.controls.explorer.saveTemplateFolder";
 
 /**
  * Main class to handle the logic of the Project Templates
@@ -36,10 +41,15 @@ export default class TemplateManager implements IWireUpCommands {
     wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.extension.createProjectFromTemplate, createProjectFromTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.extension.deleteProjectTemplate, deleteProjectTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.extension.openProjectTemplatesFolder, openProjectTemplatesFolder.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.extension.saveProjectAsTemplate, saveProjectAsTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.controls.explorer.createFromItemTemplate, createFromItemTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.controls.explorer.createFromProjectTemplate, createFromProjectTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.controls.explorer.saveTemplateFile, saveTemplateFile.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.controls.explorer.saveTemplateFolder, saveTemplateFolder.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.templates.createFromTemplate, createTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.templates.deleteTemplate, deleteTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.templates.editTemplateCatalog, editTemplateCatalog.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.templates.openTemplateFolder, openTemplateFolder.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.templates.saveTemplate, saveTemplate.bind(this)),
         );
     }
 
@@ -49,22 +59,22 @@ export default class TemplateManager implements IWireUpCommands {
 
     /**
      * Populates a workspace folder with the contents of a template
-     * @param folder current workspace folder to populate
+     * @param fsPath current workspace folder to populate
      */
-    async createFromFilesystem(folder: string) {
+    async createFromFilesystem(fsPath: string, type:TemplateType) {
         await TemplateManager.createTemplatesDirIfNotExists();
 
         // choose a template
-        let template = await QuickPicker.pickTemplate("Choose a template that you would like to create.");
+        let template = await QuickPicker.pickTemplate("Choose a template that you would like to create.", type);
 
         if (!template) {
             return;
         }
 
-        if (folder && template.outputPath && !path.isAbsolute(template.outputPath)) {
-            folder = path.join(folder, template.outputPath);
+        if (fsPath && template.outputPath && !path.isAbsolute(template.outputPath)) {
+            fsPath = path.join(fsPath, template.outputPath);
         } else if (template.outputPath && path.isAbsolute(template.outputPath)) {
-            folder = template.outputPath;
+            fsPath = template.outputPath;
         }
 
         // get template folder
@@ -105,7 +115,7 @@ export default class TemplateManager implements IWireUpCommands {
                 while (fs.existsSync(destination)) {
                     // if it is not a file, cannot overwrite
                     if (!fs.lstatSync(destination).isFile()) {
-                        let reldest = path.relative(folder, destination);
+                        let reldest = path.relative(fsPath, destination);
        
                         // get user's input
                         destination = await QuickPicker.ask(`Cannot overwrite "${reldest}".  Please enter a new filename"`, undefined, reldest)
@@ -113,11 +123,11 @@ export default class TemplateManager implements IWireUpCommands {
 
                         // if not absolute path, make workspace-relative
                         if (!path.isAbsolute(destination)) {
-                            destination = path.join(folder, destination);
+                            destination = path.join(fsPath, destination);
                         }
                     } else {
                         // ask if user wants to replace, otherwise prompt for new filename
-                        let reldest = path.relative(folder, destination);
+                        let reldest = path.relative(fsPath, destination);
                         let action;
 
                         if (overwriteAll) { action = "Overwrite"; } else if (skipAll) { action = "Skip"; } else if (renameAll) { action = "Rename"; } else {
@@ -144,7 +154,7 @@ export default class TemplateManager implements IWireUpCommands {
 
                                 // if not absolute path, make workspace-relative
                                 if (!path.isAbsolute(destination)) {
-                                    destination = path.join(folder, destination);
+                                    destination = path.join(fsPath, destination);
                                 }
 
                                 break;
@@ -178,11 +188,11 @@ export default class TemplateManager implements IWireUpCommands {
         
         // actually copy the file recursively
         try {
-            await FileSystem.recurse(templateDir, folder, copyInternal);
+            await FileSystem.recurse(templateDir, fsPath, copyInternal);
         } catch (error) {
             if (error.name && error.name === cs.dynamics.errors.userCancelledAction) {
                 // User initiated cancel of this template, remove the files that have been copied.
-                FileSystem.deleteFolder(folder);
+                FileSystem.deleteFolder(fsPath);
 
                 return null;
             }
@@ -198,18 +208,36 @@ export default class TemplateManager implements IWireUpCommands {
      * @param template name of template
      * @returns success or failure
      */
-    async deleteFromFilesystem(template: string) {
+    async deleteFromFilesystem(template: TemplateItem) {
         // no template, cancel
-        if (!template) {
+        if (!template || !template.location) {
             return false;
         }
             
         let templateRoot = await TemplateManager.getTemplatesFolder();
-        let templateDir : string = path.join(templateRoot, template);
+        let templateLocation:string = path.isAbsolute(template.location) ? template.location : path.join(templateRoot, template.location);
 
-        if (fs.existsSync(templateDir) && fs.lstatSync(templateDir).isDirectory()) {
-            QuickPicker.pickBoolean(`Are you sure you want to delete the project template '${template}'?`, "Yes", "No")
-                .then(async (choice) => choice ? await FileSystem.deleteFolder(templateDir) : false);
+        if (FileSystem.exists(templateLocation)) {
+            await QuickPicker.pickBoolean(`Are you sure you want to delete the project template '${template}'?`, "Yes", "No")
+                .then(async (choice) => {
+                    if (choice) {
+                        if (FileSystem.stats(templateLocation).isDirectory()) {
+                            await FileSystem.deleteFolder(templateLocation);
+                        } else if (FileSystem.stats(templateLocation).isFile()) {
+                            await FileSystem.deleteItem(templateLocation);
+                        }
+                    }
+
+                    return choice;
+                });
+
+            const catalog = await TemplateManager.getTemplateCatalog();
+            const index = catalog.items.findIndex(i => i.name === template.name);
+            
+            if (index > -1) {
+                catalog.items.splice(index, 1);
+                catalog.save();
+            }
 
             return true;
         }
@@ -217,12 +245,16 @@ export default class TemplateManager implements IWireUpCommands {
         return false;
     }
 
-    async openTemplateFolderInExplorer(template: TemplateItem): Promise<void> {
-        const folder = template && template.location && FileSystem.exists(template.location) 
-            ? template.location 
-            : await TemplateManager.getTemplatesFolder();
+    static async openTemplateFolderInExplorer(template: TemplateItem): Promise<void> {
+        const templateRoot = await TemplateManager.getTemplatesFolder();
+        
+        if (template && template.location) {
+            const templateDir:string = path.isAbsolute(template.location) ? template.location : path.join(templateRoot, template.location);
 
-        FileSystem.openFolderInExplorer(folder);
+            FileSystem.openFolderInExplorer(templateDir);
+        } else {
+            FileSystem.openFolderInExplorer(templateRoot);
+        }
     }
 
     /**
@@ -231,7 +263,7 @@ export default class TemplateManager implements IWireUpCommands {
      * @param type the type of template to store.
      * @returns  name of template
      */
-    async saveToFilesystem(fsPath: string, type: TemplateType) {
+    async saveToFilesystem(fsPath: string, type: TemplateType): Promise<TemplateItem> {
         // ensure templates directory exists
         await TemplateManager.createTemplatesDirIfNotExists();
 
@@ -274,24 +306,37 @@ export default class TemplateManager implements IWireUpCommands {
 
                 // Check to see if this template exists in the catalog.
                 const templateCatalog = await TemplateManager.getTemplateCatalog();
-                
+                const categoryList = templateCatalog.queryCategoriesByType();
+                let templateItem;
+
                 if (templateCatalog && templateCatalog.query(c => c.where(i => i.name === templateName)).length === 0) {
-                    const templateItem = new TemplateItem();
+                    templateItem = new TemplateItem();
                     templateItem.name = templateName;
                     templateItem.location = path.relative(templatesDir, templateDir);
                     templateItem.displayName = await QuickPicker.ask(`What should we call the display name for '${templateName}'`, undefined, templateName);
                     templateItem.publisher = await QuickPicker.ask(`Who is the publisher name for '${templateItem.displayName}'`);
                     templateItem.type = type;
+                    templateItem.categories = await QuickPicker.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
 
                     templateCatalog.add(templateItem);
                     templateCatalog.save();
+                } else {
+                    templateItem = templateCatalog.query(c => c.where(i => i.name === templateName))[0];
                 }
 
-                return templateName;
+                return templateItem;
             }
         );
     }
 
+    /**
+     * Gets a copy of the template catalog
+     *
+     * @static
+     * @param {string} [filename]
+     * @returns {Promise<TemplateCatalog>}
+     * @memberof TemplateManager
+     */
     static async getTemplateCatalog(filename?:string): Promise<TemplateCatalog> {
         const templatesDir = await TemplateManager.getDefaultTemplatesDir();
         if (!filename) { filename = path.join(templatesDir, "catalog.json"); }
@@ -608,6 +653,14 @@ export class TemplateCatalog {
         return this;
     }
 
+    queryCategoriesByType(type?:TemplateType): string[] { 
+        const allCategories = this.query(c => c
+            .where(i => type ? i.type === type : i.type === i.type)
+            .select(i => i.categories));
+
+        return new TS.Linq.Enumerator([].concat(...allCategories)).distinct().toArray();
+    }
+
     queryPublishersByType(type?:TemplateType): string[] { 
         return this.query(c => c
             .where(i => type ? i.type === type : i.type === i.type)
@@ -615,10 +668,21 @@ export class TemplateCatalog {
             .distinct());
     }
 
+    queryByCategory(type?:TemplateType, category?:string): TemplateItem[] { 
+        return this.query(c => c
+            .where(i => type ? i.type === type : i.type === i.type)
+            .where(i => category ? new TS.Linq.Enumerator(i.categories).any(c => c === category) : i.categories === i.categories));
+    }
+
     queryByPublisher(type?:TemplateType, publisher?:string): TemplateItem[] { 
         return this.query(c => c
             .where(i => type ? i.type === type : i.type === i.type)
             .where(i => publisher ? i.publisher === publisher : i.publisher === i.publisher));
+    }
+
+    queryByType(type?:TemplateType): TemplateItem[] { 
+        return this.query(c => c
+            .where(i => type ? i.type === type : i.type === i.type));
     }
 
     query<T>(query:(queryable:TS.Linq.Enumerator<TemplateItem>) => TS.Linq.Enumerator<T>):T[] {
