@@ -13,6 +13,9 @@
             case "load":
                 setInitialState(message.viewModel);
                 break;
+            case "pluginStepError":
+                CloudSmith.ErrorPanel.showError([`${message.message}`]);
+                break;
         }
     });
 
@@ -93,7 +96,7 @@
             } else if (e.keyCode == 13) {
                 /*If the ENTER key is pressed, prevent the form from being submitted,*/
                 e.preventDefault();
-            if (currentFocus[inputId] > -1) {
+                if (currentFocus[inputId] > -1) {
                     /*and simulate a click on the "active" item:*/
                     $("button", $autocompleteItems).eq(currentFocus[inputId]).click();
                 }
@@ -101,6 +104,21 @@
         }, 150); // <- debounce this event this many ms
         // wire the event up
         $textInput.keyup(keyupEvent);
+    }
+
+    function bindSelect($select, selectionArray, noSelectionOption) {
+        // remove prior options if they exist
+        $("option", $select).remove();
+        if (noSelectionOption) {
+            $select.append(`<option value="">${noSelectionOption}</option>`);
+        }
+        // add selections back
+        _.forEach(selectionArray, i => {
+            // create the dropdown option
+            const $option = $(`<option value="${i.value}">${i.text}</option>`);
+            // append this to the select list
+            $select.append($option);
+        });
     }
 
     function setInitialState(viewModel) {
@@ -120,34 +138,20 @@
         // initialize autocomplete for the text boxes
         initializeAutoComplete($("#Message"), window.dataCache.sdkMessagesMap, "mdi-message-settings-variant-outline");
 
-        // fill in the plugin event dropdown
-        const $eventHandelerSelect = $("#EventHandler");
-        // remove prior options if they exist
-        $("option", $eventHandelerSelect).remove();
-        // add selections back
-        _.forEach(viewModel.pluginTypes, i => {
-            const $option = $(`<option value="${i.plugintypeid}">(Plugin) ${i.name}</option>`);
-            // see if it should be selected
-            if (viewModel.step 
-                && viewModel.step.eventhandler_plugintype 
-                && viewModel.step.eventhandler_plugintype.plugintypeid
-                && viewModel.step.eventhandler_plugintype.plugintypeid === i.plugintypeid) {
-                    $option.attr("selected", "selected");
-                }
-            $eventHandelerSelect.append($option);
-        });
+        // bind select lists
+        bindSelect($("#EventHandler"), _.map(viewModel.pluginTypes, i => {
+            return { 
+                value: i.plugintypeid,
+                text: i.name
+             }
+        }));
 
-        // fill in the users dropdown
-        const $userContextSelect = $("#UserContext");
-        // remove prior options if they exist
-        $("option", $userContextSelect).remove();
-        // put empty value in
-        $userContextSelect.append("<option value=''>Calling User</option>");
-        // add selections
-        _.forEach(viewModel.users, i => {
-            const $option = $(`<option value="${i.systemuserid}">${i.fullname}${i.isdisabled ? ' (Disabled)' : ''}</option>`);
-            $userContextSelect.append($option);
-        });
+        bindSelect($("#UserContext"), _.map(viewModel.users, i => {
+            return {
+                value: i.systemuserid,
+                text: i.fullname
+            }
+        }), "Calling User");
         
         if (viewModel.step) {
             const step = viewModel.step;
@@ -165,12 +169,22 @@
             $("#PreValidation").prop("checked", step.stage === 10);
             $("#PreOperation").prop("checked", step.stage === 20);
             $("#PostOperation").prop("checked", step.stage === 40);
-            $("#Server").prop("checked", step.supporteddeployment === 0 || step.supporteddeployment === 3);
-            $("#Offline").prop("checked", step.supporteddeployment === 1 || step.supporteddeployment === 3);
+            $("#Server").prop("checked", step.supporteddeployment === 0 || step.supporteddeployment === 2);
+            $("#Offline").prop("checked", step.supporteddeployment === 1 || step.supporteddeployment === 2);
 
-            if (step.sdkmessageprocessingstepsecureconfigid && step.sdkmessageprocessingstepsecureconfigid.secureconfig) {
-                $("#SecureConfiguration").val(step.sdkmessageprocessingstepsecureconfigid.secureconfig);
+            if (step && step.eventhandler_plugintype) {
+                $("#EventHandler").val(step.eventhandler_plugintype.plugintypeid);
             }
+
+            if (step && step.impersonatinguserid) {
+                $("#UserContext").val(step.impersonatinguserid.systemuserid);
+            }
+
+            if (step.sdkmessageprocessingstepsecureconfigid 
+                && step.sdkmessageprocessingstepsecureconfigid.secureconfig) {
+                    $("#SecureConfigId").val(step.sdkmessageprocessingstepsecureconfigid.sdkmessageprocessingstepsecureconfigid);
+                    $("#SecureConfiguration").val(step.sdkmessageprocessingstepsecureconfigid.secureconfig);
+                }
 
             $("#Message").val(step.sdkmessageid.name);
             $("#Message").change();
@@ -213,19 +227,21 @@
            updateStepNameAndDescription(); 
         });
 
-        function validateForm(settings) {
+        function existsInOptions(options, condition) {
+            return _.find(options, i => condition(i)) !== null;
+        }
+
+        function validateForm(step) {
             const messages = [];
 
             // put validations in here
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.message)) { messages.push('The Message is required'); }
-            if (window.sdkMessages.indexOf(settings.message) === -1) { messages.push('The Message has to exist in message selection'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.primaryEntity)) { messages.push('The Primary Entity is required'); }
-            if (window.entityTypeCodes.indexOf(settings.primaryEntity) === -1) { messages.push('The Primary Entity has to exist in message selection'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.secondEntity)) { messages.push('The Second Entity is required'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.eventHandler)) { messages.push('The Event Handler is required'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.stepName)) { messages.push('The Step Name is required'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.userContext)) { messages.push('The User Context is required'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.executionOrder)) { messages.push('The Execution Order is required'); }
+            if (CloudSmith.Utilities.isNullOrEmpty(step["sdkmessageid@odata.bind"])) { messages.push('Invalid Message'); }
+            if (CloudSmith.Utilities.isNullOrEmpty(step["sdkmessagefilterid@odata.bind"])) { messages.push('Invalid Prmary and Secondary entities'); }
+            if (CloudSmith.Utilities.isNullOrEmpty(step.name)) { message.push('The Step Name is required'); }
+            if (CloudSmith.Utilities.isNullOrEmpty(step.rank)
+                || isNaN(step.rank)) {
+                    message.push("Invalid Execution Order");
+                }
 
             // show errors
             CloudSmith.ErrorPanel.showError(messages);
@@ -236,29 +252,68 @@
 
         // wire up submit click handler
         $("#submitButton").click(function() {
-            const settings = {
+            const dataCache = window.dataCache;
+            
+            const selectedMessageid = () => {
+                const message = _.find(dataCache.sdkMessages, i => {
+                    return i.name === $("#Message").val()
+                });
+                return message ? message.sdkmessageid : "";
+            }
+
+            const selectedFilterid = () => {
+                const filter = _.find(dataCache.currentMessageFilters, i => {
+                    return i.primaryobjecttypecode === $("#PrimaryEntity").val()
+                        && i.secondaryobjecttypecode === $("#SecondEntity").val()
+                });
+                return filter ? filter.sdkmessagefilterid : "";
+            }
+
+            const server = $("#Server").prop("checked");
+            const offline = $("#Offline").prop("checked");
+            let supportedDeployment = 0;
+            supportedDeployment = (offline && !server) ? 1 : supportedDeployment;
+            supportedDeployment = (server && offline) ? 2 : supportedDeployment;
+            
+            const step = {
                 // work on gathering the form information
-                message: $("#Message").val(),
-                primaryEntity: $("#PrimaryEntity").val(),
-                secondEntity: $("#SecondEntity").val(),
-                filteringAttributes: $("#FilteringAttributes").val(),
-                eventHandler: $("#EventHandler").val(),
-                stepName: $("#StepName").val(),
-                userContext: $("#UserContext").val(),
-                executionOrder: $("#ExecutionOrder").val(),
+                sdkmessageprocessingstepid: $("#Id").val(),
+                "sdkmessageid@odata.bind": `sdkmessages(${selectedMessageid()})`,
+                "sdkmessagefilterid@odata.bind": `sdkmessagefilters(${selectedFilterid()})`,
+                "eventhandler_plugintype@odata.bind": `plugintypes(${$("#EventHandler").val()})`,
+                filteringattributes: $("#FilteringAttributes").val(),
+                name: $("#StepName").val(),
+                rank: $("#ExecutionOrder").val(),
                 description: $("#Description").val(),
-                executionPipeline: $(`[name="ExecutionPipeline"]:checked`).val(),
-                statusCode: $("#StatusCode").val() && $("#StatusCode").val().length > 0,
-                executionMode: $(`[name="ExecutionMode"]:checked`).val(),
-                server: $("#Server").val() && $("#Server").val().length > 0,
-                offline: $("#Offline").val() && $("#Offline").val().length > 0
+                stage: $(`[name="ExecutionPipeline"]:checked`).val(),
+                asyncautodelete: $("#AsyncAutoDelete").prop("checked"),
+                mode: $(`[name="ExecutionMode"]:checked`).val(),
+                supporteddeployment: supportedDeployment,
+                configuration: $("#UnsecureConfiguration").val()
             };
 
-            if (!validateForm(settings)) return;
+            // attach a user if selected
+            const userId = CloudSmith.Utilities.nullForEmpty($("#UserContext").val());
+            if (userId) { step["impersonatinguserid@odata.bind"] = `systemsuers(${userId})`; }
+            
+            // attach secure config if needed
+            const secureConfigId = CloudSmith.Utilities.nullForEmpty($("#SecureConfigId").val());
+            const secureConfig = CloudSmith.Utilities.nullForEmpty($("#SecureConfiguration").val());
+            if (secureConfigId) {
+                step["sdkmessageprocessingstepsecureconfigid@odata.bind"] = `sdkmessageprocessingstepsecureconfigs(${secureConfigId})`;
+                step.sdkmessageprocessingstepsecureconfigid = step.sdkmessageprocessingstepsecureconfigid || {};
+                step.sdkmessageprocessingstepsecureconfigid.sdkmessageprocessingstepsecureconfigid = secureConfigId;
+            }
+            if (secureConfig) { 
+                step.sdkmessageprocessingstepsecureconfigid = step.sdkmessageprocessingstepsecureconfigid || {};
+                step.sdkmessageprocessingstepsecureconfigid.secureconfig = secureConfig
+            }
+
+            if (!validateForm(step)) return;
 
             vscode.postMessage({
                 command: 'saveSdkMessageProcessingStep',
-                settings
+                step
             });
         });
     });

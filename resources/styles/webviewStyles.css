@@ -65,7 +65,9 @@ table>tbody>tr:nth-child(odd) {
 .tab__content,
 .field-container,
 .crmsvcutil-row,
-.field {
+.field,
+.panel_error,
+.panel_info {
     animation: fadeEffect 1s;
     /* Fading effect takes 1 second */
 }
@@ -93,7 +95,7 @@ table>tbody>tr:nth-child(odd) {
 
 .grid--left-panel-large {
     display: grid;
-    grid-template-columns: 49% 49%;
+    grid-template-columns: 50% 50%;
 }
 
 .grid--right-panel {
@@ -121,6 +123,7 @@ table>tbody>tr:nth-child(odd) {
 
 .field--buttons {
     padding: 0.5em 0 !important;
+    text-align: right;
 }
 
 .field--buttons button,

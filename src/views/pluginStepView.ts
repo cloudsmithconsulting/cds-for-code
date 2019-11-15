@@ -5,6 +5,7 @@ import IWireUpCommands from '../wireUpCommand';
 import ApiRepository from '../repositories/apiRepository';
 import { DynamicsWebApi } from '../api/Types';
 import QuickPicker from '../helpers/QuickPicker';
+import async = require('async');
 
 export default class PluginStepViewManager implements IWireUpCommands {
 	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -24,16 +25,34 @@ export default class PluginStepViewManager implements IWireUpCommands {
                 }, true); // always new
 
                 const api = new ApiRepository(config);
-                const viewModel = {
-                    entityTypeCodes: await api.retrieveEntityTypeCodes(),
-                    pluginTypes: await api.retrievePluginTypes(pluginAssemblyId),
-                    sdkMessageFilters: await api.retrieveSdkMessageFilters(),
-                    sdkMessages: await api.retrieveSdkMessages(),
-                    users: await api.retrieveSystemUsers(),
-                    step: step && step.sdkmessageprocessingstepid ? await api.retrievePluginStep(step.sdkmessageprocessingstepid) : null
-                };
 
-                view.setInitialState(viewModel, config);
+                async.parallel({
+                    entityTypeCodes: async function(callback) {
+                        callback(null, await api.retrieveEntityTypeCodes());
+                    },
+                    pluginTypes: async function(callback) {
+                        callback(null, await api.retrievePluginTypes(pluginAssemblyId));
+                    },
+                    sdkMessageFilters: async function(callback) {
+                        callback(null, await api.retrieveSdkMessageFilters());
+                    },
+                    sdkMessages: async function(callback) {
+                        callback(null, await api.retrieveSdkMessages());
+                    },
+                    users: async function(callback) {
+                        callback(null, await api.retrieveSystemUsers());
+                    },
+                    step: async function(callback) {
+                        if (!step) {
+                            callback(null);
+                            return;
+                        }
+                        callback(null, await api.retrievePluginStep(step.sdkmessageprocessingstepid));
+                    }
+                }, function(error: any, viewModel: any) {
+                    // set the initial state
+                    view.setInitialState(viewModel, config);
+                });
             }) // <-- no semi-colon, comma starts next command registration
         );
     }
@@ -56,15 +75,24 @@ class PluginStepView extends View {
 
     private saveSdkMessageProcessingStep(step :any) {
         const api = new ApiRepository(this.config);
-        api.upsertPluginStep(step);
+        api.upsertPluginStep(step)
+            .then(() => this.dispose())
+            .catch(err => {
+                this.sendErrorMessage(err.message);
+                console.error(err);
+            });
     }
     
     public onDidReceiveMessage(instance: PluginStepView, message: any): vscode.Event<any> {
         switch (message.command) {
             case 'saveSdkMessageProcessingStep':                
-                instance.saveSdkMessageProcessingStep(message.settings);
+                instance.saveSdkMessageProcessingStep(message.step);
                 return;
         }
+    }
+
+    public sendErrorMessage(message: string) {
+        this.panel.webview.postMessage({ command: 'pluginStepError', message: message });
     }
 
     public setInitialState(viewModel: any, config: DynamicsWebApi.Config) {

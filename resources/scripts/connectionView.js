@@ -16,6 +16,7 @@
                     break;
                 case "connectionError":
                     CloudSmith.ErrorPanel.showError([`${message.message}`]);
+                    break;
             }
         });
     });
