@@ -93,7 +93,7 @@
             } else if (e.keyCode == 13) {
                 /*If the ENTER key is pressed, prevent the form from being submitted,*/
                 e.preventDefault();
-            if (currentFocus[inputId] > -1) {
+                if (currentFocus[inputId] > -1) {
                     /*and simulate a click on the "active" item:*/
                     $("button", $autocompleteItems).eq(currentFocus[inputId]).click();
                 }
@@ -107,7 +107,7 @@
         // remove prior options if they exist
         $("option", $select).remove();
         if (noSelectionOption) {
-            $select.append(`<option>${noSelectionOption}</option>`);
+            $select.append(`<option value="">${noSelectionOption}</option>`);
         }
         // add selections back
         _.forEach(selectionArray, i => {
@@ -223,18 +223,25 @@
            updateStepNameAndDescription(); 
         });
 
+        function existsInOptions(options, condition) {
+            return _.find(options, i => condition(i)) !== null;
+        }
+
         function validateForm(settings) {
             const messages = [];
+            const dataCache = window.dataCache;
 
             // put validations in here
             if (CloudSmith.Utilities.isNullOrEmpty(settings.message)) { messages.push('The Message is required'); }
-            if (window.sdkMessages.indexOf(settings.message) === -1) { messages.push('The Message has to exist in message selection'); }
+            if (!existsInOptions(dataCache.sdkMessages, i => i.name === settings.message)) { messages.push('The Message has to exist in message selection'); }
             if (CloudSmith.Utilities.isNullOrEmpty(settings.primaryEntity)) { messages.push('The Primary Entity is required'); }
-            if (window.entityTypeCodes.indexOf(settings.primaryEntity) === -1) { messages.push('The Primary Entity has to exist in message selection'); }
             if (CloudSmith.Utilities.isNullOrEmpty(settings.secondEntity)) { messages.push('The Second Entity is required'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.eventHandler)) { messages.push('The Event Handler is required'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.stepName)) { messages.push('The Step Name is required'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.userContext)) { messages.push('The User Context is required'); }
+            if (!existsInOptions(dataCache.sdkMessageFilters, 
+                i => i.primaryobjecttypecode === settings.primaryEntity && i.secondaryobjecttypecode === settings.secondEntity)) {
+                    messages.push('The Primary and Second Entities do not exist in the entity selection');
+                }
+            if (CloudSmith.Utilities.isNullOrEmpty(settings._eventhandler_value)) { messages.push('The Event Handler is required'); }
+            if (CloudSmith.Utilities.isNullOrEmpty(settings.name)) { messages.push('The Step Name is required'); }
             if (CloudSmith.Utilities.isNullOrEmpty(settings.executionOrder)) { messages.push('The Execution Order is required'); }
 
             // show errors
@@ -248,20 +255,21 @@
         $("#submitButton").click(function() {
             const settings = {
                 // work on gathering the form information
+                sdkmessageprocessingstepid: $("#Id").val(),
                 message: $("#Message").val(),
                 primaryEntity: $("#PrimaryEntity").val(),
                 secondEntity: $("#SecondEntity").val(),
                 filteringAttributes: $("#FilteringAttributes").val(),
-                eventHandler: $("#EventHandler").val(),
-                stepName: $("#StepName").val(),
+                _eventhandler_value: $("#EventHandler").val(),
+                name: $("#StepName").val(),
                 userContext: $("#UserContext").val(),
                 executionOrder: $("#ExecutionOrder").val(),
                 description: $("#Description").val(),
                 executionPipeline: $(`[name="ExecutionPipeline"]:checked`).val(),
-                statusCode: $("#StatusCode").val() && $("#StatusCode").val().length > 0,
+                statusCode: $("#AsyncAutoDelete").prop("checked"),
                 executionMode: $(`[name="ExecutionMode"]:checked`).val(),
-                server: $("#Server").val() && $("#Server").val().length > 0,
-                offline: $("#Offline").val() && $("#Offline").val().length > 0
+                server: $("#Server").prop("checked"),
+                offline: $("#Offline").prop("checked")
             };
 
             if (!validateForm(settings)) return;

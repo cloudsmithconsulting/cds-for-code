@@ -75,7 +75,8 @@ class PluginStepView extends View {
 
     private saveSdkMessageProcessingStep(step :any) {
         const api = new ApiRepository(this.config);
-        api.upsertPluginStep(step);
+        //api.upsertPluginStep(step);
+        this.dispose();
     }
     
     public onDidReceiveMessage(instance: PluginStepView, message: any): vscode.Event<any> {
