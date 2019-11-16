@@ -74,3 +74,28 @@ div.jsoneditor-value.jsoneditor-null {
 div.jsoneditor-value.jsoneditor-invalid {
   color: white;
 }
+
+div.jsoneditor-frame {
+  background: var(--vscode-input-background);
+  border: 1px solid var(--vscode-dropdown-border);
+  color: var(--vscode-input-foreground);
+}
+
+div.jsoneditor-frame input {
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+}
+
+div.jsoneditor-navigation-bar {
+  background: var(--vscode-background);
+  color: var(--vscode-editor-foreground);
+}
+
+.jsoneditor-contextmenu .jsoneditor-menu li button.jsoneditor-selected, 
+.jsoneditor-contextmenu .jsoneditor-menu li button.jsoneditor-selected:focus, 
+.jsoneditor-contextmenu .jsoneditor-menu li button.jsoneditor-selected:hover {
+  background: none !important;
+  background-color: var(--vscode-input-background) !important;
+  border: 1px solid var(--vscode-dropdown-border) !important;
+  color: var(--vscode-editor-foreground) !important;
+}
