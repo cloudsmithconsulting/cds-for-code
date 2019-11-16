@@ -4,6 +4,17 @@
     #{viewTitle}
 </h1>
 
+<div class="field field--buttons">
+    <button id="submitButton" class="button button--primary">
+        <span class="iconify" data-icon="fa:save"></span>
+        Save Changes
+    </button>
+    <button id="cancelButton" class="button">
+        <span class="iconify" data-icon="fa:ban"></span>
+        Cancel
+    </button>
+</div>
+
 <blockquote class="panel_error" id="errorPanel" hidden>
     <div class="panel__text">
         <h4>Oops! Slight problem</h4>
@@ -509,17 +520,6 @@
             </fieldset>
         </div>
     </div>
-</div>
-
-<div class="field field--buttons">
-    <button id="submitButton" class="button button--primary">
-        <span class="iconify" data-icon="fa:save"></span>
-        Save Changes
-    </button>
-    <button id="cancelButton" class="button">
-        <span class="iconify" data-icon="fa:ban"></span>
-        Cancel
-    </button>
 </div>
 
 <script id="listRowTemplate" type="x-tmpl-mustache">

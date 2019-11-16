@@ -444,7 +444,7 @@
 					"id": "cs.dynamics.viewContainers.dynamicsExplorer",
 					"name": "Dynamics Explorer"
 				}
-			], 
+			],
 			"explorer": [
 				{
 					"id": "cs.dynamics.viewContainers.templateExplorer",
@@ -634,6 +634,7 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
+		"@types/async": "^3.0.3",
 		"@types/glob": "^7.1.1",
 		"@types/lodash": "^4.14.144",
 		"@types/mocha": "^5.2.6",
@@ -648,11 +649,15 @@
 		"vscode-test": "^1.2.0"
 	},
 	"dependencies": {
+		"@iconify/iconify": "^1.0.3",
 		"adal-node": "^0.2.1",
+		"async": "^3.1.0",
 		"eol": "^0.9.1",
 		"httpntlm": "^1.7.6",
+		"jquery": "^3.4.1",
 		"jsoneditor": "^7.1.0",
 		"lodash": "^4.17.15",
+		"mustache": "^3.1.0",
 		"node-fetch": "^2.6.0",
 		"node-stream-zip": "^1.8.2",
 		"opn": "^6.0.0",

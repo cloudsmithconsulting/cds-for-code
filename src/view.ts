@@ -37,6 +37,10 @@ export class ViewRenderer {
 		this._scripts.insert(0, scriptName, this.getFileUri('resources', 'scripts', scriptName));
 	}
 
+	private addFrameworkScript(scriptName: string) {
+		this._scripts.insert(0, scriptName, this.getFileUri('node_modules', scriptName));
+	}
+
 	public addStyleSheet(styleSheetName: string) {
 		this._styleSheets.add(styleSheetName, this.getFileUri('resources', 'styles', styleSheetName));
 	}
@@ -93,10 +97,11 @@ export class ViewRenderer {
 
 		// add some default scripts
 		this.insertScriptAt(0, 'main.js');
-		this.insertScriptAt(0, 'lodash.min.js');
-		this.insertScriptAt(0, 'iconify.min.js');
-		this.insertScriptAt(0, 'mustache.min.js');
-		this.insertScriptAt(0, 'jquery.min.js');
+		// these are framework scripts hosted out of node_modules
+		this.addFrameworkScript('lodash/lodash.min.js');
+		this.addFrameworkScript('@iconify/iconify/dist/iconify.min.js');
+		this.addFrameworkScript('mustache/mustache.min.js');
+		this.addFrameworkScript('jquery/dist/jquery.min.js');
 
 		let scriptHtml: string = '';
 		this._scripts.values.forEach(uri => {
@@ -165,7 +170,10 @@ export abstract class View {
 				enableScripts: true,
 
 				// And restrict the webview to only loading content from our extension's `resources` directory.
-				localResourceRoots: [vscode.Uri.file(path.join(extensionPath, 'resources'))]
+				localResourceRoots: [
+					vscode.Uri.file(path.join(extensionPath, 'resources')),
+					vscode.Uri.file(path.join(extensionPath, 'node_modules'))
+				]
 			}
 		);
 

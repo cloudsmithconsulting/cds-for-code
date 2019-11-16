@@ -115,7 +115,7 @@ export default class WebApiRequest
             return;
         }
     
-        if (path === '$batch') {
+        if (path.endsWith('$batch')) {
             let batchResult = RequestUtilities.convertToBatch(this.batchRequestCollection);
     
             stringifiedData = batchResult.body;

@@ -217,7 +217,8 @@ export default class ApiRepository
                 { property: "sdkmessageid", select: ["sdkmessageid", "name"] },
                 { property: "sdkmessagefilterid", select: [ "sdkmessagefilterid", "_sdkmessageid_value", "primaryobjecttypecode", "secondaryobjecttypecode" ] },
                 { property: "eventhandler_plugintype", select: ["plugintypeid", "_pluginassemblyid_value", "name"] },
-                { property: "sdkmessageprocessingstepsecureconfigid", select: ["sdkmessageprocessingstepsecureconfigid", "secureconfig"] }
+                { property: "sdkmessageprocessingstepsecureconfigid", select: ["sdkmessageprocessingstepsecureconfigid", "secureconfig"] },
+                { property: "impersonatinguserid", select: [ "systemuserid", "fullname", "isdisabled" ] }
             ]
         };
 
@@ -320,11 +321,68 @@ export default class ApiRepository
             });
     }
 
-    public upsertPluginStep(step: any) {
+    public async upsertPluginStep(step: any) {
+        // see if we have a secure configration
+        let secureConfig = null;
+        if (step.sdkmessageprocessingstepsecureconfigid) {
+            // transfer to a new object
+            secureConfig = step.sdkmessageprocessingstepsecureconfigid;
+            // delete from step, it will error in the update if not
+            delete step.sdkmessageprocessingstepsecureconfigid;
+        }
+
+        // insert or update secure config
+        if (secureConfig && secureConfig.sdkmessageprocessingstepsecureconfigid) {
+            await this.webapi.updateRequest({
+                id: secureConfig.sdkmessageprocessingstepsecureconfigid,
+                collection: "sdkmessageprocessingstepsecureconfigs",
+                entity: secureConfig
+            });
+        }
+
+        const secureConfigCreate = async (result: any, step: any) => {
+            // we only do this if it needs created
+            if (secureConfig && !secureConfig.sdkmessageprocessingstepsecureconfigid) {
+                await this.webapi.createRequest({
+                    collection: "sdkmessageprocessingstepsecureconfigs",
+                    entity: secureConfig
+                })
+                .then(result => {
+                    // after create, associate it to the plugin step
+                    const sdkmessageprocessingstepid = step.sdkmessageprocessingstepid;
+                    // create a smaller step message to associate the record back to the step
+                    step = {
+                        sdkmessageprocessingstepid,
+                        "sdkmessageprocessingstepsecureconfigid@odata.bind": `sdkmessageprocessingstepsecureconfigs(${result})`
+                    };
+                })
+                .then(() => {
+                    return this.webapi.updateRequest({
+                        id: step.sdkmessageprocessingstepid,
+                        collection: "sdkmessageprocessingsteps",
+                        entity: step
+                    });
+                });
+            }
+            return result;
+        };
+
+        // see if we need to update or create the step
         if (step.sdkmessageprocessingstepid) {
-            this.webapi.update(step.sdkmessageprocessingstepid, "sdkmessageprocessingsteps", step);
+            return this.webapi.updateRequest({
+                id: step.sdkmessageprocessingstepid,
+                collection: "sdkmessageprocessingsteps",
+                entity: step
+            }).then((result) => secureConfigCreate(result, step));
         } else {
-            this.webapi.create(step, "sdkmessageprocessingsteps");
+            delete step.sdkmessageprocessingstepid;
+            return this.webapi.createRequest({
+                collection: "sdkmessageprocessingsteps",
+                entity: step
+            }).then((result) => {
+                step.sdkmessageprocessingstepid = result;
+                return secureConfigCreate(result, step);
+            });
         }
     }
 

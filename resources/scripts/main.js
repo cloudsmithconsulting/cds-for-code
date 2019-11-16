@@ -34,6 +34,9 @@
         Utilities: {
             isNullOrEmpty: function(str) {
                 return (!str || str.replace(/\s/gi, "").length === 0);
+            },
+            nullForEmpty: function(str) {
+                return this.isNullOrEmpty(str) ? null : str;
             }
         }
     };
