@@ -290,6 +290,8 @@ export default class QuickPicker {
                     workspace = ws.uri;
                 }
             }
+        } else {
+            QuickPicker.error("You must have at least one workspace folder open to perform this action", undefined, "Open Workspace Folder", () => vscode.commands.executeCommand("vscode.openFolder", undefined, false));
         }
 
         return workspace;

@@ -278,9 +278,19 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.dynamics.controls.newWorkspace.hideLoadingMessage",
+				"title": "Show the loading message in the New Workspace screen",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.controls.newWorkspace.open",
 				"title": "Get started in a new workspace",
-				"category": "Dynamics 365 CE"
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.newWorkspace.showLoadingMessage",
+				"title": "Show the loading message in the New Workspace screen",
+				"category": "UserInterface"
 			},
 			{
 				"command": "cs.dynamics.controls.svcUtilConfig.configure",

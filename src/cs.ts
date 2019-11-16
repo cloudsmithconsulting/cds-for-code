@@ -147,7 +147,9 @@ export namespace dynamics {
         // tslint:disable-next-line: class-name
         export class newWorkspace {
             public static readonly _namespace:string = "cs.dynamics.controls.newWorkspace";
-            public static readonly open:string = `${jsonInspector._namespace}.open`;
+            public static readonly hideLoadingMessage:string = `${newWorkspace._namespace}.hideLoadingMessage`;
+            public static readonly open:string = `${newWorkspace._namespace}.open`;
+            public static readonly showLoadingMessage:string = `${newWorkspace._namespace}.showLoadingMessage`;
         }
 
         // tslint:disable-next-line: class-name

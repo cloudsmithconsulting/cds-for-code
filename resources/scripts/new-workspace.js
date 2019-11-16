@@ -12,6 +12,12 @@
             const message = event.data;
 
             switch (message.command) {
+                case "showLoadingMessage":
+                    $("#loadingPanel").show();
+                    break;
+                case "hideLoadingMessage":
+                    $("#loadingPanel").hide();
+                    break;
                 case "load":
                     window.initializeState(message.parameters);
                     break;
@@ -20,7 +26,7 @@
     });
 
     window.initializeState = (viewModel) => {
-        $("#ShowWelcomeExperienceCheckbox").attr("checked", viewModel.showWelcomeExperience);
+        $("#ShowWelcomeExperienceCheckbox").prop("checked") = viewModel.showWelcomeExperience;
     }
 
     // this part starts on document ready
