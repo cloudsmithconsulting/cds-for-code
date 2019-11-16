@@ -21,11 +21,13 @@ export default class NewWorkspaceViewManager implements IWireUpCommands {
     }
 
 	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+        let view;
+
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.controls.newWorkspace.open, () => { // Match name of command to package.json command
+            vscode.commands.registerCommand(cs.dynamics.controls.newWorkspace.open, (showLoadingMessage:boolean = false) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-                const view = View.createOrShow(NewWorkspaceView, {
+                view = View.createOrShow(NewWorkspaceView, {
                     extensionPath: context.extensionPath,
                     iconPath: './resources/images/cloudsmith-logo-only-50px.png',
                     viewTitle: 'Welcome to Dynamics 365 for Code',
@@ -37,7 +39,23 @@ export default class NewWorkspaceViewManager implements IWireUpCommands {
                     showWelcomeExperience: ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience),
                     connections: DiscoveryRepository.getOrgConnections(context)
                 });
+
+                return view;
             }) // <-- no semi-colon, comma starts next command registration
+            , vscode.commands.registerCommand(cs.dynamics.controls.newWorkspace.showLoadingMessage, async () => {
+                if (!view) {
+                    view = await vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.open, true);                    
+                } else {
+                    view.postMessage("showLoadingMessage");
+                }
+            })
+            , vscode.commands.registerCommand(cs.dynamics.controls.newWorkspace.hideLoadingMessage, async () => {
+                if (!view) {
+                    view = await vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.open, false);
+                } else {
+                    view.postMessage("hideLoadingMessage");
+                }
+            })
         );
 
         this.showWelcomeExperience();

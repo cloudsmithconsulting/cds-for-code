@@ -1,0 +1,196 @@
+{
+    "items": [
+        {
+            "displayName": "Dynamics CRM 8.0 Basic Plugin",
+            "name": "CloudSmith.Dynamics365.BasicPlugin.v8.0",
+            "type": "Project Template",
+            "publisher": "CloudSmith Consulting LLC",
+            "location": "CloudSmith.Dynamics365.BasicPlugin.v8.0",
+            "outputPath": "#{Namespace}",
+            "categories": [
+                "Dynamics",
+                "Plugins"
+            ],
+            "placeholders": [
+                {
+                    "name": "PluginName",
+                    "displayName": "Plugin Class Name",
+                    "required": true
+                },
+                {
+                    "name": "Namespace",
+                    "displayName": "Project namespace and assembly name",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "displayName": "Dynamics CRM 8.0 Plugin with validation and tests",
+            "name": "CloudSmith.Dynamics365.SamplePlugin.v8.0",
+            "type": "Project Template",
+            "publisher": "CloudSmith Consulting LLC",
+            "location": "CloudSmith.Dynamics365.SamplePlugin.v8.0",
+            "outputPath": "#{Namespace}",
+            "categories": [
+                "Dynamics",
+                "Plugins"
+            ],
+            "placeholders": [
+                {
+                    "name": "PluginName",
+                    "displayName": "Plugin Class Name",
+                    "required": true
+                },
+                {
+                    "name": "Namespace",
+                    "displayName": "Project namespace and assembly name",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "displayName": "Dynamics CRM 8.1 Basic Plugin",
+            "name": "CloudSmith.Dynamics365.BasicPlugin.v8.1",
+            "type": "Project Template",
+            "publisher": "CloudSmith Consulting LLC",
+            "location": "CloudSmith.Dynamics365.BasicPlugin.v8.1",
+            "outputPath": "#{Namespace}",
+            "categories": [
+                "Dynamics",
+                "Plugins"
+            ],
+            "placeholders": [
+                {
+                    "name": "PluginName",
+                    "displayName": "Plugin Class Name",
+                    "required": true
+                },
+                {
+                    "name": "Namespace",
+                    "displayName": "Project namespace and assembly name",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "displayName": "Dynamics CRM 8.1 Plugin with validation and tests",
+            "name": "CloudSmith.Dynamics365.SamplePlugin.v8.1",
+            "type": "Project Template",
+            "publisher": "CloudSmith Consulting LLC",
+            "location": "CloudSmith.Dynamics365.SamplePlugin.v8.1",
+            "outputPath": "#{Namespace}",
+            "categories": [
+                "Dynamics",
+                "Plugins"
+            ],
+            "placeholders": [
+                {
+                    "name": "PluginName",
+                    "displayName": "Plugin Class Name",
+                    "required": true
+                },
+                {
+                    "name": "Namespace",
+                    "displayName": "Project namespace and assembly name",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "displayName": "Dynamics365 8.2 Basic Plugin",
+            "name": "CloudSmith.Dynamics365.BasicPlugin.v8.2",
+            "type": "Project Template",
+            "publisher": "CloudSmith Consulting LLC",
+            "location": "CloudSmith.Dynamics365.BasicPlugin.v8.2",
+            "outputPath": "#{Namespace}",
+            "categories": [
+                "Dynamics",
+                "Plugins"
+            ],
+            "placeholders": [
+                {
+                    "name": "PluginName",
+                    "displayName": "Plugin Class Name",
+                    "required": true
+                },
+                {
+                    "name": "Namespace",
+                    "displayName": "Project namespace and assembly name",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "displayName": "Dynamics365 8.2 Plugin with validation and tests",
+            "name": "CloudSmith.Dynamics365.SamplePlugin.v8.2",
+            "type": "Project Template",
+            "publisher": "CloudSmith Consulting LLC",
+            "location": "CloudSmith.Dynamics365.SamplePlugin.v8.2",
+            "outputPath": "#{Namespace}",
+            "categories": [
+                "Dynamics",
+                "Plugins"
+            ],
+            "placeholders": [
+                {
+                    "name": "PluginName",
+                    "displayName": "Plugin Class Name",
+                    "required": true
+                },
+                {
+                    "name": "Namespace",
+                    "displayName": "Project namespace and assembly name",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "displayName": "Dynamics365 9.0 Basic Plugin",
+            "name": "CloudSmith.Dynamics365.BasicPlugin.v9.0",
+            "type": "Project Template",
+            "publisher": "CloudSmith Consulting LLC",
+            "location": "CloudSmith.Dynamics365.BasicPlugin.v9.0",
+            "outputPath": "#{Namespace}",
+            "categories": [
+                "Dynamics",
+                "Plugins"
+            ],
+            "placeholders": [
+                {
+                    "name": "PluginName",
+                    "displayName": "Plugin Class Name",
+                    "required": true
+                },
+                {
+                    "name": "Namespace",
+                    "displayName": "Project namespace and assembly name",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "displayName": "Dynamics365 9.0 Plugin with validation and tests",
+            "name": "CloudSmith.Dynamics365.SamplePlugin.v9.0",
+            "type": "Project Template",
+            "publisher": "CloudSmith Consulting LLC",
+            "location": "CloudSmith.Dynamics365.SamplePlugin.v9.0",
+            "outputPath": "#{Namespace}",
+            "categories": [
+                "Dynamics",
+                "Plugins"
+            ],
+            "placeholders": [
+                {
+                    "name": "PluginName",
+                    "displayName": "Plugin Class Name",
+                    "required": true
+                },
+                {
+                    "name": "Namespace",
+                    "displayName": "Project namespace and assembly name",
+                    "required": true
+                }
+            ]
+        }
+    ]
+}

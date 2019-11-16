@@ -47,8 +47,8 @@ export default class QuickPicker {
         if (secondaryOption) { secondary = { title: secondaryOption, isCloseAffordance: true }; }
 
         await vscode.window.showInformationMessage(message, { modal }, primary, secondary)
-            .then(response => { if (response && response.title === primaryOption) { primaryAction(); } return response; })
-            .then(response => { if (response && response.title === secondaryOption) { secondaryAction(); } return response; });
+            .then(response => { if (response && response.title === primaryOption) { if (primaryAction) { primaryAction(); } } return response; })
+            .then(response => { if (response && response.title === secondaryOption) { if (secondaryAction) { secondaryAction(); } } return response; });
     }
 
     /**
@@ -72,8 +72,8 @@ export default class QuickPicker {
         if (secondaryOption) { secondary = { title: secondaryOption, isCloseAffordance: true }; }
 
         await vscode.window.showWarningMessage(message, { modal }, primary, secondary)
-            .then(response => { if (response && response.title === primaryOption) { primaryAction(); } return response; })
-            .then(response => { if (response && response.title === secondaryOption) { secondaryAction(); } return response; });
+            .then(response => { if (response && response.title === primaryOption) { if (primaryAction) { primaryAction(); } } return response; })
+            .then(response => { if (response && response.title === secondaryOption) { if (secondaryAction) { secondaryAction(); } } return response; });
     }
 
     /**
@@ -97,8 +97,8 @@ export default class QuickPicker {
         if (secondaryOption) { secondary = { title: secondaryOption, isCloseAffordance: true }; }
 
         await vscode.window.showErrorMessage(message, { modal }, primary, secondary)
-            .then(response => { if (response && response.title === primaryOption) { primaryAction(); } return response; })
-            .then(response => { if (response && response.title === secondaryOption) { secondaryAction(); } return response; });
+            .then(response => { if (response && response.title === primaryOption) { if (primaryAction) { primaryAction(); } } return response; })
+            .then(response => { if (response && response.title === secondaryOption) { if (secondaryAction) { secondaryAction(); } } return response; });
     }
 
     /**
@@ -122,14 +122,94 @@ export default class QuickPicker {
         return null;
 	}    
 
+    public static async pickOrNew(placeHolder:string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption> {
+        if (options.length > 0) {
+            let quickPickOptions:QuickPickOption[];
+
+            if (!(options[0] instanceof QuickPickOption) || !(<QuickPickOption[]>options).find(i => i.label === `${Octicon.plus}`)) {
+                quickPickOptions.push(new QuickPickOption(`${Octicon.plus}`, undefined, 'New Item', undefined, true));
+            }
+
+            if (options[0] instanceof QuickPickOption) {
+                quickPickOptions = <QuickPickOption[]>options;
+            } else {
+                quickPickOptions = (<string[]>options).map(i => new QuickPickOption(i));
+            }
+
+            const option = await vscode.window.showQuickPick(quickPickOptions, { placeHolder, ignoreFocusOut: true, canPickMany: false });
+
+            if (option && option.label === `${Octicon.plus}`) {
+                const newItem = await QuickPicker.ask("What is the name of the new item?");
+
+                if (newItem) {
+                    quickPickOptions.push(new QuickPickOption(newItem));
+
+                    return this.pickOrNew(placeHolder, ...quickPickOptions);
+                }
+            } else {
+                return option;
+            }
+        }
+    }
+
     /**
 	 * shows a QuickPick-Panel in the VS Code Window
 	 * @param placeHolder text to display when nothing was chosen
 	 * @param options options to choose from
 	 */
-	public static async pickAny(placeHolder: string, ...options: QuickPickOption[]): Promise<QuickPickOption[]> {
-		return await vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut: true, canPickMany: true });
+	public static async pickAny(placeHolder: string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption[]> {
+        if (options.length > 0) {
+            let quickPickOptions:QuickPickOption[];
+
+            if (options[0] instanceof QuickPickOption) {
+                quickPickOptions = <QuickPickOption[]>options;
+            } else {
+                quickPickOptions = (<string[]>options).map(i => new QuickPickOption(i));
+            }
+
+            return await vscode.window.showQuickPick(quickPickOptions, { placeHolder, ignoreFocusOut: true, canPickMany: true });
+        }
+
+        return null;
 	}    
+
+    public static async pickAnyOrNew(placeHolder:string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption[]> {
+        if (options && options.length > 0) {
+            let quickPickOptions:QuickPickOption[] = [];
+
+            if (!(options[0] instanceof QuickPickOption) || !(<QuickPickOption[]>options).find(i => i.label === `${Octicon.plus}`)) {
+                quickPickOptions.push(new QuickPickOption(`${Octicon.plus}`, undefined, 'New Item', undefined, true));
+            }
+
+            if (options[0] instanceof QuickPickOption) {
+                quickPickOptions.push(...<QuickPickOption[]>options);
+            } else {
+                quickPickOptions.push(...(<string[]>options).map(i => new QuickPickOption(i)));
+            }
+
+            const option = await vscode.window.showQuickPick(quickPickOptions, { placeHolder, ignoreFocusOut: true, canPickMany: true });
+
+            quickPickOptions.forEach(o => {
+                if (o.label !== `${Octicon.plus}` && option.find(op => op.label === o.label)) {
+                    o.picked = true;
+                }
+            });
+
+            if (option && option.find(o => o.label === `${Octicon.plus}`)) {
+                const newItem = await QuickPicker.ask("What is the name of the new item?");
+
+                if (newItem) {
+                    const newOption = new QuickPickOption(newItem);
+                    newOption.picked = true;
+                    quickPickOptions.push(newOption);
+
+                    return this.pickAnyOrNew(placeHolder, ...quickPickOptions);
+                }
+            } else {
+                return option;
+            }
+        }
+    }
 
         /**
 	 * shows a QuickPick-Panel in the VS Code Window
@@ -162,10 +242,14 @@ export default class QuickPicker {
 
                 if (choices.length === 0) {
                     QuickPicker.warn(
-                        "You do not have any templates configured.  Add some by copying files or using the Template Explorer.", 
+                        "You do not have any templates configured.  Add some by using the Template Explorer.", 
                         undefined, 
+                        "Add a template from workspace",
+                        async () => vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, undefined, templateType),
                         "Open template folder", 
                         async () => FileSystem.openFolderInExplorer(await TemplateManager.getTemplatesFolder()));
+
+                    return;
                 }
 
                 return choices;
@@ -174,15 +258,11 @@ export default class QuickPicker {
                     return await this.pick(placeHolder, ...items);
                 }
             }).then(async item => {
-                if (item.context) {
+                if (item && item.context) {
                     return item.context;
                 }
-
-                //TODO: complete this workflow.
-                const template = new TemplateItem();
-                template.name = await QuickPicker.ask("What would you like to call the new template?");
-                
-                return template;
+            
+                return undefined;
             });
     }
 
@@ -210,6 +290,8 @@ export default class QuickPicker {
                     workspace = ws.uri;
                 }
             }
+        } else {
+            QuickPicker.error("You must have at least one workspace folder open to perform this action", undefined, "Open Workspace Folder", () => vscode.commands.executeCommand("vscode.openFolder", undefined, false));
         }
 
         return workspace;
@@ -279,8 +361,13 @@ export default class QuickPicker {
                     let newUri;
                     let itemType = choice.context[1];
 
+                    if (!itemType && choice.context) {
+                        const stat = FileSystem.stats(choice.context.fsPath);
+                        itemType = stat.isDirectory() ? vscode.FileType.Directory : stat.isFile() ? vscode.FileType.File : stat.isSymbolicLink() ? vscode.FileType.SymbolicLink : vscode.FileType.Unknown;
+                    }
+
                     if (choice.label === `${Octicon.file_symlink_directory} .`) {
-                        return new WorkspaceFileItem(defaultUri.fsPath, defaultUri.fsPath.endsWith("/") ? vscode.FileType.Directory : vscode.FileType.File);
+                        return new WorkspaceFileItem(defaultUri.fsPath, itemType);
                     } else if (choice.label.startsWith(`${Octicon.file_symlink_file} `)) {
                         return new WorkspaceFileItem(choice.context[0], vscode.FileType.SymbolicLink);
                     } else if (choice.label === `${Octicon.file_symlink_directory} ..`) {
@@ -331,17 +418,17 @@ export default class QuickPicker {
             .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0] : pathUris : null);
     }
 
-    public static async pickEnum<T>(enumObject:T, placeHolder?:string): Promise<any> {
+    public static async pickEnum<T>(enumObject:any, placeHolder?:string): Promise<T> {
         let enumOptions:QuickPickOption[] = [];
 
         for (let value in enumObject) {
             if (typeof enumObject[value] === 'number' || typeof enumObject[value] === 'string') {
-                enumOptions.push(new QuickPickOption(value, undefined, undefined, enumObject[value]));
+                enumOptions.push(new QuickPickOption(typeof enumObject[value] === 'string' ? enumObject[value].toString() : value, undefined, undefined, value));
             }
         }
 
         return await this.pick(placeHolder, ...enumOptions)
-            .then(p => p.context);
+            .then(p => p.context as T);
     }
 
     public static async pickDictionaryEntry<TKey, TItem>(dictionary:Dictionary<TKey, TItem>, placeHolder?:string): Promise<TItem> {

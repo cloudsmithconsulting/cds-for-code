@@ -2,32 +2,41 @@ import * as vscode from 'vscode';
 import { TS } from 'typescript-linq/TS';
 import * as cs from '../cs';
 import IWireUpCommands from '../wireUpCommand';
-import { DynamicsWebApi } from '../api/Types';
 import { ExtensionIconThemes } from '../commands/iconLoader';
 import Utilities from '../helpers/Utilities';
+import TemplateManager, { TemplateItem, TemplateType } from '../controls/Templates/TemplateManager';
+import refreshEntry from '../commands/cs.dynamics.controls.templateTreeView.refreshEntry';
+import addEntry from '../commands/cs.dynamics.controls.templateTreeView.addEntry';
+import editEntry from '../commands/cs.dynamics.controls.templateTreeView.editEntry';
+import deleteEntry from '../commands/cs.dynamics.controls.templateTreeView.deleteEntry';
+import clickEntry from '../commands/cs.dynamics.controls.templateTreeView.clickEntry';
+import createInWorkspace from '../commands/cs.dynamics.controls.templateTreeView.createInWorkspace';
+import openEntry from '../commands/cs.dynamics.controls.templateTreeView.openEntry';
+import ExtensionConfiguration from '../config/ExtensionConfiguration';
 
 export default class TemplateTreeView implements IWireUpCommands {
     public static Instance:TemplateTreeViewProvider;
 
     public wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
-        const isNew = !TemplateTreeView.Instance;        
-        const treeProvider = isNew ? new TemplateTreeViewProvider(context) : TemplateTreeView.Instance;
-
-        if (isNew) {
-            TemplateTreeView.Instance = treeProvider;
-            vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.templateExplorer, treeProvider);        
+        if (!TemplateTreeView.Instance) {
+            TemplateTreeView.Instance = new TemplateTreeViewProvider(context);
+            vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.templateExplorer, TemplateTreeView.Instance);
         }
         
         // setup commands
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.refreshEntry, (item?: TreeEntry) => {
-                treeProvider.refresh(item);
-            })
+            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.refreshEntry, refreshEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.addEntry, addEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.editEntry, editEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.deleteEntry, deleteEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.clickEntry, clickEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.createInWorkspace, createInWorkspace.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.openEntry, openEntry.bind(TemplateTreeView.Instance))
         );
     }
 }
 
-class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEntry> {
+export class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEntry> {
 	private _onDidChangeTreeData: vscode.EventEmitter<TreeEntry | undefined> = new vscode.EventEmitter<TreeEntry | undefined>();
     readonly onDidChangeTreeData: vscode.Event<TreeEntry | undefined> = this._onDidChangeTreeData.event;
     private _context: vscode.ExtensionContext;
@@ -43,9 +52,39 @@ class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEntry> {
 	public async getChildren(element?: TreeEntry): Promise<TreeEntry[]> {
         if (element && element.itemType) {
             const commandPrefix:string = Utilities.RemoveTrailingSlash(((element.command && element.command.arguments) || '').toString());
+            const catalog = await TemplateManager.getTemplateCatalog();
+            const grouping = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.templates.treeViewGroupPreference);
 
             switch (element.itemType) {
                 case "Folder":
+                    const templateTypeFilter = commandPrefix.indexOf("/ProjectTemplates") > -1 ? TemplateType.ProjectTemplate : commandPrefix.indexOf("/ItemTemplates") > -1 ? TemplateType.ItemTemplate : undefined;
+                    const templateGroupFilter = commandPrefix.split("/").length >= 3 ? commandPrefix.split("/")[2] : undefined;
+
+                    if (commandPrefix === "/ProjectTemplates" || commandPrefix === "/ItemTemplates") {
+                        switch (grouping) {
+                            case "Publisher":
+                                return Promise.resolve(catalog.queryPublishersByType(templateTypeFilter)
+                                    .map(i => TreeEntry.parseFolder(i, undefined, commandPrefix, templateTypeFilter)));
+                            case "Category":
+                                return Promise.resolve(catalog.queryCategoriesByType(templateTypeFilter)
+                                    .map(i => TreeEntry.parseFolder(i, undefined, commandPrefix, templateTypeFilter)));
+                            default:
+                                return Promise.resolve(catalog.queryByType(templateTypeFilter)
+                                    .map(i => TreeEntry.parseTemplate(i, commandPrefix)));
+                        }
+                    } else if (commandPrefix.startsWith("/ProjectTemplates") || commandPrefix.startsWith("/ItemTemplates")) {
+                        if (templateGroupFilter) {
+                            switch (grouping) {
+                                case "Publisher":
+                                    return Promise.resolve(catalog.queryByPublisher(templateTypeFilter, templateGroupFilter)
+                                        .map(i => TreeEntry.parseTemplate(i, commandPrefix)));
+                                case "Category":
+                                    return Promise.resolve(catalog.queryByCategory(templateTypeFilter, templateGroupFilter)
+                                        .map(i => TreeEntry.parseTemplate(i, commandPrefix)));
+                            }
+                        }
+                    }
+
                     return;
             }
         }
@@ -58,39 +97,18 @@ class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEntry> {
     }
 
 	private getRootEntries(): TreeEntry[] {
-        const result: TreeEntry[] = [];
-        
-        result.push(new TreeEntry(
-            "Project Templates", 
-            "Folder", 
-            vscode.TreeItemCollapsibleState.Collapsed, 
-            undefined,
-            {
-                command: cs.dynamics.controls.templateTreeView.clickEntry,
-                title: "Project Templates",
-                arguments: ["/ProjectTemplates"]
-            },
-            undefined
-        ));
+        ExtensionConfiguration.notify(cs.dynamics.configuration.templates._namespace, change => {
+            this.refresh();
+        });
 
-        result.push(new TreeEntry(
-            "Item Templates", 
-            "Folder", 
-            vscode.TreeItemCollapsibleState.Collapsed, 
-            undefined,
-            {
-                command: cs.dynamics.controls.templateTreeView.clickEntry,
-                title: "Item Templates",
-                arguments: ["/ItemTemplates"]
-            },
-            undefined
-        ));
-
-        return result;
+        return [
+            TreeEntry.parseFolder("ProjectTemplates", "Project Templates", "", TemplateType.ProjectTemplate), 
+            TreeEntry.parseFolder("ItemTemplates", "Item Templates", "", TemplateType.ItemTemplate)
+        ];
     }
 }
 
-class TreeEntryCache {
+export class TreeEntryCache {
     private static _instance:TreeEntryCache;
 
     private _items:TreeEntry[] = [];
@@ -124,11 +142,43 @@ class TreeEntryCache {
     }
 }
 
-class TreeEntry extends vscode.TreeItem {
+export class TreeEntry extends vscode.TreeItem {
     private static readonly canRefreshEntryTypes:EntryType[] = [ "Folder" ];
-    private static readonly canAddEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+    private static readonly canAddEntryTypes:EntryType[] = [ "Folder" ];
     private static readonly canEditEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
     private static readonly canDeleteEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+    private static readonly canOpenEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+    private static readonly canCreateInWorkspaceTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+
+    static parseFolder(name: string, displayName: string, commandPrefix: string, context?:any): TreeEntry {
+        return new TreeEntry(
+            displayName ? displayName : name, 
+            "Folder",
+            vscode.TreeItemCollapsibleState.Collapsed,
+            undefined,
+            {
+                command: cs.dynamics.controls.templateTreeView.clickEntry,
+                title: name,
+                arguments: [`${commandPrefix}/${name}`]
+            },
+            context
+        );
+    }
+
+    static parseTemplate(item: TemplateItem, commandPrefix: string): TreeEntry {
+        return new TreeEntry(
+            item.displayName, 
+            item.type === TemplateType.ProjectTemplate ? "ProjectTemplate" : item.type === TemplateType.ItemTemplate ? "ItemTemplate" : undefined,
+            vscode.TreeItemCollapsibleState.None,
+            item.description,
+            {
+                command: cs.dynamics.controls.templateTreeView.clickEntry,
+                title: item.description,
+                arguments: [`${commandPrefix}/${item.name}`]
+            },
+            item
+        );
+    }
 
     constructor(
         public label: string,
@@ -185,18 +235,6 @@ class TreeEntry extends vscode.TreeItem {
         return null;
     }
 
-    get folder(): string {
-        if (this.itemType === "Folder" && this.id && this.context && this.context.innerType) {
-            var index = this.id.lastIndexOf(`${this.context.innerType.toString()}/`);
-
-            return this.id.substring(index + this.context.innerType.toString().length + 1);
-        } else if (this.parent && this.parent.itemType === "Folder" && this.parent.id) {
-            return this.parent.folder;
-        }
-
-        return '';
-    }
-
     get capabilities(): string[] {
         const returnValue = [];
         
@@ -204,6 +242,8 @@ class TreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canAddItem", TreeEntry.canAddEntryTypes);
         this.addCapability(returnValue, "canEditItem", TreeEntry.canEditEntryTypes);
         this.addCapability(returnValue, "canDeleteItem", TreeEntry.canDeleteEntryTypes);
+        this.addCapability(returnValue, "canOpenItem", TreeEntry.canOpenEntryTypes);
+        this.addCapability(returnValue, "canCreateInWorkspace", TreeEntry.canCreateInWorkspaceTypes);
 
         return returnValue;
     }

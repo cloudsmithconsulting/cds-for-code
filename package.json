@@ -23,7 +23,7 @@
 	"activationEvents": [
 		"onFileSystem:file",
 		"onView:cs.dynamics.viewContainers.dynamicsExplorer",
-		"onCommand:cs.dynamics.controls.dynamicsTreeView.editConnection",
+		"onView:cs.dynamics.viewContainers.templateExplorer",
 		"onCommand:cs.dynamics.controls.explorer.dotNetBuild",
 		"onCommand:cs.dynamics.controls.explorer.dotNetTest",
 		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFolder",
@@ -31,22 +31,22 @@
 		"onCommand:cs.dynamics.controls.explorer.packSolutionFromFolder",
 		"onCommand:cs.dynamics.controls.explorer.registerPluginFile",
 		"onCommand:cs.dynamics.controls.explorer.unpackSolutionToFolder",
+		"onCommand:cs.dynamics.controls.pluginStep.open",
+		"onCommand:cs.dynamics.controls.svcUtilConfig.configure",
 		"onCommand:cs.dynamics.deployment.addSolutionComponent",
 		"onCommand:cs.dynamics.deployment.removeSolutionComponent",
 		"onCommand:cs.dynamics.deployment.registerPluginAssembly",
 		"onCommand:cs.dynamics.deployment.updateSolutionMapping",
 		"onCommand:cs.dynamics.extension.clearTerminal",
-		"onCommand:cs.dynamics.extension.createProjectFromTemplate",
 		"onCommand:cs.dynamics.extension.createTerminal",
-		"onCommand:cs.dynamics.extension.deleteProjectTemplate",
 		"onCommand:cs.dynamics.extension.downloadRequiredScripts",
-		"onCommand:cs.dynamics.extension.openProjectTemplatesFolder",
-		"onCommand:cs.dynamics.extension.saveProjectAsTemplate",
 		"onCommand:cs.dynamics.powerShell.generateEntities",
 		"onCommand:cs.dynamics.powerShell.packSolution",
 		"onCommand:cs.dynamics.powerShell.unpackSolution",
-		"onCommand:cs.dynamics.controls.pluginStep.open",
-		"onCommand:cs.dynamics.controls.svcUtilConfig.configure"
+		"onCommand:cs.dynamics.templates.createProjectFromTemplate",
+		"onCommand:cs.dynamics.templates.deleteProjectTemplate",
+		"onCommand:cs.dynamics.templates.openProjectTemplatesFolder",
+		"onCommand:cs.dynamics.templates.saveProjectAsTemplate"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -99,24 +99,39 @@
 					"default": "true",
 					"description": "Show the welcome experience for Dynamics when you open a new workspace"
 				},
-				"cs.dynamics.configuration.templates.templatesDirectory": {
-					"type": "string",
-					"description": "Directory to read/store project template folders"
-				},
-				"cs.dynamics.configuration.templates.usePlaceholders": {
-					"type": "boolean",
-					"default": true,
-					"description": "Look for and replace placeholders in template (e.g. #{author})"
+				"cs.dynamics.configuration.templates.placeholders": {
+					"type": "object",
+					"default": {},
+					"description": "List of built in placeholders, in key-value string pairs."
 				},
 				"cs.dynamics.configuration.templates.placeholderRegExp": {
 					"type": "string",
 					"default": "#{([\\s\\S]+?)}",
 					"description": "Regular expression for detecting placeholders (e.g. \"#{([\\s\\S]+?)}\").  The first capture group dictates the placeholder key."
 				},
-				"cs.dynamics.configuration.templates.placeholders": {
-					"type": "object",
-					"default": {},
-					"description": "List of built in placeholders, in key-value string pairs."
+				"cs.dynamics.configuration.templates.templatesDirectory": {
+					"type": "string",
+					"description": "Filesystem path that stores template folders"
+				},
+				"cs.dynamics.configuration.templates.treeViewGroupPreference": {
+					"type": "string",
+					"default": "Publisher",
+					"enum": [
+						"None",
+						"Publisher",
+						"Category"
+					],
+					"enumDescriptions": [
+						"No Grouping",
+						"Group by Publisher",
+						"Group by Category"
+					],
+					"description": "Preference for grouping template items in the Template Explorer"
+				},
+				"cs.dynamics.configuration.templates.usePlaceholders": {
+					"type": "boolean",
+					"default": true,
+					"description": "Look for and replace placeholders in template (e.g. #{author})"
 				}
 			}
 		},
@@ -208,6 +223,16 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.dynamics.controls.explorer.createFromItemTemplate",
+				"title": "New Templated Item",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.createFromProjectTemplate",
+				"title": "New Templated Project",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.controls.explorer.dotNetBuild",
 				"title": "Build project",
 				"category": "UserInterface"
@@ -238,18 +263,38 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.dynamics.controls.explorer.saveTemplateFile",
+				"title": "Save as template",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.explorer.saveTemplateFolder",
+				"title": "Save as template",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
 				"title": "Download Dynamics 365 solution here",
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.dynamics.controls.newWorkspace.hideLoadingMessage",
+				"title": "Show the loading message in the New Workspace screen",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.controls.newWorkspace.open",
 				"title": "Get started in a new workspace",
-				"category": "Dynamics 365 CE"
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.newWorkspace.showLoadingMessage",
+				"title": "Show the loading message in the New Workspace screen",
+				"category": "UserInterface"
 			},
 			{
 				"command": "cs.dynamics.controls.svcUtilConfig.configure",
-				"title": "Configure entity code generation from the CrmSvcUtil",
+				"title": "Configure entity code generation for use with CrmSvcUtil.exe",
 				"category": "Dynamics 365 CE"
 			},
 			{
@@ -291,6 +336,16 @@
 			{
 				"command": "cs.dynamics.controls.templateTreeView.clickEntry",
 				"title": "Click",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.templateTreeView.createInWorkspace",
+				"title": "Create in Workspace",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.templateTreeView.openEntry",
+				"title": "Open in Explorer",
 				"category": "UserInterface"
 			},
 			{
@@ -344,26 +399,6 @@
 				"category": "Dynamics 365 CE"
 			},
 			{
-				"command": "cs.dynamics.extension.openProjectTemplatesFolder",
-				"title": "Open project templates folder",
-				"category": "Dynamics 365 CE"
-			},
-			{
-				"command": "cs.dynamics.extension.saveProjectAsTemplate",
-				"title": "Save folder contents as template",
-				"category": "Dynamics 365 CE"
-			},
-			{
-				"command": "cs.dynamics.extension.deleteProjectTemplate",
-				"title": "Delete project template from library",
-				"category": "Dynamics 365 CE"
-			},
-			{
-				"command": "cs.dynamics.extension.createProjectFromTemplate",
-				"title": "Create project from a template",
-				"category": "Dynamics 365 CE"
-			},
-			{
 				"command": "cs.dynamics.powerShell.unpackSolution",
 				"title": "Download & unpack solution from a registered Dynamics server",
 				"category": "Dynamics 365 CE"
@@ -376,6 +411,31 @@
 			{
 				"command": "cs.dynamics.powerShell.generateEntities",
 				"title": "Generate entity code from metadata on a registered Dynamics server",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.templates.createFromTemplate",
+				"title": "Create new items or projects from a template",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.templates.deleteTemplate",
+				"title": "Delete a template from the catalog",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.templates.editTemplateCatalog",
+				"title": "Open template catalog in code editor",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.templates.openTemplateFolder",
+				"title": "Open template folder in explorer",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.templates.saveTemplate",
+				"title": "Save workspace items as a template in the template catalog",
 				"category": "Dynamics 365 CE"
 			}
 		],
@@ -404,16 +464,6 @@
 		},
 		"menus": {
 			"explorer/context": [
-				{
-					"command": "cs.dynamics.extension.createProjectFromTemplate",
-					"when": "explorerResourceIsFolder",
-					"group": "projectTemplates@1"
-				},
-				{
-					"command": "cs.dynamics.extension.saveProjectAsTemplate",
-					"when": "explorerResourceIsFolder",
-					"group": "projectTemplates@2"
-				},
 				{
 					"command": "cs.dynamics.controls.explorer.dotNetBuild",
 					"when": "explorerResourceIsFolder == true || resourceExtname == .csproj || resourceExtname == .vbproj",
@@ -448,6 +498,26 @@
 					"command": "cs.dynamics.controls.explorer.registerPluginFile",
 					"when": "explorerResourceIsFolder != true && resourceExtname == .csproj || resourceExtname == .vbproj || resourceExtname == .dll",
 					"group": "zzz_azuretools_deploy@3"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.createFromItemTemplate",
+					"when": "explorerResourceIsFolder",
+					"group": "navigation@1"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.createFromProjectTemplate",
+					"when": "explorerResourceIsFolder",
+					"group": "navigation@2"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.saveTemplateFile",
+					"when": "explorerResourceIsFolder != true",
+					"group": "navigation@999"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.saveTemplateFolder",
+					"when": "explorerResourceIsFolder",
+					"group": "navigation@999"
 				}
 			],
 			"view/title": [
@@ -467,7 +537,7 @@
 					"when": "view == cs.dynamics.viewContainers.templateExplorer"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.addEntry",
+					"command": "cs.dynamics.controls.templateTreeView.editEntry",
 					"group": "navigation",
 					"when": "view == cs.dynamics.viewContainers.templateExplorer"
 				}
@@ -539,6 +609,11 @@
 					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
 				},
 				{
+					"command": "cs.dynamics.controls.templateTreeView.createInWorkspace",
+					"group": "group@3",
+					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canCreateInWorkspace)(.*)$/"
+				},
+				{
 					"command": "cs.dynamics.controls.templateTreeView.editEntry",
 					"group": "inline",
 					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
@@ -547,6 +622,11 @@
 					"command": "cs.dynamics.controls.templateTreeView.deleteEntry",
 					"group": "inline",
 					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.openEntry",
+					"group": "group@2",
+					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canOpenItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.templateTreeView.refreshEntry",

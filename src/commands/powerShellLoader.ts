@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 import * as path from 'path';
 import * as cs from '../cs';
 import fetch from 'node-fetch';
@@ -45,20 +44,24 @@ export default class PowerShellLoader implements IWireUpCommands {
 
 		// Array that stores script names
 		const scriptsToFetch = [
-			"CloudSmith.Dynamics365.SampleScripts/Deploy-XrmSolution.ps1",
-			"CloudSmith.Dynamics365.SampleScripts/Generate-XrmEntities.ps1",
-			"CloudSmith.Dynamics365.SampleScripts/Get-XrmSolution.ps1",
-			"CloudSmith.Dynamics365.SampleScripts/Install-Sdk.ps1",
-			"CloudSmith.Dynamics365.SampleScripts/Install-XrmToolbox.ps1",
-			"CloudSmith.Dynamics365.SampleScripts/Setup-EasyRepro.ps1",
-			"CloudSmith.Dynamics365.SampleScripts/runonce-script.ps1"
+			"templates/catalog.json",
+			"src/CloudSmith.Dynamics365.SampleScripts/Deploy-XrmSolution.ps1",
+			"src/CloudSmith.Dynamics365.SampleScripts/Generate-XrmEntities.ps1",
+			"src/CloudSmith.Dynamics365.SampleScripts/Get-XrmSolution.ps1",
+			"src/CloudSmith.Dynamics365.SampleScripts/Install-Sdk.ps1",
+			"src/CloudSmith.Dynamics365.SampleScripts/Install-XrmToolbox.ps1",
+			"src/CloudSmith.Dynamics365.SampleScripts/Setup-EasyRepro.ps1",
+			"src/CloudSmith.Dynamics365.SampleScripts/runonce-script.ps1"
 		];
 
 		const remoteFolderPath:string = Utilities.EnforceTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateSource));
 		const updateChannel:string = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateChannel);
-		
-		return this.checkVersion(remoteFolderPath, updateChannel)
-			.then(version => {
+		let isDownloading = false;
+
+		vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.showLoadingMessage);
+
+		const returnValue = this.checkVersion(remoteFolderPath, updateChannel)
+			.then(async version => {
 				if (version === -1) {
 					vscode.window.showErrorMessage(`The Dynamics 365 extension could not check for updates in the ${updateChannel} channel.  Please check the configuration updateSource and updateChannel to ensure they are set correctly.`);
 
@@ -66,7 +69,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 				}
 
 				const currentVersion = GlobalState.Instance(context).PowerShellScriptVersion;
-				const templateManager = new TemplateManager(context);
+				const templatesFolder = await TemplateManager.getTemplatesFolder();
 
 				// For loop to iterate through the array of scripts
 				for (var i = 0; i < scriptsToFetch.length; i++ ) {
@@ -75,11 +78,20 @@ export default class PowerShellLoader implements IWireUpCommands {
 					// uri containing remote file location
 					const remoteFilePath = `${remoteFolderPath}${fileName}`;
 					// local file location
-					const localFilePath = path.join(scriptsFolder, path.basename(fileName));
+					let localFilePath;
+
+					if (fileName === "templates/catalog.json") {
+						localFilePath = path.join(templatesFolder, "catalog.json");
+					} else { 
+						localFilePath = path.join(scriptsFolder, path.basename(fileName));
+					}
+
 					// see if file exists & if our current version is less than the new version.
-					if ((!fs.existsSync(localFilePath))
+					if ((!FileSystem.exists(localFilePath))
 						|| (!currentVersion || parseFloat(currentVersion.toString()) < version))
 					{
+						isDownloading = true;
+
 						// file doesn't exist, get it from remote location
 						PowerShellLoader.downloadScript(remoteFilePath, localFilePath)
 							.then(localPath => {
@@ -92,8 +104,8 @@ export default class PowerShellLoader implements IWireUpCommands {
 								if (localPath.endsWith("Install-Sdk.ps1")) {
 									const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
 
-									if (!fs.existsSync(sdkInstallPath)) {
-										fs.mkdirSync(sdkInstallPath);
+									if (!FileSystem.exists(sdkInstallPath)) {
+										FileSystem.makeFolderSync(sdkInstallPath);
 									}
 
 									DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
@@ -104,6 +116,8 @@ export default class PowerShellLoader implements IWireUpCommands {
 								}
 							}).then(() => {
 								GlobalState.Instance(context).PowerShellScriptVersion = version;
+							}).then(() => {
+								vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.hideLoadingMessage);
 							});
 					}
 				}
@@ -117,9 +131,11 @@ export default class PowerShellLoader implements IWireUpCommands {
 					// local file location
 					const localFilePath = path.join(appsFolder, path.basename(fileName));
 					// see if file exists & if our current version is less than the new version.
-					if ((!fs.existsSync(localFilePath))
+					if ((!FileSystem.exists(localFilePath))
 						|| (!currentVersion || parseFloat(currentVersion.toString()) < version))
 					{
+						isDownloading = true;
+
 						// file doesn't exist, get it from remote location
 						PowerShellLoader.downloadZip(remoteFilePath, localFilePath)
 							.then(async localPath => {
@@ -127,7 +143,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 
 								// Sample projects are templates
 								if (path.basename(fileName).startsWith("CloudSmith.Dynamics365.Sample")) {
-									extractPath = path.join(await TemplateManager.getTemplatesFolder(), path.basename(fileName).replace(path.extname(fileName), ""));
+									extractPath = path.join(templatesFolder, path.basename(fileName).replace(path.extname(fileName), ""));
 								}
 
 								return { zipFile: localPath, extractPath };
@@ -138,10 +154,18 @@ export default class PowerShellLoader implements IWireUpCommands {
 							})
 							.then(() => {
 								GlobalState.Instance(context).PowerShellScriptVersion = version;
+							}).then(() => {
+								vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.hideLoadingMessage);
 							});
 					}
 				}
 			});
+
+		if (!isDownloading) {
+			vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.hideLoadingMessage);
+		}
+
+		return returnValue;
     }
 
 	//TODO: remove dependence on fetch.
@@ -154,7 +178,7 @@ export default class PowerShellLoader implements IWireUpCommands {
         })
 		.then(res => res.text())
 		.then(body => {
-			fs.writeFileSync(localFilePath, body);
+			FileSystem.writeFileSync(localFilePath, body);
 
 			return localFilePath;
         })
@@ -175,7 +199,7 @@ export default class PowerShellLoader implements IWireUpCommands {
 		})
 		.then(res => res.buffer())
 		.then(body => {
-			fs.writeFileSync(localFilePath, body);
+			FileSystem.writeFileSync(localFilePath, body);
 
 			return localFilePath;
 		})

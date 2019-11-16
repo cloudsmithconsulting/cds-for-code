@@ -56,6 +56,20 @@ export async function copyFolder(source: string, destination: string): Promise<b
 	return Promise.resolve(true);
 }
 
+export async function copyItem(path:string, destination:string): Promise<void> {
+	fs.copyFile(path, destination, (error) => {
+		if (error) {
+			return Promise.reject(error);
+		}
+
+		return Promise.resolve();
+	});
+}
+
+export function copyItemSync(path:string, destination:string): void {
+	fs.copyFileSync(path, destination);
+}
+
 export function exists(path:string): boolean {
 	return fs.existsSync(path);
 }
@@ -166,6 +180,16 @@ async function _walk(dir: string, predicate?:(item:string) => boolean, done?: (e
 				}
 			});
 		});
+	});
+}
+
+export async function deleteItem(path:string): Promise<void> {
+	fs.unlink(path, (error) => {
+		if (error) {
+			return Promise.reject(error);
+		}
+
+		return Promise.resolve();
 	});
 }
 
