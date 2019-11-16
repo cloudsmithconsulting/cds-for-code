@@ -409,6 +409,13 @@ export default class ApiRepository
             .then(response => response.value && response.value.length > 0 ? response.value[0] : null);
     }
 
+    public async removePluginStep(step: any) {
+        return this.webapi.deleteRequest({
+            id: step.sdkmessageprocessingstepid,
+            collection: "sdkmessageprocessingsteps",
+        });
+    }
+
     public removeSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
         return this.getSolutionComponent(componentId, componentType)
             .then(solutionComponent => {
