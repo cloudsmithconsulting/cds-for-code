@@ -332,24 +332,40 @@ export default class ApiRepository
         }
 
         // insert or update secure config
-        if (secureConfig) {
-            if (!secureConfig.sdkmessageprocessingstepsecureconfigid) {
+        if (secureConfig && secureConfig.sdkmessageprocessingstepsecureconfigid) {
+            await this.webapi.updateRequest({
+                id: secureConfig.sdkmessageprocessingstepsecureconfigid,
+                collection: "sdkmessageprocessingstepsecureconfigs",
+                entity: secureConfig
+            });
+        }
+
+        const secureConfigCreate = async (result: any, step: any) => {
+            // we only do this if it needs created
+            if (secureConfig && !secureConfig.sdkmessageprocessingstepsecureconfigid) {
                 await this.webapi.createRequest({
                     collection: "sdkmessageprocessingstepsecureconfigs",
                     entity: secureConfig
                 })
                 .then(result => {
                     // after create, associate it to the plugin step
-                    step["sdkmessageprocessingstepsecureconfigid@odata.bind"] = `sdkmessageprocessingstepsecureconfigs(${result})`;
-                });
-            } else {
-                await this.webapi.updateRequest({
-                    id: secureConfig.sdkmessageprocessingstepsecureconfigid,
-                    collection: "sdkmessageprocessingstepsecureconfigs",
-                    entity: secureConfig
+                    const sdkmessageprocessingstepid = step.sdkmessageprocessingstepid;
+                    // create a smaller step message to associate the record back to the step
+                    step = {
+                        sdkmessageprocessingstepid,
+                        "sdkmessageprocessingstepsecureconfigid@odata.bind": `sdkmessageprocessingstepsecureconfigs(${result})`
+                    };
+                })
+                .then(() => {
+                    return this.webapi.updateRequest({
+                        id: step.sdkmessageprocessingstepid,
+                        collection: "sdkmessageprocessingsteps",
+                        entity: step
+                    });
                 });
             }
-        }
+            return result;
+        };
 
         // see if we need to update or create the step
         if (step.sdkmessageprocessingstepid) {
@@ -357,12 +373,15 @@ export default class ApiRepository
                 id: step.sdkmessageprocessingstepid,
                 collection: "sdkmessageprocessingsteps",
                 entity: step
-            });
+            }).then((result) => secureConfigCreate(result, step));
         } else {
             delete step.sdkmessageprocessingstepid;
             return this.webapi.createRequest({
                 collection: "sdkmessageprocessingsteps",
                 entity: step
+            }).then((result) => {
+                step.sdkmessageprocessingstepid = result;
+                return secureConfigCreate(result, step);
             });
         }
     }
