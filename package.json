@@ -329,6 +329,11 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.dynamics.controls.templateTreeView.createInWorkspace",
+				"title": "Create in Workspace",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.controls.templateTreeView.openEntry",
 				"title": "Open in Explorer",
 				"category": "UserInterface"
@@ -592,6 +597,11 @@
 					"command": "cs.dynamics.controls.templateTreeView.addEntry",
 					"group": "inline",
 					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.createInWorkspace",
+					"group": "group@3",
+					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canCreateInWorkspace)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.templateTreeView.editEntry",

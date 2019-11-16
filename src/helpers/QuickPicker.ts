@@ -355,8 +355,13 @@ export default class QuickPicker {
                     let newUri;
                     let itemType = choice.context[1];
 
+                    if (!itemType && choice.context) {
+                        const stat = FileSystem.stats(choice.context.fsPath);
+                        itemType = stat.isDirectory() ? vscode.FileType.Directory : stat.isFile() ? vscode.FileType.File : stat.isSymbolicLink() ? vscode.FileType.SymbolicLink : vscode.FileType.Unknown;
+                    }
+
                     if (choice.label === `${Octicon.file_symlink_directory} .`) {
-                        return new WorkspaceFileItem(defaultUri.fsPath, defaultUri.fsPath.endsWith("/") ? vscode.FileType.Directory : vscode.FileType.File);
+                        return new WorkspaceFileItem(defaultUri.fsPath, itemType);
                     } else if (choice.label.startsWith(`${Octicon.file_symlink_file} `)) {
                         return new WorkspaceFileItem(choice.context[0], vscode.FileType.SymbolicLink);
                     } else if (choice.label === `${Octicon.file_symlink_directory} ..`) {

@@ -194,6 +194,7 @@ export namespace dynamics {
             public static readonly _namespace:string = "cs.dynamics.controls.templateTreeView";
             public static readonly addEntry:string = `${templateTreeView._namespace}.addEntry`;
             public static readonly clickEntry:string = `${templateTreeView._namespace}.clickEntry`;
+            public static readonly createInWorkspace:string = `${templateTreeView._namespace}.createInWorkspace`;
             public static readonly deleteEntry:string = `${templateTreeView._namespace}.deleteEntry`;
             public static readonly editEntry:string = `${templateTreeView._namespace}.editEntry`;
             public static readonly openEntry:string = `${templateTreeView._namespace}.openEntry`;

@@ -10,6 +10,7 @@ import addEntry from '../commands/cs.dynamics.controls.templateTreeView.addEntry
 import editEntry from '../commands/cs.dynamics.controls.templateTreeView.editEntry';
 import deleteEntry from '../commands/cs.dynamics.controls.templateTreeView.deleteEntry';
 import clickEntry from '../commands/cs.dynamics.controls.templateTreeView.clickEntry';
+import createInWorkspace from '../commands/cs.dynamics.controls.templateTreeView.createInWorkspace';
 import openEntry from '../commands/cs.dynamics.controls.templateTreeView.openEntry';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
 
@@ -29,6 +30,7 @@ export default class TemplateTreeView implements IWireUpCommands {
             vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.editEntry, editEntry.bind(TemplateTreeView.Instance)),
             vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.deleteEntry, deleteEntry.bind(TemplateTreeView.Instance)),
             vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.clickEntry, clickEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.createInWorkspace, createInWorkspace.bind(TemplateTreeView.Instance)),
             vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.openEntry, openEntry.bind(TemplateTreeView.Instance))
         );
     }
@@ -143,9 +145,10 @@ export class TreeEntryCache {
 export class TreeEntry extends vscode.TreeItem {
     private static readonly canRefreshEntryTypes:EntryType[] = [ "Folder" ];
     private static readonly canAddEntryTypes:EntryType[] = [ "Folder" ];
-    private static readonly canEditEntryTypes:EntryType[] = [ "Folder" ];
+    private static readonly canEditEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
     private static readonly canDeleteEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
     private static readonly canOpenEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+    private static readonly canCreateInWorkspaceTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
 
     static parseFolder(name: string, displayName: string, commandPrefix: string, context?:any): TreeEntry {
         return new TreeEntry(
@@ -232,18 +235,6 @@ export class TreeEntry extends vscode.TreeItem {
         return null;
     }
 
-    get folder(): string {
-        if (this.itemType === "Folder" && this.id && this.context && this.context.innerType) {
-            var index = this.id.lastIndexOf(`${this.context.innerType.toString()}/`);
-
-            return this.id.substring(index + this.context.innerType.toString().length + 1);
-        } else if (this.parent && this.parent.itemType === "Folder" && this.parent.id) {
-            return this.parent.folder;
-        }
-
-        return '';
-    }
-
     get capabilities(): string[] {
         const returnValue = [];
         
@@ -252,6 +243,7 @@ export class TreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canEditItem", TreeEntry.canEditEntryTypes);
         this.addCapability(returnValue, "canDeleteItem", TreeEntry.canDeleteEntryTypes);
         this.addCapability(returnValue, "canOpenItem", TreeEntry.canOpenEntryTypes);
+        this.addCapability(returnValue, "canCreateInWorkspace", TreeEntry.canCreateInWorkspaceTypes);
 
         return returnValue;
     }

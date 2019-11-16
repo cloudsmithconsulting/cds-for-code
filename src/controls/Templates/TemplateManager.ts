@@ -61,11 +61,11 @@ export default class TemplateManager implements IWireUpCommands {
      * Populates a workspace folder with the contents of a template
      * @param fsPath current workspace folder to populate
      */
-    async createFromFilesystem(fsPath: string, type:TemplateType) {
+    async createFromFilesystem(fsPath: string, type:TemplateType, template?:TemplateItem) {
         await TemplateManager.createTemplatesDirIfNotExists();
 
         // choose a template
-        let template = await QuickPicker.pickTemplate("Choose a template that you would like to create.", type);
+        template = template || await QuickPicker.pickTemplate("Choose a template that you would like to create.", type);
 
         if (!template) {
             return;
@@ -249,7 +249,11 @@ export default class TemplateManager implements IWireUpCommands {
         const templateRoot = await TemplateManager.getTemplatesFolder();
         
         if (template && template.location) {
-            const templateDir:string = path.isAbsolute(template.location) ? template.location : path.join(templateRoot, template.location);
+            let templateDir:string = path.isAbsolute(template.location) ? template.location : path.join(templateRoot, template.location);
+
+            if (template.type === TemplateType.ItemTemplate) {
+                templateDir = path.join(templateDir, "..");
+            }
 
             FileSystem.openFolderInExplorer(templateDir);
         } else {
@@ -268,7 +272,7 @@ export default class TemplateManager implements IWireUpCommands {
         await TemplateManager.createTemplatesDirIfNotExists();
 
         type = type || TemplateType.ProjectTemplate;
-        const fsBaseName = path.basename(fsPath);
+        const fsBaseName = path.basename(fsPath, path.extname(fsPath));
 
         // prompt user
         return await QuickPicker.ask("Enter the desired template name", undefined, fsBaseName)
@@ -283,7 +287,7 @@ export default class TemplateManager implements IWireUpCommands {
                 const templateDir = path.join(templatesDir, templateName);
     
                 // check if exists
-                if (fs.existsSync(templateDir)) {
+                if (FileSystem.exists(templateDir)) {
                     await QuickPicker.pickBoolean(`Template '${templateName}' aleady exists.  Do you wish to overwrite?`, "Yes", "No")
                         .then(async choice => { 
                             if (choice) { 
@@ -297,22 +301,28 @@ export default class TemplateManager implements IWireUpCommands {
                     FileSystem.makeFolderSync(templateDir);
                 }
 
+                let location:string;
+
                 if (type === TemplateType.ProjectTemplate) {
+                    location = templateDir;
                     // copy current workspace to new template folder
                     await FileSystem.copyFolder(fsPath, templateDir);
                 } else {
-                    await FileSystem.copyItem(fsPath, templateDir);
+                    location = path.join(templateDir, fsBaseName)  + path.extname(fsPath);
+                    FileSystem.copyItemSync(fsPath, location);
                 }
 
                 // Check to see if this template exists in the catalog.
                 const templateCatalog = await TemplateManager.getTemplateCatalog();
                 const categoryList = templateCatalog.queryCategoriesByType();
+
+                location = path.relative(templatesDir, location);
                 let templateItem;
 
                 if (templateCatalog && templateCatalog.query(c => c.where(i => i.name === templateName)).length === 0) {
                     templateItem = new TemplateItem();
                     templateItem.name = templateName;
-                    templateItem.location = path.relative(templatesDir, templateDir);
+                    templateItem.location = location;
                     templateItem.displayName = await QuickPicker.ask(`What should we call the display name for '${templateName}'`, undefined, templateName);
                     templateItem.publisher = await QuickPicker.ask(`Who is the publisher name for '${templateItem.displayName}'`);
                     templateItem.type = type;

@@ -2,8 +2,9 @@ import vscode = require("vscode");
 import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
 import QuickPicker from "../helpers/QuickPicker";
-import { TemplateType } from "../controls/Templates/TemplateManager";
+import { TemplateType, TemplateItem } from "../controls/Templates/TemplateManager";
 import * as FileSystem from "../helpers/FileSystem";
+import * as p from 'path';
 
 /**
  * Command creates a folder or item in your workspace and restores a template from the catalog to it.
@@ -14,8 +15,12 @@ import * as FileSystem from "../helpers/FileSystem";
  * @param {vscode.Uri} [destinationUri] supplied by vscode's contribution on file/explorer.
  * @returns void
  */
-export default async function run(destinationUri?: vscode.Uri, type?:TemplateType): Promise<void> {
+export default async function run(destinationUri?: vscode.Uri, type?:TemplateType, template?:TemplateItem): Promise<void> {
 	let path:string;
+
+    if (template && !type) {
+        type = template.type;
+    }
 
     type = type || await QuickPicker.pickEnum<TemplateType>(TemplateType, "What kind of template would you like to create?");
     if (!type) { return; }
@@ -26,7 +31,18 @@ export default async function run(destinationUri?: vscode.Uri, type?:TemplateTyp
                 path = await QuickPicker.pickWorkspaceFolder(destinationUri, "Select the template folder");
                 break;
             case TemplateType.ItemTemplate:
-                path = await QuickPicker.pickWorkspaceFile(destinationUri, "Select the template item");
+                const fileItem = await QuickPicker.pickWorkspaceAny(destinationUri, "Select the template item");
+                path = fileItem.fsPath;
+
+                if (fileItem.itemType === vscode.FileType.Directory) {
+                    const filename = await QuickPicker.ask("What would you like to call the file that is created?");
+                    if (!filename) { return; }
+
+                    path = p.join(path, filename);
+                } else {
+                    path = fileItem.fsPath;
+                }
+
                 break;
         }
     }
@@ -41,7 +57,7 @@ export default async function run(destinationUri?: vscode.Uri, type?:TemplateTyp
     ExtensionConfiguration.updateConfiguration(cs.dynamics.configuration.templates._namespace);
 
     // create project
-    this.createFromFilesystem(path, type).then(
+    this.createFromFilesystem(path, type, template).then(
         (template) => {
             if (template) {
                 QuickPicker.inform(`Created ${template.type === TemplateType.ProjectTemplate ? "project" : "item"} from template '${template.displayName}'`);

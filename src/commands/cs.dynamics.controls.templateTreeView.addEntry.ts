@@ -10,5 +10,7 @@ import * as vscode from 'vscode';
  * @returns void
  */
 export default async function run(item?: TemplateTreeView.TreeEntry) {
-	return await vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, undefined, item && item.context ? item.context : undefined);
+	return vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, undefined, item && item.context ? item.context : undefined).then(
+		() => vscode.commands.executeCommand(cs.dynamics.controls.templateTreeView.refreshEntry, item)
+	);
 }

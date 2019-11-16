@@ -1,8 +1,6 @@
-import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
 import * as TemplateTreeView from "../views/TemplateTreeView";
 import * as vscode from 'vscode';
-
 /**
  * This command can be invoked by the Template Tree View and edits an item to the TreeView
  * @export run command function
@@ -11,7 +9,5 @@ import * as vscode from 'vscode';
  * @returns void
  */
 export default async function run(item?: TemplateTreeView.TreeEntry) {
-	vscode.commands.executeCommand(cs.dynamics.templates.deleteTemplate, item.context).then(
-		() => vscode.commands.executeCommand(cs.dynamics.controls.templateTreeView.refreshEntry, item.parent)
-	);
+	vscode.commands.executeCommand(cs.dynamics.templates.createFromTemplate, undefined, undefined, item.context);
 }
