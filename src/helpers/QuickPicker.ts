@@ -244,8 +244,12 @@ export default class QuickPicker {
                     QuickPicker.warn(
                         "You do not have any templates configured.  Add some by using the Template Explorer.", 
                         undefined, 
+                        "Add a template from workspace",
+                        async () => vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, undefined, templateType),
                         "Open template folder", 
                         async () => FileSystem.openFolderInExplorer(await TemplateManager.getTemplatesFolder()));
+
+                    return;
                 }
 
                 return choices;
@@ -254,11 +258,11 @@ export default class QuickPicker {
                     return await this.pick(placeHolder, ...items);
                 }
             }).then(async item => {
-                if (item.context) {
+                if (item && item.context) {
                     return item.context;
                 }
-                
-                return await vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, undefined, templateType);
+            
+                return undefined;
             });
     }
 

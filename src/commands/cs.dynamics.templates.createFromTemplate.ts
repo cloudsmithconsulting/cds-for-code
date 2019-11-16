@@ -45,6 +45,8 @@ export default async function run(destinationUri?: vscode.Uri, type?:TemplateTyp
 
                 break;
         }
+    } else {
+        path = destinationUri.fsPath;
     }
 
     if (!path) {

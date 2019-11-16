@@ -80,7 +80,7 @@ export default class TemplateManager implements IWireUpCommands {
         // get template folder
         let templateDir = path.isAbsolute(template.location) ? template.location : path.join(await TemplateManager.getTemplatesFolder(), template.location);
 
-        if (!fs.existsSync(templateDir) || !fs.lstatSync(templateDir).isDirectory()) {
+        if (!fs.existsSync(templateDir)) {
             QuickPicker.error(`Cannot extract this template as ${templateDir} is not a valid path.`);
 
             return undefined;
