@@ -45,7 +45,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         treeProvider.removeConnection(item.config);
                         break;
                     case "PluginStep":
-                        treeProvider.removePluginStep(item.config, item.context);
+                        treeProvider.removePluginStep(item.config, item.context).then(() => treeProvider.refresh(item.parent));
                         break;
                 }
             }) 
@@ -453,7 +453,6 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         if (step && step.sdkmessageprocessingstepid) {
             const api = new ApiRepository(config);
             await api.removePluginStep(step);
-            this.refresh();
         }
     }
 

@@ -409,11 +409,20 @@ export default class ApiRepository
             .then(response => response.value && response.value.length > 0 ? response.value[0] : null);
     }
 
-    public async removePluginStep(step: any) {
-        return this.webapi.deleteRequest({
+    public async removePluginStep(step: any) : Promise<boolean> {
+        await this.webapi.deleteRequest({
             id: step.sdkmessageprocessingstepid,
             collection: "sdkmessageprocessingsteps",
         });
+        // delete the secure config if they have one
+        if (step._sdkmessageprocessingstepsecureconfigid_value) {
+            await this.webapi.deleteRequest({
+                id: step._sdkmessageprocessingstepsecureconfigid_value,
+                collection: "sdkmessageprocessingstepsecureconfigs",
+            });
+        }
+
+        return true;
     }
 
     public removeSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
