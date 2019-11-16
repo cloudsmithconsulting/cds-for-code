@@ -30,7 +30,7 @@ class JsonInspectorView extends View {
     public getHtmlForWebview(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('jsoneditor.min.js');
-        viewRenderer.addScript('jsonInspector.js');
+        viewRenderer.addScript('jsonInspectorView.js');
 
         viewRenderer.addStyleSheet('webviewStyles.css');
         viewRenderer.addStyleSheet('jsoneditor.min.css');
