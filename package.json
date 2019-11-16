@@ -502,22 +502,22 @@
 				{
 					"command": "cs.dynamics.controls.explorer.createFromItemTemplate",
 					"when": "explorerResourceIsFolder",
-					"group": "projectTemplates@1"
+					"group": "navigation@1"
 				},
 				{
 					"command": "cs.dynamics.controls.explorer.createFromProjectTemplate",
 					"when": "explorerResourceIsFolder",
-					"group": "projectTemplates@1"
+					"group": "navigation@2"
 				},
 				{
 					"command": "cs.dynamics.controls.explorer.saveTemplateFile",
 					"when": "explorerResourceIsFolder != true",
-					"group": "projectTemplates@2"
+					"group": "navigation@999"
 				},
 				{
 					"command": "cs.dynamics.controls.explorer.saveTemplateFolder",
 					"when": "explorerResourceIsFolder",
-					"group": "projectTemplates@2"
+					"group": "navigation@999"
 				}
 			],
 			"view/title": [
