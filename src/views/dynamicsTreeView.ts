@@ -40,7 +40,14 @@ export default class DynamicsTreeView implements IWireUpCommands {
                 }            
             }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.deleteEntry, (item: TreeEntry) => { // Match name of command to package.json command
-               treeProvider.removeConnection(item.config);
+                switch(item.itemType) {
+                    case "Connection":
+                        treeProvider.removeConnection(item.config);
+                        break;
+                    case "PluginStep":
+                        treeProvider.removePluginStep(item.config, item.context);
+                        break;
+                }
             }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.inspectEntry, (item: TreeEntry) => { // Match name of command to package.json command
                 vscode.commands.executeCommand(cs.dynamics.controls.jsonInspector.inspect, item.context);
@@ -438,6 +445,14 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         if (removeIndex >= 0) {
             this._connections.splice(removeIndex, 1);
             DiscoveryRepository.saveConnections(this._context, this._connections);
+            this.refresh();
+        }
+    }
+
+    public async removePluginStep(config: DynamicsWebApi.Config, step: any) {
+        if (step && step.sdkmessageprocessingstepid) {
+            const api = new ApiRepository(config);
+            await api.removePluginStep(step);
             this.refresh();
         }
     }
@@ -1240,10 +1255,10 @@ class TreeEntryCache {
 }
 
 class TreeEntry extends vscode.TreeItem {
-    private static readonly canRefreshEntryTypes:EntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Plugins", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries" ];
+    private static readonly canRefreshEntryTypes:EntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries" ];
     private static readonly canAddEntryTypes:EntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries", "PluginType" ];
     private static readonly canEditEntryTypes:EntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
-    private static readonly canDeleteEntryTypes:EntryType[] = [ "Connection" ];
+    private static readonly canDeleteEntryTypes:EntryType[] = [ "Connection", "PluginStep" ];
     private static readonly canInspectEntryTypes:EntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
     private static readonly canUnpackSolutionEntryTypes:EntryType[] = [ "Solution" ];
     private static readonly canMoveSolutionEntryTypes:EntryType[] = [ "Solution" ];
