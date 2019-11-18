@@ -170,8 +170,12 @@ class ProcessCryptography implements ICryptography {
 class LocalCryptography implements ICryptography {
     private readonly symetricCrypto;
 
-    constructor() {
-        this.symetricCrypto = new SymetricCryptography();
+    constructor(key?:Securable) {
+        this.symetricCrypto = new SymetricCryptography(key);
+    }
+
+    get key(): Securable {
+        return this.symetricCrypto.key;
     }
 
     encrypt(value:Securable): ISecureItem {
@@ -194,7 +198,10 @@ export default class Encryption {
      */
     static machine:ICryptography = MachineCryptography.Instance;
     static process:ICryptography = ProcessCryptography.Instance;
-    static local:ICryptography = new LocalCryptography();
+    
+    static local(key?:Securable):ICryptography {
+        return new LocalCryptography(key);
+    }
 
     static createSecureItem(iv:Securable, data:Securable, preferredOutput?:SecureOutput): ISecureItem {
         return SecureItem.from(iv, data, preferredOutput);
