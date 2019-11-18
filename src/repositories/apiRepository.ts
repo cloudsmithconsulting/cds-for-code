@@ -425,6 +425,13 @@ export default class ApiRepository
         return true;
     }
 
+    public removePluginStepImage(stepImage: any) : Promise<any> {
+        return this.webapi.deleteRequest({
+            id: stepImage.sdkmessageprocessingstepimageid,
+            collection: "sdkmessageprocessingstepimages"
+        });
+    }
+
     public removeSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
         return this.getSolutionComponent(componentId, componentType)
             .then(solutionComponent => {
