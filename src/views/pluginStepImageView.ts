@@ -3,6 +3,7 @@ import { View, ViewRenderer } from '../view';
 import * as cs from '../cs';
 import IWireUpCommands from '../wireUpCommand';
 import { DynamicsWebApi } from '../api/Types';
+import ApiRepository from '../repositories/apiRepository';
 
 export default class PluginStepImageViewManager implements IWireUpCommands {
 	public wireUpCommands(context: vscode.ExtensionContext, wsConfig?:vscode.WorkspaceConfiguration) {
@@ -41,11 +42,15 @@ class PluginStepImageView extends View {
         // return rendered html
         return viewRenderer.renderPartialFile('plugin-step-image.html');
     }    
+
+    private saveSdkMessageProcessingStepImage(pluginStepImage: any) {
+        const api = new ApiRepository(this.config);
+    }
     
     public onDidReceiveMessage(instance: PluginStepImageView, message: any): vscode.Event<any> {
         switch (message.command) {
-            case 'load':
-                
+            case 'saveSdkMessageProcessingStep':                
+                instance.saveSdkMessageProcessingStepImage(message.pluginStepImage);
                 return;
         }
     }
