@@ -7,7 +7,9 @@ import QuickPicker from "../helpers/QuickPicker";
 import WebResourceManager from "../controls/WebResources/WebResourceManager";
 import ApiRepository from "../repositories/apiRepository";
 import Utilities from "../helpers/Utilities";
-import SolutionMap from "../config/SolutionMap";
+import SolutionMap, { SolutionWorkspaceMapping } from "../config/SolutionMap";
+import TemplateManager from "../controls/Templates/TemplateManager";
+import Dictionary from "../helpers/Dictionary";
 
 /**
  * This command can be invoked by the Dynamics Explorer tree view and creates or updates a web resource in the local workspace.
@@ -27,12 +29,18 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
         fsPath = fileUri.fsPath;
     }
 
-    fsPath = fsPath || await QuickPicker.pickWorkspaceFolder(undefined, "Choose a location where the web resource will be downloaded");
-
     const solutionMap = SolutionMap.loadFromWorkspace(this.context);
-    
-    webResource = webResource || await QuickPicker.pickDynamicsSolutionComponent(config, undefined, DynamicsWebApi.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
+    let map:SolutionWorkspaceMapping;
+
+    if (fsPath && FileSystem.exists(fsPath)) {
+        const mappings = solutionMap.getByPathOrParent(fsPath);
+        map = mappings.length > 0 ? mappings[0] : undefined;
+    }
+
+    webResource = webResource || await QuickPicker.pickDynamicsSolutionComponent(config, map ? map.solutionId : undefined, DynamicsWebApi.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
     if (!webResource) { return; }
+
+    fsPath = fsPath || await QuickPicker.pickWorkspaceFolder(undefined, "Choose a location where the web resource will be downloaded");
 
     const api = new ApiRepository(config);
 
@@ -46,4 +54,19 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
     }
 
     FileSystem.writeFileSync(fsPath, Utilities.Base64ToBytes(webResource.content));
+
+    if (!map && fsPath && FileSystem.exists(fsPath)) {
+        const mappings = solutionMap.getByPathOrParent(fsPath);
+        map = mappings.length > 0 ? mappings[0] : undefined;
+    }
+
+    if (map) {
+        const dataFile = path.join(fsPath, ".data.xml");
+
+        if (!FileSystem.exists(dataFile)) {
+            TemplateManager.getSystemTemplate("solution.webresource.xml").then(t => {
+                t.apply(new Dictionary<string, string>());
+            });
+        }
+    }
 }

@@ -9,7 +9,7 @@ import IWireUpCommands from "../wireUpCommand";
 import { DynamicsWebApi } from "../api/Types";
 import Utilities from "../helpers/Utilities";
 import { WorkspaceFileSystemWatcher } from "../helpers/FileManager";
-import AddSolutionComponent from "../../out/commands/addSolutionComponent";
+
 
 export default class SolutionMap implements IWireUpCommands
 {
@@ -163,10 +163,30 @@ export default class SolutionMap implements IWireUpCommands
         return this.getBySolutionId(solutionId, organizationId).length > 0;
     }
 
-    getByPath(path:string, organizationId?:string): SolutionWorkspaceMapping[] {
+    getByPath(fsPath:string, organizationId?:string): SolutionWorkspaceMapping[] {
+        if (fsPath.endsWith(path.sep)) {
+            fsPath = fsPath.substring(0, fsPath.length - 1); 
+        }
+
         return new TS.Linq.Enumerator(this.mappings)
-            .where(m => m.path && (m.path === path || m.path === path + "/" || m.path === path + "\\") && (!organizationId || organizationId && m.organizationId === organizationId))
+            .where(m => m.path && (m.path === fsPath || m.path === fsPath + "/" || m.path === fsPath + "\\") && (!organizationId || organizationId && m.organizationId === organizationId))
             .toArray();
+    }
+
+    getByPathOrParent(fsPath:string, organizationId?:string): SolutionWorkspaceMapping[] {
+        const results = this.getByPath(fsPath, organizationId);
+
+        if (results.length > 0) {
+            return results;
+        } else {
+            const parentPath = path.join(fsPath, "../");
+
+            if (parentPath && parentPath !== path.parse(parentPath).root) {
+                return this.getByPathOrParent(parentPath, organizationId);
+            }
+        }
+
+        return [];
     }
 
     getBySolutionId(solutionId:string, organizationId?:string): SolutionWorkspaceMapping[] {

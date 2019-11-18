@@ -383,15 +383,26 @@ export default class TemplateManager implements IWireUpCommands {
             });
     }
 
+    private static _systemTemplates:TemplateItem[];
+
     static async getSystemTemplates(): Promise<TemplateItem[]> {
-        return TemplateManager.getTemplatesFolder(true).then(folder => TemplateManager.getTemplates(folder));
+        if (!TemplateManager._systemTemplates || TemplateManager._systemTemplates.length === 0) { 
+            TemplateManager._systemTemplates = await TemplateManager.getTemplatesFolder(true).then(folder => TemplateManager.getTemplates(folder));
+        }
+
+        return TemplateManager._systemTemplates;
+    }
+
+    static async getSystemTemplate(name:string): Promise<TemplateItem> {
+        return await TemplateManager.getSystemTemplates()
+            .then(templates => templates.find(t => t.name === name));
     }
 
     static async getTemplates(folder: string, mergeWith?:TemplateItem[]):Promise<TemplateItem[]> {
         const templates: TemplateItem[] = [];
         const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
 
-        await this.getTemplateFolderItems()
+        await this.getTemplateFolderItems(folder)
             .then(items => {
                 items.forEach(async (i) => {
                     let templateItem:TemplateItem;
@@ -486,10 +497,13 @@ export default class TemplateManager implements IWireUpCommands {
      * Returns a list of available project templates by reading the Templates Directory.
      * @returns list of templates found
      */
-    private static async getTemplateFolderItems(): Promise<TemplateFilesystemItem[]> {
+    private static async getTemplateFolderItems(folder?: string): Promise<TemplateFilesystemItem[]> {
         await this.createTemplatesDirIfNotExists();
 
-		const templateDir: string = await this.getTemplatesFolder();
+        const templateDir: string = folder || await this.getTemplatesFolder();
+        
+        if (!FileSystem.exists(templateDir)) { return; }
+
         const templates: TemplateFilesystemItem[] = fs.readdirSync(templateDir)
             .map(item => {
                 // ignore hidden folders
@@ -515,18 +529,20 @@ export default class TemplateManager implements IWireUpCommands {
 	 * @throws Error
      */
     private static async createTemplatesDirIfNotExists() {
-		let templatesDir = await TemplateManager.getTemplatesFolder();
-		
-		if (templatesDir && !fs.existsSync(templatesDir)) {
-			try {
-                FileSystem.makeFolderSync(templatesDir, 0o775);
-				fs.mkdirSync(templatesDir);
-			} catch (err) {
-				if (err.code !== 'EEXIST') {
-					throw err;
-				}
-			}
-		}
+        const templatesDirs = [ await TemplateManager.getTemplatesFolder(true), await TemplateManager.getTemplatesFolder(false) ];
+        
+		templatesDirs.forEach(templatesDir => {
+            if (templatesDir && !fs.existsSync(templatesDir)) {
+                try {
+                    FileSystem.makeFolderSync(templatesDir, 0o775);
+                    fs.mkdirSync(templatesDir);
+                } catch (err) {
+                    if (err.code !== 'EEXIST') {
+                        throw err;
+                    }
+                }
+            }
+        });
     }
 
     
@@ -823,8 +839,24 @@ export class TemplateItem {
     categories: string[];
     placeholders: TemplatePlaceholder[] = [];
 
-    async apply(data:string | Buffer, placeholders:Dictionary<string,string>): Promise<string | Buffer> {   
-        return TemplateManager.applyTemplate(this, data, placeholders);
+    async apply(placeholders:Dictionary<string,string>): Promise<string | Buffer> {   
+        if (this.type !== TemplateType.ItemTemplate) {
+            throw new Error("Only item templates may invoke the .Apply function inline");
+        }
+
+        const systemTemplates = await TemplateManager.getDefaultTemplatesDir(true);
+        const userTemplates = await TemplateManager.getDefaultTemplatesDir(true);
+        let fileContents:Buffer;
+
+        if (FileSystem.exists(path.join(systemTemplates, this.location))) {
+            fileContents = fs.readFileSync(path.join(systemTemplates, this.location));
+        } else if (FileSystem.exists(path.join(userTemplates, this.location))) {
+            fileContents = fs.readFileSync(path.join(userTemplates, this.location));
+        } 
+
+        if (fileContents) {
+            return TemplateManager.applyTemplate(this, fileContents, placeholders);
+        }
     }
 }
 
