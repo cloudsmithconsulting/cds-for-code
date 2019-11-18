@@ -57,6 +57,14 @@ export default class TemplateManager implements IWireUpCommands {
         return TemplateManager.getTemplateCatalog().then(c => c.items);
     }
 
+    static async applyTemplate(template:TemplateItem, data:string | Buffer, placeholders:Dictionary<string,string>): Promise<string | Buffer> {
+        const usePlaceholders = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.usePlaceholders, false);
+        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
+        placeholders = placeholders || ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.dynamics.configuration.templates.placeholders, new Dictionary<string, string>());
+
+        return TemplateManager.resolvePlaceholders(data, placeholderRegExp, placeholders, template);
+    }
+
     /**
      * Populates a workspace folder with the contents of a template
      * @param fsPath current workspace folder to populate
@@ -99,7 +107,7 @@ export default class TemplateManager implements IWireUpCommands {
 		const copyInternal = async (source: string, destination: string) => {
             // maybe replace placeholders in filename
             if (usePlaceholders) {
-                destination = await this.resolvePlaceholders(destination, placeholderRegExp, placeholders, template) as string;
+                destination = await TemplateManager.resolvePlaceholders(destination, placeholderRegExp, placeholders, template) as string;
             }
 
 			if (fs.lstatSync(source).isDirectory()) {
@@ -171,8 +179,9 @@ export default class TemplateManager implements IWireUpCommands {
 
                 // get src file contents
                 let fileContents : Buffer = fs.readFileSync(source);
+
                 if (usePlaceholders) {
-                    fileContents = await this.resolvePlaceholders(fileContents, placeholderRegExp, placeholders, template) as Buffer;
+                    fileContents = await TemplateManager.resolvePlaceholders(fileContents, placeholderRegExp, placeholders, template) as Buffer;
                 }
 
                 // ensure directories exist
@@ -245,8 +254,8 @@ export default class TemplateManager implements IWireUpCommands {
         return false;
     }
 
-    static async openTemplateFolderInExplorer(template: TemplateItem): Promise<void> {
-        const templateRoot = await TemplateManager.getTemplatesFolder();
+    static async openTemplateFolderInExplorer(template: TemplateItem, systemTemplate:boolean = false): Promise<void> {
+        const templateRoot = await TemplateManager.getTemplatesFolder(systemTemplate);
         
         if (template && template.location) {
             let templateDir:string = path.isAbsolute(template.location) ? template.location : path.join(templateRoot, template.location);
@@ -347,38 +356,67 @@ export default class TemplateManager implements IWireUpCommands {
      * @returns {Promise<TemplateCatalog>}
      * @memberof TemplateManager
      */
-    static async getTemplateCatalog(filename?:string): Promise<TemplateCatalog> {
-        const templatesDir = await TemplateManager.getDefaultTemplatesDir();
+    static async getTemplateCatalog(filename?:string, getSystemCatalog:boolean = false): Promise<TemplateCatalog> {
+        const templatesDir = await TemplateManager.getDefaultTemplatesDir(getSystemCatalog);
+        let returnCatalog:TemplateCatalog;
+        let defaultCatalog:boolean = true;
+
         if (!filename) { filename = path.join(templatesDir, "catalog.json"); }
 
         if (filename && FileSystem.exists(filename)) {
-            return TemplateCatalog.read(filename);
+            defaultCatalog = false;
+            returnCatalog = await TemplateCatalog.read(filename);
         } else {
-            const catalog = new TemplateCatalog();
-
-            // Load the catalog with all items by default.
-            return await this.getTemplateFolderItems()
-                .then(items => {
-                    items.forEach(async i => {
-                        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
-
-                        if (path.basename(i.name) !== path.basename(filename)) {
-                            const templateItem = new TemplateItem(); 
-        
-                            templateItem.name = i.name;
-                            templateItem.type = i.type === vscode.FileType.Directory ? TemplateType.ProjectTemplate : TemplateType.ItemTemplate;
-                            templateItem.location = i.name;
-                            templateItem.placeholders = this.getPlaceholders(path.join(templatesDir, i.name), placeholderRegExp, i.type === vscode.FileType.Directory).map(i => new TemplatePlaceholder(i));
-                            
-                            catalog.add(templateItem);
-                        }
-                    });
-                }).then(() => {
-                    catalog.save(filename);
-
-                    return catalog;
-                });
+            returnCatalog = new TemplateCatalog();
         }
+
+        // Load the catalog with all items by default.
+        return await TemplateManager.getTemplates(templatesDir, returnCatalog.items)
+            .then(items => {
+                returnCatalog.items = items;
+
+                if (defaultCatalog) {
+                    returnCatalog.save(filename);
+                }
+
+                return returnCatalog;
+            });
+    }
+
+    static async getSystemTemplates(): Promise<TemplateItem[]> {
+        return TemplateManager.getTemplatesFolder(true).then(folder => TemplateManager.getTemplates(folder));
+    }
+
+    static async getTemplates(folder: string, mergeWith?:TemplateItem[]):Promise<TemplateItem[]> {
+        const templates: TemplateItem[] = [];
+        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
+
+        await this.getTemplateFolderItems()
+            .then(items => {
+                items.forEach(async (i) => {
+                    let templateItem:TemplateItem;
+                    const type:TemplateType = i.type === vscode.FileType.Directory ? TemplateType.ProjectTemplate : TemplateType.ItemTemplate;
+
+                    if (mergeWith && mergeWith.length > 0) {
+                        const current = mergeWith.find(m => m.name === i.name && m.type === type);
+
+                        if (current) {
+                            templateItem = current;
+                        }
+                    }
+
+                    templateItem = templateItem || new TemplateItem();
+        
+                    templateItem.name = i.name;
+                    templateItem.type = type;
+                    templateItem.location = templateItem.location || i.name;
+                    templateItem.placeholders = TemplateManager.mergePlaceholders(templateItem.placeholders, this.getPlaceholders(path.join(folder, i.name), placeholderRegExp, i.type === vscode.FileType.Directory).map(i => new TemplatePlaceholder(i)));
+
+                    templates.push(templateItem);
+                });
+            });
+
+        return templates;
     }
 
     /**
@@ -388,11 +426,11 @@ export default class TemplateManager implements IWireUpCommands {
      * Otherwise it will look for the path defined in the extension configuration.
      * @return the templates directory
      */
-    static async getTemplatesFolder(): Promise<string> {
+    static async getTemplatesFolder(systemTemplates:boolean = false): Promise<string> {
         let dir:string = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.templates.templatesDirectory);
 
-        if (!dir) {
-            dir = path.normalize(TemplateManager.getDefaultTemplatesDir());
+        if (systemTemplates || !dir) {
+            dir = path.normalize(TemplateManager.getDefaultTemplatesDir(systemTemplates));
 
             return Promise.resolve(dir);
         }
@@ -408,16 +446,18 @@ export default class TemplateManager implements IWireUpCommands {
      * Returns the default templates location, which is based on the global storage-path directory.
      * @returns default template directory
      */
-    static getDefaultTemplatesDir(): string {
+    static getDefaultTemplatesDir(systemTemplates:boolean = false): string {
+        const templatesFolderName:string = systemTemplates ? "BuiltInTemplates" : "UserTemplates";
+        
         if (!TemplateManager.context) {
             // no workspace, default to OS-specific hard-coded path
              switch (process.platform) {
                  case 'linux':
-                     return path.join(os.homedir(), '.config', 'Code-Templates');
+                     return path.join(os.homedir(), '.config', 'Code-Templates', templatesFolderName);
                  case 'darwin':
-                     return path.join(os.homedir(), 'Library', 'Application Support', 'Code-Templates');
+                     return path.join(os.homedir(), 'Library', 'Application Support', 'Code-Templates', templatesFolderName);
                  case 'win32':
-                     return path.join(process.env.APPDATA!, "CloudSmith", "Code-Templates");
+                     return path.join(process.env.APPDATA!, "CloudSmith", "Code-Templates", templatesFolderName);
                  default:
                      throw Error("Unrecognized operating system: " + process.platform);
              }
@@ -430,13 +470,13 @@ export default class TemplateManager implements IWireUpCommands {
             // extract from log path
             userDataDir = TemplateManager.context.logPath;
             let gggparent = path.dirname(path.dirname(path.dirname(path.dirname(userDataDir))));
-            userDataDir = path.join(gggparent, 'User', 'Templates');
+            userDataDir = path.join(gggparent, 'User', 'Templates', templatesFolderName);
         } else {
             // get parent of parent of parent to remove workspaceStorage/<UID>/<extension>
             // this is done this way to be filesystem agnostic (\ or /)
             let ggparent = path.dirname(path.dirname(path.dirname(userDataDir)));
             // add subfolder 'ProjectTemplates'
-            userDataDir = path.join(ggparent, 'Templates');
+            userDataDir = path.join(ggparent, 'Templates', templatesFolderName);
         }
 
         return userDataDir;
@@ -489,6 +529,7 @@ export default class TemplateManager implements IWireUpCommands {
 		}
     }
 
+    
     private static getPlaceholders(fsItem: string, placeholderRegExp: string, isFolder:boolean): string[] {
         const returnValue: string[] = [];
         const _getPlaceholders:(data: string | Buffer) => string[] = (data) => {
@@ -541,6 +582,21 @@ export default class TemplateManager implements IWireUpCommands {
         return returnValue;
     }
 
+    private static mergePlaceholders(source:TemplatePlaceholder[], merge:TemplatePlaceholder[]) {
+        let merged:TemplatePlaceholder[] = [];
+        
+        merged.push(...source);
+        merge.forEach(i => {
+            const index = merged.findIndex(m => m.name === i.name);
+
+            if (index === -1) {
+                merged.push(i);
+            }
+        });
+
+        return merged;
+    }
+
     /**
      * Replaces any placeholders found within the input data.  Will use a 
      * dictionary of values from the user's workspace settings, or will prompt
@@ -553,7 +609,7 @@ export default class TemplateManager implements IWireUpCommands {
      * @param placeholders dictionary of placeholder key-value pairs
      * @returns the (potentially) modified data, with the same type as the input data 
      */
-    private async resolvePlaceholders(
+    private static async resolvePlaceholders(
         data: string | Buffer, 
         placeholderRegExp: string,
         placeholders: Dictionary<string, string>,
@@ -651,8 +707,8 @@ export class TemplateCatalog {
 
     items: TemplateItem[];
 
-    add(item:TemplateItem): TemplateCatalog {
-        this.items.push(item);
+    add(...items:TemplateItem[]): TemplateCatalog {
+        this.items.push(...items);
 
         return this;
     }
@@ -766,6 +822,10 @@ export class TemplateItem {
     outputPath: string;
     categories: string[];
     placeholders: TemplatePlaceholder[] = [];
+
+    async apply(data:string | Buffer, placeholders:Dictionary<string,string>): Promise<string | Buffer> {   
+        return TemplateManager.applyTemplate(this, data, placeholders);
+    }
 }
 
 export class TemplatePlaceholder {
