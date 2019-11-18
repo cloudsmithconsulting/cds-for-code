@@ -467,7 +467,7 @@ export default class QuickPicker {
         }
     }
 
-    public static async pickDynamicsSolutionComponent(config:DynamicsWebApi.Config, solution:any, componentType:DynamicsWebApi.SolutionComponent, placeHolder?:string): Promise<string> {
+    public static async pickDynamicsSolutionComponent(config:DynamicsWebApi.Config, solution:any, componentType:DynamicsWebApi.SolutionComponent, placeHolder?:string): Promise<{ componentId:string, component:any }> {
         const options:QuickPickOption[] = [];
         const metadataApi = new MetadataRepository(config);
         const api = new ApiRepository(config);
@@ -475,28 +475,27 @@ export default class QuickPicker {
         switch (componentType) {
             case DynamicsWebApi.SolutionComponent.Entity:
                 await metadataApi.retrieveEntities(solution && solution.solutionid ? solution.solutionid : undefined)                
-                    .then(entities => entities.forEach(e => options.push(new QuickPickOption(e["LogicalName"], undefined, undefined, e["MetadataId"]))));
+                    .then(entities => entities.forEach(e => options.push(new QuickPickOption(e["LogicalName"], undefined, undefined, { componentId: e["MetadataId"], component: e }))));
 
                 break;
             case DynamicsWebApi.SolutionComponent.OptionSet:
                 await metadataApi.retrieveOptionSets(solution && solution.solutionid ? solution.solutionid : undefined)                
-                    .then(optionsets => optionsets.forEach(o => options.push(new QuickPickOption(o["Name"], undefined, undefined, o["MetadataId"]))));
+                    .then(optionsets => optionsets.forEach(o => options.push(new QuickPickOption(o["Name"], undefined, undefined, { componentId: o["MetadataId"], component: o }))));
 
                 break;
             case DynamicsWebApi.SolutionComponent.PluginAssembly:
                 await api.retrievePluginAssemblies(solution && solution.solutionid ? solution.solutionid : undefined)                
-                    .then(plugins => plugins.forEach(p => options.push(new QuickPickOption(p["name"], undefined, undefined, p["pluginassemblyid"]))))
-                    .catch(error => console.error(error));
+                    .then(plugins => plugins.forEach(p => options.push(new QuickPickOption(p["name"], undefined, undefined, { componentId: p["pluginassemblyid"], component: p }))));
 
                 break;
             case DynamicsWebApi.SolutionComponent.WebResource:
                 await api.retrieveWebResources(solution && solution.solutionid ? solution.solutionid : undefined)                
-                    .then(webresources => webresources.forEach(w => options.push(new QuickPickOption(w["name"], undefined, undefined, w["webresourceid"]))));
+                    .then(webresources => webresources.forEach(w => options.push(new QuickPickOption(w["name"], undefined, undefined, { componentId: w["webresourceid"], component: w }))));
 
                 break;
             case DynamicsWebApi.SolutionComponent.Workflow:
                 await api.retrieveProcesses(solution && solution.solutionid ? solution.solutionid : undefined)                
-                    .then(processes => processes.forEach(p => options.push(new QuickPickOption(p["name"], undefined, undefined, p["workflowid"]))));
+                    .then(processes => processes.forEach(p => options.push(new QuickPickOption(p["name"], undefined, undefined, { componentId: p["workflowid"], component: p }))));
 
                 break;
         }

@@ -2,9 +2,8 @@ import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
 import { DynamicsWebApi } from '../api/Types';
 import { TS } from 'typescript-linq/TS';
 
-export default class ApiHelper
-{
-    public static isOuterJoin(componentType:DynamicsWebApi.SolutionComponent | DynamicsWebApi.SolutionComponent[]) {
+export default class ApiHelper {
+    static isOuterJoin(componentType:DynamicsWebApi.SolutionComponent | DynamicsWebApi.SolutionComponent[]) {
         const innerFunction = (type:DynamicsWebApi.SolutionComponent) => {
             switch (type) {
                 case DynamicsWebApi.SolutionComponent.Form:
@@ -30,32 +29,21 @@ export default class ApiHelper
         }
     }
 
-    public static filterSolutionComponents(api: DynamicsWebApiClient, response:any, solutionId?:string, componentType?:DynamicsWebApi.SolutionComponent | DynamicsWebApi.SolutionComponent[], keySelector?:(item:unknown) => any): Promise<TS.Linq.Enumerator<any>>
-    {
+    static async getSolutionComponents(api: DynamicsWebApiClient, solutionId?:string, componentType?:DynamicsWebApi.SolutionComponent | DynamicsWebApi.SolutionComponent[]): Promise<any[]> {
+        return this.getSolutionComponentsRaw(api, solutionId, componentType)
+            .then(solution => {
+                 if (solution && solution.solution_solutioncomponent && solution.solution_solutioncomponent.length > 0) {
+                     return solution.solution_solutioncomponent;
+                 }
+
+                 return [];
+            });
+    }
+
+    static async filterSolutionComponents(api: DynamicsWebApiClient, response:any, solutionId?:string, componentType?:DynamicsWebApi.SolutionComponent | DynamicsWebApi.SolutionComponent[], keySelector?:(item:unknown) => any): Promise<TS.Linq.Enumerator<any>> {
         if (solutionId && componentType && keySelector) {
-            const getSolutionComponentFilter = () => {
-                if (!(componentType instanceof Array)) {
-                    return `componenttype eq ${DynamicsWebApi.CodeMappings.getSolutionComponentCode(<DynamicsWebApi.SolutionComponent>componentType)}`;
-                } else {
-                    const filterString = new TS.Linq.Enumerator(<DynamicsWebApi.SolutionComponent[]>componentType)
-                        .select(c => `'${DynamicsWebApi.CodeMappings.getSolutionComponentCode(c)}'`)
-                        .toArray()
-                        .join(",");
-
-                    return `Microsoft.Dynamics.CRM.In(PropertyName='componenttype',PropertyValues=[${filterString}])`;
-                }
-            };
-
-            let solutionQuery:DynamicsWebApi.RetrieveRequest = {
-                collection: "solutions",
-                id: solutionId,
-                select: [ "solutionid", "uniquename" ],
-                expand: [ { property: "solution_solutioncomponent", filter: getSolutionComponentFilter() } ]
-            };    
-            
-            return api.retrieveRequest(solutionQuery).then(solution => {
-                if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0)
-                {
+            return this.getSolutionComponentsRaw(api, solutionId, componentType).then(solution => {
+                if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0) {
                     // For certain components, exclusion from systemcomponent means "select *" (take all subcomponents)
                     if (this.isOuterJoin(componentType)) {
                         return Promise.resolve(new TS.Linq.Enumerator(response.value));
@@ -77,4 +65,29 @@ export default class ApiHelper
             return Promise.resolve(new TS.Linq.Enumerator(response.value));
         }          
     }    
+
+    private static async getSolutionComponentsRaw(api: DynamicsWebApiClient, solutionId?:string, componentType?:DynamicsWebApi.SolutionComponent | DynamicsWebApi.SolutionComponent[]): Promise<any> {
+        const getSolutionComponentFilter = () => {
+            if (!(componentType instanceof Array)) {
+                return `componenttype eq ${DynamicsWebApi.CodeMappings.getSolutionComponentCode(<DynamicsWebApi.SolutionComponent>componentType)}`;
+            } else {
+                const filterString = new TS.Linq.Enumerator(<DynamicsWebApi.SolutionComponent[]>componentType)
+                    .select(c => `'${DynamicsWebApi.CodeMappings.getSolutionComponentCode(c)}'`)
+                    .toArray()
+                    .join(",");
+
+                return `Microsoft.Dynamics.CRM.In(PropertyName='componenttype',PropertyValues=[${filterString}])`;
+            }
+        };
+
+        let solutionQuery:DynamicsWebApi.RetrieveRequest = {
+            collection: "solutions",
+            id: solutionId,
+            select: [ "solutionid", "uniquename" ],
+            expand: [ { property: "solution_solutioncomponent", select: [ "objectid", "componenttype" ], filter: getSolutionComponentFilter() } ]
+        };    
+        
+        return api.retrieveRequest(solutionQuery);
+    }
+
 }

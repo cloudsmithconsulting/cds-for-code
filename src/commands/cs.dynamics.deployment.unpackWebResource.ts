@@ -1,0 +1,49 @@
+import * as cs from "../cs";
+import * as vscode from 'vscode';
+import * as path from 'path';
+import * as FileSystem from "../helpers/FileSystem";
+import { DynamicsWebApi } from "../api/Types";
+import QuickPicker from "../helpers/QuickPicker";
+import WebResourceManager from "../controls/WebResources/WebResourceManager";
+import ApiRepository from "../repositories/apiRepository";
+import Utilities from "../helpers/Utilities";
+import SolutionMap from "../config/SolutionMap";
+
+/**
+ * This command can be invoked by the Dynamics Explorer tree view and creates or updates a web resource in the local workspace.
+ * @export run command function
+ * @param {DynamicsWebApi.Config} [config] The configuration to use when retreiving a web resource
+ * @param {string} [webResourceId] The web resource object as retrieved by WebApi.
+ * @param {vscode.Uri} [fileUri] The Uri of the file to save the web resource as.
+ * @returns void
+ */
+export default async function run(config?:DynamicsWebApi.Config, webResource?:any, fileUri?: vscode.Uri) {
+    config = config || await QuickPicker.pickDynamicsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
+    if (!config) { return; }
+
+    let fsPath:string;
+
+    if (fileUri && fileUri.fsPath) {
+        fsPath = fileUri.fsPath;
+    }
+
+    fsPath = fsPath || await QuickPicker.pickWorkspaceFolder(undefined, "Choose a location where the web resource will be downloaded");
+
+    const solutionMap = SolutionMap.loadFromWorkspace(this.context);
+    
+    webResource = webResource || await QuickPicker.pickDynamicsSolutionComponent(config, undefined, DynamicsWebApi.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
+    if (!webResource) { return; }
+
+    const api = new ApiRepository(config);
+
+    if (!webResource.content && webResource.webresourceid) {
+        // We only got the stub (reference), time to look up the rest.
+        webResource = await api.retrieveWebResource(webResource.webresourceid);
+    }
+
+    if (path.extname(fsPath) === "") {
+        fsPath = path.join(fsPath, webResource.name);
+    }
+
+    FileSystem.writeFileSync(fsPath, Utilities.Base64ToBytes(webResource.content));
+}

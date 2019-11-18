@@ -9,6 +9,7 @@ import IWireUpCommands from "../wireUpCommand";
 import { DynamicsWebApi } from "../api/Types";
 import Utilities from "../helpers/Utilities";
 import { WorkspaceFileSystemWatcher } from "../helpers/FileManager";
+import AddSolutionComponent from "../../out/commands/addSolutionComponent";
 
 export default class SolutionMap implements IWireUpCommands
 {
@@ -292,7 +293,7 @@ export default class SolutionMap implements IWireUpCommands
         });
     }
 
-    private static patternName(pattern:vscode.GlobPattern) {
+    private static patternName(pattern:vscode.GlobPattern): string {
         if (pattern instanceof vscode.RelativePattern) {
             return `SolutionMap:${(<vscode.RelativePattern>pattern).base}${(<vscode.RelativePattern>pattern).pattern}`;
         }
@@ -301,18 +302,36 @@ export default class SolutionMap implements IWireUpCommands
     }
 }
 
-export class SolutionWorkspaceMapping
-{
-    constructor(organizationId?:string, solutionId?:string, path?:string)
-    {
+export class SolutionWorkspaceMapping {
+    constructor(organizationId?:string, solutionId?:string, path?:string) {
         this.organizationId = organizationId;
         this.solutionId = solutionId;
         this.path = path;
     }
 
-    public solutionId:string;
-    public organizationId:string;
-    public path:string;
+    solutionId:string;
+    organizationId:string;
+    path:string;
+
+    getPath(component:DynamicsWebApi.SolutionComponent, item?:any): string {
+        let returnPath:string;
+
+        //TODO: complete this switch statement.
+        switch (component) {
+            case DynamicsWebApi.SolutionComponent.WebResource:
+                returnPath = path.join(this.path, "WebResources");
+
+                if (item && item.name) {
+                    returnPath = path.join(returnPath, item.name);
+                }
+
+                break;
+            default:
+                throw new Error(`SolutionMap cannot determine the local path for solution component '${component.toString()}'`);
+        }
+
+        return returnPath;
+    }
 
     static getSolutionWatcherPattern(mapping:SolutionWorkspaceMapping):vscode.GlobPattern { 
         return new RelativePattern(mapping.path, "*");
