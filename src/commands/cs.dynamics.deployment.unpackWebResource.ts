@@ -66,11 +66,8 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
         const dataFile = fsPath + ".data.xml";
 
         if (!FileSystem.exists(dataFile)) {
-            TemplateManager.getSystemTemplate("solution.webresource.xml").then(async t => {
-                const templateOutput:string | Buffer = await t.apply(undefined, { webresource: webResource });
-
-                FileSystem.writeFileSync(dataFile, templateOutput);
-            });
+            TemplateManager.getSystemTemplate("solution.webresource.xml")
+                .then(async t => FileSystem.writeFileSync(dataFile, await t.apply(undefined, { webresource: webResource })));
         }
     }
 }

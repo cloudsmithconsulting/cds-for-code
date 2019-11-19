@@ -63,7 +63,7 @@ export default class TemplateManager implements IWireUpCommands {
         const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
         placeholders = placeholders || ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.dynamics.configuration.templates.placeholders, new Dictionary<string, string>());
 
-        const resolver = async (data:string | Buffer, placeholderRegExp:RegExp) => {
+        const resolver = (data:string | Buffer, placeholderRegExp:RegExp) => {
             // use custom delimiter #{ }
             _.templateSettings.interpolate = placeholderRegExp;
             // compile the template
@@ -73,7 +73,9 @@ export default class TemplateManager implements IWireUpCommands {
         };
 
         if (usePlaceholders && placeholderRegExp) {
-            return TemplateManager.resolvePlaceholders(data, placeholderRegExp, placeholders, template, object ? [ resolver ] : undefined);
+            const returnValue = await TemplateManager.resolvePlaceholders(data, placeholderRegExp, placeholders, template, object ? [ resolver ] : undefined);
+
+            return returnValue;
         }
     }
 
@@ -642,7 +644,7 @@ export default class TemplateManager implements IWireUpCommands {
         placeholderRegExp: string,
         placeholders: Dictionary<string, string>,
         templateInfo: TemplateItem,
-        resolvers?:((data:string | Buffer, placeholderRegExp:RegExp, template?:TemplateItem, defaultPlaceholders?:Dictionary<string, string>) => Promise<string | Buffer>)[]): Promise<string | Buffer> {
+        resolvers?:((data:string | Buffer, placeholderRegExp:RegExp, template?:TemplateItem, defaultPlaceholders?:Dictionary<string, string>) => string | Buffer)[]): Promise<string | Buffer> {
 
         // resolve each placeholder
         const regex = RegExp(placeholderRegExp, 'g');
@@ -652,7 +654,7 @@ export default class TemplateManager implements IWireUpCommands {
 
         data = await this.defaultResolver(data, regex, templateInfo, placeholders);
 
-        resolvers.forEach(async resolver => {
+        await resolvers.forEach(async resolver => {
             data = await resolver(data, regex, templateInfo, placeholders);
         });
 
@@ -888,7 +890,7 @@ export class TemplateItem {
         } 
 
         if (fileContents) {
-            return TemplateManager.applyTemplate(this, fileContents, placeholders, object);
+            return await TemplateManager.applyTemplate(this, fileContents, placeholders, object);
         }
     }
 }
