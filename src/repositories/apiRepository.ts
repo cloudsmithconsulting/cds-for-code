@@ -93,12 +93,15 @@ export default class ApiRepository {
         }
 
     async retrieveWebResources(solutionId?:string, folder?:string) : Promise<any[]> {
+        const selectAll:boolean = folder && folder === "*";
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "webresourceset",
             select: ['webresourceid', "name", "displayname", "webresourcetype", "solutionid"],
-            filter: "(not contains(name, '/'))",
+            filter: !selectAll ? "(not contains(name, '/'))" : "",
             orderBy: ["displayname"]
         };
+
+        folder = !selectAll ? folder : undefined;
 
         let depth: number = 0;
 
@@ -112,7 +115,12 @@ export default class ApiRepository {
             const components = (await ApiHelper.getSolutionComponents(this.webapi, solutionId, DynamicsWebApi.SolutionComponent.WebResource)).map(c => `'${c["objectid"]}'`).join(",");
 
             if (!Utilities.IsNullOrEmpty(components)) {
-                request.filter += ` and Microsoft.Dynamics.CRM.In(PropertyName='webresourceid',PropertyValues=[${components}])`;
+                if (!Utilities.IsNullOrEmpty(request.filter)) {
+                    request.filter += " and";
+                }
+
+                request.filter += ` Microsoft.Dynamics.CRM.In(PropertyName='webresourceid',PropertyValues=[${components}])`;
+                request.filter = request.filter.trim();
             } else {
                 return Promise.resolve([]);
             }
@@ -120,9 +128,13 @@ export default class ApiRepository {
 
         return this.webapi.retrieveAllRequest(request)
             .then(response => {
-                return new TS.Linq.Enumerator(response.value)
+                if (!selectAll) {
+                    return new TS.Linq.Enumerator(response.value)
                     .where(w => (w["name"] === folder || w["name"].split("/").length === depth + 1))
                     .toArray();
+                } else {
+                    return response.value;
+                }
             });
     }
 

@@ -489,7 +489,7 @@ export default class QuickPicker {
 
                 break;
             case DynamicsWebApi.SolutionComponent.WebResource:
-                await api.retrieveWebResources(solution && solution.solutionid ? solution.solutionid : undefined)                
+                await api.retrieveWebResources(solution && solution.solutionid ? solution.solutionid : undefined, "*")                
                     .then(webresources => webresources.forEach(w => options.push(new QuickPickOption(w["name"], undefined, undefined, { componentId: w["webresourceid"], component: w }))));
 
                 break;
