@@ -10,6 +10,7 @@ import { DynamicsWebApi } from "../api/Types";
 import Utilities from "../helpers/Utilities";
 import { WorkspaceFileSystemWatcher } from "../helpers/FileManager";
 
+
 export default class SolutionMap implements IWireUpCommands
 {
     public constructor (map?:SolutionMap) {
@@ -162,10 +163,30 @@ export default class SolutionMap implements IWireUpCommands
         return this.getBySolutionId(solutionId, organizationId).length > 0;
     }
 
-    getByPath(path:string, organizationId?:string): SolutionWorkspaceMapping[] {
+    getByPath(fsPath:string, organizationId?:string): SolutionWorkspaceMapping[] {
+        if (fsPath.endsWith(path.sep)) {
+            fsPath = fsPath.substring(0, fsPath.length - 1); 
+        }
+
         return new TS.Linq.Enumerator(this.mappings)
-            .where(m => m.path && (m.path === path || m.path === path + "/" || m.path === path + "\\") && (!organizationId || organizationId && m.organizationId === organizationId))
+            .where(m => m.path && (m.path === fsPath || m.path === fsPath + "/" || m.path === fsPath + "\\") && (!organizationId || organizationId && m.organizationId === organizationId))
             .toArray();
+    }
+
+    getByPathOrParent(fsPath:string, organizationId?:string): SolutionWorkspaceMapping[] {
+        const results = this.getByPath(fsPath, organizationId);
+
+        if (results.length > 0) {
+            return results;
+        } else {
+            const parentPath = path.join(fsPath, "../");
+
+            if (parentPath && parentPath !== path.parse(parentPath).root) {
+                return this.getByPathOrParent(parentPath, organizationId);
+            }
+        }
+
+        return [];
     }
 
     getBySolutionId(solutionId:string, organizationId?:string): SolutionWorkspaceMapping[] {
@@ -292,7 +313,7 @@ export default class SolutionMap implements IWireUpCommands
         });
     }
 
-    private static patternName(pattern:vscode.GlobPattern) {
+    private static patternName(pattern:vscode.GlobPattern): string {
         if (pattern instanceof vscode.RelativePattern) {
             return `SolutionMap:${(<vscode.RelativePattern>pattern).base}${(<vscode.RelativePattern>pattern).pattern}`;
         }
@@ -301,18 +322,36 @@ export default class SolutionMap implements IWireUpCommands
     }
 }
 
-export class SolutionWorkspaceMapping
-{
-    constructor(organizationId?:string, solutionId?:string, path?:string)
-    {
+export class SolutionWorkspaceMapping {
+    constructor(organizationId?:string, solutionId?:string, path?:string) {
         this.organizationId = organizationId;
         this.solutionId = solutionId;
         this.path = path;
     }
 
-    public solutionId:string;
-    public organizationId:string;
-    public path:string;
+    solutionId:string;
+    organizationId:string;
+    path:string;
+
+    getPath(component:DynamicsWebApi.SolutionComponent, item?:any): string {
+        let returnPath:string;
+
+        //TODO: complete this switch statement.
+        switch (component) {
+            case DynamicsWebApi.SolutionComponent.WebResource:
+                returnPath = path.join(this.path, "WebResources");
+
+                if (item && item.name) {
+                    returnPath = path.join(returnPath, item.name);
+                }
+
+                break;
+            default:
+                throw new Error(`SolutionMap cannot determine the local path for solution component '${component.toString()}'`);
+        }
+
+        return returnPath;
+    }
 
     static getSolutionWatcherPattern(mapping:SolutionWorkspaceMapping):vscode.GlobPattern { 
         return new RelativePattern(mapping.path, "*");

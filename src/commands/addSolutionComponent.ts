@@ -31,9 +31,10 @@ export default class AddSolutionComponent implements IWireUpCommands {
                 if (!componentType) { return; }
                 
                 if (Utilities.IsNullOrEmpty(componentId)) { 
-                    componentId = await QuickPicker.pickDynamicsSolutionComponent(config, undefined, componentType, "Choose a component to add");
+                    const pickResponse = await QuickPicker.pickDynamicsSolutionComponent(config, solution, componentType, "Choose a component to add");
+                    if (!pickResponse) { return; }
 
-                    if (Utilities.IsNullOrEmpty(componentId)) { return; }
+                    componentId = pickResponse.componentId;
                 }
 
                 addRequiredComponents = addRequiredComponents || await QuickPicker.pickBoolean("Add all dependent components?", "Yes", "No");

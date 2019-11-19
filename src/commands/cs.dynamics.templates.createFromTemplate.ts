@@ -2,7 +2,7 @@ import vscode = require("vscode");
 import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
 import QuickPicker from "../helpers/QuickPicker";
-import { TemplateType, TemplateItem } from "../controls/Templates/TemplateManager";
+import { TemplateItem, TemplateType } from "../controls/Templates/Types";
 import * as FileSystem from "../helpers/FileSystem";
 import * as p from 'path';
 

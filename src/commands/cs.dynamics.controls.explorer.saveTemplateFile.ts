@@ -1,6 +1,6 @@
 import * as cs from "../cs";
 import * as vscode from 'vscode';
-import { TemplateType } from "../controls/Templates/TemplateManager";
+import { TemplateType } from "../controls/Templates/Types";
 
 /**
  * This command can be invoked by the Explorer file viewer and saves a file in your workspace as a template

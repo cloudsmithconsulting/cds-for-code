@@ -1,10 +1,13 @@
 import * as vscode from 'vscode';
-import { TS } from 'typescript-linq/TS';
 import * as cs from '../cs';
+import { TS } from 'typescript-linq/TS';
 import IWireUpCommands from '../wireUpCommand';
 import { ExtensionIconThemes } from '../commands/iconLoader';
+import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import Utilities from '../helpers/Utilities';
-import TemplateManager, { TemplateItem, TemplateType } from '../controls/Templates/TemplateManager';
+import TemplateManager from '../controls/Templates/TemplateManager';
+import { TemplateItem, TemplateType } from "../controls/Templates/Types";
+
 import refreshEntry from '../commands/cs.dynamics.controls.templateTreeView.refreshEntry';
 import addEntry from '../commands/cs.dynamics.controls.templateTreeView.addEntry';
 import editEntry from '../commands/cs.dynamics.controls.templateTreeView.editEntry';
@@ -12,7 +15,6 @@ import deleteEntry from '../commands/cs.dynamics.controls.templateTreeView.delet
 import clickEntry from '../commands/cs.dynamics.controls.templateTreeView.clickEntry';
 import createInWorkspace from '../commands/cs.dynamics.controls.templateTreeView.createInWorkspace';
 import openEntry from '../commands/cs.dynamics.controls.templateTreeView.openEntry';
-import ExtensionConfiguration from '../config/ExtensionConfiguration';
 
 export default class TemplateTreeView implements IWireUpCommands {
     public static Instance:TemplateTreeViewProvider;
@@ -50,6 +52,8 @@ export class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEnt
 	}
 
 	public async getChildren(element?: TreeEntry): Promise<TreeEntry[]> {
+        let returnValue:TreeEntry[];
+
         if (element && element.itemType) {
             const commandPrefix:string = Utilities.RemoveTrailingSlash(((element.command && element.command.arguments) || '').toString());
             const catalog = await TemplateManager.getTemplateCatalog();
@@ -63,30 +67,37 @@ export class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEnt
                     if (commandPrefix === "/ProjectTemplates" || commandPrefix === "/ItemTemplates") {
                         switch (grouping) {
                             case "Publisher":
-                                return Promise.resolve(catalog.queryPublishersByType(templateTypeFilter)
-                                    .map(i => TreeEntry.parseFolder(i, undefined, commandPrefix, templateTypeFilter)));
+                                 returnValue = catalog.queryPublishersByType(templateTypeFilter)
+                                    .map(i => TreeEntry.parseFolder(i, undefined, commandPrefix, templateTypeFilter));
+                                break;
                             case "Category":
-                                return Promise.resolve(catalog.queryCategoriesByType(templateTypeFilter)
-                                    .map(i => TreeEntry.parseFolder(i, undefined, commandPrefix, templateTypeFilter)));
+                                returnValue = catalog.queryCategoriesByType(templateTypeFilter)
+                                    .map(i => TreeEntry.parseFolder(i, undefined, commandPrefix, templateTypeFilter));
+                                break;
                             default:
-                                return Promise.resolve(catalog.queryByType(templateTypeFilter)
-                                    .map(i => TreeEntry.parseTemplate(i, commandPrefix)));
+                                returnValue = catalog.queryByType(templateTypeFilter)
+                                    .map(i => TreeEntry.parseTemplate(i, commandPrefix));
+                                break;
                         }
                     } else if (commandPrefix.startsWith("/ProjectTemplates") || commandPrefix.startsWith("/ItemTemplates")) {
                         if (templateGroupFilter) {
                             switch (grouping) {
                                 case "Publisher":
-                                    return Promise.resolve(catalog.queryByPublisher(templateTypeFilter, templateGroupFilter)
-                                        .map(i => TreeEntry.parseTemplate(i, commandPrefix)));
+                                    returnValue = catalog.queryByPublisher(templateTypeFilter, templateGroupFilter)
+                                        .map(i => TreeEntry.parseTemplate(i, commandPrefix));
+                                    break;
                                 case "Category":
-                                    return Promise.resolve(catalog.queryByCategory(templateTypeFilter, templateGroupFilter)
-                                        .map(i => TreeEntry.parseTemplate(i, commandPrefix)));
+                                    returnValue = catalog.queryByCategory(templateTypeFilter, templateGroupFilter)
+                                        .map(i => TreeEntry.parseTemplate(i, commandPrefix));
+                                    break;
                             }
                         }
                     }
-
-                    return;
             }
+        }
+
+        if (returnValue) {
+            return Promise.resolve(returnValue);
         }
 
         return Promise.resolve(this.getRootEntries());
