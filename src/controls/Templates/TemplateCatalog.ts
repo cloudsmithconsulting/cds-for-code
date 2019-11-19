@@ -44,7 +44,8 @@ export class TemplateCatalog {
     queryPublishersByType(type?: TemplateType): string[] {
         return this.query(c => c
             .where(i => type ? i.type === type : i.type === i.type)
-            .select(i => i.publisher)
+            .select(i => i.publisher ? i.publisher : "")
+            .where(s => s !== "")
             .distinct());
     }
 

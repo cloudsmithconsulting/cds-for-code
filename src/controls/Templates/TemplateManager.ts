@@ -428,12 +428,12 @@ export default class TemplateManager implements IWireUpCommands {
             .then(items => {
                 items.forEach(async (i) => {
                     let templateItem:TemplateItem;
-                    const type:TemplateType = i.type === vscode.FileType.Directory ? TemplateType.ProjectTemplate : TemplateType.ItemTemplate;
+                    let type:TemplateType;
                     const isExclusion:boolean = exclusions && exclusions.length > 0 ? exclusions.findIndex(e => e === i.name) > -1 ? true : false : false;
 
                     if (!isExclusion) {
                         if (mergeWith && mergeWith.length > 0) {
-                            const current = mergeWith.find(m => m.name === i.name && m.type === type);
+                            const current = mergeWith.find(m => m.name === i.name);
 
                             if (current) {
                                 templateItem = current;
@@ -441,8 +441,9 @@ export default class TemplateManager implements IWireUpCommands {
                         }
 
                         templateItem = templateItem || new TemplateItem();
-            
-                        templateItem.name = i.name;
+                        type = templateItem.type ? templateItem.type : i.type === vscode.FileType.Directory ? TemplateType.ProjectTemplate : TemplateType.ItemTemplate;
+
+                        templateItem.name = templateItem.name || i.name;
                         templateItem.type = type;
                         templateItem.location = templateItem.location || i.name;
                         templateItem.placeholders = TemplateManager.mergePlaceholders(templateItem.placeholders, this.getPlaceholders(path.join(folder, i.name), placeholderRegExp, i.type === vscode.FileType.Directory).map(i => new TemplatePlaceholder(i)));
@@ -570,7 +571,6 @@ export default class TemplateManager implements IWireUpCommands {
         });
     }
 
-    
     private static getPlaceholders(fsItem: string, placeholderRegExp: string, isFolder:boolean): string[] {
         const returnValue: string[] = [];
         const _getPlaceholders:(data: string | Buffer) => string[] = (data) => {
@@ -626,7 +626,10 @@ export default class TemplateManager implements IWireUpCommands {
     private static mergePlaceholders(source:TemplatePlaceholder[], merge:TemplatePlaceholder[]) {
         let merged:TemplatePlaceholder[] = [];
         
-        merged.push(...source);
+        if (source) { 
+            merged.push(...source);
+        }
+
         merge.forEach(i => {
             const index = merged.findIndex(m => m.name === i.name);
 
