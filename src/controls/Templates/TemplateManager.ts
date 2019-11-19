@@ -5,6 +5,7 @@ import * as path from 'path';
 import * as os from 'os';
 import * as FileSystem from '../../helpers/FileSystem';
 import * as EnvironmentVariables from '../../helpers/EnvironmentVariables';
+import * as _ from 'lodash';
 import { TS } from 'typescript-linq/TS';
 import ExtensionConfiguration from '../../config/ExtensionConfiguration';
 import IWireUpCommands from '../../wireUpCommand';
@@ -57,12 +58,23 @@ export default class TemplateManager implements IWireUpCommands {
         return TemplateManager.getTemplateCatalog().then(c => c.items);
     }
 
-    static async applyTemplate(template:TemplateItem, data:string | Buffer, placeholders:Dictionary<string,string>): Promise<string | Buffer> {
+    static async applyTemplate(template:TemplateItem, data:string | Buffer, placeholders?:Dictionary<string, string>, object?:any): Promise<string | Buffer> {
         const usePlaceholders = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.usePlaceholders, false);
         const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
         placeholders = placeholders || ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.dynamics.configuration.templates.placeholders, new Dictionary<string, string>());
 
-        return TemplateManager.resolvePlaceholders(data, placeholderRegExp, placeholders, template);
+        const resolver = async (data:string | Buffer, placeholderRegExp:RegExp) => {
+            // use custom delimiter #{ }
+            _.templateSettings.interpolate = placeholderRegExp;
+            // compile the template
+            const compiled = _.template(data.toString());
+
+            return compiled(object);
+        };
+
+        if (usePlaceholders && placeholderRegExp) {
+            return TemplateManager.resolvePlaceholders(data, placeholderRegExp, placeholders, template, object ? [ resolver ] : undefined);
+        }
     }
 
     /**
@@ -629,49 +641,70 @@ export default class TemplateManager implements IWireUpCommands {
         data: string | Buffer, 
         placeholderRegExp: string,
         placeholders: Dictionary<string, string>,
-        templateInfo: TemplateItem): Promise<string | Buffer> {
+        templateInfo: TemplateItem,
+        resolvers?:((data:string | Buffer, placeholderRegExp:RegExp, template?:TemplateItem, defaultPlaceholders?:Dictionary<string, string>) => Promise<string | Buffer>)[]): Promise<string | Buffer> {
 
         // resolve each placeholder
         const regex = RegExp(placeholderRegExp, 'g');
 
-        // collect set of expressions and their replacements
-        let match;
-        let nmatches = 0;
-        let str: string;
+        placeholders = placeholders || new Dictionary<string, string>();
+        resolvers = resolvers || [];
+
+        data = await this.defaultResolver(data, regex, templateInfo, placeholders);
+
+        resolvers.forEach(async resolver => {
+            data = await resolver(data, regex, templateInfo, placeholders);
+        });
+
+        return data;
+    }
+
+    private static async defaultResolver(data:string | Buffer, placeholderRegExp:RegExp, template?:TemplateItem, defaultPlaceholders?:Dictionary<string, string>): Promise<string | Buffer> {
         let encoding: string = "utf8";
+        let isBuffer: boolean = false;
 
         if (Buffer.isBuffer(data)) {
             // get default encoding
             encoding = vscode.workspace.getConfiguration('files').get("files.encoding", "utf8");
+            isBuffer = true;
 
             try {
-                str = data.toString(encoding);
+                data = data.toString(encoding);
             } catch(error) {
                 // cannot decipher text from encoding, assume raw data
                 return data;
             }
         } else {
-            str = data;
+            data = data;
         }
 
-        while (match = regex.exec(str)) {
+        let match;
+        let nmatches = 0;
+        let placeholders = defaultPlaceholders || new Dictionary<string, string>();
+
+        while (match = placeholderRegExp.exec(<string>data)) {
             let key = match[1];
             let val : string | undefined = placeholders[key];
             let placeholderItem;
 
-            if (templateInfo.placeholders && templateInfo.placeholders.length > 0) {
-                placeholderItem = <TemplatePlaceholder>templateInfo.placeholders.find(p => p.name === key);
+            if (template.placeholders && template.placeholders.length > 0) {
+                placeholderItem = <TemplatePlaceholder>template.placeholders.find(p => p.name === key);
             }
 
             let attempts:number = 0;
             let cancel:boolean = false;
+
+            // This parser can't compile object expressions.
+            if (key && key.indexOf(".") > -1) {
+                continue;
+            }
 
             while ((!val && attempts === 0) || (!val && placeholderItem && placeholderItem.required) || !cancel) {
                 if (attempts >= 1) {
                     await QuickPicker.inform(`The template requires a response for the placeholder '${match[0]}'.`, false, "Try Again", undefined, "Cancel", () => cancel = true);
                     
                     if (cancel) {
-                        const error = new Error(`The user has requested to cancel template processing${templateInfo ? " for '" + templateInfo.name : "'"}`);
+                        const error = new Error(`The user has requested to cancel template processing${template ? " for '" + template.name : "'"}`);
                         error.name = cs.dynamics.errors.userCancelledAction;
 
                         throw error;
@@ -691,20 +724,20 @@ export default class TemplateManager implements IWireUpCommands {
         }
 
         // reset regex
-        regex.lastIndex = 0;
+        placeholderRegExp.lastIndex = 0;
 
         // compute output
         let out : string | Buffer = data;
         
         if (nmatches > 0) {
             // replace placeholders in string
-            str = str.replace(regex, (match, key) => placeholders[key] || match);
+            data = data.replace(placeholderRegExp, (match, key) => placeholders[key] || match);
 
             // if input was a buffer, re-encode to buffer
-            if (Buffer.isBuffer(data)) {
-                out = Buffer.from(str, encoding);
+            if (isBuffer) {
+                out = Buffer.from(data, encoding);
             } else {
-                out = str;
+                out = data;
             }
         }
 
@@ -839,7 +872,7 @@ export class TemplateItem {
     categories: string[];
     placeholders: TemplatePlaceholder[] = [];
 
-    async apply(placeholders:Dictionary<string,string>): Promise<string | Buffer> {   
+    async apply(placeholders:Dictionary<string,string>, object?:any): Promise<string | Buffer> {   
         if (this.type !== TemplateType.ItemTemplate) {
             throw new Error("Only item templates may invoke the .Apply function inline");
         }
@@ -855,7 +888,7 @@ export class TemplateItem {
         } 
 
         if (fileContents) {
-            return TemplateManager.applyTemplate(this, fileContents, placeholders);
+            return TemplateManager.applyTemplate(this, fileContents, placeholders, object);
         }
     }
 }

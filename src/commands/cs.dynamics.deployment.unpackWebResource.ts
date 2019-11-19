@@ -34,6 +34,7 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
 
     if (fsPath && FileSystem.exists(fsPath)) {
         const mappings = solutionMap.getByPathOrParent(fsPath);
+        
         map = mappings.length > 0 ? mappings[0] : undefined;
     }
 
@@ -57,15 +58,18 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
 
     if (!map && fsPath && FileSystem.exists(fsPath)) {
         const mappings = solutionMap.getByPathOrParent(fsPath);
+
         map = mappings.length > 0 ? mappings[0] : undefined;
     }
 
     if (map) {
-        const dataFile = path.join(fsPath, ".data.xml");
+        const dataFile = fsPath + ".data.xml";
 
         if (!FileSystem.exists(dataFile)) {
-            TemplateManager.getSystemTemplate("solution.webresource.xml").then(t => {
-                t.apply(new Dictionary<string, string>());
+            TemplateManager.getSystemTemplate("solution.webresource.xml").then(async t => {
+                const templateOutput:string | Buffer = await t.apply(undefined, { webresource: webResource });
+
+                FileSystem.writeFileSync(dataFile, templateOutput);
             });
         }
     }
