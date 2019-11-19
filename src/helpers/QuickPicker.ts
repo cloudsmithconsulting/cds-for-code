@@ -10,7 +10,8 @@ import Dictionary from "./Dictionary";
 import * as FileSystem from "../helpers/FileSystem";
 import { Octicon } from "../core/Octicon";
 import * as path from 'path';
-import TemplateManager, { TemplateItem, TemplateType, TemplateCatalog } from "../controls/Templates/TemplateManager";
+import TemplateManager from "../controls/Templates/TemplateManager";
+import { TemplateItem, TemplateType } from "../controls/Templates/Types";
 
 export default class QuickPicker {
     /**

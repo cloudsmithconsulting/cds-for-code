@@ -1,8 +1,7 @@
 import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
 import QuickPicker from "../helpers/QuickPicker";
-import { TemplateItem } from "../controls/Templates/TemplateManager";
-import * as FileSystem from "../helpers/FileSystem";
+import { TemplateItem } from "../controls/Templates/Types";
 
 /**
  * Main command to delete an existing template.

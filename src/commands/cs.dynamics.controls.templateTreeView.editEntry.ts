@@ -1,7 +1,7 @@
 import * as cs from "../cs";
 import * as TemplateTreeView from "../views/TemplateTreeView";
 import * as vscode from 'vscode';
-import { TemplateType } from "../controls/Templates/TemplateManager";
+import { TemplateType } from "../controls/Templates/Types";
 import TemplateManager from "../controls/Templates/TemplateManager";
 import * as path from 'path';
 import QuickPicker from "../helpers/QuickPicker";
@@ -36,8 +36,9 @@ export default async function run(item?: TemplateTreeView.TreeEntry) {
 				folder = path.join(folder, item.context.location);
 			}
 
-			if (vscode.workspace.workspaceFolders.length === 0 
-				&& await QuickPicker.pickBoolean("Would you like to open this project template in a new workspace folder?", "Yes", "No")) {
+			const existingFolder = vscode.workspace.workspaceFolders.find(f => f.uri.fsPath === folder);
+
+			if (!existingFolder && await QuickPicker.pickBoolean("Would you like to open this project template in a new workspace folder?", "Yes", "No")) {
 				vscode.workspace.updateWorkspaceFolders(0, 0, { uri: vscode.Uri.file(folder), name: item.context.name });
 			}
 		}

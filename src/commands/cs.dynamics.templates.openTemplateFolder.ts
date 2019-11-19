@@ -1,6 +1,4 @@
-import ExtensionConfiguration from "../config/ExtensionConfiguration";
-import * as cs from "../cs";
-import { TemplateItem } from "../controls/Templates/TemplateManager";
+import { TemplateItem } from "../controls/Templates/Types";
 import TemplateManager from "../controls/Templates/TemplateManager";
 
 /**

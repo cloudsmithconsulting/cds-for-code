@@ -1,10 +1,13 @@
 import * as vscode from 'vscode';
-import { TS } from 'typescript-linq/TS';
 import * as cs from '../cs';
+import { TS } from 'typescript-linq/TS';
 import IWireUpCommands from '../wireUpCommand';
 import { ExtensionIconThemes } from '../commands/iconLoader';
+import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import Utilities from '../helpers/Utilities';
-import TemplateManager, { TemplateItem, TemplateType } from '../controls/Templates/TemplateManager';
+import TemplateManager from '../controls/Templates/TemplateManager';
+import { TemplateItem, TemplateType } from "../controls/Templates/Types";
+
 import refreshEntry from '../commands/cs.dynamics.controls.templateTreeView.refreshEntry';
 import addEntry from '../commands/cs.dynamics.controls.templateTreeView.addEntry';
 import editEntry from '../commands/cs.dynamics.controls.templateTreeView.editEntry';
@@ -12,7 +15,6 @@ import deleteEntry from '../commands/cs.dynamics.controls.templateTreeView.delet
 import clickEntry from '../commands/cs.dynamics.controls.templateTreeView.clickEntry';
 import createInWorkspace from '../commands/cs.dynamics.controls.templateTreeView.createInWorkspace';
 import openEntry from '../commands/cs.dynamics.controls.templateTreeView.openEntry';
-import ExtensionConfiguration from '../config/ExtensionConfiguration';
 
 export default class TemplateTreeView implements IWireUpCommands {
     public static Instance:TemplateTreeViewProvider;
