@@ -13,7 +13,7 @@
             case "load":
                 setInitialState(message.viewModel);
                 break;
-            case "pluginStepError":
+            case "error":
                 CloudSmith.ErrorPanel.showError([`${message.message}`]);
                 break;
         }
@@ -124,7 +124,7 @@
     function setInitialState(viewModel) {
         window.dataCache = {
             step: viewModel.step,
-            entityTypeCodes: viewModel.entityTypeCodes,
+            //entityTypeCodes: viewModel.entityTypeCodes,
             pluginTypes: viewModel.pluginTypes,
             sdkMessageFilters: viewModel.sdkMessageFilters,
             sdkMessages: viewModel.sdkMessages,
@@ -312,7 +312,7 @@
             if (!validateForm(step)) return;
 
             vscode.postMessage({
-                command: 'saveSdkMessageProcessingStep',
+                command: "save",
                 step
             });
         });

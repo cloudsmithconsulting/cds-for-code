@@ -1,0 +1,61 @@
+<img class="branding" src="#{images['cloudsmith-logo-only-50px.png']}" alt="CloudSmith Conulting" title="CloudSmith Conulting" />
+
+<h1 id="title">
+    #{viewTitle}
+</h1>
+
+<div class="field field--buttons">
+    <button id="submitButton" class="button button--primary">
+        <span class="iconify" data-icon="fa:save"></span>
+        Save Plugin Step Image
+    </button>
+    <button id="cancelButton" class="button button">
+        <span class="iconify" data-icon="fa:ban"></span>
+        Cancel
+    </button>
+</div>
+
+<blockquote class="panel_error" id="errorPanel" hidden>
+    <div class="panel__text">
+        <h4>Oops! Slight problem</h4>
+        <span id="errorMessage"></span>
+    </div>
+</blockquote>
+
+<div class="grid grid--left-panel-large">
+    <div>
+        <fieldset>
+            <legend>General Configuraiton</legend>
+            <input type="hidden" id="Id" name="Id" value="" />
+            <input type="hidden" id="SdkMessageProcessingStepId" name="SdkMessageProcessingStepId" value="" />
+            <div class="field field--checkbox">
+                <label class="field__label" for="PostImage">
+                    Post Image
+                </label>
+                <input type="checkbox" class="field__input" id="PostImage" name="PostImage" value="true" />
+                <label class="field__label" for="PreImage">
+                    Pre Image
+                </label>
+                <input type="checkbox" class="field__input" id="PreImage" name="PreImage" value="true" checked="checked" />
+            </div>
+            <div class="field">
+                <label class="field__label" for="Name">
+                    Name
+                </label>
+                <input type="text" class="field__input field__input--wide" id="Name" name="Name" />
+            </div>
+            <div class="field">
+                <label class="field__label" for="Alias">
+                    Entity Alias
+                </label>
+                <input type="text" class="field__input field__input--wide" id="Alias" name="Alias" />
+            </div>
+            <div class="field">
+                <label class="field__label" for="Parameters">
+                    Parameters
+                </label>
+                <input type="text" class="field__input field__input--wide" id="Parameters" name="Parameters" />
+            </div>
+        </fieldset>
+    </div>
+</div>

@@ -39,102 +39,9 @@ class ConnectionView extends View {
 
         // return rendered html
         return viewRenderer.renderPartialFile('connection.html');
-
-//         return viewRenderer.renderHtml(`
-// <img class="branding" src="${viewRenderer.getImageUri('cloudsmith-logo-only-50px.png')}" alt="CloudSmith Conulting" />
-
-// <h1 id="title">
-//     ${this.viewOptions.viewTitle}
-// </h1>
-
-// <blockquote class="panel_error" id="errorPanel" hidden>
-//     <div class="panel__text">
-//         <h4>Oops! Slight problem</h4>
-//         <span id="errorMessage"></span>
-//     </div>
-// </blockquote>
-
-// <input type="hidden" id="Id" name="Id" value="" />
-
-// <div class="field field--checkbox">
-//     <label class="field__label" for="AuthType1">
-//         Windows
-//     </label>
-//     <input type="radio" class="field__input" id="AuthType1" name="AuthType" value="1" />
-//     <label class="field__label" for="AuthType2">
-//         OAuth
-//     </label>
-//     <input type="radio" class="field__input" id="AuthType2" name="AuthType" value="2" checked="checked" />
-// </div>
-// <div class="field">
-//     <label class="field__label" for="WebApiVersion">
-//         Web API Version
-//     </label>
-//     <select id="WebApiVersion" name="WebApiVersion" class="field__input">
-//         <option>v8.0</option>
-//         <option>v8.1</option>
-//         <option>v8.2</option>
-//         <option>v9.0</option>
-//         <option>v9.1</option>
-//     </select>
-// </div>
-// <div class="field">
-//     <label class="field__label" for="Name">
-//         Friendly Name
-//     </label>
-//     <input type="text" class="field__input" id="Name" name="Name" />
-// </div>
-// <div class="field">
-//     <label class="field__label" for="ServerUrl">
-//         Server URL
-//     </label>
-//     <input type="text" class="field__input" id="ServerUrl" name="ServerUrl" />
-// </div>
-// <div class="field">
-//     <label class="field__label" for="Domain">
-//         Domain
-//     </label>
-//     <input type="text" class="field__input" id="Domain" name="Domain" />
-// </div>
-// <div id="accessTokenField" class="field">
-//     <label class="field__label" for="AccessToken">
-//         Access Token
-//     </label>
-//     <input type="text" class="field__input" id="AccessToken" name="AccessToken" />
-// </div>
-// <div class="field">
-//     <label class="field__label" for="Username">
-//         Username
-//     </label>
-//     <input type="text" class="field__input" id="Username" name="Username" />
-// </div>
-// <div class="field">
-//     <label class="field__label" for="Password">
-//         Password
-//     </label>
-//     <input type="password" class="field__input" id="Password" name="Password" />
-// </div>
-// <div class="field">
-//     <button id="submitButton" class="button button--primary">Add Connection</button>
-// </div>
-//         `);
-    }    
+    } 
     
-    public onDidReceiveMessage(instance: ConnectionView, message: any): vscode.Event<any> {
-        switch (message.command) {
-            case 'createConnection':
-                instance.testConnection(message.settings);
-                return;
-        }
-    }
-
-    public setInitialState(config?: DynamicsWebApi.Config) {
-        if (config) {
-            this.panel.webview.postMessage({ command: 'connectionEdit', message: config });
-        }
-    }
-
-    private testConnection(config: DynamicsWebApi.Config) {
+    private save(config: DynamicsWebApi.Config) {
         // first clean up the config, if we have an access token get rid of username and password
         if (config.accessToken && config.accessToken.length > 0) {
             config.username = null;
@@ -156,7 +63,22 @@ class ConnectionView extends View {
                 });
             })
             .catch(err => {
-                this.panel.webview.postMessage({ command: 'connectionError', message: err.message });
+                this.panel.webview.postMessage({ command: 'error', message: err.message });
+                console.log(err);
             });
+    }
+    
+    public onDidReceiveMessage(instance: ConnectionView, message: any): vscode.Event<any> {
+        switch (message.command) {
+            case 'save':
+                instance.save(message.settings);
+                return;
+        }
+    }
+
+    public setInitialState(config?: DynamicsWebApi.Config) {
+        if (config) {
+            this.panel.webview.postMessage({ command: 'load', message: config });
+        }
     }
 }

@@ -23,6 +23,7 @@ import SolutionMap from './config/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
 import VisualStudioProjectCommands from './commands/visualStudioProjectCommands';
 import TemplateTreeView from './views/TemplateTreeView';
+import PluginStepImageViewManager from './views/pluginStepImageView';
 import WebResourceManager from './controls/WebResources/WebResourceManager';
 
 // this method is called when your extension is activated
@@ -50,6 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
 		new SvcUtilConfigViewManager(),
 		new DynamicsTerminal(),
 		new PluginStepViewManager(),
+		new PluginStepImageViewManager(),
 		new NewWorkspaceViewManager(),
 		
 		// our commands

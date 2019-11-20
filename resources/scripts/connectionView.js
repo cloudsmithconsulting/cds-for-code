@@ -11,10 +11,10 @@
         $(document).ready(function() { 
             const message = event.data; // The json data that the extension sent
             switch (message.command) {
-                case "connectionEdit":
+                case "load":
                     setInitialState(message.message);
                     break;
-                case "connectionError":
+                case "error":
                     CloudSmith.ErrorPanel.showError([`${message.message}`]);
                     break;
             }
@@ -104,7 +104,7 @@
             if (!validateForm(settings)) return;
 
             vscode.postMessage({
-                command: 'createConnection',
+                command: "save",
                 settings
             });
         });

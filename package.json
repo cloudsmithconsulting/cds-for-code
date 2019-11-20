@@ -31,7 +31,6 @@
 		"onCommand:cs.dynamics.controls.explorer.packSolutionFromFolder",
 		"onCommand:cs.dynamics.controls.explorer.registerPluginFile",
 		"onCommand:cs.dynamics.controls.explorer.unpackSolutionToFolder",
-		"onCommand:cs.dynamics.controls.pluginStep.open",
 		"onCommand:cs.dynamics.controls.svcUtilConfig.configure",
 		"onCommand:cs.dynamics.deployment.addSolutionComponent",
 		"onCommand:cs.dynamics.deployment.removeSolutionComponent",

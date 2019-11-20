@@ -436,6 +436,30 @@ export default class ApiRepository {
         }
     }
 
+    async upsertPluginStepImage(stepImage: any) : Promise<any> {
+        const stepId = stepImage.sdkmessageprocessingstepid;
+        delete stepImage.sdkmessageprocessingstepid;
+        stepImage["sdkmessageprocessingstepid@odata.bind"] = `sdkmessageprocessingsteps(${stepId})`;
+        stepImage.messagepropertyname = 'Target';
+
+        if (stepImage.sdkmessageprocessingstepimageid) {
+            return this.webapi.updateRequest({
+                id: stepImage.sdkmessageprocessingstepimageid,
+                collection: "sdkmessageprocessingstepimages",
+                entity: stepImage
+            });
+        } else {
+            if (stepImage.sdkmessageprocessingstepimageid === null) {
+                delete stepImage.sdkmessageprocessingstepimageid;
+            }
+            return this.webapi.createRequest({
+                collection: "sdkmessageprocessingstepimages",
+                entity: stepImage
+            })
+            .catch(err => console.error(err));
+        }
+    }
+
     addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
         return this.getSolutionComponent(componentId, componentType)
             .then(solutionComponent => {
@@ -462,10 +486,26 @@ export default class ApiRepository {
             .then(response => response.value && response.value.length > 0 ? response.value[0] : null);
     }
 
-    async removePluginStep(step: any) {
-        return this.webapi.deleteRequest({
+    async removePluginStep(step: any) : Promise<boolean> {
+        await this.webapi.deleteRequest({
             id: step.sdkmessageprocessingstepid,
             collection: "sdkmessageprocessingsteps",
+        });
+        // delete the secure config if they have one
+        if (step._sdkmessageprocessingstepsecureconfigid_value) {
+            await this.webapi.deleteRequest({
+                id: step._sdkmessageprocessingstepsecureconfigid_value,
+                collection: "sdkmessageprocessingstepsecureconfigs",
+            });
+        }
+
+        return true;
+    }
+
+    public removePluginStepImage(stepImage: any) : Promise<any> {
+        return this.webapi.deleteRequest({
+            id: stepImage.sdkmessageprocessingstepimageid,
+            collection: "sdkmessageprocessingstepimages"
         });
     }
 

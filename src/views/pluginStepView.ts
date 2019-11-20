@@ -27,9 +27,9 @@ export default class PluginStepViewManager implements IWireUpCommands {
                 const api = new ApiRepository(config);
 
                 async.parallel({
-                    entityTypeCodes: async function(callback) {
-                        callback(null, await api.retrieveEntityTypeCodes());
-                    },
+                    // entityTypeCodes: async function(callback) {
+                    //     callback(null, await api.retrieveEntityTypeCodes());
+                    // },
                     pluginTypes: async function(callback) {
                         callback(null, await api.retrievePluginTypes(pluginAssemblyId));
                     },
@@ -73,26 +73,22 @@ class PluginStepView extends View {
         return viewRenderer.renderPartialFile('plugin-step.html');
     }
 
-    private saveSdkMessageProcessingStep(step :any) {
+    private save(step :any) {
         const api = new ApiRepository(this.config);
         api.upsertPluginStep(step)
             .then(() => this.dispose())
             .catch(err => {
-                this.sendErrorMessage(err.message);
+                this.panel.webview.postMessage({ command: 'error', message: err.message });
                 console.error(err);
             });
     }
     
     public onDidReceiveMessage(instance: PluginStepView, message: any): vscode.Event<any> {
         switch (message.command) {
-            case 'saveSdkMessageProcessingStep':                
-                instance.saveSdkMessageProcessingStep(message.step);
+            case 'save':                
+                instance.save(message.step);
                 return;
         }
-    }
-
-    public sendErrorMessage(message: string) {
-        this.panel.webview.postMessage({ command: 'pluginStepError', message: message });
     }
 
     public setInitialState(viewModel: any, config: DynamicsWebApi.Config) {
