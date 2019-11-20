@@ -17,12 +17,9 @@ export default class PluginStepImageViewManager implements IWireUpCommands {
                     iconPath: './resources/images/cloudsmith-logo-only-50px.png',
                     viewTitle: 'Configure Plugin Step Image - Dynamics 365 CE',
                     viewType: cs.dynamics.views.pluginStepImageView
-                });
+                }, true);
 
-                // only do this if we are editing
-                if (pluginStepImage) {
-                    view.setInitialState(pluginStepImage, config);
-                }
+                view.setInitialState(sdkmessageprocessingstepid, pluginStepImage, config);
             }) // <-- no semi-colon, comma starts next command registration
         );
     }
@@ -43,20 +40,27 @@ class PluginStepImageView extends View {
         return viewRenderer.renderPartialFile('plugin-step-image.html');
     }    
 
-    private saveSdkMessageProcessingStepImage(pluginStepImage: any) {
+    private save(pluginStepImage: any) {
         const api = new ApiRepository(this.config);
+        
+        api.upsertPluginStepImage(pluginStepImage)
+            .then(() => this.dispose())
+            .catch(err => {
+                this.panel.webview.postMessage({ command: 'error', message: err.message });
+                console.error(err);
+            });
     }
     
     public onDidReceiveMessage(instance: PluginStepImageView, message: any): vscode.Event<any> {
         switch (message.command) {
-            case 'saveSdkMessageProcessingStep':                
-                instance.saveSdkMessageProcessingStepImage(message.pluginStepImage);
+            case 'save':                
+                instance.save(message.pluginStepImage);
                 return;
         }
     }
 
-    public setInitialState(viewModel: any, config: DynamicsWebApi.Config) {
+    public setInitialState(sdkmessageprocessingstepid: string, viewModel: any, config: DynamicsWebApi.Config) {
         this.config = config;
-        this.panel.webview.postMessage({ command: 'load', viewModel });
+        this.panel.webview.postMessage({ command: 'load', viewModel, sdkmessageprocessingstepid });
     }
 }

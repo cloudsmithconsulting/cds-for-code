@@ -103,7 +103,7 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
                                         return Promise.all(promises);
                                     }).then(responses => {
                                         if (!pluginAssembly) {
-                                            vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, {});
+                                            vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, assemblyId);
                                         }
                                     }).then(() => {
                                         vscode.window.showInformationMessage(`The plugin assembly '${file.fsPath}' has been registered on the Dynamics 365 server.`);

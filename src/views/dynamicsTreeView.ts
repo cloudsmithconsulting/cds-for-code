@@ -278,7 +278,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, item.context.eventhandler_plugintype._pluginassemblyid_value, item.context);
                         break;
                     case "PluginStepImage":
-                        vscode.commands.executeCommand(cs.dynamics.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, item.context);
+                        vscode.commands.executeCommand(cs.dynamics.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, item.context, item.config);
                         break;
                 }
            }) 

@@ -386,6 +386,30 @@ export default class ApiRepository
         }
     }
 
+    public async upsertPluginStepImage(stepImage: any) : Promise<any> {
+        const stepId = stepImage.sdkmessageprocessingstepid;
+        delete stepImage.sdkmessageprocessingstepid;
+        stepImage["sdkmessageprocessingstepid@odata.bind"] = `sdkmessageprocessingsteps(${stepId})`;
+        stepImage.messagepropertyname = 'Target';
+
+        if (stepImage.sdkmessageprocessingstepimageid) {
+            return this.webapi.updateRequest({
+                id: stepImage.sdkmessageprocessingstepimageid,
+                collection: "sdkmessageprocessingstepimages",
+                entity: stepImage
+            });
+        } else {
+            if (stepImage.sdkmessageprocessingstepimageid === null) {
+                delete stepImage.sdkmessageprocessingstepimageid;
+            }
+            return this.webapi.createRequest({
+                collection: "sdkmessageprocessingstepimages",
+                entity: stepImage
+            })
+            .catch(err => console.error(err));
+        }
+    }
+
     public addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
         const actionParams = { 
             ComponentId: componentId,

@@ -12,13 +12,18 @@
             const message = event.data; // The json data that the extension sent
             switch (message.command) {
                 case "load":
-                    setInitialState(message.viewModel);
+                    setInitialState(message.viewModel, message.sdkmessageprocessingstepid);
+                    break;
+                case "error":
+                    CloudSmith.ErrorPanel.showError([`${message.message}`]);
                     break;
             }
         });
     });
 
-    function setInitialState(viewModel) {
+    function setInitialState(viewModel, sdkmessageprocessingstepid) {
+        $("#SdkMessageProcessingStepId").val(sdkmessageprocessingstepid);
+
         if (viewModel) {
             $("#Id").val(viewModel.sdkmessageprocessingstepimageid);
             $("#PreImage").prop("checked", viewModel.imagetype === 0 || viewModel.imagetype === 2);
@@ -34,6 +39,7 @@
         function validateForm(pluginStepImage) {
             const messages = [];
     
+            if (CloudSmith.Utilities.isNullOrEmpty(pluginStepImage.sdkmessageprocessingstepid)) { messages.push('The sdkmessageprocessingstepid is required'); }
             if (pluginStepImage.imagetype === null) { messages.push('The Image Type is required'); }
             if (CloudSmith.Utilities.isNullOrEmpty(pluginStepImage.name)) { messages.push('The Name is required'); }
             if (CloudSmith.Utilities.isNullOrEmpty(pluginStepImage.entityalias)) { messages.push('The Entity Alias is required'); }
@@ -58,6 +64,7 @@
 
             const pluginStepImage = {
                 sdkmessageprocessingstepimageid: (id.length > 0) ? id: null, // pass the id or null
+                sdkmessageprocessingstepid: $("#SdkMessageProcessingStepId").val(),
                 name: $("#Name").val(),
                 entityalias: $("#Alias").val(),
                 attributes: $("#Parameters").val(),
@@ -67,7 +74,7 @@
             if (!validateForm(pluginStepImage)) return;
 
             vscode.postMessage({
-                command: 'saveSdkMessageProcessingStepImage',
+                command: "save",
                 pluginStepImage
             });
         });
