@@ -6,29 +6,25 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { TS } from "typescript-linq";
 
-export default class ApiRepository
-{
+export default class ApiRepository {
     private config:DynamicsWebApi.Config;
 
-    public constructor (config:DynamicsWebApi.Config)
-    {
+    constructor (config:DynamicsWebApi.Config) {
         this.config = config;
         this.webapi = new DynamicsWebApiClient(this.config);
     }
 
     private webapi: DynamicsWebApiClient;
 
-    public async whoAmI() : Promise<any>
-    {
+    async whoAmI() : Promise<any> {
         return await this.webapi.executeUnboundFunction('WhoAmI');
     }
 
-    public retrieveSolution(solutionId:string) : Promise<any[]> {
-        return this.webapi.retrieveRequest({ collection: "solutions", id: solutionId })
-            .then(response => response.value);
+    retrieveSolution(solutionId:string) : Promise<any[]> {
+        return this.webapi.retrieveRequest({ collection: "solutions", id: solutionId });
     }
 
-    public retrieveSolutions() : Promise<any[]> {
+    retrieveSolutions() : Promise<any[]> {
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "solutions",
             filter: "isvisible eq true",
@@ -43,7 +39,7 @@ export default class ApiRepository
             });
     }
 
-    public retrieveProcesses(entityName?:string, solutionId?:string) : Promise<any[]> {
+    retrieveProcesses(entityName?:string, solutionId?:string) : Promise<any[]> {
         // documentation of the attributes for workflow: https://docs.microsoft.com/en-us/dynamics365/customer-engagement/web-api/workflow?view=dynamics-ce-odata-9        
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "workflows",
@@ -63,11 +59,11 @@ export default class ApiRepository
             .then(response => response.value);
     }
 
-    public retrieveWebResourceFolders(solutionId?:string, folder?:string) : Promise<string[]> {
+    async retrieveWebResourceFolders(solutionId?:string, folder?:string, customizableOnly:boolean = true) : Promise<string[]> {
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "webresourceset",
             filter: "contains(name, '/')",
-            select: ['webresourceid', "name"],
+            select: ['webresourceid', "name", "iscustomizable"],
             orderBy: ["name"]
         };
 
@@ -76,11 +72,22 @@ export default class ApiRepository
             request.filter = `startswith(name,'${folder}')`;
         }
 
+        if (customizableOnly) {
+            request.filter += " and iscustomizable/Value eq true";
+        }
+
+        if (solutionId && Utilities.IsGuid(solutionId)) { 
+            const components = (await ApiHelper.getSolutionComponents(this.webapi, solutionId, DynamicsWebApi.SolutionComponent.WebResource)).map(c => `'${c["objectid"]}'`).join(",");
+
+            if (!Utilities.IsNullOrEmpty(components)) {
+                request.filter += ` and Microsoft.Dynamics.CRM.In(PropertyName='webresourceid',PropertyValues=[${components}])`;
+            } else {
+                return Promise.resolve([]);
+            }
+        }
+
         return this.webapi.retrieveAllRequest(request)
-            .then(response => { console.log(response); return response; })
-            .then(webResourceFolderResponse => ApiHelper.filterSolutionComponents(this.webapi, webResourceFolderResponse, solutionId, DynamicsWebApi.SolutionComponent.WebResource, w => w["webresourceid"]))
-            .then(response => { console.log(response); return response; })
-            .then(response => response
+            .then(response => new TS.Linq.Enumerator(response.value)
                 .select(w => w["name"].replace(folder || '', ''))
                 .where(n => n.split("/").length > 1)
                 .select(n => n.split("/")[0])
@@ -88,12 +95,16 @@ export default class ApiRepository
                 .toArray());
         }
 
-    public retrieveWebResources(solutionId?:string, folder?:string) : Promise<any[]> {
+    async retrieveWebResources(solutionId?:string, folder?:string, customizableOnly:boolean = true) : Promise<any[]> {
+        const selectAll:boolean = folder && folder === "*";
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "webresourceset",
-            filter: "not contains(name, '/')",
-            orderBy: ["displayname"]
+            select: ['webresourceid', "name", "displayname", "webresourcetype", "solutionid", "iscustomizable"],
+            filter: !selectAll ? "(not contains(name, '/'))" : "",
+            orderBy: ["name"]
         };
+
+        folder = !selectAll ? folder : undefined;
 
         let depth: number = 0;
 
@@ -103,16 +114,56 @@ export default class ApiRepository
             depth = folder.split("/").length - 1;
         }
 
+        if (customizableOnly) {
+            if (!Utilities.IsNullOrEmpty(request.filter)) {
+                request.filter += " and";
+            }
+
+            request.filter += " iscustomizable/Value eq true";
+        }
+
+        if (solutionId && Utilities.IsGuid(solutionId)) { 
+            const components = (await ApiHelper.getSolutionComponents(this.webapi, solutionId, DynamicsWebApi.SolutionComponent.WebResource)).map(c => `'${c["objectid"]}'`).join(",");
+
+            if (!Utilities.IsNullOrEmpty(components)) {
+                if (!Utilities.IsNullOrEmpty(request.filter)) {
+                    request.filter += " and";
+                }
+
+                request.filter += ` Microsoft.Dynamics.CRM.In(PropertyName='webresourceid',PropertyValues=[${components}])`;
+                request.filter = request.filter.trim();
+            } else {
+                return Promise.resolve([]);
+            }
+        }
+
         return this.webapi.retrieveAllRequest(request)
-            .then(webResourceResponse => ApiHelper.filterSolutionComponents(this.webapi, webResourceResponse, solutionId, DynamicsWebApi.SolutionComponent.WebResource, w => w["webresourceid"]))
             .then(response => {
-                return response
-                    .where(w => (w["name"] === folder || w["name"].split("/").length === depth + 1))
-                    .toArray();
+                let filteredResponse = new TS.Linq.Enumerator(response.value);
+
+                if (!selectAll) {
+                    filteredResponse = filteredResponse.where(w => (w["name"] === folder || w["name"].split("/").length === depth + 1));
+                } 
+
+                return filteredResponse.toArray();
             });
     }
 
-    public retrievePluginAssemblies(solutionId?:string) : Promise<any[]> {
+    retrieveWebResource(webResourceId:string): Promise<any> {
+        return this.webapi.retrieve(webResourceId, "webresourceset");
+    }
+
+    upsertWebResource(webResource:any): Promise<any> {
+        //return this.webapi.upsert(webResource.webresourceid || Utilities.NewGuid(), "webresourceset", webResource, "return=representation");
+        
+        if (webResource.webresourceid) {
+            return this.webapi.update(webResource.webresourceid, "webresourceset", webResource, "return=representation");
+        } else {
+            return this.webapi.create(webResource, "webresourceset", "return=representation");
+        }
+    }
+
+    retrievePluginAssemblies(solutionId?:string) : Promise<any[]> {
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "pluginassemblies",
             orderBy: ["name"]
@@ -125,7 +176,7 @@ export default class ApiRepository
                 .toArray() : []);
     }
 
-    public retrievePluginTypes(pluginAssemblyId:string) {
+    retrievePluginTypes(pluginAssemblyId:string) {
         const request:DynamicsWebApi.RetrieveRequest = {
             collection: "pluginassemblies",
             id: pluginAssemblyId,
@@ -142,7 +193,7 @@ export default class ApiRepository
             });
     }
 
-    public upsertPluginType(pluginAssemblyId:string, typeName:string, name:string = typeName, friendlyName:string = typeName, description?:string) {        
+    upsertPluginType(pluginAssemblyId:string, typeName:string, name:string = typeName, friendlyName:string = typeName, description?:string) {        
         return this.webapi.retrieveMultipleRequest({
             collection: "plugintypes",
             select: ["plugintypeid"],
@@ -169,8 +220,7 @@ export default class ApiRepository
     }
 
     // Gets a list of entities and their IDs
-    public retrieveEntityTypeCodes() : Promise<any[]>
-    {
+    retrieveEntityTypeCodes() : Promise<any[]> {
         let entitiesQuery:DynamicsWebApi.RetrieveMultipleRequest = {
             select: [ "MetadataId", "LogicalName", "ObjectTypeCode" ]
         };
@@ -180,7 +230,7 @@ export default class ApiRepository
     }
 
     // Lookup "Message" in plugin registration
-    public retrieveSdkMessages() {
+    retrieveSdkMessages() {
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessages",
             select: ["sdkmessageid", "name", "autotransact", "availability", "categoryname", "isactive", "isprivate", "isreadonly", "template", "workflowsdkstepenabled"],
@@ -190,7 +240,7 @@ export default class ApiRepository
             .then(response => response.value ? new TS.Linq.Enumerator(response.value).orderBy(e => e["name"]).toArray() : []);
     }
 
-    public retrieveSdkMessageFilters() {
+    retrieveSdkMessageFilters() {
         const request: DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessagefilters",
             select: [ "sdkmessagefilterid", "_sdkmessageid_value", "primaryobjecttypecode", "secondaryobjecttypecode" ]
@@ -200,7 +250,7 @@ export default class ApiRepository
             .then(response => response.value ? new TS.Linq.Enumerator(response.value).orderBy(e => e["primaryobjecttypecode"]).toArray() : []);
     }
 
-    public retrieveSdkMessageDetails(sdkMessageId:string) {
+    retrieveSdkMessageDetails(sdkMessageId:string) {
         const request:DynamicsWebApi.RetrieveRequest = {
             collection: "sdkmessages",
             id: sdkMessageId
@@ -209,7 +259,7 @@ export default class ApiRepository
         return this.webapi.retrieveRequest(request);
     }
 
-    public retrievePluginStep(sdkmessageprocessingstepid:string) {
+    retrievePluginStep(sdkmessageprocessingstepid:string) {
         const request:DynamicsWebApi.RetrieveRequest = {
             collection: "sdkmessageprocessingsteps",
             id: sdkmessageprocessingstepid,
@@ -225,7 +275,7 @@ export default class ApiRepository
         return this.webapi.retrieveRequest(request);
     }
     
-    public retrievePluginSteps(pluginTypeId:string) {
+    retrievePluginSteps(pluginTypeId:string) {
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessageprocessingsteps",
             expand: [ { property: "sdkmessageid" } ],
@@ -249,7 +299,7 @@ export default class ApiRepository
             });
     }
 
-    public retrievePluginStepImages(pluginStepId:string) {
+    retrievePluginStepImages(pluginStepId:string) {
         const request:DynamicsWebApi.RetrieveRequest = {
             collection: "sdkmessageprocessingsteps",
             id: pluginStepId,
@@ -263,7 +313,7 @@ export default class ApiRepository
             });
     }
 
-    public retrieveSystemUsers() {
+    retrieveSystemUsers() {
         const request: DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "systemusers",
             select: [ "systemuserid", "fullname", "isdisabled" ],
@@ -275,7 +325,7 @@ export default class ApiRepository
             .then(response => response.value || []);
     }
 
-    public uploadPluginAssembly(assemblyUri:vscode.Uri, pluginAssemblyId?:string): Thenable<any> {
+    uploadPluginAssembly(assemblyUri:vscode.Uri, pluginAssemblyId?:string): Thenable<any> {
         const fs = vscode.workspace.fs;
         let fileContents;
 
@@ -321,7 +371,7 @@ export default class ApiRepository
             });
     }
 
-    public async upsertPluginStep(step: any) {
+    async upsertPluginStep(step: any) {
         // see if we have a secure configration
         let secureConfig = null;
         if (step.sdkmessageprocessingstepsecureconfigid) {
@@ -386,7 +436,7 @@ export default class ApiRepository
         }
     }
 
-    public async upsertPluginStepImage(stepImage: any) : Promise<any> {
+    async upsertPluginStepImage(stepImage: any) : Promise<any> {
         const stepId = stepImage.sdkmessageprocessingstepid;
         delete stepImage.sdkmessageprocessingstepid;
         stepImage["sdkmessageprocessingstepid@odata.bind"] = `sdkmessageprocessingsteps(${stepId})`;
@@ -410,20 +460,23 @@ export default class ApiRepository
         }
     }
 
-    public addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
-        const actionParams = { 
-            ComponentId: componentId,
-            ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
-            SolutionUniqueName: solution.uniquename,  
-            AddRequiredComponents: addRequiredComponents,
-            DoNotIncludeSubcomponents: doNotIncludeSubcomponents,
-            IncludedComponentSettingsValues: componentSettings || null
-        };
+    addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
+        return this.getSolutionComponent(componentId, componentType)
+            .then(solutionComponent => {
+                if (solutionComponent) { return; }
 
-        return this.webapi.executeUnboundAction("AddSolutionComponent", actionParams);
+                return { 
+                    ComponentId: componentId,
+                    ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
+                    SolutionUniqueName: solution.uniquename,  
+                    AddRequiredComponents: addRequiredComponents,
+                    DoNotIncludeSubcomponents: doNotIncludeSubcomponents,
+                    IncludedComponentSettingsValues: componentSettings || null
+                };
+            }).then(parameters => this.webapi.executeUnboundAction("AddSolutionComponent", parameters));
     }
 
-    public getSolutionComponent(componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
+    getSolutionComponent(componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
         const solutionQuery:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "solutioncomponents",
             filter: `componenttype eq ${DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType)} and objectid eq ${componentId}`
@@ -433,7 +486,7 @@ export default class ApiRepository
             .then(response => response.value && response.value.length > 0 ? response.value[0] : null);
     }
 
-    public async removePluginStep(step: any) : Promise<boolean> {
+    async removePluginStep(step: any) : Promise<boolean> {
         await this.webapi.deleteRequest({
             id: step.sdkmessageprocessingstepid,
             collection: "sdkmessageprocessingsteps",
@@ -456,7 +509,7 @@ export default class ApiRepository
         });
     }
 
-    public removeSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
+    removeSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
         return this.getSolutionComponent(componentId, componentType)
             .then(solutionComponent => {
                 if (!solutionComponent) { return; }

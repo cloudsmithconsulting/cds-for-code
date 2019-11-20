@@ -353,6 +353,16 @@
 				"category": "Dynamics 365 CE"
 			},
 			{
+				"command": "cs.dynamics.deployment.createWebResource",
+				"title": "Create a web resource in your workspace or on a Dynamics 365 instance",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.deployment.compareWebResource",
+				"title": "Compare a local web resource file to a version deployed on a Dynamics 365 instance",
+				"category": "Dynamics 365 CE"
+			},
+			{
 				"command": "cs.dynamics.deployment.dotNetBuild",
 				"title": "Build a .Net Core project in the current workspace",
 				"category": "Dynamics 365 CE"
@@ -360,6 +370,11 @@
 			{
 				"command": "cs.dynamics.deployment.dotNetTest",
 				"title": "Build and Test a .Net Core project in the current workspace",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.deployment.packWebResource",
+				"title": "Deploy a Web Resource to Dynamics 365",
 				"category": "Dynamics 365 CE"
 			},
 			{
@@ -375,6 +390,11 @@
 			{
 				"command": "cs.dynamics.deployment.removeSolutionMapping",
 				"title": "Remove remembered locations where Dynamics solutions are stored in this workspace",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.deployment.unpackWebResource",
+				"title": "Download a Web Resource from Dynamics 365",
 				"category": "Dynamics 365 CE"
 			},
 			{

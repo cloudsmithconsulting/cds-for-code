@@ -324,140 +324,177 @@ export namespace DynamicsWebApi {
         CanvasApp = "Canvas App"
     }
 
+    export enum WebResourceFileType {
+        Html = ".html",
+        Css = ".css",
+        JScript = ".js",
+        Json = ".json",
+        Data = ".xml",
+        Png = ".png",
+        Jpeg = ".jpg",
+        Gif = ".gif",
+        Silverlight = ".xap",
+        Xsl = ".xsl",
+        Icon = ".ico",
+        Vector = ".svg",
+        String = ".resx"
+    }
+
     export class CodeMappings {
-        public static getDynamicsFormCode(form: DynamicsForm): number {
-            return this.DynamicsForms.getKey(form);
+        static getDynamicsFormCode(form: DynamicsForm): number {
+            return this.DynamicsForms.get(form);
         }
 
-        public static getInteractiveDashboardLayout(layout: InteractiveDashboardLayout) {
-            return this.InteractiveDashboardLayouts.getKey(layout);
+        static getInteractiveDashboardLayout(layout: InteractiveDashboardLayout) {
+            return this.InteractiveDashboardLayouts.get(layout);
         }
 
-        public static getProcessTypeCode(processType: ProcessType): number {
-            return this.ProcessTypes.getKey(processType);
+        static getProcessTypeCode(processType: ProcessType): number {
+            return this.ProcessTypes.get(processType);
         }
 
-        public static getSolutionComponentCode(componentType: SolutionComponent): number {
-            return this.SolutionComponents.getKey(componentType);
+        static getSolutionComponentCode(componentType: SolutionComponent): number {
+            return this.SolutionComponents.get(componentType);
         }
 
-        public static InteractiveDashboardLayouts = new Dictionary<number, InteractiveDashboardLayout>([
-            { key: 7, value: InteractiveDashboardLayout._4ColumnOverview },
-            { key: 8, value: InteractiveDashboardLayout._3ColumnOverview },
-            { key: 9, value: InteractiveDashboardLayout._2ColumnOverview },
-            { key: 10, value: InteractiveDashboardLayout._3ColumnOverviewVariableWidth }
+        static getWebResourceTypeCode(webResourceType: WebResourceFileType): number {
+            return this.WebResources.get(webResourceType);
+        }
+
+        static InteractiveDashboardLayouts = new Dictionary<InteractiveDashboardLayout, number>([
+            { value: 7, key: InteractiveDashboardLayout._4ColumnOverview },
+            { value: 8, key: InteractiveDashboardLayout._3ColumnOverview },
+            { value: 9, key: InteractiveDashboardLayout._2ColumnOverview },
+            { value: 10, key: InteractiveDashboardLayout._3ColumnOverviewVariableWidth }
         ]);
 
-        public static DynamicsForms = new Dictionary<number, DynamicsForm>([
-            { key: 0, value: DynamicsForm.Dashboard },
-            { key: 1, value: DynamicsForm.AppointmentBook },
-            { key: 2, value: DynamicsForm.Main },
-            { key: 3, value: DynamicsForm.MiniCampaignBO },
-            { key: 4, value: DynamicsForm.Preview },
-            { key: 5, value: DynamicsForm.MobileExpress },
-            { key: 6, value: DynamicsForm.QuickView },
-            { key: 7, value: DynamicsForm.QuickCreate },
-            { key: 8, value: DynamicsForm.Dialog },
-            { key: 9, value: DynamicsForm.TaskFlow },
-            { key: 10, value: DynamicsForm.InteractionCentricDashboard },
-            { key: 11, value: DynamicsForm.ActionCard },
-            { key: 12, value: DynamicsForm.MainInteractive },
-            { key: 100, value: DynamicsForm.Other },
-            { key: 101, value: DynamicsForm.MainBackup },
-            { key: 102, value: DynamicsForm.AppointmentBookBackup },
-            { key: 103, value: DynamicsForm.PowerBIDashboard }
+        static DynamicsForms = new Dictionary<DynamicsForm, number>([
+            { value: 0, key: DynamicsForm.Dashboard },
+            { value: 1, key: DynamicsForm.AppointmentBook },
+            { value: 2, key: DynamicsForm.Main },
+            { value: 3, key: DynamicsForm.MiniCampaignBO },
+            { value: 4, key: DynamicsForm.Preview },
+            { value: 5, key: DynamicsForm.MobileExpress },
+            { value: 6, key: DynamicsForm.QuickView },
+            { value: 7, key: DynamicsForm.QuickCreate },
+            { value: 8, key: DynamicsForm.Dialog },
+            { value: 9, key: DynamicsForm.TaskFlow },
+            { value: 10, key: DynamicsForm.InteractionCentricDashboard },
+            { value: 11, key: DynamicsForm.ActionCard },
+            { value: 12, key: DynamicsForm.MainInteractive },
+            { value: 100, key: DynamicsForm.Other },
+            { value: 101, key: DynamicsForm.MainBackup },
+            { value: 102, key: DynamicsForm.AppointmentBookBackup },
+            { value: 103, key: DynamicsForm.PowerBIDashboard }
         ]);
 
-        public static ProcessTypes = new Dictionary<number, ProcessType>([
-            { key: 0, value: ProcessType.Workflow },
-            { key: 1, value: ProcessType.Dialog },
-            { key: 2, value: ProcessType.BusinessRule },
-            { key: 3, value: ProcessType.Action },
-            { key: 4, value: ProcessType.BusinessProcessFlow },
-            { key: 5, value: ProcessType.Flow }
+        static ProcessTypes = new Dictionary<ProcessType, number>([
+            { value: 0, key: ProcessType.Workflow },
+            { value: 1, key: ProcessType.Dialog },
+            { value: 2, key: ProcessType.BusinessRule },
+            { value: 3, key: ProcessType.Action },
+            { value: 4, key: ProcessType.BusinessProcessFlow },
+            { value: 5, key: ProcessType.Flow }
         ]);   
         
-        public static SolutionComponents = new Dictionary<number, SolutionComponent>([
-            { key: 1, value: SolutionComponent.Entity }, 
-            { key: 2, value: SolutionComponent.Attribute }, 
-            { key: 3, value: SolutionComponent.Relationship }, 
-            { key: 4, value: SolutionComponent.AttributePicklistValue }, 
-            { key: 5, value: SolutionComponent.AttributeLookupValue }, 
-            { key: 6, value: SolutionComponent.ViewAttribute }, 
-            { key: 7, value: SolutionComponent.LocalizedLabel }, 
-            { key: 8, value: SolutionComponent.RelationshipExtraCondition }, 
-            { key: 9, value: SolutionComponent.OptionSet }, 
-            { key: 10, value: SolutionComponent.EntityRelationship }, 
-            { key: 11, value: SolutionComponent.EntityRelationshipRole }, 
-            { key: 12, value: SolutionComponent.EntityRelationshipRelationships }, 
-            { key: 13, value: SolutionComponent.ManagedProperty }, 
-            { key: 14, value: SolutionComponent.EntityKey }, 
-            { key: 16, value: SolutionComponent.Privilege }, 
-            { key: 17, value: SolutionComponent.PrivilegeObjectTypeCode }, 
-            { key: 18, value: SolutionComponent.Index }, 
-            { key: 20, value: SolutionComponent.Role }, 
-            { key: 21, value: SolutionComponent.RolePrivilege }, 
-            { key: 22, value: SolutionComponent.DisplayString }, 
-            { key: 23, value: SolutionComponent.DisplayStringMap }, 
-            { key: 24, value: SolutionComponent.Form }, 
-            { key: 25, value: SolutionComponent.Organization }, 
-            { key: 26, value: SolutionComponent.SavedQuery }, 
-            { key: 29, value: SolutionComponent.Workflow }, 
-            { key: 31, value: SolutionComponent.Report }, 
-            { key: 32, value: SolutionComponent.ReportEntity }, 
-            { key: 33, value: SolutionComponent.ReportCategory }, 
-            { key: 34, value: SolutionComponent.ReportVisibility }, 
-            { key: 35, value: SolutionComponent.Attachment }, 
-            { key: 36, value: SolutionComponent.EmailTemplate }, 
-            { key: 37, value: SolutionComponent.ContractTemplate }, 
-            { key: 38, value: SolutionComponent.KBArticleTemplate }, 
-            { key: 39, value: SolutionComponent.MailMergeTemplate }, 
-            { key: 44, value: SolutionComponent.DuplicateRule }, 
-            { key: 45, value: SolutionComponent.DuplicateRuleCondition }, 
-            { key: 46, value: SolutionComponent.EntityMap }, 
-            { key: 47, value: SolutionComponent.AttributeMap }, 
-            { key: 48, value: SolutionComponent.RibbonCommand }, 
-            { key: 49, value: SolutionComponent.RibbonContextGroup }, 
-            { key: 50, value: SolutionComponent.RibbonCustomization }, 
-            { key: 52, value: SolutionComponent.RibbonRule }, 
-            { key: 53, value: SolutionComponent.RibbonTabToCommandMap }, 
-            { key: 55, value: SolutionComponent.RibbonDiff }, 
-            { key: 59, value: SolutionComponent.SavedQueryVisualization }, 
-            { key: 60, value: SolutionComponent.SystemForm }, 
-            { key: 61, value: SolutionComponent.WebResource }, 
-            { key: 62, value: SolutionComponent.SiteMap }, 
-            { key: 63, value: SolutionComponent.ConnectionRole }, 
-            { key: 64, value: SolutionComponent.ComplexControl }, 
-            { key: 65, value: SolutionComponent.HierarchyRule }, 
-            { key: 66, value: SolutionComponent.CustomControl }, 
-            { key: 68, value: SolutionComponent.CustomControlDefaultConfig }, 
-            { key: 70, value: SolutionComponent.FieldSecurityProfile }, 
-            { key: 71, value: SolutionComponent.FieldPermission }, 
-            { key: 90, value: SolutionComponent.PluginType }, 
-            { key: 91, value: SolutionComponent.PluginAssembly }, 
-            { key: 92, value: SolutionComponent.SdkMessageProcessingStep }, 
-            { key: 93, value: SolutionComponent.SdkMessageProcessingStepImage }, 
-            { key: 95, value: SolutionComponent.ServiceEndpoint }, 
-            { key: 150, value: SolutionComponent.RoutingRule }, 
-            { key: 151, value: SolutionComponent.RoutingRuleItem }, 
-            { key: 152, value: SolutionComponent.SLA }, 
-            { key: 153, value: SolutionComponent.SLAItem }, 
-            { key: 154, value: SolutionComponent.ConvertRule }, 
-            { key: 155, value: SolutionComponent.ConvertRuleItem }, 
-            { key: 161, value: SolutionComponent.MobileOfflineProfile }, 
-            { key: 162, value: SolutionComponent.MobileOfflineProfileItem }, 
-            { key: 165, value: SolutionComponent.SimilarityRule }, 
-            { key: 166, value: SolutionComponent.DataSourceMapping }, 
-            { key: 201, value: SolutionComponent.SdkMessage }, 
-            { key: 202, value: SolutionComponent.SdkMessageFilter }, 
-            { key: 203, value: SolutionComponent.SdkMessagePair }, 
-            { key: 204, value: SolutionComponent.SdkMessageRequest }, 
-            { key: 205, value: SolutionComponent.SdkMessageRequestField }, 
-            { key: 206, value: SolutionComponent.SdkMessageResponse }, 
-            { key: 207, value: SolutionComponent.SdkMessageResponseField }, 
-            { key: 208, value: SolutionComponent.ImportMap }, 
-            { key: 210, value: SolutionComponent.WebWizard }, 
-            { key: 300, value: SolutionComponent.CanvasApp }
+        static SolutionComponents = new Dictionary<SolutionComponent, number>([
+            { value: 1, key: SolutionComponent.Entity }, 
+            { value: 2, key: SolutionComponent.Attribute }, 
+            { value: 3, key: SolutionComponent.Relationship }, 
+            { value: 4, key: SolutionComponent.AttributePicklistValue }, 
+            { value: 5, key: SolutionComponent.AttributeLookupValue }, 
+            { value: 6, key: SolutionComponent.ViewAttribute }, 
+            { value: 7, key: SolutionComponent.LocalizedLabel }, 
+            { value: 8, key: SolutionComponent.RelationshipExtraCondition }, 
+            { value: 9, key: SolutionComponent.OptionSet }, 
+            { value: 10, key: SolutionComponent.EntityRelationship }, 
+            { value: 11, key: SolutionComponent.EntityRelationshipRole }, 
+            { value: 12, key: SolutionComponent.EntityRelationshipRelationships }, 
+            { value: 13, key: SolutionComponent.ManagedProperty }, 
+            { value: 14, key: SolutionComponent.EntityKey }, 
+            { value: 16, key: SolutionComponent.Privilege }, 
+            { value: 17, key: SolutionComponent.PrivilegeObjectTypeCode }, 
+            { value: 18, key: SolutionComponent.Index }, 
+            { value: 20, key: SolutionComponent.Role }, 
+            { value: 21, key: SolutionComponent.RolePrivilege }, 
+            { value: 22, key: SolutionComponent.DisplayString }, 
+            { value: 23, key: SolutionComponent.DisplayStringMap }, 
+            { value: 24, key: SolutionComponent.Form }, 
+            { value: 25, key: SolutionComponent.Organization }, 
+            { value: 26, key: SolutionComponent.SavedQuery }, 
+            { value: 29, key: SolutionComponent.Workflow }, 
+            { value: 31, key: SolutionComponent.Report }, 
+            { value: 32, key: SolutionComponent.ReportEntity }, 
+            { value: 33, key: SolutionComponent.ReportCategory }, 
+            { value: 34, key: SolutionComponent.ReportVisibility }, 
+            { value: 35, key: SolutionComponent.Attachment }, 
+            { value: 36, key: SolutionComponent.EmailTemplate }, 
+            { value: 37, key: SolutionComponent.ContractTemplate }, 
+            { value: 38, key: SolutionComponent.KBArticleTemplate }, 
+            { value: 39, key: SolutionComponent.MailMergeTemplate }, 
+            { value: 44, key: SolutionComponent.DuplicateRule }, 
+            { value: 45, key: SolutionComponent.DuplicateRuleCondition }, 
+            { value: 46, key: SolutionComponent.EntityMap }, 
+            { value: 47, key: SolutionComponent.AttributeMap }, 
+            { value: 48, key: SolutionComponent.RibbonCommand }, 
+            { value: 49, key: SolutionComponent.RibbonContextGroup }, 
+            { value: 50, key: SolutionComponent.RibbonCustomization }, 
+            { value: 52, key: SolutionComponent.RibbonRule }, 
+            { value: 53, key: SolutionComponent.RibbonTabToCommandMap }, 
+            { value: 55, key: SolutionComponent.RibbonDiff }, 
+            { value: 59, key: SolutionComponent.SavedQueryVisualization }, 
+            { value: 60, key: SolutionComponent.SystemForm }, 
+            { value: 61, key: SolutionComponent.WebResource }, 
+            { value: 62, key: SolutionComponent.SiteMap }, 
+            { value: 63, key: SolutionComponent.ConnectionRole }, 
+            { value: 64, key: SolutionComponent.ComplexControl }, 
+            { value: 65, key: SolutionComponent.HierarchyRule }, 
+            { value: 66, key: SolutionComponent.CustomControl }, 
+            { value: 68, key: SolutionComponent.CustomControlDefaultConfig }, 
+            { value: 70, key: SolutionComponent.FieldSecurityProfile }, 
+            { value: 71, key: SolutionComponent.FieldPermission }, 
+            { value: 90, key: SolutionComponent.PluginType }, 
+            { value: 91, key: SolutionComponent.PluginAssembly }, 
+            { value: 92, key: SolutionComponent.SdkMessageProcessingStep }, 
+            { value: 93, key: SolutionComponent.SdkMessageProcessingStepImage }, 
+            { value: 95, key: SolutionComponent.ServiceEndpoint }, 
+            { value: 150, key: SolutionComponent.RoutingRule }, 
+            { value: 151, key: SolutionComponent.RoutingRuleItem }, 
+            { value: 152, key: SolutionComponent.SLA }, 
+            { value: 153, key: SolutionComponent.SLAItem }, 
+            { value: 154, key: SolutionComponent.ConvertRule }, 
+            { value: 155, key: SolutionComponent.ConvertRuleItem }, 
+            { value: 161, key: SolutionComponent.MobileOfflineProfile }, 
+            { value: 162, key: SolutionComponent.MobileOfflineProfileItem }, 
+            { value: 165, key: SolutionComponent.SimilarityRule }, 
+            { value: 166, key: SolutionComponent.DataSourceMapping }, 
+            { value: 201, key: SolutionComponent.SdkMessage }, 
+            { value: 202, key: SolutionComponent.SdkMessageFilter }, 
+            { value: 203, key: SolutionComponent.SdkMessagePair }, 
+            { value: 204, key: SolutionComponent.SdkMessageRequest }, 
+            { value: 205, key: SolutionComponent.SdkMessageRequestField }, 
+            { value: 206, key: SolutionComponent.SdkMessageResponse }, 
+            { value: 207, key: SolutionComponent.SdkMessageResponseField }, 
+            { value: 208, key: SolutionComponent.ImportMap }, 
+            { value: 210, key: SolutionComponent.WebWizard }, 
+            { value: 300, key: SolutionComponent.CanvasApp }
         ]);
+
+        static WebResources = new Dictionary<WebResourceFileType, number>([
+            { value: 1, key: WebResourceFileType.Html },
+            { value: 2, key: WebResourceFileType.Css },
+            { value: 3, key: WebResourceFileType.JScript },
+            { value: 3, key: WebResourceFileType.Json },
+            { value: 4, key: WebResourceFileType.Data },
+            { value: 5, key: WebResourceFileType.Png },
+            { value: 6, key: WebResourceFileType.Jpeg },
+            { value: 7, key: WebResourceFileType.Gif },
+            { value: 8, key: WebResourceFileType.Silverlight },
+            { value: 9, key: WebResourceFileType.Xsl },
+            { value: 10, key: WebResourceFileType.Icon },
+            { value: 11, key: WebResourceFileType.Vector },
+            { value: 12, key: WebResourceFileType.String }
+        ]);
+    
     }
 }

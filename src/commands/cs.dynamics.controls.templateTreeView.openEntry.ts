@@ -1,5 +1,3 @@
-import ExtensionConfiguration from "../config/ExtensionConfiguration";
-import * as cs from "../cs";
 import * as TemplateTreeView from "../views/TemplateTreeView";
 import TemplateManager from "../controls/Templates/TemplateManager";
 /**

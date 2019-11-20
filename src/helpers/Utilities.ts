@@ -5,22 +5,20 @@ import * as opn from "opn";
 
 export default class Utilities
 {
-    public static IsNullOrEmpty(value: any) : boolean {
+    static IsNullOrEmpty(value: any) : boolean {
         return !(value && value.length > 0);
     }
 
-    public static IsNull(value: any) : boolean
-    {
+    static IsNull(value: any) : boolean {
         return typeof value === "undefined" || value === null;
     }
 
-    public static NormalizeLineBreaks(value: string): string {
+    static NormalizeLineBreaks(value: string): string {
         return value.replace("\r\n", "\n").replace("\n\r", "\n").replace("\n", "\r\n");
     }
     
     //https://stackoverflow.com/a/8809472
-    public static NewGuid() : string 
-    {
+    static NewGuid(): string {
         var d = new Date().getTime();
 
         if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -36,12 +34,10 @@ export default class Utilities
         });
     }    
 
-    public static ParseDate(date: string) : Date
-    {
+    static ParseDate(date: string) : Date {
         let regexMatch: RegExpExecArray | (string | number)[];
         
-        if (typeof date === 'string') 
-        {
+        if (typeof date === 'string') {
             regexMatch = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:Z|[-+]\d{2}:\d{2})$/.exec(date);
 
             if (regexMatch) {
@@ -52,7 +48,7 @@ export default class Utilities
         return new Date(date);        
     }
 
-    public static IsGuid(parameter:string): boolean {
+    static IsGuid(parameter:string): boolean {
         try {
             const match = /[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}/i.exec(parameter)[0];
 
@@ -63,33 +59,33 @@ export default class Utilities
         }
     }    
 
-    public static TrimGuid(id: string) {
+    static TrimGuid(id: string):string {
         return (id || '').replace(/{|}/g, '');
     }
 
-    public static EnforceTrailingSlash(path: string): string {
-        if (!path.endsWith("/"))
-        {
+    static EnforceTrailingSlash(path: string): string {
+        if (!path.endsWith("/")) {
             path = `${path}/`;
         }
 
         return path;
     }
 
-    public static RemoveTrailingSlash(string:string): string {
+    static RemoveTrailingSlash(string:string): string {
         return string.replace(/\/$/, "");
     }
 
-    public static InitWebApiUrl(version:string): string {
+    static InitWebApiUrl(version:string): string {
         return '/api/data/v' + version + '/';
     }
 
-    public static IsObject(obj):boolean {
+    static IsObject(obj):boolean {
         const type = typeof obj;
+
         return type === 'function' || type === 'object' && !!obj;
     }
 
-    public static Clone<T>(src: any): T {
+    static Clone<T>(src: any): T {
         let target = {};
 
         for (let prop in src) {
@@ -106,7 +102,7 @@ export default class Utilities
         return <T>target;
     }
 
-    public static OpenWindow(uri:vscode.Uri | string, retryFunction?:any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close"): void {
+    static OpenWindow(uri:vscode.Uri | string, retryFunction?:any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close"): void {
         if (uri instanceof vscode.Uri) {
             vscode.env.openExternal(<vscode.Uri>uri).then(opened => {
                 if (!opened && retryFunction) {
@@ -119,7 +115,7 @@ export default class Utilities
         }
     }
 
-    public static RetryWithMessage(errorMessage:string, retryFunction:any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close"): void {
+    static RetryWithMessage(errorMessage:string, retryFunction:any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close"): void {
         vscode.window
             .showErrorMessage(errorMessage, tryAgainMessage, closeMessage)
             .then(selectedItem =>
@@ -141,7 +137,7 @@ export default class Utilities
             });
     }    
 
-    public static BuildFunctionParameters(parameters?: any) : string {
+    static BuildFunctionParameters(parameters?: any) : string {
         if (parameters) {
             var parameterNames = Object.keys(parameters);
             var functionParameters = "";
@@ -178,21 +174,21 @@ export default class Utilities
         }
     }    
 
-    public static ObjectToQuerystring(source:any):string {
+    static ObjectToQuerystring(source:any):string {
         return Object.keys(source).map(key => key + '=' + encodeURIComponent(source[key])).join('&');
     }
 
-    public static ConvertToReferenceObject(responseData:any):any {
+    static ConvertToReferenceObject(responseData:any):any {
         const result = /\/(\w+)\(([0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12})/i.exec(responseData["@odata.id"]);
 
         return { id: result[2], collection: result[1], oDataContext: responseData["@odata.context"] };
     }
 
-    public static PowerShellSafeString(value: string) : string {
+    static PowerShellSafeString(value: string) : string {
         return value.replace('$', '`$');
     }
 
-    public static ToPlural(value:string): string { 
+    static ToPlural(value:string): string { 
         if (value.endsWith("s")) {
             return `${value}es`;
         } else if (value.endsWith("y")) {
@@ -202,62 +198,21 @@ export default class Utilities
         }
     }
 
-    private static utf8encoder = new TextEncoder();
+    static utf8encoder = new TextEncoder();
     
-    // All solutions at MDN only provide a way to encode a native JS string to UTF-16 base64 string.
-    // Here, you can apply any encoding supported by TextEncoder.
-    public static Base64utf8Encode(str:string): string {
-        return this.BytesToBase64(this.utf8encoder.encode(str));
+    static StringToBase64(string:string): string {
+        return this.BytesToBase64(this.utf8encoder.encode(string));
     }
 
-    public static BytesToBase64(bytes:Uint8Array): string {
-        const base64abc = () => {
-            let abc = [],
-                A = "A".charCodeAt(0),
-                a = "a".charCodeAt(0),
-                n = "0".charCodeAt(0);
-    
-            for (let i = 0; i < 26; ++i) {
-                abc.push(String.fromCharCode(A + i));
-            }
-            
-            for (let i = 0; i < 26; ++i) {
-                abc.push(String.fromCharCode(a + i));
-            }
-    
-            for (let i = 0; i < 10; ++i) {
-                abc.push(String.fromCharCode(n + i));
-            }
-    
-            abc.push("+");
-            abc.push("/");
-    
-            return abc;
-        };
-
-        const base64alphabet = base64abc();
-        let result = '', i: number, l = bytes.length;
-
-        for (i = 2; i < l; i += 3) {
-            result += base64alphabet[bytes[i - 2] >> 2];
-            result += base64alphabet[((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)];
-            result += base64alphabet[((bytes[i - 1] & 0x0F) << 2) | (bytes[i] >> 6)];
-            result += base64alphabet[bytes[i] & 0x3F];
-        }
-        
-        if (i === l + 1) { // 1 octet missing
-            result += base64alphabet[bytes[i - 2] >> 2];
-            result += base64alphabet[(bytes[i - 2] & 0x03) << 4];
-            result += "==";
-        }
-        
-        if (i === l) { // 2 octets missing
-            result += base64alphabet[bytes[i - 2] >> 2];
-            result += base64alphabet[((bytes[i - 2] & 0x03) << 4) | (bytes[i - 1] >> 4)];
-            result += base64alphabet[(bytes[i - 1] & 0x0F) << 2];
-            result += "=";
-        }
-        
-        return result;
+    static BytesToBase64(bytes:Uint8Array): string {
+        return Buffer.from(bytes).toString("base64");
     }    
+
+    static Base64ToBytes(str:string): Uint8Array {
+        return this.utf8encoder.encode(Buffer.from(str, "base64").toString());
+    }
+
+    static Base64ToString(str:string): string { 
+        return Buffer.from(str, "base64").toString();
+    }
 }

@@ -5,11 +5,15 @@ export namespace dynamics {
     export class deployment {
         public static readonly _namespace:string = "cs.dynamics.deployment";
         public static readonly addSolutionComponent:string = `${deployment._namespace}.addSolutionComponent`;
+        public static readonly createWebResource:string = `${deployment._namespace}.createWebResource`;
+        public static readonly compareWebResource:string = `${deployment._namespace}.compareWebResource`;
         public static readonly dotNetBuild:string = `${deployment._namespace}.dotNetBuild`;
         public static readonly dotNetTest:string = `${deployment._namespace}.dotNetTest`;
+        public static readonly packWebResource:string = `${deployment._namespace}.packWebResource`;
         public static readonly registerPluginAssembly:string = `${deployment._namespace}.registerPluginAssembly`;
         public static readonly removeSolutionComponent:string = `${deployment._namespace}.removeSolutionComponent`;
         public static readonly removeSolutionMapping:string = `${deployment._namespace}.removeSolutionMapping`;
+        public static readonly unpackWebResource:string = `${deployment._namespace}.unpackWebResource`;
         public static readonly updateSolutionMapping:string = `${deployment._namespace}.updateSolutionMapping`;
     }
 

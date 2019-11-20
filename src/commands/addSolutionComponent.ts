@@ -31,9 +31,10 @@ export default class AddSolutionComponent implements IWireUpCommands {
                 if (!componentType) { return; }
                 
                 if (Utilities.IsNullOrEmpty(componentId)) { 
-                    componentId = await QuickPicker.pickDynamicsSolutionComponent(config, undefined, componentType, "Choose a component to add");
+                    const pickResponse = await QuickPicker.pickDynamicsSolutionComponent(config, solution, componentType, "Choose a component to add");
+                    if (!pickResponse) { return; }
 
-                    if (Utilities.IsNullOrEmpty(componentId)) { return; }
+                    componentId = pickResponse.componentId;
                 }
 
                 addRequiredComponents = addRequiredComponents || await QuickPicker.pickBoolean("Add all dependent components?", "Yes", "No");
@@ -43,7 +44,11 @@ export default class AddSolutionComponent implements IWireUpCommands {
 
                 return api.addSolutionComponent(solution, componentId, componentType, addRequiredComponents, doNotIncludeSubcomponents, componentSettings)
                     .then(() => solution)
-                    .catch(error => vscode.window.showErrorMessage(`Could not add ${componentType.toString()} to solution.  The error returned was: ${error.message}`));
+                    .catch(error => QuickPicker.error(
+                        `Could not add ${componentType.toString()} to solution.  The error returned was: ${error.message}`, 
+                        undefined, 
+                        "Retry", 
+                        () => vscode.commands.executeCommand(cs.dynamics.deployment.addSolutionComponent, config, solution, componentId, componentType)));
             })
         );
     }

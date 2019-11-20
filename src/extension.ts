@@ -24,6 +24,7 @@ import NewWorkspaceViewManager from './views/NewWorkspaceView';
 import VisualStudioProjectCommands from './commands/visualStudioProjectCommands';
 import TemplateTreeView from './views/TemplateTreeView';
 import PluginStepImageViewManager from './views/pluginStepImageView';
+import WebResourceManager from './controls/WebResources/WebResourceManager';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -58,6 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 		new IconLoader(),
 		new GenerateEntities(),
 		new SolutionMap(),
+		new WebResourceManager(context),
 		new PackDynamicsSolution(),
 		new UnpackDynamicsSolution(),
 		new AddSolutionComponent(),

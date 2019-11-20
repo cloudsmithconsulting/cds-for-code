@@ -2,6 +2,7 @@ import * as FileSystem from "../helpers/FileSystem";
 import * as vscode from 'vscode';
 import * as path from 'path';
 import TemplateManager from "../controls/Templates/TemplateManager";
+import QuickPicker from "../helpers/QuickPicker";
 
 /**
  * Main command to edit the template catalog.
@@ -22,5 +23,5 @@ export default async function run(configFile?:vscode.Uri) {
 		file = path.join((await TemplateManager.getTemplatesFolder()), "catalog.json");
 	}
 
-	vscode.workspace.openTextDocument(file).then(d => vscode.window.showTextDocument(d));
+	QuickPicker.openFile(file);
 }

@@ -2,7 +2,7 @@ import vscode = require("vscode");
 import ExtensionConfiguration from "../config/ExtensionConfiguration";
 import * as cs from "../cs";
 import QuickPicker from "../helpers/QuickPicker";
-import { TemplateType, TemplateItem } from "../controls/Templates/TemplateManager";
+import { TemplateItem, TemplateType } from "../controls/Templates/Types";
 import * as FileSystem from "../helpers/FileSystem";
 import * as p from 'path';
 
@@ -50,7 +50,7 @@ export default async function run(destinationUri?: vscode.Uri, type?:TemplateTyp
     }
 
     if (!path) {
-        QuickPicker.error("You must select a workspace and folder before you can create a templated project or item", false, "Try Again", () => { this.run(destinationUri, type); }, "Cancel");
+        QuickPicker.error("You must select a workspace and folder before you can create a templated project or item", false, "Try Again", () => { vscode.commands.executeCommand(cs.dynamics.templates.createFromTemplate, destinationUri, type); }, "Cancel");
 
         return;
     }

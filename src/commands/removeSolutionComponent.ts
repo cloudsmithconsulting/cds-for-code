@@ -34,9 +34,10 @@ export default class RemoveSolutionComponent implements IWireUpCommands {
                 }
                 
                 if (Utilities.IsNullOrEmpty(componentId)) { 
-                    componentId = await QuickPicker.pickDynamicsSolutionComponent(config, solution, componentType, "Choose a component to remove");
+                    const pickResponse = await QuickPicker.pickDynamicsSolutionComponent(config, solution, componentType, "Choose a component to remove");
+                    if (!pickResponse) { return; }
 
-                    if (Utilities.IsNullOrEmpty(componentId)) { return; }
+                    componentId = pickResponse.componentId;
                 }
 
                 const api = new ApiRepository(config);
