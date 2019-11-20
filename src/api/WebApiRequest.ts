@@ -341,6 +341,7 @@ export default class WebApiRequest
         if (protocolInterface === httpntlm)
         {
             console.log(`WebAPI: [${method}] ${uri} - (${headers ? Object.keys(headers).length : 0} headers / ${data ? data.length : 0} bytes)`);
+            if (data) { console.log(data); }
 
             protocolInterface[method.toLowerCase()]({
                 url: uri,

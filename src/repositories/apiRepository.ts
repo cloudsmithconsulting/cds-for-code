@@ -21,8 +21,7 @@ export default class ApiRepository {
     }
 
     retrieveSolution(solutionId:string) : Promise<any[]> {
-        return this.webapi.retrieveRequest({ collection: "solutions", id: solutionId })
-            .then(response => response.value);
+        return this.webapi.retrieveRequest({ collection: "solutions", id: solutionId });
     }
 
     retrieveSolutions() : Promise<any[]> {
@@ -60,17 +59,21 @@ export default class ApiRepository {
             .then(response => response.value);
     }
 
-    async retrieveWebResourceFolders(solutionId?:string, folder?:string) : Promise<string[]> {
+    async retrieveWebResourceFolders(solutionId?:string, folder?:string, customizableOnly:boolean = true) : Promise<string[]> {
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "webresourceset",
             filter: "contains(name, '/')",
-            select: ['webresourceid', "name"],
+            select: ['webresourceid', "name", "iscustomizable"],
             orderBy: ["name"]
         };
 
         if (folder) {
             folder = Utilities.EnforceTrailingSlash(folder);
             request.filter = `startswith(name,'${folder}')`;
+        }
+
+        if (customizableOnly) {
+            request.filter += " and iscustomizable/Value eq true";
         }
 
         if (solutionId && Utilities.IsGuid(solutionId)) { 
@@ -92,13 +95,13 @@ export default class ApiRepository {
                 .toArray());
         }
 
-    async retrieveWebResources(solutionId?:string, folder?:string) : Promise<any[]> {
+    async retrieveWebResources(solutionId?:string, folder?:string, customizableOnly:boolean = true) : Promise<any[]> {
         const selectAll:boolean = folder && folder === "*";
         const request:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "webresourceset",
-            select: ['webresourceid', "name", "displayname", "webresourcetype", "solutionid"],
+            select: ['webresourceid', "name", "displayname", "webresourcetype", "solutionid", "iscustomizable"],
             filter: !selectAll ? "(not contains(name, '/'))" : "",
-            orderBy: ["displayname"]
+            orderBy: ["name"]
         };
 
         folder = !selectAll ? folder : undefined;
@@ -109,6 +112,14 @@ export default class ApiRepository {
             folder = Utilities.EnforceTrailingSlash(folder);
             request.filter = `startswith(name,'${folder}')`;
             depth = folder.split("/").length - 1;
+        }
+
+        if (customizableOnly) {
+            if (!Utilities.IsNullOrEmpty(request.filter)) {
+                request.filter += " and";
+            }
+
+            request.filter += " iscustomizable/Value eq true";
         }
 
         if (solutionId && Utilities.IsGuid(solutionId)) { 
@@ -128,18 +139,28 @@ export default class ApiRepository {
 
         return this.webapi.retrieveAllRequest(request)
             .then(response => {
+                let filteredResponse = new TS.Linq.Enumerator(response.value);
+
                 if (!selectAll) {
-                    return new TS.Linq.Enumerator(response.value)
-                    .where(w => (w["name"] === folder || w["name"].split("/").length === depth + 1))
-                    .toArray();
-                } else {
-                    return response.value;
-                }
+                    filteredResponse = filteredResponse.where(w => (w["name"] === folder || w["name"].split("/").length === depth + 1));
+                } 
+
+                return filteredResponse.toArray();
             });
     }
 
     retrieveWebResource(webResourceId:string): Promise<any> {
         return this.webapi.retrieve(webResourceId, "webresourceset");
+    }
+
+    upsertWebResource(webResource:any): Promise<any> {
+        //return this.webapi.upsert(webResource.webresourceid || Utilities.NewGuid(), "webresourceset", webResource, "return=representation");
+        
+        if (webResource.webresourceid) {
+            return this.webapi.update(webResource.webresourceid, "webresourceset", webResource, "return=representation");
+        } else {
+            return this.webapi.create(webResource, "webresourceset", "return=representation");
+        }
     }
 
     retrievePluginAssemblies(solutionId?:string) : Promise<any[]> {
@@ -199,8 +220,7 @@ export default class ApiRepository {
     }
 
     // Gets a list of entities and their IDs
-    retrieveEntityTypeCodes() : Promise<any[]>
-    {
+    retrieveEntityTypeCodes() : Promise<any[]> {
         let entitiesQuery:DynamicsWebApi.RetrieveMultipleRequest = {
             select: [ "MetadataId", "LogicalName", "ObjectTypeCode" ]
         };
@@ -417,16 +437,19 @@ export default class ApiRepository {
     }
 
     addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
-        const actionParams = { 
-            ComponentId: componentId,
-            ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
-            SolutionUniqueName: solution.uniquename,  
-            AddRequiredComponents: addRequiredComponents,
-            DoNotIncludeSubcomponents: doNotIncludeSubcomponents,
-            IncludedComponentSettingsValues: componentSettings || null
-        };
+        return this.getSolutionComponent(componentId, componentType)
+            .then(solutionComponent => {
+                if (solutionComponent) { return; }
 
-        return this.webapi.executeUnboundAction("AddSolutionComponent", actionParams);
+                return { 
+                    ComponentId: componentId,
+                    ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
+                    SolutionUniqueName: solution.uniquename,  
+                    AddRequiredComponents: addRequiredComponents,
+                    DoNotIncludeSubcomponents: doNotIncludeSubcomponents,
+                    IncludedComponentSettingsValues: componentSettings || null
+                };
+            }).then(parameters => this.webapi.executeUnboundAction("AddSolutionComponent", parameters));
     }
 
     getSolutionComponent(componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {

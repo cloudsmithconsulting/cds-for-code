@@ -50,7 +50,7 @@ export default async function run(destinationUri?: vscode.Uri, type?:TemplateTyp
     }
 
     if (!path) {
-        QuickPicker.error("You must select a workspace and folder before you can create a templated project or item", false, "Try Again", () => { this.run(destinationUri, type); }, "Cancel");
+        QuickPicker.error("You must select a workspace and folder before you can create a templated project or item", false, "Try Again", () => { vscode.commands.executeCommand(cs.dynamics.templates.createFromTemplate, destinationUri, type); }, "Cancel");
 
         return;
     }
