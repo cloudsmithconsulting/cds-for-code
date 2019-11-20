@@ -170,6 +170,7 @@ export default class SolutionMap implements IWireUpCommands
 
         return new TS.Linq.Enumerator(this.mappings)
             .where(m => m.path && (m.path === fsPath || m.path === fsPath + "/" || m.path === fsPath + "\\") && (!organizationId || organizationId && m.organizationId === organizationId))
+            .select(m => new SolutionWorkspaceMapping(m.organizationId, m.solutionId, m.path))
             .toArray();
     }
 

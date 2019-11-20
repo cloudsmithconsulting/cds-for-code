@@ -424,7 +424,7 @@ export default class QuickPicker {
 
         for (let value in enumObject) {
             if (typeof enumObject[value] === 'number' || typeof enumObject[value] === 'string') {
-                enumOptions.push(new QuickPickOption(typeof enumObject[value] === 'string' ? enumObject[value].toString() : value, undefined, undefined, value));
+                enumOptions.push(new QuickPickOption(typeof enumObject[value] === 'string' ? enumObject[value].toString() : value, undefined, undefined, enumObject[value]));
             }
         }
 
@@ -506,6 +506,20 @@ export default class QuickPicker {
         }
 
         return null;
+    }
+
+    public static async openFile(filename:string): Promise<void> {
+        if (FileSystem.exists(filename)) {
+            vscode.workspace.openTextDocument(filename).then(d => vscode.window.showTextDocument(d));
+        }
+    }
+
+    public static async openContent(content:string | Buffer, language:string): Promise<void> {
+        if (Buffer.isBuffer(content)) {
+            content = content.toString();
+        }
+
+        vscode.workspace.openTextDocument({ language, content}).then(d => vscode.window.showTextDocument(d));
     }
 }
 
