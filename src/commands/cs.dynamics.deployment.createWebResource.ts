@@ -7,7 +7,6 @@ import QuickPicker from "../helpers/QuickPicker";
 import ApiRepository from "../repositories/apiRepository";
 import Utilities from "../helpers/Utilities";
 import { SolutionWorkspaceMapping } from "../config/SolutionMap";
-import EnumParser from "../../out/helpers/EnumParser";
 
 /**
  * This command can be invoked by the by either the file explorer view or the Dynamics TreeView
