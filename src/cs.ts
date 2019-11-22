@@ -132,6 +132,7 @@ export namespace dynamics {
             public static readonly _namespace:string = "cs.dynamics.controls.explorer";
             public static readonly createFromItemTemplate:string = `${explorer._namespace}.createFromItemTemplate`;
             public static readonly createFromProjectTemplate:string = `${explorer._namespace}.createFromProjectTemplate`;
+            public static readonly craeteWebResource:string = `${explorer._namespace}.createWebResource`;
             public static readonly dotNetBuild:string = `${explorer._namespace}.dotNetBuild`;
             public static readonly dotNetTest:string = `${explorer._namespace}.dotNetTest`;
             public static readonly generateEntityCodeToFolder:string = `${explorer._namespace}.generateEntityCodeToFolder`;
@@ -163,6 +164,7 @@ export namespace dynamics {
             public static readonly open:string = `${pluginStep._namespace}.open`;
         }
 
+        // tslint:disable-next-line: class-name
         export class pluginStepImage {
             public static readonly _namespace:string = "cs.dynamics.controls.pluginStepImage";
             public static readonly open:string = `${pluginStepImage._namespace}.open`;

@@ -15,6 +15,7 @@ import ApiRepository from '../../repositories/apiRepository';
 import EnumParser from '../../helpers/EnumParser';
 import XmlParser from '../../helpers/XmlParser';
 
+import createWebResourceExplorer from "../../commands/cs.dynamics.controls.explorer.createWebResource";
 import createWebResource from "../../commands/cs.dynamics.deployment.createWebResource";
 import compareWebResource from "../../commands/cs.dynamics.deployment.compareWebResource";
 import packWebResource from "../../commands/cs.dynamics.deployment.packWebResource";
@@ -35,6 +36,7 @@ export default class WebResourceManager implements IWireUpCommands {
     wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
         // now wire a command into the context
         context.subscriptions.push(
+            vscode.commands.registerCommand(cs.dynamics.controls.explorer.craeteWebResource, createWebResourceExplorer.bind(this)),
             vscode.commands.registerCommand(cs.dynamics.deployment.createWebResource, createWebResource.bind(this)),
             vscode.commands.registerCommand(cs.dynamics.deployment.compareWebResource, compareWebResource.bind(this)),
             vscode.commands.registerCommand(cs.dynamics.deployment.packWebResource, packWebResource.bind(this)),
@@ -42,25 +44,29 @@ export default class WebResourceManager implements IWireUpCommands {
         );
     }
 
-    getSolutionMapping(fsPath:string, orgId?:string): SolutionWorkspaceMapping {
+    getSolutionMapping(fsPath?:string, orgId?:string, solutionId?:string): SolutionWorkspaceMapping {
         const solutionMap = SolutionMap.loadFromWorkspace(this.context);
-        let map:SolutionWorkspaceMapping;
-    
+        let mappings;
+
         if (fsPath && FileSystem.exists(fsPath)) {
-            const mappings = solutionMap.getByPathOrParent(fsPath, orgId);
-            
-            map = mappings.length > 0 ? mappings[0] : undefined;
+            mappings = solutionMap.getByPathOrParent(fsPath, orgId);
+        } else if (solutionId) {
+            mappings = solutionMap.getBySolutionId(solutionId, orgId);
         }
 
-        return map;
+        return mappings && mappings.length > 0 ? mappings[0] : undefined;
     }
 
-    getWebResourceType(extension:string): number {
+    getWebResourceType(extension:string): number | undefined {
+        if (!extension || extension === "") {
+            return undefined;
+        }
+        
         if (!extension.startsWith(".")) { extension = "." + extension; }
         
         const webResourceType = EnumParser.getValues<DynamicsWebApi.WebResourceFileType>(DynamicsWebApi.WebResourceFileType).find(e => e.toString() === extension);
 
-        return DynamicsWebApi.CodeMappings.getWebResourceTypeCode(webResourceType);
+        return webResourceType ? DynamicsWebApi.CodeMappings.getWebResourceTypeCode(webResourceType) : undefined;
     }
 
     async getWebResourceDetails(fsPath:string | undefined): Promise<any> {
@@ -88,13 +94,7 @@ export default class WebResourceManager implements IWireUpCommands {
         return undefined;
     }
 
-    async writeDataXmlFile(config:DynamicsWebApi.Config, map:SolutionWorkspaceMapping, webResource:any, fsPath:string) {
-        const api = new ApiRepository(config);
-
-        // Get the solution and add this web resource as a component.
-        await api.retrieveSolution(map.solutionId)
-            .then(solution => api.addSolutionComponent(solution, webResource.webresourceid, DynamicsWebApi.SolutionComponent.WebResource, true, false));
-
+    async writeDataXmlFile(map:SolutionWorkspaceMapping, webResource:any, fsPath:string) {
         const dataFile = fsPath + ".data.xml";
         const resolver = (webResource) => {
             const parts = path.relative(map.path, fsPath).split(".").join("").split("\\");
@@ -107,7 +107,7 @@ export default class WebResourceManager implements IWireUpCommands {
 
         if (!FileSystem.exists(dataFile)) {
             await TemplateManager.getSystemTemplate("solution.webresource.xml")
-                .then(async t => FileSystem.writeFileSync(dataFile, await t.apply(undefined, { webresource: webResource, resolver: { resolvefilename: resolver } })));
+                .then(async template => FileSystem.writeFileSync(dataFile, await template.apply(undefined, { webresource: webResource, resolver: { resolvefilename: resolver } })));
         }        
     }
 }

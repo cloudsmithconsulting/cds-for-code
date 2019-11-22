@@ -154,8 +154,6 @@ export default class ApiRepository {
     }
 
     upsertWebResource(webResource:any): Promise<any> {
-        //return this.webapi.upsert(webResource.webresourceid || Utilities.NewGuid(), "webresourceset", webResource, "return=representation");
-        
         if (webResource.webresourceid) {
             return this.webapi.update(webResource.webresourceid, "webresourceset", webResource, "return=representation");
         } else {
@@ -461,19 +459,17 @@ export default class ApiRepository {
     }
 
     addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
-        return this.getSolutionComponent(componentId, componentType)
-            .then(solutionComponent => {
-                if (solutionComponent) { return; }
+        // This action allows you to call it on components that are already added, no need for a check.
+        const parameters:any = { 
+            ComponentId: componentId,
+            ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
+            SolutionUniqueName: solution.uniquename,  
+            AddRequiredComponents: addRequiredComponents,
+            DoNotIncludeSubcomponents: doNotIncludeSubcomponents,
+            IncludedComponentSettingsValues: componentSettings || null
+        };
 
-                return { 
-                    ComponentId: componentId,
-                    ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
-                    SolutionUniqueName: solution.uniquename,  
-                    AddRequiredComponents: addRequiredComponents,
-                    DoNotIncludeSubcomponents: doNotIncludeSubcomponents,
-                    IncludedComponentSettingsValues: componentSettings || null
-                };
-            }).then(parameters => this.webapi.executeUnboundAction("AddSolutionComponent", parameters));
+        return this.webapi.executeUnboundAction("AddSolutionComponent", parameters);
     }
 
     getSolutionComponent(componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {

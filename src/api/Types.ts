@@ -341,24 +341,24 @@ export namespace DynamicsWebApi {
     }
 
     export class CodeMappings {
-        static getDynamicsFormCode(form: DynamicsForm): number {
-            return this.DynamicsForms.get(form);
+        static getDynamicsFormCode(form?: DynamicsForm): number {
+            return form ? this.DynamicsForms.get(form) : undefined;
         }
 
-        static getInteractiveDashboardLayout(layout: InteractiveDashboardLayout) {
-            return this.InteractiveDashboardLayouts.get(layout);
+        static getInteractiveDashboardLayout(layout?: InteractiveDashboardLayout) {
+            return layout ? this.InteractiveDashboardLayouts.get(layout) : undefined;
         }
 
-        static getProcessTypeCode(processType: ProcessType): number {
-            return this.ProcessTypes.get(processType);
+        static getProcessTypeCode(processType?: ProcessType): number {
+            return processType ? this.ProcessTypes.get(processType) : undefined;
         }
 
-        static getSolutionComponentCode(componentType: SolutionComponent): number {
-            return this.SolutionComponents.get(componentType);
+        static getSolutionComponentCode(componentType?: SolutionComponent): number {
+            return componentType ? this.SolutionComponents.get(componentType) : undefined;
         }
 
-        static getWebResourceTypeCode(webResourceType: WebResourceFileType): number {
-            return this.WebResources.get(webResourceType);
+        static getWebResourceTypeCode(webResourceType?: WebResourceFileType): number {            
+            return webResourceType ? this.WebResources.get(webResourceType) : undefined;
         }
 
         static InteractiveDashboardLayouts = new Dictionary<InteractiveDashboardLayout, number>([

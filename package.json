@@ -222,6 +222,11 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.dynamics.controls.explorer.createWebResource",
+				"title": "New Web Resource",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.controls.explorer.createFromItemTemplate",
 				"title": "New Templated Item",
 				"category": "UserInterface"
@@ -527,6 +532,11 @@
 					"command": "cs.dynamics.controls.explorer.createFromProjectTemplate",
 					"when": "explorerResourceIsFolder",
 					"group": "navigation@2"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.createWebResource",
+					"when": "explorerResourceIsFolder",
+					"group": "navigation@3"
 				},
 				{
 					"command": "cs.dynamics.controls.explorer.saveTemplateFile",
