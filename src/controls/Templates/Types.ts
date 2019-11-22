@@ -13,9 +13,11 @@ export class TemplateItem {
         public location?: string,
         public outputPath?: string,
         public categories?: string[],
-        public placeholders?: TemplatePlaceholder[]) { 
+        public placeholders?: TemplatePlaceholder[],
+        public directives?: TemplateDirective[]) { 
         if (!categories) { categories = []; }
         if (!placeholders) { placeholders = []; }
+        if (!directives) { directives = []; }
     }
 
     static from(from:TemplateItem): TemplateItem {
@@ -28,7 +30,8 @@ export class TemplateItem {
             from.location, 
             from.outputPath,
             from.categories,
-            from.placeholders);
+            from.placeholders,
+            from.directives);
     }
     
     async apply(placeholders: Dictionary<string, string>, object?: any): Promise<string | Buffer> {
@@ -50,6 +53,18 @@ export class TemplateItem {
             return await TemplateManager.applyTemplate(this, fileContents, placeholders, object);
         }
     }
+}
+
+export class TemplateDirective { 
+    constructor(name?:string) {
+        this.name = name;
+        this.usePlaceholders = true;
+        this.usePlaceholdersInFilename = true;
+    }
+    
+    name: string;
+    usePlaceholders: boolean;   
+    usePlaceholdersInFilename: boolean;
 }
 
 export class TemplatePlaceholder {

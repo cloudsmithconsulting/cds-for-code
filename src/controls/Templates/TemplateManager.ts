@@ -121,8 +121,9 @@ export default class TemplateManager implements IWireUpCommands {
 
         // recursively copy files, replacing placeholders as necessary
 		const copyInternal = async (source: string, destination: string) => {
+            const directive = template && template.directives && template.directives.length > 0 ? template.directives.find(d => d.name === path.basename(source)) : undefined;
             // maybe replace placeholders in filename
-            if (usePlaceholders) {
+            if (usePlaceholders && (!directive || directive.usePlaceholdersInFilename)) {
                 destination = await TemplateManager.resolvePlaceholders(destination, placeholderRegExp, placeholders, template) as string;
             }
 
@@ -196,7 +197,7 @@ export default class TemplateManager implements IWireUpCommands {
                 // get src file contents
                 let fileContents : Buffer = fs.readFileSync(source);
 
-                if (usePlaceholders) {
+                if (usePlaceholders && (!directive || directive.usePlaceholders)) {
                     fileContents = await TemplateManager.resolvePlaceholders(fileContents, placeholderRegExp, placeholders, template) as Buffer;
                 }
 
