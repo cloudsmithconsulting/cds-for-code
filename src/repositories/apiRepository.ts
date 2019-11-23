@@ -16,6 +16,10 @@ export default class ApiRepository {
 
     private webapi: DynamicsWebApiClient;
 
+    publishAllXml() : Promise<any> {
+        return this.webapi.executeUnboundAction("PublishAllXml");
+    }
+
     async whoAmI() : Promise<any> {
         return await this.webapi.executeUnboundFunction('WhoAmI');
     }
