@@ -71,7 +71,7 @@ export default class SolutionFile {
     }
 
     get components(): Promise<SolutionComponentElement[]> {
-
+        return this.solutionManifest.then(manifest => manifest ? manifest.RootComponents : undefined);
     }    
 }
 
