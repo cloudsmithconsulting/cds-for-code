@@ -15,6 +15,7 @@ export namespace dynamics {
         public static readonly removeSolutionMapping:string = `${deployment._namespace}.removeSolutionMapping`;
         public static readonly unpackWebResource:string = `${deployment._namespace}.unpackWebResource`;
         public static readonly updateSolutionMapping:string = `${deployment._namespace}.updateSolutionMapping`;
+        public static readonly publishAllXml:string = `${deployment._namespace}.publishAllXml`;
     }
 
     // tslint:disable-next-line: class-name

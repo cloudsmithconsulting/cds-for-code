@@ -3,7 +3,7 @@ import * as cs from '../cs';
 import * as fs from 'fs';
 import * as path from 'path';
 import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import QuickPicker, { QuickPickOption } from '../helpers/QuickPicker';
+import QuickPicker from '../helpers/QuickPicker';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import IWireUpCommands from '../wireUpCommand';
@@ -74,6 +74,8 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 
 				managed = managed || false;
 
+				const publishXml = await QuickPicker.pickBoolean("Do you also wish to publish your customizations?", "Yes", "No");
+
 				if (Utilities.IsNullOrEmpty(logFile)) { 
 					if ((await QuickPicker.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
 						let dateString = new Date().toISOString();
@@ -112,6 +114,11 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 								if (logFile) {
 									vscode.workspace.openTextDocument(logFile)
 										.then(d => vscode.window.showTextDocument(d));	
+								}
+							})
+							.then(async () => {
+								if (publishXml) {
+									vscode.commands.executeCommand(cs.dynamics.deployment.publishAllXml, config);
 								}
 							});
 					});

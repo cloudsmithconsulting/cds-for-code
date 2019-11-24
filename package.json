@@ -33,6 +33,7 @@
 		"onCommand:cs.dynamics.controls.explorer.unpackSolutionToFolder",
 		"onCommand:cs.dynamics.controls.svcUtilConfig.configure",
 		"onCommand:cs.dynamics.deployment.addSolutionComponent",
+		"onCommand:cs.dynamics.deployment.publishAllXml",
 		"onCommand:cs.dynamics.deployment.removeSolutionComponent",
 		"onCommand:cs.dynamics.deployment.registerPluginAssembly",
 		"onCommand:cs.dynamics.deployment.updateSolutionMapping",
@@ -380,6 +381,11 @@
 			{
 				"command": "cs.dynamics.deployment.packWebResource",
 				"title": "Deploy a Web Resource to Dynamics 365",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.deployment.publishAllXml",
+				"title": "Publish all solution changes to Dynamics 365",
 				"category": "Dynamics 365 CE"
 			},
 			{
