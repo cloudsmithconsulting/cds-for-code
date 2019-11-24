@@ -8,10 +8,9 @@ import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import IWireUpCommands from '../wireUpCommand';
 import SolutionMap from '../config/SolutionMap';
-import XmlParser from '../helpers/XmlParser';
-import { TS } from 'typescript-linq/TS';
 import { DynamicsWebApi } from '../api/Types';
 import WorkspaceState from '../config/WorkspaceState';
+import SolutionFile from '../dynamics/SolutionFile';
 
 export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;
@@ -55,19 +54,15 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 					}
 
 					if (fs.existsSync(solutionFile)) {
-						const solutionFileXml = await XmlParser.parseFile(solutionFile);
+						const solutionFileXml:SolutionFile = await SolutionFile.from(solutionFile);
 						
-						if (!solutionFileXml 
-							|| !solutionFileXml.ImportExportXml 
-							|| !solutionFileXml.ImportExportXml.SolutionManifest 
-							|| solutionFileXml.ImportExportXml.SolutionManifest.length === 0 
-							|| !solutionFileXml.ImportExportXml.SolutionManifest[0].UniqueName) {
+						if (!solutionFileXml.isValid) {
 							vscode.window.showErrorMessage(`The solution file ${solutionFile} is not a valid Dynamics 365 solution manifest.`); 
 
 							return;
 						}
 
-						solution = solutionFileXml.ImportExportXml.SolutionManifest[0].UniqueName.toString();
+						solution = await solutionFileXml.uniqueName;
 					} 
 					else {
 						return;

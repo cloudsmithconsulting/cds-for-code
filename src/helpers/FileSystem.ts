@@ -278,12 +278,12 @@ export function makeFolderSync(destination: string, mode: string | number | null
     return true;
 }
 
-export function readFileSync(source: string): any {
-	return fs.readFileSync(source, 'utf8');
+export function readFileSync(source: string, options?: string | { encoding: string; flag?:string; }): any {
+	return fs.readFileSync(source, options || 'utf8');
 }
 
-export function writeFileSync(destination: string, data: any): void {
-	fs.writeFileSync(destination, data, 'utf8');
+export function writeFileSync(destination: string, data: any, options?: { encoding?: string | null; mode?: number | string; flag?: string; } | string | null): void {
+	fs.writeFileSync(destination, data, options || 'utf8');
 }
 
 export function unzip(archive:string, destination:string): Promise<number> {
@@ -295,6 +295,7 @@ export function unzip(archive:string, destination:string): Promise<number> {
 	return new Promise((resolve, reject) => {
 		zip.on('ready', () => {
 			makeFolderSync(destination);
+
 			zip.extract(null, destination, (err, count) => {
 				zip.close();
 

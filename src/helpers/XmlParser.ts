@@ -1,11 +1,11 @@
 import * as xml2js from 'xml2js';
-import * as fs from 'fs';
+import * as FileSystem from '../helpers/FileSystem';
 
 export default class XmlParser {
     public static async parseFile(file:string, encoding:string = 'utf8'): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (fs.existsSync(file)) {
-                xml2js.parseString(fs.readFileSync(file, encoding), (error, results) => {
+            if (FileSystem.exists(file)) {
+                xml2js.parseString(FileSystem.readFileSync(file, encoding), (error, results) => {
                     if (error) { reject(error); }
                     if (results) { resolve(results); }
                 });
