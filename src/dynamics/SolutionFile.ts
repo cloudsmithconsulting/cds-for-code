@@ -11,6 +11,7 @@ export default class SolutionFile {
     
     private _file:string;
     private _xml:string;
+    private _data:any;
     
     private constructor(file?:string, xml?:string) {
         this._file = file;
@@ -20,12 +21,23 @@ export default class SolutionFile {
     static from(file?:string) { return new SolutionFile(file); }
     static xml(input?:string) { return new SolutionFile(undefined, input); }
 
+    async save(file?:string): Promise<void> {
+        const save = XmlParser.createXml(await this.data);
+
+        FileSystem.makeFolderSync(path.dirname(file));
+        FileSystem.writeFileSync(file, save);
+    }
+
     get data(): Promise<any> { 
-        if (this._file && !this._xml) { 
-            this._xml = FileSystem.readFileSync(this._file);
+        if (!this._data) {
+            if (this._file && !this._xml) { 
+                this._xml = FileSystem.readFileSync(this._file);
+            }
+
+            return XmlParser.parseString(this._xml).then(results => this._data = results).then(() => this._data);
         }
         
-        return XmlParser.parseString(this._xml);
+        return Promise.resolve(this._data);
     }
 
     toString(): string | undefined { return this._xml; }
@@ -71,12 +83,66 @@ export default class SolutionFile {
     }
 
     get components(): Promise<SolutionComponentElement[]> {
-        return this.solutionManifest.then(manifest => manifest ? manifest.RootComponents : undefined);
+        return this.solutionManifest
+            .then(manifest => {
+                const returnValue = manifest 
+                    && manifest.RootComponents 
+                    && manifest.RootComponents.length > 0
+                    && manifest.RootComponents[0].RootComponent 
+                    && manifest.RootComponents[0].RootComponent.length > 0 
+                    ? manifest.RootComponents[0].RootComponent.map(c => new SolutionComponentElement(c.$.type, c.$.schemaName, c.$.behavior)) 
+                    : [];
+
+                return returnValue;
+            });
     }    
+
+    async addComponent(type:DynamicsWebApi.SolutionComponent | number, schemaName:string, behavior:number): Promise<void> {
+        const components = await this.components;
+        let typeCode = parseInt(type.toString());
+    
+        if (!Number.isInteger(typeCode)) {
+            typeCode = DynamicsWebApi.CodeMappings.getSolutionComponentCode(<DynamicsWebApi.SolutionComponent>type);
+        }
+
+        if (components.findIndex(c => c.type === typeCode && c.schemaName === schemaName) === -1) {
+            components.push(new SolutionComponentElement(type, schemaName, behavior));
+        }
+    }
+
+    async removeComponent(type:DynamicsWebApi.SolutionComponent | number, schemaName:string): Promise<number> {
+        const components = await this.components;
+        let typeCode = parseInt(type.toString());
+    
+        if (!Number.isInteger(typeCode)) {
+            typeCode = DynamicsWebApi.CodeMappings.getSolutionComponentCode(<DynamicsWebApi.SolutionComponent>type);
+        }
+
+        const index:number = components.findIndex(c => c.type === typeCode && c.schemaName === schemaName);
+
+        if (index > -1) {
+            components.splice(index, 1);
+        }
+
+        return index;
+    }
 }
 
 export class SolutionComponentElement {
-    type: DynamicsWebApi.SolutionComponent;
+    constructor(type:DynamicsWebApi.SolutionComponent | number, schemaName:string, behavior:number) {
+        const typeCode = parseInt(type.toString());
+    
+        if (!Number.isInteger(typeCode)) {
+            this.type = DynamicsWebApi.CodeMappings.getSolutionComponentCode(<DynamicsWebApi.SolutionComponent>type);
+        } else {
+            this.type = typeCode;
+        }
+
+        this.schemaName = schemaName;
+        this.behavior = behavior;
+    }
+
+    type: number;
     schemaName: string;
     behavior: number;
 }

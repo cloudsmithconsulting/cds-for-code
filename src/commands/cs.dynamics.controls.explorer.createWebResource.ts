@@ -8,5 +8,5 @@ import * as vscode from 'vscode';
  * @returns void
  */
 export default async function run(defaultUri?: vscode.Uri) {
-	return await vscode.commands.executeCommand(cs.dynamics.deployment.createWebResource, undefined, undefined, defaultUri);
+	return await vscode.commands.executeCommand(cs.dynamics.deployment.createWebResource, undefined, undefined, undefined, defaultUri);
 }

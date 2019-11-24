@@ -334,21 +334,25 @@ export class SolutionWorkspaceMapping {
     organizationId:string;
     path:string;
 
-    getPath(component:DynamicsWebApi.SolutionComponent, item?:any): string {
+    getPath(component?:DynamicsWebApi.SolutionComponent, item?:any): string {
         let returnPath:string;
 
-        //TODO: complete this switch statement.
-        switch (component) {
-            case DynamicsWebApi.SolutionComponent.WebResource:
-                returnPath = path.join(this.path, "WebResources");
+        if (!component) {
+            returnPath = path.join(this.path, "Other", "Solution.xml");
+        } else {
+            //TODO: complete this switch statement.
+            switch (component) {
+                case DynamicsWebApi.SolutionComponent.WebResource:
+                    returnPath = path.join(this.path, "WebResources");
 
-                if (item && item.name) {
-                    returnPath = path.join(returnPath, item.name);
-                }
+                    if (item && item.name) {
+                        returnPath = path.join(returnPath, item.name);
+                    }
 
-                break;
-            default:
-                throw new Error(`SolutionMap cannot determine the local path for solution component '${component.toString()}'`);
+                    break;
+                default:
+                    throw new Error(`SolutionMap cannot determine the local path for solution component '${component.toString()}'`);
+            }
         }
 
         return returnPath;
@@ -359,6 +363,6 @@ export class SolutionWorkspaceMapping {
     }
 
     static getWebResourceWatcherPattern(mapping:SolutionWorkspaceMapping):vscode.GlobPattern { 
-        return new RelativePattern(mapping.path, "**/WebResources/*.*");
+        return new RelativePattern(mapping.path, "*/WebResources/**/*.*");
     }
 }

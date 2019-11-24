@@ -20,6 +20,7 @@ import createWebResource from "../../commands/cs.dynamics.deployment.createWebRe
 import compareWebResource from "../../commands/cs.dynamics.deployment.compareWebResource";
 import packWebResource from "../../commands/cs.dynamics.deployment.packWebResource";
 import unpackWebResource from "../../commands/cs.dynamics.deployment.unpackWebResource";
+import SolutionFile from '../../dynamics/SolutionFile';
 
 export default class WebResourceManager implements IWireUpCommands {
     /**
@@ -108,6 +109,12 @@ export default class WebResourceManager implements IWireUpCommands {
         if (!FileSystem.exists(dataFile)) {
             await TemplateManager.getSystemTemplate("solution.webresource.xml")
                 .then(async template => FileSystem.writeFileSync(dataFile, await template.apply(undefined, { webresource: webResource, resolver: { resolvefilename: resolver } })));
-        }        
+        }       
+
+        // Edit the solution.xml file and add the component there, too.
+        const solutionFile = SolutionFile.from(map.getPath());
+        
+        await solutionFile.addComponent(DynamicsWebApi.SolutionComponent.WebResource, webResource.name, 0);
+        await solutionFile.save(map.getPath());
     }
 }

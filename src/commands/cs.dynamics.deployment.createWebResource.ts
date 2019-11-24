@@ -7,6 +7,7 @@ import QuickPicker from "../helpers/QuickPicker";
 import ApiRepository from "../repositories/apiRepository";
 import Utilities from "../helpers/Utilities";
 import { SolutionWorkspaceMapping } from "../config/SolutionMap";
+import SolutionFile from "../dynamics/SolutionFile";
 
 /**
  * This command can be invoked by the by either the file explorer view or the Dynamics TreeView
@@ -15,7 +16,7 @@ import { SolutionWorkspaceMapping } from "../config/SolutionMap";
  * @param {vscode.Uri} [defaultUri] that invoked the command
  * @returns void
  */
-export default async function run(config?:DynamicsWebApi.Config, webResource?:any, fileUri?:vscode.Uri) {
+export default async function run(config?:DynamicsWebApi.Config, solution?:any, webResource?:any, fileUri?:vscode.Uri) {
     let fsPath:string;
     let map:SolutionWorkspaceMapping;
     let folder:string;
@@ -51,23 +52,14 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
     if (webResource) {
         webResource.content = content;
     } else {
-        webResource = (await this.getWebResourceDetails(fsPath)) || {
-            name: undefined,
-            displayname: undefined,
-            languagecode: undefined,
-            description: undefined,
-            content: content,
-            webresourcetype: undefined,
-            isenabledformobileclient: undefined,
-            isavailableformobileoffline: undefined
-        };
+        webResource = (await this.getWebResourceDetails(fsPath)) || { webresourceid: Utilities.NewGuid() };
     }
 
     let defaultName:string = "";
     let defaultType:number = DynamicsWebApi.CodeMappings.getWebResourceTypeCode(this.getWebResourceType(path.extname(fsPath)));
 
     if (folder) {
-        defaultName = map ? folder.replace(map.path, "") : workspaceRoot ? folder.replace(workspaceRoot, "") : "";
+        defaultName = map ? folder.replace(map.getPath(DynamicsWebApi.SolutionComponent.WebResource), "").replace(map.path, "") : workspaceRoot ? folder.replace(workspaceRoot, "") : "";
         defaultName = defaultName.replace(/\\/, "/");
 
         if (!defaultName.endsWith("/")) {
@@ -95,6 +87,10 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
     webResource.webresourcetype = webResource.webresourcetype || defaultType || DynamicsWebApi.CodeMappings.getWebResourceTypeCode(await QuickPicker.pickEnum<DynamicsWebApi.WebResourceFileType>(DynamicsWebApi.WebResourceFileType, "What type of web resource is this?"));
     webResource.isenabledformobileclient = webResource.isenabledformobileclient || await QuickPicker.pickBoolean("Enable this web resource for mobile use?", "Yes", "No");
     webResource.isavailableformobileoffline = webResource.isavailableformobileoffline || (webResource.isenabledformobileclient && await QuickPicker.pickBoolean("Enable this web resource for mobile offline use?", "Yes", "No"));
+    webResource.introducedversion = webResource.inintroducedversion || "1.0";
+    webResource.iscustomizable = webResource.iscustomizable || { Value: true };
+    webResource.canbedeleted = webResource.canbedeleted || { Value: true };
+    webResource.ishidden = webResource.ishidden || { Value: false };
 
     if (!fsPath) {
         fsPath = await QuickPicker.pickWorkspaceFolder(undefined, "Where would you like to save this web resource?");
@@ -121,29 +117,28 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
 
     // Double check as we have calculated a path now, is there a map?
     if (!map) { map = this.getSolutionMapping(fsPath, config.orgId); }
-    let solution:any;
 
     if (!map || !map.solutionId) {
-        solution = await QuickPicker.pickDynamicsSolution(config, "Would you like to add this web resource to a solution?");
+        solution = solution || await QuickPicker.pickDynamicsSolution(config, "Would you like to add this web resource to a solution?");
         map = this.getSolutionMapping(undefined, config.orgId, solution.solutionid);
     } else {
-        solution = await api.retrieveSolution(map.solutionId);
+        solution = solution || await api.retrieveSolution(map.solutionId);
     }
 
-    await api.upsertWebResource(webResource)
-        .then(response => {
-            webResource = response;
-        })
-        .then(async () => {
-            if (solution) {
-                await api.addSolutionComponent(solution, webResource.webresourceid, DynamicsWebApi.SolutionComponent.WebResource, true, false);
-            }
+    if (solution && map) {
+        await this.writeDataXmlFile(map, webResource, fsPath);
+    } else {
+        await api.upsertWebResource(webResource)
+            .then(response => {
+                webResource = response;
+            })
+            .then(async () => {
+                if (solution) {
+                    await api.addSolutionComponent(solution, webResource.webresourceid, DynamicsWebApi.SolutionComponent.WebResource, true, false);
+                }
+            }).then(() => QuickPicker.inform(`The web resource '${webResource.name}' was created.`))
+            .catch(error => QuickPicker.error(`There was an error when saving the web resource.  The error returned was: ${error.toString()}`, undefined, "Try Again", () => vscode.commands.executeCommand(cs.dynamics.deployment.createWebResource, config, undefined, fileUri)));
+    }
 
-            if (solution && map) {
-                await this.writeDataXmlFile(map, webResource, fsPath);
-            }
-        }).then(() => QuickPicker.inform(`The web resource '${webResource.name}' was created.`))
-        .catch(error => QuickPicker.error(`There was an error when saving the web resource.  The error returned was: ${error.toString()}`, undefined, "Try Again", () => vscode.commands.executeCommand(cs.dynamics.deployment.createWebResource, config, undefined, fileUri)));
-   
     return webResource;
 }
