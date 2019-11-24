@@ -18,11 +18,11 @@ export default class SolutionFile {
         this._xml = xml || this._file && FileSystem.exists(this._file) ? FileSystem.readFileSync(this._file) : undefined;
      }
 
-    static from(file?:string) { return new SolutionFile(file); }
-    static xml(input?:string) { return new SolutionFile(undefined, input); }
+    static async from(file?:string): Promise<SolutionFile> { const returnObject = new SolutionFile(file); await returnObject.data; return returnObject; }
+    static async xml(input?:string): Promise<SolutionFile> { const returnObject = new SolutionFile(undefined, input); await returnObject.data; return returnObject; }
 
     async save(file?:string): Promise<void> {
-        const save = XmlParser.createXml(await this.data);
+        const save = await XmlParser.createXml(await this.data);
 
         FileSystem.makeFolderSync(path.dirname(file));
         FileSystem.writeFileSync(file, save);
@@ -108,6 +108,10 @@ export default class SolutionFile {
         if (components.findIndex(c => c.type === typeCode && c.schemaName === schemaName) === -1) {
             components.push(new SolutionComponentElement(type, schemaName, behavior));
         }
+
+        if (this._data) {
+            this._data.ImportExportXml.SolutionManifest[0].RootComponents[0].RootComponent = components.map(c => c.xml);
+        }
     }
 
     async removeComponent(type:DynamicsWebApi.SolutionComponent | number, schemaName:string): Promise<number> {
@@ -122,6 +126,10 @@ export default class SolutionFile {
 
         if (index > -1) {
             components.splice(index, 1);
+        }
+
+        if (this._data) {
+            this._data.ImportExportXml.SolutionManifest[0].RootComponents[0].RootComponent = components.map(c => c.xml);
         }
 
         return index;
@@ -145,4 +153,8 @@ export class SolutionComponentElement {
     type: number;
     schemaName: string;
     behavior: number;
+
+    get xml(): any { 
+        return { $: { type: this.type, schemaName: this.schemaName, behavior: this.behavior } };
+    }
 }

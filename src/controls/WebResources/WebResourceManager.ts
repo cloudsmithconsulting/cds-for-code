@@ -112,9 +112,10 @@ export default class WebResourceManager implements IWireUpCommands {
         }       
 
         // Edit the solution.xml file and add the component there, too.
-        const solutionFile = SolutionFile.from(map.getPath());
-        
-        await solutionFile.addComponent(DynamicsWebApi.SolutionComponent.WebResource, webResource.name, 0);
-        await solutionFile.save(map.getPath());
+        const solutionFile = await SolutionFile.from(map.getPath());
+
+        await solutionFile.addComponent(DynamicsWebApi.SolutionComponent.WebResource, webResource.name, 0).then(() => {
+            solutionFile.save(map.getPath());
+        });
     }
 }
