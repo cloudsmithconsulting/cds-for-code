@@ -335,15 +335,19 @@ export class SolutionWorkspaceMapping {
     path:string;
 
     getPath(component?:DynamicsWebApi.SolutionComponent, item?:any): string {
+        return SolutionWorkspaceMapping.mapWorkspacePath(this.path, component, item);
+    }
+
+    static mapWorkspacePath(solutionPath:string, component?:DynamicsWebApi.SolutionComponent, item?:any): string {
         let returnPath:string;
 
         if (!component) {
-            returnPath = path.join(this.path, "Other", "Solution.xml");
+            returnPath = path.join(solutionPath, "Other", "Solution.xml");
         } else {
             //TODO: complete this switch statement.
             switch (component) {
                 case DynamicsWebApi.SolutionComponent.WebResource:
-                    returnPath = path.join(this.path, "WebResources");
+                    returnPath = path.join(solutionPath, "WebResources");
 
                     if (item && item.name) {
                         returnPath = path.join(returnPath, item.name);

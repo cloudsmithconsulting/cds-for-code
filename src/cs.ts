@@ -139,6 +139,7 @@ export namespace dynamics {
             public static readonly generateEntityCodeToFolder:string = `${explorer._namespace}.generateEntityCodeToFolder`;
             public static readonly generateEntityCodeToFile:string = `${explorer._namespace}.generateEntityCodeToFile`;
             public static readonly packSolutionFromFolder:string = `${explorer._namespace}.packSolutionFromFolder`;
+            public static readonly packWebResource:string = `${explorer._namespace}.packWebResource`;
             public static readonly saveTemplateFile:string = `${explorer._namespace}.saveTemplateFile`;
             public static readonly saveTemplateFolder:string = `${explorer._namespace}.saveTemplateFolder`;
             public static readonly registerPluginFile:string = `${explorer._namespace}.registerPluginFile`;

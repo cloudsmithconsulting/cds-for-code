@@ -263,6 +263,11 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.dynamics.controls.explorer.packWebResource",
+				"title": "Deploy web resource to Dynamics 365",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.controls.explorer.registerPluginFile",
 				"title": "Deploy assembly to Dynamics 365",
 				"category": "UserInterface"
@@ -279,7 +284,7 @@
 			},
 			{
 				"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
-				"title": "Download Dynamics 365 solution here",
+				"title": "Download & unpack Dynamics 365 solution here",
 				"category": "UserInterface"
 			},
 			{
@@ -520,14 +525,19 @@
 					"group": "zzz_azuretools_deploy@3"
 				},
 				{
+					"command": "cs.dynamics.controls.explorer.packWebResource",
+					"when": "resourceExtname == .html || resourceExtname == .css || resourceExtname == .js || resourceExtName == .json || resourceExtname == .xml || resourceExtname == .png || resourceExtname == .jpg || resourceExtname == .gif || resourceExtname == .xap || resourceExtname == .xsl || resourceExtname == .ico || resourceExtname == .svg || resourceExtname == .resx",
+					"group": "zzz_azuretools_deploy@4"
+				},
+				{
 					"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
 					"when": "explorerResourceIsFolder",
-					"group": "zzz_azuretools_deploy@4"
+					"group": "zzz_azuretools_deploy@5"
 				},
 				{
 					"command": "cs.dynamics.controls.explorer.registerPluginFile",
 					"when": "explorerResourceIsFolder != true && resourceExtname == .csproj || resourceExtname == .vbproj || resourceExtname == .dll",
-					"group": "zzz_azuretools_deploy@3"
+					"group": "zzz_azuretools_deploy@4"
 				},
 				{
 					"command": "cs.dynamics.controls.explorer.createFromItemTemplate",

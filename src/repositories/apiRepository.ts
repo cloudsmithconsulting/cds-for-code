@@ -154,14 +154,32 @@ export default class ApiRepository {
     }
 
     retrieveWebResource(webResourceId:string): Promise<any> {
-        return this.webapi.retrieve(webResourceId, "webresourceset");
+        return this.webapi.retrieve(webResourceId, "webresourceset")
+            .catch(error => {
+                if (error && error.status === 404) {
+                    return undefined;
+                }
+
+                throw error;
+            });
     }
 
-    upsertWebResource(webResource:any): Promise<any> {
-        if (webResource.webresourceid) {
+    async upsertWebResource(webResource:any): Promise<any> {
+        let forceCreate:boolean = false;
+
+        if (webResource && webResource.webresourceid) {
+            const newWebResource = await this.retrieveWebResource(webResource.webresourceid);
+
+            forceCreate = !newWebResource;
+        }
+
+        if (webResource && !forceCreate) {
             return this.webapi.update(webResource.webresourceid, "webresourceset", webResource, "return=representation");
         } else {
-            return this.webapi.create(webResource, "webresourceset", "return=representation");
+            return this.webapi.create(webResource, "webresourceset", "return=representation")
+                .catch(error => {
+                    throw error;
+                });
         }
     }
 

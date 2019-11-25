@@ -16,7 +16,7 @@ import { SolutionWorkspaceMapping } from "../config/SolutionMap";
  * @param {vscode.Uri} [fileUri] The Uri of the file to save the web resource as.
  * @returns void
  */
-export default async function run(config?:DynamicsWebApi.Config, webResource?:any, fileUri?: vscode.Uri) {
+export default async function run(config?:DynamicsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
     config = config || await QuickPicker.pickDynamicsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
     if (!config) { return; }
 
@@ -31,6 +31,11 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
     webResource = webResource || await QuickPicker.pickDynamicsSolutionComponent(config, map ? map.solutionId : undefined, DynamicsWebApi.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
     if (!webResource) { return; }
 
+    // If we do have a map, enforce that we put files where we are supposed to, regardless of user preference.
+    if (map && !fsPath) { 
+        fsPath = map.getPath(DynamicsWebApi.SolutionComponent.WebResource, webResource);
+    }
+    
     fsPath = fsPath || await QuickPicker.pickWorkspaceFolder(undefined, "Choose a location where the web resource will be downloaded");
 
     const api = new ApiRepository(config);
@@ -50,7 +55,7 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
         map = this.getSolutionMapping(fsPath, config.orgId);
     }
 
-    // If we do have a map, enforce that we put files where we are supposed to, regardless of user preference.
+    // Check again :) If we do have a map, enforce that we put files where we are supposed to, regardless of user preference.
     if (map) { 
         fsPath = map.getPath(DynamicsWebApi.SolutionComponent.WebResource, webResource);
     }
@@ -63,7 +68,11 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
         await this.writeDataXmlFile(config, map, webResource, fsPath);
     }
 
-    QuickPicker.inform(`${webResource.name} is now synchronized with the filesystem.`, undefined, "Open in Editor", async () => {
+    if (!autoOpen) {
+        QuickPicker.inform(`${webResource.name} is now synchronized with the filesystem.`, undefined, "Open in Editor", async () => {
+            await QuickPicker.openFile(fsPath);
+        });
+    } else {
         await QuickPicker.openFile(fsPath);
-    });
+    }
 }
