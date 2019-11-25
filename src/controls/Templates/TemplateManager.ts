@@ -300,34 +300,38 @@ export default class TemplateManager implements IWireUpCommands {
     }
 
     static async importTemplate(archive: string, systemTemplate:boolean = false): Promise<TemplateItem> {
-        const folder = await this.getTemplatesFolder(systemTemplate);
-        const templateFolder = path.join(folder, path.basename(archive).replace(path.extname(archive), ""));
-
-        await FileSystem.makeFolderSync(templateFolder);
-        await FileSystem.unzip(archive, templateFolder);
-
-        if (FileSystem.exists(path.join(templateFolder, "template.json"))) {
-            const template = await TemplateItem.read(path.join(templateFolder, "template.json"));
-            const catalog = await this.getTemplateCatalog(undefined, systemTemplate);
-            
-            if (template && catalog) {
-                // We may have moved the location of the template (+ items), and need to re-calculate.                
-                const filename = path.extname(template.location) !== "" ? path.basename(template.location) : "";
-                template.location = path.join(path.relative(folder, templateFolder), filename);
-
-                const index = catalog.items.findIndex(i => i.name === template.name);
-
-                if (index > -1) {
-                    catalog.items.splice(index, 1);
+        try {
+            const folder = await this.getTemplatesFolder(systemTemplate);
+            const templateFolder = path.join(folder, path.basename(archive).replace(path.extname(archive), ""));
+    
+            await FileSystem.makeFolderSync(templateFolder);
+            await FileSystem.unzip(archive, templateFolder);
+    
+            if (FileSystem.exists(path.join(templateFolder, "template.json"))) {
+                const template = await TemplateItem.read(path.join(templateFolder, "template.json"));
+                const catalog = await this.getTemplateCatalog(undefined, systemTemplate);
+                
+                if (template && catalog) {
+                    // We may have moved the location of the template (+ items), and need to re-calculate.                
+                    const filename = path.extname(template.location) !== "" ? path.basename(template.location) : "";
+                    template.location = path.join(path.relative(folder, templateFolder), filename);
+    
+                    const index = catalog.items.findIndex(i => i.name === template.name);
+    
+                    if (index > -1) {
+                        catalog.items.splice(index, 1);
+                    }
+    
+                    catalog.items.push(template);
+                    catalog.save();
+    
+                    await FileSystem.deleteItem(path.join(templateFolder, "template.json"));
+    
+                    return template;
                 }
-
-                catalog.items.push(template);
-                catalog.save();
-
-                await FileSystem.deleteItem(path.join(templateFolder, "template.json"));
-
-                return template;
             }
+        } catch (error) {
+            console.log(error);
         }
     }
 
