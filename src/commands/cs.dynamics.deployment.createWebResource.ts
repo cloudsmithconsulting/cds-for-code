@@ -50,7 +50,6 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
     }
 
     const api = new ApiRepository(config);
-    const isNew = !(webResource && webResource.webresourceid);
 
     webResource = webResource || (await this.getWebResourceDetails(fsPath)) || { webresourceid: Utilities.NewGuid() };
 
@@ -89,12 +88,8 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
 
     webResource.displayname = webResource.displayname || await QuickPicker.ask("What is the display name for this web resource?");
     webResource.webresourcetype = webResource.webresourcetype || defaultType || DynamicsWebApi.CodeMappings.getWebResourceTypeCode(await QuickPicker.pickEnum<DynamicsWebApi.WebResourceFileType>(DynamicsWebApi.WebResourceFileType, "What type of web resource is this?"));
-
-    if (isNew) {
-        webResource.description = webResource.description || await QuickPicker.ask("Describe this web resource");
-        webResource.languagecode = webResource.languagecode || parseInt(await QuickPicker.ask("What is the language code for this web resource?", undefined, "1033"));
-    }
-
+    webResource.description = webResource.description || await QuickPicker.ask("Describe this web resource");
+    webResource.languagecode = webResource.languagecode || parseInt(await QuickPicker.ask("What is the language code for this web resource?", undefined, "1033"));
     webResource.isenabledformobileclient = webResource.isenabledformobileclient || await QuickPicker.pickBoolean("Enable this web resource for mobile use?", "Yes", "No");
     webResource.isavailableformobileoffline = webResource.isavailableformobileoffline || (webResource.isenabledformobileclient && await QuickPicker.pickBoolean("Enable this web resource for mobile offline use?", "Yes", "No"));
     webResource.introducedversion = webResource.inintroducedversion || "1.0";

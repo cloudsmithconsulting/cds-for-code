@@ -47,13 +47,13 @@ export default async function run(config?:DynamicsWebApi.Config, solution?:any, 
     }
 
     try {
-        webResource = await this.upsertWebResource(config, webResource, solution);
+        const result = await this.upsertWebResource(config, webResource, solution);
 
         if (inform) {
             await QuickPicker.inform(`The web resource '${webResource.name}' was saved to the Dynamics server.`);
         }
 
-        return { webResource, fsPath: fileUri.fsPath };
+        return { webResource: result || webResource, fsPath: fileUri.fsPath };
     } catch (error) {
         await QuickPicker.error(`There was an error when saving the web resource.  The error returned was: ${error && error.message ? error.message : error.toString() }`, undefined, "Try Again", () => vscode.commands.executeCommand(cs.dynamics.deployment.packWebResource, config, solution, webResource, fileUri));
     }
