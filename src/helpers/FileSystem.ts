@@ -185,13 +185,15 @@ async function _walk(dir: string, predicate?:(item:string) => boolean, done?: (e
 }
 
 export async function deleteItem(path:string): Promise<void> {
-	fs.unlink(path, (error) => {
-		if (error) {
-			return Promise.reject(error);
-		}
+	if (fs.existsSync(path)) {
+		fs.unlink(path, (error) => {
+			if (error) {
+				return Promise.reject(error);
+			}
 
-		return Promise.resolve();
-	});
+			return Promise.resolve();
+		});
+	} 
 }
 
 /**

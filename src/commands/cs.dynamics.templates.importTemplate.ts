@@ -5,6 +5,7 @@ import QuickPicker from "../helpers/QuickPicker";
 import { TemplateItem, TemplateType } from "../controls/Templates/Types";
 import * as FileSystem from "../helpers/FileSystem";
 import * as p from 'path';
+import TemplateManager from "../controls/Templates/TemplateManager";
 
 /**
  * Command exports a template from your workspace into a .zip archive for re-import later.
@@ -16,5 +17,22 @@ import * as p from 'path';
  * @returns void
  */
 export default async function run(sourceUri:vscode.Uri): Promise<void> {
+    if (!sourceUri) {
+        const response = await QuickPicker.pickAnyFile(undefined, false, "Select template item", { "Zip Files": [ "*.zip" ]});
+        if (!response) { return; }
+
+        if (response instanceof Array && response.length > 0) {
+            sourceUri = response[0];
+        } else {
+            sourceUri = <vscode.Uri>response;
+        }
+    } 
+
+    TemplateManager.importTemplate(sourceUri.fsPath)
+        .then(template => {
+            QuickPicker.inform(`Imported template '${template.name}'`);
+        }).catch(error => {
+            QuickPicker.error(`Failed to import the template '${sourceUri.fsPath}': ${error}`, false, "Try Again", () => { vscode.commands.executeCommand(cs.dynamics.templates.importTemplate, sourceUri); }, "Cancel");
+        });
 
 }

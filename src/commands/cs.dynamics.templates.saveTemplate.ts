@@ -34,7 +34,7 @@ export default async function run(templateUri: vscode.Uri, type:TemplateType) {
     }
 
     if (!path) {
-        QuickPicker.error("You must select a workspace and folder before you can save a project template", false, "Try Again", () => { vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, templateUri, type); }, "Cancel");
+        await QuickPicker.error("You must select a workspace and folder before you can save a project template", false, "Try Again", () => { vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, templateUri, type); }, "Cancel");
 
         return;
     }
