@@ -58,6 +58,8 @@ export namespace dynamics {
         public static readonly createFromTemplate:string = `${templates._namespace}.createFromTemplate`;
         public static readonly deleteTemplate:string = `${templates._namespace}.deleteTemplate`;
         public static readonly editTemplateCatalog:string = `${templates._namespace}.editTemplateCatalog`;
+        public static readonly exportTemplate:string = `${templates._namespace}.exportTemplate`;
+        public static readonly importTemplate:string = `${templates._namespace}.importTemplate`;
         public static readonly openTemplateFolder:string = `${templates._namespace}.openTemplateFolder`;
         public static readonly saveTemplate:string = `${templates._namespace}.saveTemplate`;
     }
@@ -213,6 +215,8 @@ export namespace dynamics {
             public static readonly createInWorkspace:string = `${templateTreeView._namespace}.createInWorkspace`;
             public static readonly deleteEntry:string = `${templateTreeView._namespace}.deleteEntry`;
             public static readonly editEntry:string = `${templateTreeView._namespace}.editEntry`;
+            public static readonly exportEntry:string = `${templateTreeView._namespace}.exportEntry`;
+            public static readonly importEntry:string = `${templateTreeView._namespace}.importEntry`;
             public static readonly openEntry:string = `${templateTreeView._namespace}.openEntry`;
             public static readonly refreshEntry:string = `${templateTreeView._namespace}.refreshEntry`;
         }

@@ -19,6 +19,8 @@ import createFromProjectTemplate from "../../commands/cs.dynamics.controls.explo
 import createTemplate from '../../commands/cs.dynamics.templates.createFromTemplate';
 import deleteTemplate from '../../commands/cs.dynamics.templates.deleteTemplate';
 import editTemplateCatalog from '../../commands/cs.dynamics.templates.editTemplateCatalog';
+import exportTemplate from '../../commands/cs.dynamics.templates.exportTemplate';
+import importTemplate from '../../commands/cs.dynamics.templates.importTemplate';
 import openTemplateFolder from '../../commands/cs.dynamics.templates.openTemplateFolder';
 import saveTemplate from '../../commands/cs.dynamics.templates.saveTemplate';
 import saveTemplateFile from "../../commands/cs.dynamics.controls.explorer.saveTemplateFile";
@@ -51,6 +53,8 @@ export default class TemplateManager implements IWireUpCommands {
             vscode.commands.registerCommand(cs.dynamics.templates.createFromTemplate, createTemplate.bind(this)),
             vscode.commands.registerCommand(cs.dynamics.templates.deleteTemplate, deleteTemplate.bind(this)),
             vscode.commands.registerCommand(cs.dynamics.templates.editTemplateCatalog, editTemplateCatalog.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.templates.exportTemplate, exportTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.templates.importTemplate, importTemplate.bind(this)),
             vscode.commands.registerCommand(cs.dynamics.templates.openTemplateFolder, openTemplateFolder.bind(this)),
             vscode.commands.registerCommand(cs.dynamics.templates.saveTemplate, saveTemplate.bind(this)),
         );
