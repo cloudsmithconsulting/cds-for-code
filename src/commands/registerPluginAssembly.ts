@@ -67,7 +67,7 @@ export default class RegisterPluginAssembly implements IWireUpCommands {
 				if (!config) { return; }
 
 				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a solution", true);
-                pluginAssembly = pluginAssembly || await QuickPicker.pickDynamicsSolutionComponent(config, solution, DynamicsWebApi.SolutionComponent.PluginAssembly, "Choose a plugin assembly to update (or none for new)");
+                pluginAssembly = pluginAssembly || await QuickPicker.pickDynamicsSolutionComponent(config, solution, DynamicsWebApi.SolutionComponent.PluginAssembly, "Choose a plugin assembly to update (or press esc for new)");
                
                 const api = new ApiRepository(config);
 
