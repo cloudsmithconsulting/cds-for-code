@@ -90,14 +90,14 @@ export default class SolutionFile {
                     && manifest.RootComponents.length > 0
                     && manifest.RootComponents[0].RootComponent 
                     && manifest.RootComponents[0].RootComponent.length > 0 
-                    ? manifest.RootComponents[0].RootComponent.map(c => new SolutionComponentElement(c.$.type, c.$.schemaName, c.$.behavior)) 
+                    ? manifest.RootComponents[0].RootComponent.map(c => new SolutionComponentElement(c.$.type, c.$.id, c.$.schemaName, c.$.behavior)) 
                     : [];
 
                 return returnValue;
             });
     }    
 
-    async addComponent(type:DynamicsWebApi.SolutionComponent | number, schemaName:string, behavior:number): Promise<void> {
+    async addComponent(type:DynamicsWebApi.SolutionComponent | number, id?:string, schemaName?:string, behavior?:number): Promise<void> {
         const components = await this.components;
         let typeCode = parseInt(type.toString());
     
@@ -105,8 +105,10 @@ export default class SolutionFile {
             typeCode = DynamicsWebApi.CodeMappings.getSolutionComponentCode(<DynamicsWebApi.SolutionComponent>type);
         }
 
-        if (components.findIndex(c => c.type === typeCode && c.schemaName === schemaName) === -1) {
-            components.push(new SolutionComponentElement(type, schemaName, behavior));
+        if (schemaName && components.findIndex(c => c.type === typeCode && c.schemaName === schemaName) === -1) {
+            components.push(new SolutionComponentElement(type, undefined, schemaName, behavior));
+        } else if (id && components.findIndex(c => c.type === typeCode && c.id === id) === -1) {
+            components.push(new SolutionComponentElement(type, id, undefined, behavior));
         }
 
         if (this._data) {
@@ -114,7 +116,7 @@ export default class SolutionFile {
         }
     }
 
-    async removeComponent(type:DynamicsWebApi.SolutionComponent | number, schemaName:string): Promise<number> {
+    async removeComponent(type:DynamicsWebApi.SolutionComponent | number, id?:string, schemaName?:string): Promise<number> {
         const components = await this.components;
         let typeCode = parseInt(type.toString());
     
@@ -122,9 +124,15 @@ export default class SolutionFile {
             typeCode = DynamicsWebApi.CodeMappings.getSolutionComponentCode(<DynamicsWebApi.SolutionComponent>type);
         }
 
-        const index:number = components.findIndex(c => c.type === typeCode && c.schemaName === schemaName);
+        let index:number;
+        
+        if (schemaName) {
+            index = components.findIndex(c => c.type === typeCode && c.schemaName === schemaName);
+        } else if (id) {
+            index = components.findIndex(c => c.type === typeCode && c.id === id);
+        }
 
-        if (index > -1) {
+        if (index && index > -1) {
             components.splice(index, 1);
         }
 
@@ -137,7 +145,7 @@ export default class SolutionFile {
 }
 
 export class SolutionComponentElement {
-    constructor(type:DynamicsWebApi.SolutionComponent | number, schemaName:string, behavior:number) {
+    constructor(type:DynamicsWebApi.SolutionComponent | number, id?:string, schemaName?:string, behavior?:number) {
         const typeCode = parseInt(type.toString());
     
         if (!Number.isInteger(typeCode)) {
@@ -146,15 +154,17 @@ export class SolutionComponentElement {
             this.type = typeCode;
         }
 
-        this.schemaName = schemaName;
-        this.behavior = behavior;
+        if (id) { this.id = id; }
+        if (schemaName) { this.schemaName = schemaName; }
+        if (behavior !== undefined) { this.behavior = behavior; }
     }
 
+    id: string;
     type: number;
     schemaName: string;
     behavior: number;
 
     get xml(): any { 
-        return { $: { type: this.type, schemaName: this.schemaName, behavior: this.behavior } };
+        return { $: { type: this.type, schemaName: this.schemaName, behavior: this.behavior, id: this.id } };
     }
 }

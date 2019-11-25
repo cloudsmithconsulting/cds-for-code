@@ -83,6 +83,7 @@ export default class WebResourceManager implements IWireUpCommands {
                     name: xmlObject.WebResource.Name && xmlObject.WebResource.Name.length > 0 ? xmlObject.WebResource.Name[0] : undefined,
                     displayname: xmlObject.WebResource.DisplayName && xmlObject.WebResource.DisplayName.length > 0 ? xmlObject.WebResource.DisplayName[0] : undefined,
                     description: xmlObject.WebResource.Description && xmlObject.WebResource.Description.length > 0 ? xmlObject.WebResource.Description[0] : undefined,
+                    languagecode: xmlObject.WebResource.LanguageCode && xmlObject.WebResource.LanguageCode.length > 0 ? xmlObject.WebResource.LanguageCode[0] : undefined,
                     webresourcetype: xmlObject.WebResource.WebResourceType && xmlObject.WebResource.WebResourceType.length > 0 && Number.isInteger(xmlObject.WebResource.WebResourceType[0]) ? parseInt(xmlObject.WebResource.WebResourceType[0]) : undefined,
                     introducedversion: xmlObject.WebResource.IntroducedVersion && xmlObject.WebResource.IntroducedVersion.length > 0 ? xmlObject.WebResource.IntroducedVersion[0] : undefined,
                     isenabledformobileclient: xmlObject.WebResource.IsEnabledForMobileClient && xmlObject.WebResource.IsEnabledForMobileClient.length > 0 ? xmlObject.WebResource.IsEnabledForMobileClient[0] === "1" : undefined,
@@ -111,6 +112,8 @@ export default class WebResourceManager implements IWireUpCommands {
                 if (await QuickPicker.pickBoolean("Would you like to publish the web resource?", "Yes", "No")) {
                     await vscode.commands.executeCommand(cs.dynamics.deployment.publishCustomizations, config, [ { type: DynamicsWebApi.SolutionComponent.WebResource, id: webResource.webresourceid }]);
                 }
+            }).then(() => {
+                return webResource;
             });        
     }
 
@@ -133,7 +136,7 @@ export default class WebResourceManager implements IWireUpCommands {
         // Edit the solution.xml file and add the component there, too.
         const solutionFile = await SolutionFile.from(SolutionWorkspaceMapping.mapWorkspacePath(map.path));
 
-        await solutionFile.addComponent(DynamicsWebApi.SolutionComponent.WebResource, webResource.name, 0).then(() => {
+        await solutionFile.addComponent(DynamicsWebApi.SolutionComponent.WebResource, undefined, webResource.name, 0).then(() => {
             solutionFile.save(SolutionWorkspaceMapping.mapWorkspacePath(map.path));
         });
     }
