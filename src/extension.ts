@@ -18,7 +18,7 @@ import AddSolutionComponent from './commands/addSolutionComponent';
 import RemoveSolutionComponent from './commands/removeSolutionComponent';
 import PluginStepViewManager from './views/pluginStepView';
 import RegisterPluginAssembly from './commands/registerPluginAssembly';
-import PublishAllXml from "./commands/PublishAllXml";
+import PublishCustomizations from "./commands/PublishAllXml";
 import SvcUtilConfigViewManager from './views/svcUtilConfigView';
 import SolutionMap from './config/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
@@ -63,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
 		new WebResourceManager(context),
 		new PackDynamicsSolution(),
 		new UnpackDynamicsSolution(),
-		new PublishAllXml(),
+		new PublishCustomizations(),
 		new AddSolutionComponent(),
 		new RemoveSolutionComponent(),
 		new RegisterPluginAssembly(),

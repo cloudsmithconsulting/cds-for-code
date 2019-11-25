@@ -18,6 +18,7 @@ import compareWebResource from "../../commands/cs.dynamics.deployment.compareWeb
 import packWebResource from "../../commands/cs.dynamics.deployment.packWebResource";
 import unpackWebResource from "../../commands/cs.dynamics.deployment.unpackWebResource";
 import SolutionFile from '../../dynamics/SolutionFile';
+import QuickPicker from '../../helpers/QuickPicker';
 
 export default class WebResourceManager implements IWireUpCommands {
     /**
@@ -106,6 +107,10 @@ export default class WebResourceManager implements IWireUpCommands {
                 }               
 
                 return webResource;
+            }).then(async () => {
+                if (await QuickPicker.pickBoolean("Would you like to publish the web resource?", "Yes", "No")) {
+                    await vscode.commands.executeCommand(cs.dynamics.deployment.publishCustomizations, config, [ { type: DynamicsWebApi.SolutionComponent.WebResource, id: webResource.webresourceid }]);
+                }
             });        
     }
 

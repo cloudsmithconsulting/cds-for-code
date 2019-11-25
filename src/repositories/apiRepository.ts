@@ -16,6 +16,10 @@ export default class ApiRepository {
 
     private webapi: DynamicsWebApiClient;
 
+    publishXml(xml:string) : Promise<any> {
+        return this.webapi.executeUnboundAction("PublishXml", { ParameterXml: xml });
+    }
+
     publishAllXml() : Promise<any> {
         return this.webapi.executeUnboundAction("PublishAllXml");
     }

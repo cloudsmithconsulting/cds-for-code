@@ -118,7 +118,7 @@ export default class PackDynamicsSolutionCommand implements IWireUpCommands {
 							})
 							.then(async () => {
 								if (publishXml) {
-									vscode.commands.executeCommand(cs.dynamics.deployment.publishAllXml, config);
+									vscode.commands.executeCommand(cs.dynamics.deployment.publishCustomizations, config);
 								}
 							});
 					});

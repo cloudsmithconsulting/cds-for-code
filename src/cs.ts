@@ -10,12 +10,12 @@ export namespace dynamics {
         public static readonly dotNetBuild:string = `${deployment._namespace}.dotNetBuild`;
         public static readonly dotNetTest:string = `${deployment._namespace}.dotNetTest`;
         public static readonly packWebResource:string = `${deployment._namespace}.packWebResource`;
+        public static readonly publishCustomizations:string = `${deployment._namespace}.publishCustomizations`;
         public static readonly registerPluginAssembly:string = `${deployment._namespace}.registerPluginAssembly`;
         public static readonly removeSolutionComponent:string = `${deployment._namespace}.removeSolutionComponent`;
         public static readonly removeSolutionMapping:string = `${deployment._namespace}.removeSolutionMapping`;
         public static readonly unpackWebResource:string = `${deployment._namespace}.unpackWebResource`;
         public static readonly updateSolutionMapping:string = `${deployment._namespace}.updateSolutionMapping`;
-        public static readonly publishAllXml:string = `${deployment._namespace}.publishAllXml`;
     }
 
     // tslint:disable-next-line: class-name

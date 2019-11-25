@@ -4,11 +4,12 @@ import IWireUpCommands from '../wireUpCommand';
 import { DynamicsWebApi } from '../api/Types';
 import ApiRepository from '../repositories/apiRepository';
 import QuickPicker from '..//helpers/QuickPicker';
+import Utilities from '../helpers/Utilities';
 
-export default class PublishAllXml implements IWireUpCommands {
+export default class PublishCustomizations implements IWireUpCommands {
     public wireUpCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
         
-        context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.deployment.publishAllXml, async (config?: DynamicsWebApi.Config) => {
+        context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.deployment.publishCustomizations, async (config?: DynamicsWebApi.Config, components?:{type:DynamicsWebApi.SolutionComponent, id:string}[]) => {
             
             config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
             if (!config) { return; }
@@ -17,9 +18,26 @@ export default class PublishAllXml implements IWireUpCommands {
             config.timeout = (1000 * 30); // 30 seconds
 
             const api = new ApiRepository(config);
-            await api.publishAllXml();
-            QuickPicker.inform('All customizations published successfully');
-        
+
+            if (!components) {
+                await api.publishAllXml();
+                await QuickPicker.inform('All customizations published successfully');
+            } else {
+                let parameterXml:string = "<importexportxml><webresources>";
+                
+                components.forEach(c => {
+                    if (c.type === DynamicsWebApi.SolutionComponent.WebResource) {
+                        parameterXml += `<webresource>{${Utilities.TrimGuid(c.id)}}</webresource>`;
+                    }
+                });
+                
+                parameterXml += "</webresources></importexportxml>";
+
+                await api.publishXml(parameterXml);
+
+                await QuickPicker.inform("Components were published successfully");
+            }
+
         }));
     }
 }
