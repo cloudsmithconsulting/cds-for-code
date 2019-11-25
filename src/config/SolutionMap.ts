@@ -346,6 +346,8 @@ export class SolutionWorkspaceMapping {
         } else {
             //TODO: complete this switch statement.
             switch (component) {
+                case DynamicsWebApi.SolutionComponent.PluginAssembly:
+                    break;
                 case DynamicsWebApi.SolutionComponent.WebResource:
                     returnPath = path.join(solutionPath, "WebResources");
 
