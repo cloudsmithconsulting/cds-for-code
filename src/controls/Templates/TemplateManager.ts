@@ -314,7 +314,12 @@ export default class TemplateManager implements IWireUpCommands {
                 if (template && catalog) {
                     // We may have moved the location of the template (+ items), and need to re-calculate.                
                     const filename = path.extname(template.location) !== "" ? path.basename(template.location) : "";
-                    template.location = path.join(path.relative(folder, templateFolder), filename);
+
+                    if (template.type === TemplateType.ProjectTemplate) {
+                        template.location = path.relative(folder, templateFolder);
+                    } else {
+                        template.location = path.join(path.relative(folder, templateFolder), filename);
+                    }
     
                     const index = catalog.items.findIndex(i => i.name === template.name);
     
