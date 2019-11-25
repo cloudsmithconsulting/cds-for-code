@@ -10,12 +10,12 @@ export namespace dynamics {
         public static readonly dotNetBuild:string = `${deployment._namespace}.dotNetBuild`;
         public static readonly dotNetTest:string = `${deployment._namespace}.dotNetTest`;
         public static readonly packWebResource:string = `${deployment._namespace}.packWebResource`;
+        public static readonly publishCustomizations:string = `${deployment._namespace}.publishCustomizations`;
         public static readonly registerPluginAssembly:string = `${deployment._namespace}.registerPluginAssembly`;
         public static readonly removeSolutionComponent:string = `${deployment._namespace}.removeSolutionComponent`;
         public static readonly removeSolutionMapping:string = `${deployment._namespace}.removeSolutionMapping`;
         public static readonly unpackWebResource:string = `${deployment._namespace}.unpackWebResource`;
         public static readonly updateSolutionMapping:string = `${deployment._namespace}.updateSolutionMapping`;
-        public static readonly publishAllXml:string = `${deployment._namespace}.publishAllXml`;
     }
 
     // tslint:disable-next-line: class-name
@@ -133,11 +133,13 @@ export namespace dynamics {
             public static readonly _namespace:string = "cs.dynamics.controls.explorer";
             public static readonly createFromItemTemplate:string = `${explorer._namespace}.createFromItemTemplate`;
             public static readonly createFromProjectTemplate:string = `${explorer._namespace}.createFromProjectTemplate`;
+            public static readonly craeteWebResource:string = `${explorer._namespace}.createWebResource`;
             public static readonly dotNetBuild:string = `${explorer._namespace}.dotNetBuild`;
             public static readonly dotNetTest:string = `${explorer._namespace}.dotNetTest`;
             public static readonly generateEntityCodeToFolder:string = `${explorer._namespace}.generateEntityCodeToFolder`;
             public static readonly generateEntityCodeToFile:string = `${explorer._namespace}.generateEntityCodeToFile`;
             public static readonly packSolutionFromFolder:string = `${explorer._namespace}.packSolutionFromFolder`;
+            public static readonly packWebResource:string = `${explorer._namespace}.packWebResource`;
             public static readonly saveTemplateFile:string = `${explorer._namespace}.saveTemplateFile`;
             public static readonly saveTemplateFolder:string = `${explorer._namespace}.saveTemplateFolder`;
             public static readonly registerPluginFile:string = `${explorer._namespace}.registerPluginFile`;
@@ -164,6 +166,7 @@ export namespace dynamics {
             public static readonly open:string = `${pluginStep._namespace}.open`;
         }
 
+        // tslint:disable-next-line: class-name
         export class pluginStepImage {
             public static readonly _namespace:string = "cs.dynamics.controls.pluginStepImage";
             public static readonly open:string = `${pluginStepImage._namespace}.open`;

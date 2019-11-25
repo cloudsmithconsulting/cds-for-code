@@ -63,12 +63,12 @@ export default class Utilities
         return (id || '').replace(/{|}/g, '');
     }
 
-    static EnforceTrailingSlash(path: string): string {
-        if (!path.endsWith("/")) {
+    static EnforceTrailingSlash(path: string | undefined): string {
+        if (path && !path.endsWith("/")) {
             path = `${path}/`;
         }
 
-        return path;
+        return path ? path : "";
     }
 
     static RemoveTrailingSlash(string:string): string {

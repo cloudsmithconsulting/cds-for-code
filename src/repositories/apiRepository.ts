@@ -16,6 +16,10 @@ export default class ApiRepository {
 
     private webapi: DynamicsWebApiClient;
 
+    publishXml(xml:string) : Promise<any> {
+        return this.webapi.executeUnboundAction("PublishXml", { ParameterXml: xml });
+    }
+
     publishAllXml() : Promise<any> {
         return this.webapi.executeUnboundAction("PublishAllXml");
     }
@@ -154,16 +158,32 @@ export default class ApiRepository {
     }
 
     retrieveWebResource(webResourceId:string): Promise<any> {
-        return this.webapi.retrieve(webResourceId, "webresourceset");
+        return this.webapi.retrieve(webResourceId, "webresourceset")
+            .catch(error => {
+                if (error && error.status === 404) {
+                    return undefined;
+                }
+
+                throw error;
+            });
     }
 
-    upsertWebResource(webResource:any): Promise<any> {
-        //return this.webapi.upsert(webResource.webresourceid || Utilities.NewGuid(), "webresourceset", webResource, "return=representation");
-        
-        if (webResource.webresourceid) {
+    async upsertWebResource(webResource:any): Promise<any> {
+        let forceCreate:boolean = false;
+
+        if (webResource && webResource.webresourceid) {
+            const newWebResource = await this.retrieveWebResource(webResource.webresourceid);
+
+            forceCreate = !newWebResource;
+        }
+
+        if (webResource && !forceCreate) {
             return this.webapi.update(webResource.webresourceid, "webresourceset", webResource, "return=representation");
         } else {
-            return this.webapi.create(webResource, "webresourceset", "return=representation");
+            return this.webapi.create(webResource, "webresourceset", "return=representation")
+                .catch(error => {
+                    throw error;
+                });
         }
     }
 
@@ -465,19 +485,17 @@ export default class ApiRepository {
     }
 
     addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
-        return this.getSolutionComponent(componentId, componentType)
-            .then(solutionComponent => {
-                if (solutionComponent) { return; }
+        // This action allows you to call it on components that are already added, no need for a check.
+        const parameters:any = { 
+            ComponentId: componentId,
+            ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
+            SolutionUniqueName: solution.uniquename,  
+            AddRequiredComponents: addRequiredComponents,
+            DoNotIncludeSubcomponents: doNotIncludeSubcomponents,
+            IncludedComponentSettingsValues: componentSettings || null
+        };
 
-                return { 
-                    ComponentId: componentId,
-                    ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
-                    SolutionUniqueName: solution.uniquename,  
-                    AddRequiredComponents: addRequiredComponents,
-                    DoNotIncludeSubcomponents: doNotIncludeSubcomponents,
-                    IncludedComponentSettingsValues: componentSettings || null
-                };
-            }).then(parameters => this.webapi.executeUnboundAction("AddSolutionComponent", parameters));
+        return this.webapi.executeUnboundAction("AddSolutionComponent", parameters);
     }
 
     getSolutionComponent(componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {

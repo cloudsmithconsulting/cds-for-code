@@ -161,7 +161,7 @@ export class TreeEntry extends vscode.TreeItem {
     private static readonly canOpenEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
     private static readonly canCreateInWorkspaceTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
 
-    static parseFolder(name: string, displayName: string, commandPrefix: string, context?:any): TreeEntry {
+    static parseFolder(name: string, displayName: string | undefined, commandPrefix: string, context?:any): TreeEntry {
         return new TreeEntry(
             displayName ? displayName : name, 
             "Folder",

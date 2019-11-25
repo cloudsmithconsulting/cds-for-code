@@ -164,6 +164,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                 }
 
                 let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.addEntry, item);
+                const hasWorkspace = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0;
 
                 switch (item.itemType)
                 {
@@ -216,7 +217,11 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityChartUrl(item.config, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
                         break;
                     case "WebResources":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, undefined, item.solutionId), retryFunction);
+                        if (hasWorkspace) {
+                            vscode.commands.executeCommand(cs.dynamics.deployment.createWebResource, item.config, item.solutionId, undefined, undefined, item.folder);
+                        } else {
+                            Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, undefined, item.solutionId), retryFunction);
+                        }
                         break;
                     case "PluginType":
                         if (!item.context._pluginassemblyid_value) { return; }
@@ -229,6 +234,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
             })   
             , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.editEntry, async (item: TreeEntry) => { // Match name of command to package.json command
                 let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editEntry, item);
+                const hasWorkspace = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0;
 
                 switch (item.itemType)
                 {
@@ -271,7 +277,12 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityChartUrl(item.config, item.parent.context.ObjectTypeCode, item.context.savedqueryvisualizationid, item.solutionId), retryFunction);
                         break;     
                     case "WebResources":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, item.context.webresourceid, item.solutionId), retryFunction);
+                        if (hasWorkspace) {
+                            vscode.commands.executeCommand(cs.dynamics.deployment.unpackWebResource, item.config, item.context, undefined, true);
+                        } else {
+                            Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, item.context.webresourceid, item.solutionId), retryFunction);
+                        }
+
                         break;
                     case "PluginStep":
                         if (!item.context.eventhandler_plugintype) { return; }
