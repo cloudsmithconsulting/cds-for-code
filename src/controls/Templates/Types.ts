@@ -2,6 +2,7 @@ import * as FileSystem from '../../helpers/FileSystem';
 import * as path from 'path';
 import Dictionary from '../../helpers/Dictionary';
 import TemplateManager from './TemplateManager';
+import QuickPicker from '../../helpers/QuickPicker';
 
 export class TemplateItem {
     constructor(
@@ -38,8 +39,8 @@ export class TemplateItem {
         if (this.type !== TemplateType.ItemTemplate) {
             throw new Error("Only item templates may invoke the .Apply function inline");
         }
-        const systemTemplates = await TemplateManager.getDefaultTemplatesDir(true);
-        const userTemplates = await TemplateManager.getDefaultTemplatesDir(true);
+        const systemTemplates = await TemplateManager.getDefaultTemplatesFolder(true);
+        const userTemplates = await TemplateManager.getDefaultTemplatesFolder(true);
         let fileContents: Buffer;
 
         if (FileSystem.exists(path.join(systemTemplates, this.location))) {
@@ -53,6 +54,52 @@ export class TemplateItem {
             return await TemplateManager.applyTemplate(this, fileContents, placeholders, object);
         }
     }
+
+    async load(filename?: string): Promise<TemplateItem> {
+        return (TemplateItem.read(filename).then(item => TemplateItem.from(item)));
+    }
+
+    async save(filename?: string): Promise<TemplateItem> {
+        return TemplateItem.write(this, filename);
+    }
+
+    static async read(filename: string = "template.json"): Promise<TemplateItem> {
+        const file = path.isAbsolute(filename) ? filename : path.join(await TemplateManager.getTemplatesFolder(), filename);
+
+        if (FileSystem.exists(file)) {
+            try {
+                let returnObject = JSON.parse(FileSystem.readFileSync(file));
+ 
+                if (returnObject) {
+                    return TemplateItem.from(returnObject);
+                }
+            }
+            catch (error) {
+                QuickPicker.error(`The template '${filename}' was found but could not be parsed.${error ? '  The error returned was: ' + error : ''}`);
+            }
+        }
+
+        return new TemplateItem();
+    }
+    
+    static async write(template: TemplateItem, filename: string = "template.json"): Promise<TemplateItem> {
+        const folder = path.isAbsolute(filename) ? path.dirname(filename) : path.join(await TemplateManager.getTemplateFolder(template), path.dirname(filename));
+        
+        if (!FileSystem.exists(folder)) {
+            FileSystem.makeFolderSync(folder);
+        }
+        
+        const file = path.isAbsolute(filename) ? filename : path.join(folder, filename);
+        
+        try {
+            FileSystem.writeFileSync(file, JSON.stringify(template));
+        }
+        catch (error) {
+            QuickPicker.error(`The template '${filename}' could not be saved to the template folder.${error ? '  The error returned was: ' + error : ''}`);
+        }
+        
+        return template;
+    }    
 }
 
 export class TemplateDirective { 

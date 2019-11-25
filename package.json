@@ -359,6 +359,16 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.dynamics.controls.templateTreeView.exportEntry",
+				"title": "Export Template",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.dynamics.controls.templateTreeView.importEntry",
+				"title": "Import Template",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.dynamics.deployment.addSolutionComponent",
 				"title": "Add component to a Dynamics 365 Solution",
 				"category": "Dynamics 365 CE"
@@ -461,6 +471,16 @@
 			{
 				"command": "cs.dynamics.templates.editTemplateCatalog",
 				"title": "Open template catalog in code editor",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.templates.exportTemplate",
+				"title": "Export template from the template catalog",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.templates.importTemplate",
+				"title": "Import template into the template catalog",
 				"category": "Dynamics 365 CE"
 			},
 			{
@@ -677,6 +697,16 @@
 					"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
 					"group": "group@1",
 					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.exportEntry",
+					"group": "group@4",
+					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canExportItem)(.*)$/"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.importEntry",
+					"group": "group@4",
+					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canImportItem)(.*)$/"
 				}
 			]
 		}
@@ -689,6 +719,7 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
+		"@types/archiver": "^3.0.0",
 		"@types/async": "^3.0.3",
 		"@types/glob": "^7.1.1",
 		"@types/lodash": "^4.14.144",
@@ -706,6 +737,7 @@
 	"dependencies": {
 		"@iconify/iconify": "^1.0.3",
 		"adal-node": "^0.2.1",
+		"archiver": "^3.1.1",
 		"async": "^3.1.0",
 		"eol": "^0.9.1",
 		"httpntlm": "^1.7.6",

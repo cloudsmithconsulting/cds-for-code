@@ -1,6 +1,7 @@
 import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as archiver from 'archiver';
 import * as StreamZip from 'node-stream-zip';
 
 /**
@@ -184,13 +185,15 @@ async function _walk(dir: string, predicate?:(item:string) => boolean, done?: (e
 }
 
 export async function deleteItem(path:string): Promise<void> {
-	fs.unlink(path, (error) => {
-		if (error) {
-			return Promise.reject(error);
-		}
+	if (fs.existsSync(path)) {
+		fs.unlink(path, (error) => {
+			if (error) {
+				return Promise.reject(error);
+			}
 
-		return Promise.resolve();
-	});
+			return Promise.resolve();
+		});
+	} 
 }
 
 /**
@@ -286,7 +289,7 @@ export function writeFileSync(destination: string, data: any, options?: { encodi
 	fs.writeFileSync(destination, data, options || 'utf8');
 }
 
-export function unzip(archive:string, destination:string): Promise<number> {
+export async function unzip(archive:string, destination:string): Promise<number> {
 	const zip = new StreamZip({
 		file: archive,
 		storeEntries: true
@@ -307,6 +310,49 @@ export function unzip(archive:string, destination:string): Promise<number> {
 			});
 		});	
 	});
+}
+
+export async function zip(out:string, items:string[], rootPath?:string): Promise<void> {
+	const archive = archiver('zip', { zlib: { level: 9 }});
+	const stream = fs.createWriteStream(out);
+
+	return new Promise((resolve, reject) => {
+		items.forEach(s => {
+			if (fs.existsSync(s)) {
+				if (rootPath) {
+					archive.file(s, { name: path.relative(rootPath, s) });
+				} else {
+					archive.file(s, { name: path.basename(s) });
+				}
+			}
+		});
+
+		archive
+		  .on('error', err => reject(err))
+		  .pipe(stream);
+	
+		stream.on('close', () => resolve());
+		archive.finalize();
+	  });
+}
+
+export async function zipFolder(out:string, source:string, subfolderName:string | false = false): Promise<void> {
+	if (path.extname(out) === "") {
+		out = path.join(out, `${path.dirname(source)}.zip`);
+	}
+
+	const archive = archiver('zip', { zlib: { level: 9 }});
+	const stream = fs.createWriteStream(out);
+
+	return new Promise((resolve, reject) => {
+		archive
+		  .directory(source, subfolderName)
+		  .on('error', err => reject(err))
+		  .pipe(stream);
+	
+		stream.on('close', () => resolve());
+		archive.finalize();
+	  });
 }
 
 /**

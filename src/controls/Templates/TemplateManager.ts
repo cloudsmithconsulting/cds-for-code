@@ -19,6 +19,8 @@ import createFromProjectTemplate from "../../commands/cs.dynamics.controls.explo
 import createTemplate from '../../commands/cs.dynamics.templates.createFromTemplate';
 import deleteTemplate from '../../commands/cs.dynamics.templates.deleteTemplate';
 import editTemplateCatalog from '../../commands/cs.dynamics.templates.editTemplateCatalog';
+import exportTemplate from '../../commands/cs.dynamics.templates.exportTemplate';
+import importTemplate from '../../commands/cs.dynamics.templates.importTemplate';
 import openTemplateFolder from '../../commands/cs.dynamics.templates.openTemplateFolder';
 import saveTemplate from '../../commands/cs.dynamics.templates.saveTemplate';
 import saveTemplateFile from "../../commands/cs.dynamics.controls.explorer.saveTemplateFile";
@@ -51,6 +53,8 @@ export default class TemplateManager implements IWireUpCommands {
             vscode.commands.registerCommand(cs.dynamics.templates.createFromTemplate, createTemplate.bind(this)),
             vscode.commands.registerCommand(cs.dynamics.templates.deleteTemplate, deleteTemplate.bind(this)),
             vscode.commands.registerCommand(cs.dynamics.templates.editTemplateCatalog, editTemplateCatalog.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.templates.exportTemplate, exportTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.dynamics.templates.importTemplate, importTemplate.bind(this)),
             vscode.commands.registerCommand(cs.dynamics.templates.openTemplateFolder, openTemplateFolder.bind(this)),
             vscode.commands.registerCommand(cs.dynamics.templates.saveTemplate, saveTemplate.bind(this)),
         );
@@ -271,7 +275,7 @@ export default class TemplateManager implements IWireUpCommands {
         return false;
     }
 
-    static async openTemplateFolderInExplorer(template: TemplateItem, systemTemplate:boolean = false): Promise<void> {
+    static async getTemplateFolder(template: TemplateItem, systemTemplate:boolean = false): Promise<string> {
         const templateRoot = await TemplateManager.getTemplatesFolder(systemTemplate);
         
         if (template && template.location) {
@@ -281,10 +285,54 @@ export default class TemplateManager implements IWireUpCommands {
                 templateDir = path.join(templateDir, "..");
             }
 
-            FileSystem.openFolderInExplorer(templateDir);
+            return templateDir;
         } else {
-            FileSystem.openFolderInExplorer(templateRoot);
+            return templateRoot;
         }
+    }
+
+    static async exportTemplate(template: TemplateItem, archive: string, systemTemplate:boolean = false): Promise<void> {
+        const folder = await this.getTemplateFolder(template, systemTemplate);
+        
+        await template.save(path.join(folder, "template.json"));
+        await FileSystem.zipFolder(archive, folder);
+        await FileSystem.deleteItem(path.join(folder, "template.json"));
+    }
+
+    static async importTemplate(archive: string, systemTemplate:boolean = false): Promise<TemplateItem> {
+        const folder = await this.getTemplatesFolder(systemTemplate);
+        const templateFolder = path.join(folder, path.basename(archive).replace(path.extname(archive), ""));
+
+        await FileSystem.makeFolderSync(templateFolder);
+        await FileSystem.unzip(archive, templateFolder);
+
+        if (FileSystem.exists(path.join(templateFolder, "template.json"))) {
+            const template = await TemplateItem.read(path.join(templateFolder, "template.json"));
+            const catalog = await this.getTemplateCatalog(undefined, systemTemplate);
+            
+            if (template && catalog) {
+                // We may have moved the location of the template (+ items), and need to re-calculate.                
+                const filename = path.extname(template.location) !== "" ? path.basename(template.location) : "";
+                template.location = path.join(path.relative(folder, templateFolder), filename);
+
+                const index = catalog.items.findIndex(i => i.name === template.name);
+
+                if (index > -1) {
+                    catalog.items.splice(index, 1);
+                }
+
+                catalog.items.push(template);
+                catalog.save();
+
+                await FileSystem.deleteItem(path.join(templateFolder, "template.json"));
+
+                return template;
+            }
+        }
+    }
+
+    static async openTemplateFolderInExplorer(template: TemplateItem, systemTemplate:boolean = false): Promise<void> {
+        FileSystem.openFolderInExplorer(await this.getTemplateFolder(template, systemTemplate));
     }
 
     /**
@@ -380,7 +428,7 @@ export default class TemplateManager implements IWireUpCommands {
      * @memberof TemplateManager
      */
     static async getTemplateCatalog(filename?:string, getSystemCatalog:boolean = false): Promise<TemplateCatalog> {
-        const templatesDir = await TemplateManager.getDefaultTemplatesDir(getSystemCatalog);
+        const templatesDir = await TemplateManager.getDefaultTemplatesFolder(getSystemCatalog);
         let returnCatalog:TemplateCatalog;
         let defaultCatalog:boolean = true;
 
@@ -468,7 +516,7 @@ export default class TemplateManager implements IWireUpCommands {
         let dir:string = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.templates.templatesDirectory);
 
         if (systemTemplates || !dir) {
-            dir = path.normalize(TemplateManager.getDefaultTemplatesDir(systemTemplates));
+            dir = path.normalize(TemplateManager.getDefaultTemplatesFolder(systemTemplates));
 
             return Promise.resolve(dir);
         }
@@ -484,7 +532,7 @@ export default class TemplateManager implements IWireUpCommands {
      * Returns the default templates location, which is based on the global storage-path directory.
      * @returns default template directory
      */
-    static getDefaultTemplatesDir(systemTemplates:boolean = false): string {
+    static getDefaultTemplatesFolder(systemTemplates:boolean = false): string {
         const templatesFolderName:string = systemTemplates ? "BuiltInTemplates" : "UserTemplates";
         
         if (!TemplateManager.context) {
