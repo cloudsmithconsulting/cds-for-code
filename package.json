@@ -713,6 +713,7 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
+		"vscode:package": "vsce package",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile",
@@ -732,6 +733,7 @@
 		"mocha": "^6.1.4",
 		"tslint": "^5.12.1",
 		"typescript": "^3.3.1",
+		"vsce": "^1.69.0",
 		"vscode-test": "^1.2.0"
 	},
 	"dependencies": {
