@@ -2,7 +2,7 @@ import * as FileSystem from '../../core/io/FileSystem';
 import * as path from 'path';
 import Dictionary from '../../core/types/Dictionary';
 import TemplateManager from './TemplateManager';
-import QuickPicker from '../../core/QuickPicker';
+import Quickly from '../../core/Quickly';
 
 export class TemplateItem {
     constructor(
@@ -75,7 +75,7 @@ export class TemplateItem {
                 }
             }
             catch (error) {
-                QuickPicker.error(`The template '${filename}' was found but could not be parsed.${error ? '  The error returned was: ' + error : ''}`);
+                Quickly.error(`The template '${filename}' was found but could not be parsed.${error ? '  The error returned was: ' + error : ''}`);
             }
         }
 
@@ -95,7 +95,7 @@ export class TemplateItem {
             FileSystem.writeFileSync(file, JSON.stringify(template));
         }
         catch (error) {
-            QuickPicker.error(`The template '${filename}' could not be saved to the template folder.${error ? '  The error returned was: ' + error : ''}`);
+            Quickly.error(`The template '${filename}' could not be saved to the template folder.${error ? '  The error returned was: ' + error : ''}`);
         }
         
         return template;

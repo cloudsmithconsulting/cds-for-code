@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as FileSystem from "../core/io/FileSystem";
 import { DynamicsWebApi } from "../webapi/Types";
-import QuickPicker from "../core/QuickPicker";
+import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
 import Utilities from "../core/Utilities";
 import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
@@ -17,7 +17,7 @@ import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
  * @returns void
  */
 export default async function run(config?:DynamicsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
-    config = config || await QuickPicker.pickDynamicsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
+    config = config || await Quickly.pickDynamicsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
     if (!config) { return; }
 
     let fsPath:string;
@@ -28,7 +28,7 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
 
     let map:SolutionWorkspaceMapping = this.getSolutionMapping(fsPath, config.orgId);
 
-    webResource = webResource || await QuickPicker.pickDynamicsSolutionComponent(config, map ? map.solutionId : undefined, DynamicsWebApi.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
+    webResource = webResource || await Quickly.pickDynamicsSolutionComponent(config, map ? map.solutionId : undefined, DynamicsWebApi.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
     if (!webResource) { return; }
 
     // If we do have a map, enforce that we put files where we are supposed to, regardless of user preference.
@@ -36,7 +36,7 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
         fsPath = map.getPath(DynamicsWebApi.SolutionComponent.WebResource, webResource);
     }
     
-    fsPath = fsPath || await QuickPicker.pickWorkspaceFolder(undefined, "Choose a location where the web resource will be downloaded");
+    fsPath = fsPath || await Quickly.pickWorkspaceFolder(undefined, "Choose a location where the web resource will be downloaded");
 
     const api = new ApiRepository(config);
 
@@ -69,10 +69,10 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
     }
 
     if (!autoOpen) {
-        QuickPicker.inform(`${webResource.name} is now synchronized with the filesystem.`, undefined, "Open in Editor", async () => {
-            await QuickPicker.openFile(fsPath);
+        Quickly.inform(`${webResource.name} is now synchronized with the filesystem.`, undefined, "Open in Editor", async () => {
+            await Quickly.openFile(fsPath);
         });
     } else {
-        await QuickPicker.openFile(fsPath);
+        await Quickly.openFile(fsPath);
     }
 }

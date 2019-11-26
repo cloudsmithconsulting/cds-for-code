@@ -4,7 +4,7 @@ import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import ApiRepository from '../repositories/apiRepository';
 import { DynamicsWebApi } from '../webapi/Types';
-import QuickPicker from '../core/QuickPicker';
+import Quickly from '../core/Quickly';
 import async = require('async');
 
 export default class PluginStepViewManager implements IContributor {
@@ -13,7 +13,7 @@ export default class PluginStepViewManager implements IContributor {
 
             vscode.commands.registerCommand(cs.dynamics.controls.pluginStep.open, async (pluginAssemblyId:string, step?: any, config?:DynamicsWebApi.Config) => { // Match name of command to package.json command
                 // Run command code
-                config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
+                config = config || await Quickly.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);

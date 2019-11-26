@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { TemplateType } from "../components/Templates/Types";
 import TemplateManager from "../components/Templates/TemplateManager";
 import * as path from 'path';
-import QuickPicker from "../core/QuickPicker";
+import Quickly from "../core/Quickly";
 
 /**
  * This command can be invoked by the Template Tree View and edits an item to the TreeView
@@ -38,7 +38,7 @@ export default async function run(item?: TemplateTreeView.TreeEntry) {
 
 			const existingFolder = vscode.workspace.workspaceFolders.find(f => f.uri.fsPath === folder);
 
-			if (!existingFolder && await QuickPicker.pickBoolean("Would you like to open this project template in a new workspace folder?", "Yes", "No")) {
+			if (!existingFolder && await Quickly.pickBoolean("Would you like to open this project template in a new workspace folder?", "Yes", "No")) {
 				vscode.workspace.updateWorkspaceFolders(0, 0, { uri: vscode.Uri.file(folder), name: item.context.name });
 			}
 		}

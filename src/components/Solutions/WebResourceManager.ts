@@ -5,8 +5,8 @@ import * as path from 'path';
 import { DynamicsWebApi } from "../../webapi/Types";
 import IContributor from '../../core/CommandBuilder';
 import Utilities from '../../core/Utilities';
-import SolutionMap from "../Solutions/SolutionMap";
-import { SolutionWorkspaceMapping } from "../Solutions/Types";
+import SolutionMap from "./SolutionMap";
+import { SolutionWorkspaceMapping } from "./Types";
 import TemplateManager from "../Templates/TemplateManager";
 import ApiRepository from '../../repositories/apiRepository';
 import EnumParser from '../../core/EnumParser';
@@ -19,7 +19,7 @@ import compareWebResource from "../../commands/cs.dynamics.deployment.compareWeb
 import packWebResource from "../../commands/cs.dynamics.deployment.packWebResource";
 import unpackWebResource from "../../commands/cs.dynamics.deployment.unpackWebResource";
 import SolutionFile from '../SolutionXml/SolutionFile';
-import QuickPicker from '../../core/QuickPicker';
+import Quickly from '../../core/Quickly';
 
 export default class WebResourceManager implements IContributor {
     /**
@@ -110,7 +110,7 @@ export default class WebResourceManager implements IContributor {
 
                 return webResource;
             }).then(async () => {
-                if (await QuickPicker.pickBoolean("Would you like to publish the web resource?", "Yes", "No")) {
+                if (await Quickly.pickBoolean("Would you like to publish the web resource?", "Yes", "No")) {
                     await vscode.commands.executeCommand(cs.dynamics.deployment.publishCustomizations, config, [ { type: DynamicsWebApi.SolutionComponent.WebResource, id: webResource.webresourceid }]);
                 }
             }).then(() => {

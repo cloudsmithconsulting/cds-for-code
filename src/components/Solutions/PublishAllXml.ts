@@ -3,7 +3,7 @@ import * as cs from '../../cs';
 import IContributor from '../../core/CommandBuilder';
 import { DynamicsWebApi } from '../../webapi/Types';
 import ApiRepository from '../../repositories/apiRepository';
-import QuickPicker from '../../core/QuickPicker';
+import Quickly from '../../core/Quickly';
 import Utilities from '../../core/Utilities';
 
 export default class PublishCustomizations implements IContributor {
@@ -11,7 +11,7 @@ export default class PublishCustomizations implements IContributor {
         
         context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.deployment.publishCustomizations, async (config?: DynamicsWebApi.Config, components?:{type:DynamicsWebApi.SolutionComponent, id:string}[]) => {
             
-            config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
+            config = config || await Quickly.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
             if (!config) { return; }
 
             // this operation might run long, we need a longer timeout here
@@ -21,7 +21,7 @@ export default class PublishCustomizations implements IContributor {
 
             if (!components) {
                 await api.publishAllXml();
-                await QuickPicker.inform('All customizations published successfully');
+                await Quickly.inform('All customizations published successfully');
             } else {
                 let parameterXml:string = "<importexportxml><webresources>";
                 
@@ -35,7 +35,7 @@ export default class PublishCustomizations implements IContributor {
 
                 await api.publishXml(parameterXml);
 
-                await QuickPicker.inform("Components were published successfully");
+                await Quickly.inform("Components were published successfully");
             }
 
         }));

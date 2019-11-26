@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import * as cs from '../../cs';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
-import QuickPicker from '../../core/QuickPicker';
+import Quickly from '../../core/Quickly';
 import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
 import Utilities from '../../core/Utilities';
 import IContributor from '../../core/CommandBuilder';
@@ -32,10 +32,10 @@ export default class UnpackDynamicsSolutionCommand implements IContributor {
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 				const map:SolutionMap = SolutionMap.loadFromWorkspace(context);
 
-				config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
+				config = config || await Quickly.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
-				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a Solution to unpack", true);
+				solution = solution || await Quickly.pickDynamicsSolution(config, "Choose a Solution to unpack", true);
 				if (!solution) { return; }
 
 				if (map) {
@@ -50,7 +50,7 @@ export default class UnpackDynamicsSolutionCommand implements IContributor {
 					}
 				} 
 
-				folder = folder || await QuickPicker.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true, true);
+				folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true, true);
 				if (Utilities.IsNullOrEmpty(folder)) {
 					vscode.window.showInformationMessage("You must select a workspace folder to unpack a solution.");
 
@@ -68,7 +68,7 @@ export default class UnpackDynamicsSolutionCommand implements IContributor {
 				if (Utilities.IsNull(toolsPath)) { return; }
 
 				if (Utilities.IsNullOrEmpty(logFile)) { 
-					if ((await QuickPicker.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
+					if ((await Quickly.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
 						let dateString = new Date().toISOString();
 						dateString = dateString.substr(0, dateString.length - 5);
 						dateString = dateString.replace("T","-").replace(":","").replace(":", "");

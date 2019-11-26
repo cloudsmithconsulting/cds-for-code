@@ -9,7 +9,7 @@ import * as path from 'path';
 import { TS } from 'typescript-linq';
 import VisualStudioProjectCommands from '../DotNetCore/visualStudioProjectCommands';
 import { Octicon } from "../../core/types/Octicon";
-import QuickPicker, { QuickPickOption } from '../../core/QuickPicker';
+import Quickly, { QuickPickOption } from '../../core/Quickly';
 
 export default class RegisterPluginAssembly implements IContributor {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;
@@ -40,7 +40,7 @@ export default class RegisterPluginAssembly implements IContributor {
                 const fileTypes = VisualStudioProjectCommands.projectFileTypes;
                 fileTypes.push(".dll");
 
-                file = file || await QuickPicker.pickWorkspaceFile(defaultFolder, "Choose a projet to build or assembly to upload", undefined, false, fileTypes).then(r => vscode.Uri.file(r));
+                file = file || await Quickly.pickWorkspaceFile(defaultFolder, "Choose a projet to build or assembly to upload", undefined, false, fileTypes).then(r => vscode.Uri.file(r));
                 if (!file) { return; }
 
                 if (VisualStudioProjectCommands.fileIsProject(file)) {
@@ -54,7 +54,7 @@ export default class RegisterPluginAssembly implements IContributor {
 
                                 return;
                             } else {
-                                let option = await QuickPicker.pick("Choose the output assembly to deploy", ...results.map(r => new QuickPickOption(`${Octicon.file_binary} ${r}`, undefined, undefined, r)));
+                                let option = await Quickly.pick("Choose the output assembly to deploy", ...results.map(r => new QuickPickOption(`${Octicon.file_binary} ${r}`, undefined, undefined, r)));
                                 
                                 if (option) {
                                     file = vscode.Uri.file(option.context);
@@ -63,11 +63,11 @@ export default class RegisterPluginAssembly implements IContributor {
                         });
                 }
 
-                config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
+                config = config || await Quickly.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
-				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a solution", true);
-                pluginAssembly = pluginAssembly || await QuickPicker.pickDynamicsSolutionComponent(config, solution, DynamicsWebApi.SolutionComponent.PluginAssembly, "Choose a plugin assembly to update (or press esc for new)");
+				solution = solution || await Quickly.pickDynamicsSolution(config, "Choose a solution", true);
+                pluginAssembly = pluginAssembly || await Quickly.pickDynamicsSolutionComponent(config, solution, DynamicsWebApi.SolutionComponent.PluginAssembly, "Choose a plugin assembly to update (or press esc for new)");
                
                 const api = new ApiRepository(config);
 

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as cs from '../../cs';
-import QuickPicker from "../../core/QuickPicker";
+import Quickly from "../../core/Quickly";
 import * as path from 'path';
 import * as FileSystem from '../../core/io/FileSystem';
 import { TS } from "typescript-linq";
@@ -72,20 +72,20 @@ export default class SolutionMap implements IContributor
                 } 
 
                 if (!organizationId) {
-                    config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
+                    config = config || await Quickly.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
                     if (!config) { return; }
     
                     organizationId = config.orgId;
                 }
 
                 if (!solutionId) {
-                    let solution = await QuickPicker.pickDynamicsSolution(config, "Choose a Solution to map to the local workspace", true);
+                    let solution = await Quickly.pickDynamicsSolution(config, "Choose a Solution to map to the local workspace", true);
                     if (!solution) { return; }
     
                     solutionId = solution.solutionid;
                 }
 
-				folder = folder || await QuickPicker.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a workplace folder containing solution items.");
+				folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a workplace folder containing solution items.");
                 if (Utilities.IsNullOrEmpty(folder)) { return; }
                 
                 const map = SolutionMap.loadFromWorkspace(context);
@@ -262,7 +262,7 @@ export default class SolutionMap implements IContributor
     }    
     
     static async read(filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap> {
-        const workspacePath = await QuickPicker.pickWorkspaceRoot(undefined, "Choose a location that houses your .dynamics folder.", true).then(uri => uri ? uri.fsPath : null);
+        const workspacePath = await Quickly.pickWorkspaceRoot(undefined, "Choose a location that houses your .dynamics folder.", true).then(uri => uri ? uri.fsPath : null);
         if (!workspacePath) { return; }
 
         const file = path.join(workspacePath, filename);
@@ -283,7 +283,7 @@ export default class SolutionMap implements IContributor
     }
 
     static async write(map:SolutionMap, filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap> {
-        const workspacePath = await QuickPicker.pickWorkspaceRoot(undefined, "Choose a location where your .dynamics folder will go.", true).then(uri => uri ? uri.fsPath : null);
+        const workspacePath = await Quickly.pickWorkspaceRoot(undefined, "Choose a location where your .dynamics folder will go.", true).then(uri => uri ? uri.fsPath : null);
         if (!workspacePath) { return; }
 
         const folder  = path.join(workspacePath, path.dirname(filename));

@@ -3,7 +3,7 @@ import * as cs from '../../cs';
 import * as fs from 'fs';
 import * as path from 'path';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
-import QuickPicker from '../../core/QuickPicker';
+import Quickly from '../../core/Quickly';
 import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
 import Utilities from '../../core/Utilities';
 import IContributor from '../../core/CommandBuilder';
@@ -37,10 +37,10 @@ export default class PackDynamicsSolutionCommand implements IContributor {
 					}
 				}
 
-				folder = folder || await QuickPicker.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder containing the solution to pack", true);
+				folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder containing the solution to pack", true);
 				if (Utilities.IsNullOrEmpty(folder)) { return; }
 				
-				config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
+				config = config || await Quickly.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
 				if (!solution) {
@@ -48,7 +48,7 @@ export default class PackDynamicsSolutionCommand implements IContributor {
 					let solutionFile = path.join(solutionFolder, "Other/Solution.xml");
 
 					if (!fs.existsSync(solutionFile)) { 
-						solution = await QuickPicker.pickDynamicsSolution(config, "Choose a Dynamics 365 Solution to pack", true);
+						solution = await Quickly.pickDynamicsSolution(config, "Choose a Dynamics 365 Solution to pack", true);
 
 						if (!solution) { return; }
 					}
@@ -74,10 +74,10 @@ export default class PackDynamicsSolutionCommand implements IContributor {
 
 				managed = managed || false;
 
-				const publishXml = await QuickPicker.pickBoolean("Do you also wish to publish your customizations?", "Yes", "No");
+				const publishXml = await Quickly.pickBoolean("Do you also wish to publish your customizations?", "Yes", "No");
 
 				if (Utilities.IsNullOrEmpty(logFile)) { 
-					if ((await QuickPicker.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
+					if ((await Quickly.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
 						let dateString = new Date().toISOString();
 						dateString = dateString.substr(0, dateString.length - 5);
 						dateString = dateString.replace("T","-").replace(":","").replace(":", "");

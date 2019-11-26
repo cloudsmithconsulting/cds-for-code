@@ -1,6 +1,6 @@
 import * as cs from "../cs";
 import * as vscode from 'vscode';
-import QuickPicker from "../core/QuickPicker";
+import Quickly from "../core/Quickly";
 
 /**
  * This command can be invoked by the Explorer file viewer and packs a new web resource
@@ -11,7 +11,7 @@ import QuickPicker from "../core/QuickPicker";
 export default async function run(defaultUri?: vscode.Uri) {
 	const returnObject:any = (await vscode.commands.executeCommand(cs.dynamics.deployment.packWebResource, undefined, undefined, undefined, defaultUri));
 	
-	await QuickPicker.openFile(returnObject.fsPath);
+	await Quickly.openFile(returnObject.fsPath);
 
 	return returnObject;
 }

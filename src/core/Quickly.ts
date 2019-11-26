@@ -13,7 +13,7 @@ import * as path from 'path';
 import TemplateManager from "../components/Templates/TemplateManager";
 import { TemplateItem, TemplateType } from "../components/Templates/Types";
 
-export default class QuickPicker {
+export default class Quickly {
     /**
      * shows an input box with a question and returns a response
      * @param prompt prompt to display when asking
@@ -140,7 +140,7 @@ export default class QuickPicker {
             const option = await vscode.window.showQuickPick(quickPickOptions, { placeHolder, ignoreFocusOut: true, canPickMany: false });
 
             if (option && option.label === `${Octicon.plus}`) {
-                const newItem = await QuickPicker.ask("What is the name of the new item?");
+                const newItem = await Quickly.ask("What is the name of the new item?");
 
                 if (newItem) {
                     quickPickOptions.push(new QuickPickOption(newItem));
@@ -197,7 +197,7 @@ export default class QuickPicker {
             });
 
             if (option && option.find(o => o.label === `${Octicon.plus}`)) {
-                const newItem = await QuickPicker.ask("What is the name of the new item?");
+                const newItem = await Quickly.ask("What is the name of the new item?");
 
                 if (newItem) {
                     const newOption = new QuickPickOption(newItem);
@@ -242,7 +242,7 @@ export default class QuickPicker {
                 items.forEach(i => choices.push(new QuickPickOption(Utilities.IsNullOrEmpty(i.displayName) ? i.location : i.displayName, undefined, i.description, i))); 
 
                 if (choices.length === 0) {
-                    QuickPicker.warn(
+                    Quickly.warn(
                         "You do not have any templates configured.  Add some by using the Template Explorer.", 
                         undefined, 
                         "Add a template from workspace",
@@ -292,7 +292,7 @@ export default class QuickPicker {
                 }
             }
         } else {
-            QuickPicker.error("You must have at least one workspace folder open to perform this action", undefined, "Open Workspace Folder", () => vscode.commands.executeCommand("vscode.openFolder", undefined, false));
+            Quickly.error("You must have at least one workspace folder open to perform this action", undefined, "Open Workspace Folder", () => vscode.commands.executeCommand("vscode.openFolder", undefined, false));
         }
 
         return workspace;
@@ -374,7 +374,7 @@ export default class QuickPicker {
                     } else if (choice.label === `${Octicon.file_symlink_directory} ..`) {
                         newUri = defaultUri.with({ path: defaultUri.path.substr(0, defaultUri.path.lastIndexOf("/")) });
                     } else if (choice.label === `${Octicon.file_directory_create}`) {
-                        const input = await QuickPicker.ask(`What is the name of the new ${canPickFiles && !canPickFolders ? "File" : canPickFolders && !canPickFiles ? "Folder" : "Item" }?`);
+                        const input = await Quickly.ask(`What is the name of the new ${canPickFiles && !canPickFolders ? "File" : canPickFolders && !canPickFiles ? "Folder" : "Item" }?`);
 
                         if (input) {
                             const isFolder = canPickFolders && !canPickFiles ? true : input.endsWith("/") || input.endsWith("\\") ? true : false;

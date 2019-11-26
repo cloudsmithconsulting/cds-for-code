@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as cs from '../../cs';
 import IContributor from '../../core/CommandBuilder';
 import * as FileSystem from '../../core/io/FileSystem';
-import QuickPicker from '../../core/QuickPicker';
+import Quickly from '../../core/Quickly';
 import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
 import * as path from 'path';
 import Xml from '../../core/io/Xml';
@@ -61,7 +61,7 @@ export default class VisualStudioProjectCommands implements IContributor {
                     }
                 }
 
-                file = file || await QuickPicker.pickWorkspaceFile(defaultFolder, "Choose a projet to build", undefined, false, VisualStudioProjectCommands.projectFileTypes).then(r => vscode.Uri.file(r));
+                file = file || await Quickly.pickWorkspaceFile(defaultFolder, "Choose a projet to build", undefined, false, VisualStudioProjectCommands.projectFileTypes).then(r => vscode.Uri.file(r));
                 if (!file) { return; }
 
                 if (updateVersionBuild) {
@@ -93,7 +93,7 @@ export default class VisualStudioProjectCommands implements IContributor {
                 }
 
                 if (!logFile || logFile !== "!") {
-                    if ((await QuickPicker.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
+                    if ((await Quickly.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
                         let dateString = new Date().toISOString();
                         dateString = dateString.substr(0, dateString.length - 5);
                         dateString = dateString.replace("T","-").replace(":","").replace(":", "");
@@ -139,11 +139,11 @@ export default class VisualStudioProjectCommands implements IContributor {
                     }
                 }
 
-                file = file || await QuickPicker.pickWorkspaceFile(defaultFolder, "Choose a projet to test", undefined, false, VisualStudioProjectCommands.projectFileTypes).then(r => vscode.Uri.file(r));
+                file = file || await Quickly.pickWorkspaceFile(defaultFolder, "Choose a projet to test", undefined, false, VisualStudioProjectCommands.projectFileTypes).then(r => vscode.Uri.file(r));
                 if (!file) { return; }
 
                 if (!logFile) {
-                    if ((await QuickPicker.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
+                    if ((await Quickly.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
                         let dateString = new Date().toISOString();
                         dateString = dateString.substr(0, dateString.length - 5);
                         dateString = dateString.replace("T","-").replace(":","").replace(":", "");

@@ -10,7 +10,7 @@ import DynamicsUrlResolver from '../webapi/DynamicsUrlResolver';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import { DynamicsWebApi } from '../webapi/Types';
 import { ExtensionIconThemes } from '../components/WebDownloaders/IconDownloader';
-import QuickPicker from '../core/QuickPicker';
+import Quickly from '../core/Quickly';
 import SolutionMap from '../components/Solutions/SolutionMap';
 import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
 
@@ -182,7 +182,7 @@ export default class DynamicsTreeView implements IContributor {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, undefined, item.solutionId), retryFunction);
                         break;
                     case "Processes":                 
-                        let processType = await QuickPicker.pickEnum<DynamicsWebApi.ProcessType>(DynamicsWebApi.ProcessType);
+                        let processType = await Quickly.pickEnum<DynamicsWebApi.ProcessType>(DynamicsWebApi.ProcessType);
 
                         if (processType) {
                             Utilities.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, processType, item.parent && item.parent.context && item.parent.context.ObjectTypeCode ? item.parent.context.ObjectTypeCode : undefined, item.solutionId), retryFunction);
@@ -196,7 +196,7 @@ export default class DynamicsTreeView implements IContributor {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityRelationshipUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
                         break;
                     case "Forms":   
-                        let formType = await QuickPicker.pickEnum<DynamicsWebApi.DynamicsForm>(DynamicsWebApi.DynamicsForm);
+                        let formType = await Quickly.pickEnum<DynamicsWebApi.DynamicsForm>(DynamicsWebApi.DynamicsForm);
 
                         if (formType) {
                             Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.context.ObjectTypeCode, formType, undefined, item.solutionId), retryFunction);
@@ -204,7 +204,7 @@ export default class DynamicsTreeView implements IContributor {
 
                         break;
                     case "Dashboards":
-                        let layoutType = await QuickPicker.pickEnum<DynamicsWebApi.InteractiveDashboardLayout>(DynamicsWebApi.InteractiveDashboardLayout);
+                        let layoutType = await Quickly.pickEnum<DynamicsWebApi.InteractiveDashboardLayout>(DynamicsWebApi.InteractiveDashboardLayout);
 
                         if (layoutType) {
                             Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityDashboardUri(item.config, item.context.ObjectTypeCode, layoutType, "1030", undefined, item.solutionId), retryFunction);

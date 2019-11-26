@@ -10,7 +10,7 @@ import { TemplatePlaceholder, TemplateItem, TemplateType } from './Types';
 
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import IContributor from '../../core/CommandBuilder';
-import QuickPicker from '../../core/QuickPicker';
+import Quickly from '../../core/Quickly';
 import Dictionary from '../../core/types/Dictionary';
 import Utilities from '../../core/Utilities';
 
@@ -93,7 +93,7 @@ export default class TemplateManager implements IContributor {
         await TemplateManager.createTemplatesDirIfNotExists();
 
         // choose a template
-        template = template || await QuickPicker.pickTemplate("Choose a template that you would like to create.", type);
+        template = template || await Quickly.pickTemplate("Choose a template that you would like to create.", type);
 
         if (!template) {
             return;
@@ -109,7 +109,7 @@ export default class TemplateManager implements IContributor {
         let templateDir = path.isAbsolute(template.location) ? template.location : path.join(await TemplateManager.getTemplatesFolder(), template.location);
 
         if (!fs.existsSync(templateDir)) {
-            QuickPicker.error(`Cannot extract this template as ${templateDir} is not a valid path.`);
+            Quickly.error(`Cannot extract this template as ${templateDir} is not a valid path.`);
 
             return undefined;
         }
@@ -147,7 +147,7 @@ export default class TemplateManager implements IContributor {
                         let reldest = path.relative(fsPath, destination);
        
                         // get user's input
-                        destination = await QuickPicker.ask(`Cannot overwrite "${reldest}".  Please enter a new filename"`, undefined, reldest)
+                        destination = await Quickly.ask(`Cannot overwrite "${reldest}".  Please enter a new filename"`, undefined, reldest)
                             .then(value => value ? value : destination);
 
                         // if not absolute path, make workspace-relative
@@ -160,7 +160,7 @@ export default class TemplateManager implements IContributor {
                         let action;
 
                         if (overwriteAll) { action = "Overwrite"; } else if (skipAll) { action = "Skip"; } else if (renameAll) { action = "Rename"; } else {
-                            action = (await QuickPicker.pick(`Destination file "${reldest}" already exists.  What would you like to do?`, "Overwrite", "Overwrite All", "Rename", "Rename All", "Skip", "Skip All", "Abort")).label;
+                            action = (await Quickly.pick(`Destination file "${reldest}" already exists.  What would you like to do?`, "Overwrite", "Overwrite All", "Rename", "Rename All", "Skip", "Skip All", "Abort")).label;
                         }
 
                         overwriteAll = overwriteAll || action === "Overwrite All";
@@ -177,7 +177,7 @@ export default class TemplateManager implements IContributor {
                             case "Rename":
                             case "Rename All":
                                 // get user's input
-                                destination = await QuickPicker
+                                destination = await Quickly
                                     .ask("Please enter a new filename", undefined, reldest)
                                     .then(value => value ? value : destination);
 
@@ -248,7 +248,7 @@ export default class TemplateManager implements IContributor {
         let templateLocation:string = path.isAbsolute(template.location) ? template.location : path.join(templateRoot, template.location);
 
         if (FileSystem.exists(templateLocation)) {
-            await QuickPicker.pickBoolean(`Are you sure you want to delete the project template '${template}'?`, "Yes", "No")
+            await Quickly.pickBoolean(`Are you sure you want to delete the project template '${template}'?`, "Yes", "No")
                 .then(async (choice) => {
                     if (choice) {
                         if (FileSystem.stats(templateLocation).isDirectory()) {
@@ -358,7 +358,7 @@ export default class TemplateManager implements IContributor {
         const fsBaseName = path.basename(fsPath, path.extname(fsPath));
 
         // prompt user
-        return await QuickPicker.ask("Enter the desired template name", undefined, fsBaseName)
+        return await Quickly.ask("Enter the desired template name", undefined, fsBaseName)
             .then(async templateName => {
                 // empty filename exits
                 if (!templateName) {
@@ -371,7 +371,7 @@ export default class TemplateManager implements IContributor {
                 
                 // check if exists
                 if (FileSystem.exists(templateDir)) {
-                    await QuickPicker.pickBoolean(`Template '${templateName}' aleady exists.  Do you wish to overwrite?`, "Yes", "No")
+                    await Quickly.pickBoolean(`Template '${templateName}' aleady exists.  Do you wish to overwrite?`, "Yes", "No")
                         .then(async choice => { 
                             if (choice) { 
                                 await FileSystem.deleteFolder(templateDir); 
@@ -412,10 +412,10 @@ export default class TemplateManager implements IContributor {
 
                 templateItem.name = templateName;
                 templateItem.location = location;
-                templateItem.displayName = templateItem.displayName || await QuickPicker.ask(`What should we call the display name for '${templateName}'`, undefined, templateName);
-                templateItem.publisher = templateItem.publisher || await QuickPicker.ask(`Who is the publisher name for '${templateItem.displayName}'`);
+                templateItem.displayName = templateItem.displayName || await Quickly.ask(`What should we call the display name for '${templateName}'`, undefined, templateName);
+                templateItem.publisher = templateItem.publisher || await Quickly.ask(`Who is the publisher name for '${templateItem.displayName}'`);
                 templateItem.type = type;
-                templateItem.categories = templateItem.categories || await QuickPicker.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
+                templateItem.categories = templateItem.categories || await Quickly.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
 
                 if (isNew) {
                     templateCatalog.add(templateItem);
@@ -775,7 +775,7 @@ export default class TemplateManager implements IContributor {
 
             while ((!val && attempts === 0) || (!val && placeholderItem && placeholderItem.required) || !cancel) {
                 if (attempts >= 1) {
-                    await QuickPicker.inform(`The template requires a response for the placeholder '${match[0]}'.`, false, "Try Again", undefined, "Cancel", () => cancel = true);
+                    await Quickly.inform(`The template requires a response for the placeholder '${match[0]}'.`, false, "Try Again", undefined, "Cancel", () => cancel = true);
                     
                     if (cancel) {
                         const error = new Error(`The user has requested to cancel template processing${template ? " for '" + template.name : "'"}`);
@@ -785,7 +785,7 @@ export default class TemplateManager implements IContributor {
                     }
                 }
 
-                val = val || await QuickPicker.ask(placeholderItem ? placeholderItem.displayName : `Please enter the desired value for "${match[0]}"`)
+                val = val || await Quickly.ask(placeholderItem ? placeholderItem.displayName : `Please enter the desired value for "${match[0]}"`)
                     .then(value => { if (value) { placeholders[key] = value; } return value; });
 
                 if (Utilities.IsNullOrEmpty(val)) { val = undefined; }

@@ -17,7 +17,7 @@ import IconLoader from './components/WebDownloaders/IconDownloader';
 import AddSolutionComponent from './components/Solutions/addSolutionComponent';
 import RemoveSolutionComponent from './components/Solutions/removeSolutionComponent';
 import PluginStepViewManager from './views/PluginStepView';
-import RegisterPluginAssembly from './components/Plugins/registerPluginAssembly';
+import RegisterPluginAssembly from './components/Solutions/registerPluginAssembly';
 import PublishCustomizations from "./components/Solutions/PublishAllXml";
 import SvcUtilConfigViewManager from './views/ServiceUtilityConfigurationView';
 import SolutionMap from './components/Solutions/SolutionMap';
@@ -25,7 +25,7 @@ import NewWorkspaceViewManager from './views/NewWorkspaceView';
 import VisualStudioProjectCommands from './components/DotNetCore/visualStudioProjectCommands';
 import TemplateTreeView from './views/TemplatesTreeView';
 import PluginStepImageViewManager from './views/PluginStepImageView';
-import WebResourceManager from './components/WebResources/WebResourceManager';
+import WebResourceManager from './components/Solutions/WebResourceManager';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed

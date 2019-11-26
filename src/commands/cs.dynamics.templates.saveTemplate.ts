@@ -1,7 +1,7 @@
 import vscode = require("vscode");
 import ExtensionConfiguration from "../core/ExtensionConfiguration";
 import * as cs from "../cs";
-import QuickPicker from "../core/QuickPicker";
+import Quickly from "../core/Quickly";
 import { TemplateType } from "../components/Templates/Types";
 import * as FileSystem from "../core/io/FileSystem";
 
@@ -17,16 +17,16 @@ import * as FileSystem from "../core/io/FileSystem";
 export default async function run(templateUri: vscode.Uri, type:TemplateType) {
 	let path:string;
 
-    type = type || await QuickPicker.pickEnum<TemplateType>(TemplateType, "What kind of template would you like to create?");
+    type = type || await Quickly.pickEnum<TemplateType>(TemplateType, "What kind of template would you like to create?");
     if (!type) { return; }
 
     if (!templateUri || !templateUri.fsPath || !FileSystem.exists(templateUri.fsPath)) {
         switch (type) {
             case TemplateType.ProjectTemplate:
-                path = await QuickPicker.pickWorkspaceFolder(templateUri, "Select the template folder");
+                path = await Quickly.pickWorkspaceFolder(templateUri, "Select the template folder");
                 break;
             case TemplateType.ItemTemplate:
-                path = await QuickPicker.pickWorkspaceFile(templateUri, "Select the template item");
+                path = await Quickly.pickWorkspaceFile(templateUri, "Select the template item");
                 break;
         }
     } else {
@@ -34,7 +34,7 @@ export default async function run(templateUri: vscode.Uri, type:TemplateType) {
     }
 
     if (!path) {
-        await QuickPicker.error("You must select a workspace and folder before you can save a project template", false, "Try Again", () => { vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, templateUri, type); }, "Cancel");
+        await Quickly.error("You must select a workspace and folder before you can save a project template", false, "Try Again", () => { vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, templateUri, type); }, "Cancel");
 
         return;
     }
@@ -46,11 +46,11 @@ export default async function run(templateUri: vscode.Uri, type:TemplateType) {
     this.saveToFilesystem(path, type).then(
         (template) => {
             if (template) {
-                QuickPicker.inform(`Created template '${template.name}' from ${type === TemplateType.ItemTemplate ? "item" : "folder"}`);
+                Quickly.inform(`Created template '${template.name}' from ${type === TemplateType.ItemTemplate ? "item" : "folder"}`);
             }
         },
         (reason: any) => {
-            QuickPicker.error(`Failed to save a template from the contents of '${path}': ${reason}`, false, "Try Again", () => { vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, templateUri, type); }, "Cancel");
+            Quickly.error(`Failed to save a template from the contents of '${path}': ${reason}`, false, "Try Again", () => { vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, templateUri, type); }, "Cancel");
         }
 	);   
 }

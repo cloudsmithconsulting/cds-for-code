@@ -3,7 +3,7 @@ import * as cs from '../../cs';
 import IContributor from '../../core/CommandBuilder';
 import { DynamicsWebApi } from '../../webapi/Types';
 import ApiRepository from '../../repositories/apiRepository';
-import QuickPicker from '../../core/QuickPicker';
+import Quickly from '../../core/Quickly';
 import Utilities from '../../core/Utilities';
 
 export default class RemoveSolutionComponent implements IContributor {
@@ -15,14 +15,14 @@ export default class RemoveSolutionComponent implements IContributor {
         // now wire a command into the context
         context.subscriptions.push(
             vscode.commands.registerCommand(cs.dynamics.deployment.removeSolutionComponent, async (config?:DynamicsWebApi.Config, solution?:any, componentId?:string, componentType?:DynamicsWebApi.SolutionComponent):Promise<any> => { 
-				config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
+				config = config || await Quickly.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
-				solution = solution || await QuickPicker.pickDynamicsSolution(config, "Choose a solution", true);
+				solution = solution || await Quickly.pickDynamicsSolution(config, "Choose a solution", true);
 				if (!solution) { return; }
 
                 if (Utilities.IsNullOrEmpty(componentType)) {
-                    componentType = await QuickPicker.pickDynamicsSolutionComponentType("Choose a component to remove", [
+                    componentType = await Quickly.pickDynamicsSolutionComponentType("Choose a component to remove", [
                         DynamicsWebApi.SolutionComponent.Entity,
                         DynamicsWebApi.SolutionComponent.OptionSet,
                         DynamicsWebApi.SolutionComponent.PluginAssembly,
@@ -34,7 +34,7 @@ export default class RemoveSolutionComponent implements IContributor {
                 }
                 
                 if (Utilities.IsNullOrEmpty(componentId)) { 
-                    const pickResponse = await QuickPicker.pickDynamicsSolutionComponent(config, solution, componentType, "Choose a component to remove");
+                    const pickResponse = await Quickly.pickDynamicsSolutionComponent(config, solution, componentType, "Choose a component to remove");
                     if (!pickResponse) { return; }
 
                     componentId = pickResponse.componentId;
