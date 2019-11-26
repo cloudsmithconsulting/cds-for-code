@@ -5,13 +5,13 @@ import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import QuickPicker, { WorkspaceFileItem } from '../core/QuickPicker';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../core/Utilities';
-import IBuildCommands from '../core/CommandBuilder';
+import IContributor from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/Types';
 
-export default class GenerateEntitiesCommand implements IBuildCommands {
+export default class GenerateEntitiesCommand implements IContributor {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
-    public buildCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
+    public contribute(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
         this.workspaceConfiguration = config;
 
         // now wire a command into the context

@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import { View, ViewRenderer } from '../core/view';
 import * as cs from '../cs';
-import IBuildCommands from '../core/CommandBuilder';
+import IContributor from '../core/CommandBuilder';
 
-export default class SvcUtilConfigViewManager implements IBuildCommands {
-	public buildCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+export default class SvcUtilConfigViewManager implements IContributor {
+	public contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.svcUtilConfig.configure, async (item: any) => { // Match name of command to package.json command

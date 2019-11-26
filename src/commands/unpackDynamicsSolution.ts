@@ -5,15 +5,15 @@ import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import QuickPicker from '../core/QuickPicker';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../core/Utilities';
-import IBuildCommands from '../core/CommandBuilder';
+import IContributor from '../core/CommandBuilder';
 import SolutionMap from '../components/SolutionMap/SolutionMap';
 import { DynamicsWebApi } from '../api/Types';
 import * as FileSystem from "../core/io/FileSystem";
 
-export default class UnpackDynamicsSolutionCommand implements IBuildCommands {
+export default class UnpackDynamicsSolutionCommand implements IContributor {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
-    public buildCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration){
+    public contribute(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration){
 		this.workspaceConfiguration = config;
 		
 		context.subscriptions.push(

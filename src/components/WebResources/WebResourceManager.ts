@@ -3,7 +3,7 @@ import * as cs from '../../cs';
 import * as FileSystem from "../../core/io/FileSystem";
 import * as path from 'path';
 import { DynamicsWebApi } from "../../api/Types";
-import IBuildCommands from '../../core/CommandBuilder';
+import IContributor from '../../core/CommandBuilder';
 import Utilities from '../../core/Utilities';
 import SolutionMap from "../SolutionMap/SolutionMap";
 import { SolutionWorkspaceMapping } from "../SolutionMap/Types";
@@ -21,7 +21,7 @@ import unpackWebResource from "../../commands/cs.dynamics.deployment.unpackWebRe
 import SolutionFile from '../SolutionXml/SolutionFile';
 import QuickPicker from '../../core/QuickPicker';
 
-export default class WebResourceManager implements IBuildCommands {
+export default class WebResourceManager implements IContributor {
     /**
      * local copy of workspace configuration to maintain consistency between calls
      */
@@ -33,7 +33,7 @@ export default class WebResourceManager implements IBuildCommands {
 
     get context():vscode.ExtensionContext { return WebResourceManager.context; }
 
-    buildCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
+    contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
         // now wire a command into the context
         context.subscriptions.push(
             vscode.commands.registerCommand(cs.dynamics.controls.explorer.craeteWebResource, createWebResourceExplorer.bind(this)),

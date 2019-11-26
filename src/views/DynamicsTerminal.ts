@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import IBuildCommands from '../core/CommandBuilder';
+import IContributor from '../core/CommandBuilder';
 import * as cs from '../cs';
 import * as fs from 'fs';
 import * as eol from 'eol';
@@ -757,9 +757,9 @@ export class Terminal implements vscode.Terminal {
 	}
 }
 
-export default class DynamicsTerminal implements IBuildCommands
+export default class DynamicsTerminal implements IContributor
 {
-	buildCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
+	contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
 		let terminals:Dictionary<string, Terminal> = new Dictionary<string, Terminal>();
 
 		context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.extension.createTerminal, async (folder:string, name:string): Promise<Terminal> => {

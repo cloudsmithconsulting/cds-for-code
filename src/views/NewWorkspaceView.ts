@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
 import { View, ViewRenderer } from '../core/view';
 import * as cs from '../cs';
-import IBuildCommands from '../core/CommandBuilder';
+import IContributor from '../core/CommandBuilder';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 
-export default class NewWorkspaceViewManager implements IBuildCommands {
+export default class NewWorkspaceViewManager implements IContributor {
     private static _initialized:boolean = false;
 
     public showWelcomeExperience() {
@@ -20,7 +20,7 @@ export default class NewWorkspaceViewManager implements IBuildCommands {
         }
     }
 
-	public buildCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+	public contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         let view;
 
         context.subscriptions.push(

@@ -2,11 +2,11 @@ import * as vscode from 'vscode';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import { View, ViewRenderer } from '../core/view';
 import * as cs from '../cs';
-import IBuildCommands from '../core/CommandBuilder';
+import IContributor from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/Types';
 
-export default class ConnectionViewManager implements IBuildCommands {
-	public buildCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+export default class ConnectionViewManager implements IContributor {
+	public contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.editConnection, async (config?: DynamicsWebApi.Config) => { // Match name of command to package.json command

@@ -6,16 +6,16 @@ import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import QuickPicker from '../core/QuickPicker';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../core/Utilities';
-import IBuildCommands from '../core/CommandBuilder';
+import IContributor from '../core/CommandBuilder';
 import SolutionMap from '../components/SolutionMap/SolutionMap';
 import { DynamicsWebApi } from '../api/Types';
 import WorkspaceState from '../components/Configuration/WorkspaceState';
 import SolutionFile from '../components/SolutionXml/SolutionFile';
 
-export default class PackDynamicsSolutionCommand implements IBuildCommands {
+export default class PackDynamicsSolutionCommand implements IContributor {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
-	public buildCommands (context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
+	public contribute (context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
 		this.workspaceConfiguration = config;
 
 		// now wire a command into the context

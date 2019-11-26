@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import IBuildCommands from '../core/CommandBuilder';
+import IContributor from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/Types';
 import ApiRepository from '../repositories/apiRepository';
 import QuickPicker from '../core/QuickPicker';
 import Utilities from '../core/Utilities';
 
-export default class RemoveSolutionComponent implements IBuildCommands {
+export default class RemoveSolutionComponent implements IContributor {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
-    public buildCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
+    public contribute(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
         this.workspaceConfiguration = wconfig;
 
         // now wire a command into the context

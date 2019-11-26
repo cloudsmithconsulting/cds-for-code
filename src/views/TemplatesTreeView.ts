@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
 import { TS } from 'typescript-linq/TS';
-import IBuildCommands from '../core/CommandBuilder';
+import IContributor from '../core/CommandBuilder';
 import { ExtensionIconThemes } from '../commands/iconLoader';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import Utilities from '../core/Utilities';
@@ -18,10 +18,10 @@ import openEntry from '../commands/cs.dynamics.controls.templateTreeView.openEnt
 import exportEntry from '../commands/cs.dynamics.controls.templateTreeView.exportEntry';
 import importEntry from '../commands/cs.dynamics.controls.templateTreeView.importEntry';
 
-export default class TemplateTreeView implements IBuildCommands {
+export default class TemplateTreeView implements IContributor {
     public static Instance:TemplateTreeViewProvider;
 
-    public buildCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
+    public contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         if (!TemplateTreeView.Instance) {
             TemplateTreeView.Instance = new TemplateTreeViewProvider(context);
             vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.templateExplorer, TemplateTreeView.Instance);

@@ -68,11 +68,11 @@ export function activate(context: vscode.ExtensionContext) {
 		new RemoveSolutionComponent(),
 		new RegisterPluginAssembly(),
 		new VisualStudioProjectCommands()
-	].forEach(c => c.buildCommands(context, toolsConfig));
+	].forEach(c => c.contribute(context, toolsConfig));
 
 	[   // templating engine.
 		new TemplateManager(context)
-	].forEach(c => c.buildCommands(context, templatesConfig));
+	].forEach(c => c.contribute(context, templatesConfig));
 }
 
 // this method is called when your extension is deactivated

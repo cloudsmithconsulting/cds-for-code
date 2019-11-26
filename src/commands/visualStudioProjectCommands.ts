@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import IBuildCommands from '../core/CommandBuilder';
+import IContributor from '../core/CommandBuilder';
 import * as FileSystem from '../core/io/FileSystem';
 import QuickPicker from '../core/QuickPicker';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import * as path from 'path';
 import XmlParser from '../core/XmlParser';
 
-export default class VisualStudioProjectCommands implements IBuildCommands {
+export default class VisualStudioProjectCommands implements IContributor {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
     public static projectFileTypes:string[] = [".csproj", ".vbproj"];
@@ -20,7 +20,7 @@ export default class VisualStudioProjectCommands implements IBuildCommands {
         return fileIsProject;
     }
 
-    public buildCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
+    public contribute(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
         this.workspaceConfiguration = wconfig;
 
         const incrementBuild = (build:string) => {

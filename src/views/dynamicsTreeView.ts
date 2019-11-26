@@ -5,7 +5,7 @@ import ApiRepository from '../repositories/apiRepository';
 import Utilities from '../core/Utilities';
 import MetadataRepository from '../repositories/metadataRepository';
 import * as cs from '../cs';
-import IBuildCommands from '../core/CommandBuilder';
+import IContributor from '../core/CommandBuilder';
 import DynamicsUrlResolver from '../api/DynamicsUrlResolver';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import { DynamicsWebApi } from '../api/Types';
@@ -14,10 +14,10 @@ import QuickPicker from '../core/QuickPicker';
 import SolutionMap from '../components/SolutionMap/SolutionMap';
 import { SolutionWorkspaceMapping } from "../components/SolutionMap/Types";
 
-export default class DynamicsTreeView implements IBuildCommands {
+export default class DynamicsTreeView implements IContributor {
     public static Instance:DynamicsServerTreeProvider;
 
-    public buildCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
+    public contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         const isNew = !DynamicsTreeView.Instance;        
         const treeProvider = isNew ? new DynamicsServerTreeProvider(context) : DynamicsTreeView.Instance;
 

@@ -5,14 +5,14 @@ import * as path from 'path';
 import * as FileSystem from '../../core/io/FileSystem';
 import { TS } from "typescript-linq";
 import { ExtensionContext } from "vscode";
-import IBuildCommands from "../../core/CommandBuilder";
+import IContributor from "../../core/CommandBuilder";
 import { DynamicsWebApi } from "../../api/Types";
 import Utilities from "../../core/Utilities";
 import { WorkspaceFileSystemWatcher } from "../../core/io/FileManager";
 import { SolutionWorkspaceMapping } from "./Types";
 
 
-export default class SolutionMap implements IBuildCommands
+export default class SolutionMap implements IContributor
 {
     public constructor (map?:SolutionMap) {
         if (map && map.mappings) {
@@ -26,7 +26,7 @@ export default class SolutionMap implements IBuildCommands
         }
     }
 
-    buildCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
+    contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         // load default map as it will force filesystemwatchers to intialize.
         if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
             // Watch the files in the workspace for changes.

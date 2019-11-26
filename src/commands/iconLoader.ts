@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as cs from '../cs';
 import fetch from 'node-fetch';
-import IBuildCommands from '../core/CommandBuilder';
+import IContributor from '../core/CommandBuilder';
 import Utilities from '../core/Utilities';
 import Dictionary from '../core/types/Dictionary';
 import * as FileSystem from '../core/io/FileSystem';
@@ -12,8 +12,8 @@ import { TS } from 'typescript-linq';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import * as TemplateTreeView from '../views/TemplatesTreeView';
 
-export default class IconLoader implements IBuildCommands {
-    public buildCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+export default class IconLoader implements IContributor {
+    public contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
 		//GlobalState.Instance(context).PowerShellScriptVersion = null;
 
 		// do this immediately

@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 import { TemplatePlaceholder, TemplateItem, TemplateType } from './Types';
 
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
-import IBuildCommands from '../../core/CommandBuilder';
+import IContributor from '../../core/CommandBuilder';
 import QuickPicker from '../../core/QuickPicker';
 import Dictionary from '../../core/types/Dictionary';
 import Utilities from '../../core/Utilities';
@@ -32,7 +32,7 @@ import { TemplateCatalog } from './TemplateCatalog';
  * @export
  * @class TemplateManager
  */
-export default class TemplateManager implements IBuildCommands {
+export default class TemplateManager implements IContributor {
     /**
      * local copy of workspace configuration to maintain consistency between calls
      */
@@ -43,7 +43,7 @@ export default class TemplateManager implements IBuildCommands {
         TemplateManager.createTemplatesDirIfNotExists();
     }
 
-    buildCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
+    contribute(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
         // now wire a command into the context
         context.subscriptions.push(
             vscode.commands.registerCommand(cs.dynamics.controls.explorer.createFromItemTemplate, createFromItemTemplate.bind(this)),
