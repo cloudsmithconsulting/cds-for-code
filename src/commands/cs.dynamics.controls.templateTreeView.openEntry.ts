@@ -1,4 +1,4 @@
-import * as TemplateTreeView from "../views/TemplateTreeView";
+import * as TemplateTreeView from "../views/TemplatesTreeView";
 import TemplateManager from "../components/Templates/TemplateManager";
 /**
  * This command can be invoked by the Template Tree View and edits an item to the TreeView

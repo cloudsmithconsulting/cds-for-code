@@ -10,7 +10,7 @@ import * as FileSystem from '../core/io/FileSystem';
 import * as DynamicsTreeView from '../views/DynamicsTreeView';
 import { TS } from 'typescript-linq';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
-import * as TemplateTreeView from '../views/TemplateTreeView';
+import * as TemplateTreeView from '../views/TemplatesTreeView';
 
 export default class IconLoader implements IBuildCommands {
     public buildCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {

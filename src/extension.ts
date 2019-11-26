@@ -10,21 +10,21 @@ import PowerShellLoader from './commands/powerShellLoader';
 import DynamicsTreeView from './views/DynamicsTreeView';
 import PackDynamicsSolution from './commands/packDynamicsSolution';
 import UnpackDynamicsSolution from './commands/unpackDynamicsSolution';
-import JsonInspectorViewManager from './views/JsonInspectorView';
+import JsonObjectViewManager from './views/JsonObjectView';
 import TemplateManager from './components/Templates/TemplateManager';
 import DynamicsTerminal from './views/DynamicsTerminal';
 import IconLoader from './commands/iconLoader';
 import AddSolutionComponent from './commands/addSolutionComponent';
 import RemoveSolutionComponent from './commands/removeSolutionComponent';
-import PluginStepViewManager from './views/pluginStepView';
+import PluginStepViewManager from './views/PluginStepView';
 import RegisterPluginAssembly from './commands/registerPluginAssembly';
 import PublishCustomizations from "./commands/PublishAllXml";
-import SvcUtilConfigViewManager from './views/svcUtilConfigView';
+import SvcUtilConfigViewManager from './views/ServiceUtilityConfigurationView';
 import SolutionMap from './components/SolutionMap/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
 import VisualStudioProjectCommands from './commands/visualStudioProjectCommands';
-import TemplateTreeView from './views/TemplateTreeView';
-import PluginStepImageViewManager from './views/pluginStepImageView';
+import TemplateTreeView from './views/TemplatesTreeView';
+import PluginStepImageViewManager from './views/PluginStepImageView';
 import WebResourceManager from './components/WebResources/WebResourceManager';
 
 // this method is called when your extension is activated
@@ -48,7 +48,7 @@ export function activate(context: vscode.ExtensionContext) {
 		new DynamicsTreeView(),
 		new TemplateTreeView(),
 		new ConnectionViewManager(),
-		new JsonInspectorViewManager(),
+		new JsonObjectViewManager(),
 		new SvcUtilConfigViewManager(),
 		new DynamicsTerminal(),
 		new PluginStepViewManager(),

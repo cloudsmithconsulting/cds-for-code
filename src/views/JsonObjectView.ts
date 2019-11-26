@@ -3,14 +3,14 @@ import { View, ViewRenderer } from '../core/view';
 import * as cs from '../cs';
 import IBuildCommands from '../core/CommandBuilder';
 
-export default class JsonInspectorViewManager implements IBuildCommands {
-	public buildCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+export default class JsonObjectViewManager implements IBuildCommands {
+	buildCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.jsonInspector.inspect, async (item: any) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-                const view = View.createOrShow(JsonInspectorView, {
+                const view = View.createOrShow(JsonObjectView, {
                     extensionPath: context.extensionPath,
                     iconPath: './resources/images/cloudsmith-logo-only-50px.png',
                     viewTitle: 'Object inspector',
@@ -26,7 +26,7 @@ export default class JsonInspectorViewManager implements IBuildCommands {
     }
 }
 
-class JsonInspectorView extends View {
+class JsonObjectView extends View {
     public getHtmlForWebview(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('jsoneditor.min.js');
@@ -43,7 +43,7 @@ class JsonInspectorView extends View {
         return viewRenderer.renderPartialFile('jsonInspector.html');
     }    
     
-    public onDidReceiveMessage(instance: JsonInspectorView, message: any): vscode.Event<any> {
+    public onDidReceiveMessage(instance: JsonObjectView, message: any): vscode.Event<any> {
         switch (message.command) {
             case 'default':                
                 return;
