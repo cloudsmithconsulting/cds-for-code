@@ -6,7 +6,7 @@ import { DynamicsWebApi } from "../api/Types";
 import QuickPicker from "../helpers/QuickPicker";
 import ApiRepository from "../repositories/apiRepository";
 import Utilities from "../helpers/Utilities";
-import { SolutionWorkspaceMapping } from "../config/SolutionMap";
+import { SolutionWorkspaceMapping } from "../controls/SolutionMap/SolutionWorkspaceMapping";
 import SolutionFile from "../dynamics/SolutionFile";
 
 /**

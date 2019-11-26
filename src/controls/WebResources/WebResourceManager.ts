@@ -5,7 +5,8 @@ import * as path from 'path';
 import { DynamicsWebApi } from "../../api/Types";
 import IWireUpCommands from '../../wireUpCommand';
 import Utilities from '../../helpers/Utilities';
-import SolutionMap, { SolutionWorkspaceMapping } from "../../config/SolutionMap";
+import SolutionMap from "../SolutionMap/SolutionMap";
+import { SolutionWorkspaceMapping } from "../SolutionMap/SolutionWorkspaceMapping";
 import TemplateManager from "../../controls/Templates/TemplateManager";
 import ApiRepository from '../../repositories/apiRepository';
 import EnumParser from '../../helpers/EnumParser';
@@ -134,10 +135,10 @@ export default class WebResourceManager implements IWireUpCommands {
         }       
 
         // Edit the solution.xml file and add the component there, too.
-        const solutionFile = await SolutionFile.from(SolutionWorkspaceMapping.mapWorkspacePath(map.path));
+        const solutionFile = await SolutionFile.from(SolutionMap.mapWorkspacePath(map.path));
 
         await solutionFile.addComponent(DynamicsWebApi.SolutionComponent.WebResource, undefined, webResource.name, 0).then(() => {
-            solutionFile.save(SolutionWorkspaceMapping.mapWorkspacePath(map.path));
+            solutionFile.save(SolutionMap.mapWorkspacePath(map.path));
         });
     }
 }

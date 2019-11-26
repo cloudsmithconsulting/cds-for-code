@@ -20,7 +20,7 @@ import PluginStepViewManager from './views/pluginStepView';
 import RegisterPluginAssembly from './commands/registerPluginAssembly';
 import PublishCustomizations from "./commands/PublishAllXml";
 import SvcUtilConfigViewManager from './views/svcUtilConfigView';
-import SolutionMap from './config/SolutionMap';
+import SolutionMap from './controls/SolutionMap/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
 import VisualStudioProjectCommands from './commands/visualStudioProjectCommands';
 import TemplateTreeView from './views/TemplateTreeView';

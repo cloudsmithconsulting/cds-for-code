@@ -1,14 +1,15 @@
 import * as vscode from "vscode";
-import * as cs from '../cs';
-import QuickPicker from "../helpers/QuickPicker";
+import * as cs from '../../cs';
+import QuickPicker from "../../helpers/QuickPicker";
 import * as path from 'path';
-import * as FileSystem from '../helpers/FileSystem';
+import * as FileSystem from '../../helpers/FileSystem';
 import { TS } from "typescript-linq";
-import { ExtensionContext, RelativePattern } from "vscode";
-import IWireUpCommands from "../wireUpCommand";
-import { DynamicsWebApi } from "../api/Types";
-import Utilities from "../helpers/Utilities";
-import { WorkspaceFileSystemWatcher } from "../helpers/FileManager";
+import { ExtensionContext } from "vscode";
+import IWireUpCommands from "../../wireUpCommand";
+import { DynamicsWebApi } from "../../api/Types";
+import Utilities from "../../helpers/Utilities";
+import { WorkspaceFileSystemWatcher } from "../../helpers/FileManager";
+import { SolutionWorkspaceMapping } from "./SolutionWorkspaceMapping";
 
 
 export default class SolutionMap implements IWireUpCommands
@@ -234,7 +235,31 @@ export default class SolutionMap implements IWireUpCommands
 
         return new SolutionMap();
     }
-    
+
+    static mapWorkspacePath(solutionPath: string, component?: DynamicsWebApi.SolutionComponent, item?: any): string {
+        let returnPath: string;
+        
+        if (!component) {
+            returnPath = path.join(solutionPath, "Other", "Solution.xml");
+        } else {
+            //TODO: complete this switch statement.
+            switch (component) {
+                case DynamicsWebApi.SolutionComponent.PluginAssembly:
+                    break;
+                case DynamicsWebApi.SolutionComponent.WebResource:
+                    returnPath = path.join(solutionPath, "WebResources");
+                    
+                    if (item && item.name) {
+                        returnPath = path.join(returnPath, item.name);
+                    }
+                    break;
+                default:
+                    throw new Error(`SolutionMap cannot determine the local path for solution component '${component.toString()}'`);
+            }
+        }
+
+        return returnPath;
+    }    
     static async read(filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap> {
         const workspacePath = await QuickPicker.pickWorkspaceRoot(undefined, "Choose a location that houses your .dynamics folder.", true).then(uri => uri ? uri.fsPath : null);
         if (!workspacePath) { return; }
@@ -323,52 +348,3 @@ export default class SolutionMap implements IWireUpCommands
     }
 }
 
-export class SolutionWorkspaceMapping {
-    constructor(organizationId?:string, solutionId?:string, path?:string) {
-        this.organizationId = organizationId;
-        this.solutionId = solutionId;
-        this.path = path;
-    }
-
-    solutionId:string;
-    organizationId:string;
-    path:string;
-
-    getPath(component?:DynamicsWebApi.SolutionComponent, item?:any): string {
-        return SolutionWorkspaceMapping.mapWorkspacePath(this.path, component, item);
-    }
-
-    static mapWorkspacePath(solutionPath:string, component?:DynamicsWebApi.SolutionComponent, item?:any): string {
-        let returnPath:string;
-
-        if (!component) {
-            returnPath = path.join(solutionPath, "Other", "Solution.xml");
-        } else {
-            //TODO: complete this switch statement.
-            switch (component) {
-                case DynamicsWebApi.SolutionComponent.PluginAssembly:
-                    break;
-                case DynamicsWebApi.SolutionComponent.WebResource:
-                    returnPath = path.join(solutionPath, "WebResources");
-
-                    if (item && item.name) {
-                        returnPath = path.join(returnPath, item.name);
-                    }
-
-                    break;
-                default:
-                    throw new Error(`SolutionMap cannot determine the local path for solution component '${component.toString()}'`);
-            }
-        }
-
-        return returnPath;
-    }
-
-    static getSolutionWatcherPattern(mapping:SolutionWorkspaceMapping):vscode.GlobPattern { 
-        return new RelativePattern(mapping.path, "*");
-    }
-
-    static getWebResourceWatcherPattern(mapping:SolutionWorkspaceMapping):vscode.GlobPattern { 
-        return new RelativePattern(mapping.path, "*/WebResources/**/*.*");
-    }
-}

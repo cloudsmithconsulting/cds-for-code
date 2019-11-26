@@ -7,7 +7,7 @@ import QuickPicker from '../helpers/QuickPicker';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../helpers/Utilities';
 import IWireUpCommands from '../wireUpCommand';
-import SolutionMap from '../config/SolutionMap';
+import SolutionMap from '../controls/SolutionMap/SolutionMap';
 import { DynamicsWebApi } from '../api/Types';
 import WorkspaceState from '../config/WorkspaceState';
 import SolutionFile from '../dynamics/SolutionFile';

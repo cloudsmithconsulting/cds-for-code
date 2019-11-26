@@ -11,7 +11,8 @@ import ExtensionConfiguration from '../config/ExtensionConfiguration';
 import { DynamicsWebApi } from '../api/Types';
 import { ExtensionIconThemes } from '../commands/iconLoader';
 import QuickPicker from '../helpers/QuickPicker';
-import SolutionMap, { SolutionWorkspaceMapping } from '../config/SolutionMap';
+import SolutionMap from '../controls/SolutionMap/SolutionMap';
+import { SolutionWorkspaceMapping } from "../controls/SolutionMap/SolutionWorkspaceMapping";
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;
