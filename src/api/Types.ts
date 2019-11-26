@@ -1,4 +1,4 @@
-import Dictionary from "../core/Dictionary";
+import Dictionary from "../core/types/Dictionary";
 
 export namespace DynamicsWebApi {
     export interface Expand {

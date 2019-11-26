@@ -1,6 +1,6 @@
-import * as FileSystem from '../../core/FileSystem';
+import * as FileSystem from '../../core/io/FileSystem';
 import * as path from 'path';
-import Dictionary from '../../core/Dictionary';
+import Dictionary from '../../core/types/Dictionary';
 import TemplateManager from './TemplateManager';
 import QuickPicker from '../../core/QuickPicker';
 

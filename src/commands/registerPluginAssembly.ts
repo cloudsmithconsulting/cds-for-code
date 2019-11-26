@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import * as FileSystem from '../core/FileSystem';
+import * as FileSystem from '../core/io/FileSystem';
 import IBuildCommands from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/Types';
 import ApiRepository from '../repositories/apiRepository';

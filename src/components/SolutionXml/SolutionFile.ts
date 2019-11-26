@@ -1,7 +1,7 @@
-import * as FileSystem from "../core/FileSystem";
+import * as FileSystem from "../../core/io/FileSystem";
 import * as path from 'path';
-import XmlParser from '../core/XmlParser';
-import { DynamicsWebApi } from '../api/Types';
+import XmlParser from '../../core/XmlParser';
+import { DynamicsWebApi } from '../../api/Types';
 
 export default class SolutionFile {
     get file():string { return this._file; }

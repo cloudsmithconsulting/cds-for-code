@@ -1,13 +1,13 @@
 import * as cs from "../cs";
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as FileSystem from "../core/FileSystem";
+import * as FileSystem from "../core/io/FileSystem";
 import { DynamicsWebApi } from "../api/Types";
 import QuickPicker from "../core/QuickPicker";
 import ApiRepository from "../repositories/apiRepository";
 import Utilities from "../core/Utilities";
 import { SolutionWorkspaceMapping } from "../components/SolutionMap/Types";
-import SolutionFile from "../dynamics/SolutionFile";
+import SolutionFile from "../components/SolutionXml/SolutionFile";
 
 /**
  * This command can be invoked by the by either the file explorer view or the Dynamics TreeView

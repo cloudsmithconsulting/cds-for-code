@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as _ from 'lodash';
-import Dictionary from './Dictionary';
+import Dictionary from './types/Dictionary';
 
 export interface IViewOptions {
 	preserveFocus?: boolean;
@@ -18,18 +18,18 @@ export class ViewRenderer {
 	private _scripts: Dictionary<string, vscode.Uri> = new Dictionary();
 	private _styleSheets: Dictionary<string, vscode.Uri> = new Dictionary();
 
-	public readonly nonce: string;
+	readonly nonce: string;
 
 	constructor(view: View) {
 		this.nonce = this.getNonce();
 		this._view = view;
 	}
 
-	public addImage(imageName: string) {
+	addImage(imageName: string) {
 		this._images.add(imageName, this.getFileUri('resources', 'images', imageName));
 	}
 
-	public addScript(scriptName: string) {
+	addScript(scriptName: string) {
 		this._scripts.add(scriptName, this.getFileUri('resources', 'scripts', scriptName));
 	}
 
@@ -41,7 +41,7 @@ export class ViewRenderer {
 		this._scripts.insert(0, scriptName, this.getFileUri('node_modules', scriptName));
 	}
 
-	public addStyleSheet(styleSheetName: string) {
+	addStyleSheet(styleSheetName: string) {
 		this._styleSheets.add(styleSheetName, this.getFileUri('resources', 'styles', styleSheetName));
 	}
 
@@ -52,7 +52,7 @@ export class ViewRenderer {
 		return this._view.panel.webview.asWebviewUri(pathOnDisk);
 	}
 
-	public getImageUri(imageName: string): vscode.Uri {
+	getImageUri(imageName: string): vscode.Uri {
 		return this._images[imageName];
 	}
 
@@ -65,7 +65,7 @@ export class ViewRenderer {
 		return result;
 	}
 
-	public renderPartialFile(webviewFileName: string) : string {
+	renderPartialFile(webviewFileName: string) : string {
 		// get the file path
 		const pathOnDisk = path.join(this._view.extensionPath, 'resources', 'webviews', webviewFileName);
 		// read file contents from disk
@@ -89,7 +89,7 @@ export class ViewRenderer {
 		return this.renderHtml(result);
 	}
 
-	public renderHtml(htmlParial: string): string {
+	renderHtml(htmlParial: string): string {
 		let cssHtml: string = '';
 		this._styleSheets.values.forEach(uri => {
 			cssHtml += `<link rel="stylesheet" type="text/css" href="${uri}">`;
@@ -139,9 +139,9 @@ export abstract class View {
     /**
 	 * Track the currently panel. Only allow a single panel to exist at a time.
 	 */
-	public static openPanels: { [key: string]: View } = {};
+	static openPanels: { [key: string]: View } = {};
 
-	public static createOrShow<T extends View>(
+	static createOrShow<T extends View>(
 		c: new(viewOptions: IViewOptions, panel: vscode.WebviewPanel) => T, 
 		viewOptions: IViewOptions, alwaysNew?: boolean): T {
 		
@@ -185,6 +185,7 @@ export abstract class View {
 		else if (iconPath.startsWith('/')) {
 			iconPath = iconPath.substr(1);
 		}
+
 		const arrIconPath = iconPath.split('/');
 		panel.iconPath = vscode.Uri.file(path.join(extensionPath, ...arrIconPath));
 
@@ -198,9 +199,9 @@ export abstract class View {
 		return result;
 	}
 
-	public readonly extensionPath: string;
-	public readonly panel: vscode.WebviewPanel;
-	public readonly viewOptions: IViewOptions;
+	readonly extensionPath: string;
+	readonly panel: vscode.WebviewPanel;
+	readonly viewOptions: IViewOptions;
 
 	protected _disposables: vscode.Disposable[] = [];
 	protected readonly _viewRenderer: ViewRenderer;
@@ -209,7 +210,7 @@ export abstract class View {
 
 	abstract onDidReceiveMessage(instance: View, message: any): vscode.Event<any>;
 
-	public constructor(viewOptions: IViewOptions, panel: vscode.WebviewPanel) {
+	constructor(viewOptions: IViewOptions, panel: vscode.WebviewPanel) {
 		this.viewOptions = viewOptions;
 		this.panel = panel;
 		this._viewRenderer = new ViewRenderer(this);
@@ -246,7 +247,7 @@ export abstract class View {
 		});
 	}
 
-	public dispose() {
+	dispose() {
 		// If we already have a panel, removie it from the open panels
 		// const panelIndex =
 		// 	View.openPanels.findIndex(
@@ -270,7 +271,7 @@ export abstract class View {
 		if (this.panel) {
 			this.panel.dispose();
 		}
-}
+	}
 
 	private _update() {
 		this.panel.title = this.viewOptions.viewTitle;

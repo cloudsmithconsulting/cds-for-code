@@ -3,7 +3,7 @@ import ExtensionConfiguration from "../core/ExtensionConfiguration";
 import * as cs from "../cs";
 import QuickPicker from "../core/QuickPicker";
 import { TemplateType } from "../components/Templates/Types";
-import * as FileSystem from "../core/FileSystem";
+import * as FileSystem from "../core/io/FileSystem";
 
 /**
  * This command saves a folder or item as a template.

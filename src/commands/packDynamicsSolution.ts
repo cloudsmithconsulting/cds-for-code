@@ -10,7 +10,7 @@ import IBuildCommands from '../core/CommandBuilder';
 import SolutionMap from '../components/SolutionMap/SolutionMap';
 import { DynamicsWebApi } from '../api/Types';
 import WorkspaceState from '../components/Configuration/WorkspaceState';
-import SolutionFile from '../dynamics/SolutionFile';
+import SolutionFile from '../components/SolutionXml/SolutionFile';
 
 export default class PackDynamicsSolutionCommand implements IBuildCommands {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;

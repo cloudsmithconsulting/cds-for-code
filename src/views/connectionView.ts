@@ -29,7 +29,7 @@ export default class ConnectionViewManager implements IBuildCommands {
 }
 
 class ConnectionView extends View {
-    public getHtmlForWebview(viewRenderer: ViewRenderer): string {
+    getHtmlForWebview(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('connectionView.js');
         viewRenderer.addStyleSheet('webviewStyles.css');

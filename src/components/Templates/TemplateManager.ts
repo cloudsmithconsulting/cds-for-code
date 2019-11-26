@@ -3,7 +3,7 @@ import * as cs from '../../cs';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import * as FileSystem from '../../core/FileSystem';
+import * as FileSystem from '../../core/io/FileSystem';
 import * as EnvironmentVariables from '../../core/EnvironmentVariables';
 import * as _ from 'lodash';
 import { TemplatePlaceholder, TemplateItem, TemplateType } from './Types';
@@ -11,7 +11,7 @@ import { TemplatePlaceholder, TemplateItem, TemplateType } from './Types';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import IBuildCommands from '../../core/CommandBuilder';
 import QuickPicker from '../../core/QuickPicker';
-import Dictionary from '../../core/Dictionary';
+import Dictionary from '../../core/types/Dictionary';
 import Utilities from '../../core/Utilities';
 
 import createFromItemTemplate from "../../commands/cs.dynamics.controls.explorer.createFromItemTemplate";

@@ -1,4 +1,4 @@
-import * as FileSystem from "../core/FileSystem";
+import * as FileSystem from "../core/io/FileSystem";
 import * as vscode from 'vscode';
 import * as path from 'path';
 import TemplateManager from "../components/Templates/TemplateManager";

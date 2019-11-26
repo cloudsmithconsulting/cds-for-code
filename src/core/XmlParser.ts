@@ -1,5 +1,5 @@
 import * as xml2js from 'xml2js';
-import * as FileSystem from './FileSystem';
+import * as FileSystem from './io/FileSystem';
 
 export default class XmlParser {
     public static async parseFile(file:string, encoding:string = 'utf8'): Promise<any> {

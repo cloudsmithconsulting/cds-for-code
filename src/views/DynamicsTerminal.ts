@@ -8,7 +8,7 @@ import Utilities from '../core/Utilities';
 import QuickPicker, { QuickPickOption } from '../core/QuickPicker';
 import { TS } from 'typescript-linq';
 import { TextEncoder, TextDecoder } from 'util';
-import Dictionary from '../core/Dictionary';
+import Dictionary from '../core/types/Dictionary';
 
 export class TerminalCommand {
 	private _command:string;

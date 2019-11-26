@@ -1,7 +1,7 @@
 import * as cs from "../cs";
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as FileSystem from "../core/FileSystem";
+import * as FileSystem from "../core/io/FileSystem";
 import { DynamicsWebApi } from "../api/Types";
 import QuickPicker from "../core/QuickPicker";
 import WebResourceManager from "../components/WebResources/WebResourceManager";
@@ -10,7 +10,7 @@ import Utilities from "../core/Utilities";
 import SolutionMap from "../components/SolutionMap/SolutionMap";
 import { SolutionWorkspaceMapping } from "../components/SolutionMap/Types";
 import TemplateManager from "../components/Templates/TemplateManager";
-import Dictionary from "../core/Dictionary";
+import Dictionary from "../core/types/Dictionary";
 import EnumParser from "../core/EnumParser";
 
 /**

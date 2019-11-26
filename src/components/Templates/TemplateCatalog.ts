@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as FileSystem from '../../core/FileSystem';
+import * as FileSystem from '../../core/io/FileSystem';
 import { TS } from 'typescript-linq/TS';
 import { TemplateItem, TemplateType } from './Types';
 import TemplateManager from './TemplateManager';

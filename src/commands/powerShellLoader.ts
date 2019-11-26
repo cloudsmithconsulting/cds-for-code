@@ -8,7 +8,7 @@ import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import Utilities from '../core/Utilities';
 import GlobalState from '../components/Configuration/GlobalState';
 import TemplateManager from "../components/Templates/TemplateManager";
-import * as FileSystem from "../core/FileSystem";
+import * as FileSystem from "../core/io/FileSystem";
 
 export default class PowerShellLoader implements IBuildCommands {
     public buildCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {

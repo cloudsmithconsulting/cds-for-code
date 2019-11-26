@@ -8,7 +8,7 @@ import Utilities from '../core/Utilities';
 import IBuildCommands from '../core/CommandBuilder';
 import SolutionMap from '../components/SolutionMap/SolutionMap';
 import { DynamicsWebApi } from '../api/Types';
-import * as FileSystem from "../core/FileSystem";
+import * as FileSystem from "../core/io/FileSystem";
 
 export default class UnpackDynamicsSolutionCommand implements IBuildCommands {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;

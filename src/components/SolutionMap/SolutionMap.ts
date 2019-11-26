@@ -2,13 +2,13 @@ import * as vscode from "vscode";
 import * as cs from '../../cs';
 import QuickPicker from "../../core/QuickPicker";
 import * as path from 'path';
-import * as FileSystem from '../../core/FileSystem';
+import * as FileSystem from '../../core/io/FileSystem';
 import { TS } from "typescript-linq";
 import { ExtensionContext } from "vscode";
 import IBuildCommands from "../../core/CommandBuilder";
 import { DynamicsWebApi } from "../../api/Types";
 import Utilities from "../../core/Utilities";
-import { WorkspaceFileSystemWatcher } from "../../core/FileManager";
+import { WorkspaceFileSystemWatcher } from "../../core/io/FileManager";
 import { SolutionWorkspaceMapping } from "./Types";
 
 
@@ -260,6 +260,7 @@ export default class SolutionMap implements IBuildCommands
 
         return returnPath;
     }    
+    
     static async read(filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap> {
         const workspacePath = await QuickPicker.pickWorkspaceRoot(undefined, "Choose a location that houses your .dynamics folder.", true).then(uri => uri ? uri.fsPath : null);
         if (!workspacePath) { return; }

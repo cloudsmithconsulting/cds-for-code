@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
 import IBuildCommands from '../core/CommandBuilder';
-import * as FileSystem from '../core/FileSystem';
+import * as FileSystem from '../core/io/FileSystem';
 import QuickPicker from '../core/QuickPicker';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import * as path from 'path';

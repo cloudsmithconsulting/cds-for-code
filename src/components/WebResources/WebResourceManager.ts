@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as cs from '../../cs';
-import * as FileSystem from "../../core/FileSystem";
+import * as FileSystem from "../../core/io/FileSystem";
 import * as path from 'path';
 import { DynamicsWebApi } from "../../api/Types";
 import IBuildCommands from '../../core/CommandBuilder';
@@ -18,7 +18,7 @@ import createWebResource from "../../commands/cs.dynamics.deployment.createWebRe
 import compareWebResource from "../../commands/cs.dynamics.deployment.compareWebResource";
 import packWebResource from "../../commands/cs.dynamics.deployment.packWebResource";
 import unpackWebResource from "../../commands/cs.dynamics.deployment.unpackWebResource";
-import SolutionFile from '../../dynamics/SolutionFile';
+import SolutionFile from '../SolutionXml/SolutionFile';
 import QuickPicker from '../../core/QuickPicker';
 
 export default class WebResourceManager implements IBuildCommands {

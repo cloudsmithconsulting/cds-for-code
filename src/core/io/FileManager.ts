@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import Dictionary from "./Dictionary";
+import Dictionary from "../types/Dictionary";
 import { TS } from 'typescript-linq/TS';
 
 export class FileWatcherDeclaration {
