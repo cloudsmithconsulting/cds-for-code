@@ -1,16 +1,16 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as cs from '../cs';
+import * as cs from '../../cs';
 import fetch from 'node-fetch';
-import IContributor from '../core/CommandBuilder';
-import Utilities from '../core/Utilities';
-import Dictionary from '../core/types/Dictionary';
-import * as FileSystem from '../core/io/FileSystem';
-import * as DynamicsTreeView from '../views/DynamicsTreeView';
+import IContributor from '../../core/CommandBuilder';
+import Utilities from '../../core/Utilities';
+import Dictionary from '../../core/types/Dictionary';
+import * as FileSystem from '../../core/io/FileSystem';
+import * as DynamicsTreeView from '../../views/DynamicsTreeView';
 import { TS } from 'typescript-linq';
-import ExtensionConfiguration from '../core/ExtensionConfiguration';
-import * as TemplateTreeView from '../views/TemplatesTreeView';
+import ExtensionConfiguration from '../../core/ExtensionConfiguration';
+import * as TemplateTreeView from '../../views/TemplatesTreeView';
 
 export default class IconLoader implements IContributor {
     public contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -132,7 +132,7 @@ export class IconifyIcon {
 }
 
 export class ExtensionIconTheme {
-	public static readonly defaultTheme:ExtensionIconTheme = new ExtensionIconTheme(
+	static readonly defaultTheme:ExtensionIconTheme = new ExtensionIconTheme(
 		cs.dynamics.configuration.iconThemes.default, new Dictionary<ExtensionIcon, string>([
 			{ key: "Connection", value: 'uil-cloud-data-connection' },
 			{ key: "Organization", value: 'jam-building-f' },

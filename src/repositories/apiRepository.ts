@@ -1,5 +1,5 @@
-import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
-import { DynamicsWebApi } from '../api/Types';
+import { DynamicsWebApiClient } from "../webapi/DynamicsWebApi";
+import { DynamicsWebApi } from '../webapi/Types';
 import Utilities from '../core/Utilities';
 import ApiHelper from "./ApiHelper";
 import * as vscode from 'vscode';

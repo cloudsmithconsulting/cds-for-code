@@ -3,7 +3,7 @@ import DiscoveryRepository from '../repositories/discoveryRepository';
 import { View, ViewRenderer } from '../core/view';
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
-import { DynamicsWebApi } from '../api/Types';
+import { DynamicsWebApi } from '../webapi/Types';
 
 export default class ConnectionViewManager implements IContributor {
 	public contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {

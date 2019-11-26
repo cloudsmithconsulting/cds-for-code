@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
-import * as cs from '../cs';
-import IContributor from '../core/CommandBuilder';
-import { DynamicsWebApi } from '../api/Types';
-import ApiRepository from '../repositories/apiRepository';
-import QuickPicker from '../core/QuickPicker';
-import Utilities from '../core/Utilities';
+import * as cs from '../../cs';
+import IContributor from '../../core/CommandBuilder';
+import { DynamicsWebApi } from '../../webapi/Types';
+import ApiRepository from '../../repositories/apiRepository';
+import QuickPicker from '../../core/QuickPicker';
+import Utilities from '../../core/Utilities';
 
 export default class PublishCustomizations implements IContributor {
     public contribute(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {

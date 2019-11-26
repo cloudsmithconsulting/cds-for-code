@@ -6,7 +6,7 @@ import * as FileSystem from '../../core/io/FileSystem';
 import { TS } from "typescript-linq";
 import { ExtensionContext } from "vscode";
 import IContributor from "../../core/CommandBuilder";
-import { DynamicsWebApi } from "../../api/Types";
+import { DynamicsWebApi } from "../../webapi/Types";
 import Utilities from "../../core/Utilities";
 import { WorkspaceFileSystemWatcher } from "../../core/io/FileManager";
 import { SolutionWorkspaceMapping } from "./Types";

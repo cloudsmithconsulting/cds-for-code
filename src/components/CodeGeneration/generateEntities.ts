@@ -1,12 +1,12 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import * as cs from '../cs';
-import ExtensionConfiguration from '../core/ExtensionConfiguration';
-import QuickPicker, { WorkspaceFileItem } from '../core/QuickPicker';
-import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
-import Utilities from '../core/Utilities';
-import IContributor from '../core/CommandBuilder';
-import { DynamicsWebApi } from '../api/Types';
+import * as cs from '../../cs';
+import ExtensionConfiguration from '../../core/ExtensionConfiguration';
+import QuickPicker, { WorkspaceFileItem } from '../../core/QuickPicker';
+import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
+import Utilities from '../../core/Utilities';
+import IContributor from '../../core/CommandBuilder';
+import { DynamicsWebApi } from '../../webapi/Types';
 
 export default class GenerateEntitiesCommand implements IContributor {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;

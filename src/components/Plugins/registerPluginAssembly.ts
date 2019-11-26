@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
-import * as cs from '../cs';
-import * as FileSystem from '../core/io/FileSystem';
-import IContributor from '../core/CommandBuilder';
-import { DynamicsWebApi } from '../api/Types';
-import ApiRepository from '../repositories/apiRepository';
-import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
+import * as cs from '../../cs';
+import * as FileSystem from '../../core/io/FileSystem';
+import IContributor from '../../core/CommandBuilder';
+import { DynamicsWebApi } from '../../webapi/Types';
+import ApiRepository from '../../repositories/apiRepository';
+import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
 import * as path from 'path';
 import { TS } from 'typescript-linq';
-import VisualStudioProjectCommands from './visualStudioProjectCommands';
-import { Octicon } from "../core/Octicon";
-import QuickPicker, { QuickPickOption } from '../core/QuickPicker';
+import VisualStudioProjectCommands from '../DotNetCore/visualStudioProjectCommands';
+import { Octicon } from "../../core/types/Octicon";
+import QuickPicker, { QuickPickOption } from '../../core/QuickPicker';
 
 export default class RegisterPluginAssembly implements IContributor {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;

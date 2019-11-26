@@ -1,16 +1,16 @@
 import * as vscode from 'vscode';
-import * as cs from '../cs';
+import * as cs from '../../cs';
 import * as fs from 'fs';
 import * as path from 'path';
-import ExtensionConfiguration from '../core/ExtensionConfiguration';
-import QuickPicker from '../core/QuickPicker';
-import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
-import Utilities from '../core/Utilities';
-import IContributor from '../core/CommandBuilder';
-import SolutionMap from '../components/SolutionMap/SolutionMap';
-import { DynamicsWebApi } from '../api/Types';
-import WorkspaceState from '../components/Configuration/WorkspaceState';
-import SolutionFile from '../components/SolutionXml/SolutionFile';
+import ExtensionConfiguration from '../../core/ExtensionConfiguration';
+import QuickPicker from '../../core/QuickPicker';
+import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
+import Utilities from '../../core/Utilities';
+import IContributor from '../../core/CommandBuilder';
+import SolutionMap from './SolutionMap';
+import { DynamicsWebApi } from '../../webapi/Types';
+import WorkspaceState from '../Configuration/WorkspaceState';
+import SolutionFile from '../SolutionXml/SolutionFile';
 
 export default class PackDynamicsSolutionCommand implements IContributor {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;

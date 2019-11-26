@@ -6,13 +6,13 @@ import Utilities from '../core/Utilities';
 import MetadataRepository from '../repositories/metadataRepository';
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
-import DynamicsUrlResolver from '../api/DynamicsUrlResolver';
+import DynamicsUrlResolver from '../webapi/DynamicsUrlResolver';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
-import { DynamicsWebApi } from '../api/Types';
-import { ExtensionIconThemes } from '../commands/iconLoader';
+import { DynamicsWebApi } from '../webapi/Types';
+import { ExtensionIconThemes } from '../components/WebDownloaders/IconDownloader';
 import QuickPicker from '../core/QuickPicker';
-import SolutionMap from '../components/SolutionMap/SolutionMap';
-import { SolutionWorkspaceMapping } from "../components/SolutionMap/Types";
+import SolutionMap from '../components/Solutions/SolutionMap';
+import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
 
 export default class DynamicsTreeView implements IContributor {
     public static Instance:DynamicsServerTreeProvider;

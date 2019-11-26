@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as cs from '../cs';
 import { TS } from 'typescript-linq/TS';
 import IContributor from '../core/CommandBuilder';
-import { ExtensionIconThemes } from '../commands/iconLoader';
+import { ExtensionIconThemes } from '../components/WebDownloaders/IconDownloader';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import Utilities from '../core/Utilities';
 import TemplateManager from '../components/Templates/TemplateManager';

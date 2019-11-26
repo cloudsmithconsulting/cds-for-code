@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { View, ViewRenderer } from '../core/view';
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
-import { DynamicsWebApi } from '../api/Types';
+import { DynamicsWebApi } from '../webapi/Types';
 import ApiRepository from '../repositories/apiRepository';
 
 export default class PluginStepImageViewManager implements IContributor {

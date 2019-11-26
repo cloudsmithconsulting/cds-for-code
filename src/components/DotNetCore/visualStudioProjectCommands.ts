@@ -1,18 +1,18 @@
 import * as vscode from 'vscode';
-import * as cs from '../cs';
-import IContributor from '../core/CommandBuilder';
-import * as FileSystem from '../core/io/FileSystem';
-import QuickPicker from '../core/QuickPicker';
-import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
+import * as cs from '../../cs';
+import IContributor from '../../core/CommandBuilder';
+import * as FileSystem from '../../core/io/FileSystem';
+import QuickPicker from '../../core/QuickPicker';
+import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
 import * as path from 'path';
-import XmlParser from '../core/XmlParser';
+import Xml from '../../core/io/Xml';
 
 export default class VisualStudioProjectCommands implements IContributor {
-    public workspaceConfiguration:vscode.WorkspaceConfiguration;
+    workspaceConfiguration:vscode.WorkspaceConfiguration;
 
-    public static projectFileTypes:string[] = [".csproj", ".vbproj"];
+    static projectFileTypes:string[] = [".csproj", ".vbproj"];
 
-    public static fileIsProject(file:vscode.Uri):boolean {
+    static fileIsProject(file:vscode.Uri):boolean {
         let fileIsProject = false;
 
         VisualStudioProjectCommands.projectFileTypes.forEach(t => { if (file.path.endsWith(t)) { fileIsProject = true; } });   
@@ -20,11 +20,12 @@ export default class VisualStudioProjectCommands implements IContributor {
         return fileIsProject;
     }
 
-    public contribute(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
+    contribute(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
         this.workspaceConfiguration = wconfig;
 
         const incrementBuild = (build:string) => {
             const parts = build.split(".");
+            
             if (parts.length < 4) {
                 for (let i = parts.length; i <= 4; i++) {
                     parts.push(i < 4 ? "0" : "1"); 
@@ -64,7 +65,7 @@ export default class VisualStudioProjectCommands implements IContributor {
                 if (!file) { return; }
 
                 if (updateVersionBuild) {
-                    const projectFileXml = await XmlParser.parseFile(file.fsPath);
+                    const projectFileXml = await Xml.parseFile(file.fsPath);
 
                     if (projectFileXml 
                         && projectFileXml.Project
@@ -87,7 +88,7 @@ export default class VisualStudioProjectCommands implements IContributor {
                             propertyGroup.FileVersion = { _:incrementBuild(value) };
                         }
 
-                        FileSystem.writeFileSync(file.fsPath, await XmlParser.createXml(projectFileXml));
+                        FileSystem.writeFileSync(file.fsPath, await Xml.createXml(projectFileXml));
                     }
                 }
 

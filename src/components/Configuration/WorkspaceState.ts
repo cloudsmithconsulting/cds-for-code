@@ -1,6 +1,6 @@
 import * as cs from '../../cs';
 import { ExtensionContext } from 'vscode';
-import SolutionMap from '../SolutionMap/SolutionMap';
+import SolutionMap from '../Solutions/SolutionMap';
 
 export default class WorkspaceState {
     private _context: ExtensionContext;

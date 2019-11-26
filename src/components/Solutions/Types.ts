@@ -1,5 +1,5 @@
 import { RelativePattern } from "vscode";
-import { DynamicsWebApi } from "../../api/Types";
+import { DynamicsWebApi } from "../../webapi/Types";
 import * as vscode from 'vscode';
 import SolutionMap from "./SolutionMap";
 

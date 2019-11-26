@@ -1,7 +1,7 @@
 import * as FileSystem from "../../core/io/FileSystem";
 import * as path from 'path';
-import XmlParser from '../../core/XmlParser';
-import { DynamicsWebApi } from '../../api/Types';
+import Xml from '../../core/io/Xml';
+import { DynamicsWebApi } from '../../webapi/Types';
 
 export default class SolutionFile {
     get file():string { return this._file; }
@@ -19,7 +19,7 @@ export default class SolutionFile {
     static async xml(input?:string): Promise<SolutionFile> { const returnObject = new SolutionFile(undefined, input); await returnObject.data; return returnObject; }
 
     async save(file?:string): Promise<void> {
-        const save = await XmlParser.createXml(await this.data);
+        const save = await Xml.createXml(await this.data);
 
         FileSystem.makeFolderSync(path.dirname(file));
         FileSystem.writeFileSync(file, save);
@@ -31,7 +31,7 @@ export default class SolutionFile {
                 this._xml = FileSystem.readFileSync(this._file);
             }
 
-            return XmlParser.parseString(this._xml).then(results => this._data = results).then(() => this._data);
+            return Xml.parseString(this._xml).then(results => this._data = results).then(() => this._data);
         }
         
         return Promise.resolve(this._data);

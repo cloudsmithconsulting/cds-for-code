@@ -2,15 +2,15 @@ import * as vscode from 'vscode';
 import * as cs from '../../cs';
 import * as FileSystem from "../../core/io/FileSystem";
 import * as path from 'path';
-import { DynamicsWebApi } from "../../api/Types";
+import { DynamicsWebApi } from "../../webapi/Types";
 import IContributor from '../../core/CommandBuilder';
 import Utilities from '../../core/Utilities';
-import SolutionMap from "../SolutionMap/SolutionMap";
-import { SolutionWorkspaceMapping } from "../SolutionMap/Types";
+import SolutionMap from "../Solutions/SolutionMap";
+import { SolutionWorkspaceMapping } from "../Solutions/Types";
 import TemplateManager from "../Templates/TemplateManager";
 import ApiRepository from '../../repositories/apiRepository';
 import EnumParser from '../../core/EnumParser';
-import XmlParser from '../../core/XmlParser';
+import Xml from '../../core/io/Xml';
 
 import createWebResourceExplorer from "../../commands/cs.dynamics.controls.explorer.createWebResource";
 import packWebResourceExplorer from "../../commands/cs.dynamics.controls.explorer.packWebResource";
@@ -76,7 +76,7 @@ export default class WebResourceManager implements IContributor {
         const dataFile = fsPath + ".data.xml";
         
         if (FileSystem.exists(dataFile)) {
-            const xmlObject = await XmlParser.parseFile(dataFile);
+            const xmlObject = await Xml.parseFile(dataFile);
 
             if (xmlObject && xmlObject.WebResource) {
                 return {
