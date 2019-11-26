@@ -1,10 +1,10 @@
 import * as cs from "../cs";
 import * as TemplateTreeView from "../views/TemplateTreeView";
 import * as vscode from 'vscode';
-import { TemplateType } from "../controls/Templates/Types";
-import TemplateManager from "../controls/Templates/TemplateManager";
+import { TemplateType } from "../components/Templates/Types";
+import TemplateManager from "../components/Templates/TemplateManager";
 import * as path from 'path';
-import QuickPicker from "../helpers/QuickPicker";
+import QuickPicker from "../core/QuickPicker";
 
 /**
  * This command can be invoked by the Template Tree View and edits an item to the TreeView

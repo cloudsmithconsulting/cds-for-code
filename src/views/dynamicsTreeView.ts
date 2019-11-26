@@ -2,22 +2,22 @@ import * as vscode from 'vscode';
 import { TS } from 'typescript-linq/TS';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import ApiRepository from '../repositories/apiRepository';
-import Utilities from '../helpers/Utilities';
+import Utilities from '../core/Utilities';
 import MetadataRepository from '../repositories/metadataRepository';
 import * as cs from '../cs';
-import IWireUpCommands from '../wireUpCommand';
+import IBuildCommands from '../core/CommandBuilder';
 import DynamicsUrlResolver from '../api/DynamicsUrlResolver';
-import ExtensionConfiguration from '../config/ExtensionConfiguration';
+import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import { DynamicsWebApi } from '../api/Types';
 import { ExtensionIconThemes } from '../commands/iconLoader';
-import QuickPicker from '../helpers/QuickPicker';
-import SolutionMap from '../controls/SolutionMap/SolutionMap';
-import { SolutionWorkspaceMapping } from "../controls/SolutionMap/Types";
+import QuickPicker from '../core/QuickPicker';
+import SolutionMap from '../components/SolutionMap/SolutionMap';
+import { SolutionWorkspaceMapping } from "../components/SolutionMap/Types";
 
-export default class DynamicsTreeView implements IWireUpCommands {
+export default class DynamicsTreeView implements IBuildCommands {
     public static Instance:DynamicsServerTreeProvider;
 
-    public wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
+    public buildCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         const isNew = !DynamicsTreeView.Instance;        
         const treeProvider = isNew ? new DynamicsServerTreeProvider(context) : DynamicsTreeView.Instance;
 

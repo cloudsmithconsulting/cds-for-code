@@ -2,20 +2,20 @@ import * as vscode from 'vscode';
 import * as cs from '../cs';
 import * as fs from 'fs';
 import * as path from 'path';
-import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import QuickPicker from '../helpers/QuickPicker';
+import ExtensionConfiguration from '../core/ExtensionConfiguration';
+import QuickPicker from '../core/QuickPicker';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
-import Utilities from '../helpers/Utilities';
-import IWireUpCommands from '../wireUpCommand';
-import SolutionMap from '../controls/SolutionMap/SolutionMap';
+import Utilities from '../core/Utilities';
+import IBuildCommands from '../core/CommandBuilder';
+import SolutionMap from '../components/SolutionMap/SolutionMap';
 import { DynamicsWebApi } from '../api/Types';
-import WorkspaceState from '../config/WorkspaceState';
+import WorkspaceState from '../components/Configuration/WorkspaceState';
 import SolutionFile from '../dynamics/SolutionFile';
 
-export default class PackDynamicsSolutionCommand implements IWireUpCommands {
+export default class PackDynamicsSolutionCommand implements IBuildCommands {
 	public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
-	public wireUpCommands (context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
+	public buildCommands (context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
 		this.workspaceConfiguration = config;
 
 		// now wire a command into the context

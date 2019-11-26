@@ -1,4 +1,4 @@
-import Utilities from "../helpers/Utilities";
+import Utilities from "../core/Utilities";
 import RequestUtilities from "./RequestUtilities";
 
 export default class ResponseUtilities

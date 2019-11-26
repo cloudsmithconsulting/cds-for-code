@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import Utilities from '../helpers/Utilities';
+import Utilities from '../core/Utilities';
 import { DynamicsWebApi } from './Types';
 
 export default class DynamicsUrlResolver

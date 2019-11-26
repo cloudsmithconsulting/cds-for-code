@@ -1,8 +1,8 @@
-import * as FileSystem from '../../helpers/FileSystem';
+import * as FileSystem from '../../core/FileSystem';
 import * as path from 'path';
-import Dictionary from '../../helpers/Dictionary';
+import Dictionary from '../../core/Dictionary';
 import TemplateManager from './TemplateManager';
-import QuickPicker from '../../helpers/QuickPicker';
+import QuickPicker from '../../core/QuickPicker';
 
 export class TemplateItem {
     constructor(

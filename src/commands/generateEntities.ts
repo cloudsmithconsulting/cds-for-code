@@ -1,17 +1,17 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import QuickPicker, { WorkspaceFileItem } from '../helpers/QuickPicker';
+import ExtensionConfiguration from '../core/ExtensionConfiguration';
+import QuickPicker, { WorkspaceFileItem } from '../core/QuickPicker';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
-import Utilities from '../helpers/Utilities';
-import IWireUpCommands from '../wireUpCommand';
+import Utilities from '../core/Utilities';
+import IBuildCommands from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/Types';
 
-export default class GenerateEntitiesCommand implements IWireUpCommands {
+export default class GenerateEntitiesCommand implements IBuildCommands {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
-    public wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
+    public buildCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
         this.workspaceConfiguration = config;
 
         // now wire a command into the context

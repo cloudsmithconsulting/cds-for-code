@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import * as cs from './cs';
 // config
-import ExtensionConfiguration from './config/ExtensionConfiguration';
+import ExtensionConfiguration from './core/ExtensionConfiguration';
 import ConnectionViewManager from './views/ConnectionView';
 import GenerateEntities from './commands/generateEntities';
 import PowerShellLoader from './commands/powerShellLoader';
@@ -11,7 +11,7 @@ import DynamicsTreeView from './views/DynamicsTreeView';
 import PackDynamicsSolution from './commands/packDynamicsSolution';
 import UnpackDynamicsSolution from './commands/unpackDynamicsSolution';
 import JsonInspectorViewManager from './views/JsonInspectorView';
-import TemplateManager from './controls/Templates/TemplateManager';
+import TemplateManager from './components/Templates/TemplateManager';
 import DynamicsTerminal from './views/DynamicsTerminal';
 import IconLoader from './commands/iconLoader';
 import AddSolutionComponent from './commands/addSolutionComponent';
@@ -20,12 +20,12 @@ import PluginStepViewManager from './views/pluginStepView';
 import RegisterPluginAssembly from './commands/registerPluginAssembly';
 import PublishCustomizations from "./commands/PublishAllXml";
 import SvcUtilConfigViewManager from './views/svcUtilConfigView';
-import SolutionMap from './controls/SolutionMap/SolutionMap';
+import SolutionMap from './components/SolutionMap/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
 import VisualStudioProjectCommands from './commands/visualStudioProjectCommands';
 import TemplateTreeView from './views/TemplateTreeView';
 import PluginStepImageViewManager from './views/pluginStepImageView';
-import WebResourceManager from './controls/WebResources/WebResourceManager';
+import WebResourceManager from './components/WebResources/WebResourceManager';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -68,11 +68,11 @@ export function activate(context: vscode.ExtensionContext) {
 		new RemoveSolutionComponent(),
 		new RegisterPluginAssembly(),
 		new VisualStudioProjectCommands()
-	].forEach(c => c.wireUpCommands(context, toolsConfig));
+	].forEach(c => c.buildCommands(context, toolsConfig));
 
 	[   // templating engine.
 		new TemplateManager(context)
-	].forEach(c => c.wireUpCommands(context, templatesConfig));
+	].forEach(c => c.buildCommands(context, templatesConfig));
 }
 
 // this method is called when your extension is deactivated

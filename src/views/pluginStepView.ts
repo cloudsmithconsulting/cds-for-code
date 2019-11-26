@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
-import { View, ViewRenderer } from '../view';
+import { View, ViewRenderer } from '../core/view';
 import * as cs from '../cs';
-import IWireUpCommands from '../wireUpCommand';
+import IBuildCommands from '../core/CommandBuilder';
 import ApiRepository from '../repositories/apiRepository';
 import { DynamicsWebApi } from '../api/Types';
-import QuickPicker from '../helpers/QuickPicker';
+import QuickPicker from '../core/QuickPicker';
 import async = require('async');
 
-export default class PluginStepViewManager implements IWireUpCommands {
-	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+export default class PluginStepViewManager implements IBuildCommands {
+	public buildCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.pluginStep.open, async (pluginAssemblyId:string, step?: any, config?:DynamicsWebApi.Config) => { // Match name of command to package.json command

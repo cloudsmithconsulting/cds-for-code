@@ -7,11 +7,11 @@ import MetadataRepository from "../repositories/metadataRepository";
 import { DynamicsWebApi } from "../api/Types";
 import Utilities from "./Utilities";
 import Dictionary from "./Dictionary";
-import * as FileSystem from "../helpers/FileSystem";
-import { Octicon } from "../core/Octicon";
+import * as FileSystem from "./FileSystem";
+import { Octicon } from "./Octicon";
 import * as path from 'path';
-import TemplateManager from "../controls/Templates/TemplateManager";
-import { TemplateItem, TemplateType } from "../controls/Templates/Types";
+import TemplateManager from "../components/Templates/TemplateManager";
+import { TemplateItem, TemplateType } from "../components/Templates/Types";
 
 export default class QuickPicker {
     /**

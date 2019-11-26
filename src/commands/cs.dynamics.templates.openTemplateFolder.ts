@@ -1,5 +1,5 @@
-import { TemplateItem } from "../controls/Templates/Types";
-import TemplateManager from "../controls/Templates/TemplateManager";
+import { TemplateItem } from "../components/Templates/Types";
+import TemplateManager from "../components/Templates/TemplateManager";
 
 /**
  * This command can be invoked by the Command Palette or by the template tree view and reveals 

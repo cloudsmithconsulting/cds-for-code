@@ -1,9 +1,9 @@
 import vscode = require("vscode");
-import ExtensionConfiguration from "../config/ExtensionConfiguration";
+import ExtensionConfiguration from "../core/ExtensionConfiguration";
 import * as cs from "../cs";
-import QuickPicker from "../helpers/QuickPicker";
-import { TemplateType } from "../controls/Templates/Types";
-import * as FileSystem from "../helpers/FileSystem";
+import QuickPicker from "../core/QuickPicker";
+import { TemplateType } from "../components/Templates/Types";
+import * as FileSystem from "../core/FileSystem";
 
 /**
  * This command saves a folder or item as a template.

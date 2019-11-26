@@ -1,7 +1,7 @@
 import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
 import { DynamicsWebApi } from '../api/Types';
-import Utilities from '../helpers/Utilities';
-import ApiHelper from "../helpers/ApiHelper";
+import Utilities from '../core/Utilities';
+import ApiHelper from "./ApiHelper";
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { TS } from "typescript-linq";

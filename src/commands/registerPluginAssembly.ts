@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import * as FileSystem from '../helpers/FileSystem';
-import IWireUpCommands from '../wireUpCommand';
+import * as FileSystem from '../core/FileSystem';
+import IBuildCommands from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/Types';
 import ApiRepository from '../repositories/apiRepository';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
@@ -9,12 +9,12 @@ import * as path from 'path';
 import { TS } from 'typescript-linq';
 import VisualStudioProjectCommands from './visualStudioProjectCommands';
 import { Octicon } from "../core/Octicon";
-import QuickPicker, { QuickPickOption } from '..//helpers/QuickPicker';
+import QuickPicker, { QuickPickOption } from '../core/QuickPicker';
 
-export default class RegisterPluginAssembly implements IWireUpCommands {
+export default class RegisterPluginAssembly implements IBuildCommands {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
-    public wireUpCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
+    public buildCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
         this.workspaceConfiguration = wconfig;
 
         // now wire a command into the context

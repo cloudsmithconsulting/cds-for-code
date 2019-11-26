@@ -1,6 +1,6 @@
 import * as cs from "../cs";
 import * as vscode from 'vscode';
-import QuickPicker from "../helpers/QuickPicker";
+import QuickPicker from "../core/QuickPicker";
 
 /**
  * This command can be invoked by the Explorer file viewer and packs a new web resource

@@ -1,8 +1,8 @@
-import * as FileSystem from "../helpers/FileSystem";
+import * as FileSystem from "../core/FileSystem";
 import * as vscode from 'vscode';
 import * as path from 'path';
-import TemplateManager from "../controls/Templates/TemplateManager";
-import QuickPicker from "../helpers/QuickPicker";
+import TemplateManager from "../components/Templates/TemplateManager";
+import QuickPicker from "../core/QuickPicker";
 
 /**
  * Main command to edit the template catalog.

@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
-import IWireUpCommands from '../wireUpCommand';
+import IBuildCommands from '../core/CommandBuilder';
 import * as cs from '../cs';
 import * as fs from 'fs';
 import * as eol from 'eol';
 import * as child_process from 'child_process';
-import Utilities from '../helpers/Utilities';
-import QuickPicker, { QuickPickOption } from '../helpers/QuickPicker';
+import Utilities from '../core/Utilities';
+import QuickPicker, { QuickPickOption } from '../core/QuickPicker';
 import { TS } from 'typescript-linq';
 import { TextEncoder, TextDecoder } from 'util';
-import Dictionary from '../helpers/Dictionary';
+import Dictionary from '../core/Dictionary';
 
 export class TerminalCommand {
 	private _command:string;
@@ -757,9 +757,9 @@ export class Terminal implements vscode.Terminal {
 	}
 }
 
-export default class DynamicsTerminal implements IWireUpCommands
+export default class DynamicsTerminal implements IBuildCommands
 {
-	wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
+	buildCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
 		let terminals:Dictionary<string, Terminal> = new Dictionary<string, Terminal>();
 
 		context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.extension.createTerminal, async (folder:string, name:string): Promise<Terminal> => {

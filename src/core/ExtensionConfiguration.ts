@@ -8,13 +8,13 @@ export default class ExtensionConfiguration {
 
     static extensionPath:string = "";
     
-    public static updateConfiguration(namespace:string): void {
+    static updateConfiguration(namespace:string): void {
         if (this._configurations && this._configurations[namespace]) {
             delete this._configurations[namespace];
         }
     }
 
-    public static getConfiguration(namespace:string): vscode.WorkspaceConfiguration {
+    static getConfiguration(namespace:string): vscode.WorkspaceConfiguration {
         if (!this._configurations || !this._configurations[namespace] || !this._validConfigurations || !this._validConfigurations[namespace]) {
             // get root config
             const config = vscode.workspace.getConfiguration(namespace);
@@ -42,7 +42,7 @@ export default class ExtensionConfiguration {
         return this._configurations[namespace];
     }
 
-    public static getConfigurationInfo<T>(...config:string[]): { key: string; defaultValue?: T; globalValue?: T; workspaceValue?: T, workspaceFolderValue?: T } | undefined {
+    static getConfigurationInfo<T>(...config:string[]): { key: string; defaultValue?: T; globalValue?: T; workspaceValue?: T, workspaceFolderValue?: T } | undefined {
         const parsedKey = this.parseConfigurationString(...config);
 
         if (parsedKey && parsedKey.namespace) {
@@ -56,7 +56,7 @@ export default class ExtensionConfiguration {
         return undefined;
     }
 
-    public static getConfigurationValue<T>(...config:string[]): T | undefined {
+    static getConfigurationValue<T>(...config:string[]): T | undefined {
         const parsedKey = this.parseConfigurationString(...config);
 
         if (parsedKey && parsedKey.namespace) {
@@ -70,7 +70,7 @@ export default class ExtensionConfiguration {
         return undefined;
     }
 
-    public static setConfigurationValue<T>(config:string, value?:T, configurationTarget:vscode.ConfigurationTarget = vscode.ConfigurationTarget.Global): Thenable<void> {
+    static setConfigurationValue<T>(config:string, value?:T, configurationTarget:vscode.ConfigurationTarget = vscode.ConfigurationTarget.Global): Thenable<void> {
         const parsedKey = this.parseConfigurationString(...config);
 
         if (parsedKey && parsedKey.namespace) {
@@ -84,7 +84,7 @@ export default class ExtensionConfiguration {
         return undefined;
     }
 
-    public static getConfigurationValueOrDefault<T>(config:string, defaultValue:T): T {
+    static getConfigurationValueOrDefault<T>(config:string, defaultValue:T): T {
         const returnValue:T = this.getConfigurationValue(config);
 
         return returnValue || defaultValue;
@@ -93,19 +93,19 @@ export default class ExtensionConfiguration {
     // can be called 2 ways:
     // parseConfigurationValue<string>(config, "root.namespace", "value");
     // parseConfigurationValue<string>(config, "root.namespace.value");
-    public static parseConfigurationValue<T>(workspaceConfig:vscode.WorkspaceConfiguration, ...config:string[]): T {
+    static parseConfigurationValue<T>(workspaceConfig:vscode.WorkspaceConfiguration, ...config:string[]): T {
         const parsedKey = this.parseConfigurationString(...config);
 
         return workspaceConfig.get(parsedKey.configKey) as T;
     }
 
-    public static notify(namespace:string, notify?:(config:vscode.WorkspaceConfiguration) => void) {
+    static notify(namespace:string, notify?:(config:vscode.WorkspaceConfiguration) => void) {
         if (namespace && notify) {
             this._notifiers[namespace] = notify;
         }
     }
 
-    public static unnotify(namespace:string) {
+    static unnotify(namespace:string) {
         if (this._notifiers[namespace]) {
             delete this._notifiers[namespace];
         }

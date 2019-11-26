@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
-import { View, ViewRenderer } from '../view';
+import { View, ViewRenderer } from '../core/view';
 import * as cs from '../cs';
-import IWireUpCommands from '../wireUpCommand';
-import ExtensionConfiguration from '../config/ExtensionConfiguration';
+import IBuildCommands from '../core/CommandBuilder';
+import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 
-export default class NewWorkspaceViewManager implements IWireUpCommands {
+export default class NewWorkspaceViewManager implements IBuildCommands {
     private static _initialized:boolean = false;
 
     public showWelcomeExperience() {
@@ -20,7 +20,7 @@ export default class NewWorkspaceViewManager implements IWireUpCommands {
         }
     }
 
-	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+	public buildCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         let view;
 
         context.subscriptions.push(

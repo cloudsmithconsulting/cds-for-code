@@ -1,4 +1,4 @@
-import Utilities from "../helpers/Utilities";
+import Utilities from "../core/Utilities";
 
 export default class RequestUtilities
 {

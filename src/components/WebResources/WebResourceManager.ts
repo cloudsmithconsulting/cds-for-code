@@ -1,16 +1,16 @@
 import * as vscode from 'vscode';
 import * as cs from '../../cs';
-import * as FileSystem from "../../helpers/FileSystem";
+import * as FileSystem from "../../core/FileSystem";
 import * as path from 'path';
 import { DynamicsWebApi } from "../../api/Types";
-import IWireUpCommands from '../../wireUpCommand';
-import Utilities from '../../helpers/Utilities';
+import IBuildCommands from '../../core/CommandBuilder';
+import Utilities from '../../core/Utilities';
 import SolutionMap from "../SolutionMap/SolutionMap";
 import { SolutionWorkspaceMapping } from "../SolutionMap/Types";
-import TemplateManager from "../../controls/Templates/TemplateManager";
+import TemplateManager from "../Templates/TemplateManager";
 import ApiRepository from '../../repositories/apiRepository';
-import EnumParser from '../../helpers/EnumParser';
-import XmlParser from '../../helpers/XmlParser';
+import EnumParser from '../../core/EnumParser';
+import XmlParser from '../../core/XmlParser';
 
 import createWebResourceExplorer from "../../commands/cs.dynamics.controls.explorer.createWebResource";
 import packWebResourceExplorer from "../../commands/cs.dynamics.controls.explorer.packWebResource";
@@ -19,9 +19,9 @@ import compareWebResource from "../../commands/cs.dynamics.deployment.compareWeb
 import packWebResource from "../../commands/cs.dynamics.deployment.packWebResource";
 import unpackWebResource from "../../commands/cs.dynamics.deployment.unpackWebResource";
 import SolutionFile from '../../dynamics/SolutionFile';
-import QuickPicker from '../../helpers/QuickPicker';
+import QuickPicker from '../../core/QuickPicker';
 
-export default class WebResourceManager implements IWireUpCommands {
+export default class WebResourceManager implements IBuildCommands {
     /**
      * local copy of workspace configuration to maintain consistency between calls
      */
@@ -33,7 +33,7 @@ export default class WebResourceManager implements IWireUpCommands {
 
     get context():vscode.ExtensionContext { return WebResourceManager.context; }
 
-    wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
+    buildCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
         // now wire a command into the context
         context.subscriptions.push(
             vscode.commands.registerCommand(cs.dynamics.controls.explorer.craeteWebResource, createWebResourceExplorer.bind(this)),

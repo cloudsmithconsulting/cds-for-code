@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import IWireUpCommands from '../wireUpCommand';
+import IBuildCommands from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/Types';
 import ApiRepository from '../repositories/apiRepository';
-import QuickPicker from '../helpers/QuickPicker';
-import Utilities from '../helpers/Utilities';
+import QuickPicker from '../core/QuickPicker';
+import Utilities from '../core/Utilities';
 
-export default class AddSolutionComponent implements IWireUpCommands {
+export default class AddSolutionComponent implements IBuildCommands {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
-    public wireUpCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
+    public buildCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
         this.workspaceConfiguration = wconfig;
 
         // now wire a command into the context

@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
 import { TS } from 'typescript-linq/TS';
-import IWireUpCommands from '../wireUpCommand';
+import IBuildCommands from '../core/CommandBuilder';
 import { ExtensionIconThemes } from '../commands/iconLoader';
-import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import Utilities from '../helpers/Utilities';
-import TemplateManager from '../controls/Templates/TemplateManager';
-import { TemplateItem, TemplateType } from "../controls/Templates/Types";
+import ExtensionConfiguration from '../core/ExtensionConfiguration';
+import Utilities from '../core/Utilities';
+import TemplateManager from '../components/Templates/TemplateManager';
+import { TemplateItem, TemplateType } from "../components/Templates/Types";
 
 import refreshEntry from '../commands/cs.dynamics.controls.templateTreeView.refreshEntry';
 import addEntry from '../commands/cs.dynamics.controls.templateTreeView.addEntry';
@@ -18,10 +18,10 @@ import openEntry from '../commands/cs.dynamics.controls.templateTreeView.openEnt
 import exportEntry from '../commands/cs.dynamics.controls.templateTreeView.exportEntry';
 import importEntry from '../commands/cs.dynamics.controls.templateTreeView.importEntry';
 
-export default class TemplateTreeView implements IWireUpCommands {
+export default class TemplateTreeView implements IBuildCommands {
     public static Instance:TemplateTreeViewProvider;
 
-    public wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
+    public buildCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         if (!TemplateTreeView.Instance) {
             TemplateTreeView.Instance = new TemplateTreeViewProvider(context);
             vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.templateExplorer, TemplateTreeView.Instance);

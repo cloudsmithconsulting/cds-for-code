@@ -1,12 +1,12 @@
 import * as cs from "../cs";
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as FileSystem from "../helpers/FileSystem";
+import * as FileSystem from "../core/FileSystem";
 import { DynamicsWebApi } from "../api/Types";
-import QuickPicker from "../helpers/QuickPicker";
+import QuickPicker from "../core/QuickPicker";
 import ApiRepository from "../repositories/apiRepository";
-import Utilities from "../helpers/Utilities";
-import { SolutionWorkspaceMapping } from "../controls/SolutionMap/Types";
+import Utilities from "../core/Utilities";
+import { SolutionWorkspaceMapping } from "../components/SolutionMap/Types";
 import SolutionFile from "../dynamics/SolutionFile";
 
 /**

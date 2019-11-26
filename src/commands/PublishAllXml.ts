@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import IWireUpCommands from '../wireUpCommand';
+import IBuildCommands from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/Types';
 import ApiRepository from '../repositories/apiRepository';
-import QuickPicker from '..//helpers/QuickPicker';
-import Utilities from '../helpers/Utilities';
+import QuickPicker from '../core/QuickPicker';
+import Utilities from '../core/Utilities';
 
-export default class PublishCustomizations implements IWireUpCommands {
-    public wireUpCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
+export default class PublishCustomizations implements IBuildCommands {
+    public buildCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
         
         context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.deployment.publishCustomizations, async (config?: DynamicsWebApi.Config, components?:{type:DynamicsWebApi.SolutionComponent, id:string}[]) => {
             

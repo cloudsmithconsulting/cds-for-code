@@ -1,11 +1,11 @@
 import vscode = require("vscode");
-import ExtensionConfiguration from "../config/ExtensionConfiguration";
+import ExtensionConfiguration from "../core/ExtensionConfiguration";
 import * as cs from "../cs";
-import QuickPicker from "../helpers/QuickPicker";
-import { TemplateItem, TemplateType } from "../controls/Templates/Types";
-import * as FileSystem from "../helpers/FileSystem";
+import QuickPicker from "../core/QuickPicker";
+import { TemplateItem, TemplateType } from "../components/Templates/Types";
+import * as FileSystem from "../core/FileSystem";
 import * as p from 'path';
-import TemplateManager from "../controls/Templates/TemplateManager";
+import TemplateManager from "../components/Templates/TemplateManager";
 
 /**
  * Command exports a template from your workspace into a .zip archive for re-import later.

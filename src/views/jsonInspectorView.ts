@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
-import { View, ViewRenderer } from '../view';
+import { View, ViewRenderer } from '../core/view';
 import * as cs from '../cs';
-import IWireUpCommands from '../wireUpCommand';
+import IBuildCommands from '../core/CommandBuilder';
 
-export default class JsonInspectorViewManager implements IWireUpCommands {
-	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+export default class JsonInspectorViewManager implements IBuildCommands {
+	public buildCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.jsonInspector.inspect, async (item: any) => { // Match name of command to package.json command

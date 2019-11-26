@@ -3,16 +3,16 @@ import * as cs from '../../cs';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import * as FileSystem from '../../helpers/FileSystem';
-import * as EnvironmentVariables from '../../helpers/EnvironmentVariables';
+import * as FileSystem from '../../core/FileSystem';
+import * as EnvironmentVariables from '../../core/EnvironmentVariables';
 import * as _ from 'lodash';
 import { TemplatePlaceholder, TemplateItem, TemplateType } from './Types';
 
-import ExtensionConfiguration from '../../config/ExtensionConfiguration';
-import IWireUpCommands from '../../wireUpCommand';
-import QuickPicker from '../../helpers/QuickPicker';
-import Dictionary from '../../helpers/Dictionary';
-import Utilities from '../../helpers/Utilities';
+import ExtensionConfiguration from '../../core/ExtensionConfiguration';
+import IBuildCommands from '../../core/CommandBuilder';
+import QuickPicker from '../../core/QuickPicker';
+import Dictionary from '../../core/Dictionary';
+import Utilities from '../../core/Utilities';
 
 import createFromItemTemplate from "../../commands/cs.dynamics.controls.explorer.createFromItemTemplate";
 import createFromProjectTemplate from "../../commands/cs.dynamics.controls.explorer.createFromProjectTemplate";
@@ -32,7 +32,7 @@ import { TemplateCatalog } from './TemplateCatalog';
  * @export
  * @class TemplateManager
  */
-export default class TemplateManager implements IWireUpCommands {
+export default class TemplateManager implements IBuildCommands {
     /**
      * local copy of workspace configuration to maintain consistency between calls
      */
@@ -43,7 +43,7 @@ export default class TemplateManager implements IWireUpCommands {
         TemplateManager.createTemplatesDirIfNotExists();
     }
 
-    wireUpCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
+    buildCommands(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
         // now wire a command into the context
         context.subscriptions.push(
             vscode.commands.registerCommand(cs.dynamics.controls.explorer.createFromItemTemplate, createFromItemTemplate.bind(this)),

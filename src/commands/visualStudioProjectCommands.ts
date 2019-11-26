@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import IWireUpCommands from '../wireUpCommand';
-import * as FileSystem from '../helpers/FileSystem';
-import QuickPicker from '../helpers/QuickPicker';
+import IBuildCommands from '../core/CommandBuilder';
+import * as FileSystem from '../core/FileSystem';
+import QuickPicker from '../core/QuickPicker';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import * as path from 'path';
-import XmlParser from '../helpers/XmlParser';
+import XmlParser from '../core/XmlParser';
 
-export default class VisualStudioProjectCommands implements IWireUpCommands {
+export default class VisualStudioProjectCommands implements IBuildCommands {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;
 
     public static projectFileTypes:string[] = [".csproj", ".vbproj"];
@@ -20,7 +20,7 @@ export default class VisualStudioProjectCommands implements IWireUpCommands {
         return fileIsProject;
     }
 
-    public wireUpCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
+    public buildCommands(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
         this.workspaceConfiguration = wconfig;
 
         const incrementBuild = (build:string) => {

@@ -1,18 +1,18 @@
 import * as vscode from "vscode";
 import * as cs from '../../cs';
-import QuickPicker from "../../helpers/QuickPicker";
+import QuickPicker from "../../core/QuickPicker";
 import * as path from 'path';
-import * as FileSystem from '../../helpers/FileSystem';
+import * as FileSystem from '../../core/FileSystem';
 import { TS } from "typescript-linq";
 import { ExtensionContext } from "vscode";
-import IWireUpCommands from "../../wireUpCommand";
+import IBuildCommands from "../../core/CommandBuilder";
 import { DynamicsWebApi } from "../../api/Types";
-import Utilities from "../../helpers/Utilities";
-import { WorkspaceFileSystemWatcher } from "../../helpers/FileManager";
+import Utilities from "../../core/Utilities";
+import { WorkspaceFileSystemWatcher } from "../../core/FileManager";
 import { SolutionWorkspaceMapping } from "./Types";
 
 
-export default class SolutionMap implements IWireUpCommands
+export default class SolutionMap implements IBuildCommands
 {
     public constructor (map?:SolutionMap) {
         if (map && map.mappings) {
@@ -26,7 +26,7 @@ export default class SolutionMap implements IWireUpCommands
         }
     }
 
-    wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
+    buildCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         // load default map as it will force filesystemwatchers to intialize.
         if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
             // Watch the files in the workspace for changes.

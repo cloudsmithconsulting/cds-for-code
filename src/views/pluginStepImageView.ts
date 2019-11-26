@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
-import { View, ViewRenderer } from '../view';
+import { View, ViewRenderer } from '../core/view';
 import * as cs from '../cs';
-import IWireUpCommands from '../wireUpCommand';
+import IBuildCommands from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/Types';
 import ApiRepository from '../repositories/apiRepository';
 
-export default class PluginStepImageViewManager implements IWireUpCommands {
-	public wireUpCommands(context: vscode.ExtensionContext, wsConfig?:vscode.WorkspaceConfiguration) {
+export default class PluginStepImageViewManager implements IBuildCommands {
+	public buildCommands(context: vscode.ExtensionContext, wsConfig?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.pluginStepImage.open, (sdkmessageprocessingstepid: string, pluginStepImage: any, config?: DynamicsWebApi.Config) => { // Match name of command to package.json command

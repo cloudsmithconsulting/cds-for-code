@@ -1,6 +1,6 @@
-import * as FileSystem from "../helpers/FileSystem";
+import * as FileSystem from "../core/FileSystem";
 import * as path from 'path';
-import XmlParser from '../helpers/XmlParser';
+import XmlParser from '../core/XmlParser';
 import { DynamicsWebApi } from '../api/Types';
 
 export default class SolutionFile {

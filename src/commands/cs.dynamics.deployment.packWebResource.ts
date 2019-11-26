@@ -1,17 +1,17 @@
 import * as cs from "../cs";
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as FileSystem from "../helpers/FileSystem";
+import * as FileSystem from "../core/FileSystem";
 import { DynamicsWebApi } from "../api/Types";
-import QuickPicker from "../helpers/QuickPicker";
-import WebResourceManager from "../controls/WebResources/WebResourceManager";
+import QuickPicker from "../core/QuickPicker";
+import WebResourceManager from "../components/WebResources/WebResourceManager";
 import ApiRepository from "../repositories/apiRepository";
-import Utilities from "../helpers/Utilities";
-import SolutionMap from "../controls/SolutionMap/SolutionMap";
-import { SolutionWorkspaceMapping } from "../controls/SolutionMap/Types";
-import TemplateManager from "../controls/Templates/TemplateManager";
-import Dictionary from "../helpers/Dictionary";
-import EnumParser from "../helpers/EnumParser";
+import Utilities from "../core/Utilities";
+import SolutionMap from "../components/SolutionMap/SolutionMap";
+import { SolutionWorkspaceMapping } from "../components/SolutionMap/Types";
+import TemplateManager from "../components/Templates/TemplateManager";
+import Dictionary from "../core/Dictionary";
+import EnumParser from "../core/EnumParser";
 
 /**
  * This command can be invoked by the Explorer file viewer and creates or updates a web resource in Dynamics

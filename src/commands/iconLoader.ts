@@ -3,17 +3,17 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as cs from '../cs';
 import fetch from 'node-fetch';
-import IWireUpCommands from '../wireUpCommand';
-import Utilities from '../helpers/Utilities';
-import Dictionary from '../helpers/Dictionary';
-import * as FileSystem from '../helpers/FileSystem';
+import IBuildCommands from '../core/CommandBuilder';
+import Utilities from '../core/Utilities';
+import Dictionary from '../core/Dictionary';
+import * as FileSystem from '../core/FileSystem';
 import * as DynamicsTreeView from '../views/DynamicsTreeView';
 import { TS } from 'typescript-linq';
-import ExtensionConfiguration from '../config/ExtensionConfiguration';
+import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import * as TemplateTreeView from '../views/TemplateTreeView';
 
-export default class IconLoader implements IWireUpCommands {
-    public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+export default class IconLoader implements IBuildCommands {
+    public buildCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
 		//GlobalState.Instance(context).PowerShellScriptVersion = null;
 
 		// do this immediately
