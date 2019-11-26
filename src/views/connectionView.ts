@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import DiscoveryRepository from '../repositories/discoveryRepository';
-import { View, ViewRenderer } from '../core/view';
+import { View, ViewRenderer } from '../core/types/View';
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../webapi/Types';
