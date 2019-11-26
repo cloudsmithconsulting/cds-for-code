@@ -207,7 +207,7 @@ export class TreeEntry extends vscode.TreeItem {
 	) {
         super(label, collapsibleState);
         
-        const resolver = ExtensionIconThemes.selected.resolve("../../../Resources/icons/", itemType);
+        const resolver = ExtensionIconThemes.selected.resolve("~/Resources/icons/", itemType);
 
         if (resolver) {
             this.iconPath = resolver.iconPath;

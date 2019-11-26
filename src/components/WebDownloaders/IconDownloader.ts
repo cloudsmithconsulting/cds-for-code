@@ -51,8 +51,7 @@ export enum ScriptedIconFormat {
 	json = ".json"
 }
 
-export class IconResolver
-{
+export class IconResolver {
     public readonly iconPath: { light: string | vscode.Uri; dark: string | vscode.Uri } = null;
 
     constructor(
@@ -195,6 +194,8 @@ export class ExtensionIconTheme {
 	mappings:Dictionary<ExtensionIcon, string>;
 
 	resolve(folder: string, icon:ExtensionIcon): IconResolver {
+		folder = folder.replace("~/", "../../../../");
+		
 		const destination = path.join(folder, this.name.replace(`${cs.dynamics.configuration.iconThemes._namespace}.`, ''));
 		const icons = this.icons.where(i => i.extensionIcon === icon);
 		const lightIcon = icons.where(i => i.annotation === "light").first();
