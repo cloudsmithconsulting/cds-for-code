@@ -8,7 +8,7 @@ import WebResourceManager from "../controls/WebResources/WebResourceManager";
 import ApiRepository from "../repositories/apiRepository";
 import Utilities from "../helpers/Utilities";
 import SolutionMap from "../controls/SolutionMap/SolutionMap";
-import { SolutionWorkspaceMapping } from "../controls/SolutionMap/SolutionWorkspaceMapping";
+import { SolutionWorkspaceMapping } from "../controls/SolutionMap/Types";
 import TemplateManager from "../controls/Templates/TemplateManager";
 import Dictionary from "../helpers/Dictionary";
 import EnumParser from "../helpers/EnumParser";

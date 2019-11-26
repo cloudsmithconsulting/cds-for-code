@@ -6,7 +6,7 @@ import { DynamicsWebApi } from "../../api/Types";
 import IWireUpCommands from '../../wireUpCommand';
 import Utilities from '../../helpers/Utilities';
 import SolutionMap from "../SolutionMap/SolutionMap";
-import { SolutionWorkspaceMapping } from "../SolutionMap/SolutionWorkspaceMapping";
+import { SolutionWorkspaceMapping } from "../SolutionMap/Types";
 import TemplateManager from "../../controls/Templates/TemplateManager";
 import ApiRepository from '../../repositories/apiRepository';
 import EnumParser from '../../helpers/EnumParser';

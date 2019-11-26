@@ -12,7 +12,7 @@ import { DynamicsWebApi } from '../api/Types';
 import { ExtensionIconThemes } from '../commands/iconLoader';
 import QuickPicker from '../helpers/QuickPicker';
 import SolutionMap from '../controls/SolutionMap/SolutionMap';
-import { SolutionWorkspaceMapping } from "../controls/SolutionMap/SolutionWorkspaceMapping";
+import { SolutionWorkspaceMapping } from "../controls/SolutionMap/Types";
 
 export default class DynamicsTreeView implements IWireUpCommands {
     public static Instance:DynamicsServerTreeProvider;

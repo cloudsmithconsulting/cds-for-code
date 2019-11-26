@@ -1,8 +1,5 @@
-import * as vscode from 'vscode';
-import * as cs from '../cs';
 import * as FileSystem from "../helpers/FileSystem";
 import * as path from 'path';
-import { TS } from 'typescript-linq/TS';
 import XmlParser from '../helpers/XmlParser';
 import { DynamicsWebApi } from '../api/Types';
 
@@ -82,7 +79,7 @@ export default class SolutionFile {
         return this.solutionManifest.then(manifest => manifest ? manifest.Publisher : undefined);
     }
 
-    get components(): Promise<SolutionComponentElement[]> {
+    get components(): Promise<SolutionFileComponentElement[]> {
         return this.solutionManifest
             .then(manifest => {
                 const returnValue = manifest 
@@ -90,7 +87,7 @@ export default class SolutionFile {
                     && manifest.RootComponents.length > 0
                     && manifest.RootComponents[0].RootComponent 
                     && manifest.RootComponents[0].RootComponent.length > 0 
-                    ? manifest.RootComponents[0].RootComponent.map(c => new SolutionComponentElement(c.$.type, c.$.id, c.$.schemaName, c.$.behavior)) 
+                    ? manifest.RootComponents[0].RootComponent.map(c => new SolutionFileComponentElement(c.$.type, c.$.id, c.$.schemaName, c.$.behavior)) 
                     : [];
 
                 return returnValue;
@@ -106,9 +103,9 @@ export default class SolutionFile {
         }
 
         if (schemaName && components.findIndex(c => c.type === typeCode && c.schemaName === schemaName) === -1) {
-            components.push(new SolutionComponentElement(type, undefined, schemaName, behavior));
+            components.push(new SolutionFileComponentElement(type, undefined, schemaName, behavior));
         } else if (id && components.findIndex(c => c.type === typeCode && c.id === id) === -1) {
-            components.push(new SolutionComponentElement(type, id, undefined, behavior));
+            components.push(new SolutionFileComponentElement(type, id, undefined, behavior));
         }
 
         if (this._data) {
@@ -144,7 +141,7 @@ export default class SolutionFile {
     }
 }
 
-export class SolutionComponentElement {
+class SolutionFileComponentElement {
     constructor(type:DynamicsWebApi.SolutionComponent | number, id?:string, schemaName?:string, behavior?:number) {
         const typeCode = parseInt(type.toString());
     

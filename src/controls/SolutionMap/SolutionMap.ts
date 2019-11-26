@@ -9,7 +9,7 @@ import IWireUpCommands from "../../wireUpCommand";
 import { DynamicsWebApi } from "../../api/Types";
 import Utilities from "../../helpers/Utilities";
 import { WorkspaceFileSystemWatcher } from "../../helpers/FileManager";
-import { SolutionWorkspaceMapping } from "./SolutionWorkspaceMapping";
+import { SolutionWorkspaceMapping } from "./Types";
 
 
 export default class SolutionMap implements IWireUpCommands
