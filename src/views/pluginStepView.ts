@@ -1,19 +1,19 @@
 import * as vscode from 'vscode';
-import { View, ViewRenderer } from '../view';
+import { View, ViewRenderer } from '../core/types/View';
 import * as cs from '../cs';
-import IWireUpCommands from '../wireUpCommand';
+import IContributor from '../core/CommandBuilder';
 import ApiRepository from '../repositories/apiRepository';
-import { DynamicsWebApi } from '../api/Types';
-import QuickPicker from '../helpers/QuickPicker';
+import { DynamicsWebApi } from '../webapi/Types';
+import Quickly from '../core/Quickly';
 import async = require('async');
 
-export default class PluginStepViewManager implements IWireUpCommands {
-	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+export default class PluginStepViewManager implements IContributor {
+	public contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.pluginStep.open, async (pluginAssemblyId:string, step?: any, config?:DynamicsWebApi.Config) => { // Match name of command to package.json command
                 // Run command code
-                config = config || await QuickPicker.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
+                config = config || await Quickly.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
 
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);

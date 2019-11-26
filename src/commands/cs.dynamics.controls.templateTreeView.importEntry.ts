@@ -1,5 +1,5 @@
 import * as cs from "../cs";
-import * as TemplateTreeView from "../views/TemplateTreeView";
+import * as TemplateTreeView from "../views/TemplatesTreeView";
 import * as vscode from 'vscode';
 
 /**

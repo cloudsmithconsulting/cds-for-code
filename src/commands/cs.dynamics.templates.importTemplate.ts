@@ -1,11 +1,11 @@
 import vscode = require("vscode");
-import ExtensionConfiguration from "../config/ExtensionConfiguration";
+import ExtensionConfiguration from "../core/ExtensionConfiguration";
 import * as cs from "../cs";
-import QuickPicker from "../helpers/QuickPicker";
-import { TemplateItem, TemplateType } from "../controls/Templates/Types";
-import * as FileSystem from "../helpers/FileSystem";
+import Quickly from "../core/Quickly";
+import { TemplateItem, TemplateType } from "../components/Templates/Types";
+import * as FileSystem from "../core/io/FileSystem";
 import * as p from 'path';
-import TemplateManager from "../controls/Templates/TemplateManager";
+import TemplateManager from "../components/Templates/TemplateManager";
 
 /**
  * Command exports a template from your workspace into a .zip archive for re-import later.
@@ -18,7 +18,7 @@ import TemplateManager from "../controls/Templates/TemplateManager";
  */
 export default async function run(sourceUri:vscode.Uri): Promise<void> {
     if (!sourceUri) {
-        const response = await QuickPicker.pickAnyFile(undefined, false, "Select template item", { "Zip Files": [ "*.zip" ]});
+        const response = await Quickly.pickAnyFile(undefined, false, "Select template item", { "Zip Files": [ "*.zip" ]});
         if (!response) { return; }
 
         if (response instanceof Array && response.length > 0) {
@@ -30,9 +30,9 @@ export default async function run(sourceUri:vscode.Uri): Promise<void> {
 
     TemplateManager.importTemplate(sourceUri.fsPath)
         .then(template => {
-            QuickPicker.inform(`Imported template '${template.name}'`);
+            Quickly.inform(`Imported template '${template.name}'`);
         }).catch(error => {
-            QuickPicker.error(`Failed to import the template '${sourceUri.fsPath}': ${error}`, false, "Try Again", () => { vscode.commands.executeCommand(cs.dynamics.templates.importTemplate, sourceUri); }, "Cancel");
+            Quickly.error(`Failed to import the template '${sourceUri.fsPath}': ${error}`, false, "Try Again", () => { vscode.commands.executeCommand(cs.dynamics.templates.importTemplate, sourceUri); }, "Cancel");
         });
 
 }

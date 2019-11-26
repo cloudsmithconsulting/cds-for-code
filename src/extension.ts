@@ -3,29 +3,29 @@
 import * as vscode from 'vscode';
 import * as cs from './cs';
 // config
-import ExtensionConfiguration from './config/ExtensionConfiguration';
+import ExtensionConfiguration from './core/ExtensionConfiguration';
 import ConnectionViewManager from './views/ConnectionView';
-import GenerateEntities from './commands/generateEntities';
-import PowerShellLoader from './commands/powerShellLoader';
+import GenerateEntities from './components/CodeGeneration/generateEntities';
+import PowerShellLoader from './components/WebDownloaders/ScriptDownloader';
 import DynamicsTreeView from './views/DynamicsTreeView';
-import PackDynamicsSolution from './commands/packDynamicsSolution';
-import UnpackDynamicsSolution from './commands/unpackDynamicsSolution';
-import JsonInspectorViewManager from './views/JsonInspectorView';
-import TemplateManager from './controls/Templates/TemplateManager';
+import PackDynamicsSolution from './components/Solutions/packDynamicsSolution';
+import UnpackDynamicsSolution from './components/Solutions/unpackDynamicsSolution';
+import JsonObjectViewManager from './views/JsonObjectView';
+import TemplateManager from './components/Templates/TemplateManager';
 import DynamicsTerminal from './views/DynamicsTerminal';
-import IconLoader from './commands/iconLoader';
-import AddSolutionComponent from './commands/addSolutionComponent';
-import RemoveSolutionComponent from './commands/removeSolutionComponent';
-import PluginStepViewManager from './views/pluginStepView';
-import RegisterPluginAssembly from './commands/registerPluginAssembly';
-import PublishCustomizations from "./commands/PublishAllXml";
-import SvcUtilConfigViewManager from './views/svcUtilConfigView';
-import SolutionMap from './config/SolutionMap';
+import IconLoader from './components/WebDownloaders/IconDownloader';
+import AddSolutionComponent from './components/Solutions/addSolutionComponent';
+import RemoveSolutionComponent from './components/Solutions/removeSolutionComponent';
+import PluginStepViewManager from './views/PluginStepView';
+import RegisterPluginAssembly from './components/Solutions/registerPluginAssembly';
+import PublishCustomizations from "./components/Solutions/PublishAllXml";
+import SvcUtilConfigViewManager from './views/ServiceUtilityConfigurationView';
+import SolutionMap from './components/Solutions/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
-import VisualStudioProjectCommands from './commands/visualStudioProjectCommands';
-import TemplateTreeView from './views/TemplateTreeView';
-import PluginStepImageViewManager from './views/pluginStepImageView';
-import WebResourceManager from './controls/WebResources/WebResourceManager';
+import VisualStudioProjectCommands from './components/DotNetCore/visualStudioProjectCommands';
+import TemplateTreeView from './views/TemplatesTreeView';
+import PluginStepImageViewManager from './views/PluginStepImageView';
+import WebResourceManager from './components/Solutions/WebResourceManager';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -48,7 +48,7 @@ export function activate(context: vscode.ExtensionContext) {
 		new DynamicsTreeView(),
 		new TemplateTreeView(),
 		new ConnectionViewManager(),
-		new JsonInspectorViewManager(),
+		new JsonObjectViewManager(),
 		new SvcUtilConfigViewManager(),
 		new DynamicsTerminal(),
 		new PluginStepViewManager(),
@@ -68,11 +68,11 @@ export function activate(context: vscode.ExtensionContext) {
 		new RemoveSolutionComponent(),
 		new RegisterPluginAssembly(),
 		new VisualStudioProjectCommands()
-	].forEach(c => c.wireUpCommands(context, toolsConfig));
+	].forEach(c => c.contribute(context, toolsConfig));
 
 	[   // templating engine.
 		new TemplateManager(context)
-	].forEach(c => c.wireUpCommands(context, templatesConfig));
+	].forEach(c => c.contribute(context, templatesConfig));
 }
 
 // this method is called when your extension is deactivated

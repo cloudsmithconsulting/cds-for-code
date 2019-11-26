@@ -1,6 +1,6 @@
 import * as cs from "../cs";
 import * as vscode from 'vscode';
-import { TemplateType } from "../controls/Templates/Types";
+import { TemplateType } from "../components/Templates/Types";
 
 /**
  * This command can be invoked by the Explorer file viewer and creates a new workspace item from a template

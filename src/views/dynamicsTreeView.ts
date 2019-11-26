@@ -2,21 +2,22 @@ import * as vscode from 'vscode';
 import { TS } from 'typescript-linq/TS';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import ApiRepository from '../repositories/apiRepository';
-import Utilities from '../helpers/Utilities';
+import Utilities from '../core/Utilities';
 import MetadataRepository from '../repositories/metadataRepository';
 import * as cs from '../cs';
-import IWireUpCommands from '../wireUpCommand';
-import DynamicsUrlResolver from '../api/DynamicsUrlResolver';
-import ExtensionConfiguration from '../config/ExtensionConfiguration';
-import { DynamicsWebApi } from '../api/Types';
-import { ExtensionIconThemes } from '../commands/iconLoader';
-import QuickPicker from '../helpers/QuickPicker';
-import SolutionMap, { SolutionWorkspaceMapping } from '../config/SolutionMap';
+import IContributor from '../core/CommandBuilder';
+import DynamicsUrlResolver from '../webapi/DynamicsUrlResolver';
+import ExtensionConfiguration from '../core/ExtensionConfiguration';
+import { DynamicsWebApi } from '../webapi/Types';
+import { ExtensionIconThemes } from '../components/WebDownloaders/IconDownloader';
+import Quickly from '../core/Quickly';
+import SolutionMap from '../components/Solutions/SolutionMap';
+import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
 
-export default class DynamicsTreeView implements IWireUpCommands {
+export default class DynamicsTreeView implements IContributor {
     public static Instance:DynamicsServerTreeProvider;
 
-    public wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
+    public contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         const isNew = !DynamicsTreeView.Instance;        
         const treeProvider = isNew ? new DynamicsServerTreeProvider(context) : DynamicsTreeView.Instance;
 
@@ -181,7 +182,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, undefined, item.solutionId), retryFunction);
                         break;
                     case "Processes":                 
-                        let processType = await QuickPicker.pickEnum<DynamicsWebApi.ProcessType>(DynamicsWebApi.ProcessType);
+                        let processType = await Quickly.pickEnum<DynamicsWebApi.ProcessType>(DynamicsWebApi.ProcessType);
 
                         if (processType) {
                             Utilities.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, processType, item.parent && item.parent.context && item.parent.context.ObjectTypeCode ? item.parent.context.ObjectTypeCode : undefined, item.solutionId), retryFunction);
@@ -195,7 +196,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
                         Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityRelationshipUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
                         break;
                     case "Forms":   
-                        let formType = await QuickPicker.pickEnum<DynamicsWebApi.DynamicsForm>(DynamicsWebApi.DynamicsForm);
+                        let formType = await Quickly.pickEnum<DynamicsWebApi.DynamicsForm>(DynamicsWebApi.DynamicsForm);
 
                         if (formType) {
                             Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.context.ObjectTypeCode, formType, undefined, item.solutionId), retryFunction);
@@ -203,7 +204,7 @@ export default class DynamicsTreeView implements IWireUpCommands {
 
                         break;
                     case "Dashboards":
-                        let layoutType = await QuickPicker.pickEnum<DynamicsWebApi.InteractiveDashboardLayout>(DynamicsWebApi.InteractiveDashboardLayout);
+                        let layoutType = await Quickly.pickEnum<DynamicsWebApi.InteractiveDashboardLayout>(DynamicsWebApi.InteractiveDashboardLayout);
 
                         if (layoutType) {
                             Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityDashboardUri(item.config, item.context.ObjectTypeCode, layoutType, "1030", undefined, item.solutionId), retryFunction);
@@ -1305,7 +1306,7 @@ class TreeEntry extends vscode.TreeItem {
 	) {
         super(label, collapsibleState);
         
-        const resolver = ExtensionIconThemes.selected.resolve("../../../Resources/icons/", itemType);
+        const resolver = ExtensionIconThemes.selected.resolve("~/Resources/icons/", itemType);
 
         if (resolver) {
             this.iconPath = resolver.iconPath;

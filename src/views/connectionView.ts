@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import DiscoveryRepository from '../repositories/discoveryRepository';
-import { View, ViewRenderer } from '../view';
+import { View, ViewRenderer } from '../core/types/View';
 import * as cs from '../cs';
-import IWireUpCommands from '../wireUpCommand';
-import { DynamicsWebApi } from '../api/Types';
+import IContributor from '../core/CommandBuilder';
+import { DynamicsWebApi } from '../webapi/Types';
 
-export default class ConnectionViewManager implements IWireUpCommands {
-	public wireUpCommands(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+export default class ConnectionViewManager implements IContributor {
+	public contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.editConnection, async (config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
@@ -29,7 +29,7 @@ export default class ConnectionViewManager implements IWireUpCommands {
 }
 
 class ConnectionView extends View {
-    public getHtmlForWebview(viewRenderer: ViewRenderer): string {
+    getHtmlForWebview(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('connectionView.js');
         viewRenderer.addStyleSheet('webviewStyles.css');

@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
-import IWireUpCommands from '../wireUpCommand';
+import IContributor from '../core/CommandBuilder';
 import * as cs from '../cs';
 import * as fs from 'fs';
 import * as eol from 'eol';
 import * as child_process from 'child_process';
-import Utilities from '../helpers/Utilities';
-import QuickPicker, { QuickPickOption } from '../helpers/QuickPicker';
+import Utilities from '../core/Utilities';
+import Quickly, { QuickPickOption } from '../core/Quickly';
 import { TS } from 'typescript-linq';
 import { TextEncoder, TextDecoder } from 'util';
-import Dictionary from '../helpers/Dictionary';
+import Dictionary from '../core/types/Dictionary';
 
 export class TerminalCommand {
 	private _command:string;
@@ -459,7 +459,7 @@ export class Terminal implements vscode.Terminal {
 			.where(c => !Utilities.IsNullOrEmpty(c.command))
 			.select(c => new QuickPickOption(c.hidden, undefined, undefined, c)).toArray();
 
-		return await QuickPicker.pick("", ...options)
+		return await Quickly.pick("", ...options)
 			.then(o => o ? o.context : null);
 	}
 
@@ -757,9 +757,9 @@ export class Terminal implements vscode.Terminal {
 	}
 }
 
-export default class DynamicsTerminal implements IWireUpCommands
+export default class DynamicsTerminal implements IContributor
 {
-	wireUpCommands(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
+	contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
 		let terminals:Dictionary<string, Terminal> = new Dictionary<string, Terminal>();
 
 		context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.extension.createTerminal, async (folder:string, name:string): Promise<Terminal> => {
@@ -794,7 +794,7 @@ export default class DynamicsTerminal implements IWireUpCommands
 				} else if (terminals.length === 1) {
 					terminal = terminals.values[0];
 				} else {
-					terminal = await QuickPicker.pickDictionaryEntry(terminals, "Choose a terminal to clear");
+					terminal = await Quickly.pickDictionaryEntry(terminals, "Choose a terminal to clear");
 				}
 			}
 

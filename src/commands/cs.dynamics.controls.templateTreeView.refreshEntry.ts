@@ -1,6 +1,6 @@
-import ExtensionConfiguration from "../config/ExtensionConfiguration";
+import ExtensionConfiguration from "../core/ExtensionConfiguration";
 import * as cs from "../cs";
-import * as TemplateTreeView from "../views/TemplateTreeView";
+import * as TemplateTreeView from "../views/TemplatesTreeView";
 /**
  * This command can be invoked by the Template Tree View and refreshes an item (or the entire treeview)
  * @export run command function

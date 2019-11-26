@@ -1,7 +1,7 @@
-import ExtensionConfiguration from "../config/ExtensionConfiguration";
+import ExtensionConfiguration from "../core/ExtensionConfiguration";
 import * as cs from "../cs";
-import QuickPicker from "../helpers/QuickPicker";
-import { TemplateItem } from "../controls/Templates/Types";
+import Quickly from "../core/Quickly";
+import { TemplateItem } from "../components/Templates/Types";
 
 /**
  * Main command to delete an existing template.
@@ -15,7 +15,7 @@ export default async function run(template: TemplateItem) {
     // load latest configuration
     ExtensionConfiguration.updateConfiguration(cs.dynamics.configuration.templates._namespace);
 
-    template = template || await QuickPicker.pickTemplate("Choose the template you would like to delete");
+    template = template || await Quickly.pickTemplate("Choose the template you would like to delete");
 
     // no template chosen, simply exit
     if (!template || !template.location) {
@@ -26,10 +26,10 @@ export default async function run(template: TemplateItem) {
     this.deleteFromFilesystem(template)
         .then(deleted => { 
             if (deleted) {
-                QuickPicker.inform(`Template '${template.name}' was removed from the library.`);
+                Quickly.inform(`Template '${template.name}' was removed from the library.`);
             } 
         }, (reason) => { 
-            QuickPicker.error(`Failed to delete the contents of '${template.location}': ${reason}`, false, "Try Again", () => { this.run(template); }, "Cancel");
+            Quickly.error(`Failed to delete the contents of '${template.location}': ${reason}`, false, "Try Again", () => { this.run(template); }, "Cancel");
         }
     );
     
