@@ -209,7 +209,7 @@
             // show all options
             $selectOptions.show();
             // if this is empty, do nothing and return
-            if (CloudSmith.Utilities.$Object.IsNullOrEmpty(searchText)) { return; }
+            if (CloudSmith.Utilities.IsNullOrEmpty(searchText)) { return; }
 
             // entities select filter
             $selectOptions.each(function() {
