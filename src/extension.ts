@@ -5,20 +5,15 @@ import * as cs from './cs';
 // config
 import ExtensionConfiguration from './core/ExtensionConfiguration';
 import ConnectionViewManager from './views/ConnectionView';
-import GenerateEntities from './components/CodeGeneration/generateEntities';
-import PowerShellLoader from './components/WebDownloaders/ScriptDownloader';
+import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
+import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
 import DynamicsTreeView from './views/DynamicsTreeView';
-import PackDynamicsSolution from './components/Solutions/packDynamicsSolution';
-import UnpackDynamicsSolution from './components/Solutions/unpackDynamicsSolution';
 import JsonObjectViewManager from './views/JsonObjectView';
 import TemplateManager from './components/Templates/TemplateManager';
 import DynamicsTerminal from './views/DynamicsTerminal';
 import IconLoader from './components/WebDownloaders/IconDownloader';
-import AddSolutionComponent from './components/Solutions/addSolutionComponent';
-import RemoveSolutionComponent from './components/Solutions/removeSolutionComponent';
+import SolutionManager from './components/Solutions/SolutionManager';
 import PluginStepViewManager from './views/PluginStepView';
-import RegisterPluginAssembly from './components/Solutions/registerPluginAssembly';
-import PublishCustomizations from "./components/Solutions/PublishAllXml";
 import SvcUtilConfigViewManager from './views/ServiceUtilityConfigurationView';
 import SolutionMap from './components/Solutions/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
@@ -59,17 +54,12 @@ export function activate(context: vscode.ExtensionContext) {
 		new NewWorkspaceViewManager(),
 		
 		// our commands
-		new PowerShellLoader(),
+		new ScriptDownloader(),
 		new IconLoader(),
-		new GenerateEntities(),
+		new CodeGenerationManager(),
 		new SolutionMap(),
 		new WebResourceManager(context),
-		new PackDynamicsSolution(),
-		new UnpackDynamicsSolution(),
-		new PublishCustomizations(),
-		new AddSolutionComponent(),
-		new RemoveSolutionComponent(),
-		new RegisterPluginAssembly(),
+		new SolutionManager(),
 		new VisualStudioProjectCommands()
 	].forEach(c => c.contribute(context, toolsConfig));
 

@@ -24,7 +24,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	const coreToolsRoot = !Utilities.$Object.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 
-	config = config || await Quickly.pickDynamicsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
+	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
 	if (!config) { return; }
 
 	if (!folder && !outputFileName) {

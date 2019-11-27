@@ -24,7 +24,7 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
 
     workspaceRoot = vscode.workspace && vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
 
-    config = config || await Quickly.pickDynamicsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
+    config = config || await Quickly.pickCdsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
     if (!config) { return; }
 
     if (fileUri && fileUri.fsPath) {
@@ -126,7 +126,7 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
     let solution;
 
     if ((!map || !map.solutionId) && !solutionId) {
-        solution = await Quickly.pickDynamicsSolution(config, "Would you like to add this web resource to a solution?");
+        solution = await Quickly.pickCdsSolution(config, "Would you like to add this web resource to a solution?");
         map = this.getSolutionMapping(undefined, config.orgId, solution.solutionid);
     } else {
         solution = await api.retrieveSolution(solutionId || map.solutionId);

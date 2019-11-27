@@ -443,21 +443,21 @@ export default class Quickly {
         }
     }
 
-    static async pickDynamicsSolution(config:DynamicsWebApi.Config, placeHolder?:string, ignoreFocusOut:boolean = true) : Promise<any> {
+    static async pickCdsSolution(config:DynamicsWebApi.Config, placeHolder?:string, ignoreFocusOut:boolean = true) : Promise<any> {
         return new ApiRepository(config).retrieveSolutions()
             .then(solutions => new TS.Linq.Enumerator(solutions).select(solution => new QuickPickOption(`${Octicon.circuit_board} ${solution.friendlyname}`, undefined, undefined, solution)).toArray())
             .then(options => vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }))
             .then(chosen => chosen.context);
     }
 
-    static async pickDynamicsOrganization(context:vscode.ExtensionContext, placeHolder?:string, ignoreFocusOut: boolean = true) : Promise<DynamicsWebApi.Config> {
+    static async pickCdsOrganization(context:vscode.ExtensionContext, placeHolder?:string, ignoreFocusOut: boolean = true) : Promise<DynamicsWebApi.Config> {
         return DiscoveryRepository.getOrgConnections(context)
             .then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(`${Octicon.database} ${org.name}`, undefined, undefined, org)).toArray())
             .then(options => options && options.length === 1 ? options[0] : vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }))
             .then(chosen => <DynamicsWebApi.Config>chosen.context);
     }
 
-    static async pickDynamicsSolutionComponentType(placeHolder?:string, choices?:DynamicsWebApi.SolutionComponent[]): Promise<DynamicsWebApi.SolutionComponent> {
+    static async pickCdsSolutionComponentType(placeHolder?:string, choices?:DynamicsWebApi.SolutionComponent[]): Promise<DynamicsWebApi.SolutionComponent> {
         if (choices && choices.length > 0) {
             const options:QuickPickOption[] = [];
         
@@ -468,7 +468,7 @@ export default class Quickly {
         }
     }
 
-    static async pickDynamicsSolutionComponent(config:DynamicsWebApi.Config, solution:any, componentType:DynamicsWebApi.SolutionComponent, placeHolder?:string): Promise<{ componentId:string, component:any }> {
+    static async pickCdsSolutionComponent(config:DynamicsWebApi.Config, solution:any, componentType:DynamicsWebApi.SolutionComponent, placeHolder?:string): Promise<{ componentId:string, component:any }> {
         const options:QuickPickOption[] = [];
         const metadataApi = new MetadataRepository(config);
         const api = new ApiRepository(config);

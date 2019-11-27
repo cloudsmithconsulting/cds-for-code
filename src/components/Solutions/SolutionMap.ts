@@ -72,14 +72,14 @@ export default class SolutionMap implements IContributor
                 } 
 
                 if (!organizationId) {
-                    config = config || await Quickly.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
+                    config = config || await Quickly.pickCdsOrganization(context, "Choose a Dynamics 365 Organization", true);
                     if (!config) { return; }
     
                     organizationId = config.orgId;
                 }
 
                 if (!solutionId) {
-                    let solution = await Quickly.pickDynamicsSolution(config, "Choose a Solution to map to the local workspace", true);
+                    let solution = await Quickly.pickCdsSolution(config, "Choose a Solution to map to the local workspace", true);
                     if (!solution) { return; }
     
                     solutionId = solution.solutionid;

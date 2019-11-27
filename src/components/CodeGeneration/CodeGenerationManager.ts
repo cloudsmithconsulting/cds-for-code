@@ -5,7 +5,7 @@ import generateEntityCodeToFile from "../../commands/cs.dynamics.controls.explor
 import generateEntityCodeToFolder from "../../commands/cs.dynamics.controls.explorer.generateEntityCodeToFolder";
 import generateEntities from "../../commands/cs.dynamics.powerShell.generateEntities";
 
-export default class GenerateEntitiesCommand implements IContributor {
+export default class CodeGenerationManager implements IContributor {
     public contribute(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
         // now wire a command into the context
         context.subscriptions.push(
