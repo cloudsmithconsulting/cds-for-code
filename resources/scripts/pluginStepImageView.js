@@ -39,11 +39,11 @@
         function validateForm(pluginStepImage) {
             const messages = [];
     
-            if (CloudSmith.Utilities.IsNullOrEmpty(pluginStepImage.sdkmessageprocessingstepid)) { messages.push('The sdkmessageprocessingstepid is required'); }
+            if (CloudSmith.Utilities.isNullOrEmpty(pluginStepImage.sdkmessageprocessingstepid)) { messages.push('The sdkmessageprocessingstepid is required'); }
             if (pluginStepImage.imagetype === null) { messages.push('The Image Type is required'); }
-            if (CloudSmith.Utilities.IsNullOrEmpty(pluginStepImage.name)) { messages.push('The Name is required'); }
-            if (CloudSmith.Utilities.IsNullOrEmpty(pluginStepImage.entityalias)) { messages.push('The Entity Alias is required'); }
-            if (CloudSmith.Utilities.IsNullOrEmpty(pluginStepImage.attributes)) { messages.push('The Parameters is required'); }
+            if (CloudSmith.Utilities.isNullOrEmpty(pluginStepImage.name)) { messages.push('The Name is required'); }
+            if (CloudSmith.Utilities.isNullOrEmpty(pluginStepImage.entityalias)) { messages.push('The Entity Alias is required'); }
+            if (CloudSmith.Utilities.isNullOrEmpty(pluginStepImage.attributes)) { messages.push('The Parameters is required'); }
             
             // show errors
             CloudSmith.ErrorPanel.showError(messages);
