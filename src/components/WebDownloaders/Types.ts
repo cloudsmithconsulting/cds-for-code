@@ -57,6 +57,88 @@ const defaultIcons:Dictionary<ExtensionIcon, string> = new Dictionary<ExtensionI
     { key: "Cancel", value: "ic-twotone-cancel" },
 ]);
 
+export class ExtensionIconTheme {
+	constructor(name: string, mappings: Dictionary<ExtensionIcon, string>, lightColor?: string, darkColor?: string) {
+		this.name = name;
+		this.mappings = mappings;
+		this.lightColor = lightColor;
+		this.darkColor = darkColor;
+	}
+    
+    get icons(): TS.Linq.Enumerator<IconifyIcon> {
+		return new TS.Linq.Enumerator(ExtensionIconTheme.getIcons(this.mappings, this.lightColor, this.darkColor));
+	}
+    
+    name: string;
+	lightColor: string;
+	darkColor: string;
+	mappings: Dictionary<ExtensionIcon, string>;
+    
+    resolve(folder: string, icon: ExtensionIcon): IconResolver {
+		folder = folder.replace("~/", "../../../../");
+    
+        const destination = path.join(folder, this.name.replace(`${cs.dynamics.configuration.iconThemes._namespace}.`, ''));
+		const icons = this.icons.where(i => i.extensionIcon === icon);
+		const lightIcon = icons.where(i => i.annotation === "light").first();
+		const darkIcon = icons.where(i => i.annotation === "dark").first();
+		const resolver = new IconResolver(path.join(destination, lightIcon.mappedOutputFile), path.join(destination, darkIcon.mappedOutputFile));
+    
+        return resolver;
+    }
+    
+	//TODO: remove dependence on fetch.
+	downloadIcons(folder: string): string {
+		const destination = path.join(folder, this.name.replace(`${cs.dynamics.configuration.iconThemes._namespace}.`, ''));
+    
+        this.icons.forEach(icon => {
+			const localPath = path.join(destination, icon.mappedOutputFile);
+    
+            FileSystem.makeFolderSync(path.dirname(localPath));
+    
+            if (FileSystem.exists(localPath)) {
+				return;
+			}
+    
+            return fetch(icon.url, {
+				method: 'get',
+				headers: {
+					'Accepts': icon.mimeType
+				}
+			})
+				.then(res => res.text())
+				.then(body => {
+					FileSystem.writeFileSync(localPath, body);
+    
+                    return localPath;
+				});
+        });
+        
+		return destination;
+    }
+    
+	private static getIcons(mappings: Dictionary<ExtensionIcon, string>, lightColor?: string, darkColor?: string): IconifyIcon[] {
+        const returnObject: IconifyIcon[] = [];
+        
+		if (mappings) {
+			for (let i = 0; i < mappings.keys.length; i++) {
+				if (!lightColor && !darkColor) {
+					returnObject.push(new IconifyIcon(mappings.values[i], undefined, undefined, undefined, undefined, undefined, mappings.keys[i]));
+                }
+                
+				if (lightColor) {
+					returnObject.push(new IconifyIcon(mappings.values[i], lightColor, "light", undefined, undefined, undefined, mappings.keys[i]));
+                }
+                
+				if (darkColor) {
+					returnObject.push(new IconifyIcon(mappings.values[i], darkColor, "dark", undefined, undefined, undefined, mappings.keys[i]));
+				}
+			}
+        }
+        
+		return returnObject;
+	}
+}
+
 export class ExtensionIconThemes {
     static get default(): ExtensionIconTheme {
 		return new ExtensionIconTheme(cs.dynamics.configuration.iconThemes.default, defaultIcons, "black", "white");
@@ -182,87 +264,5 @@ export class IconifyIcon {
 		}
 
         return Utilities.$Object.ToQuerystring(querystring);
-	}
-}
-
-export class ExtensionIconTheme {
-	constructor(name: string, mappings: Dictionary<ExtensionIcon, string>, lightColor?: string, darkColor?: string) {
-		this.name = name;
-		this.mappings = mappings;
-		this.lightColor = lightColor;
-		this.darkColor = darkColor;
-	}
-    
-    get icons(): TS.Linq.Enumerator<IconifyIcon> {
-		return new TS.Linq.Enumerator(ExtensionIconTheme.getIcons(this.mappings, this.lightColor, this.darkColor));
-	}
-    
-    name: string;
-	lightColor: string;
-	darkColor: string;
-	mappings: Dictionary<ExtensionIcon, string>;
-    
-    resolve(folder: string, icon: ExtensionIcon): IconResolver {
-		folder = folder.replace("~/", "../../../../");
-    
-        const destination = path.join(folder, this.name.replace(`${cs.dynamics.configuration.iconThemes._namespace}.`, ''));
-		const icons = this.icons.where(i => i.extensionIcon === icon);
-		const lightIcon = icons.where(i => i.annotation === "light").first();
-		const darkIcon = icons.where(i => i.annotation === "dark").first();
-		const resolver = new IconResolver(path.join(destination, lightIcon.mappedOutputFile), path.join(destination, darkIcon.mappedOutputFile));
-    
-        return resolver;
-    }
-    
-	//TODO: remove dependence on fetch.
-	downloadIcons(folder: string): string {
-		const destination = path.join(folder, this.name.replace(`${cs.dynamics.configuration.iconThemes._namespace}.`, ''));
-    
-        this.icons.forEach(icon => {
-			const localPath = path.join(destination, icon.mappedOutputFile);
-    
-            FileSystem.makeFolderSync(path.dirname(localPath));
-    
-            if (FileSystem.exists(localPath)) {
-				return;
-			}
-    
-            return fetch(icon.url, {
-				method: 'get',
-				headers: {
-					'Accepts': icon.mimeType
-				}
-			})
-				.then(res => res.text())
-				.then(body => {
-					FileSystem.writeFileSync(localPath, body);
-    
-                    return localPath;
-				});
-        });
-        
-		return destination;
-    }
-    
-	private static getIcons(mappings: Dictionary<ExtensionIcon, string>, lightColor?: string, darkColor?: string): IconifyIcon[] {
-        const returnObject: IconifyIcon[] = [];
-        
-		if (mappings) {
-			for (let i = 0; i < mappings.keys.length; i++) {
-				if (!lightColor && !darkColor) {
-					returnObject.push(new IconifyIcon(mappings.values[i], undefined, undefined, undefined, undefined, undefined, mappings.keys[i]));
-                }
-                
-				if (lightColor) {
-					returnObject.push(new IconifyIcon(mappings.values[i], lightColor, "light", undefined, undefined, undefined, mappings.keys[i]));
-                }
-                
-				if (darkColor) {
-					returnObject.push(new IconifyIcon(mappings.values[i], darkColor, "dark", undefined, undefined, undefined, mappings.keys[i]));
-				}
-			}
-        }
-        
-		return returnObject;
 	}
 }
