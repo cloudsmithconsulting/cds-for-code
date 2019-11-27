@@ -19,8 +19,8 @@ export class TerminalCommand {
 	private _hideFlag:boolean = false;
 	private _maskFlag:boolean = false;
 
-	public onLineCompleted: vscode.Event<{ raw:string, masked:string, hidden:string }>;
-	public static readonly lineSeperator:string = "\r\n";
+	onLineCompleted: vscode.Event<{ raw:string, masked:string, hidden:string }>;
+	static readonly lineSeperator:string = "\r\n";
 
 	constructor(command?: string, output?: string, error?:string) {
 		this._onLineCompleted = new vscode.EventEmitter<{ raw:string, masked:string, hidden:string }>();
@@ -192,12 +192,12 @@ class PromiseInfo<T> {
 }
 
 class Masker {
-	public static readonly hiddenReplacementByte:number = 0;		// ASCII 0 is null
-	public static readonly maskReplacementByte:number = 42;		// ASCII 42 is *
-	public static readonly hiddenSeperatorByte:number = 30;		// ASCII 30 is RS (Record Seperator)
-	public static readonly maskSeperatorByte:number = 29;		// ASCII 29 is GS (Group Seperator)
-	public static readonly maskSeperator:string = String.fromCharCode(Masker.maskSeperatorByte);
-	public static readonly hiddenSeperator:string = String.fromCharCode(Masker.hiddenSeperatorByte);
+	static readonly hiddenReplacementByte:number = 0;		// ASCII 0 is null
+	static readonly maskReplacementByte:number = 42;		// ASCII 42 is *
+	static readonly hiddenSeperatorByte:number = 30;		// ASCII 30 is RS (Record Seperator)
+	static readonly maskSeperatorByte:number = 29;		// ASCII 29 is GS (Group Seperator)
+	static readonly maskSeperator:string = String.fromCharCode(Masker.maskSeperatorByte);
+	static readonly hiddenSeperator:string = String.fromCharCode(Masker.hiddenSeperatorByte);
 
 	maskText(text:string, includeHidden?:boolean): string {
 		return this.maskBytes(new TextEncoder().encode(text), includeHidden);
@@ -278,8 +278,8 @@ class MaskedBuffer {
 	private _rawBuffer:string[];
 	private _timeout:NodeJS.Timeout;
 
-	public static readonly autoFlushDelay:number = 400;
-	public onDidFlush: vscode.Event<{ bytes:Uint8Array, raw:string, masked:string }>;
+	static readonly autoFlushDelay:number = 400;
+	onDidFlush: vscode.Event<{ bytes:Uint8Array, raw:string, masked:string }>;
 
 	constructor(autoFlush:boolean = true) {
 		this._autoFlush = autoFlush;
@@ -298,7 +298,7 @@ class MaskedBuffer {
 		return this._rawBuffer.length;
 	}
 
-	public flush(): { raw:string, masked:string } {
+	flush(): { raw:string, masked:string } {
 		if (this._timeout) {
 			clearTimeout(this._timeout);
 			this._timeout = undefined;
@@ -319,7 +319,7 @@ class MaskedBuffer {
 		return returnValue;
 	}
 
-	public push(bytes:Uint8Array): void {
+	push(bytes:Uint8Array): void {
 		if (bytes && bytes.length > 0) {
 			this._rawBuffer.push(bytes.toString());
 
@@ -333,11 +333,11 @@ class MaskedBuffer {
 		}
 	}
 
-	public toMaskedString(): string { 
+	toMaskedString(): string { 
 		return this._masker.maskText(this._rawBuffer.join(""));
 	}
 
-	public toString(): string {
+	toString(): string {
 		return this._rawBuffer.join("");
 	}
 }
@@ -362,12 +362,12 @@ export class Terminal implements vscode.Terminal {
 	private _promiseInfo:PromiseInfo<TerminalCommand>;
 	private _isAlreadyInitialized:boolean = false;
 
-	public onDidWrite: vscode.Event<string> = this._onDidWrite.event;
-	public onDidOpen: vscode.Event<void> = this._onDidOpen.event;
-	public onDidClose: vscode.Event<void> = this._onDidClose.event;
-	public onDidReceiveInput: vscode.Event<string> = this._onDidReceiveInput.event;
-	public onDidRunCommand: vscode.Event<TerminalCommand> = this._onDidRunCommand.event;
-	public onDidError: vscode.Event<TerminalCommand> = this._onDidError.event;
+	onDidWrite: vscode.Event<string> = this._onDidWrite.event;
+	onDidOpen: vscode.Event<void> = this._onDidOpen.event;
+	onDidClose: vscode.Event<void> = this._onDidClose.event;
+	onDidReceiveInput: vscode.Event<string> = this._onDidReceiveInput.event;
+	onDidRunCommand: vscode.Event<TerminalCommand> = this._onDidRunCommand.event;
+	onDidError: vscode.Event<TerminalCommand> = this._onDidError.event;
 	
 	static readonly defaultTerminalName: string = "CloudSmith Terminal";
 	static readonly maximumCommandBufferSize: number = 20;
@@ -757,8 +757,7 @@ export class Terminal implements vscode.Terminal {
 	}
 }
 
-export default class DynamicsTerminal implements IContributor
-{
+export default class DynamicsTerminal implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
 		let terminals:Dictionary<string, Terminal> = new Dictionary<string, Terminal>();
 
@@ -804,7 +803,7 @@ export default class DynamicsTerminal implements IContributor
 		}));
 	}
 
-    public static async showTerminal(folder: string, name?:string): Promise<Terminal> {
+    static async showTerminal(folder: string, name?:string): Promise<Terminal> {
 		return vscode.commands.executeCommand(cs.dynamics.extension.createTerminal, folder, name);
 	}
 }
