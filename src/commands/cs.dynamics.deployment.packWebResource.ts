@@ -6,7 +6,7 @@ import { DynamicsWebApi } from "../webapi/Types";
 import Quickly from "../core/Quickly";
 import WebResourceManager from "../components/Solutions/WebResourceManager";
 import ApiRepository from "../repositories/apiRepository";
-import Utilities from "../core/Utilities";
+import { Utilities } from "../core/Utilities";
 import SolutionMap from "../components/Solutions/SolutionMap";
 import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
 import TemplateManager from "../components/Templates/TemplateManager";

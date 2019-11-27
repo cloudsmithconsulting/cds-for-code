@@ -4,7 +4,7 @@ import IContributor from '../../core/CommandBuilder';
 import { DynamicsWebApi } from '../../webapi/Types';
 import ApiRepository from '../../repositories/apiRepository';
 import Quickly from '../../core/Quickly';
-import Utilities from '../../core/Utilities';
+import { Utilities } from '../../core/Utilities';
 
 export default class PublishCustomizations implements IContributor {
     public contribute(context: vscode.ExtensionContext, wconfig: vscode.WorkspaceConfiguration) {
@@ -27,7 +27,7 @@ export default class PublishCustomizations implements IContributor {
                 
                 components.forEach(c => {
                     if (c.type === DynamicsWebApi.SolutionComponent.WebResource) {
-                        parameterXml += `<webresource>{${Utilities.TrimGuid(c.id)}}</webresource>`;
+                        parameterXml += `<webresource>{${Utilities.Guid.TrimGuid(c.id)}}</webresource>`;
                     }
                 });
                 

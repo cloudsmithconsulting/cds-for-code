@@ -4,7 +4,7 @@ import IContributor from '../../core/CommandBuilder';
 import { DynamicsWebApi } from '../../webapi/Types';
 import ApiRepository from '../../repositories/apiRepository';
 import Quickly from '../../core/Quickly';
-import Utilities from '../../core/Utilities';
+import { Utilities } from '../../core/Utilities';
 
 export default class RemoveSolutionComponent implements IContributor {
     public workspaceConfiguration:vscode.WorkspaceConfiguration;
@@ -21,7 +21,7 @@ export default class RemoveSolutionComponent implements IContributor {
 				solution = solution || await Quickly.pickDynamicsSolution(config, "Choose a solution", true);
 				if (!solution) { return; }
 
-                if (Utilities.IsNullOrEmpty(componentType)) {
+                if (Utilities.$Object.IsNullOrEmpty(componentType)) {
                     componentType = await Quickly.pickDynamicsSolutionComponentType("Choose a component to remove", [
                         DynamicsWebApi.SolutionComponent.Entity,
                         DynamicsWebApi.SolutionComponent.OptionSet,
@@ -30,10 +30,10 @@ export default class RemoveSolutionComponent implements IContributor {
                         DynamicsWebApi.SolutionComponent.Workflow
                     ]);
 
-                    if (Utilities.IsNullOrEmpty(componentType)) { return; }
+                    if (Utilities.$Object.IsNullOrEmpty(componentType)) { return; }
                 }
                 
-                if (Utilities.IsNullOrEmpty(componentId)) { 
+                if (Utilities.$Object.IsNullOrEmpty(componentId)) { 
                     const pickResponse = await Quickly.pickDynamicsSolutionComponent(config, solution, componentType, "Choose a component to remove");
                     if (!pickResponse) { return; }
 

@@ -4,7 +4,7 @@ import * as FileSystem from "../../core/io/FileSystem";
 import * as path from 'path';
 import { DynamicsWebApi } from "../../webapi/Types";
 import IContributor from '../../core/CommandBuilder';
-import Utilities from '../../core/Utilities';
+import { Utilities } from '../../core/Utilities';
 import SolutionMap from "./SolutionMap";
 import { SolutionWorkspaceMapping } from "./Types";
 import TemplateManager from "../Templates/TemplateManager";
@@ -80,7 +80,7 @@ export default class WebResourceManager implements IContributor {
 
             if (xmlObject && xmlObject.WebResource) {
                 return {
-                    webresourceid: xmlObject.WebResource.WebResourceId && xmlObject.WebResource.WebResourceId.length > 0 ? Utilities.TrimGuid(xmlObject.WebResource.WebResourceId[0]) : undefined,
+                    webresourceid: xmlObject.WebResource.WebResourceId && xmlObject.WebResource.WebResourceId.length > 0 ? Utilities.Guid.TrimGuid(xmlObject.WebResource.WebResourceId[0]) : undefined,
                     name: xmlObject.WebResource.Name && xmlObject.WebResource.Name.length > 0 ? xmlObject.WebResource.Name[0] : undefined,
                     displayname: xmlObject.WebResource.DisplayName && xmlObject.WebResource.DisplayName.length > 0 ? xmlObject.WebResource.DisplayName[0] : undefined,
                     description: xmlObject.WebResource.Description && xmlObject.WebResource.Description.length > 0 ? xmlObject.WebResource.Description[0] : undefined,
@@ -124,7 +124,7 @@ export default class WebResourceManager implements IContributor {
             const parts = path.relative(map.path, fsPath).split(".").join("").split("\\");
 
             parts[0] = `/${parts[0]}/`;
-            parts.push(Utilities.TrimGuid(webResource.webresourceid));
+            parts.push(Utilities.Guid.TrimGuid(webResource.webresourceid));
 
             return parts.join("");
         };

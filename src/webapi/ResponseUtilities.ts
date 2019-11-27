@@ -1,4 +1,4 @@
-import Utilities from "../core/Utilities";
+import { Utilities } from "../core/Utilities";
 import RequestUtilities from "./RequestUtilities";
 
 export default class ResponseUtilities
@@ -83,7 +83,7 @@ export default class ResponseUtilities
     public static parseData(object:any, parseParams?:any) {
         if (parseParams) {
             if (parseParams.isRef && object["@odata.id"] !== null) {
-                return Utilities.ConvertToReferenceObject(object);
+                return Utilities.$Object.ConvertToReferenceObject(object);
             }
     
             if (parseParams.toCount) {

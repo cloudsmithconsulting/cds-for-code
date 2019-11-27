@@ -22,7 +22,7 @@ import PublishCustomizations from "./components/Solutions/PublishAllXml";
 import SvcUtilConfigViewManager from './views/ServiceUtilityConfigurationView';
 import SolutionMap from './components/Solutions/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
-import VisualStudioProjectCommands from './components/DotNetCore/visualStudioProjectCommands';
+import VisualStudioProjectCommands from './components/DotNetCore/DotNetProjectManager';
 import TemplateTreeView from './views/TemplatesTreeView';
 import PluginStepImageViewManager from './views/PluginStepImageView';
 import WebResourceManager from './components/Solutions/WebResourceManager';

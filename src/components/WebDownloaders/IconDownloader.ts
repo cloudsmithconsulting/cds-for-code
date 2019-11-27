@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as cs from '../../cs';
 import fetch from 'node-fetch';
 import IContributor from '../../core/CommandBuilder';
-import Utilities from '../../core/Utilities';
+import { Utilities } from '../../core/Utilities';
 import Dictionary from '../../core/types/Dictionary';
 import * as FileSystem from '../../core/io/FileSystem';
 import * as DynamicsTreeView from '../../views/DynamicsTreeView';
@@ -122,11 +122,11 @@ export class IconifyIcon {
 	private toQueryObject(): any {
 		const querystring:any = { };
 
-		if (!Utilities.IsNullOrEmpty(this._color)) { querystring["color"] = this._color; }
+		if (!Utilities.$Object.IsNullOrEmpty(this._color)) { querystring["color"] = this._color; }
 		if (this.height > 0) { querystring["height"] = this.height; }
 		if (this.width > 0) { querystring["width"] = this.height; }
 
-		return Utilities.ObjectToQuerystring(querystring);
+		return Utilities.$Object.ToQuerystring(querystring);
 	}
 }
 

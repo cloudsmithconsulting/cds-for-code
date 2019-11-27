@@ -2,8 +2,7 @@ import * as cs from '../../cs';
 import { ExtensionContext } from 'vscode';
 import { DynamicsWebApi } from '../../webapi/Types';
 
-export default class GlobalState
-{
+export default class GlobalState {
     private _context: ExtensionContext;
 
     constructor (context: ExtensionContext)

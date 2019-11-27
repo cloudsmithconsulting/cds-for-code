@@ -4,7 +4,7 @@ import IContributor from '../../core/CommandBuilder';
 import { DynamicsWebApi } from '../../webapi/Types';
 import ApiRepository from '../../repositories/apiRepository';
 import Quickly from '../../core/Quickly';
-import Utilities from '../../core/Utilities';
+import { Utilities } from '../../core/Utilities';
 
 export default class AddSolutionComponent implements IContributor {
     workspaceConfiguration:vscode.WorkspaceConfiguration;
@@ -30,7 +30,7 @@ export default class AddSolutionComponent implements IContributor {
                 ]);
                 if (!componentType) { return; }
                 
-                if (Utilities.IsNullOrEmpty(componentId)) { 
+                if (Utilities.$Object.IsNullOrEmpty(componentId)) { 
                     const pickResponse = await Quickly.pickDynamicsSolutionComponent(config, solution, componentType, "Choose a component to add");
                     if (!pickResponse) { return; }
 

@@ -27,9 +27,9 @@
         const $eventHandler = $("#EventHandler>option:selected");
         const eventHandler = $.trim($eventHandler.text());
 
-        if (!CloudSmith.Utilities.isNullOrEmpty(message) 
-            && !CloudSmith.Utilities.isNullOrEmpty(primaryEntity)
-            && !CloudSmith.Utilities.isNullOrEmpty(eventHandler)) {
+        if (!CloudSmith.Utilities.$Object.IsNullOrEmpty(message) 
+            && !CloudSmith.Utilities.$Object.IsNullOrEmpty(primaryEntity)
+            && !CloudSmith.Utilities.$Object.IsNullOrEmpty(eventHandler)) {
                 const stepName = `${eventHandler.replace("(Plugin) ", "")}: ${message} of ${primaryEntity}`;
                 $("#StepName,#Description").val(stepName);
         }
@@ -47,7 +47,7 @@
             // clear all previous items
             $("div", $autocompleteItems).remove();
             // get out if there's no work to do
-            if (CloudSmith.Utilities.isNullOrEmpty(lookup)) {
+            if (CloudSmith.Utilities.$Object.IsNullOrEmpty(lookup)) {
                 currentFocus[inputId] = -1;
                 return; 
             }
@@ -235,10 +235,10 @@
             const messages = [];
 
             // put validations in here
-            if (CloudSmith.Utilities.isNullOrEmpty(step["sdkmessageid@odata.bind"])) { messages.push('Invalid Message'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(step["sdkmessagefilterid@odata.bind"])) { messages.push('Invalid Prmary and Secondary entities'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(step.name)) { message.push('The Step Name is required'); }
-            if (CloudSmith.Utilities.isNullOrEmpty(step.rank)
+            if (CloudSmith.Utilities.$Object.IsNullOrEmpty(step["sdkmessageid@odata.bind"])) { messages.push('Invalid Message'); }
+            if (CloudSmith.Utilities.$Object.IsNullOrEmpty(step["sdkmessagefilterid@odata.bind"])) { messages.push('Invalid Prmary and Secondary entities'); }
+            if (CloudSmith.Utilities.$Object.IsNullOrEmpty(step.name)) { message.push('The Step Name is required'); }
+            if (CloudSmith.Utilities.$Object.IsNullOrEmpty(step.rank)
                 || isNaN(step.rank)) {
                     message.push("Invalid Execution Order");
                 }

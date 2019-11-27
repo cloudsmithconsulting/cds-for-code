@@ -5,7 +5,7 @@ import * as FileSystem from "../core/io/FileSystem";
 import { DynamicsWebApi } from "../webapi/Types";
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
-import Utilities from "../core/Utilities";
+import { Utilities } from "../core/Utilities";
 import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
 
 /**
@@ -61,7 +61,7 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
     }
 
     FileSystem.makeFolderSync(path.dirname(fsPath));
-    FileSystem.writeFileSync(fsPath, Utilities.Base64ToBytes(webResource.content));
+    FileSystem.writeFileSync(fsPath, Utilities.Encoding.Base64ToBytes(webResource.content));
 
     // If we're part of a solution, we need to write the data XML file so that solution packager can pick this up.
     if (map) {

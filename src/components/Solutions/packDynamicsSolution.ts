@@ -5,7 +5,7 @@ import * as path from 'path';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import Quickly from '../../core/Quickly';
 import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
-import Utilities from '../../core/Utilities';
+import { Utilities } from '../../core/Utilities';
 import IContributor from '../../core/CommandBuilder';
 import SolutionMap from './SolutionMap';
 import { DynamicsWebApi } from '../../webapi/Types';
@@ -27,7 +27,7 @@ export default class PackDynamicsSolutionCommand implements IContributor {
 			vscode.commands.registerCommand(cs.dynamics.powerShell.packSolution, async (config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string, logFile?:string, mappingFile?:string, includeResourceFiles?:boolean, solutionPath?:string, managed?:boolean) => { // Match name of command to package.json command
                 // setup configurations
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
-                const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
+                const coreToolsRoot = !Utilities.$Object.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 				const solutionMap:SolutionMap = WorkspaceState.Instance(context).SolutionMap;
 
@@ -38,7 +38,7 @@ export default class PackDynamicsSolutionCommand implements IContributor {
 				}
 
 				folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder containing the solution to pack", true);
-				if (Utilities.IsNullOrEmpty(folder)) { return; }
+				if (Utilities.$Object.IsNullOrEmpty(folder)) { return; }
 				
 				config = config || await Quickly.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
 				if (!config) { return; }
@@ -70,13 +70,13 @@ export default class PackDynamicsSolutionCommand implements IContributor {
 				}
 
 				toolsPath = toolsPath || coreToolsRoot;
-				if (Utilities.IsNull(toolsPath)) { return; }
+				if (Utilities.$Object.IsNull(toolsPath)) { return; }
 
 				managed = managed || false;
 
 				const publishXml = await Quickly.pickBoolean("Do you also wish to publish your customizations?", "Yes", "No");
 
-				if (Utilities.IsNullOrEmpty(logFile)) { 
+				if (Utilities.$Object.IsNullOrEmpty(logFile)) { 
 					if ((await Quickly.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
 						let dateString = new Date().toISOString();
 						dateString = dateString.substr(0, dateString.length - 5);
@@ -86,7 +86,7 @@ export default class PackDynamicsSolutionCommand implements IContributor {
 					}
 				}
 
-				const splitUrl = Utilities.RemoveTrailingSlash(config.webApiUrl).split("/");
+				const splitUrl = Utilities.String.RemoveTrailingSlash(config.webApiUrl).split("/");
 				const orgName = config.domain ? splitUrl[splitUrl.length - 1] : config.orgName;
 				let serverUrl = config.domain ? config.webApiUrl.replace(orgName, "") : config.webApiUrl;
 
@@ -103,12 +103,12 @@ export default class PackDynamicsSolutionCommand implements IContributor {
 							.text(`-Path "${folder}" `)
 							.text(`-ToolsPath "${toolsPath}" `)
 							.text(`-Credential (New-Object System.Management.Automation.PSCredential ("${config.username}", (ConvertTo-SecureString "`)
-							.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
+							.sensitive(`${Utilities.String.PowerShellSafeString(config.password)}`)
 							.text(`" -AsPlainText -Force))) `)
-							.if(() => !Utilities.IsNullOrEmpty(mappingFile), c => c.text(` -MapFile "${mappingFile}"`))
-							.if(() => !Utilities.IsNullOrEmpty(logFile), c => c.text(` -LogFile "${logFile}"`))
+							.if(() => !Utilities.$Object.IsNullOrEmpty(mappingFile), c => c.text(` -MapFile "${mappingFile}"`))
+							.if(() => !Utilities.$Object.IsNullOrEmpty(logFile), c => c.text(` -LogFile "${logFile}"`))
 							.if(() => includeResourceFiles, c => c.text(` -IncludeResourceFiles`))
-							.if(() => !Utilities.IsNullOrEmpty(solutionPath), c => c.text(` -SaveSolution "${solutionPath}"`))
+							.if(() => !Utilities.$Object.IsNullOrEmpty(solutionPath), c => c.text(` -SaveSolution "${solutionPath}"`))
 							.if(() => managed, c => c.text(` -Managed`)))
 							.then(() => {
 								if (logFile) {

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { DynamicsWebApiClient } from "../webapi/DynamicsWebApi";
-import Utilities from '../core/Utilities';
+import { Utilities } from '../core/Utilities';
 import GlobalState from '../components/Configuration/GlobalState';
 import { DynamicsWebApi } from '../webapi/Types';
 
@@ -59,7 +59,7 @@ export default class DiscoveryRepository
     public static createOrganizationConnection(org: any, connection: DynamicsWebApi.Config):DynamicsWebApi.Config {
         const versionSplit = org.Version.split('.');
         // Clone the current connection and override the endpoint and version.
-        const orgConnection = Utilities.Clone<DynamicsWebApi.Config>(connection);
+        const orgConnection = Utilities.$Object.Clone<DynamicsWebApi.Config>(connection);
 
         orgConnection.webApiUrl = org.ApiUrl;
         orgConnection.webApiVersion = `${versionSplit[0]}.${versionSplit[1]}`;

@@ -4,7 +4,7 @@ import * as cs from '../cs';
 import * as fs from 'fs';
 import * as eol from 'eol';
 import * as child_process from 'child_process';
-import Utilities from '../core/Utilities';
+import { Utilities } from '../core/Utilities';
 import Quickly, { QuickPickOption } from '../core/Quickly';
 import { TS } from 'typescript-linq';
 import { TextEncoder, TextDecoder } from 'util';
@@ -456,7 +456,7 @@ export class Terminal implements vscode.Terminal {
 
 	async showComandBuffer(): Promise<TerminalCommand> {
 		const options = new TS.Linq.Enumerator(this._commandBuffer)
-			.where(c => !Utilities.IsNullOrEmpty(c.command))
+			.where(c => !Utilities.$Object.IsNullOrEmpty(c.command))
 			.select(c => new QuickPickOption(c.hidden, undefined, undefined, c)).toArray();
 
 		return await Quickly.pick("", ...options)
@@ -701,7 +701,7 @@ export class Terminal implements vscode.Terminal {
 	}
 
 	private resolveIncomingCommand(outputBuffer:string, errorBuffer:string) {
-		if (!Utilities.IsNullOrEmpty(this._inputCommand.command) || outputBuffer || errorBuffer) {
+		if (!Utilities.$Object.IsNullOrEmpty(this._inputCommand.command) || outputBuffer || errorBuffer) {
 			if (outputBuffer) { this._inputCommand.output += outputBuffer; }
 			if (errorBuffer) { this._inputCommand.error += errorBuffer; }
 
@@ -712,8 +712,8 @@ export class Terminal implements vscode.Terminal {
 			// Remove all crlf as this command is complete.
 			this._inputCommand.join();
 
-			const hasError = !Utilities.IsNullOrEmpty(this._inputCommand.error);
-			const hasOutput = !Utilities.IsNullOrEmpty(this._inputCommand.output);
+			const hasError = !Utilities.$Object.IsNullOrEmpty(this._inputCommand.error);
+			const hasOutput = !Utilities.$Object.IsNullOrEmpty(this._inputCommand.output);
 			const readyToProcess = !hasError || (hasError && hasOutput);
 
 			if (this._inputCommand.command.trim() !== "" && readyToProcess) {
@@ -725,7 +725,7 @@ export class Terminal implements vscode.Terminal {
 			}
 
 			if (this._promiseInfo && readyToProcess) {
-				if (!Utilities.IsNullOrEmpty(this._inputCommand.error)) {
+				if (!Utilities.$Object.IsNullOrEmpty(this._inputCommand.error)) {
 					this._promiseInfo.reject(this._inputCommand.error);
 				} else {
 					this._promiseInfo.resolve(this._inputCommand);

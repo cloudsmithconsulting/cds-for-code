@@ -4,7 +4,7 @@ import { TS } from 'typescript-linq/TS';
 import IContributor from '../core/CommandBuilder';
 import { ExtensionIconThemes } from '../components/WebDownloaders/IconDownloader';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
-import Utilities from '../core/Utilities';
+import { Utilities } from '../core/Utilities';
 import TemplateManager from '../components/Templates/TemplateManager';
 import { TemplateItem, TemplateType } from "../components/Templates/Types";
 
@@ -59,7 +59,7 @@ export class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEnt
         let returnValue:TreeEntry[];
 
         if (element && element.itemType) {
-            const commandPrefix:string = Utilities.RemoveTrailingSlash(((element.command && element.command.arguments) || '').toString());
+            const commandPrefix:string = Utilities.String.RemoveTrailingSlash(((element.command && element.command.arguments) || '').toString());
             const catalog = await TemplateManager.getTemplateCatalog();
             const grouping = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.templates.treeViewGroupPreference);
 

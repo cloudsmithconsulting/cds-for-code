@@ -56,26 +56,26 @@
         function validateForm(settings) {
             const messages = [];
     
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.webApiUrl))
+            if (CloudSmith.Utilities.$Object.IsNullOrEmpty(settings.webApiUrl))
                 messages.push("The Server URL is required");
             if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.webApiUrl))
                 messages.push("The Server URL is invalid");
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.domain))
+            if (CloudSmith.Utilities.$Object.IsNullOrEmpty(settings.domain))
                 messages.push("The Domain is required");
     
             if (settings.authType === 1) {
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.username))
+                if (CloudSmith.Utilities.$Object.IsNullOrEmpty(settings.username))
                     messages.push("The Username is required");
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.password))
+                if (CloudSmith.Utilities.$Object.IsNullOrEmpty(settings.password))
                     messages.push('The Password is required');
             } else {
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.accessToken) 
-                    && CloudSmith.Utilities.isNullOrEmpty(settings.username)) {
+                if (CloudSmith.Utilities.$Object.IsNullOrEmpty(settings.accessToken) 
+                    && CloudSmith.Utilities.$Object.IsNullOrEmpty(settings.username)) {
                         messages.push("Access Token or Username and Password is required");
                 }
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.accessToken)
-                    && !CloudSmith.Utilities.isNullOrEmpty(settings.username)
-                    && CloudSmith.Utilities.isNullOrEmpty(settings.password)) {
+                if (CloudSmith.Utilities.$Object.IsNullOrEmpty(settings.accessToken)
+                    && !CloudSmith.Utilities.$Object.IsNullOrEmpty(settings.username)
+                    && CloudSmith.Utilities.$Object.IsNullOrEmpty(settings.password)) {
                         messages.push('The Password is required');
                 }
             }

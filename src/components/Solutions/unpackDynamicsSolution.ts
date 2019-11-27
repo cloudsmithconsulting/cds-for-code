@@ -4,7 +4,7 @@ import * as cs from '../../cs';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import Quickly from '../../core/Quickly';
 import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
-import Utilities from '../../core/Utilities';
+import { Utilities } from '../../core/Utilities';
 import IContributor from '../../core/CommandBuilder';
 import SolutionMap from './SolutionMap';
 import { DynamicsWebApi } from '../../webapi/Types';
@@ -28,7 +28,7 @@ export default class UnpackDynamicsSolutionCommand implements IContributor {
 			vscode.commands.registerCommand(cs.dynamics.powerShell.unpackSolution, async (config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string, logFile?:string, mappingFile?:string, templateResourceCode?:string, includeResourceFiles?:boolean, allowDelete:boolean = true) => { // Match name of command to package.json command
                 // setup configurations
                 const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
-                const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
+                const coreToolsRoot = !Utilities.$Object.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 				const map:SolutionMap = SolutionMap.loadFromWorkspace(context);
 
@@ -51,7 +51,7 @@ export default class UnpackDynamicsSolutionCommand implements IContributor {
 				} 
 
 				folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true, true);
-				if (Utilities.IsNullOrEmpty(folder)) {
+				if (Utilities.$Object.IsNullOrEmpty(folder)) {
 					vscode.window.showInformationMessage("You must select a workspace folder to unpack a solution.");
 
 					 return; 
@@ -65,9 +65,9 @@ export default class UnpackDynamicsSolutionCommand implements IContributor {
 				FileSystem.makeFolderSync(folder);
 				
 				toolsPath = toolsPath || coreToolsRoot;
-				if (Utilities.IsNull(toolsPath)) { return; }
+				if (Utilities.$Object.IsNull(toolsPath)) { return; }
 
-				if (Utilities.IsNullOrEmpty(logFile)) { 
+				if (Utilities.$Object.IsNullOrEmpty(logFile)) { 
 					if ((await Quickly.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
 						let dateString = new Date().toISOString();
 						dateString = dateString.substr(0, dateString.length - 5);
@@ -77,7 +77,7 @@ export default class UnpackDynamicsSolutionCommand implements IContributor {
 					}
 				}
 
-				const splitUrl = Utilities.RemoveTrailingSlash(config.webApiUrl).split("/");
+				const splitUrl = Utilities.String.RemoveTrailingSlash(config.webApiUrl).split("/");
 				const orgName = config.domain ? splitUrl[splitUrl.length - 1] : config.orgName;
 				let serverUrl = config.domain ? config.webApiUrl.replace(orgName, "") : config.webApiUrl;
 
@@ -94,11 +94,11 @@ export default class UnpackDynamicsSolutionCommand implements IContributor {
 							.text(`-Path "${folder}" `)
 							.text(`-ToolsPath "${toolsPath}" `)
 							.text(`-Credential (New-Object System.Management.Automation.PSCredential ("${config.username}", (ConvertTo-SecureString "`)
-							.sensitive(`${Utilities.PowerShellSafeString(config.password)}`)
+							.sensitive(`${Utilities.String.PowerShellSafeString(config.password)}`)
 							.text(`" -AsPlainText -Force)))`)
-							.if(() => !Utilities.IsNullOrEmpty(mappingFile), c => c.text(` -MapFile "${mappingFile}"`))
-							.if(() => !Utilities.IsNullOrEmpty(logFile), c => c.text(` -LogFile "${logFile}"`))
-							.if(() => !Utilities.IsNullOrEmpty(templateResourceCode), c => c.text(` -TemplateResourceLanguageCode "${templateResourceCode}"`))
+							.if(() => !Utilities.$Object.IsNullOrEmpty(mappingFile), c => c.text(` -MapFile "${mappingFile}"`))
+							.if(() => !Utilities.$Object.IsNullOrEmpty(logFile), c => c.text(` -LogFile "${logFile}"`))
+							.if(() => !Utilities.$Object.IsNullOrEmpty(templateResourceCode), c => c.text(` -TemplateResourceLanguageCode "${templateResourceCode}"`))
 							.if(() => includeResourceFiles, c => c.text(` -IncludeResourceFiles`))
 							.if(() => allowDelete, c => c.text(` -AllowDelete`)))
 							.then(tc => { 

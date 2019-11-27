@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 import IContributor from '../../core/CommandBuilder';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
-import Utilities from '../../core/Utilities';
+import { Utilities } from '../../core/Utilities';
 import GlobalState from '../Configuration/GlobalState';
 import TemplateManager from "../Templates/TemplateManager";
 import * as FileSystem from "../../core/io/FileSystem";
@@ -54,7 +54,7 @@ export default class PowerShellLoader implements IContributor {
 			"src/CloudSmith.Dynamics365.SampleScripts/runonce-script.ps1"
 		];
 
-		const remoteFolderPath:string = Utilities.EnforceTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateSource));
+		const remoteFolderPath:string = Utilities.String.EnforceTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateSource));
 		const updateChannel:string = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateChannel);
 		let isDownloading = false;
 
@@ -218,7 +218,7 @@ export default class PowerShellLoader implements IContributor {
 	
 	//TODO: remove dependence on fetch.
     private static checkVersion(remoteFilePath: string, channel: string): Promise<number> {
-        return fetch(`${Utilities.EnforceTrailingSlash(remoteFilePath)}${channel}.version`, {
+        return fetch(`${Utilities.String.EnforceTrailingSlash(remoteFilePath)}${channel}.version`, {
             method: 'get',
             headers: {
                 'Accepts': 'text/plain'

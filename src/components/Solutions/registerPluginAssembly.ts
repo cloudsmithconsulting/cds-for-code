@@ -7,7 +7,7 @@ import ApiRepository from '../../repositories/apiRepository';
 import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
 import * as path from 'path';
 import { TS } from 'typescript-linq';
-import VisualStudioProjectCommands from '../DotNetCore/visualStudioProjectCommands';
+import VisualStudioProjectCommands from '../DotNetCore/DotNetProjectManager';
 import { Octicon } from "../../core/types/Octicon";
 import Quickly, { QuickPickOption } from '../../core/Quickly';
 

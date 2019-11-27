@@ -1,4 +1,3 @@
-import * as cs from '../../cs';
 import { ExtensionContext } from 'vscode';
 import SolutionMap from '../Solutions/SolutionMap';
 

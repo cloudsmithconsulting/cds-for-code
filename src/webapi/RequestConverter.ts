@@ -1,4 +1,4 @@
-import Utilities from "../core/Utilities";
+import { Utilities } from "../core/Utilities";
 import RequestUtilities from "./RequestUtilities";
 import { DynamicsWebApi } from "./Types";
 
@@ -15,7 +15,7 @@ export default class RequestConverter {
     public static convertRequestOptions(request: any, url: string, joinSymbol?: string, config?: any) {
         let headers = {};
         let requestArray = [];
-        joinSymbol = Utilities.IsNull(joinSymbol) ? '&' : joinSymbol;
+        joinSymbol = Utilities.$Object.IsNull(joinSymbol) ? '&' : joinSymbol;
 
         if (request) {
             if (request.navigationProperty) {
