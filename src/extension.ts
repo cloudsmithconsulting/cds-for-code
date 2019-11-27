@@ -5,27 +5,23 @@ import * as cs from './cs';
 // config
 import ExtensionConfiguration from './core/ExtensionConfiguration';
 import ConnectionViewManager from './views/ConnectionView';
-import GenerateEntities from './components/CodeGeneration/generateEntities';
-import PowerShellLoader from './components/WebDownloaders/ScriptDownloader';
+import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
+import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
 import DynamicsTreeView from './views/DynamicsTreeView';
-import PackDynamicsSolution from './components/Solutions/packDynamicsSolution';
-import UnpackDynamicsSolution from './components/Solutions/unpackDynamicsSolution';
 import JsonObjectViewManager from './views/JsonObjectView';
 import TemplateManager from './components/Templates/TemplateManager';
 import DynamicsTerminal from './views/DynamicsTerminal';
 import IconLoader from './components/WebDownloaders/IconDownloader';
-import AddSolutionComponent from './components/Solutions/addSolutionComponent';
-import RemoveSolutionComponent from './components/Solutions/removeSolutionComponent';
+import SolutionManager from './components/Solutions/SolutionManager';
 import PluginStepViewManager from './views/PluginStepView';
-import RegisterPluginAssembly from './components/Solutions/registerPluginAssembly';
-import PublishCustomizations from "./components/Solutions/PublishAllXml";
 import SvcUtilConfigViewManager from './views/ServiceUtilityConfigurationView';
 import SolutionMap from './components/Solutions/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
-import VisualStudioProjectCommands from './components/DotNetCore/visualStudioProjectCommands';
+import VisualStudioProjectCommands from './components/DotNetCore/DotNetProjectManager';
 import TemplateTreeView from './views/TemplatesTreeView';
 import PluginStepImageViewManager from './views/PluginStepImageView';
 import WebResourceManager from './components/Solutions/WebResourceManager';
+import ExtensionContext from './core/ExtensionContext';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -36,8 +32,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('[CloudSmith]: extension:activate');
-	
-	ExtensionConfiguration.extensionPath = context.extensionPath;
+
+	// We initialize this as it's a psuedo-singleton... no Internals here :)
+	// tslint:disable-next-line: no-unused-expression
+	new ExtensionContext(context);
 	
 	// load and check extension configuration
 	const toolsConfig = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration.tools._namespace);
@@ -56,17 +54,12 @@ export function activate(context: vscode.ExtensionContext) {
 		new NewWorkspaceViewManager(),
 		
 		// our commands
-		new PowerShellLoader(),
+		new ScriptDownloader(),
 		new IconLoader(),
-		new GenerateEntities(),
+		new CodeGenerationManager(),
 		new SolutionMap(),
 		new WebResourceManager(context),
-		new PackDynamicsSolution(),
-		new UnpackDynamicsSolution(),
-		new PublishCustomizations(),
-		new AddSolutionComponent(),
-		new RemoveSolutionComponent(),
-		new RegisterPluginAssembly(),
+		new SolutionManager(),
 		new VisualStudioProjectCommands()
 	].forEach(c => c.contribute(context, toolsConfig));
 

@@ -1,4 +1,4 @@
-import Utilities from "../core/Utilities";
+import { Utilities } from "../core/Utilities";
 import WebApiRequest from "./WebApiRequest";
 import { Query } from "./FetchQuery";
 import FetchQueryResolver from "./FetchQueryResolver";
@@ -69,10 +69,10 @@ export class DynamicsWebApiClient {
         if (config.webApiUrl) {
             this._internalConfig.webApiUrl = config.webApiUrl;
         } else {
-            this._internalConfig.webApiUrl = Utilities.InitWebApiUrl(this._internalConfig.webApiVersion);
+            this._internalConfig.webApiUrl = Utilities.WebApi.InitWebApiUrl(this._internalConfig.webApiVersion);
         }
 
-        if (config.impersonate && Utilities.IsGuid(config.impersonate)) {
+        if (config.impersonate && Utilities.Guid.IsGuid(config.impersonate)) {
             this._internalConfig.impersonate = config.impersonate;
         }
 
@@ -150,7 +150,7 @@ export class DynamicsWebApiClient {
 
     private _executeFunction(functionName:string, parameters:any, collection:string, id:string, impersonateUserId?:string, isUnbound?:boolean) {
         var request = {
-            _additionalUrl: functionName + Utilities.BuildFunctionParameters(parameters),
+            _additionalUrl: functionName + Utilities.WebApi.BuildFunctionParameters(parameters),
             _unboundRequest: isUnbound,
             key: id,
             collection: collection,

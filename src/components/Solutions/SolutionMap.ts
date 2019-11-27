@@ -7,7 +7,7 @@ import { TS } from "typescript-linq";
 import { ExtensionContext } from "vscode";
 import IContributor from "../../core/CommandBuilder";
 import { DynamicsWebApi } from "../../webapi/Types";
-import Utilities from "../../core/Utilities";
+import { Utilities } from "../../core/Utilities";
 import { WorkspaceFileSystemWatcher } from "../../core/io/FileManager";
 import { SolutionWorkspaceMapping } from "./Types";
 
@@ -72,21 +72,21 @@ export default class SolutionMap implements IContributor
                 } 
 
                 if (!organizationId) {
-                    config = config || await Quickly.pickDynamicsOrganization(context, "Choose a Dynamics 365 Organization", true);
+                    config = config || await Quickly.pickCdsOrganization(context, "Choose a Dynamics 365 Organization", true);
                     if (!config) { return; }
     
                     organizationId = config.orgId;
                 }
 
                 if (!solutionId) {
-                    let solution = await Quickly.pickDynamicsSolution(config, "Choose a Solution to map to the local workspace", true);
+                    let solution = await Quickly.pickCdsSolution(config, "Choose a Solution to map to the local workspace", true);
                     if (!solution) { return; }
     
                     solutionId = solution.solutionid;
                 }
 
 				folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a workplace folder containing solution items.");
-                if (Utilities.IsNullOrEmpty(folder)) { return; }
+                if (Utilities.$Object.IsNullOrEmpty(folder)) { return; }
                 
                 const map = SolutionMap.loadFromWorkspace(context);
                 item = item || map.hasSolutionMap(solutionId, organizationId) ? map.getBySolutionId(solutionId, organizationId)[0] : null;

@@ -6,7 +6,7 @@ import IContributor from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../webapi/Types';
 
 export default class ConnectionViewManager implements IContributor {
-	public contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.editConnection, async (config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
@@ -68,7 +68,7 @@ class ConnectionView extends View {
             });
     }
     
-    public onDidReceiveMessage(instance: ConnectionView, message: any): vscode.Event<any> {
+    onDidReceiveMessage(instance: ConnectionView, message: any): vscode.Event<any> {
         switch (message.command) {
             case 'save':
                 instance.save(message.settings);
@@ -76,7 +76,7 @@ class ConnectionView extends View {
         }
     }
 
-    public setInitialState(config?: DynamicsWebApi.Config) {
+    setInitialState(config?: DynamicsWebApi.Config) {
         if (config) {
             this.panel.webview.postMessage({ command: 'load', message: config });
         }

@@ -5,7 +5,7 @@ import * as FileSystem from "../core/io/FileSystem";
 import { DynamicsWebApi } from "../webapi/Types";
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
-import Utilities from "../core/Utilities";
+import { Utilities } from "../core/Utilities";
 import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
 import SolutionFile from "../components/SolutionXml/SolutionFile";
 
@@ -24,7 +24,7 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
 
     workspaceRoot = vscode.workspace && vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
 
-    config = config || await Quickly.pickDynamicsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
+    config = config || await Quickly.pickCdsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
     if (!config) { return; }
 
     if (fileUri && fileUri.fsPath) {
@@ -44,14 +44,14 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
     let content: string;
 
     if (fsPath && fsPath !== folder && FileSystem.exists(fsPath)) {
-        content = Utilities.BytesToBase64(FileSystem.readFileSync(fsPath));
+        content = Utilities.Encoding.BytesToBase64(FileSystem.readFileSync(fsPath));
     } else {
         content = "";
     }
 
     const api = new ApiRepository(config);
 
-    webResource = webResource || (await this.getWebResourceDetails(fsPath)) || { webresourceid: Utilities.NewGuid() };
+    webResource = webResource || (await this.getWebResourceDetails(fsPath)) || { webresourceid: Utilities.Guid.NewGuid() };
 
     if (webResource) {
         webResource.content = content;
@@ -126,7 +126,7 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
     let solution;
 
     if ((!map || !map.solutionId) && !solutionId) {
-        solution = await Quickly.pickDynamicsSolution(config, "Would you like to add this web resource to a solution?");
+        solution = await Quickly.pickCdsSolution(config, "Would you like to add this web resource to a solution?");
         map = this.getSolutionMapping(undefined, config.orgId, solution.solutionid);
     } else {
         solution = await api.retrieveSolution(solutionId || map.solutionId);

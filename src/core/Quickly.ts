@@ -5,7 +5,7 @@ import { TS } from 'typescript-linq';
 import ApiRepository from "../repositories/apiRepository";
 import MetadataRepository from "../repositories/metadataRepository";
 import { DynamicsWebApi } from "../webapi/Types";
-import Utilities from "./Utilities";
+import { Utilities } from "./Utilities";
 import Dictionary from "./types/Dictionary";
 import * as FileSystem from "./io/FileSystem";
 import { Octicon } from "./types/Octicon";
@@ -21,7 +21,7 @@ export default class Quickly {
      * @param value pre-selected value, if any
      * @param ignoreFocusOut boolean indicating if the input box should be closed if it loses focus
      */
-    public static async ask(prompt: string, placeHolder?:string, value?: string, ignoreFocusOut: boolean = true): Promise<string> {
+    static async ask(prompt: string, placeHolder?:string, value?: string, ignoreFocusOut: boolean = true): Promise<string> {
         return vscode.window
             .showInputBox({ prompt, placeHolder, value, ignoreFocusOut })
             .then(chosen => chosen);
@@ -40,7 +40,7 @@ export default class Quickly {
      * @returns {Promise<void>} empty promise
      * @memberof QuickPicker
      */
-    public static async inform(message: string, modal:boolean = false, primaryOption?:string, primaryAction?:() => void, secondaryOption?:string, secondaryAction?:() => void): Promise<void> {
+    static async inform(message: string, modal:boolean = false, primaryOption?:string, primaryAction?:() => void, secondaryOption?:string, secondaryAction?:() => void): Promise<void> {
         let primary:vscode.MessageItem;
         let secondary:vscode.MessageItem;
 
@@ -65,7 +65,7 @@ export default class Quickly {
      * @returns {Promise<void>} empty promise
      * @memberof QuickPicker
      */
-    public static async warn(message: string, modal:boolean = false, primaryOption?:string, primaryAction?:() => void, secondaryOption?:string, secondaryAction?:() => void): Promise<void> {
+    static async warn(message: string, modal:boolean = false, primaryOption?:string, primaryAction?:() => void, secondaryOption?:string, secondaryAction?:() => void): Promise<void> {
         let primary:vscode.MessageItem;
         let secondary:vscode.MessageItem;
 
@@ -90,7 +90,7 @@ export default class Quickly {
      * @returns {Promise<void>} empty promise
      * @memberof QuickPicker
      */
-    public static async error(message: string, modal:boolean = false, primaryOption?:string, primaryAction?:() => void, secondaryOption?:string, secondaryAction?:() => void): Promise<void> {
+    static async error(message: string, modal:boolean = false, primaryOption?:string, primaryAction?:() => void, secondaryOption?:string, secondaryAction?:() => void): Promise<void> {
         let primary:vscode.MessageItem;
         let secondary:vscode.MessageItem;
 
@@ -107,7 +107,7 @@ export default class Quickly {
 	 * @param placeHolder text to display when nothing was chosen
 	 * @param options options to choose from
 	 */
-	public static async pick(placeHolder: string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption> {
+	static async pick(placeHolder: string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption> {
         if (options.length > 0) {
             let quickPickOptions:QuickPickOption[];
 
@@ -123,7 +123,7 @@ export default class Quickly {
         return null;
 	}    
 
-    public static async pickOrNew(placeHolder:string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption> {
+    static async pickOrNew(placeHolder:string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption> {
         if (options.length > 0) {
             let quickPickOptions:QuickPickOption[];
 
@@ -158,7 +158,7 @@ export default class Quickly {
 	 * @param placeHolder text to display when nothing was chosen
 	 * @param options options to choose from
 	 */
-	public static async pickAny(placeHolder: string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption[]> {
+	static async pickAny(placeHolder: string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption[]> {
         if (options.length > 0) {
             let quickPickOptions:QuickPickOption[];
 
@@ -174,7 +174,7 @@ export default class Quickly {
         return null;
 	}    
 
-    public static async pickAnyOrNew(placeHolder:string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption[]> {
+    static async pickAnyOrNew(placeHolder:string, ...options: QuickPickOption[] | string[]): Promise<QuickPickOption[]> {
         if (options && options.length > 0) {
             let quickPickOptions:QuickPickOption[] = [];
 
@@ -217,12 +217,12 @@ export default class Quickly {
 	 * @param placeHolder text to display when nothing was chosen
 	 * @param options options to choose from
 	 */
-	public static async pickBoolean(placeHolder: string, trueValue:string = "True", falseValue:string = "False"): Promise<boolean> {
+	static async pickBoolean(placeHolder: string, trueValue:string = "True", falseValue:string = "False"): Promise<boolean> {
         return await vscode.window.showQuickPick([new QuickPickOption(`${Octicon.check} ${trueValue}`, undefined), new QuickPickOption(`${Octicon.x} ${falseValue}`, undefined)], { placeHolder, ignoreFocusOut: true, canPickMany: false })
             .then(value => value.label.startsWith(`${Octicon.check}`) ? true : value.label.startsWith(`${Octicon.x}`) ? false : null);
 	}    
 
-    public static async pickTemplate(placeHolder: string, templateType?:TemplateType, canAddNewItem:boolean = false): Promise<TemplateItem> {
+    static async pickTemplate(placeHolder: string, templateType?:TemplateType, canAddNewItem:boolean = false): Promise<TemplateItem> {
         return await TemplateManager.getTemplateCatalog()
             .then(catalog => {
                 let choices:QuickPickOption[] = [];
@@ -239,7 +239,7 @@ export default class Quickly {
                     items = catalog.items;
                 }
                 
-                items.forEach(i => choices.push(new QuickPickOption(Utilities.IsNullOrEmpty(i.displayName) ? i.location : i.displayName, undefined, i.description, i))); 
+                items.forEach(i => choices.push(new QuickPickOption(Utilities.$Object.IsNullOrEmpty(i.displayName) ? i.location : i.displayName, undefined, i.description, i))); 
 
                 if (choices.length === 0) {
                     Quickly.warn(
@@ -273,7 +273,7 @@ export default class Quickly {
      * or for multi-root will present a chooser to select a workspace.
      * @param defaultUri 
      */
-    public static async pickWorkspaceRoot(defaultUri?: vscode.Uri, placeHolder?: string, ignoreFocusOut: boolean = true) : Promise<vscode.Uri> {
+    static async pickWorkspaceRoot(defaultUri?: vscode.Uri, placeHolder?: string, ignoreFocusOut: boolean = true) : Promise<vscode.Uri> {
         let workspace: vscode.Uri;
 
         // check arguments
@@ -308,17 +308,17 @@ export default class Quickly {
      * @param canAddNewItem boolean indicating if the "Add new" option should be allowed
      * @param allowedFileTypes array of file type extensions that are allowed.
      */
-    public static async pickWorkspaceFile(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canAddNewItem:boolean = false, allowedFileTypes?:string[]): Promise<string> {
+    static async pickWorkspaceFile(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canAddNewItem:boolean = false, allowedFileTypes?:string[]): Promise<string> {
         return this.pickWorkspaceFsItem(defaultUri, placeHolder, ignoreFocusOut, true, false, false, canAddNewItem, allowedFileTypes)
             .then(r => r.fsPath);
     }
 
-    public static async pickWorkspaceFolder(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canAddNewItem:boolean = false): Promise<string> {
+    static async pickWorkspaceFolder(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canAddNewItem:boolean = false): Promise<string> {
         return this.pickWorkspaceFsItem(defaultUri, placeHolder, ignoreFocusOut, false, true, false, canAddNewItem)
             .then(r => r.fsPath);
     }
 
-    public static async pickWorkspaceAny(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canAddNewItem:boolean = false, allowedFileTypes?:string[]): Promise<WorkspaceFileItem> {
+    static async pickWorkspaceAny(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canAddNewItem:boolean = false, allowedFileTypes?:string[]): Promise<WorkspaceFileItem> {
         return this.pickWorkspaceFsItem(defaultUri, placeHolder, ignoreFocusOut, true, true, true, canAddNewItem, allowedFileTypes);
     }
 
@@ -407,19 +407,19 @@ export default class Quickly {
             });
     }
 
-    public static async pickAnyFolder(defaultUri?:vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<vscode.Uri | vscode.Uri[]> {
+    static async pickAnyFolder(defaultUri?:vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<vscode.Uri | vscode.Uri[]> {
         return vscode.window
             .showOpenDialog({canSelectFolders: true, canSelectFiles: false, canSelectMany, openLabel, defaultUri, filters })
             .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0] : pathUris : null);
     }
 
-    public static async pickAnyFile(defaultUri?:vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<vscode.Uri | vscode.Uri[]> {
+    static async pickAnyFile(defaultUri?:vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<vscode.Uri | vscode.Uri[]> {
         return vscode.window
             .showOpenDialog({canSelectFolders: false, canSelectFiles: true, canSelectMany, openLabel, defaultUri, filters })
             .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0] : pathUris : null);
     }
 
-    public static async pickEnum<T>(enumObject:any, placeHolder?:string): Promise<T> {
+    static async pickEnum<T>(enumObject:any, placeHolder?:string): Promise<T> {
         let enumOptions:QuickPickOption[] = [];
 
         for (let value in enumObject) {
@@ -432,7 +432,7 @@ export default class Quickly {
             .then(p => p.context as T);
     }
 
-    public static async pickDictionaryEntry<TKey, TItem>(dictionary:Dictionary<TKey, TItem>, placeHolder?:string): Promise<TItem> {
+    static async pickDictionaryEntry<TKey, TItem>(dictionary:Dictionary<TKey, TItem>, placeHolder?:string): Promise<TItem> {
         if (dictionary && dictionary.keys.length > 0) {
             const options:QuickPickOption[] = [];
         
@@ -443,32 +443,32 @@ export default class Quickly {
         }
     }
 
-    public static async pickDynamicsSolution(config:DynamicsWebApi.Config, placeHolder?:string, ignoreFocusOut:boolean = true) : Promise<any> {
+    static async pickCdsSolution(config:DynamicsWebApi.Config, placeHolder?:string, ignoreFocusOut:boolean = true) : Promise<any> {
         return new ApiRepository(config).retrieveSolutions()
             .then(solutions => new TS.Linq.Enumerator(solutions).select(solution => new QuickPickOption(`${Octicon.circuit_board} ${solution.friendlyname}`, undefined, undefined, solution)).toArray())
             .then(options => vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }))
             .then(chosen => chosen.context);
     }
 
-    public static async pickDynamicsOrganization(context:vscode.ExtensionContext, placeHolder?:string, ignoreFocusOut: boolean = true) : Promise<DynamicsWebApi.Config> {
+    static async pickCdsOrganization(context:vscode.ExtensionContext, placeHolder?:string, ignoreFocusOut: boolean = true) : Promise<DynamicsWebApi.Config> {
         return DiscoveryRepository.getOrgConnections(context)
             .then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(`${Octicon.database} ${org.name}`, undefined, undefined, org)).toArray())
             .then(options => options && options.length === 1 ? options[0] : vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }))
             .then(chosen => <DynamicsWebApi.Config>chosen.context);
     }
 
-    public static async pickDynamicsSolutionComponentType(placeHolder?:string, choices?:DynamicsWebApi.SolutionComponent[]): Promise<DynamicsWebApi.SolutionComponent> {
+    static async pickCdsSolutionComponentType(placeHolder?:string, choices?:DynamicsWebApi.SolutionComponent[]): Promise<DynamicsWebApi.SolutionComponent> {
         if (choices && choices.length > 0) {
             const options:QuickPickOption[] = [];
         
-            choices.forEach(c => options.push(new QuickPickOption(Utilities.ToPlural(c.toString()), undefined, undefined, c)));
+            choices.forEach(c => options.push(new QuickPickOption(Utilities.String.ToPlural(c.toString()), undefined, undefined, c)));
 
             return await this.pick(placeHolder, ...options)
                 .then(p => p.context);
         }
     }
 
-    public static async pickDynamicsSolutionComponent(config:DynamicsWebApi.Config, solution:any, componentType:DynamicsWebApi.SolutionComponent, placeHolder?:string): Promise<{ componentId:string, component:any }> {
+    static async pickCdsSolutionComponent(config:DynamicsWebApi.Config, solution:any, componentType:DynamicsWebApi.SolutionComponent, placeHolder?:string): Promise<{ componentId:string, component:any }> {
         const options:QuickPickOption[] = [];
         const metadataApi = new MetadataRepository(config);
         const api = new ApiRepository(config);
@@ -508,19 +508,37 @@ export default class Quickly {
         return null;
     }
 
-    public static async openFile(filename:string): Promise<void> {
+    static async openFile(filename:string): Promise<void> {
         if (FileSystem.exists(filename)) {
             vscode.workspace.openTextDocument(filename).then(d => vscode.window.showTextDocument(d));
         }
     }
 
-    public static async openContent(content:string | Buffer, language:string): Promise<void> {
+    static async openContent(content:string | Buffer, language:string): Promise<void> {
         if (Buffer.isBuffer(content)) {
             content = content.toString();
         }
 
         vscode.workspace.openTextDocument({ language, content}).then(d => vscode.window.showTextDocument(d));
     }
+
+    static async askToRetry(errorMessage:string, retryFunction:(...rest:any) => any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close", ...rest:any): Promise<any> {
+        return await vscode.window.showErrorMessage(errorMessage, tryAgainMessage, closeMessage)
+            .then(async selectedItem => {
+                switch (selectedItem) {
+                    case tryAgainMessage:
+                        if (typeof retryFunction === "function") {
+                            return retryFunction(rest);
+                        }
+
+                        break;
+                    case closeMessage:
+                        break;
+                }
+
+                return Promise.resolve();
+            });
+    }    
 }
 
 export class QuickPickOption implements vscode.QuickPickItem {

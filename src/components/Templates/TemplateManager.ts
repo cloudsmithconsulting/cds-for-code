@@ -12,7 +12,7 @@ import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import IContributor from '../../core/CommandBuilder';
 import Quickly from '../../core/Quickly';
 import Dictionary from '../../core/types/Dictionary';
-import Utilities from '../../core/Utilities';
+import { Utilities } from '../../core/Utilities';
 
 import createFromItemTemplate from "../../commands/cs.dynamics.controls.explorer.createFromItemTemplate";
 import createFromProjectTemplate from "../../commands/cs.dynamics.controls.explorer.createFromProjectTemplate";
@@ -788,7 +788,7 @@ export default class TemplateManager implements IContributor {
                 val = val || await Quickly.ask(placeholderItem ? placeholderItem.displayName : `Please enter the desired value for "${match[0]}"`)
                     .then(value => { if (value) { placeholders[key] = value; } return value; });
 
-                if (Utilities.IsNullOrEmpty(val)) { val = undefined; }
+                if (Utilities.$Object.IsNullOrEmpty(val)) { val = undefined; }
                 if (val) { cancel = true; }
 
                 attempts++;

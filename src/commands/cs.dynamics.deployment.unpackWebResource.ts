@@ -5,7 +5,7 @@ import * as FileSystem from "../core/io/FileSystem";
 import { DynamicsWebApi } from "../webapi/Types";
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
-import Utilities from "../core/Utilities";
+import { Utilities } from "../core/Utilities";
 import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
 
 /**
@@ -17,7 +17,7 @@ import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
  * @returns void
  */
 export default async function run(config?:DynamicsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
-    config = config || await Quickly.pickDynamicsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
+    config = config || await Quickly.pickCdsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
     if (!config) { return; }
 
     let fsPath:string;
@@ -28,7 +28,7 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
 
     let map:SolutionWorkspaceMapping = this.getSolutionMapping(fsPath, config.orgId);
 
-    webResource = webResource || await Quickly.pickDynamicsSolutionComponent(config, map ? map.solutionId : undefined, DynamicsWebApi.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
+    webResource = webResource || await Quickly.pickCdsSolutionComponent(config, map ? map.solutionId : undefined, DynamicsWebApi.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
     if (!webResource) { return; }
 
     // If we do have a map, enforce that we put files where we are supposed to, regardless of user preference.
@@ -61,7 +61,7 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
     }
 
     FileSystem.makeFolderSync(path.dirname(fsPath));
-    FileSystem.writeFileSync(fsPath, Utilities.Base64ToBytes(webResource.content));
+    FileSystem.writeFileSync(fsPath, Utilities.Encoding.Base64ToBytes(webResource.content));
 
     // If we're part of a solution, we need to write the data XML file so that solution packager can pick this up.
     if (map) {

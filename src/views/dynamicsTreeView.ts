@@ -2,14 +2,14 @@ import * as vscode from 'vscode';
 import { TS } from 'typescript-linq/TS';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import ApiRepository from '../repositories/apiRepository';
-import Utilities from '../core/Utilities';
+import { Utilities } from '../core/Utilities';
 import MetadataRepository from '../repositories/metadataRepository';
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import DynamicsUrlResolver from '../webapi/DynamicsUrlResolver';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import { DynamicsWebApi } from '../webapi/Types';
-import { ExtensionIconThemes } from '../components/WebDownloaders/IconDownloader';
+import { ExtensionIconThemes } from "../components/WebDownloaders/Types";
 import Quickly from '../core/Quickly';
 import SolutionMap from '../components/Solutions/SolutionMap';
 import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
@@ -148,7 +148,7 @@ export default class DynamicsTreeView implements IContributor {
                         break;
                 }
 
-                if (!Utilities.IsNullOrEmpty(item.solutionIdPath)) {
+                if (!Utilities.$Object.IsNullOrEmpty(item.solutionIdPath)) {
                     const solutions = TreeEntryCache.Instance.Items.where(i => i.id === item.solutionIdPath).toArray();
                     
                     if (solutions && solutions.length > 0 && componentId && componentType) {
@@ -170,36 +170,36 @@ export default class DynamicsTreeView implements IContributor {
                 switch (item.itemType)
                 {
                     case "Solutions":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config), retryFunction);
                         break;
                     case "Entities":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityUri(item.config, undefined, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityUri(item.config, undefined, item.solutionId), retryFunction);
                         break;
                     case "Attributes":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageAttributeUri(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageAttributeUri(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
                         break;       
                     case "OptionSets":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, undefined, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, undefined, item.solutionId), retryFunction);
                         break;
                     case "Processes":                 
                         let processType = await Quickly.pickEnum<DynamicsWebApi.ProcessType>(DynamicsWebApi.ProcessType);
 
                         if (processType) {
-                            Utilities.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, processType, item.parent && item.parent.context && item.parent.context.ObjectTypeCode ? item.parent.context.ObjectTypeCode : undefined, item.solutionId), retryFunction);
+                            Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, processType, item.parent && item.parent.context && item.parent.context.ObjectTypeCode ? item.parent.context.ObjectTypeCode : undefined, item.solutionId), retryFunction);
                         }
                         
                         break;
                     case "Keys":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityKeyUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityKeyUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
                         break;
                     case "Relationships":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityRelationshipUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityRelationshipUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
                         break;
                     case "Forms":   
                         let formType = await Quickly.pickEnum<DynamicsWebApi.DynamicsForm>(DynamicsWebApi.DynamicsForm);
 
                         if (formType) {
-                            Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.context.ObjectTypeCode, formType, undefined, item.solutionId), retryFunction);
+                            Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.context.ObjectTypeCode, formType, undefined, item.solutionId), retryFunction);
                         }
 
                         break;
@@ -207,21 +207,21 @@ export default class DynamicsTreeView implements IContributor {
                         let layoutType = await Quickly.pickEnum<DynamicsWebApi.InteractiveDashboardLayout>(DynamicsWebApi.InteractiveDashboardLayout);
 
                         if (layoutType) {
-                            Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityDashboardUri(item.config, item.context.ObjectTypeCode, layoutType, "1030", undefined, item.solutionId), retryFunction);
+                            Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityDashboardUri(item.config, item.context.ObjectTypeCode, layoutType, "1030", undefined, item.solutionId), retryFunction);
                         }
 
                         break;
                     case "Views":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.context.MetadataId, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.context.MetadataId, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
                         break;
                     case "Charts":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityChartUrl(item.config, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityChartUrl(item.config, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
                         break;
                     case "WebResources":
                         if (hasWorkspace) {
                             vscode.commands.executeCommand(cs.dynamics.deployment.createWebResource, item.config, item.solutionId, undefined, undefined, item.folder);
                         } else {
-                            Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, undefined, item.solutionId), retryFunction);
+                            Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, undefined, item.solutionId), retryFunction);
                         }
                         break;
                     case "PluginType":
@@ -243,45 +243,45 @@ export default class DynamicsTreeView implements IContributor {
                         vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editConnection, item.config);
                         break;
                     case "Solution":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config, item.context.solutionid), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageSolutionUri(item.config, item.context.solutionid), retryFunction);
                         break;
                     case "Entity":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityUri(item.config, item.context.MetadataId, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityUri(item.config, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case "Attribute":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case "OptionSet":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, item.context.MetadataId, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case "Process":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, DynamicsUrlResolver.parseProcessType(item.context.category), item.parent && item.parent.context && item.parent.context.ObjectTypeCode ? item.parent.context.ObjectTypeCode : undefined, item.context.workflowid, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, DynamicsUrlResolver.parseProcessType(item.context.category), item.parent && item.parent.context && item.parent.context.ObjectTypeCode ? item.parent.context.ObjectTypeCode : undefined, item.context.workflowid, item.solutionId), retryFunction);
                         break;
                     case "Key":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityKeyUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityKeyUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case "OneToManyRelationship":
                     case "ManyToOneRelationship":
                     case "ManyToManyRelationship":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityRelationshipUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityRelationshipUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
                         break;
                     case "Form":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, DynamicsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, DynamicsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId), retryFunction);
                         break;
                     case "Dashboard":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityDashboardUri(item.config, undefined, undefined, "1032", item.context.formid, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityDashboardUri(item.config, undefined, undefined, "1032", item.context.formid, item.solutionId), retryFunction);
                         break;
                     case "View":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.parent.context.ObjectTypeCode, item.context.savedqueryid, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.parent.context.ObjectTypeCode, item.context.savedqueryid, item.solutionId), retryFunction);
                         break;     
                     case "Chart":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getManageEntityChartUrl(item.config, item.parent.context.ObjectTypeCode, item.context.savedqueryvisualizationid, item.solutionId), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityChartUrl(item.config, item.parent.context.ObjectTypeCode, item.context.savedqueryvisualizationid, item.solutionId), retryFunction);
                         break;     
                     case "WebResources":
                         if (hasWorkspace) {
                             vscode.commands.executeCommand(cs.dynamics.deployment.unpackWebResource, item.config, item.context, undefined, true);
                         } else {
-                            Utilities.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, item.context.webresourceid, item.solutionId), retryFunction);
+                            Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageWebResourceUri(item.config, item.context.webresourceid, item.solutionId), retryFunction);
                         }
 
                         break;
@@ -299,13 +299,13 @@ export default class DynamicsTreeView implements IContributor {
 
                 switch (item.itemType) {
                     case "Entity":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityUsingAppUrl(item.context.LogicalName), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getOpenEntityUsingAppUrl(item.context.LogicalName), retryFunction);
                         break;
                     case "Dashboard":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityDashboardUsingAppUrl(item.context.formid), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getOpenEntityDashboardUsingAppUrl(item.context.formid), retryFunction);
                         break;
                     case "View":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityViewUsingAppUrl(item.parent.context.LogicalName, item.context.savedqueryid), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getOpenEntityViewUsingAppUrl(item.parent.context.LogicalName, item.context.savedqueryid), retryFunction);
                         break;
                 }
            })
@@ -314,14 +314,14 @@ export default class DynamicsTreeView implements IContributor {
 
                 switch (item.itemType) {
                     case "Entity":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityFormUri(item.config, item.context.LogicalName), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getOpenEntityFormUri(item.config, item.context.LogicalName), retryFunction);
                         break;
                     case "Form":
                     case "Dashboard":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityFormUri(item.config, item.parent.context.LogicalName, item.context.formid), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getOpenEntityFormUri(item.config, item.parent.context.LogicalName, item.context.formid), retryFunction);
                         break;
                     case "View":
-                        Utilities.OpenWindow(DynamicsUrlResolver.getOpenEntityViewUri(item.config, item.parent.context.LogicalName, item.context.savedqueryid), retryFunction);
+                        Utilities.Browser.OpenWindow(DynamicsUrlResolver.getOpenEntityViewUri(item.config, item.parent.context.LogicalName, item.context.savedqueryid), retryFunction);
                         break;
                 }
            })
@@ -368,7 +368,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
 	public async getChildren(element?: TreeEntry): Promise<TreeEntry[]> {
         if (element) {
-            const commandPrefix:string = Utilities.RemoveTrailingSlash(((element.command && element.command.arguments) || '').toString());
+            const commandPrefix:string = Utilities.String.RemoveTrailingSlash(((element.command && element.command.arguments) || '').toString());
 
             switch (element.itemType) {
                 case "Connection":
@@ -439,7 +439,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             // Make sure the connection has an id
             if (!o.id) {
                 // give this an id
-                o.id = Utilities.NewGuid();
+                o.id = Utilities.Guid.NewGuid();
                 // add it to the list
                 this._connections.push(o); 
             } else {
@@ -909,7 +909,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             () => this.getWebResourcesDetails(element, commandPrefix, solution, folder))
             .then(results => { 
                 if (folder) {
-                    results.forEach(r => r.label = r.label.replace(Utilities.EnforceTrailingSlash(r.folder), '')); 
+                    results.forEach(r => r.label = r.label.replace(Utilities.String.EnforceTrailingSlash(r.folder), '')); 
                 }
             
                 return results; 
@@ -1192,7 +1192,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
                 return new TS.Linq.Enumerator(result).orderBy(r => r.label).toArray();
             }).catch(error => {
-                Utilities.RetryWithMessage(`An error occurred while retrieving relationships from ${element.config.webApiUrl}`, () => this.getEntityRelationshipDetails(element, commandPrefix, entity));
+                Quickly.askToRetry(`An error occurred while retrieving relationships from ${element.config.webApiUrl}`, () => this.getEntityRelationshipDetails(element, commandPrefix, entity));
 
                 return null;
             });
@@ -1220,9 +1220,8 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             .catch(err => {
                 console.error(err.innererror ? err.innererror : err);
 
-                if (errorMessage && retryFunction)
-                {
-                    Utilities.RetryWithMessage(errorMessage, retryFunction);
+                if (errorMessage && retryFunction) {
+                    Quickly.askToRetry(errorMessage, retryFunction);
                 }
 
                 return null;
@@ -1413,8 +1412,8 @@ class TreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canInspectItem", TreeEntry.canInspectEntryTypes);
         this.addCapability(returnValue, "canUnpackSolution", TreeEntry.canUnpackSolutionEntryTypes);
         this.addCapability(returnValue, "canAddToSolution", TreeEntry.canAddToSolutionEntryTypes, () => !this.solutionId);
-        this.addCapability(returnValue, "canRemoveFromSolution", TreeEntry.canRemoveFromSolutionEntryTypes, () => !Utilities.IsNullOrEmpty(this.solutionId));
-        this.addCapability(returnValue, "canMoveSolution", TreeEntry.canMoveSolutionEntryTypes, () => this.solutionMapping && !Utilities.IsNullOrEmpty(this.solutionMapping.path));
+        this.addCapability(returnValue, "canRemoveFromSolution", TreeEntry.canRemoveFromSolutionEntryTypes, () => !Utilities.$Object.IsNullOrEmpty(this.solutionId));
+        this.addCapability(returnValue, "canMoveSolution", TreeEntry.canMoveSolutionEntryTypes, () => this.solutionMapping && !Utilities.$Object.IsNullOrEmpty(this.solutionMapping.path));
         this.addCapability(returnValue, "canOpenInApp", TreeEntry.canOpenInAppEntryTypes);
         this.addCapability(returnValue, "canOpenInBrowser", TreeEntry.canOpenInBrowserEntryTypes);
         this.addCapability(returnValue, "canOpenInEditor", TreeEntry.canOpenInEditorEntryTypes);

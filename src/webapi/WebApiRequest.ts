@@ -5,7 +5,7 @@ import * as https from 'https';
 import ResponseUtilities from "./ResponseUtilities";
 import RequestUtilities from "./RequestUtilities";
 import RequestConverter from "./RequestConverter";
-import Utilities from "../core/Utilities";
+import { Utilities } from "../core/Utilities";
 import { DynamicsWebApi } from './Types';
 
 export default class WebApiRequest
@@ -42,7 +42,7 @@ export default class WebApiRequest
                             if (valueParts.length > 2) {
                                 const collectionName = this._findCollectionName(valueParts[1]);
     
-                                if (!Utilities.IsNull(collectionName)) {
+                                if (!Utilities.$Object.IsNull(collectionName)) {
                                     value = value.replace(regularExpression, collectionName + '$2');
                                 }
                             }
@@ -134,7 +134,7 @@ export default class WebApiRequest
     
         //if the URL contains more characters than max possible limit, convert the request to a batch request
         if (path.length > 2000) {
-            const batchBoundary = 'dwa_batch_' + Utilities.NewGuid();
+            const batchBoundary = 'dwa_batch_' + Utilities.Guid.NewGuid();
     
             let batchBody = [];
             batchBody.push('--' + batchBoundary);
@@ -183,7 +183,7 @@ export default class WebApiRequest
             this._executeRequest({
                 config: config,
                 method: method,
-                uri: Utilities.EnforceTrailingSlash(config.webApiUrl) + path,
+                uri: Utilities.String.EnforceTrailingSlash(config.webApiUrl) + path,
                 data: stringifiedData,
                 additionalHeaders: additionalHeaders,
                 responseParams: this.responseParseParams,
@@ -245,10 +245,10 @@ export default class WebApiRequest
     private _findCollectionName(entityName:string) {
         let collectionName = null;
 
-        if (!Utilities.IsNull(this._entityNames)) {
+        if (!Utilities.$Object.IsNull(this._entityNames)) {
             collectionName = this._entityNames[entityName];
 
-            if (Utilities.IsNull(collectionName)) {
+            if (Utilities.$Object.IsNull(collectionName)) {
                 for (const key in this._entityNames) {
                     if (this._entityNames[key] === entityName) {
                         return entityName;
@@ -261,7 +261,7 @@ export default class WebApiRequest
     }
 
     private _getCollectionName(entityName, config, successCallback, errorCallback) {
-        if (this._isEntityNameException(entityName) || Utilities.IsNull(entityName)) {
+        if (this._isEntityNameException(entityName) || Utilities.$Object.IsNull(entityName)) {
             successCallback(entityName);
 
             return;
@@ -278,7 +278,7 @@ export default class WebApiRequest
         try {
             const collectionName = this._findCollectionName(entityName);
     
-            if (Utilities.IsNull(collectionName)) {
+            if (Utilities.$Object.IsNull(collectionName)) {
                 this._getEntityNames(entityName, config, successCallback, errorCallback);
             }
             else {
@@ -291,7 +291,7 @@ export default class WebApiRequest
     }
     
     public makeDiscoveryRequest(request:any, config:DynamicsWebApi.Config, resolve:any, reject:any): any {
-        this.sendRequest("GET", `api/discovery/v8.0/${!Utilities.IsNull(request) ? request.collection : "Instances"}`, config, null, null, null, resolve, reject, request ? request.isBatch : false, true);
+        this.sendRequest("GET", `api/discovery/v8.0/${!Utilities.$Object.IsNull(request) ? request.collection : "Instances"}`, config, null, null, null, resolve, reject, request ? request.isBatch : false, true);
     }
 
     public makeRequest(method:string, request:any, config:DynamicsWebApi.Config, responseParams:any, resolve:any, reject:any): any {
@@ -315,7 +315,7 @@ export default class WebApiRequest
         const successCallback = options.successCallback;
         const errorCallback = options.errorCallback;
         const timeout = options.timeout;
-        const ntlmAuth = options.config && (!Utilities.IsNull(options.config.domain) || !Utilities.IsNull(options.config.workstation));
+        const ntlmAuth = options.config && (!Utilities.$Object.IsNull(options.config.domain) || !Utilities.$Object.IsNull(options.config.workstation));
 
         let headers = {};
     

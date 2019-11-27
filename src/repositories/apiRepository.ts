@@ -1,6 +1,6 @@
 import { DynamicsWebApiClient } from "../webapi/DynamicsWebApi";
 import { DynamicsWebApi } from '../webapi/Types';
-import Utilities from '../core/Utilities';
+import { Utilities } from '../core/Utilities';
 import ApiHelper from "./ApiHelper";
 import * as vscode from 'vscode';
 import * as path from 'path';
@@ -76,7 +76,7 @@ export default class ApiRepository {
         };
 
         if (folder) {
-            folder = Utilities.EnforceTrailingSlash(folder);
+            folder = Utilities.String.EnforceTrailingSlash(folder);
             request.filter = `startswith(name,'${folder}')`;
         }
 
@@ -84,10 +84,10 @@ export default class ApiRepository {
             request.filter += " and iscustomizable/Value eq true";
         }
 
-        if (solutionId && Utilities.IsGuid(solutionId)) { 
+        if (solutionId && Utilities.Guid.IsGuid(solutionId)) { 
             const components = (await ApiHelper.getSolutionComponents(this.webapi, solutionId, DynamicsWebApi.SolutionComponent.WebResource)).map(c => `'${c["objectid"]}'`).join(",");
 
-            if (!Utilities.IsNullOrEmpty(components)) {
+            if (!Utilities.$Object.IsNullOrEmpty(components)) {
                 request.filter += ` and Microsoft.Dynamics.CRM.In(PropertyName='webresourceid',PropertyValues=[${components}])`;
             } else {
                 return Promise.resolve([]);
@@ -117,24 +117,24 @@ export default class ApiRepository {
         let depth: number = 0;
 
         if (folder) {
-            folder = Utilities.EnforceTrailingSlash(folder);
+            folder = Utilities.String.EnforceTrailingSlash(folder);
             request.filter = `startswith(name,'${folder}')`;
             depth = folder.split("/").length - 1;
         }
 
         if (customizableOnly) {
-            if (!Utilities.IsNullOrEmpty(request.filter)) {
+            if (!Utilities.$Object.IsNullOrEmpty(request.filter)) {
                 request.filter += " and";
             }
 
             request.filter += " iscustomizable/Value eq true";
         }
 
-        if (solutionId && Utilities.IsGuid(solutionId)) { 
+        if (solutionId && Utilities.Guid.IsGuid(solutionId)) { 
             const components = (await ApiHelper.getSolutionComponents(this.webapi, solutionId, DynamicsWebApi.SolutionComponent.WebResource)).map(c => `'${c["objectid"]}'`).join(",");
 
-            if (!Utilities.IsNullOrEmpty(components)) {
-                if (!Utilities.IsNullOrEmpty(request.filter)) {
+            if (!Utilities.$Object.IsNullOrEmpty(components)) {
+                if (!Utilities.$Object.IsNullOrEmpty(request.filter)) {
                     request.filter += " and";
                 }
 
@@ -357,7 +357,7 @@ export default class ApiRepository {
             .then(stat => {
                 return fs.readFile(assemblyUri); 
             }).then(contents => {
-                fileContents = Utilities.BytesToBase64(contents);
+                fileContents = Utilities.Encoding.BytesToBase64(contents);
 
                 return fileContents;
             }).then(contents => {

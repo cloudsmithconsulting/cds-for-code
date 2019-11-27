@@ -1,9 +1,9 @@
-import Utilities from "../core/Utilities";
+import { Utilities } from "../core/Utilities";
 
 export default class RequestUtilities
 {
     public static convertToBatch(requests:any[]):any {
-        const batchBoundary = 'dwa_batch_' + Utilities.NewGuid();
+        const batchBoundary = 'dwa_batch_' + Utilities.Guid.NewGuid();
     
         let batchBody = [];
         let currentChangeSet = null;
@@ -25,7 +25,7 @@ export default class RequestUtilities
                 batchBody.push('\n--' + batchBoundary);
     
                 if (!isGet) {
-                    currentChangeSet = 'changeset_' + Utilities.NewGuid();
+                    currentChangeSet = 'changeset_' + Utilities.Guid.NewGuid();
                     batchBody.push('Content-Type: multipart/mixed;boundary=' + currentChangeSet);
                 }
             }
