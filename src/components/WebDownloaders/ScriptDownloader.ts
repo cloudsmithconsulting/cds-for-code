@@ -9,26 +9,26 @@ import { Utilities } from '../../core/Utilities';
 import GlobalState from '../Configuration/GlobalState';
 import TemplateManager from "../Templates/TemplateManager";
 import * as FileSystem from "../../core/io/FileSystem";
+import ExtensionContext from '../../core/ExtensionContext';
+import downloadRequiredScripts from "../../commands/cs.dynamics.extension.downloadRequiredScripts";
 
-export default class PowerShellLoader implements IContributor {
-    public contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+export default class ScriptDownloader implements IContributor {
+    contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
 		//GlobalState.Instance(context).PowerShellScriptVersion = null;
 
 		// do this immediately
-        PowerShellLoader.runScriptCheck(context);
+        ScriptDownloader.runScriptCheck();
 
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.extension.downloadRequiredScripts, () => { // Downloads scripts from the Internet.
-                PowerShellLoader.runScriptCheck(context, config);
-            })
+            vscode.commands.registerCommand(cs.dynamics.extension.downloadRequiredScripts, downloadRequiredScripts.bind(ScriptDownloader))
         );
     }
 
-    private static runScriptCheck(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+    static runScriptCheck() {
 		// get local storage folder
-		const scriptsFolder = path.join(context.globalStoragePath, "/scripts/");
-		const appsFolder = path.join(context.globalStoragePath, "/tools/");
+		const scriptsFolder = path.join(ExtensionContext.Instance.globalStoragePath, "/scripts/");
+		const appsFolder = path.join(ExtensionContext.Instance.globalStoragePath, "/tools/");
 		
 		// Checks to see if folder exist
 		FileSystem.makeFolderSync(scriptsFolder);
@@ -68,7 +68,7 @@ export default class PowerShellLoader implements IContributor {
 					return;
 				}
 
-				const currentVersion = GlobalState.Instance(context).PowerShellScriptVersion;
+				const currentVersion = GlobalState.Instance.PowerShellScriptVersion;
 
 				// For loop to iterate through the array of scripts
 				for (var i = 0; i < scriptsToFetch.length; i++ ) {
@@ -87,7 +87,7 @@ export default class PowerShellLoader implements IContributor {
 						isDownloading = true;
 
 						// file doesn't exist, get it from remote location
-						await PowerShellLoader.downloadScript(remoteFilePath, localFilePath)
+						await ScriptDownloader.downloadScript(remoteFilePath, localFilePath)
 							.then(localPath => {
 								vscode.window.showInformationMessage(
 									`${fileName} PowerShell script downloaded`
@@ -102,14 +102,14 @@ export default class PowerShellLoader implements IContributor {
 										FileSystem.makeFolderSync(sdkInstallPath);
 									}
 
-									DynamicsTerminal.showTerminal(path.join(context.globalStoragePath, "\\Scripts\\"))
+									DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 										.then(terminal => { 
 											terminal.run(new TerminalCommand(`.\\Install-Sdk.ps1 `)
 												.text(`-Path ${sdkInstallPath} `));
 									});
 								}
 							}).then(() => {
-								GlobalState.Instance(context).PowerShellScriptVersion = version;
+								GlobalState.Instance.PowerShellScriptVersion = version;
 							}).then(() => {
 								vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.hideLoadingMessage);
 							});
@@ -125,7 +125,7 @@ export default class PowerShellLoader implements IContributor {
 					// uri containing remote file location
 					const remoteFilePath = `https://github.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/${fileName}`;
 					// local file location
-					const localFilePath = path.join(context.globalStoragePath, path.basename(fileName));
+					const localFilePath = path.join(ExtensionContext.Instance.globalStoragePath, path.basename(fileName));
 					// see if file exists & if our current version is less than the new version.
 					if ((!FileSystem.exists(localFilePath))
 						|| (!currentVersion || parseFloat(currentVersion.toString()) !== version))
@@ -133,7 +133,7 @@ export default class PowerShellLoader implements IContributor {
 						isDownloading = true;
 
 						// file doesn't exist, get it from remote location
-						await PowerShellLoader.downloadZip(remoteFilePath, localFilePath)
+						await ScriptDownloader.downloadZip(remoteFilePath, localFilePath)
 							.then(async localPath => {
 								let subfolder = path.basename(localPath.replace(path.extname(localPath), ""));
 
@@ -159,7 +159,7 @@ export default class PowerShellLoader implements IContributor {
 								}
 							})
 							.then(() => {
-								GlobalState.Instance(context).PowerShellScriptVersion = version;
+								GlobalState.Instance.PowerShellScriptVersion = version;
 							}).then(() => {
 								vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.hideLoadingMessage);
 							});
@@ -196,7 +196,7 @@ export default class PowerShellLoader implements IContributor {
 	}
 
 	//TODO: remove dependence on fetch.
-	private static downloadZip(remoteFilePath: string, localFilePath: string): Promise<string> {
+	static downloadZip(remoteFilePath: string, localFilePath: string): Promise<string> {
 		return fetch(remoteFilePath, {
 			method: 'get',
 			headers: {
@@ -217,7 +217,7 @@ export default class PowerShellLoader implements IContributor {
 	}
 	
 	//TODO: remove dependence on fetch.
-    private static checkVersion(remoteFilePath: string, channel: string): Promise<number> {
+    static checkVersion(remoteFilePath: string, channel: string): Promise<number> {
         return fetch(`${Utilities.String.EnforceTrailingSlash(remoteFilePath)}${channel}.version`, {
             method: 'get',
             headers: {

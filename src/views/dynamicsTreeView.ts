@@ -9,7 +9,7 @@ import IContributor from '../core/CommandBuilder';
 import DynamicsUrlResolver from '../webapi/DynamicsUrlResolver';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import { DynamicsWebApi } from '../webapi/Types';
-import { ExtensionIconThemes } from '../components/WebDownloaders/IconDownloader';
+import { ExtensionIconThemes } from "../components/WebDownloaders/Types";
 import Quickly from '../core/Quickly';
 import SolutionMap from '../components/Solutions/SolutionMap';
 import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
