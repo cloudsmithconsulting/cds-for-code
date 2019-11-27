@@ -9,10 +9,7 @@ import IContributor from '../../core/CommandBuilder';
 import { DynamicsWebApi } from '../../webapi/Types';
 
 export default class GenerateEntitiesCommand implements IContributor {
-    public workspaceConfiguration:vscode.WorkspaceConfiguration;
-
     public contribute(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
-        this.workspaceConfiguration = config;
 
         // now wire a command into the context
         context.subscriptions.push(
@@ -24,7 +21,7 @@ export default class GenerateEntitiesCommand implements IContributor {
             })
             ,vscode.commands.registerCommand(cs.dynamics.powerShell.generateEntities, async (config?:DynamicsWebApi.Config, folder?:string, outputFileName?: string, namespace?: string) => { 
                 // setup configurations
-                const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
+                const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
                 const coreToolsRoot = !Utilities.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 

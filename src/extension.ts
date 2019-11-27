@@ -26,6 +26,7 @@ import VisualStudioProjectCommands from './components/DotNetCore/visualStudioPro
 import TemplateTreeView from './views/TemplatesTreeView';
 import PluginStepImageViewManager from './views/PluginStepImageView';
 import WebResourceManager from './components/Solutions/WebResourceManager';
+import ExtensionContext from './core/ExtensionContext';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -36,8 +37,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('[CloudSmith]: extension:activate');
-	
-	ExtensionConfiguration.extensionPath = context.extensionPath;
+
+	// We initialize this as it's a psuedo-singleton... no Internals here :)
+	// tslint:disable-next-line: no-unused-expression
+	new ExtensionContext(context);
 	
 	// load and check extension configuration
 	const toolsConfig = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration.tools._namespace);
