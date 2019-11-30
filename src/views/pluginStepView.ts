@@ -3,7 +3,7 @@ import { View, ViewRenderer } from '../core/types/View';
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import ApiRepository from '../repositories/apiRepository';
-import { DynamicsWebApi } from '../webapi/Types';
+import { DynamicsWebApi } from '../http/Types';
 import Quickly from '../core/Quickly';
 import async = require('async');
 

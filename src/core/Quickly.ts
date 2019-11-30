@@ -4,7 +4,7 @@ import DiscoveryRepository from "../repositories/discoveryRepository";
 import { TS } from 'typescript-linq';
 import ApiRepository from "../repositories/apiRepository";
 import MetadataRepository from "../repositories/metadataRepository";
-import { DynamicsWebApi } from "../webapi/Types";
+import { DynamicsWebApi } from "../http/Types";
 import { Utilities } from "./Utilities";
 import Dictionary from "./types/Dictionary";
 import * as FileSystem from "./io/FileSystem";

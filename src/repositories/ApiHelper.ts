@@ -1,5 +1,5 @@
-import { DynamicsWebApiClient } from "../webapi/DynamicsWebApi";
-import { DynamicsWebApi } from '../webapi/Types';
+import { DynamicsWebApiClient } from "../http/DynamicsWebApi";
+import { DynamicsWebApi } from '../http/Types';
 import { TS } from 'typescript-linq/TS';
 
 export default class ApiHelper {

@@ -1,4 +1,4 @@
-import { DynamicsWebApi } from '../webapi/Types';
+import { DynamicsWebApi } from '../http/Types';
 import ApiRepository from '../repositories/apiRepository';
 import Quickly from '../core/Quickly';
 import { Utilities } from '../core/Utilities';

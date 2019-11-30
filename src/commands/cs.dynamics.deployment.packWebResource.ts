@@ -2,7 +2,7 @@ import * as cs from "../cs";
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as FileSystem from "../core/io/FileSystem";
-import { DynamicsWebApi } from "../webapi/Types";
+import { DynamicsWebApi } from "../http/Types";
 import Quickly from "../core/Quickly";
 import WebResourceManager from "../components/Solutions/WebResourceManager";
 import ApiRepository from "../repositories/apiRepository";
