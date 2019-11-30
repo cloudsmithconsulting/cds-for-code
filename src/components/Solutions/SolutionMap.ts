@@ -12,9 +12,8 @@ import { WorkspaceFileSystemWatcher } from "../../core/io/FileManager";
 import { SolutionWorkspaceMapping } from "./Types";
 
 
-export default class SolutionMap implements IContributor
-{
-    public constructor (map?:SolutionMap) {
+export default class SolutionMap implements IContributor {
+    constructor (map?:SolutionMap) {
         if (map && map.mappings) {
             this.mappings = map.mappings;
         } else {
