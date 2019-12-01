@@ -7,20 +7,21 @@ if (!Array.isArray) {
 }
 
 /**
- * Sends a request to given URL with given parameters
- *
+ * Uses XmlHttpRequest to send requests through the web browser.  
+ * @export xhrRequest which takes a standard set of options when requesting data.
+ * @param {*} options
  */
 export default function xhrRequest(options: any) {
-    var method = options.method;
-    var uri = options.uri;
-    var data = options.data;
-    var additionalHeaders = options.additionalHeaders;
-    var responseParams = options.responseParams;
-    var successCallback = options.successCallback;
-    var errorCallback = options.errorCallback;
-    var isAsync = options.isAsync;
+    const method = options.method;
+    const uri = options.uri;
+    const data = options.data;
+    const additionalHeaders = options.additionalHeaders;
+    const responseParams = options.responseParams;
+    const successCallback = options.successCallback;
+    const errorCallback = options.errorCallback;
+    const isAsync = options.isAsync;
 
-    var request = new XMLHttpRequest();
+    let request = new XMLHttpRequest();
     request.open(method, uri, isAsync);
 
     //set additional headers
@@ -35,10 +36,10 @@ export default function xhrRequest(options: any) {
                 case 201: // Success with content returned in response body.
                 case 204: // Success with no content returned in response body.
                 case 304: {// Success with Not Modified
-                    var responseHeaders = parseResponseHeaders(request.getAllResponseHeaders());
-                    var responseData = parseResponse(request.responseText, responseHeaders, responseParams);
+                    const responseHeaders = parseResponseHeaders(request.getAllResponseHeaders());
+                    const responseData = parseResponse(request.responseText, responseHeaders, responseParams);
 
-                    var response = {
+                    const response = {
                         data: responseData,
                         headers: responseHeaders,
                         status: request.status
@@ -48,12 +49,14 @@ export default function xhrRequest(options: any) {
                     break;
                 }
                 default: // All other statuses are error cases.
-                    var error;
+                    let error;
+
                     try {
-                        var errorParsed = parseResponse(request.responseText, parseResponseHeaders(request.getAllResponseHeaders()), responseParams);
+                        const errorParsed = parseResponse(request.responseText, parseResponseHeaders(request.getAllResponseHeaders()), responseParams);
 
                         if (Array.isArray(errorParsed)) {
                             errorCallback(errorParsed);
+
                             break;
                         }
 

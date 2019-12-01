@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { DynamicsWebApiClient } from "../http/DynamicsWebApi";
+import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
 import { Utilities } from '../core/Utilities';
 import GlobalState from '../components/Configuration/GlobalState';
-import { DynamicsWebApi } from '../http/Types';
+import { DynamicsWebApi } from '../api/Types';
 
 export default class DiscoveryRepository {
     private config:DynamicsWebApi.Config;

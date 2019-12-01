@@ -9,7 +9,7 @@ import ErrorHelper from '../helpers/ErrorHelper';
  * Sends a request to given URL with given parameters
  *
  */
-export default function httpRequest(options: any) {
+export default function nodeJsRequest(options: any) {
     const method = options.method ? options.method.toLowerCase() : "get";
     const uri = options.uri;
     const data = options.data;
@@ -18,6 +18,7 @@ export default function httpRequest(options: any) {
     const successCallback = options.successCallback;
     const errorCallback = options.errorCallback;
     const timeout = options.timeout;
+    const credentials = options.credentials;
     const ntlmAuth = options.domain || options.workstation;
 
     let headers: http.IncomingHttpHeaders = {};
@@ -67,24 +68,25 @@ export default function httpRequest(options: any) {
         };
     }
 
-    let request:any = protocolInterface[method](internalOptions, (res) => {
-        var rawData = '';
-        res.setEncoding('utf8');
-        res.on('data', function (chunk) {
+    let request:any = protocolInterface[method](internalOptions, (response) => {
+        let rawData = '';
+
+        response.setEncoding('utf8');
+        response.on('data', function (chunk) {
             rawData += chunk;
-        });
-        res.on('end', function () {
-            switch (res.statusCode) {
+        });        
+        response.on('end', function () {
+            switch (response.statusCode) {
                 case 200: // Success with content returned in response body.
                 case 201: // Success with content returned in response body.
                 case 204: // Success with no content returned in response body.
                 case 304: {// Success with Not Modified
-                    var responseData = parseResponse(rawData, res.headers, responseParams);
+                    var responseData = parseResponse(rawData, response.headers, responseParams);
 
                     var response = {
                         data: responseData,
-                        headers: res.headers,
-                        status: res.statusCode
+                        headers: response.headers,
+                        status: response.statusCode
                     };
 
                     successCallback(response);
@@ -93,7 +95,7 @@ export default function httpRequest(options: any) {
                 default: // All other statuses are error cases.
                     var crmError;
                     try {
-                        var errorParsed = parseResponse(rawData, res.headers, responseParams);
+                        var errorParsed = parseResponse(rawData, response.headers, responseParams);
 
                         if (Array.isArray(errorParsed)) {
                             errorCallback(errorParsed);
@@ -113,7 +115,7 @@ export default function httpRequest(options: any) {
                         }
                     }
 
-                    errorCallback(ErrorHelper.handleHttpError(crmError, { status: res.statusCode, statusText: request.statusText, statusMessage: res.statusMessage }));
+                    errorCallback(ErrorHelper.handleHttpError(crmError, { status: response.statusCode, statusText: request.statusText, statusMessage: response.statusMessage }));
 
                     break;
             }

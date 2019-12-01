@@ -7,7 +7,7 @@ import Quickly from '../core/Quickly';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import { Utilities } from '../core/Utilities';
 import SolutionMap from '../components/Solutions/SolutionMap';
-import { DynamicsWebApi } from '../http/Types';
+import { DynamicsWebApi } from '../api/Types';
 import WorkspaceState from '../components/Configuration/WorkspaceState';
 import SolutionFile from '../components/SolutionXml/SolutionFile';
 import ExtensionContext from '../core/ExtensionContext';

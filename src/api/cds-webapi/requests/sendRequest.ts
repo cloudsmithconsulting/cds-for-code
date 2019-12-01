@@ -1,8 +1,8 @@
 ﻿import Utility from '../utilities/Utility';
 import RequestConverter from '../utilities/RequestConverter';
 import BatchConverter from '../utilities/BatchConverter';
-import xhr from "./xhr";
-import http from "./httpRequest";
+import xhrRequest from "./xhrRequest";
+import nodeJsRequest from "./nodeJsRequest";
 
 let _entityNames;
 
@@ -26,7 +26,7 @@ export function findCollectionName(entityName: string): string {
         collectionName = _entityNames[entityName];
 
         if (Utility.isNull(collectionName)) {
-            for (var key in _entityNames) {
+            for (let key in _entityNames) {
                 if (_entityNames[key] === entityName) {
                     return entityName;
                 }
@@ -121,7 +121,7 @@ let responseParseParams = [];
  * @param {boolean} [isBatch] - Indicates whether the request is a Batch request or not. Default: false
  * @param {boolean} [isAsync] - Indicates whether the request should be made synchronously or asynchronously.
  */
-export function sendRequest(method: string, path: string, config: any, data: any, additionalHeaders: { [key: string]: string }, responseParams: any, successCallback: any, errorCallback: any, isBatch: boolean, isAsync: boolean): void {
+export function sendRequest(method: string, path: string, config: DynamicsWebApi.Config, data: any, additionalHeaders: { [key: string]: string }, responseParams: any, successCallback: any, errorCallback: any, isBatch: boolean, isAsync: boolean): void {
     additionalHeaders = additionalHeaders || {};
     responseParams = responseParams || {};
 
@@ -129,17 +129,18 @@ export function sendRequest(method: string, path: string, config: any, data: any
     responseParseParams.push(responseParams);
 
     //stringify passed data
-    var stringifiedData = stringifyData(data, config);
+    let stringifiedData = stringifyData(data, config);
 
     if (isBatch) {
         batchRequestCollection.push({
             method: method, path: path, config: config, data: stringifiedData, headers: additionalHeaders
         });
+
         return;
     }
 
     if (path === '$batch') {
-        var batchResult = BatchConverter.convertToBatch(batchRequestCollection);
+        const batchResult = BatchConverter.convertToBatch(batchRequestCollection);
 
         stringifiedData = batchResult.body;
 
@@ -157,9 +158,9 @@ export function sendRequest(method: string, path: string, config: any, data: any
 
     //if the URL contains more characters than max possible limit, convert the request to a batch request
     if (path.length > 2000) {
-        var batchBoundary = 'dwa_batch_' + Utility.generateUUID();
+        const batchBoundary = 'dwa_batch_' + Utility.generateUUID();
 
-        var batchBody = [];
+        let batchBody = [];
         batchBody.push('--' + batchBoundary);
         batchBody.push('Content-Type: application/http');
         batchBody.push('Content-Transfer-Encoding: binary\n');
@@ -196,11 +197,11 @@ export function sendRequest(method: string, path: string, config: any, data: any
     /* develblock:start */
     if (typeof XMLHttpRequest !== 'undefined') {
         /* develblock:end */
-        executeRequest = xhr;
+        executeRequest = xhrRequest;
         /* develblock:start */
     }
     else if (typeof process !== 'undefined') {
-        executeRequest = http;
+        executeRequest = nodeJsRequest;
     }
     /* develblock:end */
 

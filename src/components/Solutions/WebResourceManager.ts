@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as cs from '../../cs';
 import * as FileSystem from "../../core/io/FileSystem";
 import * as path from 'path';
-import { DynamicsWebApi } from "../../http/Types";
+import { DynamicsWebApi } from "../../api/Types";
 import IContributor from '../../core/CommandBuilder';
 import { Utilities } from '../../core/Utilities';
 import SolutionMap from "./SolutionMap";

@@ -1,5 +1,5 @@
 import * as cs from '../../cs';
-import { DynamicsWebApi } from '../../http/Types';
+import { DynamicsWebApi } from '../../api/Types';
 import ExtensionContext from '../../core/ExtensionContext';
 
 export default class GlobalState {

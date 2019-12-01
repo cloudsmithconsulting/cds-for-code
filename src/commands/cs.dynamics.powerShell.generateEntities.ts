@@ -6,7 +6,7 @@ import Quickly, { WorkspaceFileItem } from '../core/Quickly';
 import ExtensionContext from "../core/ExtensionContext";
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import { Utilities } from '../core/Utilities';
-import { DynamicsWebApi } from '../http/Types';
+import { DynamicsWebApi } from '../api/Types';
 
 /**
  * This command can be invoked by the Command Pallette or external sources and generates .Net code

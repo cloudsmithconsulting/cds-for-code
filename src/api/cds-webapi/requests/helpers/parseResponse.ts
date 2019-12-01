@@ -1,6 +1,6 @@
-﻿import { DWA } from '../../DWA';
-import Utility from '../../utilities/Utility';
-import ErrorHelper from '../../helpers/ErrorHelper';
+﻿import { DWA } from '../DWA';
+import Utility from '../utilities/Utility';
+import ErrorHelper from '../helpers/ErrorHelper';
 import dateReviver from './dateReviver';
 
 //string es6 polyfill

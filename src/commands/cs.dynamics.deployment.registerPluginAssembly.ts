@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
 import * as FileSystem from '../core/io/FileSystem';
-import { DynamicsWebApi } from '../http/Types';
+import { DynamicsWebApi } from '../api/Types';
 import ApiRepository from '../repositories/apiRepository';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import * as path from 'path';
