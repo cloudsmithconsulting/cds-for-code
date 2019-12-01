@@ -96,13 +96,13 @@ export default class WebResourceManager implements IContributor {
             })
             .then(async () => {
                 if (solution) {
-                    await api.addSolutionComponent(solution, webResource.webresourceid, DynamicsWebApi.SolutionComponent.WebResource, true, false);
+                    await api.addSolutionComponent(solution, webResource.webresourceid, CdsSolutions.SolutionComponent.WebResource, true, false);
                 }               
 
                 return webResource;
             }).then(async () => {
                 if (await Quickly.pickBoolean("Would you like to publish the web resource?", "Yes", "No")) {
-                    await vscode.commands.executeCommand(cs.dynamics.deployment.publishCustomizations, config, [ { type: DynamicsWebApi.SolutionComponent.WebResource, id: webResource.webresourceid }]);
+                    await vscode.commands.executeCommand(cs.dynamics.deployment.publishCustomizations, config, [ { type: CdsSolutions.SolutionComponent.WebResource, id: webResource.webresourceid }]);
                 }
             }).then(() => {
                 return webResource;

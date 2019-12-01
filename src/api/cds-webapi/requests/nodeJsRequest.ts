@@ -4,6 +4,8 @@ import * as httpntlm from "httpntlm";
 import * as url from 'url';
 import parseResponse from './helpers/parseResponse';
 import ErrorHelper from '../helpers/ErrorHelper';
+import * as Security from '../../../core/security/Types';
+import GlobalStateCredentialStore from '../../../core/security/GlobalStateCredentialStore';
 
 /**
  * Sends a request to given URL with given parameters
@@ -18,8 +20,7 @@ export default function nodeJsRequest(options: any) {
     const successCallback = options.successCallback;
     const errorCallback = options.errorCallback;
     const timeout = options.timeout;
-    const credentials = options.credentials;
-    const ntlmAuth = options.domain || options.workstation;
+    const useWindowsAuth = options.credentials && Security.Credential.isWindowsCredential(options.credentials);
 
     let headers: http.IncomingHttpHeaders = {};
 
@@ -37,9 +38,9 @@ export default function nodeJsRequest(options: any) {
 
     const parsedUrl = url.parse(uri);
     const protocol = parsedUrl.protocol.replace(':', '');
-    let protocolInterface = ntlmAuth ? httpntlm : protocol === 'http' ? http : https;
+    let protocolInterface = useWindowsAuth ? httpntlm : protocol === 'http' ? http : https;
 
-    let internalOptions = {
+    let internalOptions:any = {
         hostname: parsedUrl.hostname,
         port: parsedUrl.port,
         path: parsedUrl.path,
@@ -66,6 +67,15 @@ export default function nodeJsRequest(options: any) {
             timeout: timeout,
             headers: headers
         };
+    }
+    
+    if (useWindowsAuth) {
+        const credential:Security.WindowsCredential = options.credentials;
+        const decrypted = credential.decrypt<Security.WindowsCredential>(GlobalStateCredentialStore.Instance, options.id);
+
+        internalOptions.username = decrypted.username;
+        internalOptions.password = decrypted.password;
+        internalOptions.domain = decrypted.domain;
     }
 
     let request:any = protocolInterface[method](internalOptions, (response) => {

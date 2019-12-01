@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { CdsSolutions } from "../api/CdsSolutions";
 import { Utilities } from '../core/Utilities';
 import GlobalState from '../components/Configuration/GlobalState';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';

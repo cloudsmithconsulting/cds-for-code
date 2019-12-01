@@ -236,7 +236,7 @@ export default class SolutionMap implements IContributor {
         return new SolutionMap();
     }
 
-    static mapWorkspacePath(solutionPath: string, component?: DynamicsWebApi.SolutionComponent, item?: any): string {
+    static mapWorkspacePath(solutionPath: string, component?: CdsSolutions.SolutionComponent, item?: any): string {
         let returnPath: string;
         
         if (!component) {

@@ -86,8 +86,10 @@ export namespace Utilities {
             return Object.keys(source).map(key => key + '=' + encodeURIComponent(source[key])).join('&');
         }
     
-        static Clone<T>(src: any): T {
-            let target = {};
+        static Clone<T>(src: T, target?: any): T {
+            if (!target) { 
+                target = {};
+            }
     
             for (let prop in src) {
                 if (src.hasOwnProperty(prop)) {

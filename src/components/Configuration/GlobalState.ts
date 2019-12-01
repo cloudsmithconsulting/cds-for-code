@@ -1,6 +1,7 @@
 import * as cs from '../../cs';
-import { DynamicsWebApi } from '../../api/CdsSolutions';
+import { DynamicsWebApi } from '../../api/cds-webapi/DynamicsWebApi';
 import ExtensionContext from '../../core/ExtensionContext';
+import GlobalStateCredentialStore from '../../core/security/GlobalStateCredentialStore';
 
 export default class GlobalState {
     private constructor() { }
@@ -8,13 +9,23 @@ export default class GlobalState {
     get DynamicsConnections(): DynamicsWebApi.Config[] {
         const connections = ExtensionContext.Instance.globalState.get<DynamicsWebApi.Config[]>(cs.dynamics.configuration.globalState.dynamicsConnections);
 
-        //TODO: transform credentials here from secure storage
+        connections.forEach(c => {
+            const creds = GlobalStateCredentialStore.Instance.retreive(c.id);
+
+            if (creds) {
+                c.credentials = creds;
+            }
+        });
 
         return connections;
     }
     set DynamicsConnections(value: DynamicsWebApi.Config[]) {
         value.forEach(c => {
-            //TODO: transform credentials here into secure storage
+            if (c.credentials) {
+                GlobalStateCredentialStore.Instance.store(c.credentials, c.id);
+                
+                delete c.credentials;
+            }
         });
 
         ExtensionContext.Instance.globalState.update(cs.dynamics.configuration.globalState.dynamicsConnections, value);

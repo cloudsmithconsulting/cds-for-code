@@ -218,6 +218,7 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
         }
 
         executeRequest({
+            credentials: config.credentials,
             method: method,
             uri: config.webApiUrl + path,
             data: stringifiedData,

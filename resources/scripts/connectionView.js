@@ -26,32 +26,45 @@
         $title.html($title.html().replace("New", "Edit"));
         document.title = $title.text();
         
-        if (message.authType === 1) {
-            $("#AuthType1").prop("checked", true);
-            $("#accessTokenField").hide();
-        }
+        $("#AuthType1").prop("checked", message.type === 0);
+        $("#AuthType2").prop("checked", message.type === 1);
+        $("#AuthType3").prop("checked", message.type === 2);
+        $("#AuthType4").prop("checked", message.type === 3);
+
+        $domainField = $("#domainField");
+        $accessTokenField = $("#accessTokenField");
+
+        showOrHide($accessTokenField, message.type !== 0);
+        showOrHide($domainField, message.type === 0);
 
         $("#Id").val(message.id || "");
         $("#WebApiVersion").val(message.webApiVersion || "");
         $("#Name").val(message.name || "");
         $("#ServerUrl").val(message.webApiUrl || "");
-        $("#Domain").val(message.domain || "");
-        $("#AccessToken").val(message.accessToken || "");
-        $("#Username").val(message.username || "");
-        $("#Password").val(message.password || "");
+        $("#Domain").val(message.credentials ? message.credentials.domain || "" : "");
+        $("#AccessToken").val(message.credentials ? message.credentials.token || "" : "");
+        $("#Username").val(message.credentials ? message.credentials.username || "" : "");
+        $("#Password").val(message.credentials ? message.credentials.password || "" : "");
     }
 
     // this part starts on document ready
     $(function () {
         $("[name='AuthType']").click(function() {
             const authType = this.value;
+            $domainField = $("#domainField");
             $accessTokenField = $("#accessTokenField");
-            if (authType === "2") {
-                $accessTokenField.show();
-            } else {
-                $accessTokenField.hide();
-            }
+
+            showOrHide($accessTokenField, authType !== 0);
+            showOrHide($domainField, authType === 0);
         });
+
+        function showOrHide(target, value) {
+            if (value) {
+                target.show();
+            } else {
+                target.hide();
+            }
+        }
 
         function validateForm(settings) {
             const messages = [];
@@ -91,14 +104,16 @@
             const id = $("#Id").val();
             const settings = {
                 id: (id.length > 0) ? id: null, // pass the id or null
-                authType: parseInt($("[name='AuthType']:checked").val()),
+                type: parseInt($("[name='AuthType']:checked").val()),
                 webApiVersion: $("#WebApiVersion").val(),
                 name: $("#Name").val(),
                 webApiUrl: $("#ServerUrl").val(),
-                domain: $("#Domain").val(),
-                accessToken: $("#AccessToken").val(),
-                username: $("#Username").val(),
-                password: $("#Password").val()
+                credentials: {
+                    domain: $("#Domain").val(),
+                    token: $("#AccessToken").val(),
+                    username: $("#Username").val(),
+                    password: $("#Password").val()
+                }
             };
 
             if (!validateForm(settings)) return;
