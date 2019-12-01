@@ -207,9 +207,13 @@ export default class Encryption {
         return SecureItem.from(iv, data, preferredOutput);
     }
 
-    static isSecure(item:Securable | ISecureItem): boolean {
-        return ((item.hasOwnProperty("buffer") && (<any>item).buffer.iv && (<any>item).buffer.data) 
-            || (item.hasOwnProperty("string") && (<any>item).string.iv && (<any>item).string.data));
+    static isSecurable(item:any): boolean {
+        return Buffer.isBuffer(item) || typeof(item) === "string";
+    }
+
+    static isSecure(item:any): boolean {
+        return ((item.buffer && item.buffer.iv && item.buffer.data)
+            || (item.string && item.string.iv && item.string.data));
     }
 
     static decrypt(item:ISecureItem, store:ICryptography): Securable {
