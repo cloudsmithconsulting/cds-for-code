@@ -20,6 +20,10 @@ export default class GlobalStateCredentialStore extends Security.CredentialStore
         return Encryption.machine;
     }
     
+    protected onDelete(key: string): void {
+        ExtensionContext.Instance.globalState.update(`${GlobalStateCredentialStore.keyPrefix}${key}`, undefined);
+    }
+
     protected onStore(encrypted: any, key: string): void {
         ExtensionContext.Instance.globalState.update(`${GlobalStateCredentialStore.keyPrefix}${key}`, encrypted);
     }

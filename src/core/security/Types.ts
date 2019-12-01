@@ -47,19 +47,31 @@ export interface ISecureItem {
  * @interface ICredential
  */
 export interface ICredential {
-    username:Securable | ISecureItem;
-    password:ISecureItem;
+    /**
+     * Represents a public key that can be used to refer to this credential when in the credential store.
+     * @type {string}
+     * @memberof ICredential
+     */
+    readonly key?:string;
 
-    decrypt(store:ICredentialStore, key:string);
+    username:Securable | ISecureItem;
+    password:Securable | ISecureItem;
+
+    readonly isSecure:boolean;
+
+    decrypt(store:ICredentialStore, key:string): ICredential;
     store(store:ICredentialStore): string;
     toString(): string;
 }
 
 export interface ICredentialStore { 
     readonly cryptography: ICryptography;
+
+    decrypt<T extends ICredential>(key:string, credential?:T): T;
+    delete(key: string): void;
+    retreive<T extends ICredential>(key:string, credential?:T): T;
     secure(securable:Securable): ISecureItem;
     store<T extends ICredential>(credential:T, key?:string): string;
-    retreive<T extends ICredential>(key:string, credential?:T): T;
 }
 
 /**
@@ -111,35 +123,43 @@ export abstract class CredentialStore implements ICredentialStore {
     public abstract get cryptography(): ICryptography;
     protected abstract onStore(encrypted: any, key: string): void;
     protected abstract onRetreive(key: string): any;
+    protected abstract onDelete(key: string): void;
 
-    secure(securable:Securable): ISecureItem {
-        return this.cryptography.encrypt(securable);
+    delete(key: string): void {
+        const encrypteed = this.onRetreive(key);
+
+        if (!encrypteed) { return null; }
+
+        this.onDelete(key);
     }
 
-    store<T extends ICredential>(credential: T, key?: string): string {        
-        let storeObject:any = {};
-        key = key || Utilities.Guid.NewGuid();
+    decrypt<T extends ICredential>(key: string, credential?:T): T {
+        const encrypted = this.onRetreive(key);
 
-        Object.keys(credential).forEach(k => {
-            if (SecureItem.isSecure(credential[k])) {
-                const secured = this.cryptography.encrypt(credential[k]);
+        if (!encrypted) { return null; }
 
-                storeObject[k] = secured.string;
+        if (!credential) { 
+            credential = <T>{ key };
+        }
+
+        Object.keys(encrypted).forEach(k => {
+            if (SecureItem.isSecure(encrypted[k])) {
+                credential[k] = this.cryptography.decrypt(<ISecureItem>encrypted[k]);
             } else {
-                storeObject[k] = (<ISecureItem>credential[k]).string;
+                credential[k] = encrypted[k];
             }
         });
-    
-        this.onStore(storeObject, key);
 
-        return key;
+        return credential;
     }
-    
+
     retreive<T extends ICredential>(key: string, credential?:T): T {
         const encrypted = this.onRetreive(key);
 
+        if (!encrypted) { return null; }
+
         if (!credential) { 
-            credential = <T>{};
+            credential = <T>{ key };
         }
 
         Object.keys(encrypted).forEach(k => {
@@ -154,26 +174,52 @@ export abstract class CredentialStore implements ICredentialStore {
 
         return credential;
     }
+
+    secure(securable:Securable): ISecureItem {
+        return this.cryptography.encrypt(securable);
+    }
+
+    store<T extends ICredential>(credential: T, key?: string): string {        
+        let storeObject:any = {};
+        key = key || Utilities.Guid.NewGuid();
+
+        Object.keys(credential).forEach(k => {
+            if (Encryption.isSecurable(credential[k])) {
+                const secured = this.cryptography.encrypt(credential[k]);
+
+                storeObject[k] = secured.string;
+            } else if (SecureItem.isSecure(credential[k])) {
+                storeObject[k] = (<ISecureItem>credential[k]).string;
+            }
+        });
+    
+        this.onStore(storeObject, key);
+
+        return key;
+    }
 }
 
 export abstract class Credential implements ICredential {
-    public password: ISecureItem;
-    private _unencrypted: Securable;
+    protected constructor(
+        public username: ISecureItem | Securable,
+        public password: ISecureItem | Securable, 
+        public readonly key?:string) { 
+    }
 
-    protected constructor(public username: Securable, password: SecureItem | Securable) { 
-        if (SecureItem.isSecure(password)) {
-            this.password = <SecureItem>password;
-        } else {
-            this._unencrypted = <Securable>password;
-        }
+    static isCredential(value:any): boolean {
+        return value && value instanceof Credential;
     }
 
     static isWindowsCredential(value:ICredential):boolean {
-        return value && value instanceof Credential && value.hasOwnProperty("domain");
+        return value && (value instanceof Credential || value.hasOwnProperty("domain"));
     }
 
     static isOauthCredential(value:ICredential):boolean {
-        return value && value instanceof Credential && value.hasOwnProperty("token");
+        return value && (value instanceof Credential || value.hasOwnProperty("token"));
+    }
+
+    static isAzureAdCredential(value:ICredential):boolean {
+        return value && (value instanceof Credential || (value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority")));
     }
 
     static retreive<T extends Credential>(store:ICredentialStore, key: string): T {
@@ -182,19 +228,18 @@ export abstract class Credential implements ICredential {
         return store.retreive(key, undefined);
     }
 
-    decrypt(store:ICredentialStore, key:string): Securable {
-        return store.retreive(key).password.decrypt(store.cryptography);
+    get isSecure(): boolean {
+        return SecureItem.isSecure(this.username) && SecureItem.isSecure(this.password);
+    }
+
+    decrypt(store:ICredentialStore, key:string): ICredential {
+        if (!store) { return; }
+
+        return store.decrypt(key, this);
     }
 
     store(store:ICredentialStore): string {
         if (!store) { return; }
-
-        if (this._unencrypted) {
-            this.password = store.secure(this._unencrypted);
-
-            // Remove the unencrypted vlaue, it is stored now.
-            delete this._unencrypted;
-        }
 
         return store.store(this);
     }
@@ -205,21 +250,21 @@ export abstract class Credential implements ICredential {
 }
 
 export class OAuthCredential extends Credential {
-    constructor(username: Securable, password: SecureItem | Securable, token?:string) {
+    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public token?:string) {
         super(username, password);
-        this.token = token;
     }
+}
 
-    token: Securable;
+export class AzureAdCredential extends OAuthCredential {
+    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public clientId: Securable, public clientSecret: Securable, public authority: Securable, token?:string) {
+        super(username, password, token);
+    }
 }
 
 export class WindowsCredential extends Credential {
-    constructor(domain: string, username: Securable, password: SecureItem | Securable) {
+    constructor(public domain: Securable, username: SecureItem | Securable, password: SecureItem | Securable) {
         super(username, password);
-        this.domain = domain;
     }
-
-    domain: Securable;
 
     toString():string {
         return (this.domain && this.domain !== "" ? `${this.domain.toString()}\\` : "") + SecureItem.isSecure(this.username) ? "" : this.username.toString();

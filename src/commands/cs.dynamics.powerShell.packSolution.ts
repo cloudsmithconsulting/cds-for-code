@@ -11,6 +11,7 @@ import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import WorkspaceState from '../components/Configuration/WorkspaceState';
 import SolutionFile from '../components/SolutionXml/SolutionFile';
 import ExtensionContext from '../core/ExtensionContext';
+import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.
@@ -77,8 +78,16 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	}
 
 	const splitUrl = Utilities.String.RemoveTrailingSlash(config.webApiUrl).split("/");
-	const orgName = config.domain ? splitUrl[splitUrl.length - 1] : config.orgName;
-	let serverUrl = config.domain ? config.webApiUrl.replace(orgName, "") : config.webApiUrl;
+	let orgName;
+	let serverUrl;
+
+	if (config.type === DynamicsWebApi.ConfigType.OnPremises) {
+		orgName = splitUrl[splitUrl.length - 1];
+		serverUrl = config.webApiUrl.replace(orgName, "");
+	} else {
+		orgName = config.orgName;
+		serverUrl = config.webApiUrl;
+	}
 
 	if (serverUrl.endsWith("//")) {
 		serverUrl = serverUrl.substring(0, serverUrl.length - 1);
@@ -92,9 +101,13 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 				.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
 				.text(`-Path "${folder}" `)
 				.text(`-ToolsPath "${toolsPath}" `)
-				.text(`-Credential (New-Object System.Management.Automation.PSCredential ("${config.username}", (ConvertTo-SecureString "`)
-				.sensitive(`${Utilities.String.PowerShellSafeString(config.password)}`)
-				.text(`" -AsPlainText -Force))) `)
+				.if(() => !Utilities.$Object.IsNullOrEmpty(config.credentials), c => {
+					c.text(`-Credential (New-Object System.Management.Automation.PSCredential ("`)
+					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
+					 .text(`", (ConvertTo-SecureString "`)
+					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.password.toString())
+					 .text(`" -AsPlainText -Force))) `);
+				})
 				.if(() => !Utilities.$Object.IsNullOrEmpty(mappingFile), c => c.text(` -MapFile "${mappingFile}"`))
 				.if(() => !Utilities.$Object.IsNullOrEmpty(logFile), c => c.text(` -LogFile "${logFile}"`))
 				.if(() => includeResourceFiles, c => c.text(` -IncludeResourceFiles`))

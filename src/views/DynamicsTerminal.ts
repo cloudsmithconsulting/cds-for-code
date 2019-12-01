@@ -9,6 +9,7 @@ import Quickly, { QuickPickOption } from '../core/Quickly';
 import { TS } from 'typescript-linq';
 import { TextEncoder, TextDecoder } from 'util';
 import Dictionary from '../core/types/Dictionary';
+import { ICredentialStore, Credential } from '../core/security/Types';
 
 export class TerminalCommand {
 	private _command:string;
@@ -157,6 +158,22 @@ export class TerminalCommand {
 		}
 		
 		this._command += text.replace(TerminalCommand.lineSeperator, "");
+
+		return this;
+	}
+
+	credential<T extends Credential>(key:string | T, store: ICredentialStore, textFunction:(decrypted:T) => string): TerminalCommand {
+		let decrypted;
+		
+		if (Credential.isCredential(key)) {
+			decrypted = store.decrypt<T>((<Credential>key).key);
+		} else {
+			decrypted = store.decrypt<T>(<string>key);
+		}
+
+		if (decrypted && textFunction) {
+			return this.sensitive(textFunction(decrypted));
+		}
 
 		return this;
 	}
@@ -325,10 +342,10 @@ class MaskedBuffer {
 
 			if (this.autoFlush && this.onDidFlush) {
 				if (this._timeout) {
-					clearTimeout(this._timeout);
+					global.clearTimeout(this._timeout);
 				} 
 					
-				this._timeout = setTimeout(() => this.flush(), MaskedBuffer.autoFlushDelay);
+				this._timeout = global.setTimeout(() => this.flush(), MaskedBuffer.autoFlushDelay);
 			}
 		}
 	}
