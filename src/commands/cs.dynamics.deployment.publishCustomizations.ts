@@ -28,7 +28,7 @@ export default async function run(config?: DynamicsWebApi.Config, components?:{t
         
         components.forEach(c => {
             if (c.type === CdsSolutions.SolutionComponent.WebResource) {
-                parameterXml += `<webresource>{${Utilities.Guid.TrimGuid(c.id)}}</webresource>`;
+                parameterXml += `<webresource>{${Utilities.Guid.trimGuid(c.id)}}</webresource>`;
             }
         });
         

@@ -29,7 +29,7 @@ export default async function run(config?:DynamicsWebApi.Config, solution?:any, 
 	]);
 	if (!componentType) { return; }
 	
-	if (Utilities.$Object.IsNullOrEmpty(componentId)) { 
+	if (Utilities.$Object.isNullOrEmpty(componentId)) { 
 		const pickResponse = await Quickly.pickCdsSolutionComponent(config, solution, componentType, "Choose a component to add");
 		if (!pickResponse) { return; }
 

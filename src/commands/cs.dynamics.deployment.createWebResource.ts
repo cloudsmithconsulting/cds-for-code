@@ -45,14 +45,14 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
     let content: string;
 
     if (fsPath && fsPath !== folder && FileSystem.exists(fsPath)) {
-        content = Utilities.Encoding.BytesToBase64(FileSystem.readFileSync(fsPath));
+        content = Utilities.Encoding.bytesToBase64(FileSystem.readFileSync(fsPath));
     } else {
         content = "";
     }
 
     const api = new ApiRepository(config);
 
-    webResource = webResource || (await this.getWebResourceDetails(fsPath)) || { webresourceid: Utilities.Guid.NewGuid() };
+    webResource = webResource || (await this.getWebResourceDetails(fsPath)) || { webresourceid: Utilities.Guid.newGuid() };
 
     if (webResource) {
         webResource.content = content;

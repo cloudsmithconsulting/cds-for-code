@@ -82,10 +82,10 @@ export default function nodeJsRequest(options: any) {
         let rawData = '';
 
         response.setEncoding('utf8');
-        response.on('data', function (chunk) {
+        response.on('data', (chunk) => {
             rawData += chunk;
         });        
-        response.on('end', function () {
+        response.on('end', () => {
             switch (response.statusCode) {
                 case 200: // Success with content returned in response body.
                 case 201: // Success with content returned in response body.
@@ -103,7 +103,7 @@ export default function nodeJsRequest(options: any) {
                     break;
                 }
                 default: // All other statuses are error cases.
-                    var crmError;
+                    var internalError;
                     try {
                         var errorParsed = parseResponse(rawData, response.headers, responseParams);
 
@@ -112,20 +112,20 @@ export default function nodeJsRequest(options: any) {
                             break;
                         }
 
-                        crmError = errorParsed.hasOwnProperty('error') && errorParsed.error
+                        internalError = errorParsed.hasOwnProperty('error') && errorParsed.error
                             ? errorParsed.error
                             : { message: errorParsed.Message };
 
                     } catch (e) {
                         if (rawData.length > 0) {
-                            crmError = { message: rawData };
+                            internalError = { message: rawData };
                         }
                         else {
-                            crmError = { message: "Unexpected Error" };
+                            internalError = { message: "Unexpected Error" };
                         }
                     }
 
-                    errorCallback(ErrorHelper.handleHttpError(crmError, { status: response.statusCode, statusText: request.statusText, statusMessage: response.statusMessage }));
+                    errorCallback(ErrorHelper.handleHttpError(internalError, { status: response.statusCode, statusText: request.statusText, statusMessage: response.statusMessage }));
 
                     break;
             }

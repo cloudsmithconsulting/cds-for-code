@@ -240,7 +240,7 @@ export default class Quickly {
                     items = catalog.items;
                 }
                 
-                items.forEach(i => choices.push(new QuickPickOption(Utilities.$Object.IsNullOrEmpty(i.displayName) ? i.location : i.displayName, undefined, i.description, i))); 
+                items.forEach(i => choices.push(new QuickPickOption(Utilities.$Object.isNullOrEmpty(i.displayName) ? i.location : i.displayName, undefined, i.description, i))); 
 
                 if (choices.length === 0) {
                     Quickly.warn(
@@ -462,7 +462,7 @@ export default class Quickly {
         if (choices && choices.length > 0) {
             const options:QuickPickOption[] = [];
         
-            choices.forEach(c => options.push(new QuickPickOption(Utilities.String.ToPlural(c.toString()), undefined, undefined, c)));
+            choices.forEach(c => options.push(new QuickPickOption(Utilities.String.plural(c.toString()), undefined, undefined, c)));
 
             return await this.pick(placeHolder, ...options)
                 .then(p => p.context);

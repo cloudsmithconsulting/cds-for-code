@@ -71,7 +71,7 @@ export default class WebResourceManager implements IContributor {
 
             if (xmlObject && xmlObject.WebResource) {
                 return {
-                    webresourceid: xmlObject.WebResource.WebResourceId && xmlObject.WebResource.WebResourceId.length > 0 ? Utilities.Guid.TrimGuid(xmlObject.WebResource.WebResourceId[0]) : undefined,
+                    webresourceid: xmlObject.WebResource.WebResourceId && xmlObject.WebResource.WebResourceId.length > 0 ? Utilities.Guid.trimGuid(xmlObject.WebResource.WebResourceId[0]) : undefined,
                     name: xmlObject.WebResource.Name && xmlObject.WebResource.Name.length > 0 ? xmlObject.WebResource.Name[0] : undefined,
                     displayname: xmlObject.WebResource.DisplayName && xmlObject.WebResource.DisplayName.length > 0 ? xmlObject.WebResource.DisplayName[0] : undefined,
                     description: xmlObject.WebResource.Description && xmlObject.WebResource.Description.length > 0 ? xmlObject.WebResource.Description[0] : undefined,
@@ -115,7 +115,7 @@ export default class WebResourceManager implements IContributor {
             const parts = path.relative(map.path, fsPath).split(".").join("").split("\\");
 
             parts[0] = `/${parts[0]}/`;
-            parts.push(Utilities.Guid.TrimGuid(webResource.webresourceid));
+            parts.push(Utilities.Guid.trimGuid(webResource.webresourceid));
 
             return parts.join("");
         };

@@ -6,7 +6,7 @@ import Quickly from "./Quickly";
 
 export namespace Utilities {
     export class String {
-        static ParseDate(date: string) : Date {
+        static parseUtcDate(date: string) : Date {
             let regexMatch: RegExpExecArray | (string | number)[];
             
             if (typeof date === 'string') {
@@ -20,20 +20,17 @@ export namespace Utilities {
             return new Date(date);        
         }
 
-        static dateAsFilename():string {
-            let dateString = new Date().toISOString();
-    
+        static dateAsFilename(): string {
+            const now = new Date();
+            let dateString = now.toISOString();
+
             dateString = dateString.substr(0, dateString.length - 5);
             dateString = dateString.replace("T", "-").replace(":", "").replace(":", "");
            
             return dateString;
         }
-    
-        static NormalizeLineBreaks(value: string): string {
-            return value.replace("\r\n", "\n").replace("\n\r", "\n").replace("\n", "\r\n");
-        }
 
-        static EnforceTrailingSlash(path: string | undefined): string {
+        static withTrailingSlash(path: string | undefined): string {
             if (path && !path.endsWith("/")) {
                 path = `${path}/`;
             }
@@ -41,15 +38,23 @@ export namespace Utilities {
             return path ? path : "";
         }
 
-        static RemoveTrailingSlash(string:string): string {
+        static noTrailingSlash(string: string): string {
+            if (string.endsWith("/") || string.endsWith("\\")) {
+                string = string.substr(0, string.length - 1);
+            }
+
+            return string;
+        }
+
+        static noSlashes(string:string): string {
             return string.replace(/\/$/, "");
         }
 
-        static PowerShellSafeString(value: string) : string {
+        static powerShellSafe(value: string) : string {
             return value.replace('$', '`$');
         }
     
-        static ToPlural(value:string): string { 
+        static plural(value:string): string { 
             if (value.endsWith("s")) {
                 return `${value}es`;
             } else if (value.endsWith("y")) {
@@ -62,7 +67,7 @@ export namespace Utilities {
     }
 
     export class $Object {
-        static IsNullOrEmpty(value: any): boolean {
+        static isNullOrEmpty(value: any): boolean {
             return !(value && value.length > 0);
         }
 
@@ -70,23 +75,17 @@ export namespace Utilities {
             return typeof value === "undefined" || value === null;
         }        
 
-        static IsObject(obj):boolean {
+        static isObject(obj):boolean {
             const type = typeof obj;
     
             return type === 'function' || type === 'object' && !!obj;
         }
-
-        static ConvertToReferenceObject(responseData:any):any {
-            const result = /\/(\w+)\(([0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12})/i.exec(responseData["@odata.id"]);
     
-            return { id: result[2], collection: result[1], oDataContext: responseData["@odata.context"] };
-        }
-    
-        static ToQuerystring(source:any):string {
+        static asQuerystring(source:any):string {
             return Object.keys(source).map(key => key + '=' + encodeURIComponent(source[key])).join('&');
         }
     
-        static Clone<T>(src: T, target?: any): T {
+        static clone<T>(src: T, target?: any): T {
             if (!target) { 
                 target = {};
             }
@@ -94,8 +93,8 @@ export namespace Utilities {
             for (let prop in src) {
                 if (src.hasOwnProperty(prop)) {
                     // if the value is a nested object, recursively copy all it's properties
-                    if (this.IsObject(src[prop])) {
-                        target[prop] = this.Clone(src[prop]);
+                    if (this.isObject(src[prop])) {
+                        target[prop] = this.clone(src[prop]);
                     } else {
                         target[prop] = src[prop];
                     }
@@ -108,7 +107,7 @@ export namespace Utilities {
 
     export class Guid { 
         //https://stackoverflow.com/a/8809472
-        static NewGuid(): string {
+        static newGuid(): string {
             var d = new Date().getTime();
 
             if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -124,7 +123,7 @@ export namespace Utilities {
             });
         }    
 
-        static IsGuid(parameter:string): boolean {
+        static isGuid(parameter:string): boolean {
             try {
                 const match = /[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}/i.exec(parameter)[0];
     
@@ -135,56 +134,13 @@ export namespace Utilities {
             }
         }    
     
-        static TrimGuid(id: string):string {
+        static trimGuid(id: string):string {
             return (id || '').replace(/{|}/g, '');
         }
     }
     
-    export class WebApi { 
-        static InitWebApiUrl(version:string): string {
-            return '/api/data/v' + version + '/';
-        }
-
-        static BuildFunctionParameters(parameters?: any) : string {
-            if (parameters) {
-                var parameterNames = Object.keys(parameters);
-                var functionParameters = "";
-                var urlQuery = "";
-        
-                for (var i = 1; i <= parameterNames.length; i++) {
-                    var parameterName = parameterNames[i - 1];
-                    var value = parameters[parameterName];
-        
-                    if (value === undefined || value === null) {
-                        continue;
-                    }
-        
-                    if (typeof value === "string") {
-                        value = "'" + value + "'";
-                    }
-                    else if (typeof value === "object") {
-                        value = JSON.stringify(value);
-                    }
-        
-                    if (i > 1) {
-                        functionParameters += ",";
-                        urlQuery += "&";
-                    }
-        
-                    functionParameters += parameterName + "=@p" + i;
-                    urlQuery += "@p" + i + "=" + value;
-                }
-        
-                return "(" + functionParameters + ")?" + urlQuery;
-            }
-            else {
-                return "()";
-            }
-        }    
-    }
-
     export class Browser {
-        static OpenWindow(uri:vscode.Uri | string, retryFunction:(...rest:any) => any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close", ...rest:any): void {
+        static openWindow(uri:vscode.Uri | string, retryFunction:(...rest:any) => any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close", ...rest:any): void {
             if (uri instanceof vscode.Uri) {
                 vscode.env.openExternal(<vscode.Uri>uri).then(opened => {
                     if (!opened && retryFunction) {
@@ -201,19 +157,19 @@ export namespace Utilities {
     export class Encoding { 
         static utf8encoder = new TextEncoder();
         
-        static StringToBase64(string:string): string {
-            return this.BytesToBase64(this.utf8encoder.encode(string));
+        static stringToBase64(string:string): string {
+            return this.bytesToBase64(this.utf8encoder.encode(string));
         }
     
-        static BytesToBase64(bytes:Uint8Array): string {
+        static bytesToBase64(bytes:Uint8Array): string {
             return Buffer.from(bytes).toString("base64");
         }    
     
-        static Base64ToBytes(str:string): Uint8Array {
+        static base64ToBytes(str:string): Uint8Array {
             return this.utf8encoder.encode(Buffer.from(str, "base64").toString());
         }
     
-        static Base64ToString(str:string): string { 
+        static base64ToString(str:string): string { 
             return Buffer.from(str, "base64").toString();
         }
     }

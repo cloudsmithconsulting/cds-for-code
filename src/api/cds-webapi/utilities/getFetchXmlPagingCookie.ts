@@ -5,7 +5,7 @@
  * @param {number} currentPageNumber - A current page number. Fix empty paging-cookie for complex fetch xmls.
  * @returns {{cookie: "", number: 0, next: 1}}
  */
-export default function getFetchXmlPagingCookie(pageCookies, currentPageNumber) {
+export default function getFetchXmlPagingCookie(pageCookies: string, currentPageNumber: number): { cookie: string, page: number, nextPage: number } {
     pageCookies = pageCookies ? pageCookies : "";
     currentPageNumber = currentPageNumber ? currentPageNumber : 1;
 

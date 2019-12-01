@@ -49,7 +49,7 @@ export default class DiscoveryRepository {
     static createOrganizationConnection(org: any, connection: DynamicsWebApi.Config): DynamicsWebApi.Config {
         const versionSplit = org.Version.split('.');
         // Clone the current connection and override the endpoint and version.
-        const orgConnection = Utilities.$Object.Clone<DynamicsWebApi.Config>(connection);
+        const orgConnection = Utilities.$Object.clone<DynamicsWebApi.Config>(connection);
 
         orgConnection.webApiUrl = org.ApiUrl;
         orgConnection.webApiVersion = `${versionSplit[0]}.${versionSplit[1]}`;

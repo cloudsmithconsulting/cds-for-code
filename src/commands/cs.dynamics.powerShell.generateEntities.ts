@@ -23,7 +23,7 @@ import * as Security from "../core/security/Types";
 export default async function run(config?:DynamicsWebApi.Config, folder?:string, outputFileName?: string, namespace?: string) {
 	// setup configurations
 	const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
-	const coreToolsRoot = !Utilities.$Object.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
+	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
@@ -41,21 +41,21 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	}
 
 	folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder to use when generating code");
-	if (Utilities.$Object.IsNullOrEmpty(folder)) { return; }
+	if (Utilities.$Object.isNullOrEmpty(folder)) { return; }
 
 	outputFileName = outputFileName || await Quickly.pickWorkspaceFile(vscode.Uri.file(folder), "Choose the filename to use when generating code");
-	if (Utilities.$Object.IsNullOrEmpty(outputFileName)) { return; }
+	if (Utilities.$Object.isNullOrEmpty(outputFileName)) { return; }
 
 	namespace = namespace || await Quickly.ask("Enter the namespace for the generated code", undefined, path.dirname(folder));
-	if (Utilities.$Object.IsNullOrEmpty(namespace)) { return; }
+	if (Utilities.$Object.isNullOrEmpty(namespace)) { return; }
 
 	// build a powershell terminal
 	return DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => {
 			return await terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
 				.text(`-ToolsPath ${coreToolsRoot} `)
-				.text(`-Url "${Utilities.String.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `)
-				.if(() => !Utilities.$Object.IsNullOrEmpty(config.credentials), c => {
+				.text(`-Url "${Utilities.String.withTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `)
+				.if(() => !Utilities.$Object.isNullOrEmpty(config.credentials), c => {
 					c.text(`-Username "`)
 					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
 					 .text(`" -Password "`)

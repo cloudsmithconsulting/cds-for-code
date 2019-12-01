@@ -86,7 +86,7 @@ export default class SolutionMap implements IContributor {
                 }
 
 				folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a workplace folder containing solution items.");
-                if (Utilities.$Object.IsNullOrEmpty(folder)) { return; }
+                if (Utilities.$Object.isNullOrEmpty(folder)) { return; }
                 
                 const map = SolutionMap.loadFromWorkspace(context);
                 item = item || map.hasSolutionMap(solutionId, organizationId) ? map.getBySolutionId(solutionId, organizationId)[0] : null;

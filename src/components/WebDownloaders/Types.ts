@@ -251,7 +251,7 @@ export class IconifyIcon {
     private toQueryObject(): any {
 		const querystring: any = {};
 
-        if (!Utilities.$Object.IsNullOrEmpty(this._color)) {
+        if (!Utilities.$Object.isNullOrEmpty(this._color)) {
 			querystring["color"] = this._color;
 		}
 
@@ -263,6 +263,6 @@ export class IconifyIcon {
 			querystring["width"] = this.height;
 		}
 
-        return Utilities.$Object.ToQuerystring(querystring);
+        return Utilities.$Object.asQuerystring(querystring);
 	}
 }

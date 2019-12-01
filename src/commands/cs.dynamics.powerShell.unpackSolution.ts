@@ -20,7 +20,7 @@ import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialSt
 export default async function run(config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string, logFile?:string, mappingFile?:string, templateResourceCode?:string, includeResourceFiles?:boolean, allowDelete:boolean = true) {
 	// setup configurations
 	const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
-	const coreToolsRoot = !Utilities.$Object.IsNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
+	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 	const map:SolutionMap = SolutionMap.loadFromWorkspace(ExtensionContext.Instance);
 
@@ -43,7 +43,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	} 
 
 	folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true, true);
-	if (Utilities.$Object.IsNullOrEmpty(folder)) {
+	if (Utilities.$Object.isNullOrEmpty(folder)) {
 		vscode.window.showInformationMessage("You must select a workspace folder to unpack a solution.");
 
 			return; 
@@ -59,13 +59,13 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	toolsPath = toolsPath || coreToolsRoot;
 	if (Utilities.$Object.IsNull(toolsPath)) { return; }
 
-	if (Utilities.$Object.IsNullOrEmpty(logFile)) { 
+	if (Utilities.$Object.isNullOrEmpty(logFile)) { 
 		if ((await Quickly.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
 			logFile = path.join(ExtensionContext.Instance.globalStoragePath, `/logs/unpack-${solution}-${Utilities.String.dateAsFilename()}`);
 		}
 	}
 
-	const splitUrl = Utilities.String.RemoveTrailingSlash(config.webApiUrl).split("/");
+	const splitUrl = Utilities.String.noSlashes(config.webApiUrl).split("/");
 	let orgName;
 	let serverUrl;
 
@@ -89,16 +89,16 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 				.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
 				.text(`-Path "${folder}" `)
 				.text(`-ToolsPath "${toolsPath}" `)
-				.if(() => !Utilities.$Object.IsNullOrEmpty(config.credentials), c => {
+				.if(() => !Utilities.$Object.isNullOrEmpty(config.credentials), c => {
 					c.text(`-Credential (New-Object System.Management.Automation.PSCredential ("`)
 					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
 					 .text(`", (ConvertTo-SecureString "`)
 					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.password.toString())
 					 .text(`" -AsPlainText -Force))) `);
 				})
-				.if(() => !Utilities.$Object.IsNullOrEmpty(mappingFile), c => c.text(` -MapFile "${mappingFile}"`))
-				.if(() => !Utilities.$Object.IsNullOrEmpty(logFile), c => c.text(` -LogFile "${logFile}"`))
-				.if(() => !Utilities.$Object.IsNullOrEmpty(templateResourceCode), c => c.text(` -TemplateResourceLanguageCode "${templateResourceCode}"`))
+				.if(() => !Utilities.$Object.isNullOrEmpty(mappingFile), c => c.text(` -MapFile "${mappingFile}"`))
+				.if(() => !Utilities.$Object.isNullOrEmpty(logFile), c => c.text(` -LogFile "${logFile}"`))
+				.if(() => !Utilities.$Object.isNullOrEmpty(templateResourceCode), c => c.text(` -TemplateResourceLanguageCode "${templateResourceCode}"`))
 				.if(() => includeResourceFiles, c => c.text(` -IncludeResourceFiles`))
 				.if(() => allowDelete, c => c.text(` -AllowDelete`)))
 				.then(tc => { 

@@ -19,7 +19,7 @@ export default async function run(config?:DynamicsWebApi.Config, solution?:any, 
 	solution = solution || await Quickly.pickCdsSolution(config, "Choose a solution", true);
 	if (!solution) { return; }
 
-	if (Utilities.$Object.IsNullOrEmpty(componentType)) {
+	if (Utilities.$Object.isNullOrEmpty(componentType)) {
 		componentType = await Quickly.pickCdsSolutionComponentType("Choose a component to remove", [
 			CdsSolutions.SolutionComponent.Entity,
 			CdsSolutions.SolutionComponent.OptionSet,
@@ -28,10 +28,10 @@ export default async function run(config?:DynamicsWebApi.Config, solution?:any, 
 			CdsSolutions.SolutionComponent.Workflow
 		]);
 
-		if (Utilities.$Object.IsNullOrEmpty(componentType)) { return; }
+		if (Utilities.$Object.isNullOrEmpty(componentType)) { return; }
 	}
 	
-	if (Utilities.$Object.IsNullOrEmpty(componentId)) { 
+	if (Utilities.$Object.isNullOrEmpty(componentId)) { 
 		const pickResponse = await Quickly.pickCdsSolutionComponent(config, solution, componentType, "Choose a component to remove");
 		if (!pickResponse) { return; }
 

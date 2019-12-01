@@ -1,6 +1,6 @@
 import buildFunctionParameters from './buildFunctionParameters';
 import getFetchXmlPagingCookie from './getFetchXmlPagingCookie';
-import convertToReferenceObject from './convertToReferenceObject';
+import convertToReferenceObject, { ReferenceObject } from './convertToReferenceObject';
 import { Utilities } from "../../../core/Utilities";
 
 export default class Utility {
@@ -10,7 +10,7 @@ export default class Utility {
      * @param {Object} [parameters] - Function's input parameters. Example: { param1: "test", param2: 3 }.
      * @returns {string}
      */
-    static buildFunctionParameters = buildFunctionParameters.bind(Utility);
+    static buildFunctionParameters:(parameters:any) => string = buildFunctionParameters.bind(Utility);
 
     /**
      * Parses a paging cookie returned in response
@@ -19,7 +19,7 @@ export default class Utility {
      * @param {number} currentPageNumber - A current page number. Fix empty paging-cookie for complex fetch xmls.
      * @returns {{cookie: "", number: 0, next: 1}}
      */
-    static getFetchXmlPagingCookie = getFetchXmlPagingCookie.bind(Utility);
+    static getFetchXmlPagingCookie:(pageCookies: string, currentPageNumber: number) => { cookie: string, page: number, nextPage: number } = getFetchXmlPagingCookie.bind(Utility);
 
     /**
      * Converts a response to a reference object
@@ -27,16 +27,16 @@ export default class Utility {
      * @param {Object} responseData - Response object
      * @returns {ReferenceObject}
      */
-    static convertToReferenceObject = convertToReferenceObject.bind(Utility);
+    static convertToReferenceObject:(responseData:Object) => ReferenceObject = convertToReferenceObject.bind(Utility);
 
     /**
      * Checks whether the value is JS Null.
      * @param {Object} value
      * @returns {boolean}
      */
-    static isNull = Utilities.$Object.IsNull.bind(Utility);
+    static isNull:(value: any) => boolean = Utilities.$Object.IsNull.bind(Utility);
 
-    static generateUUID = Utilities.Guid.NewGuid.bind(Utility);
+    static generateUUID:() => string = Utilities.Guid.newGuid.bind(Utility);
 
     static getXrmContext(): Xrm.GlobalContext {
         if (typeof GetGlobalContext !== 'undefined') {

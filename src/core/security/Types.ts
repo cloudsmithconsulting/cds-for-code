@@ -181,7 +181,7 @@ export abstract class CredentialStore implements ICredentialStore {
 
     store<T extends ICredential>(credential: T, key?: string): string {        
         let storeObject:any = {};
-        key = key || credential.key || Utilities.Guid.NewGuid();
+        key = key || credential.key || Utilities.Guid.newGuid();
 
         Object.keys(credential).forEach(k => {
             if (Encryption.isSecurable(credential[k])) {
@@ -244,7 +244,7 @@ export abstract class Credential implements ICredential {
         if (!store) { return; }
 
         const decrypted = store.decrypt<T>(key);
-        Utilities.$Object.Clone(decrypted, this);
+        Utilities.$Object.clone(decrypted, this);
     }
 
     store(store:ICredentialStore): string {

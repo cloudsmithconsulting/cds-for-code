@@ -73,22 +73,22 @@
                 messages.push("The Server URL is required");
             if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.webApiUrl))
                 messages.push("The Server URL is invalid");
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.domain))
-                messages.push("The Domain is required");
+            if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username))
+                messages.push("The Username is required");
+            if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password))
+                messages.push('The Password is required');
     
-            if (settings.authType === 1) {
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.username))
-                    messages.push("The Username is required");
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.password))
-                    messages.push('The Password is required');
+            if (settings.type === 0) {
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.domain))
+                    messages.push("The Domain is required");
             } else {
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.accessToken) 
-                    && CloudSmith.Utilities.isNullOrEmpty(settings.username)) {
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.token) 
+                    && CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username)) {
                         messages.push("Access Token or Username and Password is required");
                 }
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.accessToken)
-                    && !CloudSmith.Utilities.isNullOrEmpty(settings.username)
-                    && CloudSmith.Utilities.isNullOrEmpty(settings.password)) {
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.token)
+                    && !CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username)
+                    && CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password)) {
                         messages.push('The Password is required');
                 }
             }

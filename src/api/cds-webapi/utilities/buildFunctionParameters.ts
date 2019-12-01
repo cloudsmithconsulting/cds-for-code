@@ -4,7 +4,7 @@
  * @param {Object} [parameters] - Function's input parameters. Example: { param1: "test", param2: 3 }.
  * @returns {string} - Function parameter result
  */
-export default function buildFunctionParameters(parameters:any) {
+export default function buildFunctionParameters(parameters:any): string {
     if (parameters) {
         var parameterNames = Object.keys(parameters);
         var functionParameters = "";
