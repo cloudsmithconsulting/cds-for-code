@@ -1,6 +1,5 @@
 import Encryption from "./Encryption";
 import { Utilities } from "../Utilities";
-import { SSL_OP_CRYPTOPRO_TLSEXT_BUG } from "constants";
 
 /**
  * @type represents an item that can be secured.

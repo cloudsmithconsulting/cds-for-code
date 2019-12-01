@@ -3,6 +3,7 @@ import RequestConverter from '../utilities/RequestConverter';
 import BatchConverter from '../utilities/BatchConverter';
 import xhrRequest from "./xhrRequest";
 import nodeJsRequest from "./nodeJsRequest";
+import { DynamicsWebApi } from "../DynamicsWebApi";
 
 let _entityNames;
 
@@ -213,7 +214,7 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
             additionalHeaders['Authorization'] = 'Bearer ' +
                 (token.hasOwnProperty('accessToken') ?
                     token.accessToken :
-                    token);
+                    token.toString());
         }
 
         executeRequest({
@@ -238,32 +239,36 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
     }
 }
 
-function _getEntityNames(entityName, config, successCallback, errorCallback) {
-
-    var xrmUtility = Utility.getXrmUtility();
+function _getEntityNames(entityName: string, config: DynamicsWebApi.Config, successCallback?:(value?:any) => any, errorCallback?:(reason?:any) => any) {
+    const xrmUtility = Utility.getXrmUtility();
 
     //try using Xrm.Utility.getEntityMetadata first (because D365 caches metadata)
     if (!Utility.isNull(xrmUtility) && typeof xrmUtility.getEntityMetadata === "function") {
-        xrmUtility.getEntityMetadata(entityName).then(function (response) {
-            successCallback(response.EntitySetName);
+        xrmUtility.getEntityMetadata(entityName).then(response => {
+            if (successCallback) { successCallback(response.EntitySetName); }
         }, errorCallback);
     }
     else {
         //make a web api call for Node.js apps
-        var resolve = function (result) {
+        const resolve = result => {
             _entityNames = {};
+
             for (var i = 0; i < result.data.value.length; i++) {
                 _entityNames[result.data.value[i].LogicalName] = result.data.value[i].EntitySetName;
             }
 
-            successCallback(findCollectionName(entityName));
+            if (successCallback) {
+                successCallback(findCollectionName(entityName));
+            }
         };
 
-        var reject = function (error) {
-            errorCallback({ message: 'Unable to fetch EntityDefinitions. Error: ' + error.message });
+        const reject = error => {
+            if (errorCallback) {
+                errorCallback({ message: 'Unable to fetch EntityDefinitions. Error: ' + error.message });
+            }
         };
 
-        var request = RequestConverter.convertRequest({
+        const request = RequestConverter.convertRequest({
             collection: 'EntityDefinitions',
             select: ['EntitySetName', 'LogicalName'],
             noCache: true
@@ -273,7 +278,7 @@ function _getEntityNames(entityName, config, successCallback, errorCallback) {
     }
 }
 
-function _isEntityNameException(entityName) {
+function _isEntityNameException(entityName: string) {
     var exceptions = [
         'EntityDefinitions', '$metadata', 'RelationshipDefinitions',
         'GlobalOptionSetDefinitions', 'ManagedPropertyDefinitions'];
@@ -281,17 +286,16 @@ function _isEntityNameException(entityName) {
     return exceptions.indexOf(entityName) > -1;
 }
 
-function _getCollectionName(entityName, config, successCallback, errorCallback) {
-
+function _getCollectionName(entityName: string, config: DynamicsWebApi.Config, resolve?:(value?:any) => any, reject?:(reason?:any) => any) {
     if (_isEntityNameException(entityName) || Utility.isNull(entityName)) {
-        successCallback(entityName);
+        resolve(entityName);
         return;
     }
 
     entityName = entityName.toLowerCase();
 
     if (!config.useEntityNames) {
-        successCallback(entityName);
+        resolve(entityName);
         return;
     }
 
@@ -299,34 +303,29 @@ function _getCollectionName(entityName, config, successCallback, errorCallback) 
         var collectionName = findCollectionName(entityName);
 
         if (Utility.isNull(collectionName)) {
-            _getEntityNames(entityName, config, successCallback, errorCallback);
+            _getEntityNames(entityName, config, resolve, reject);
         }
         else {
-            successCallback(collectionName);
+            resolve(collectionName);
         }
     }
     catch (error) {
-        errorCallback({ message: 'Unable to fetch Collection Names. Error: ' + error.message });
+        reject({ message: 'Unable to fetch Collection Names. Error: ' + error.message });
     }
 }
 
-export function makeRequest(method: string, request: any, functionName: string, config: any, responseParams?: any, resolve?:(value?:any) => any, reject?:(reason?:any) => any) {
+export function makeDiscoveryRequest(request:any, config:DynamicsWebApi.Config, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {
+    return sendRequest("GET", `api/discovery/v8.0/${!Utility.isNull(request) ? request.collection : "Instances"}`, config, null, null, null, resolve, reject, request ? request.isBatch : false, true);
+}
+
+export function makeRequest(method: string, request: any, functionName: string, config: any, responseParams?: any, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {
     var successCallback = (collectionName: string) => {
         request.collection = collectionName;
         
         const result = RequestConverter.convertRequest(request, functionName, config);
 
-        sendRequest(method, result.url, config, request.data || request.entity, result.headers, responseParams, resolve, reject, request.isBatch, result.async);
+        return sendRequest(method, result.url, config, request.data || request.entity, result.headers, responseParams, resolve, reject, request.isBatch, result.async);
     };
 
-    _getCollectionName(request.collection, config, successCallback, reject);
+    return _getCollectionName(request.collection, config, successCallback, reject);
 }
-
-module.exports = {
-    sendRequest: sendRequest,
-    makeRequest: makeRequest,
-    getCollectionName: findCollectionName,
-    /* develblock:start */
-    _clearEntityNames: function () { _entityNames = null; }
-    /* develblock:end */
-};
