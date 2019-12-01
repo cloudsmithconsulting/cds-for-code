@@ -1,8 +1,8 @@
-import Browser from "./helpers/Browser";
-import Encoding from "./helpers/Encoding";
-import Guid from "./helpers/Guid";
-import Object from "./helpers/Object";
-import String from "./helpers/String";
+import * as Object from "./helpers/Object";
+import * as Browser from "./helpers/Browser";
+import * as Encoding from "./helpers/Encoding";
+import * as Guid from "./helpers/Guid";
+import * as String from "./helpers/String";
 
 export default class Utilities {
    static Browser = Browser;
