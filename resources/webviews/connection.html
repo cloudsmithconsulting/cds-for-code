@@ -1,4 +1,5 @@
-<img class="branding" src="#{images['cloudsmith-logo-only-50px.png']}" alt="CloudSmith Conulting" title="CloudSmith Conulting" />
+<img class="branding" src="#{images['cloudsmith-logo-only-50px.png']}" alt="CloudSmith Conulting"
+    title="CloudSmith Conulting" />
 
 <h1 id="title">
     #{viewTitle}
@@ -28,22 +29,22 @@
             <legend>Connection Settings</legend>
             <input type="hidden" id="Id" name="Id" value="" />
             <div class="field field--checkbox">
-                <label class="field__label" for="AuthType1">
-                    Windows (On-Premises)
-                </label>
-                <input type="radio" class="field__input" id="AuthType1" name="AuthType" value="0" />
-                <label class="field__label" for="AuthType2">
-                    Dynamics 365/CDS Online
-                </label>
-                <input type="radio" class="field__input" id="AuthType2" name="AuthType" value="1" checked="checked" />
-                <label class="field__label" for="AuthType3">
-                    Azure AD
-                </label>
-                <input type="radio" class="field__input" id="AuthType3" name="AuthType" value="2" />
-                <label class="field__label" for="AuthType4">
-                    IFD
-                </label>
-                <input type="radio" class="field__input" id="AuthType4" name="AuthType" value="3" />
+                    <input type="radio" class="field__input" id="AuthType1" name="AuthType" value="0" />
+                    <label class="field__label" for="AuthType1">
+                        Windows (On-Premises)
+                    </label>
+                    <input type="radio" class="field__input" id="AuthType2" name="AuthType" value="1" checked="checked" />
+                    <label class="field__label" for="AuthType2">
+                        Dynamics 365 Online
+                    </label>
+                    <input type="radio" class="field__input" id="AuthType3" name="AuthType" value="2" disabled="disabled" />
+                    <label class="field__label" for="AuthType3">
+                        Azure AD
+                    </label>
+                    <input type="radio" class="field__input" id="AuthType4" name="AuthType" value="3" disabled="disabled" />
+                    <label class="field__label" for="AuthType4">
+                        IFD (On-Premises)
+                    </label>
             </div>
             <div class="field">
                 <label class="field__label" for="WebApiVersion">

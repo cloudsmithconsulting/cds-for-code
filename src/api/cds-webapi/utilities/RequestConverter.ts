@@ -122,7 +122,7 @@ export default class RequestConverter {
                 requestArray.push("$orderby=" + request.orderBy.join(','));
             }
 
-            var prefer = buildPreferHeader(request, functionName, config);
+            const prefer = buildPreferHeader(request, functionName, config);
 
             if (prefer.length) {
                 headers['Prefer'] = prefer;
@@ -192,11 +192,11 @@ export default class RequestConverter {
                     requestArray.push('$expand=' + request.expand);
                 }
                 else {
-                    var expandRequestArray = [];
-                    for (var i = 0; i < request.expand.length; i++) {
+                    const expandRequestArray = [];
+                    for (let i = 0; i < request.expand.length; i++) {
                         if (request.expand[i].property) {
-                            var expandConverted = RequestConverter.convertRequestOptions(request.expand[i], functionName + " $expand", null, ";");
-                            var expandQuery = expandConverted.query;
+                            const expandConverted = RequestConverter.convertRequestOptions(request.expand[i], functionName + " $expand", null, ";");
+                            let expandQuery = expandConverted.query;
                             if (expandQuery && expandQuery.length) {
                                 expandQuery = "(" + expandQuery + ")";
                             }
@@ -222,8 +222,8 @@ export default class RequestConverter {
      * @returns {ConvertedRequest} Converted request
      */
     static convertRequest(request: any, functionName: string, config: any): ConvertedRequest {
-        var url = '';
-        var result;
+        let url = '';
+        let result;
         if (!request.url) {
             if (!request._unboundRequest && !request.collection) {
                 ErrorHelper.parameterCheck(request.collection, 'DynamicsWebApi.' + functionName, "request.collection");

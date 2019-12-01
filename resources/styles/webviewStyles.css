@@ -133,8 +133,8 @@ table>tbody>tr:nth-child(odd) {
 
 .field--checkbox {
     display: flex;
-    justify-content: flex-end;
-    flex-direction: row-reverse;
+    justify-content: flex-start;
+    flex-direction: row;
     align-items: center;
 }
 

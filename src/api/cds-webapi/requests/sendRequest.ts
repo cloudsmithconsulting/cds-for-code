@@ -122,7 +122,7 @@ let responseParseParams = [];
  * @param {boolean} [isBatch] - Indicates whether the request is a Batch request or not. Default: false
  * @param {boolean} [isAsync] - Indicates whether the request should be made synchronously or asynchronously.
  */
-export function sendRequest(method: string, path: string, config: DynamicsWebApi.Config, data: any, additionalHeaders: { [key: string]: string }, responseParams: any, successCallback: any, errorCallback: any, isBatch: boolean, isAsync: boolean): void {
+export function sendRequest(method: string, path: string, config: DynamicsWebApi.Config, data: any, additionalHeaders: { [key: string]: string }, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void, isBatch: boolean, isAsync: boolean): void {
     additionalHeaders = additionalHeaders || {};
     responseParams = responseParams || {};
 

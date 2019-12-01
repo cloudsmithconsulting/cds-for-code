@@ -50,7 +50,8 @@
     // this part starts on document ready
     $(function () {
         $("[name='AuthType']").click(function() {
-            const authType = this.value;
+            const authType = Number.parseInt(this.value);
+
             $domainField = $("#domainField");
             $accessTokenField = $("#accessTokenField");
 

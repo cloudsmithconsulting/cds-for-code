@@ -86,7 +86,17 @@ export class SecureItem implements ISecureItem {
     }
 
     static isSecure(item:any) {
-        return item instanceof SecureItem;
+        return item instanceof SecureItem || (item.data && item.iv);
+    }
+
+    static asSecureItem(item:any): SecureItem {
+        if (item instanceof SecureItem) {
+            return <SecureItem>item;
+        }
+
+        if (item.data && item.iv) {
+            return Encryption.createSecureItem(item.iv, item.data);
+        }
     }
 
     private constructor(readonly iv: Securable, readonly data: Securable, readonly preferredOutput: SecureOutput) {
@@ -164,9 +174,7 @@ export abstract class CredentialStore implements ICredentialStore {
 
         Object.keys(encrypted).forEach(k => {
             if (SecureItem.isSecure(encrypted[k])) {
-                const secureItem:ISecureItem = encrypted[k];
-
-                credential[k] = Encryption.createSecureItem(secureItem.buffer.iv, secureItem.buffer.data);
+                credential[k] = SecureItem.asSecureItem(encrypted[k]);
             } else {
                 credential[k] = encrypted[k];
             }
@@ -206,28 +214,44 @@ export abstract class Credential implements ICredential {
         public readonly key?:string) { 
     }
 
+    static from(value:any): ICredential {
+        if (this.isCdsOnlineUserCredential(value)) {
+            return new CdsOnlineCredential(value.username, value.password, value.orgUrl, value.token);
+        } else if (this.isAzureAdClientCredential(value)) {
+            return new AzureAdClientCredential(value.clientId, value.clientSecret, value.authority, value.callbackUrl);
+        } else if (this.isAzureAdUserCredential(value)) {
+            return new AzureAdUserCredential(value.username, value.password, value.clientId, value.clientSecret, value.authority);
+        } else if (this.isOauthCredential(value)) {
+            return new OAuthCredential(value.username, value.password, value.token);
+        } else if (this.isWindowsCredential(value)) {
+            return new WindowsCredential(value.domain, value.username, value.password);
+        }
+
+        return null;
+    }
+
     static isCredential(value:any): boolean {
-        return value && value instanceof Credential;
+        return value && (value instanceof Credential || (value.hasOwnProperty("username") && value.hasOwnProperty("password")));
     }
 
     static isWindowsCredential(value:ICredential): boolean {
-        return value && (value instanceof Credential || value.hasOwnProperty("domain"));
+        return value && this.isCredential(value) && value.hasOwnProperty("domain");
     }
 
     static isOauthCredential(value:ICredential): boolean {
-        return value && (value instanceof Credential || value.hasOwnProperty("token"));
+        return value && this.isCredential(value) && value.hasOwnProperty("token");
     }
 
     static isAzureAdClientCredential(value:ICredential): boolean {
-        return value && (value instanceof Credential || (value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority") && value.hasOwnProperty("callback")));
+        return value && this.isCredential(value) && value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority") && value.hasOwnProperty("callback");
     }
 
     static isAzureAdUserCredential(value:ICredential): boolean {
-        return value && (value instanceof Credential || (value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority")));
+        return value && this.isCredential(value) && value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority");
     }
 
     static isCdsOnlineUserCredential(value:ICredential): boolean {
-        return value && (value instanceof Credential || (value.hasOwnProperty("orgUrl")));
+        return value && this.isCredential(value) && value.hasOwnProperty("orgUrl");
     }
 
     static retreive<T extends Credential>(store:ICredentialStore, key: string): T {
@@ -244,7 +268,10 @@ export abstract class Credential implements ICredential {
         if (!store) { return; }
 
         const decrypted = store.decrypt<T>(key);
-        Utilities.$Object.clone(decrypted, this);
+
+        if (!Utilities.$Object.isNullOrEmpty(decrypted)) {
+            Utilities.$Object.clone(decrypted, this);
+        }
     }
 
     store(store:ICredentialStore): string {
@@ -263,6 +290,18 @@ export class WindowsCredential extends Credential {
         super(username, password);
     }
 
+    static from(credential:any) {
+        if (!credential) {
+            return null;
+        }
+
+        const domain: Securable | undefined = credential.domain;
+        const username: Securable | undefined = credential.username;
+        const password: Securable | undefined = credential.password;
+        
+        return new WindowsCredential(domain, username, password);
+    }
+
     toString():string {
         return (this.domain && this.domain !== "" ? `${this.domain.toString()}\\` : "") + SecureItem.isSecure(this.username) ? "" : this.username.toString();
     }
@@ -274,13 +313,13 @@ export class OAuthCredential extends Credential {
     }
 }
 
-export class AzureAdClientCredential extends OAuthCredential {
+export class AzureAdClientCredential extends Credential {
     constructor(public clientId: Securable | SecureItem, public clientSecret: Securable | SecureItem, public authority: string, public callbackUrl?: string) {
         super(clientId, clientSecret);
     }
 }
 
-export class AzureAdUserCredential extends OAuthCredential {
+export class AzureAdUserCredential extends Credential {
     constructor(username: SecureItem | Securable, password: SecureItem | Securable, public clientId: Securable | SecureItem, public clientSecret: Securable | SecureItem, public authority: string) {
         super(username, password);
     }

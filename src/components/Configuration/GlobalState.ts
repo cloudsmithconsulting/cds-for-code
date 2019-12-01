@@ -2,6 +2,7 @@ import * as cs from '../../cs';
 import { DynamicsWebApi } from '../../api/cds-webapi/DynamicsWebApi';
 import ExtensionContext from '../../core/ExtensionContext';
 import GlobalStateCredentialStore from '../../core/security/GlobalStateCredentialStore';
+import { Credential } from '../../core/security/Types';
 
 export default class GlobalState {
     private constructor() { }
@@ -13,7 +14,7 @@ export default class GlobalState {
             const creds = GlobalStateCredentialStore.Instance.retreive(c.id);
 
             if (creds) {
-                c.credentials = creds;
+                c.credentials = Credential.from(creds);
             }
         });
 

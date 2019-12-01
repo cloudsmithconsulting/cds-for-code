@@ -1,6 +1,7 @@
-import * as vscode from 'vscode';
 import * as crypto from 'crypto';
 import { ICryptography, ISecureItem, Securable, SecureOutput, SecureItem } from './Types';
+import { machineIdSync } from 'node-machine-id';
+import * as Guid from '../helpers/Guid';
 
 /**
  * Abstraction for handling symetric cryptography using algorithms like AES, 3DES, etc.
@@ -37,12 +38,20 @@ class SymetricCryptography {
             iv = Buffer.from(iv);
         }
 
-        const cipher = crypto.createCipheriv(algorithm, key, iv);
-        let encrypted = cipher.update(value);
+        let returnValue:any;
 
-        encrypted = Buffer.concat([encrypted, cipher.final()]);
+        try {
+            const cipher = crypto.createCipheriv(algorithm, key, iv);
+            let encrypted = cipher.update(value);
+    
+            encrypted = Buffer.concat([encrypted, cipher.final()]);
 
-        return SecureItem.from(iv, encrypted, output);
+            returnValue = SecureItem.from(iv, encrypted, output);
+        } catch (error) {
+            throw { message: `Could not complete encryption: ${error.message || error}` };
+        }
+
+        return returnValue;
     }
 
     decrypt(value: SecureItem, algorithm: string = SymetricCryptography.defaultAlgorithm, key?: Securable): Buffer {
@@ -52,12 +61,18 @@ class SymetricCryptography {
             key = Buffer.from(key);
         }
 
-        const iv = value.buffer.iv;
-        const encrypted = value.buffer.data;
-        const decipher = crypto.createDecipheriv(algorithm, key, iv);
-        let decrypted = decipher.update(encrypted);
+        let decrypted:any;
 
-        decrypted = Buffer.concat([decrypted, decipher.final()]);
+        try {
+            const iv = value.buffer.iv;
+            const encrypted = value.buffer.data;
+            const decipher = crypto.createDecipheriv(algorithm, key, iv);
+            decrypted = decipher.update(encrypted);
+    
+            decrypted = Buffer.concat([decrypted, decipher.final()]);
+        } catch (error) {
+            throw { message: `Could not complete decryption: ${error.message || error}` };
+        }
 
         return decrypted;
     }
@@ -82,7 +97,8 @@ class MachineCryptography implements ICryptography {
     private readonly symetricCrypto;
 
     private constructor() {
-        this.symetricCrypto = new SymetricCryptography(vscode.env.machineId);
+        // Use a 32-byte machine key here.
+        this.symetricCrypto = new SymetricCryptography(machineIdSync().substr(0, 32));
     }
 
     encrypt(value:Securable): SecureItem {
@@ -113,7 +129,7 @@ class ProcessCryptography implements ICryptography {
     private readonly symetricCrypto;
 
     private constructor() {
-        this.symetricCrypto = new SymetricCryptography(vscode.env.sessionId);
+        this.symetricCrypto = new SymetricCryptography(Guid.newGuid().replace(/(-)/, "").substr(0, 32));
     }
 
     encrypt(value:Securable): SecureItem {
@@ -175,5 +191,17 @@ export default class Encryption {
 
     static encrypt(item:Securable, store:ICryptography): ISecureItem {
         return store.encrypt(item);
+    }
+
+    static async salt(passphrase: Securable, byteLength: number = 32, iterations: number = 150): Promise<Securable> {
+        const salt = crypto.randomBytes(32);
+
+        return await new Promise((resolve, reject) => {
+            crypto.pbkdf2(passphrase.toString(), salt, iterations, byteLength, 'sha256', (err, bytes) => {
+                if (err) { reject(err); }
+
+                return resolve(bytes.toString('hex'));
+            });
+        });        
     }
 }

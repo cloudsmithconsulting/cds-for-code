@@ -2,10 +2,11 @@
 import * as https from 'https';
 import * as httpntlm from "httpntlm";
 import * as url from 'url';
-import parseResponse from './helpers/parseResponse';
-import ErrorHelper from '../helpers/ErrorHelper';
 import * as Security from '../../../core/security/Types';
 import GlobalStateCredentialStore from '../../../core/security/GlobalStateCredentialStore';
+import oDataResponse from './helpers/oDataResponse';
+
+export type ResponseHandler = (request: any, response: any, responseParams: any, successCallback: any, errorCallback: any) => void;
 
 /**
  * Sends a request to given URL with given parameters
@@ -69,85 +70,77 @@ export default function nodeJsRequest(options: any) {
         };
     }
     
-    if (useWindowsAuth) {
-        const credential:Security.WindowsCredential = options.credentials;
-        const decrypted = credential.decrypt<Security.WindowsCredential>(GlobalStateCredentialStore.Instance, options.id);
+    let protocolRequest: (protocol: any, options: any, responseDelegate:ResponseHandler) => void;
 
+    if (useWindowsAuth) {
+        // NTLM works a little different from other request types.
+        const internalCredentials = Security.WindowsCredential.from(options.credentials);
+        let decrypted = internalCredentials.decrypt<Security.WindowsCredential>(GlobalStateCredentialStore.Instance, options.id) || internalCredentials;
+
+        // HttpNtlm does it's own path parsing.
+        internalOptions.url = parsedUrl.href;
         internalOptions.username = decrypted.username;
         internalOptions.password = decrypted.password;
         internalOptions.domain = decrypted.domain;
-    }
 
-    let request:any = protocolInterface[method](internalOptions, (response) => {
-        let rawData = '';
+        if (data) {
+            internalOptions.body = data;
+        }
 
-        response.setEncoding('utf8');
-        response.on('data', (chunk) => {
-            rawData += chunk;
-        });        
-        response.on('end', () => {
-            switch (response.statusCode) {
-                case 200: // Success with content returned in response body.
-                case 201: // Success with content returned in response body.
-                case 204: // Success with no content returned in response body.
-                case 304: {// Success with Not Modified
-                    var responseData = parseResponse(rawData, response.headers, responseParams);
-
-                    var response = {
-                        data: responseData,
-                        headers: response.headers,
-                        status: response.statusCode
-                    };
-
-                    successCallback(response);
-                    break;
+        protocolRequest = (protocol:any, options:any, responseDelegate:ResponseHandler) => protocol[options.method.toLowerCase()](
+            options, 
+            (error, response) => {
+                if (error) {
+                    responseParams.length = 0;
+                    errorCallback(error);
+                } else {
+                    responseDelegate(response.body, response, responseParams, successCallback, errorCallback);
                 }
-                default: // All other statuses are error cases.
-                    var internalError;
-                    try {
-                        var errorParsed = parseResponse(rawData, response.headers, responseParams);
+            });
+    } else {
+        protocolRequest = (protocol:any, options:any, responseDelegate:ResponseHandler) => protocol.request(
+            options, 
+            (response) => {
+                let rawData = '';
 
-                        if (Array.isArray(errorParsed)) {
-                            errorCallback(errorParsed);
-                            break;
-                        }
+                response.setEncoding('utf8');
+                
+                response.on('data', (chunk) => {
+                    rawData += chunk;
+                }); 
 
-                        internalError = errorParsed.hasOwnProperty('error') && errorParsed.error
-                            ? errorParsed.error
-                            : { message: errorParsed.Message };
+                response.on('end', () => {
+                    responseDelegate(rawData, response, responseParams, successCallback, errorCallback);
+                });
 
-                    } catch (e) {
-                        if (rawData.length > 0) {
-                            internalError = { message: rawData };
-                        }
-                        else {
-                            internalError = { message: "Unexpected Error" };
-                        }
-                    }
-
-                    errorCallback(ErrorHelper.handleHttpError(internalError, { status: response.statusCode, statusText: request.statusText, statusMessage: response.statusMessage }));
-
-                    break;
-            }
-
-            responseParams.length = 0;
-        });
-    });
-
-    if (internalOptions.timeout) {
-        request.setTimeout(internalOptions.timeout, () => {
-            request.abort();
-        });
+                responseParams.length = 0;
+            });
     }
 
-    request.on('error', (error) => {
-        responseParams.length = 0;
+    let request: any;
+
+    try {
+        request = protocolRequest(protocolInterface, internalOptions, oDataResponse.bind(this)); 
+    } catch (error) {
         errorCallback(error);
-    });
-
-    if (data) {
-        request.write(data);
+        return;
     }
 
-    request.end();
+    // NTLM just performs fire and forget, invoking callback when complete, others get these events.
+    if (request) {
+        if (internalOptions.timeout) {
+            global.setTimeout(() => request ? request.abort() : undefined, internalOptions.timeout);
+        }
+
+        request.on('error', (error) => {
+            responseParams.length = 0;
+            errorCallback(error);
+        });
+    
+        if (data) {
+            request.write(data);
+        }
+
+        request.end();
+    }
 }

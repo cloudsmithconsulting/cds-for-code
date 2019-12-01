@@ -43,18 +43,18 @@ export interface StringUtility {
    plural(value:string): string;
 }
 
-export type UtilityObject = {
-   Browser: BrowserUtility,
-   Encoding: EncodingUtility,
-   Guid: GuidUtility,
-   $Object: ObjectUtility,
-   String: StringUtility
-};
+export interface UtilityObject {
+   readonly Browser: BrowserUtility;
+   readonly Encoding: EncodingUtility;
+   readonly Guid: GuidUtility;
+   readonly $Object: ObjectUtility;
+   readonly String: StringUtility;
+}
 
-export const Utilities: UtilityObject = {
-   Browser: BrowserHelper,
-   Encoding: EncodingHelper,
-   Guid: GuidHelper,
-   $Object: ObjectHelper,
-   String: StringHelper
-};
+export class Utilities {
+   static get Browser(): BrowserUtility { return BrowserHelper; }
+   static get Encoding(): EncodingUtility { return EncodingHelper; }
+   static get Guid(): GuidUtility { return GuidHelper; }
+   static get $Object(): ObjectUtility { return ObjectHelper; }
+   static get String(): StringUtility { return StringHelper; }
+}
