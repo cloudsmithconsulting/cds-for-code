@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as cs from '../../cs';
 import fetch from 'node-fetch';
-import { Utilities } from '../../core/Utilities';
+import Utilities from '../../core/Utilities';
 import Dictionary from '../../core/types/Dictionary';
 import * as FileSystem from '../../core/io/FileSystem';
 import * as DynamicsTreeView from '../../views/DynamicsTreeView';

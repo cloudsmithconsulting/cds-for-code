@@ -4,7 +4,7 @@ import { TS } from 'typescript-linq/TS';
 import IContributor from '../core/CommandBuilder';
 import { ExtensionIconThemes } from "../components/WebDownloaders/Types";
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
-import { Utilities } from '../core/Utilities';
+import Utilities from '../core/Utilities';
 import TemplateManager from '../components/Templates/TemplateManager';
 import { TemplateItem, TemplateType } from "../components/Templates/Types";
 

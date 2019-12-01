@@ -8,7 +8,7 @@ import { ExtensionContext } from "vscode";
 import IContributor from "../../core/CommandBuilder";
 import { DynamicsWebApi } from "../../api/cds-webapi/DynamicsWebApi";
 import { CdsSolutions } from "../../api/CdsSolutions";
-import { Utilities } from "../../core/Utilities";
+import Utilities from "../../core/Utilities";
 import { WorkspaceFileSystemWatcher } from "../../core/io/FileManager";
 import { SolutionWorkspaceMapping } from "./Types";
 

@@ -4,7 +4,7 @@ import * as FileSystem from "../../core/io/FileSystem";
 import * as path from 'path';
 import { DynamicsWebApi } from "../../api/cds-webapi/DynamicsWebApi";
 import IContributor from '../../core/CommandBuilder';
-import { Utilities } from '../../core/Utilities';
+import Utilities from '../../core/Utilities';
 import SolutionMap from "./SolutionMap";
 import { SolutionWorkspaceMapping } from "./Types";
 import TemplateManager from "../Templates/TemplateManager";

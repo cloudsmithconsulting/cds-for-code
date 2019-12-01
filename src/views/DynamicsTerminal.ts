@@ -4,7 +4,7 @@ import * as cs from '../cs';
 import * as fs from 'fs';
 import * as eol from 'eol';
 import * as child_process from 'child_process';
-import { Utilities } from '../core/Utilities';
+import Utilities from '../core/Utilities';
 import Quickly, { QuickPickOption } from '../core/Quickly';
 import { TS } from 'typescript-linq';
 import { TextEncoder, TextDecoder } from 'util';

@@ -5,7 +5,7 @@ import * as path from 'path';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import Quickly from '../core/Quickly';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
-import { Utilities } from '../core/Utilities';
+import Utilities from '../core/Utilities';
 import SolutionMap from '../components/Solutions/SolutionMap';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import ExtensionContext from '../core/ExtensionContext';
@@ -57,7 +57,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	FileSystem.makeFolderSync(folder);
 	
 	toolsPath = toolsPath || coreToolsRoot;
-	if (Utilities.$Object.IsNull(toolsPath)) { return; }
+	if (Utilities.$Object.isNull(toolsPath)) { return; }
 
 	if (Utilities.$Object.isNullOrEmpty(logFile)) { 
 		if ((await Quickly.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
@@ -65,7 +65,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 		}
 	}
 
-	const splitUrl = Utilities.String.noSlashes(config.webApiUrl).split("/");
+	const splitUrl = Utilities.String.noTrailingSlash(config.webApiUrl).split("/");
 	let orgName;
 	let serverUrl;
 

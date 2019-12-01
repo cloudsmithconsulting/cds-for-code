@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { TS } from 'typescript-linq/TS';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import ApiRepository from '../repositories/apiRepository';
-import { Utilities } from '../core/Utilities';
+import Utilities from '../core/Utilities';
 import MetadataRepository from '../repositories/metadataRepository';
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';

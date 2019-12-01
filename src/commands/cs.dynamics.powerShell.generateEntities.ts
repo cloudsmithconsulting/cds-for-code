@@ -5,7 +5,7 @@ import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import Quickly, { WorkspaceFileItem } from '../core/Quickly';
 import ExtensionContext from "../core/ExtensionContext";
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
-import { Utilities } from '../core/Utilities';
+import Utilities from '../core/Utilities';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 import * as Security from "../core/security/Types";
@@ -69,6 +69,6 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 				})
 				.text(`-Path "${folder}" `)
 				.text(`-OutputFile "${outputFileName}" `)
-				.text(!Utilities.$Object.IsNull(namespace) ? `-Namespace "${namespace}" ` : ''));
+				.text(!Utilities.$Object.isNull(namespace) ? `-Namespace "${namespace}" ` : ''));
 		});
 }

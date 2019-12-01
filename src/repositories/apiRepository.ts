@@ -1,6 +1,6 @@
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import { CdsSolutions } from '../api/CdsSolutions';
-import { Utilities } from '../core/Utilities';
+import Utilities from '../core/Utilities';
 import ApiHelper from "./ApiHelper";
 import * as vscode from 'vscode';
 import * as path from 'path';

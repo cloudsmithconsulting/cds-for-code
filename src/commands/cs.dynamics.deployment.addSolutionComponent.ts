@@ -4,7 +4,7 @@ import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import { CdsSolutions } from '../api/CdsSolutions';
 import ApiRepository from '../repositories/apiRepository';
 import Quickly from '../core/Quickly';
-import { Utilities } from '../core/Utilities';
+import Utilities from '../core/Utilities';
 import ExtensionContext from "../core/ExtensionContext";
 
 /**

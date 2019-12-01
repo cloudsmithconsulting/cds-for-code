@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Utilities } from '../core/Utilities';
+import Utilities from '../core/Utilities';
 import { CdsSolutions } from './CdsSolutions';
 import { DynamicsWebApi } from './cds-webapi/DynamicsWebApi';
 
