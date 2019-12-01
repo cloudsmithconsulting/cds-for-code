@@ -5,7 +5,7 @@ import { DynamicsWebApi } from "../api/cds-webapi/DynamicsWebApi";
 import { CdsSolutions } from '../api/CdsSolutions';
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
-import Utilities from "../core/Utilities";
+import { Utilities } from "../core/Utilities";
 import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
 
 /**

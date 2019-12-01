@@ -12,7 +12,7 @@ import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import IContributor from '../../core/CommandBuilder';
 import Quickly from '../../core/Quickly';
 import Dictionary from '../../core/types/Dictionary';
-import Utilities from '../../core/Utilities';
+import { Utilities } from '../../core/Utilities';
 
 import createFromItemTemplate from "../../commands/cs.dynamics.controls.explorer.createFromItemTemplate";
 import createFromProjectTemplate from "../../commands/cs.dynamics.controls.explorer.createFromProjectTemplate";

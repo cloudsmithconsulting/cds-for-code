@@ -1,7 +1,7 @@
 import { TextEncoder } from "util";
 
-export const utf8encoder = new TextEncoder();
-    
+export const utf8encoder:TextEncoder = new TextEncoder();
+
 export function stringToBase64(string:string): string {
     return this.bytesToBase64(this.utf8encoder.encode(string));
 }

@@ -1,13 +1,60 @@
-import * as Object from "./helpers/Object";
-import * as Browser from "./helpers/Browser";
-import * as Encoding from "./helpers/Encoding";
-import * as Guid from "./helpers/Guid";
-import * as String from "./helpers/String";
+import * as vscode from 'vscode';
+import * as BrowserHelper from "./helpers/Browser";
+import * as EncodingHelper from "./helpers/Encoding";
+import * as GuidHelper from "./helpers/Guid";
+import * as ObjectHelper from "./helpers/Object";
+import * as StringHelper from "./helpers/String";
+import { TextEncoder } from 'util';
 
-export default class Utilities {
-   static Browser = Browser;
-   static Encoding = Encoding;
-   static Guid = Guid;
-   static $Object = Object;
-   static String = String;
+export interface BrowserUtility { 
+   openWindow(uri:vscode.Uri | string, retryFunction:(...rest:any) => any, tryAgainMessage?:string, closeMessage?:string, ...rest:any): void;
 }
+
+export interface EncodingUtility {
+   utf8encoder:TextEncoder;
+   
+   stringToBase64(string:string): string;
+   bytesToBase64(bytes:Uint8Array): string;
+   base64ToBytes(str:string): Uint8Array;
+   base64ToString(str:string): string;
+}
+
+export interface GuidUtility { 
+   newGuid(): string;
+   isGuid(parameter:string): boolean;
+   trimGuid(id: string): string;
+}
+
+export interface ObjectUtility {
+   isNullOrEmpty(value: any): boolean;
+   isNull(value: any): boolean;
+   isObject(obj):boolean;
+   asQuerystring(source:any): string;
+   clone<T>(src: T, target?: any): T;
+}
+
+export interface StringUtility {
+   parseUtcDate(date: string): Date;
+   dateAsFilename(): string;
+   withTrailingSlash(path: string | undefined): string;
+   noTrailingSlash(string: string): string;
+   noSlashes(string:string): string;
+   powerShellSafe(value: string): string;
+   plural(value:string): string;
+}
+
+export type UtilityObject = {
+   Browser: BrowserUtility,
+   Encoding: EncodingUtility,
+   Guid: GuidUtility,
+   $Object: ObjectUtility,
+   String: StringUtility
+};
+
+export const Utilities: UtilityObject = {
+   Browser: BrowserHelper,
+   Encoding: EncodingHelper,
+   Guid: GuidHelper,
+   $Object: ObjectHelper,
+   String: StringHelper
+};

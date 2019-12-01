@@ -1,7 +1,7 @@
 import buildFunctionParameters from './buildFunctionParameters';
 import getFetchXmlPagingCookie from './getFetchXmlPagingCookie';
 import convertToReferenceObject, { ReferenceObject } from './convertToReferenceObject';
-import Utilities from "../../../core/Utilities";
+import { Utilities } from "../../../core/Utilities";
 
 export default class Utility {
     /**
@@ -34,9 +34,9 @@ export default class Utility {
      * @param {Object} value
      * @returns {boolean}
      */
-    static isNull:(value: any) => boolean = Utilities.$Object.isNull.bind(Utility);
+    static isNull(value: any): boolean { return Utilities.$Object.isNull(value); }
 
-    static generateUUID:() => string = Utilities.Guid.newGuid.bind(Utility);
+    static generateUUID(): string { return Utilities.Guid.newGuid(); }
 
     static getXrmContext(): Xrm.GlobalContext {
         if (typeof GetGlobalContext !== 'undefined') {

@@ -4,7 +4,7 @@ import Quickly from '../core/Quickly';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import * as path from 'path';
 import ExtensionContext from '../core/ExtensionContext';
-import Utilities from '../core/Utilities';
+import { Utilities } from '../core/Utilities';
 
 /**
  * This command can be invoked by the Explorer file viewer and builds a .Net Core project

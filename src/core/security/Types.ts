@@ -1,5 +1,5 @@
 import Encryption from "./Encryption";
-import Utilities from "../Utilities";
+import { Utilities } from "../Utilities";
 
 /**
  * @type represents an item that can be secured.

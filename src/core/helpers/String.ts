@@ -1,4 +1,4 @@
-export function parseUtcDate(date: string) : Date {
+export function parseUtcDate(date: string): Date {
     let regexMatch: RegExpExecArray | (string | number)[];
     
     if (typeof date === 'string') {
@@ -42,7 +42,7 @@ export function noSlashes(string:string): string {
     return string.replace(/\/$/, "");
 }
 
-export function powerShellSafe(value: string) : string {
+export function powerShellSafe(value: string): string {
     return value.replace('$', '`$');
 }
 

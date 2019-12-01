@@ -5,7 +5,7 @@ import { TS } from 'typescript-linq';
 import ApiRepository from "../repositories/apiRepository";
 import MetadataRepository from "../repositories/metadataRepository";
 import { DynamicsWebApi } from "../api/cds-webapi/DynamicsWebApi";
-import Utilities from "./Utilities";
+import { Utilities } from "./Utilities";
 import Dictionary from "./types/Dictionary";
 import * as FileSystem from "./io/FileSystem";
 import { Octicon } from "./types/Octicon";

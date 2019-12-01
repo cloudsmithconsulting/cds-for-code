@@ -1,5 +1,5 @@
 import { performance } from "perf_hooks";
-import * as Object from "./Object";
+import * as $Object from "./Object";
 
 //https://stackoverflow.com/a/8809472
 export function newGuid(): string {
@@ -22,13 +22,13 @@ export function isGuid(parameter:string): boolean {
     try {
         const match = /[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}/i.exec(parameter)[0];
 
-        return !Object.isNull(match);
+        return !$Object.isNull(match);
     }
     catch (error) {
         return false;
     }
 }    
 
-export function trimGuid(id: string):string {
+export function trimGuid(id: string): string {
     return (id || '').replace(/{|}/g, '');
 }

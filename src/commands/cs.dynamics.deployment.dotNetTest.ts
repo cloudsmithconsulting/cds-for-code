@@ -4,7 +4,7 @@ import * as path from 'path';
 import Quickly from '../core/Quickly';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import ExtensionContext from '../core/ExtensionContext';
-import Utilities from '../core/Utilities';
+import { Utilities } from '../core/Utilities';
 
 /**
  * This command can be invoked by the Command Palette and builds and tests a .Net Core project

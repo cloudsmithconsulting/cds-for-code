@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 import IContributor from '../../core/CommandBuilder';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
-import Utilities from '../../core/Utilities';
+import { Utilities } from '../../core/Utilities';
 import GlobalState from '../Configuration/GlobalState';
 import TemplateManager from "../Templates/TemplateManager";
 import * as FileSystem from "../../core/io/FileSystem";
