@@ -43,7 +43,7 @@
         ///<param name="message" type="String">
         /// The error message text to include when the error is thrown.
         ///</param>
-        if (!parameter || typeof parameter !== "string" || parameter === "") {
+        if (parameter && typeof parameter !== "string" && parameter !== "") {
             this.throwParameterError(functionName, parameterName, "String");
         }
 
@@ -201,12 +201,12 @@
     static handleHttpError(parsedError: any, parameters?: any): Error {
         let error = new Error();
 
-        Object.keys(parsedError).forEach(function(k) {
+        Object.keys(parsedError).forEach(k => {
             error[k] = parsedError[k];
         });
 
         if (parameters) {
-            Object.keys(parameters).forEach(function (k) {
+            Object.keys(parameters).forEach(k => {
                 error[k] = parameters[k];
             });
         }
