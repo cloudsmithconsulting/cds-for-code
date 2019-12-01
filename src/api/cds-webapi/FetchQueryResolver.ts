@@ -1,12 +1,11 @@
 import { FetchQuery, FetchQueryCondition, GetRootQuery, Query, QueryResolver } from "./FetchQuery";
 
-export default class FetchQueryResolver implements QueryResolver
-{
-    public ResolveQuery(query: Query): string {
+export default class FetchQueryResolver implements QueryResolver {
+    ResolveQuery(query: Query): string {
         return FetchQueryResolver.ResolveQuery(query);
     }
 
-    public static ResolveQuery(query: Query, maxRowCount: number = 0, format: boolean = false): string {
+    static ResolveQuery(query: Query, maxRowCount: number = 0, format: boolean = false): string {
         const dataQuery = GetRootQuery(query);
 
         if (format) {
@@ -17,7 +16,7 @@ export default class FetchQueryResolver implements QueryResolver
         }
     }
     
-    private static GetDataQueryXml(query: FetchQuery, maxRowCount: number): string {
+    static GetDataQueryXml(query: FetchQuery, maxRowCount: number): string {
         var xml = [];
 
         xml.push('<fetch mapping="logical"');
@@ -46,6 +45,7 @@ export default class FetchQueryResolver implements QueryResolver
                 xml.push(`<attribute name="${attribute}" />`);
             }
         });
+
         query.OrderBy.forEach(attribute => {
             if (attribute.indexOf('_') === 0) {
                 xml.push(`<order attribute="${attribute.slice(1)}" descending="true" />`);
@@ -54,19 +54,26 @@ export default class FetchQueryResolver implements QueryResolver
                 xml.push(`<order attribute="${attribute}" />`);
             }
         });
+
         if (query.Conditions.length > 0) {
             var hasOrCondition = false;
             var filters = [];
+
             filters.push('<filter type="and">');
+
             for (var filter of query.Conditions) {
                 if (filter && filter.hasOwnProperty('length')) {
                     hasOrCondition = true;
+
                     var conditions = <FetchQueryCondition[]>filter;
+                    
                     filters.push('</filter>');
                     filters.push('<filter type="or">');
+                    
                     for (var condition of conditions) {
                         filters.push(this.getConditionXml(condition));
                     }
+                    
                     filters.push('</filter>');
                     filters.push('<filter type="and">');
                 }
@@ -74,6 +81,7 @@ export default class FetchQueryResolver implements QueryResolver
                     filters.push(this.getConditionXml(<FetchQueryCondition>filter));
                 }
             }
+
             filters.push('</filter>');
     
             if (hasOrCondition) {
@@ -82,6 +90,7 @@ export default class FetchQueryResolver implements QueryResolver
             }
     
             var skipNextFilter;
+            
             for (var i = 0; i < filters.length; i++) {
                 if (filters[i] && filters[i + 1] && filters[i].indexOf('<filter') > -1 && filters[i + 1].indexOf('/filter>') > -1) {
                     skipNextFilter = true;

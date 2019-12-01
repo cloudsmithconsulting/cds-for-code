@@ -6,7 +6,8 @@ import * as FileSystem from '../../core/io/FileSystem';
 import { TS } from "typescript-linq";
 import { ExtensionContext } from "vscode";
 import IContributor from "../../core/CommandBuilder";
-import { DynamicsWebApi } from "../../api/Types";
+import { DynamicsWebApi } from "../../api/cds-webapi/DynamicsWebApi";
+import { CdsSolutions } from "../../api/CdsSolutions";
 import { Utilities } from "../../core/Utilities";
 import { WorkspaceFileSystemWatcher } from "../../core/io/FileManager";
 import { SolutionWorkspaceMapping } from "./Types";
@@ -243,9 +244,9 @@ export default class SolutionMap implements IContributor {
         } else {
             //TODO: complete this switch statement.
             switch (component) {
-                case DynamicsWebApi.SolutionComponent.PluginAssembly:
+                case CdsSolutions.SolutionComponent.PluginAssembly:
                     break;
-                case DynamicsWebApi.SolutionComponent.WebResource:
+                case CdsSolutions.SolutionComponent.WebResource:
                     returnPath = path.join(solutionPath, "WebResources");
                     
                     if (item && item.name) {

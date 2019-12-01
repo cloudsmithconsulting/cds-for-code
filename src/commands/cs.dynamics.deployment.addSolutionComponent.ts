@@ -1,6 +1,7 @@
 import * as cs from "../cs";
 import * as vscode from 'vscode';
-import { DynamicsWebApi } from '../api/Types';
+import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsSolutions } from '../api/CdsSolutions';
 import ApiRepository from '../repositories/apiRepository';
 import Quickly from '../core/Quickly';
 import { Utilities } from '../core/Utilities';
@@ -12,7 +13,7 @@ import ExtensionContext from "../core/ExtensionContext";
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(config?:DynamicsWebApi.Config, solution?:any, componentId?:string, componentType?:DynamicsWebApi.SolutionComponent, addRequiredComponents?:boolean, doNotIncludeSubcomponents?:boolean, componentSettings?:string): Promise<any> {
+export default async function run(config?:DynamicsWebApi.Config, solution?:any, componentId?:string, componentType?:CdsSolutions.SolutionComponent, addRequiredComponents?:boolean, doNotIncludeSubcomponents?:boolean, componentSettings?:string): Promise<any> {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
 	if (!config) { return; }
 
@@ -20,11 +21,11 @@ export default async function run(config?:DynamicsWebApi.Config, solution?:any, 
 	if (!solution) { return; }
 
 	componentType = componentType || await Quickly.pickCdsSolutionComponentType("Choose a component to add", [
-		DynamicsWebApi.SolutionComponent.Entity,
-		DynamicsWebApi.SolutionComponent.OptionSet,
-		DynamicsWebApi.SolutionComponent.PluginAssembly,
-		DynamicsWebApi.SolutionComponent.WebResource,
-		DynamicsWebApi.SolutionComponent.Workflow
+		CdsSolutions.SolutionComponent.Entity,
+		CdsSolutions.SolutionComponent.OptionSet,
+		CdsSolutions.SolutionComponent.PluginAssembly,
+		CdsSolutions.SolutionComponent.WebResource,
+		CdsSolutions.SolutionComponent.Workflow
 	]);
 	if (!componentType) { return; }
 	

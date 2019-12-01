@@ -1,25 +1,25 @@
 import * as vscode from 'vscode';
-import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
+import { CdsSolutions } from "../api/CdsSolutions";
 import { Utilities } from '../core/Utilities';
 import GlobalState from '../components/Configuration/GlobalState';
-import { DynamicsWebApi } from '../api/Types';
+import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 
 export default class DiscoveryRepository {
     private config:DynamicsWebApi.Config;
 
     constructor (config:DynamicsWebApi.Config) {
         this.config = config;
-        this.webapi = new DynamicsWebApiClient(this.config);
+        this.webapi = new DynamicsWebApi.WebApiClient(this.config);
     }
 
-    private webapi: DynamicsWebApiClient;
+    private webapi: DynamicsWebApi.WebApiClient;
 
     async retrieveOrganizations() : Promise<any> {
         return this.webapi.discover()
             .then(result => result.value);
     }
 
-    static getConnections(context: vscode.ExtensionContext):DynamicsWebApi.Config[] {
+    static getConnections(context: vscode.ExtensionContext): DynamicsWebApi.Config[] {
         const connections: DynamicsWebApi.Config[] | undefined = GlobalState.Instance.DynamicsConnections;
 
         return connections;
@@ -47,7 +47,7 @@ export default class DiscoveryRepository {
         GlobalState.Instance.DynamicsConnections = connections;
     }
 
-    static createOrganizationConnection(org: any, connection: DynamicsWebApi.Config):DynamicsWebApi.Config {
+    static createOrganizationConnection(org: any, connection: DynamicsWebApi.Config): DynamicsWebApi.Config {
         const versionSplit = org.Version.split('.');
         // Clone the current connection and override the endpoint and version.
         const orgConnection = Utilities.$Object.Clone<DynamicsWebApi.Config>(connection);

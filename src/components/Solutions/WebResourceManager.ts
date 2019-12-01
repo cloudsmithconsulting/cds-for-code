@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as cs from '../../cs';
 import * as FileSystem from "../../core/io/FileSystem";
 import * as path from 'path';
-import { DynamicsWebApi } from "../../api/Types";
+import { DynamicsWebApi } from "../../api/cds-webapi/DynamicsWebApi";
 import IContributor from '../../core/CommandBuilder';
 import { Utilities } from '../../core/Utilities';
 import SolutionMap from "./SolutionMap";
@@ -20,19 +20,10 @@ import packWebResource from "../../commands/cs.dynamics.deployment.packWebResour
 import unpackWebResource from "../../commands/cs.dynamics.deployment.unpackWebResource";
 import SolutionFile from '../SolutionXml/SolutionFile';
 import Quickly from '../../core/Quickly';
+import ExtensionContext from '../../core/ExtensionContext';
+import { CdsSolutions } from '../../api/CdsSolutions';
 
 export default class WebResourceManager implements IContributor {
-    /**
-     * local copy of workspace configuration to maintain consistency between calls
-     */
-    private static context: vscode.ExtensionContext;
-
-    constructor(context: vscode.ExtensionContext) {
-        WebResourceManager.context = context;
-    }
-
-    get context():vscode.ExtensionContext { return WebResourceManager.context; }
-
     contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
         // now wire a command into the context
         context.subscriptions.push(
@@ -46,7 +37,7 @@ export default class WebResourceManager implements IContributor {
     }
 
     getSolutionMapping(fsPath?:string, orgId?:string, solutionId?:string): SolutionWorkspaceMapping {
-        const solutionMap = SolutionMap.loadFromWorkspace(this.context);
+        const solutionMap = SolutionMap.loadFromWorkspace(ExtensionContext.Instance);
         let mappings;
 
         if (fsPath && FileSystem.exists(fsPath)) {
@@ -65,9 +56,9 @@ export default class WebResourceManager implements IContributor {
         
         if (!extension.startsWith(".")) { extension = "." + extension; }
         
-        const webResourceType = EnumParser.getValues<DynamicsWebApi.WebResourceFileType>(DynamicsWebApi.WebResourceFileType).find(e => e.toString() === extension);
+        const webResourceType = EnumParser.getValues<CdsSolutions.WebResourceFileType>(CdsSolutions.WebResourceFileType).find(e => e.toString() === extension);
 
-        return webResourceType ? DynamicsWebApi.CodeMappings.getWebResourceTypeCode(webResourceType) : undefined;
+        return webResourceType ? CdsSolutions.CodeMappings.getWebResourceTypeCode(webResourceType) : undefined;
     }
 
     async getWebResourceDetails(fsPath:string | undefined): Promise<any> {
@@ -137,7 +128,7 @@ export default class WebResourceManager implements IContributor {
         // Edit the solution.xml file and add the component there, too.
         const solutionFile = await SolutionFile.from(SolutionMap.mapWorkspacePath(map.path));
 
-        await solutionFile.addComponent(DynamicsWebApi.SolutionComponent.WebResource, undefined, webResource.name, 0).then(() => {
+        await solutionFile.addComponent(CdsSolutions.SolutionComponent.WebResource, undefined, webResource.name, 0).then(() => {
             solutionFile.save(SolutionMap.mapWorkspacePath(map.path));
         });
     }

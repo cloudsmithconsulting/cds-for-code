@@ -6,7 +6,8 @@ import Quickly, { WorkspaceFileItem } from '../core/Quickly';
 import ExtensionContext from "../core/ExtensionContext";
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import { Utilities } from '../core/Utilities';
-import { DynamicsWebApi } from '../api/Types';
+import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 
 /**
  * This command can be invoked by the Command Pallette or external sources and generates .Net code
@@ -53,8 +54,8 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 			return await terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
 				.text(`-ToolsPath ${coreToolsRoot} `)
 				.text(`-Url "${Utilities.String.EnforceTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `)
-				.text(`-Username "${config.username}" -Password "`)
-				.sensitive(`${Utilities.String.PowerShellSafeString(config.password)}`)
+				.text(`-Username "${config.credentials.username}" -Password "`)
+				.sensitive(`${Utilities.String.PowerShellSafeString(config.credentials.decrypt(GlobalStateCredentialStore.Instance))}`)
 				.text(`" `)
 				.text((config.domain ? `-Domain "${config.domain}" ` : ''))
 				.text(`-Path "${folder}" `)

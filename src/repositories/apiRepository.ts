@@ -1,5 +1,5 @@
-import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
-import { DynamicsWebApi } from '../api/Types';
+import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsSolutions } from '../api/CdsSolutions';
 import { Utilities } from '../core/Utilities';
 import ApiHelper from "./ApiHelper";
 import * as vscode from 'vscode';
@@ -11,10 +11,10 @@ export default class ApiRepository {
 
     constructor (config:DynamicsWebApi.Config) {
         this.config = config;
-        this.webapi = new DynamicsWebApiClient(this.config);
+        this.webapi = new DynamicsWebApi.WebApiClient(this.config);
     }
 
-    private webapi: DynamicsWebApiClient;
+    private webapi: DynamicsWebApi.WebApiClient;
 
     publishXml(xml:string) : Promise<any> {
         return this.webapi.executeUnboundAction("PublishXml", { ParameterXml: xml });
@@ -85,7 +85,7 @@ export default class ApiRepository {
         }
 
         if (solutionId && Utilities.Guid.IsGuid(solutionId)) { 
-            const components = (await ApiHelper.getSolutionComponents(this.webapi, solutionId, DynamicsWebApi.SolutionComponent.WebResource)).map(c => `'${c["objectid"]}'`).join(",");
+            const components = (await ApiHelper.getSolutionComponents(this.webapi, solutionId, CdsSolutions.SolutionComponent.WebResource)).map(c => `'${c["objectid"]}'`).join(",");
 
             if (!Utilities.$Object.IsNullOrEmpty(components)) {
                 request.filter += ` and Microsoft.Dynamics.CRM.In(PropertyName='webresourceid',PropertyValues=[${components}])`;
@@ -131,7 +131,7 @@ export default class ApiRepository {
         }
 
         if (solutionId && Utilities.Guid.IsGuid(solutionId)) { 
-            const components = (await ApiHelper.getSolutionComponents(this.webapi, solutionId, DynamicsWebApi.SolutionComponent.WebResource)).map(c => `'${c["objectid"]}'`).join(",");
+            const components = (await ApiHelper.getSolutionComponents(this.webapi, solutionId, CdsSolutions.SolutionComponent.WebResource)).map(c => `'${c["objectid"]}'`).join(",");
 
             if (!Utilities.$Object.IsNullOrEmpty(components)) {
                 if (!Utilities.$Object.IsNullOrEmpty(request.filter)) {
@@ -194,7 +194,7 @@ export default class ApiRepository {
         };
 
         return this.webapi.retrieveAllRequest(request)
-            .then(pluginResponse => ApiHelper.filterSolutionComponents(this.webapi, pluginResponse, solutionId, DynamicsWebApi.SolutionComponent.PluginAssembly, w => w["pluginassemblyid"]))
+            .then(pluginResponse => ApiHelper.filterSolutionComponents(this.webapi, pluginResponse, solutionId, CdsSolutions.SolutionComponent.PluginAssembly, w => w["pluginassemblyid"]))
             .then(response => response ? response
                 .where(p => p["ishidden"].Value === false)
                 .toArray() : []);
@@ -245,11 +245,7 @@ export default class ApiRepository {
 
     // Gets a list of entities and their IDs
     retrieveEntityTypeCodes() : Promise<any[]> {
-        let entitiesQuery:DynamicsWebApi.RetrieveMultipleRequest = {
-            select: [ "MetadataId", "LogicalName", "ObjectTypeCode" ]
-        };
-
-        return this.webapi.retrieveEntitiesRequest(entitiesQuery)
+        return this.webapi.retrieveEntities([ "MetadataId", "LogicalName", "ObjectTypeCode" ])
             .then(response => response.value ? new TS.Linq.Enumerator(response.value).orderBy(e => e["LogicalName"]).toArray() : []);
     }
 
@@ -484,11 +480,11 @@ export default class ApiRepository {
         }
     }
 
-    addSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
+    addSolutionComponent(solution:any, componentId:string, componentType:CdsSolutions.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
         // This action allows you to call it on components that are already added, no need for a check.
         const parameters:any = { 
             ComponentId: componentId,
-            ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
+            ComponentType: CdsSolutions.CodeMappings.getSolutionComponentCode(componentType),
             SolutionUniqueName: solution.uniquename,  
             AddRequiredComponents: addRequiredComponents,
             DoNotIncludeSubcomponents: doNotIncludeSubcomponents,
@@ -498,10 +494,10 @@ export default class ApiRepository {
         return this.webapi.executeUnboundAction("AddSolutionComponent", parameters);
     }
 
-    getSolutionComponent(componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
+    getSolutionComponent(componentId:string, componentType:CdsSolutions.SolutionComponent): Promise<any> {
         const solutionQuery:DynamicsWebApi.RetrieveMultipleRequest = {
             collection: "solutioncomponents",
-            filter: `componenttype eq ${DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType)} and objectid eq ${componentId}`
+            filter: `componenttype eq ${CdsSolutions.CodeMappings.getSolutionComponentCode(componentType)} and objectid eq ${componentId}`
         };    
 
         return this.webapi.retrieveMultipleRequest(solutionQuery)
@@ -531,7 +527,7 @@ export default class ApiRepository {
         });
     }
 
-    removeSolutionComponent(solution:any, componentId:string, componentType:DynamicsWebApi.SolutionComponent): Promise<any> {
+    removeSolutionComponent(solution:any, componentId:string, componentType:CdsSolutions.SolutionComponent): Promise<any> {
         return this.getSolutionComponent(componentId, componentType)
             .then(solutionComponent => {
                 if (!solutionComponent) { return; }
@@ -541,7 +537,7 @@ export default class ApiRepository {
                     SolutionComponent: {
                         "solutioncomponentid": solutionComponent.objectid,
                         "@odata.type":"Microsoft.Dynamics.CRM.solutioncomponent"},
-                    ComponentType: DynamicsWebApi.CodeMappings.getSolutionComponentCode(componentType),
+                    ComponentType: CdsSolutions.CodeMappings.getSolutionComponentCode(componentType),
                     SolutionUniqueName: solution.uniquename
                 };
 

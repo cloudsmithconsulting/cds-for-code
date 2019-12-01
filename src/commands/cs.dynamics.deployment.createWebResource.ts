@@ -2,7 +2,8 @@ import * as cs from "../cs";
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as FileSystem from "../core/io/FileSystem";
-import { DynamicsWebApi } from "../api/Types";
+import { DynamicsWebApi } from "../api/cds-webapi/DynamicsWebApi";
+import { CdsSolutions } from "../api/CdsSolutions";
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
 import { Utilities } from "../core/Utilities";
@@ -106,7 +107,7 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
 
     if (fsPath) {
         if (map) {
-            fsPath = map.getPath(DynamicsWebApi.SolutionComponent.WebResource, webResource);
+            fsPath = map.getPath(CdsSolutions.SolutionComponent.WebResource, webResource);
         } else {
             fsPath = fsPath === folder ? path.join(fsPath, webResource.name.replace(defaultName, "")) : fsPath;
         }

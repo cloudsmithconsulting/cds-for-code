@@ -3,9 +3,20 @@ import Encryption from "../security/Encryption";
 import ExtensionContext from "../ExtensionContext";
 
 export default class GlobalStateCredentialStore extends Security.CredentialStore {
+    private static _instance:GlobalStateCredentialStore;    
     private static keyPrefix = "cs.credentialStore:";
 
-    protected get cryptography(): Security.ICryptography {
+    static get Instance():GlobalStateCredentialStore { 
+        if (!this._instance) {
+            this._instance = new GlobalStateCredentialStore();
+        }
+
+        return this._instance;
+    }
+
+    private constructor() { super(); }
+
+    get cryptography(): Security.ICryptography {
         return Encryption.machine;
     }
     

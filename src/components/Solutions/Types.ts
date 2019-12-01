@@ -1,5 +1,5 @@
 import { RelativePattern } from "vscode";
-import { DynamicsWebApi } from "../../api/Types";
+import { CdsSolutions } from "../../api/CdsSolutions";
 import * as vscode from 'vscode';
 import SolutionMap from "./SolutionMap";
 
@@ -14,7 +14,7 @@ export class SolutionWorkspaceMapping {
     organizationId: string;
     path: string;
     
-    getPath(component?: DynamicsWebApi.SolutionComponent, item?: any): string {
+    getPath(component?: CdsSolutions.SolutionComponent, item?: any): string {
         return SolutionMap.mapWorkspacePath(this.path, component, item);
     }
 

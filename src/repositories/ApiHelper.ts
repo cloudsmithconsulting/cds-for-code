@@ -1,15 +1,15 @@
-import { DynamicsWebApiClient } from "../api/DynamicsWebApi";
-import { DynamicsWebApi } from '../api/Types';
+import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsSolutions } from '../api/CdsSolutions';
 import { TS } from 'typescript-linq/TS';
 
 export default class ApiHelper {
-    static isOuterJoin(componentType:DynamicsWebApi.SolutionComponent | DynamicsWebApi.SolutionComponent[]) {
-        const innerFunction = (type:DynamicsWebApi.SolutionComponent) => {
+    static isOuterJoin(componentType:CdsSolutions.SolutionComponent | CdsSolutions.SolutionComponent[]) {
+        const innerFunction = (type:CdsSolutions.SolutionComponent) => {
             switch (type) {
-                case DynamicsWebApi.SolutionComponent.Form:
-                case DynamicsWebApi.SolutionComponent.SystemForm:
-                case DynamicsWebApi.SolutionComponent.SavedQuery:
-                case DynamicsWebApi.SolutionComponent.SavedQueryVisualization:
+                case CdsSolutions.SolutionComponent.Form:
+                case CdsSolutions.SolutionComponent.SystemForm:
+                case CdsSolutions.SolutionComponent.SavedQuery:
+                case CdsSolutions.SolutionComponent.SavedQueryVisualization:
                     return true;
             }
     
@@ -17,9 +17,9 @@ export default class ApiHelper {
         };
 
         if (!(componentType instanceof Array)) {
-            return innerFunction(<DynamicsWebApi.SolutionComponent>componentType);
+            return innerFunction(<CdsSolutions.SolutionComponent>componentType);
         } else {
-            (<DynamicsWebApi.SolutionComponent[]>componentType).forEach(c => {
+            (<CdsSolutions.SolutionComponent[]>componentType).forEach(c => {
                 if (innerFunction(c)) {
                     return true;
                 }
@@ -29,7 +29,7 @@ export default class ApiHelper {
         }
     }
 
-    static async getSolutionComponents(api: DynamicsWebApiClient, solutionId?:string, componentType?:DynamicsWebApi.SolutionComponent | DynamicsWebApi.SolutionComponent[]): Promise<any[]> {
+    static async getSolutionComponents(api: DynamicsWebApi.WebApiClient, solutionId?:string, componentType?:CdsSolutions.SolutionComponent | CdsSolutions.SolutionComponent[]): Promise<any[]> {
         return this.getSolutionComponentsRaw(api, solutionId, componentType)
             .then(solution => {
                  if (solution && solution.solution_solutioncomponent && solution.solution_solutioncomponent.length > 0) {
@@ -40,7 +40,7 @@ export default class ApiHelper {
             });
     }
 
-    static async filterSolutionComponents(api: DynamicsWebApiClient, response:any, solutionId?:string, componentType?:DynamicsWebApi.SolutionComponent | DynamicsWebApi.SolutionComponent[], keySelector?:(item:unknown) => any): Promise<TS.Linq.Enumerator<any>> {
+    static async filterSolutionComponents(api: DynamicsWebApi.WebApiClient, response:any, solutionId?:string, componentType?:CdsSolutions.SolutionComponent | CdsSolutions.SolutionComponent[], keySelector?:(item:unknown) => any): Promise<TS.Linq.Enumerator<any>> {
         if (solutionId && componentType && keySelector) {
             return this.getSolutionComponentsRaw(api, solutionId, componentType).then(solution => {
                 if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0) {
@@ -66,13 +66,13 @@ export default class ApiHelper {
         }          
     }    
 
-    private static async getSolutionComponentsRaw(api: DynamicsWebApiClient, solutionId?:string, componentType?:DynamicsWebApi.SolutionComponent | DynamicsWebApi.SolutionComponent[]): Promise<any> {
+    private static async getSolutionComponentsRaw(api: DynamicsWebApi.WebApiClient, solutionId?:string, componentType?:CdsSolutions.SolutionComponent | CdsSolutions.SolutionComponent[]): Promise<any> {
         const getSolutionComponentFilter = () => {
             if (!(componentType instanceof Array)) {
-                return `componenttype eq ${DynamicsWebApi.CodeMappings.getSolutionComponentCode(<DynamicsWebApi.SolutionComponent>componentType)}`;
+                return `componenttype eq ${CdsSolutions.CodeMappings.getSolutionComponentCode(<CdsSolutions.SolutionComponent>componentType)}`;
             } else {
-                const filterString = new TS.Linq.Enumerator(<DynamicsWebApi.SolutionComponent[]>componentType)
-                    .select(c => `'${DynamicsWebApi.CodeMappings.getSolutionComponentCode(c)}'`)
+                const filterString = new TS.Linq.Enumerator(<CdsSolutions.SolutionComponent[]>componentType)
+                    .select(c => `'${CdsSolutions.CodeMappings.getSolutionComponentCode(c)}'`)
                     .toArray()
                     .join(",");
 

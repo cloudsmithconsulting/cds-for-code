@@ -1,19 +1,20 @@
 import * as vscode from 'vscode';
 import { Utilities } from '../core/Utilities';
-import { DynamicsWebApi } from './Types';
+import { CdsSolutions } from './CdsSolutions';
+import { DynamicsWebApi } from './cds-webapi/DynamicsWebApi';
 
 export default class DynamicsUrlResolver
 {
-    static parseFormType(formType:number): DynamicsWebApi.DynamicsForm {
-        return DynamicsWebApi.CodeMappings.DynamicsForms[formType];
+    static parseFormType(formType:number): CdsSolutions.DynamicsForm {
+        return CdsSolutions.CodeMappings.DynamicsForms[formType];
     }
 
-    static parseProcessType(processType:number): DynamicsWebApi.ProcessType {
-        return DynamicsWebApi.CodeMappings.ProcessTypes[processType];
+    static parseProcessType(processType:number): CdsSolutions.ProcessType {
+        return CdsSolutions.CodeMappings.ProcessTypes[processType];
     }
 
-    static parseSolutionComponent(solutionComponent:number): DynamicsWebApi.SolutionComponent {
-        return DynamicsWebApi.CodeMappings.SolutionComponents[solutionComponent];
+    static parseSolutionComponent(solutionComponent:number): CdsSolutions.SolutionComponent {
+        return CdsSolutions.CodeMappings.SolutionComponents[solutionComponent];
     }
 
     static getManageSolutionUri(config:DynamicsWebApi.Config, solutionId?:string): string {
@@ -74,7 +75,7 @@ export default class DynamicsUrlResolver
         return this.addSolutionToUri(uriString);
     }
 
-    static getManageEntityFormUri(config:DynamicsWebApi.Config, entityTypeCode:string, formType:DynamicsWebApi.DynamicsForm = DynamicsWebApi.DynamicsForm.Main, formId?:string, solutionId?:string): string {
+    static getManageEntityFormUri(config:DynamicsWebApi.Config, entityTypeCode:string, formType:CdsSolutions.DynamicsForm = CdsSolutions.DynamicsForm.Main, formId?:string, solutionId?:string): string {
         let uriString:string = `${Utilities.String.EnforceTrailingSlash(config.webApiUrl)}main.aspx?pagetype=formeditor&etc=${entityTypeCode}`;
         let options;
 
@@ -132,7 +133,7 @@ export default class DynamicsUrlResolver
         return uriString;
     }
 
-    static getManageEntityDashboardUri(config:DynamicsWebApi.Config, entityTypeCode?:string, layoutType?:DynamicsWebApi.InteractiveDashboardLayout, dashboardType?:string, dashboardId?:string, solutionId?:string): string {
+    static getManageEntityDashboardUri(config:DynamicsWebApi.Config, entityTypeCode?:string, layoutType?:CdsSolutions.InteractiveDashboardLayout, dashboardType?:string, dashboardId?:string, solutionId?:string): string {
         let uriString:string = `${Utilities.String.EnforceTrailingSlash(config.webApiUrl)}main.aspx?pagetype=icdashboardeditor`;
         
         if (entityTypeCode) {
@@ -150,7 +151,7 @@ export default class DynamicsUrlResolver
         } 
         
         if (layoutType) {
-            options["layout"] = DynamicsWebApi.CodeMappings.getInteractiveDashboardLayout(layoutType);
+            options["layout"] = CdsSolutions.CodeMappings.getInteractiveDashboardLayout(layoutType);
         }
 
         uriString += `&extraqs=${DynamicsUrlResolver.escapeOptions(options)}`;
@@ -195,13 +196,13 @@ export default class DynamicsUrlResolver
         return this.addSolutionToUri(uriString, solutionId);
     }
 
-    static getManageBusinessProcessUri(config:DynamicsWebApi.Config, processType:DynamicsWebApi.ProcessType, entityTypeCode?:number, processId?:string, solutionId?:string): string {
+    static getManageBusinessProcessUri(config:DynamicsWebApi.Config, processType:CdsSolutions.ProcessType, entityTypeCode?:number, processId?:string, solutionId?:string): string {
         let uriString:string;
         let uri: string;
 
         switch (processType)
         {
-            case DynamicsWebApi.ProcessType.BusinessRule:
+            case CdsSolutions.ProcessType.BusinessRule:
                 uriString = `${Utilities.String.EnforceTrailingSlash(config.webApiUrl)}tools/systemcustomization/businessrules/businessRulesDesigner.aspx?BRLaunchpoint=BRGrid&otc=${entityTypeCode}&templateId=0`;
 
                 if (processId) {
@@ -210,9 +211,9 @@ export default class DynamicsUrlResolver
 
                 uri = this.addSolutionToUri(uriString);
                 break;
-            case DynamicsWebApi.ProcessType.Flow:
+            case CdsSolutions.ProcessType.Flow:
                 break;
-            case DynamicsWebApi.ProcessType.BusinessProcessFlow:
+            case CdsSolutions.ProcessType.BusinessProcessFlow:
                 uriString = `${Utilities.String.EnforceTrailingSlash(config.webApiUrl)}Tools/ProcessControl/UnifiedProcessDesigner.aspx?`;
 
                 if (processId) {
@@ -221,9 +222,9 @@ export default class DynamicsUrlResolver
 
                 uri = this.addSolutionToUri(uriString);
                 break;
-            case DynamicsWebApi.ProcessType.Dialog:
-            case DynamicsWebApi.ProcessType.Action:
-            case DynamicsWebApi.ProcessType.Workflow:
+            case CdsSolutions.ProcessType.Dialog:
+            case CdsSolutions.ProcessType.Action:
+            case CdsSolutions.ProcessType.Workflow:
                 uriString = `${Utilities.String.EnforceTrailingSlash(config.webApiUrl)}sfa/workflow/edit.aspx?`;
 
                 if (processId) {

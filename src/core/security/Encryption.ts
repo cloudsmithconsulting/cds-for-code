@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as crypto from 'crypto';
-import { ICryptography, ISecureItem, Securable, SecureOutput } from './Types';
+import { ICryptography, ISecureItem, Securable, SecureOutput, SecureItem } from './Types';
 
 /**
  * Abstraction for handling symetric cryptography using algorithms like AES, 3DES, etc.
@@ -60,48 +60,6 @@ class SymetricCryptography {
         decrypted = Buffer.concat([decrypted, decipher.final()]);
 
         return decrypted;
-    }
-}
-
-
-/**
- * Represents a secure item (string or buffer) with the needed components
- * (minus key, of course) to decrypt them.
- *
- * @class SecureItem
- */
-class SecureItem implements ISecureItem {
-    static from(iv: Securable, data: Securable, preferredOutput: SecureOutput = SecureOutput.Buffer): SecureItem {
-        return new SecureItem(iv, data, preferredOutput);
-    }
-
-    private constructor(readonly iv: Securable, readonly data: Securable, readonly preferredOutput: SecureOutput) {
-        if (!Buffer.isBuffer(iv)) {
-            this.iv = Buffer.from(iv);
-        }
-    
-        if (!Buffer.isBuffer(data)) {
-            this.data = Buffer.from(data);
-        }
-    }
-
-    decrypt(decryptStore:ICryptography): Securable {
-        const returnValue = decryptStore.decrypt(this);
-    
-        if (this.preferredOutput === SecureOutput.Buffer) {
-            return returnValue;
-        }
-        else {
-            return returnValue.toString();
-        }
-    }
-    
-    get buffer(): { iv: Buffer; data: Buffer; } {
-        return { iv: <Buffer>this.iv, data: <Buffer>this.data };
-    }
-    
-    get string(): { iv: string; data: string; } {
-        return { iv: this.iv.toString('hex'), data: this.data.toString('hex') };
     }
 }
 
@@ -209,11 +167,6 @@ export default class Encryption {
 
     static isSecurable(item:any): boolean {
         return Buffer.isBuffer(item) || typeof(item) === "string";
-    }
-
-    static isSecure(item:any): boolean {
-        return ((item.buffer && item.buffer.iv && item.buffer.data)
-            || (item.string && item.string.iv && item.string.data));
     }
 
     static decrypt(item:ISecureItem, store:ICryptography): Securable {

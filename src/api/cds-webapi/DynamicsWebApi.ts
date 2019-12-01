@@ -5,6 +5,8 @@ import { ICredential } from "../../core/security/Types";
 import Utility from './utilities/Utility';
 import ErrorHelper from './helpers/ErrorHelper';
 import * as Request from './requests/sendRequest';
+import { Query } from "./FetchQuery";
+import FetchQueryResolver from "./FetchQueryResolver";
 
 //string es6 polyfill
 if (!String.prototype.endsWith || !String.prototype.startsWith) {
@@ -206,6 +208,8 @@ export namespace DynamicsWebApi {
      * @property {boolean} useEntityNames - Indicates whether to use Entity Logical Names instead of Collection Logical Names.
     */
     export interface Config {
+        /** the unique ID of the configuration */
+        id: string; 
         /** The name of the connection */
         name: string;
         /** The type of connection/configuration this relates to */
@@ -292,6 +296,7 @@ export namespace DynamicsWebApi {
         */
         constructor(readonly config?: DynamicsWebApi.Config) {
             this._internalConfig = {
+                id: Utility.generateUUID(),
                 webApiVersion: "8.0",
                 type: null,
                 name: null,
@@ -850,15 +855,14 @@ export namespace DynamicsWebApi {
         /**
          * Sends an asynchronous request to count records. Returns: DWA.Types.FetchXmlResponse
          *
-         * @param collection - The name of the Entity Collection or Entity Logical name.
-         * @param fetchXml - FetchXML is a proprietary query language that provides capabilities to perform aggregation.
+         * @param query - A FetchXml Query that contains the request
          * @param includeAnnotations - Use this parameter to include annotations to a result. For example: * or Microsoft.Dynamics.CRM.fetchxmlpagingcookie
          * @param pageNumber - Page number.
          * @param pagingCookie - Paging cookie. For retrieving the first page, pagingCookie should be null.
          * @param impersonateUserId - A String representing the GUID value for the Dynamics 365 system user id. Impersonates the user.
          */
-        fetch(collection: string, fetchXml: string, includeAnnotations?: string, pageNumber?: number, pagingCookie?: string, impersonateUserId?: string): Promise<any> {
-            return this._executeFetchXml(collection, fetchXml, includeAnnotations, pageNumber, pagingCookie, impersonateUserId);
+        fetch(query: Query, includeAnnotations?: string, pageNumber?: number, pagingCookie?: string, impersonateUserId?: string): Promise<any> {
+            return this.executeFetchXml(query.Query.EntityPath, FetchQueryResolver.ResolveQuery(query), includeAnnotations, pageNumber, pagingCookie, impersonateUserId);
         }
 
         /**
@@ -876,13 +880,12 @@ export namespace DynamicsWebApi {
         /**
          * Sends an asynchronous request to execute FetchXml to retrieve all records.
          *
-         * @param collection - The name of the Entity Collection or Entity Logical name.
-         * @param fetchXml - FetchXML is a proprietary query language that provides capabilities to perform aggregation.
+         * @param query - A FetchXml Query that contains the request
          * @param includeAnnotations - Use this parameter to include annotations to a result. For example: * or Microsoft.Dynamics.CRM.fetchxmlpagingcookie
          * @param impersonateUserId - A String representing the GUID value for the Dynamics 365 system user id. Impersonates the user.
          */
-        fetchAll(collection: string, fetchXml: string, includeAnnotations?: string, impersonateUserId?: string): Promise<any> {
-            return this._executeFetchXmlAll(collection, fetchXml, includeAnnotations, impersonateUserId);
+        fetchAll(query: Query, includeAnnotations?: string, impersonateUserId?: string): Promise<any> {
+            return this.executeFetchXmlAll(query.Query.EntityPath, FetchQueryResolver.ResolveQuery(query), includeAnnotations, impersonateUserId);
         }
 
         /**

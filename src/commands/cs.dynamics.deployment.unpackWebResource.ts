@@ -1,8 +1,8 @@
-import * as cs from "../cs";
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as FileSystem from "../core/io/FileSystem";
-import { DynamicsWebApi } from "../api/Types";
+import { DynamicsWebApi } from "../api/cds-webapi/DynamicsWebApi";
+import { CdsSolutions } from '../api/CdsSolutions';
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
 import { Utilities } from "../core/Utilities";
@@ -28,12 +28,12 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
 
     let map:SolutionWorkspaceMapping = this.getSolutionMapping(fsPath, config.orgId);
 
-    webResource = webResource || await Quickly.pickCdsSolutionComponent(config, map ? map.solutionId : undefined, DynamicsWebApi.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
+    webResource = webResource || await Quickly.pickCdsSolutionComponent(config, map ? map.solutionId : undefined, CdsSolutions.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
     if (!webResource) { return; }
 
     // If we do have a map, enforce that we put files where we are supposed to, regardless of user preference.
     if (map && !fsPath) { 
-        fsPath = map.getPath(DynamicsWebApi.SolutionComponent.WebResource, webResource);
+        fsPath = map.getPath(CdsSolutions.SolutionComponent.WebResource, webResource);
     }
     
     fsPath = fsPath || await Quickly.pickWorkspaceFolder(undefined, "Choose a location where the web resource will be downloaded");
@@ -57,7 +57,7 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
 
     // Check again :) If we do have a map, enforce that we put files where we are supposed to, regardless of user preference.
     if (map) { 
-        fsPath = map.getPath(DynamicsWebApi.SolutionComponent.WebResource, webResource);
+        fsPath = map.getPath(CdsSolutions.SolutionComponent.WebResource, webResource);
     }
 
     FileSystem.makeFolderSync(path.dirname(fsPath));

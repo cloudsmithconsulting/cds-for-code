@@ -4,7 +4,7 @@ import DiscoveryRepository from "../repositories/discoveryRepository";
 import { TS } from 'typescript-linq';
 import ApiRepository from "../repositories/apiRepository";
 import MetadataRepository from "../repositories/metadataRepository";
-import { DynamicsWebApi } from "../api/Types";
+import { DynamicsWebApi } from "../api/cds-webapi/DynamicsWebApi";
 import { Utilities } from "./Utilities";
 import Dictionary from "./types/Dictionary";
 import * as FileSystem from "./io/FileSystem";
@@ -12,6 +12,7 @@ import { Octicon } from "./types/Octicon";
 import * as path from 'path';
 import TemplateManager from "../components/Templates/TemplateManager";
 import { TemplateItem, TemplateType } from "../components/Templates/Types";
+import { CdsSolutions } from "../api/CdsSolutions";
 
 export default class Quickly {
     /**
@@ -457,7 +458,7 @@ export default class Quickly {
             .then(chosen => <DynamicsWebApi.Config>chosen.context);
     }
 
-    static async pickCdsSolutionComponentType(placeHolder?:string, choices?:DynamicsWebApi.SolutionComponent[]): Promise<DynamicsWebApi.SolutionComponent> {
+    static async pickCdsSolutionComponentType(placeHolder?:string, choices?:CdsSolutions.SolutionComponent[]): Promise<CdsSolutions.SolutionComponent> {
         if (choices && choices.length > 0) {
             const options:QuickPickOption[] = [];
         
@@ -468,33 +469,33 @@ export default class Quickly {
         }
     }
 
-    static async pickCdsSolutionComponent(config:DynamicsWebApi.Config, solution:any, componentType:DynamicsWebApi.SolutionComponent, placeHolder?:string): Promise<{ componentId:string, component:any }> {
+    static async pickCdsSolutionComponent(config:DynamicsWebApi.Config, solution:any, componentType:CdsSolutions.SolutionComponent, placeHolder?:string): Promise<{ componentId:string, component:any }> {
         const options:QuickPickOption[] = [];
         const metadataApi = new MetadataRepository(config);
         const api = new ApiRepository(config);
 
         switch (componentType) {
-            case DynamicsWebApi.SolutionComponent.Entity:
+            case CdsSolutions.SolutionComponent.Entity:
                 await metadataApi.retrieveEntities(solution && solution.solutionid ? solution.solutionid : undefined)                
                     .then(entities => entities.forEach(e => options.push(new QuickPickOption(e["LogicalName"], undefined, undefined, { componentId: e["MetadataId"], component: e }))));
 
                 break;
-            case DynamicsWebApi.SolutionComponent.OptionSet:
+            case CdsSolutions.SolutionComponent.OptionSet:
                 await metadataApi.retrieveOptionSets(solution && solution.solutionid ? solution.solutionid : undefined)                
                     .then(optionsets => optionsets.forEach(o => options.push(new QuickPickOption(o["Name"], undefined, undefined, { componentId: o["MetadataId"], component: o }))));
 
                 break;
-            case DynamicsWebApi.SolutionComponent.PluginAssembly:
+            case CdsSolutions.SolutionComponent.PluginAssembly:
                 await api.retrievePluginAssemblies(solution && solution.solutionid ? solution.solutionid : undefined)                
                     .then(plugins => plugins.forEach(p => options.push(new QuickPickOption(p["name"], undefined, undefined, { componentId: p["pluginassemblyid"], component: p }))));
 
                 break;
-            case DynamicsWebApi.SolutionComponent.WebResource:
+            case CdsSolutions.SolutionComponent.WebResource:
                 await api.retrieveWebResources(solution && solution.solutionid ? solution.solutionid : undefined, "*")                
                     .then(webresources => webresources.forEach(w => options.push(new QuickPickOption(w["name"], undefined, undefined, { componentId: w["webresourceid"], component: w }))));
 
                 break;
-            case DynamicsWebApi.SolutionComponent.Workflow:
+            case CdsSolutions.SolutionComponent.Workflow:
                 await api.retrieveProcesses(solution && solution.solutionid ? solution.solutionid : undefined)                
                     .then(processes => processes.forEach(p => options.push(new QuickPickOption(p["name"], undefined, undefined, { componentId: p["workflowid"], component: p }))));
 

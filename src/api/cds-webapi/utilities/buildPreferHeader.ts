@@ -1,5 +1,5 @@
-﻿import { DynamicsWebApi } from "../../Types";
-import DWA from '../DWA';
+﻿import { DynamicsWebApi } from '../DynamicsWebApi';
+import { DWA } from '../DWA';
 import ErrorHelper from '../helpers/ErrorHelper';
 
 /**

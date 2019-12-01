@@ -8,11 +8,12 @@ import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import DynamicsUrlResolver from '../api/DynamicsUrlResolver';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
-import { DynamicsWebApi } from '../api/Types';
+import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import { ExtensionIconThemes } from "../components/WebDownloaders/Types";
 import Quickly from '../core/Quickly';
 import SolutionMap from '../components/Solutions/SolutionMap';
 import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
+import { CdsSolutions } from '../api/CdsSolutions';
 
 export default class DynamicsTreeView implements IContributor {
     public static Instance:DynamicsServerTreeProvider;
@@ -68,31 +69,31 @@ export default class DynamicsTreeView implements IContributor {
                 }
 
                 let componentId:string;
-                let componentType:DynamicsWebApi.SolutionComponent;
+                let componentType:CdsSolutions.SolutionComponent;
 
                 switch (item.itemType) {
                     case "Plugin":
-                        componentType = DynamicsWebApi.SolutionComponent.PluginAssembly;
+                        componentType = CdsSolutions.SolutionComponent.PluginAssembly;
                         componentId = item.context.pluginassemblyid;
 
                         break;
                     case "WebResource":
-                        componentType = DynamicsWebApi.SolutionComponent.WebResource;
+                        componentType = CdsSolutions.SolutionComponent.WebResource;
                         componentId = item.context.webresourceid;
 
                         break;
                     case "Process":
-                        componentType = DynamicsWebApi.SolutionComponent.Workflow;
+                        componentType = CdsSolutions.SolutionComponent.Workflow;
                         componentId = item.context.workflowid;
 
                         break;
                     case "Entity":
-                        componentType = DynamicsWebApi.SolutionComponent.Entity;
+                        componentType = CdsSolutions.SolutionComponent.Entity;
                         componentId = item.context.MetadataId;
 
                         break;
                     case "OptionSet":
-                        componentType = DynamicsWebApi.SolutionComponent.OptionSet;
+                        componentType = CdsSolutions.SolutionComponent.OptionSet;
                         componentId = item.context.MetadataId;
 
                         break;
@@ -118,31 +119,31 @@ export default class DynamicsTreeView implements IContributor {
                 }
 
                 let componentId:string;
-                let componentType:DynamicsWebApi.SolutionComponent;
+                let componentType:CdsSolutions.SolutionComponent;
 
                 switch (item.itemType) {
                     case "Plugin":
-                        componentType = DynamicsWebApi.SolutionComponent.PluginAssembly;
+                        componentType = CdsSolutions.SolutionComponent.PluginAssembly;
                         componentId = item.context.pluginassemblyid;
 
                         break;
                     case "WebResource":
-                        componentType = DynamicsWebApi.SolutionComponent.WebResource;
+                        componentType = CdsSolutions.SolutionComponent.WebResource;
                         componentId = item.context.webresourceid;
 
                         break;
                     case "Process":
-                        componentType = DynamicsWebApi.SolutionComponent.Workflow;
+                        componentType = CdsSolutions.SolutionComponent.Workflow;
                         componentId = item.context.workflowid;
 
                         break;
                     case "Entity":
-                        componentType = DynamicsWebApi.SolutionComponent.Entity;
+                        componentType = CdsSolutions.SolutionComponent.Entity;
                         componentId = item.context.MetadataId;
 
                         break;
                     case "OptionSet":
-                        componentType = DynamicsWebApi.SolutionComponent.OptionSet;
+                        componentType = CdsSolutions.SolutionComponent.OptionSet;
                         componentId = item.context.MetadataId;
 
                         break;
@@ -182,7 +183,7 @@ export default class DynamicsTreeView implements IContributor {
                         Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, undefined, item.solutionId), retryFunction);
                         break;
                     case "Processes":                 
-                        let processType = await Quickly.pickEnum<DynamicsWebApi.ProcessType>(DynamicsWebApi.ProcessType);
+                        let processType = await Quickly.pickEnum<CdsSolutions.ProcessType>(CdsSolutions.ProcessType);
 
                         if (processType) {
                             Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageBusinessProcessUri(item.config, processType, item.parent && item.parent.context && item.parent.context.ObjectTypeCode ? item.parent.context.ObjectTypeCode : undefined, item.solutionId), retryFunction);
@@ -196,7 +197,7 @@ export default class DynamicsTreeView implements IContributor {
                         Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityRelationshipUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
                         break;
                     case "Forms":   
-                        let formType = await Quickly.pickEnum<DynamicsWebApi.DynamicsForm>(DynamicsWebApi.DynamicsForm);
+                        let formType = await Quickly.pickEnum<CdsSolutions.DynamicsForm>(CdsSolutions.DynamicsForm);
 
                         if (formType) {
                             Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityFormUri(item.config, item.context.ObjectTypeCode, formType, undefined, item.solutionId), retryFunction);
@@ -204,7 +205,7 @@ export default class DynamicsTreeView implements IContributor {
 
                         break;
                     case "Dashboards":
-                        let layoutType = await Quickly.pickEnum<DynamicsWebApi.InteractiveDashboardLayout>(DynamicsWebApi.InteractiveDashboardLayout);
+                        let layoutType = await Quickly.pickEnum<CdsSolutions.InteractiveDashboardLayout>(CdsSolutions.InteractiveDashboardLayout);
 
                         if (layoutType) {
                             Utilities.Browser.OpenWindow(DynamicsUrlResolver.getManageEntityDashboardUri(item.config, item.context.ObjectTypeCode, layoutType, "1030", undefined, item.solutionId), retryFunction);
@@ -347,7 +348,6 @@ export default class DynamicsTreeView implements IContributor {
 }
 
 class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
-
 	private _onDidChangeTreeData: vscode.EventEmitter<TreeEntry | undefined> = new vscode.EventEmitter<TreeEntry | undefined>();
     readonly onDidChangeTreeData: vscode.Event<TreeEntry | undefined> = this._onDidChangeTreeData.event;
     private _connections: DynamicsWebApi.Config[] = [];
@@ -362,11 +362,11 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         }
     }
 
-    public getTreeItem(element: TreeEntry): vscode.TreeItem {
+    getTreeItem(element: TreeEntry): vscode.TreeItem {
 		return element;
 	}
 
-	public async getChildren(element?: TreeEntry): Promise<TreeEntry[]> {
+	async getChildren(element?: TreeEntry): Promise<TreeEntry[]> {
         if (element) {
             const commandPrefix:string = Utilities.String.RemoveTrailingSlash(((element.command && element.command.arguments) || '').toString());
 
@@ -434,7 +434,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return Promise.resolve(this.getConnectionEntries());
     }
 
-    public addConnection(...options: DynamicsWebApi.Config[]): void {
+    addConnection(...options: DynamicsWebApi.Config[]): void {
         options.forEach(o => {
             // Make sure the connection has an id
             if (!o.id) {
@@ -455,12 +455,11 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         this.refresh();
     }
 
-    public getConnections():DynamicsWebApi.Config[]
-    {
+    getConnections():DynamicsWebApi.Config[] {
         return this._connections;
     }
 
-    public removeConnection(connection: DynamicsWebApi.Config): void {
+    removeConnection(connection: DynamicsWebApi.Config): void { 
         const removeIndex = this._connections.findIndex(c => c.webApiUrl === connection.webApiUrl);
         
         if (removeIndex >= 0) {
@@ -470,25 +469,25 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         }
     }
 
-    public async removePluginStep(config: DynamicsWebApi.Config, step: any) {
+    async removePluginStep(config: DynamicsWebApi.Config, step: any) {
         if (step && step.sdkmessageprocessingstepid) {
             const api = new ApiRepository(config);
             await api.removePluginStep(step);
         }
     }
 
-    public async removePluginStepImage (config: DynamicsWebApi.Config, stepImage: any) {
+    async removePluginStepImage (config: DynamicsWebApi.Config, stepImage: any) {
         if (stepImage && stepImage.sdkmessageprocessingstepimageid) {
             const api = new ApiRepository(config);
             await api.removePluginStepImage(stepImage);
         }
     }
 
-    public refresh(item?:TreeEntry): void {
+    refresh(item?:TreeEntry): void {
         this._onDidChangeTreeData.fire(item);
     }
 
-    public refreshSolution(solutionPath?:string): void {
+    refreshSolution(solutionPath?:string): void {
         if (solutionPath) {
             TreeEntryCache.Instance.Items
                 .where(i => i.id === solutionPath)
@@ -508,7 +507,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 displayName, 
                 "Connection", 
                 vscode.TreeItemCollapsibleState.Collapsed, 
-                connection.workstation || connection.domain,
+                connection.credentials ? connection.credentials.username.toString() : "",
                 {
                     command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: connection.webApiUrl,
