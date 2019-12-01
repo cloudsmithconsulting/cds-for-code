@@ -23,7 +23,7 @@ class SymetricCryptography {
     private key: Securable;
     private iv: Securable;
 
-    encrypt(value: Securable, algorithm: string = SymetricCryptography.defaultAlgorithm, key?: Securable, iv?: Securable): ISecureItem {
+    encrypt(value: Securable, algorithm: string = SymetricCryptography.defaultAlgorithm, key?: Securable, iv?: Securable): SecureItem {
         key = key || this.key;
         iv = iv || this.iv || crypto.randomBytes(16);
 
@@ -45,7 +45,7 @@ class SymetricCryptography {
         return SecureItem.from(iv, encrypted, output);
     }
 
-    decrypt(value: ISecureItem, algorithm: string = SymetricCryptography.defaultAlgorithm, key?: Securable): Buffer {
+    decrypt(value: SecureItem, algorithm: string = SymetricCryptography.defaultAlgorithm, key?: Securable): Buffer {
         key = key || this.key;
 
         if (!Buffer.isBuffer(key)) {
@@ -71,7 +71,7 @@ class SymetricCryptography {
  * @class SecureItem
  */
 class SecureItem implements ISecureItem {
-    static from(iv: Securable, data: Securable, preferredOutput: SecureOutput = SecureOutput.Buffer): ISecureItem {
+    static from(iv: Securable, data: Securable, preferredOutput: SecureOutput = SecureOutput.Buffer): SecureItem {
         return new SecureItem(iv, data, preferredOutput);
     }
 
@@ -127,11 +127,11 @@ class MachineCryptography implements ICryptography {
         this.symetricCrypto = new SymetricCryptography(vscode.env.machineId);
     }
 
-    encrypt(value:Securable): ISecureItem {
+    encrypt(value:Securable): SecureItem {
         return this.symetricCrypto.encrypt(value);
     }
 
-    decrypt(value:ISecureItem): Securable {
+    decrypt(value:SecureItem): Securable {
         return this.symetricCrypto.decrypt(value);
     }
 }
@@ -158,11 +158,11 @@ class ProcessCryptography implements ICryptography {
         this.symetricCrypto = new SymetricCryptography(vscode.env.sessionId);
     }
 
-    encrypt(value:Securable): ISecureItem {
+    encrypt(value:Securable): SecureItem {
         return this.symetricCrypto.encrypt(value);
     }
 
-    decrypt(value:ISecureItem): Securable {
+    decrypt(value:SecureItem): Securable {
         return this.symetricCrypto.decrypt(value);
     }
 }
@@ -178,11 +178,11 @@ class LocalCryptography implements ICryptography {
         return this.symetricCrypto.key;
     }
 
-    encrypt(value:Securable): ISecureItem {
+    encrypt(value:Securable): SecureItem {
         return this.symetricCrypto.encrypt(value);
     }
 
-    decrypt(value:ISecureItem): Securable {
+    decrypt(value:SecureItem): Securable {
         return this.symetricCrypto.decrypt(value);
     }
 }
@@ -203,7 +203,20 @@ export default class Encryption {
         return new LocalCryptography(key);
     }
 
-    static createSecureItem(iv:Securable, data:Securable, preferredOutput?:SecureOutput): ISecureItem {
+    static createSecureItem(iv:Securable, data:Securable, preferredOutput?:SecureOutput): SecureItem {
         return SecureItem.from(iv, data, preferredOutput);
+    }
+
+    static isSecure(item:Securable | ISecureItem): boolean {
+        return ((item.hasOwnProperty("buffer") && (<any>item).buffer.iv && (<any>item).buffer.data) 
+            || (item.hasOwnProperty("string") && (<any>item).string.iv && (<any>item).string.data));
+    }
+
+    static decrypt(item:ISecureItem, store:ICryptography): Securable {
+        return item.decrypt(store);
+    }
+
+    static encrypt(item:Securable, store:ICryptography): ISecureItem {
+        return store.encrypt(item);
     }
 }
