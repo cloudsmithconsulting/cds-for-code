@@ -58,7 +58,7 @@ export default function nodeJsRequest(options: any) {
          * using end-to-end TLS.
          */
         protocolInterface = http;
-        var proxyUrl = url.parse(process.env.http_proxy);
+        const proxyUrl = url.parse(process.env.http_proxy);
         headers.host = parsedUrl.host;
         internalOptions = {
             hostname: proxyUrl.hostname,
