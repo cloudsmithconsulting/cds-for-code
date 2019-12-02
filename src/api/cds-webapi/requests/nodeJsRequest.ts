@@ -70,12 +70,12 @@ export default function nodeJsRequest(options: any) {
         };
     }
     
-    let protocolRequest: (protocol: any, options: any, responseDelegate:ResponseHandler) => void;
+    let executeRequest: (protocol: any, options: any, responseDelegate: ResponseHandler) => void;
 
+    // NTLM works a little different from other request types, we must auth here so that we're doing so for each connection (vs. request authentication)
     if (useWindowsAuth) {
-        // NTLM works a little different from other request types.
-        const internalCredentials = Security.WindowsCredential.from(options.credentials);
-        let decrypted = internalCredentials.decrypt<Security.WindowsCredential>(GlobalStateCredentialStore.Instance, options.id) || internalCredentials;
+        const internalCredentials = Security.Credential.from<Security.WindowsCredential>(options.credentials, options.connectionId);
+        let decrypted = internalCredentials.decrypt<Security.WindowsCredential>(GlobalStateCredentialStore.Instance, options.connectionId) || internalCredentials;
 
         // HttpNtlm does it's own path parsing.
         internalOptions.url = parsedUrl.href;
@@ -87,7 +87,7 @@ export default function nodeJsRequest(options: any) {
             internalOptions.body = data;
         }
 
-        protocolRequest = (protocol:any, options:any, responseDelegate:ResponseHandler) => protocol[options.method.toLowerCase()](
+        executeRequest = (protocol:any, options:any, responseDelegate: ResponseHandler) => protocol[options.method.toLowerCase()](
             options, 
             (error, response) => {
                 if (error) {
@@ -98,7 +98,7 @@ export default function nodeJsRequest(options: any) {
                 }
             });
     } else {
-        protocolRequest = (protocol:any, options:any, responseDelegate:ResponseHandler) => protocol.request(
+        executeRequest = (protocol:any, options:any, responseDelegate: ResponseHandler) => protocol.request(
             options, 
             (response) => {
                 let rawData = '';
@@ -120,13 +120,13 @@ export default function nodeJsRequest(options: any) {
     let request: any;
 
     try {
-        request = protocolRequest(protocolInterface, internalOptions, oDataResponse.bind(this)); 
+        request = executeRequest(protocolInterface, internalOptions, oDataResponse.bind(this)); 
     } catch (error) {
         errorCallback(error);
         return;
     }
 
-    // NTLM just performs fire and forget, invoking callback when complete, others get these events.
+    // NTLM library just performs fire and forget, invoking callback when complete, others get these events.
     if (request) {
         if (internalOptions.timeout) {
             global.setTimeout(() => request ? request.abort() : undefined, internalOptions.timeout);

@@ -17,6 +17,8 @@ export interface EncodingUtility {
    bytesToBase64(bytes:Uint8Array): string;
    base64ToBytes(str:string): Uint8Array;
    base64ToString(str:string): string;
+   bytesToHex(byteArray: Uint8Array): string;
+   hexToBytes(hexString: string): Uint8Array;
 }
 
 export interface GuidUtility { 

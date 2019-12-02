@@ -14,7 +14,7 @@ export default class GlobalState {
             const creds = GlobalStateCredentialStore.Instance.retreive(c.id);
 
             if (creds) {
-                c.credentials = Credential.from(creds);
+                c.credentials = Credential.from(creds, c.id);
             }
         });
 

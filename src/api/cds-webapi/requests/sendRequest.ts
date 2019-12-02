@@ -4,6 +4,7 @@ import BatchConverter from '../utilities/BatchConverter';
 import xhrRequest from "./xhrRequest";
 import nodeJsRequest from "./nodeJsRequest";
 import { DynamicsWebApi } from "../DynamicsWebApi";
+import { Credential } from '../../../core/security/Types';
 
 let _entityNames;
 
@@ -220,6 +221,7 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
         executeRequest({
             credentials: config.credentials,
             method: method,
+            connectionId: config.id,
             uri: config.webApiUrl + path,
             data: stringifiedData,
             additionalHeaders: additionalHeaders,
@@ -232,7 +234,7 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
     };
 
     //call a token refresh callback only if it is set and there is no "Authorization" header set yet
-    if (config.onTokenRefresh && (!additionalHeaders || (additionalHeaders && !additionalHeaders['Authorization']))) {
+    if (config.credentials && Credential.requireToken(config.credentials) && config.onTokenRefresh && (!additionalHeaders || (additionalHeaders && !additionalHeaders['Authorization']))) {
         config.onTokenRefresh(sendInternalRequest);
     }
     else {

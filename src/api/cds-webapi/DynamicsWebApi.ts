@@ -296,7 +296,7 @@ export namespace DynamicsWebApi {
         */
         constructor(readonly config?: DynamicsWebApi.Config) {
             this._internalConfig = {
-                id: Utility.generateUUID(),
+                id: null,
                 webApiVersion: "8.0",
                 type: null,
                 name: null,
@@ -348,6 +348,11 @@ export namespace DynamicsWebApi {
 
             if (config.type) {
                 this._internalConfig.type = config.type;
+            }
+
+            if (config.id) {
+                ErrorHelper.guidParameterCheck(config.id, "DynamicsWebApi.setConfig", "config.id");
+                this._internalConfig.id = config.id;
             }
 
             if (config.impersonate) {

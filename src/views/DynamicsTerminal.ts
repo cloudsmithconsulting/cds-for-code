@@ -166,7 +166,7 @@ export class TerminalCommand {
 		let decrypted;
 		
 		if (Credential.isCredential(key)) {
-			decrypted = store.decrypt<T>((<Credential>key).key);
+			decrypted = store.decrypt<T>((<Credential>key).storeKey);
 		} else {
 			decrypted = store.decrypt<T>(<string>key);
 		}
