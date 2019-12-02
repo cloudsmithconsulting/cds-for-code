@@ -109,7 +109,7 @@ class MachineCryptography implements ICryptography {
         return this.symetricCrypto.encrypt(value);
     }
 
-    decrypt(value:SecureItem, preferredOutput: SecureOutput = SecureOutput.Buffer): Securable {
+    decrypt(value:SecureItem, preferredOutput?: SecureOutput): Securable {
         return this.symetricCrypto.decrypt(value, undefined, undefined, preferredOutput);
     }
 }

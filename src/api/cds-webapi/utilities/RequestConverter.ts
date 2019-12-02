@@ -59,7 +59,7 @@ export default class RequestConverter {
                 }
             }
 
-            if (request.select !== null && request.select.length) {
+            if (request.select && request.select.length) {
                 ErrorHelper.arrayParameterCheck(request.select, 'DynamicsWebApi.' + functionName, 'request.select');
 
                 if (functionName === 'retrieve' && request.select.length === 1 && request.select[0].endsWith('/$ref')) {

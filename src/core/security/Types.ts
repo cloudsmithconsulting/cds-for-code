@@ -139,6 +139,9 @@ export abstract class CredentialStore implements ICredentialStore {
     decrypt<T extends ICredential>(key: string, credential?:T, preferredOutput?: SecureOutput): T {
         let encrypted = this.onRetreive(key);
 
+        // We don't really want byte arrays for creds (most of the time).
+        preferredOutput = preferredOutput || SecureOutput.String;
+
         if (!encrypted && Credential.isCredential(credential) && (<Credential>credential).isSecure) {
              encrypted = credential;
         } else if (!encrypted) {

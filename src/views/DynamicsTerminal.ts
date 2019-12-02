@@ -9,7 +9,7 @@ import Quickly, { QuickPickOption } from '../core/Quickly';
 import { TS } from 'typescript-linq';
 import { TextEncoder, TextDecoder } from 'util';
 import Dictionary from '../core/types/Dictionary';
-import { ICredentialStore, Credential } from '../core/security/Types';
+import { ICredentialStore, Credential, SecureOutput } from '../core/security/Types';
 
 export class TerminalCommand {
 	private _command:string;
@@ -162,13 +162,13 @@ export class TerminalCommand {
 		return this;
 	}
 
-	credential<T extends Credential>(key:string | T, store: ICredentialStore, textFunction:(decrypted:T) => string): TerminalCommand {
+	credential<T extends Credential>(key:string | T, store: ICredentialStore, textFunction:(decrypted: T) => string): TerminalCommand {
 		let decrypted;
 		
 		if (Credential.isCredential(key)) {
-			decrypted = store.decrypt<T>((<Credential>key).storeKey);
+			decrypted = store.decrypt<T>((<Credential>key).storeKey, undefined, SecureOutput.String);
 		} else {
-			decrypted = store.decrypt<T>(<string>key);
+			decrypted = store.decrypt<T>(<string>key, undefined, SecureOutput.String);
 		}
 
 		if (decrypted && textFunction) {
