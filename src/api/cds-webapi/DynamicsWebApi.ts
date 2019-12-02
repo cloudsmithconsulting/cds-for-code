@@ -629,7 +629,7 @@ export namespace DynamicsWebApi {
                 ErrorHelper.stringParameterCheck(propertyName, 'DynamicsWebApi.deleteRecord', 'propertyName');
             }
 
-            var request = {
+            const request = {
                 navigationProperty: propertyName,
                 collection: collection,
                 key: key
@@ -647,7 +647,7 @@ export namespace DynamicsWebApi {
             ErrorHelper.parameterCheck(request, 'DynamicsWebApi.retrieve', 'request');
 
             //copy locally
-            const isRef = request.select !== null && request.select.length === 1 && request.select[0].endsWith("/$ref");
+            const isRef = request.select && request.select.length === 1 && request.select[0].endsWith("/$ref");
 
             return this._makeRequest('GET', request, 'retrieve', { isRef: isRef }).then(response => response.data);
         }

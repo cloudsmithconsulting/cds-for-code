@@ -15,7 +15,6 @@ export default class MetadataRepository
     private webapi: DynamicsWebApi.WebApiClient;
 
     retrieveEntities(solutionId?:string) : Promise<any[]> {
-
         return this.webapi.retrieveEntities(undefined, "IsIntersect eq false")
             .then(entitiesResponse => ApiHelper.filterSolutionComponents(this.webapi, entitiesResponse, solutionId, CdsSolutions.SolutionComponent.Entity, e => e["MetadataId"]))
             .then(response => response ? response.orderBy(e => e["LogicalName"]).toArray() : []);
