@@ -135,10 +135,10 @@ export class WorkspaceFileSystemWatcher {
         this._changes.push(value);
 
         if (this._timeout) {
-            clearTimeout(this._timeout);
+            global.clearTimeout(this._timeout);
         }
 
-        this._timeout = setTimeout(() => this.flushChanges(), this.watcherLatency);
+        this._timeout = global.setTimeout(() => this.flushChanges(), this.watcherLatency);
     }
 
     openWorkspace(value:vscode.WorkspaceFolder): FileWatcherDeclaration {

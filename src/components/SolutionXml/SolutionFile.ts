@@ -1,7 +1,7 @@
 import * as FileSystem from "../../core/io/FileSystem";
 import * as path from 'path';
 import Xml from '../../core/io/Xml';
-import { DynamicsWebApi } from '../../webapi/Types';
+import { CdsSolutions } from "../../api/CdsSolutions";
 
 export default class SolutionFile {
     get file():string { return this._file; }
@@ -94,12 +94,12 @@ export default class SolutionFile {
             });
     }    
 
-    async addComponent(type:DynamicsWebApi.SolutionComponent | number, id?:string, schemaName?:string, behavior?:number): Promise<void> {
+    async addComponent(type:CdsSolutions.SolutionComponent | number, id?:string, schemaName?:string, behavior?:number): Promise<void> {
         const components = await this.components;
         let typeCode = parseInt(type.toString());
     
         if (!Number.isInteger(typeCode)) {
-            typeCode = DynamicsWebApi.CodeMappings.getSolutionComponentCode(<DynamicsWebApi.SolutionComponent>type);
+            typeCode = CdsSolutions.CodeMappings.getSolutionComponentCode(<CdsSolutions.SolutionComponent>type);
         }
 
         if (schemaName && components.findIndex(c => c.type === typeCode && c.schemaName === schemaName) === -1) {
@@ -113,12 +113,12 @@ export default class SolutionFile {
         }
     }
 
-    async removeComponent(type:DynamicsWebApi.SolutionComponent | number, id?:string, schemaName?:string): Promise<number> {
+    async removeComponent(type:CdsSolutions.SolutionComponent | number, id?:string, schemaName?:string): Promise<number> {
         const components = await this.components;
         let typeCode = parseInt(type.toString());
     
         if (!Number.isInteger(typeCode)) {
-            typeCode = DynamicsWebApi.CodeMappings.getSolutionComponentCode(<DynamicsWebApi.SolutionComponent>type);
+            typeCode = CdsSolutions.CodeMappings.getSolutionComponentCode(<CdsSolutions.SolutionComponent>type);
         }
 
         let index:number;
@@ -142,11 +142,11 @@ export default class SolutionFile {
 }
 
 class SolutionFileComponentElement {
-    constructor(type:DynamicsWebApi.SolutionComponent | number, id?:string, schemaName?:string, behavior?:number) {
+    constructor(type:CdsSolutions.SolutionComponent | number, id?:string, schemaName?:string, behavior?:number) {
         const typeCode = parseInt(type.toString());
     
         if (!Number.isInteger(typeCode)) {
-            this.type = DynamicsWebApi.CodeMappings.getSolutionComponentCode(<DynamicsWebApi.SolutionComponent>type);
+            this.type = CdsSolutions.CodeMappings.getSolutionComponentCode(<CdsSolutions.SolutionComponent>type);
         } else {
             this.type = typeCode;
         }

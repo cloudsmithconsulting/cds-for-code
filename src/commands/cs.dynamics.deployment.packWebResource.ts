@@ -1,16 +1,9 @@
 import * as cs from "../cs";
 import * as vscode from 'vscode';
-import * as path from 'path';
-import * as FileSystem from "../core/io/FileSystem";
-import { DynamicsWebApi } from "../webapi/Types";
+import { DynamicsWebApi } from "../api/cds-webapi/DynamicsWebApi";
+import { CdsSolutions } from "../api/CdsSolutions";
 import Quickly from "../core/Quickly";
-import WebResourceManager from "../components/Solutions/WebResourceManager";
 import ApiRepository from "../repositories/apiRepository";
-import { Utilities } from "../core/Utilities";
-import SolutionMap from "../components/Solutions/SolutionMap";
-import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
-import TemplateManager from "../components/Templates/TemplateManager";
-import Dictionary from "../core/types/Dictionary";
 import EnumParser from "../core/EnumParser";
 
 /**
@@ -20,7 +13,7 @@ import EnumParser from "../core/EnumParser";
  * @returns void
  */
 export default async function run(config?:DynamicsWebApi.Config, solution?:any, webResource?:any, fileUri?:vscode.Uri, inform:boolean = true) {
-    fileUri = fileUri || vscode.Uri.file(await Quickly.pickWorkspaceFile(undefined, "Choose the web resource file to deploy", undefined, true, EnumParser.getNames(DynamicsWebApi.WebResourceFileType)));
+    fileUri = fileUri || vscode.Uri.file(await Quickly.pickWorkspaceFile(undefined, "Choose the web resource file to deploy", undefined, true, EnumParser.getNames(CdsSolutions.WebResourceFileType)));
     if (!fileUri) { return; }
 
     // Trim off these files as we don't want to deploy them.

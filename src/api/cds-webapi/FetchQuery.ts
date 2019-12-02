@@ -100,44 +100,49 @@ class FetchQueryProvider implements Query {
         };
     }
 
-    public static Create(entityName:string, ...attributeNames: string[]): Query
-    {
+    static Create(entityName:string, ...attributeNames: string[]): Query {
         return new FetchQueryProvider(entityName).select(...attributeNames);
     }
 
-    public alias(attributeName: string, alias: string): Query {
+    alias(attributeName: string, alias: string): Query {
         this.Query.Alias[attributeName] = alias;
+
         return this;
     }
 
-    public path(entityPath: string): Query {
+    path(entityPath: string): Query {
         this.Query.EntityPath = entityPath;
+
         return this;
     }
 
-    public select(...attributeNames: string[]): Query {
+    select(...attributeNames: string[]): Query {
         for (const a of this.flatten(attributeNames)) {
             this.Query.Attributes.add(a);
         }
+
         if (this.RootQuery) {
             const rootQuery = GetRootQuery(this);
+
             for (const a of this.flatten(attributeNames)) {
                 rootQuery.Attributes.add(this.EntityName + '.' + a);
             }
         }
+
         return this;
     }
 
-    public where(attributeName: string, operator: QueryOperatorParam, ...values: any[]): Query {
+    where(attributeName: string, operator: QueryOperatorParam, ...values: any[]): Query {
         this.Query.Conditions.push({
             AttributeName: attributeName,
             Operator: operator as FetchQueryOperator,
             Values: this.flatten(values)
         });
+
         return this;
     }
 
-    public whereAny(any: (or: (attributeName: string, operator: QueryOperatorParam, ...values: any[]) => void) => void): Query {
+    whereAny(any: (or: (attributeName: string, operator: QueryOperatorParam, ...values: any[]) => void) => void): Query {
         let conditions:FetchQueryCondition[] = [];
         
         any((attributeName: string, operator: QueryOperatorParam, ...values: any[]) => {
@@ -147,21 +152,24 @@ class FetchQueryProvider implements Query {
                 Values: this.flatten(values)
             });
         });
+
         this.Query.Conditions.push(conditions);
+
         return this;
     }
 
-    public orderBy(attributeName: string, isDescendingOrder?: boolean): Query {
+    orderBy(attributeName: string, isDescendingOrder?: boolean): Query {
         if (isDescendingOrder) {
             this.Query.OrderBy.add('_' + attributeName);
         }
         else {
             this.Query.OrderBy.add(attributeName);
         }
+
         return this;
     }
 
-    public join(entityName: string, fromAttribute: string, toAttribute?: string, alias?: string, isOuterJoin?: boolean): Query {
+    join(entityName: string, fromAttribute: string, toAttribute?: string, alias?: string, isOuterJoin?: boolean): Query {
         var exp = new FetchQueryProvider(entityName);
         var join = <FetchQueryJoin>exp.Query;
        

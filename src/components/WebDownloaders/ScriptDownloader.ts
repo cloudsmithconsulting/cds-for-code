@@ -54,7 +54,7 @@ export default class ScriptDownloader implements IContributor {
 			"src/CloudSmith.Dynamics365.SampleScripts/runonce-script.ps1"
 		];
 
-		const remoteFolderPath:string = Utilities.String.EnforceTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateSource));
+		const remoteFolderPath:string = Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateSource));
 		const updateChannel:string = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateChannel);
 		let isDownloading = false;
 
@@ -218,7 +218,7 @@ export default class ScriptDownloader implements IContributor {
 	
 	//TODO: remove dependence on fetch.
     static checkVersion(remoteFilePath: string, channel: string): Promise<number> {
-        return fetch(`${Utilities.String.EnforceTrailingSlash(remoteFilePath)}${channel}.version`, {
+        return fetch(`${Utilities.String.withTrailingSlash(remoteFilePath)}${channel}.version`, {
             method: 'get',
             headers: {
                 'Accepts': 'text/plain'

@@ -58,7 +58,7 @@ export function activate(context: vscode.ExtensionContext) {
 		new IconLoader(),
 		new CodeGenerationManager(),
 		new SolutionMap(),
-		new WebResourceManager(context),
+		new WebResourceManager(),
 		new SolutionManager(),
 		new VisualStudioProjectCommands()
 	].forEach(c => c.contribute(context, toolsConfig));

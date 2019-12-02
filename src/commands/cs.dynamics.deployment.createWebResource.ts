@@ -2,7 +2,8 @@ import * as cs from "../cs";
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as FileSystem from "../core/io/FileSystem";
-import { DynamicsWebApi } from "../webapi/Types";
+import { DynamicsWebApi } from "../api/cds-webapi/DynamicsWebApi";
+import { CdsSolutions } from "../api/CdsSolutions";
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
 import { Utilities } from "../core/Utilities";
@@ -44,23 +45,23 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
     let content: string;
 
     if (fsPath && fsPath !== folder && FileSystem.exists(fsPath)) {
-        content = Utilities.Encoding.BytesToBase64(FileSystem.readFileSync(fsPath));
+        content = Utilities.Encoding.bytesToBase64(FileSystem.readFileSync(fsPath));
     } else {
         content = "";
     }
 
     const api = new ApiRepository(config);
 
-    webResource = webResource || (await this.getWebResourceDetails(fsPath)) || { webresourceid: Utilities.Guid.NewGuid() };
+    webResource = webResource || (await this.getWebResourceDetails(fsPath)) || { webresourceid: Utilities.Guid.newGuid() };
 
     if (webResource) {
         webResource.content = content;
     } 
     
-    let defaultType:number = fsPath && path.extname(fsPath) !== "" ? DynamicsWebApi.CodeMappings.getWebResourceTypeCode(this.getWebResourceType(path.extname(fsPath))) : undefined;
+    let defaultType:number = fsPath && path.extname(fsPath) !== "" ? CdsSolutions.CodeMappings.getWebResourceTypeCode(this.getWebResourceType(path.extname(fsPath))) : undefined;
 
     if (folder && defaultName === "") {
-        defaultName = map ? folder.replace(map.getPath(DynamicsWebApi.SolutionComponent.WebResource), "").replace(map.path, "") : workspaceRoot ? folder.replace(workspaceRoot, "") : "";
+        defaultName = map ? folder.replace(map.getPath(CdsSolutions.SolutionComponent.WebResource), "").replace(map.path, "") : workspaceRoot ? folder.replace(workspaceRoot, "") : "";
         defaultName = defaultName.replace(/\\/, "/");
 
         if (!defaultName.endsWith("/")) {
@@ -87,7 +88,7 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
     }
 
     webResource.displayname = webResource.displayname || await Quickly.ask("What is the display name for this web resource?");
-    webResource.webresourcetype = webResource.webresourcetype || defaultType || DynamicsWebApi.CodeMappings.getWebResourceTypeCode(await Quickly.pickEnum<DynamicsWebApi.WebResourceFileType>(DynamicsWebApi.WebResourceFileType, "What type of web resource is this?"));
+    webResource.webresourcetype = webResource.webresourcetype || defaultType || CdsSolutions.CodeMappings.getWebResourceTypeCode(await Quickly.pickEnum<CdsSolutions.WebResourceFileType>(CdsSolutions.WebResourceFileType, "What type of web resource is this?"));
     webResource.description = webResource.description || await Quickly.ask("Describe this web resource");
     webResource.languagecode = webResource.languagecode || parseInt(await Quickly.ask("What is the language code for this web resource?", undefined, "1033"));
     webResource.isenabledformobileclient = webResource.isenabledformobileclient || await Quickly.pickBoolean("Enable this web resource for mobile use?", "Yes", "No");
@@ -106,7 +107,7 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
 
     if (fsPath) {
         if (map) {
-            fsPath = map.getPath(DynamicsWebApi.SolutionComponent.WebResource, webResource);
+            fsPath = map.getPath(CdsSolutions.SolutionComponent.WebResource, webResource);
         } else {
             fsPath = fsPath === folder ? path.join(fsPath, webResource.name.replace(defaultName, "")) : fsPath;
         }

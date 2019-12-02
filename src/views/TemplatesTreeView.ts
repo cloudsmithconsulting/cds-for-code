@@ -59,7 +59,7 @@ export class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEnt
         let returnValue:TreeEntry[];
 
         if (element && element.itemType) {
-            const commandPrefix:string = Utilities.String.RemoveTrailingSlash(((element.command && element.command.arguments) || '').toString());
+            const commandPrefix:string = Utilities.String.noSlashes(((element.command && element.command.arguments) || '').toString());
             const catalog = await TemplateManager.getTemplateCatalog();
             const grouping = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.templates.treeViewGroupPreference);
 

@@ -788,7 +788,7 @@ export default class TemplateManager implements IContributor {
                 val = val || await Quickly.ask(placeholderItem ? placeholderItem.displayName : `Please enter the desired value for "${match[0]}"`)
                     .then(value => { if (value) { placeholders[key] = value; } return value; });
 
-                if (Utilities.$Object.IsNullOrEmpty(val)) { val = undefined; }
+                if (Utilities.$Object.isNullOrEmpty(val)) { val = undefined; }
                 if (val) { cancel = true; }
 
                 attempts++;

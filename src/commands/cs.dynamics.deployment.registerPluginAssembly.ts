@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
 import * as FileSystem from '../core/io/FileSystem';
-import { DynamicsWebApi } from '../webapi/Types';
+import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsSolutions } from '../api/CdsSolutions';
 import ApiRepository from '../repositories/apiRepository';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import * as path from 'path';
@@ -55,7 +56,7 @@ export default async function run(config?:DynamicsWebApi.Config, pluginAssembly?
     if (!config) { return; }
 
     solution = solution || await Quickly.pickCdsSolution(config, "Choose a solution", true);
-    pluginAssembly = pluginAssembly || await Quickly.pickCdsSolutionComponent(config, solution, DynamicsWebApi.SolutionComponent.PluginAssembly, "Choose a plugin assembly to update (or press esc for new)");
+    pluginAssembly = pluginAssembly || await Quickly.pickCdsSolutionComponent(config, solution, CdsSolutions.SolutionComponent.PluginAssembly, "Choose a plugin assembly to update (or press esc for new)");
    
     const api = new ApiRepository(config);
 
@@ -78,7 +79,7 @@ export default async function run(config?:DynamicsWebApi.Config, pluginAssembly?
                             assemblyId = pluginAssemblyId;
 
                             if (!pluginAssembly && solution) {
-                                return api.addSolutionComponent(solution, pluginAssemblyId, DynamicsWebApi.SolutionComponent.PluginAssembly, true, false);
+                                return api.addSolutionComponent(solution, pluginAssemblyId, CdsSolutions.SolutionComponent.PluginAssembly, true, false);
                             }                        
                         })
                         .then(response => {

@@ -1,4 +1,5 @@
-import { DynamicsWebApi } from '../webapi/Types';
+import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsSolutions } from '../api/CdsSolutions';
 import ApiRepository from '../repositories/apiRepository';
 import Quickly from '../core/Quickly';
 import { Utilities } from '../core/Utilities';
@@ -10,7 +11,7 @@ import ExtensionContext from '../core/ExtensionContext';
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(config?: DynamicsWebApi.Config, components?:{type:DynamicsWebApi.SolutionComponent, id:string}[]) {
+export default async function run(config?: DynamicsWebApi.Config, components?:{type:CdsSolutions.SolutionComponent, id:string}[]) {
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
     if (!config) { return; }
 
@@ -26,8 +27,8 @@ export default async function run(config?: DynamicsWebApi.Config, components?:{t
         let parameterXml:string = "<importexportxml><webresources>";
         
         components.forEach(c => {
-            if (c.type === DynamicsWebApi.SolutionComponent.WebResource) {
-                parameterXml += `<webresource>{${Utilities.Guid.TrimGuid(c.id)}}</webresource>`;
+            if (c.type === CdsSolutions.SolutionComponent.WebResource) {
+                parameterXml += `<webresource>{${Utilities.Guid.trimGuid(c.id)}}</webresource>`;
             }
         });
         

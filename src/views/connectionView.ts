@@ -3,7 +3,7 @@ import DiscoveryRepository from '../repositories/discoveryRepository';
 import { View, ViewRenderer } from '../core/types/View';
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
-import { DynamicsWebApi } from '../webapi/Types';
+import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 
 export default class ConnectionViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -42,12 +42,6 @@ class ConnectionView extends View {
     } 
     
     private save(config: DynamicsWebApi.Config) {
-        // first clean up the config, if we have an access token get rid of username and password
-        if (config.accessToken && config.accessToken.length > 0) {
-            config.username = null;
-            config.password = null;
-        }
-        
         // set a timeout if it doesn't exist
         config.timeout = config.timeout || (1000 * 3); // 3 seconds
         // construct the api repo

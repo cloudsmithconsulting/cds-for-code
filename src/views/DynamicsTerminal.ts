@@ -9,6 +9,7 @@ import Quickly, { QuickPickOption } from '../core/Quickly';
 import { TS } from 'typescript-linq';
 import { TextEncoder, TextDecoder } from 'util';
 import Dictionary from '../core/types/Dictionary';
+import { ICredentialStore, Credential, SecureOutput } from '../core/security/Types';
 
 export class TerminalCommand {
 	private _command:string;
@@ -157,6 +158,22 @@ export class TerminalCommand {
 		}
 		
 		this._command += text.replace(TerminalCommand.lineSeperator, "");
+
+		return this;
+	}
+
+	credential<T extends Credential>(key:string | T, store: ICredentialStore, textFunction:(decrypted: T) => string): TerminalCommand {
+		let decrypted;
+		
+		if (Credential.isCredential(key)) {
+			decrypted = store.decrypt<T>((<Credential>key).storeKey, undefined, SecureOutput.String);
+		} else {
+			decrypted = store.decrypt<T>(<string>key, undefined, SecureOutput.String);
+		}
+
+		if (decrypted && textFunction) {
+			return this.sensitive(textFunction(decrypted));
+		}
 
 		return this;
 	}
@@ -325,10 +342,10 @@ class MaskedBuffer {
 
 			if (this.autoFlush && this.onDidFlush) {
 				if (this._timeout) {
-					clearTimeout(this._timeout);
+					global.clearTimeout(this._timeout);
 				} 
 					
-				this._timeout = setTimeout(() => this.flush(), MaskedBuffer.autoFlushDelay);
+				this._timeout = global.setTimeout(() => this.flush(), MaskedBuffer.autoFlushDelay);
 			}
 		}
 	}
@@ -456,7 +473,7 @@ export class Terminal implements vscode.Terminal {
 
 	async showComandBuffer(): Promise<TerminalCommand> {
 		const options = new TS.Linq.Enumerator(this._commandBuffer)
-			.where(c => !Utilities.$Object.IsNullOrEmpty(c.command))
+			.where(c => !Utilities.$Object.isNullOrEmpty(c.command))
 			.select(c => new QuickPickOption(c.hidden, undefined, undefined, c)).toArray();
 
 		return await Quickly.pick("", ...options)
@@ -701,7 +718,7 @@ export class Terminal implements vscode.Terminal {
 	}
 
 	private resolveIncomingCommand(outputBuffer:string, errorBuffer:string) {
-		if (!Utilities.$Object.IsNullOrEmpty(this._inputCommand.command) || outputBuffer || errorBuffer) {
+		if (!Utilities.$Object.isNullOrEmpty(this._inputCommand.command) || outputBuffer || errorBuffer) {
 			if (outputBuffer) { this._inputCommand.output += outputBuffer; }
 			if (errorBuffer) { this._inputCommand.error += errorBuffer; }
 
@@ -712,8 +729,8 @@ export class Terminal implements vscode.Terminal {
 			// Remove all crlf as this command is complete.
 			this._inputCommand.join();
 
-			const hasError = !Utilities.$Object.IsNullOrEmpty(this._inputCommand.error);
-			const hasOutput = !Utilities.$Object.IsNullOrEmpty(this._inputCommand.output);
+			const hasError = !Utilities.$Object.isNullOrEmpty(this._inputCommand.error);
+			const hasOutput = !Utilities.$Object.isNullOrEmpty(this._inputCommand.output);
 			const readyToProcess = !hasError || (hasError && hasOutput);
 
 			if (this._inputCommand.command.trim() !== "" && readyToProcess) {
@@ -725,7 +742,7 @@ export class Terminal implements vscode.Terminal {
 			}
 
 			if (this._promiseInfo && readyToProcess) {
-				if (!Utilities.$Object.IsNullOrEmpty(this._inputCommand.error)) {
+				if (!Utilities.$Object.isNullOrEmpty(this._inputCommand.error)) {
 					this._promiseInfo.reject(this._inputCommand.error);
 				} else {
 					this._promiseInfo.resolve(this._inputCommand);

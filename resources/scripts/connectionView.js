@@ -26,32 +26,46 @@
         $title.html($title.html().replace("New", "Edit"));
         document.title = $title.text();
         
-        if (message.authType === 1) {
-            $("#AuthType1").prop("checked", true);
-            $("#accessTokenField").hide();
-        }
+        $("#AuthType1").prop("checked", message.type === 0);
+        $("#AuthType2").prop("checked", message.type === 1);
+        $("#AuthType3").prop("checked", message.type === 2);
+        $("#AuthType4").prop("checked", message.type === 3);
+
+        $domainField = $("#domainField");
+        $accessTokenField = $("#accessTokenField");
+
+        showOrHide($accessTokenField, message.type !== 0);
+        showOrHide($domainField, message.type === 0);
 
         $("#Id").val(message.id || "");
         $("#WebApiVersion").val(message.webApiVersion || "");
         $("#Name").val(message.name || "");
         $("#ServerUrl").val(message.webApiUrl || "");
-        $("#Domain").val(message.domain || "");
-        $("#AccessToken").val(message.accessToken || "");
-        $("#Username").val(message.username || "");
-        $("#Password").val(message.password || "");
+        $("#Domain").val(message.credentials ? message.credentials.domain || "" : "");
+        $("#AccessToken").val(message.credentials ? message.credentials.token || "" : "");
+        $("#Username").val(message.credentials ? message.credentials.username || "" : "");
+        $("#Password").val(message.credentials ? message.credentials.password || "" : "");
     }
 
     // this part starts on document ready
     $(function () {
         $("[name='AuthType']").click(function() {
-            const authType = this.value;
+            const authType = Number.parseInt(this.value);
+
+            $domainField = $("#domainField");
             $accessTokenField = $("#accessTokenField");
-            if (authType === "2") {
-                $accessTokenField.show();
-            } else {
-                $accessTokenField.hide();
-            }
+
+            showOrHide($accessTokenField, authType !== 0);
+            showOrHide($domainField, authType === 0);
         });
+
+        function showOrHide(target, value) {
+            if (value) {
+                target.show();
+            } else {
+                target.hide();
+            }
+        }
 
         function validateForm(settings) {
             const messages = [];
@@ -60,22 +74,22 @@
                 messages.push("The Server URL is required");
             if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.webApiUrl))
                 messages.push("The Server URL is invalid");
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.domain))
-                messages.push("The Domain is required");
+            if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username))
+                messages.push("The Username is required");
+            if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password))
+                messages.push('The Password is required');
     
-            if (settings.authType === 1) {
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.username))
-                    messages.push("The Username is required");
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.password))
-                    messages.push('The Password is required');
+            if (settings.type === 0) {
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.domain))
+                    messages.push("The Domain is required");
             } else {
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.accessToken) 
-                    && CloudSmith.Utilities.isNullOrEmpty(settings.username)) {
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.token) 
+                    && CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username)) {
                         messages.push("Access Token or Username and Password is required");
                 }
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.accessToken)
-                    && !CloudSmith.Utilities.isNullOrEmpty(settings.username)
-                    && CloudSmith.Utilities.isNullOrEmpty(settings.password)) {
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.token)
+                    && !CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username)
+                    && CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password)) {
                         messages.push('The Password is required');
                 }
             }
@@ -91,14 +105,16 @@
             const id = $("#Id").val();
             const settings = {
                 id: (id.length > 0) ? id: null, // pass the id or null
-                authType: parseInt($("[name='AuthType']:checked").val()),
+                type: parseInt($("[name='AuthType']:checked").val()),
                 webApiVersion: $("#WebApiVersion").val(),
                 name: $("#Name").val(),
                 webApiUrl: $("#ServerUrl").val(),
-                domain: $("#Domain").val(),
-                accessToken: $("#AccessToken").val(),
-                username: $("#Username").val(),
-                password: $("#Password").val()
+                credentials: {
+                    domain: $("#Domain").val(),
+                    token: $("#AccessToken").val(),
+                    username: $("#Username").val(),
+                    password: $("#Password").val()
+                }
             };
 
             if (!validateForm(settings)) return;

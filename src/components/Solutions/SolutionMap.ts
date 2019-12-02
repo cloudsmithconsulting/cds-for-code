@@ -6,15 +6,15 @@ import * as FileSystem from '../../core/io/FileSystem';
 import { TS } from "typescript-linq";
 import { ExtensionContext } from "vscode";
 import IContributor from "../../core/CommandBuilder";
-import { DynamicsWebApi } from "../../webapi/Types";
+import { DynamicsWebApi } from "../../api/cds-webapi/DynamicsWebApi";
+import { CdsSolutions } from "../../api/CdsSolutions";
 import { Utilities } from "../../core/Utilities";
 import { WorkspaceFileSystemWatcher } from "../../core/io/FileManager";
 import { SolutionWorkspaceMapping } from "./Types";
 
 
-export default class SolutionMap implements IContributor
-{
-    public constructor (map?:SolutionMap) {
+export default class SolutionMap implements IContributor {
+    constructor (map?:SolutionMap) {
         if (map && map.mappings) {
             this.mappings = map.mappings;
         } else {
@@ -86,7 +86,7 @@ export default class SolutionMap implements IContributor
                 }
 
 				folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a workplace folder containing solution items.");
-                if (Utilities.$Object.IsNullOrEmpty(folder)) { return; }
+                if (Utilities.$Object.isNullOrEmpty(folder)) { return; }
                 
                 const map = SolutionMap.loadFromWorkspace(context);
                 item = item || map.hasSolutionMap(solutionId, organizationId) ? map.getBySolutionId(solutionId, organizationId)[0] : null;
@@ -236,7 +236,7 @@ export default class SolutionMap implements IContributor
         return new SolutionMap();
     }
 
-    static mapWorkspacePath(solutionPath: string, component?: DynamicsWebApi.SolutionComponent, item?: any): string {
+    static mapWorkspacePath(solutionPath: string, component?: CdsSolutions.SolutionComponent, item?: any): string {
         let returnPath: string;
         
         if (!component) {
@@ -244,9 +244,9 @@ export default class SolutionMap implements IContributor
         } else {
             //TODO: complete this switch statement.
             switch (component) {
-                case DynamicsWebApi.SolutionComponent.PluginAssembly:
+                case CdsSolutions.SolutionComponent.PluginAssembly:
                     break;
-                case DynamicsWebApi.SolutionComponent.WebResource:
+                case CdsSolutions.SolutionComponent.WebResource:
                     returnPath = path.join(solutionPath, "WebResources");
                     
                     if (item && item.name) {

@@ -738,6 +738,8 @@
 	},
 	"dependencies": {
 		"@iconify/iconify": "^1.0.3",
+		"@types/react-native": "^0.60.23",
+		"@types/xrm": "^9.0.18",
 		"adal-node": "^0.2.1",
 		"archiver": "^3.1.1",
 		"async": "^3.1.0",
@@ -748,6 +750,7 @@
 		"lodash": "^4.17.15",
 		"mustache": "^3.1.0",
 		"node-fetch": "^2.6.0",
+		"node-machine-id": "^1.1.12",
 		"node-stream-zip": "^1.8.2",
 		"opn": "^6.0.0",
 		"typescript-linq": "^1.0.6",

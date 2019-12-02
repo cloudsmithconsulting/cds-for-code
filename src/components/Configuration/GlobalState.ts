@@ -1,14 +1,34 @@
 import * as cs from '../../cs';
-import { DynamicsWebApi } from '../../webapi/Types';
+import { DynamicsWebApi } from '../../api/cds-webapi/DynamicsWebApi';
 import ExtensionContext from '../../core/ExtensionContext';
+import GlobalStateCredentialStore from '../../core/security/GlobalStateCredentialStore';
+import { Credential } from '../../core/security/Types';
 
 export default class GlobalState {
     private constructor() { }
 
     get DynamicsConnections(): DynamicsWebApi.Config[] {
-        return ExtensionContext.Instance.globalState.get<DynamicsWebApi.Config[]>(cs.dynamics.configuration.globalState.dynamicsConnections);
+        const connections = ExtensionContext.Instance.globalState.get<DynamicsWebApi.Config[]>(cs.dynamics.configuration.globalState.dynamicsConnections);
+
+        connections.forEach(c => {
+            const creds = GlobalStateCredentialStore.Instance.retreive(c.id);
+
+            if (creds) {
+                c.credentials = Credential.from(creds, c.id);
+            }
+        });
+
+        return connections;
     }
     set DynamicsConnections(value: DynamicsWebApi.Config[]) {
+        value.forEach(c => {
+            if (c.credentials) {
+                GlobalStateCredentialStore.Instance.store(c.credentials, c.id);
+                
+                delete c.credentials;
+            }
+        });
+
         ExtensionContext.Instance.globalState.update(cs.dynamics.configuration.globalState.dynamicsConnections, value);
     }
 
