@@ -925,7 +925,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 process.name, 
                 "Process",
                 vscode.TreeItemCollapsibleState.None,
-                CdsUrlResolver.parseProcessType(process.category).toString(), 
+                <string | undefined>CdsUrlResolver.parseProcessType(process.category), 
                 {
                     command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: process.displayname,

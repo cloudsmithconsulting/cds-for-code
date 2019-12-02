@@ -4,7 +4,7 @@ import { ICredential } from "../../core/security/Types";
 
 import Utility from './utilities/Utility';
 import * as Parameters from '../../core/helpers/Parameters';
-import * as Request from './requests/sendRequest';
+import * as Request from './odata/sendRequest';
 import { Query } from "./FetchQuery";
 import FetchQueryResolver from "./FetchQueryResolver";
 

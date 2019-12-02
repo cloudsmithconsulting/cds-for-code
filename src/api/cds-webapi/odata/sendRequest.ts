@@ -1,8 +1,10 @@
 ﻿import Utility from '../utilities/Utility';
 import RequestConverter from '../utilities/RequestConverter';
 import BatchConverter from '../utilities/BatchConverter';
-import xhrRequest from "./xhrRequest";
-import nodeJsRequest from "./nodeJsRequest";
+import xhrRequest from "../../../core/http/xhrRequest";
+import nodeJsRequest from "../../../core/http/nodeJsRequest";
+import odataResponseNodeJs from "./odataResponse.nodejs";
+import odataResponseXhr from "./odataResponse.xhr";
 import { DynamicsWebApi } from "../DynamicsWebApi";
 import { Credential } from '../../../core/security/Types';
 
@@ -196,14 +198,18 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
     }
 
     let executeRequest;
+    let responseHandler;
+
     /* develblock:start */
     if (typeof XMLHttpRequest !== 'undefined') {
         /* develblock:end */
         executeRequest = xhrRequest;
+        responseHandler = odataResponseXhr.bind(this);
         /* develblock:start */
     }
     else if (typeof process !== 'undefined') {
         executeRequest = nodeJsRequest;
+        responseHandler = odataResponseNodeJs.bind(this);
     }
     /* develblock:end */
 
@@ -226,6 +232,7 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
             data: stringifiedData,
             additionalHeaders: additionalHeaders,
             responseParams: responseParseParams,
+            responseHandler: responseHandler,
             successCallback: successCallback,
             errorCallback: errorCallback,
             isAsync: isAsync,

@@ -2,11 +2,11 @@
 import * as https from 'https';
 import * as httpntlm from "httpntlm";
 import * as url from 'url';
-import * as Security from '../../../core/security/Types';
-import GlobalStateCredentialStore from '../../../core/security/GlobalStateCredentialStore';
-import oDataResponse from './helpers/oDataResponse';
+import * as Security from '../security/Types';
+import defaultResponseHandler from "./defaultResponseHandler.nodejs";
+import GlobalStateCredentialStore from '../security/GlobalStateCredentialStore';
 
-export type ResponseHandler = (uri: string, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) => void;
+export type ResponseHandler = (request: any, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) => void;
 
 /**
  * Sends a request to given URL with given parameters
@@ -21,6 +21,7 @@ export default function nodeJsRequest(options: any) {
     const successCallback = options.successCallback;
     const errorCallback = options.errorCallback;
     const timeout = options.timeout;
+    const responseHandler: ResponseHandler = options.responseHandler || defaultResponseHandler.bind(this);
     const useWindowsAuth = options.credentials && Security.Credential.isWindowsCredential(options.credentials);
 
     let headers: http.IncomingHttpHeaders = {};
@@ -94,7 +95,9 @@ export default function nodeJsRequest(options: any) {
                     responseParams.length = 0;
                     errorCallback(error);
                 } else {
-                    responseDelegate(parsedUrl.href, response.body, response, responseParams, successCallback, errorCallback);
+                    if (responseDelegate) {
+                        responseDelegate(parsedUrl.href, response.body, response, responseParams, successCallback, errorCallback);
+                    }
                 }
             });
     } else {
@@ -104,13 +107,13 @@ export default function nodeJsRequest(options: any) {
                 let rawData = '';
 
                 response.setEncoding('utf8');
-                
                 response.on('data', (chunk: any) => {
                     rawData += chunk;
                 }); 
-
                 response.on('end', () => {
-                    responseDelegate(parsedUrl.href, rawData, response, responseParams, successCallback, errorCallback);
+                    if (responseDelegate) {
+                        responseDelegate(parsedUrl.href, rawData, response, responseParams, successCallback, errorCallback);
+                    }
                 });
 
                 responseParams.length = 0;
@@ -120,7 +123,7 @@ export default function nodeJsRequest(options: any) {
     let request: any;
 
     try {
-        request = executeRequest(protocolInterface, internalOptions, oDataResponse.bind(this)); 
+        request = executeRequest(protocolInterface, internalOptions, responseHandler.bind(this)); 
     } catch (error) {
         errorCallback(error);
         return;

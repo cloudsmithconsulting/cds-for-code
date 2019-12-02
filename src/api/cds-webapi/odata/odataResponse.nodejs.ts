@@ -1,7 +1,7 @@
 import parseResponse from './parseResponse';
-import * as Parameters from '../../../../core/helpers/Parameters';
+import * as Parameters from '../../../core/helpers/Parameters';
 
-export default function oDataResponse(uri: string, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) {
+export default function oDataResponse(request: any, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) {
     switch (response.statusCode) {
         case 200: // Success with content returned in response body.
         case 201: // Success with content returned in response body.
@@ -39,7 +39,7 @@ export default function oDataResponse(uri: string, data: any, response: any, res
                 }
             }
 
-            errorCallback(Parameters.handleHttpError(internalError, { uri, status: response.statusCode, statusMessage: response.statusMessage }));
+            errorCallback(Parameters.handleHttpError(internalError, { uri: request.toString(), status: response.statusCode, statusMessage: response.statusMessage }));
 
             break;
     }

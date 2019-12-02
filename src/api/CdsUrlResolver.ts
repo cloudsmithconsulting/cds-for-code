@@ -5,15 +5,15 @@ import { DynamicsWebApi } from './cds-webapi/DynamicsWebApi';
 
 export default class CdsUrlResolver {
     static parseFormType(formType:number): CdsSolutions.DynamicsForm {
-        return CdsSolutions.CodeMappings.DynamicsForms[formType];
+        return formType ? CdsSolutions.CodeMappings.DynamicsForms[formType] : undefined;
     }
 
     static parseProcessType(processType:number): CdsSolutions.ProcessType {
-        return CdsSolutions.CodeMappings.ProcessTypes[processType];
+        return processType ? CdsSolutions.CodeMappings.ProcessTypes[processType] : undefined;
     }
 
     static parseSolutionComponent(solutionComponent:number): CdsSolutions.SolutionComponent {
-        return CdsSolutions.CodeMappings.SolutionComponents[solutionComponent];
+        return solutionComponent ? CdsSolutions.CodeMappings.SolutionComponents[solutionComponent] : undefined;
     }
 
     static getManageSolutionUri(config:DynamicsWebApi.Config, solutionId?:string): string {
