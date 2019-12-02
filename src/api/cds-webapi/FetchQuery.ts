@@ -34,7 +34,7 @@ export interface Query {
     whereAny(any: (or: (attributeName: string, operator: QueryOperatorParam, ...values: any[]) => void) => void): Query;
     orderBy(attributeName: string, isDescendingOrder?: boolean): Query;
     join(entityName: string, fromAttribute: string, toAttribute?: string, alias?: string, isOuterJoin?: boolean): Query;
-    Query: FetchQuery;
+    query: FetchQuery;
 }
 
 // Query operators are either Fetch or WebApi
@@ -86,13 +86,13 @@ export function GetRootQuery(query: Query): FetchQuery {
 }
 
 class FetchQueryProvider implements Query {
-    public Query: FetchQuery;
-    public RootQuery: Query | undefined;
+    query: FetchQuery;
+    rootQuery: Query | undefined;
 
-    constructor(private EntityName: string) {
-        this.Query = {
-            Alias: { EntityName },
-            EntityName: EntityName,
+    constructor(private entityName: string) {
+        this.query = {
+            Alias: { EntityName: entityName },
+            EntityName: entityName,
             Attributes: new Set(),
             OrderBy: new Set(),
             Conditions: [],
@@ -105,27 +105,27 @@ class FetchQueryProvider implements Query {
     }
 
     alias(attributeName: string, alias: string): Query {
-        this.Query.Alias[attributeName] = alias;
+        this.query.Alias[attributeName] = alias;
 
         return this;
     }
 
     path(entityPath: string): Query {
-        this.Query.EntityPath = entityPath;
+        this.query.EntityPath = entityPath;
 
         return this;
     }
 
     select(...attributeNames: string[]): Query {
         for (const a of this.flatten(attributeNames)) {
-            this.Query.Attributes.add(a);
+            this.query.Attributes.add(a);
         }
 
-        if (this.RootQuery) {
+        if (this.rootQuery) {
             const rootQuery = GetRootQuery(this);
 
             for (const a of this.flatten(attributeNames)) {
-                rootQuery.Attributes.add(this.EntityName + '.' + a);
+                rootQuery.Attributes.add(this.entityName + '.' + a);
             }
         }
 
@@ -133,7 +133,7 @@ class FetchQueryProvider implements Query {
     }
 
     where(attributeName: string, operator: QueryOperatorParam, ...values: any[]): Query {
-        this.Query.Conditions.push({
+        this.query.Conditions.push({
             AttributeName: attributeName,
             Operator: operator as FetchQueryOperator,
             Values: this.flatten(values)
@@ -153,17 +153,17 @@ class FetchQueryProvider implements Query {
             });
         });
 
-        this.Query.Conditions.push(conditions);
+        this.query.Conditions.push(conditions);
 
         return this;
     }
 
     orderBy(attributeName: string, isDescendingOrder?: boolean): Query {
         if (isDescendingOrder) {
-            this.Query.OrderBy.add('_' + attributeName);
+            this.query.OrderBy.add('_' + attributeName);
         }
         else {
-            this.Query.OrderBy.add(attributeName);
+            this.query.OrderBy.add(attributeName);
         }
 
         return this;
@@ -171,15 +171,15 @@ class FetchQueryProvider implements Query {
 
     join(entityName: string, fromAttribute: string, toAttribute?: string, alias?: string, isOuterJoin?: boolean): Query {
         var exp = new FetchQueryProvider(entityName);
-        var join = <FetchQueryJoin>exp.Query;
+        var join = <FetchQueryJoin>exp.query;
        
-        exp.RootQuery = this.RootQuery || this;
+        exp.rootQuery = this.rootQuery || this;
         join.JoinAlias = alias || entityName;
         join.JoinFromAttributeName = fromAttribute;
-        join.JoinToAttributeName = toAttribute || this.EntityName + 'id';
+        join.JoinToAttributeName = toAttribute || this.entityName + 'id';
         join.IsOuterJoin = isOuterJoin;
 
-        this.Query.Joins.push(join);
+        this.query.Joins.push(join);
        
         return exp;
     }

@@ -871,7 +871,7 @@ export namespace DynamicsWebApi {
          * @param impersonateUserId - A String representing the GUID value for the Dynamics 365 system user id. Impersonates the user.
          */
         fetch(query: Query, includeAnnotations?: string, pageNumber?: number, pagingCookie?: string, impersonateUserId?: string): Promise<any> {
-            return this.executeFetchXml(query.Query.EntityPath, FetchQueryResolver.ResolveQuery(query), includeAnnotations, pageNumber, pagingCookie, impersonateUserId);
+            return this.executeFetchXml(query.query.EntityPath, FetchQueryResolver.ResolveQuery(query), includeAnnotations, pageNumber, pagingCookie, impersonateUserId);
         }
 
         /**
@@ -894,7 +894,7 @@ export namespace DynamicsWebApi {
          * @param impersonateUserId - A String representing the GUID value for the Dynamics 365 system user id. Impersonates the user.
          */
         fetchAll(query: Query, includeAnnotations?: string, impersonateUserId?: string): Promise<any> {
-            return this.executeFetchXmlAll(query.Query.EntityPath, FetchQueryResolver.ResolveQuery(query), includeAnnotations, impersonateUserId);
+            return this.executeFetchXmlAll(query.query.EntityPath, FetchQueryResolver.ResolveQuery(query), includeAnnotations, impersonateUserId);
         }
 
         /**
