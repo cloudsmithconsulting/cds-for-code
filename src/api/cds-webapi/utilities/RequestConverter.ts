@@ -1,5 +1,5 @@
 ﻿import * as Parameters from '../../../core/helpers/Parameters';
-import buildPreferHeader from './buildPreferHeader';
+import buildPreferHeader from '../odata/buildPreferHeader';
 
 /**
  * @typedef {Object} ConvertedRequestOptions
