@@ -23,77 +23,91 @@
     </div>
 </blockquote>
 
-<div class="grid grid--left-panel-large">
-    <div>
-        <fieldset>
-            <legend>Connection Settings</legend>
-            <input type="hidden" id="Id" name="Id" value="" />
-            <div class="field field--checkbox">
-                    <input type="radio" class="field__input" id="AuthType1" name="AuthType" value="0" />
-                    <label class="field__label" for="AuthType1">
-                        Windows (On-Premises)
-                    </label>
-                    <input type="radio" class="field__input" id="AuthType2" name="AuthType" value="1" checked="checked" />
-                    <label class="field__label" for="AuthType2">
-                        Dynamics 365 Online
-                    </label>
-                    <input type="radio" class="field__input" id="AuthType3" name="AuthType" value="2" disabled="disabled" />
-                    <label class="field__label" for="AuthType3">
-                        Azure AD
-                    </label>
-                    <input type="radio" class="field__input" id="AuthType4" name="AuthType" value="3" disabled="disabled" />
-                    <label class="field__label" for="AuthType4">
-                        IFD (On-Premises)
-                    </label>
+<div>
+    <fieldset>
+        <legend>Connection Settings</legend>
+        <input type="hidden" id="Id" name="Id" value="" />
+        <div class="field field--checkbox">
+            <input type="radio" class="field__input" id="AuthType1" name="AuthType" value="0" />
+            <label class="field__label" for="AuthType1">
+                Windows (On-Premises)
+            </label>
+            <input type="radio" class="field__input" id="AuthType2" name="AuthType" value="1" checked="checked" />
+            <label class="field__label" for="AuthType2">
+                Dynamics 365 Online
+            </label>
+            <input type="radio" class="field__input" id="AuthType3" name="AuthType" value="2" />
+            <label class="field__label" for="AuthType3">
+                Azure AD
+            </label>
+            <input type="radio" class="field__input" id="AuthType4" name="AuthType" value="3" disabled="disabled" />
+            <label class="field__label" for="AuthType4">
+                IFD (On-Premises)
+            </label>
+        </div>
+        <div class="field">
+            <label class="field__label" for="WebApiVersion">
+                Web API Version
+            </label>
+            <select id="WebApiVersion" name="WebApiVersion" class="field__input">
+                <option>auto</option>
+                <option>v8.0</option>
+                <option>v8.1</option>
+                <option>v8.2</option>
+                <option>v9.0</option>
+                <option>v9.1</option>
+            </select>
+            <div class="help-tip">
+                <p>Only set this option if you wish to force API compatibility</p>
             </div>
+        </div>
+        <div class="field">
+            <label class="field__label" for="Name">
+                Name
+            </label>
+            <input type="text" class="field__input" id="Name" name="Name" />
+        </div>
+        <div class="field">
+            <label class="field__label" for="ServerUrl">
+                Server URL
+            </label>
+            <input type="text" class="field__input" id="ServerUrl" name="ServerUrl" />
+        </div>
+        <div class="field">
+            <label class="field__label" for="Username">
+                Username
+            </label>
+            <input type="text" class="field__input" id="Username" name="Username" />
+        </div>
+        <div class="field">
+            <label class="field__label" for="Password">
+                Password
+            </label>
+            <input type="password" class="field__input" id="Password" name="Password" />
+        </div>
+        <div id="DomainField" class="field">
+            <label class="field__label" for="Domain">
+                Domain
+            </label>
+            <input type="text" class="field__input" id="Domain" name="Domain" />
+        </div>
+    </fieldset>
+
+    <fieldset id="AdvancedOptionsPanel">
+        <div id="OAuthTokenPanel">
             <div class="field">
-                <label class="field__label" for="WebApiVersion">
-                    Web API Version
+                <input type="checkbox" class="field__input" id="AccessTokenCheckbox" name="AccessToken"
+                    title="Select this option if you want to attempt authentication with an already established access token." />
+                <label for="AccessTokenCheckbox" class="field__label">
+                    Use a pre-determined OAuth token to complete this request
                 </label>
-                <select id="WebApiVersion" name="WebApiVersion" class="field__input">
-                    <option>v8.0</option>
-                    <option>v8.1</option>
-                    <option>v8.2</option>
-                    <option>v9.0</option>
-                    <option>v9.1</option>
-                </select>
             </div>
-            <div class="field">
-                <label class="field__label" for="Name">
-                    Friendly Name
+            <div id="OAuthTokenField" class="field">
+                <label class="field__label" for="OAuthToken">
+                    OAuth Token
                 </label>
-                <input type="text" class="field__input" id="Name" name="Name" />
+                <input type="text" class="field__input" id="OAuthToken" name="OAuthToken" />
             </div>
-            <div class="field">
-                <label class="field__label" for="ServerUrl">
-                    Server URL
-                </label>
-                <input type="text" class="field__input" id="ServerUrl" name="ServerUrl" />
-            </div>
-            <div id="domainField" class="field">
-                <label class="field__label" for="Domain">
-                    Domain
-                </label>
-                <input type="text" class="field__input" id="Domain" name="Domain" />
-            </div>
-            <div id="accessTokenField" class="field">
-                <label class="field__label" for="AccessToken">
-                    Access Token
-                </label>
-                <input type="text" class="field__input" id="AccessToken" name="AccessToken" />
-            </div>
-            <div class="field">
-                <label class="field__label" for="Username">
-                    Username
-                </label>
-                <input type="text" class="field__input" id="Username" name="Username" />
-            </div>
-            <div class="field">
-                <label class="field__label" for="Password">
-                    Password
-                </label>
-                <input type="password" class="field__input" id="Password" name="Password" />
-            </div>
-        </fieldset>
-    </div>
+        </div>
+    </fieldset>
 </div>
