@@ -55,7 +55,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 			return await terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
 				.text(`-ToolsPath ${coreToolsRoot} `)
 				.text(`-Url "${Utilities.String.withTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `)
-				.if(() => !Utilities.$Object.isNullOrEmpty(config.credentials), c => {
+				.if(() => Security.Credential.isCredential(config.credentials), c => {
 					c.text(`-Username "`)
 					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
 					 .text(`" -Password "`)
