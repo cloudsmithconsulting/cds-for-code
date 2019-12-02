@@ -117,7 +117,7 @@ export default class RequestConverter {
                 requestArray.push("$top=" + request.top);
             }
 
-            if (request.orderBy !== null && request.orderBy.length) {
+            if (request.orderBy && request.orderBy.length) {
                 ErrorHelper.arrayParameterCheck(request.orderBy, 'DynamicsWebApi.' + functionName, "request.orderBy");
                 requestArray.push("$orderby=" + request.orderBy.join(','));
             }
@@ -128,7 +128,7 @@ export default class RequestConverter {
                 headers['Prefer'] = prefer;
             }
 
-            if (request.ifmatch !== null && request.ifnonematch !== null) {
+            if (request.ifmatch && request.ifnonematch) {
                 throw new Error('DynamicsWebApi.' + functionName + ". Either one of request.ifmatch or request.ifnonematch parameters should be used in a call, not both.");
             }
 

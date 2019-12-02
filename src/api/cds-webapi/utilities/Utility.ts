@@ -68,8 +68,20 @@ export default class Utility {
         return clientUrl;
     }
     
-    static initWebApiUrl(version: string): string {
-        return this.getClientUrl() + '/api/data/v' + version + '/';
+    static initWebApiUrl(prefix: string = this.getClientUrl(), version: string = "8.2"): string {
+        if (version && version.startsWith("v")) {
+            version = version.substring(1, version.length);
+        }
+
+        return prefix + (!prefix.endsWith("/") ? "/" : "") + 'api/data/v' + version + '/';
+    }
+
+    static initDiscoveryApiUrl(prefix: string = this.getClientUrl(), version: string = "8.2"): string {
+        if (version && version.startsWith("v")) {
+            version = version.substring(1, version.length);
+        }
+
+        return prefix + (!prefix.endsWith("/") ? "/" : "") + 'api/discovery/v' + version + '/';
     }
 
     static getXrmInternal(): any { 

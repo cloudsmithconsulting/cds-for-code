@@ -6,7 +6,7 @@ import * as Security from '../../../core/security/Types';
 import GlobalStateCredentialStore from '../../../core/security/GlobalStateCredentialStore';
 import oDataResponse from './helpers/oDataResponse';
 
-export type ResponseHandler = (request: any, response: any, responseParams: any, successCallback: any, errorCallback: any) => void;
+export type ResponseHandler = (uri: string, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) => void;
 
 /**
  * Sends a request to given URL with given parameters
@@ -94,7 +94,7 @@ export default function nodeJsRequest(options: any) {
                     responseParams.length = 0;
                     errorCallback(error);
                 } else {
-                    responseDelegate(response.body, response, responseParams, successCallback, errorCallback);
+                    responseDelegate(parsedUrl.href, response.body, response, responseParams, successCallback, errorCallback);
                 }
             });
     } else {
@@ -105,12 +105,12 @@ export default function nodeJsRequest(options: any) {
 
                 response.setEncoding('utf8');
                 
-                response.on('data', (chunk) => {
+                response.on('data', (chunk: any) => {
                     rawData += chunk;
                 }); 
 
                 response.on('end', () => {
-                    responseDelegate(rawData, response, responseParams, successCallback, errorCallback);
+                    responseDelegate(parsedUrl.href, rawData, response, responseParams, successCallback, errorCallback);
                 });
 
                 responseParams.length = 0;

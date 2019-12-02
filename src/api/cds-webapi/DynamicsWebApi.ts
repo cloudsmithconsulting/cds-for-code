@@ -216,6 +216,8 @@ export namespace DynamicsWebApi {
         type: ConfigType;
         /**A String representing the GUID value for the Dynamics 365 system user id.Impersonates the user. */
         webApiUrl?: string;
+        /** A string representation of a URL that can discovery this instance. */
+        discoveryUrl?: string;
         /**The version of Web API to use, for example: "8.1" */
         webApiVersion?: string;
         /** The credentials to use when connecting to the API endpoint */
@@ -333,9 +335,11 @@ export namespace DynamicsWebApi {
 
             if (config.webApiUrl) {
                 ErrorHelper.stringParameterCheck(config.webApiUrl, "DynamicsWebApi.setConfig", "config.webApiUrl");
-                this._internalConfig.webApiUrl = config.webApiUrl;
+                this._internalConfig.webApiUrl = Utility.initWebApiUrl(config.webApiUrl, this._internalConfig.webApiVersion); 
+                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(config.webApiUrl, this._internalConfig.webApiVersion);
             } else {
-                this._internalConfig.webApiUrl = Utility.initWebApiUrl(this._internalConfig.webApiVersion);
+                this._internalConfig.webApiUrl = Utility.initWebApiUrl(undefined, this._internalConfig.webApiVersion);
+                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(undefined, this._internalConfig.webApiVersion);
             }
 
             if (config.credentials) {

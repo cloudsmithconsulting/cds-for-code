@@ -1,14 +1,14 @@
 import parseResponse from './parseResponse';
 import ErrorHelper from '../../helpers/ErrorHelper';
 
-export default function oDataResponse(rawData: any, response: any, responseParams: any, successCallback: any, errorCallback: any) {
+export default function oDataResponse(uri: string, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) {
     switch (response.statusCode) {
         case 200: // Success with content returned in response body.
         case 201: // Success with content returned in response body.
         case 204: // Success with no content returned in response body.
         case 304: {// Success with Not Modified
             successCallback({
-                data: parseResponse(rawData, response.headers, responseParams),
+                data: parseResponse(data, response.headers, responseParams),
                 headers: response.headers,
                 status: response.statusCode
             });
@@ -19,7 +19,7 @@ export default function oDataResponse(rawData: any, response: any, responseParam
             let internalError;
 
             try {
-                const errorParsed = parseResponse(rawData, response.headers, responseParams);
+                const errorParsed = parseResponse(data, response.headers, responseParams);
 
                 if (Array.isArray(errorParsed)) {
                     errorCallback(errorParsed);
@@ -31,15 +31,15 @@ export default function oDataResponse(rawData: any, response: any, responseParam
                     : { message: errorParsed.Message };
 
             } catch (e) {
-                if (rawData.length > 0) {
-                    internalError = { message: rawData };
+                if (data.length > 0) {
+                    internalError = { message: data };
                 }
                 else {
                     internalError = { message: e.message || e };
                 }
             }
 
-            errorCallback(ErrorHelper.handleHttpError(internalError, { status: response.statusCode, statusMessage: response.statusMessage }));
+            errorCallback(ErrorHelper.handleHttpError(internalError, { uri, status: response.statusCode, statusMessage: response.statusMessage }));
 
             break;
     }

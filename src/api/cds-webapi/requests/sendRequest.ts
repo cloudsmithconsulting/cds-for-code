@@ -222,7 +222,7 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
             credentials: config.credentials,
             method: method,
             connectionId: config.id,
-            uri: config.webApiUrl + path,
+            uri: (path === "Instances" ? config.discoveryUrl : config.webApiUrl) + path,
             data: stringifiedData,
             additionalHeaders: additionalHeaders,
             responseParams: responseParseParams,
@@ -318,7 +318,7 @@ function _getCollectionName(entityName: string, config: DynamicsWebApi.Config, r
 }
 
 export function makeDiscoveryRequest(request:any, config:DynamicsWebApi.Config, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {
-    return sendRequest("GET", `api/discovery/v8.0/${!Utility.isNull(request) ? request.collection : "Instances"}`, config, null, null, null, resolve, reject, request ? request.isBatch : false, true);
+    return sendRequest("GET", `${request ? request.collection : "Instances"}`, config, null, null, null, resolve, reject, request ? request.isBatch : false, true);
 }
 
 export function makeRequest(method: string, request: any, functionName: string, config: any, responseParams?: any, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {
