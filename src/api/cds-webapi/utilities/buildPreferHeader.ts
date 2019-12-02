@@ -1,6 +1,6 @@
 ﻿import { DynamicsWebApi } from '../DynamicsWebApi';
 import { DWA } from '../DWA';
-import ErrorHelper from '../helpers/ErrorHelper';
+import * as Parameters from '../../../core/helpers/Parameters';
 
 /**
  * Builds a Prefer header value
@@ -18,7 +18,7 @@ export default function buildPreferHeader(request:any, functionName:string, conf
     var prefer;
 
     if (request.prefer && request.prefer.length) {
-        ErrorHelper.stringOrArrayParameterCheck(request.prefer, "DynamicsWebApi." + functionName, "request.prefer");
+        Parameters.stringOrArrayParameterCheck(request.prefer, "DynamicsWebApi." + functionName, "request.prefer");
         prefer = request.prefer;
         if (typeof prefer === "string") {
             prefer = prefer.split(',');
@@ -51,22 +51,22 @@ export default function buildPreferHeader(request:any, functionName:string, conf
     }
 
     if (returnRepresentation) {
-        ErrorHelper.boolParameterCheck(returnRepresentation, "DynamicsWebApi." + functionName, "request.returnRepresentation");
+        Parameters.boolParameterCheck(returnRepresentation, "DynamicsWebApi." + functionName, "request.returnRepresentation");
         prefer.push(DWA.Prefer.ReturnRepresentation);
     }
 
     if (includeAnnotations) {
-        ErrorHelper.stringParameterCheck(includeAnnotations, "DynamicsWebApi." + functionName, "request.includeAnnotations");
+        Parameters.stringParameterCheck(includeAnnotations, "DynamicsWebApi." + functionName, "request.includeAnnotations");
         prefer.push('odata.include-annotations="' + includeAnnotations + '"');
     }
 
     if (maxPageSize && maxPageSize > 0) {
-        ErrorHelper.numberParameterCheck(maxPageSize, "DynamicsWebApi." + functionName, "request.maxPageSize");
+        Parameters.numberParameterCheck(maxPageSize, "DynamicsWebApi." + functionName, "request.maxPageSize");
         prefer.push('odata.maxpagesize=' + maxPageSize);
     }
 
     if (trackChanges) {
-        ErrorHelper.boolParameterCheck(trackChanges, "DynamicsWebApi." + functionName, "request.trackChanges");
+        Parameters.boolParameterCheck(trackChanges, "DynamicsWebApi." + functionName, "request.trackChanges");
         prefer.push('odata.track-changes');
     }
 

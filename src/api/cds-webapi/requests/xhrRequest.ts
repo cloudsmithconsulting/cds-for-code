@@ -1,6 +1,6 @@
 ﻿import parseResponse from './helpers/parseResponse';
 import parseResponseHeaders from './helpers/parseResponseHeaders';
-import ErrorHelper from '../helpers/ErrorHelper';
+import * as Parameters from '../../../core/helpers/Parameters';
 
 if (!Array.isArray) {
     require("../polyfills/Array-es6");
@@ -70,7 +70,7 @@ export default function xhrRequest(options: any) {
                         }
                     }
 
-                    errorCallback(ErrorHelper.handleHttpError(error, {
+                    errorCallback(Parameters.handleHttpError(error, {
                         status: request.status,
                         statusText: request.statusText
                     }));
@@ -88,7 +88,7 @@ export default function xhrRequest(options: any) {
     }
 
     request.onerror = function () {
-        errorCallback(ErrorHelper.handleHttpError({
+        errorCallback(Parameters.handleHttpError({
             status: request.status,
             statusText: request.statusText,
             message: request.responseText || "Network Error"
@@ -98,7 +98,7 @@ export default function xhrRequest(options: any) {
     };
 
     request.ontimeout = function () {
-        errorCallback(ErrorHelper.handleHttpError({
+        errorCallback(Parameters.handleHttpError({
             status: request.status,
             statusText: request.statusText,
             message: request.responseText || "Request Timed Out"

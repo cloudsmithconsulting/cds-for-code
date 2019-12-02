@@ -1,6 +1,6 @@
 ﻿import { DWA } from '../../DWA';
 import Utility from '../../utilities/Utility';
-import ErrorHelper from '../../helpers/ErrorHelper';
+import * as Parameters from '../../../../core/helpers/Parameters';
 import dateReviver from './dateReviver';
 
 //string es6 polyfill
@@ -177,7 +177,7 @@ function parseBatchResponse(response: string, parseParams?: any[], requestNumber
                 var parsedResponse = parseData(JSON.parse(responseData, dateReviver), parseParams[requestNumber]);
 
                 if (httpStatus >= 400) {
-                    result.push(ErrorHelper.handleHttpError(parsedResponse, {
+                    result.push(Parameters.handleHttpError(parsedResponse, {
                         status: httpStatus,
                         statusText: httpStatusMessage,
                         statusMessage: httpStatusMessage

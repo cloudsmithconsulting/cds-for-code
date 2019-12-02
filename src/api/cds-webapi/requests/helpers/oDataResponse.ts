@@ -1,5 +1,5 @@
 import parseResponse from './parseResponse';
-import ErrorHelper from '../../helpers/ErrorHelper';
+import * as Parameters from '../../../../core/helpers/Parameters';
 
 export default function oDataResponse(uri: string, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) {
     switch (response.statusCode) {
@@ -39,7 +39,7 @@ export default function oDataResponse(uri: string, data: any, response: any, res
                 }
             }
 
-            errorCallback(ErrorHelper.handleHttpError(internalError, { uri, status: response.statusCode, statusMessage: response.statusMessage }));
+            errorCallback(Parameters.handleHttpError(internalError, { uri, status: response.statusCode, statusMessage: response.statusMessage }));
 
             break;
     }
