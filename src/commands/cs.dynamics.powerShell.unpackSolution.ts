@@ -10,6 +10,7 @@ import SolutionMap from '../components/Solutions/SolutionMap';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import ExtensionContext from '../core/ExtensionContext';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
+import { Credential } from '../core/security/Types';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.
@@ -19,7 +20,7 @@ import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialSt
  */
 export default async function run(config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string, logFile?:string, mappingFile?:string, templateResourceCode?:string, includeResourceFiles?:boolean, allowDelete:boolean = true) {
 	// setup configurations
-	const sdkInstallPath = ExtensionConfiguration.parseConfigurationValue<string>(this.workspaceConfiguration, cs.dynamics.configuration.tools.sdkInstallPath);
+	const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
 	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 	const map:SolutionMap = SolutionMap.loadFromWorkspace(ExtensionContext.Instance);
@@ -89,7 +90,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 				.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
 				.text(`-Path "${folder}" `)
 				.text(`-ToolsPath "${toolsPath}" `)
-				.if(() => !Utilities.$Object.isNullOrEmpty(config.credentials), c => {
+				.if(() => Credential.isCredential(config.credentials), c => {
 					c.text(`-Credential (New-Object System.Management.Automation.PSCredential ("`)
 					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
 					 .text(`", (ConvertTo-SecureString "`)

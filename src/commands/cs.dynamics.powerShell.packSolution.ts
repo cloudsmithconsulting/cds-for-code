@@ -12,6 +12,7 @@ import WorkspaceState from '../components/Configuration/WorkspaceState';
 import SolutionFile from '../components/SolutionXml/SolutionFile';
 import ExtensionContext from '../core/ExtensionContext';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
+import { Credential } from '../core/security/Types';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.
@@ -101,7 +102,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 				.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
 				.text(`-Path "${folder}" `)
 				.text(`-ToolsPath "${toolsPath}" `)
-				.if(() => !Utilities.$Object.isNullOrEmpty(config.credentials), c => {
+				.if(() => Credential.isCredential(config.credentials), c => {
 					c.text(`-Credential (New-Object System.Management.Automation.PSCredential ("`)
 					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
 					 .text(`", (ConvertTo-SecureString "`)
