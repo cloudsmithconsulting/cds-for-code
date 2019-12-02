@@ -12,7 +12,7 @@ import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import { ExtensionIconThemes } from "../components/WebDownloaders/Types";
 import Quickly from '../core/Quickly';
 import SolutionMap from '../components/Solutions/SolutionMap';
-import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
+import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
 import { CdsSolutions } from '../api/CdsSolutions';
 
 export default class DynamicsTreeView implements IContributor {

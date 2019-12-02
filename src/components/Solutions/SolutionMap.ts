@@ -10,7 +10,7 @@ import { DynamicsWebApi } from "../../api/cds-webapi/DynamicsWebApi";
 import { CdsSolutions } from "../../api/CdsSolutions";
 import { Utilities } from "../../core/Utilities";
 import { WorkspaceFileSystemWatcher } from "../../core/io/FileManager";
-import { SolutionWorkspaceMapping } from "./Types";
+import SolutionWorkspaceMapping from "./SolutionWorkspaceMapping";
 
 
 export default class SolutionMap implements IContributor {

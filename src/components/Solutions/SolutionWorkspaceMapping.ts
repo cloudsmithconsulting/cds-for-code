@@ -3,7 +3,7 @@ import { CdsSolutions } from "../../api/CdsSolutions";
 import * as vscode from 'vscode';
 import SolutionMap from "./SolutionMap";
 
-export class SolutionWorkspaceMapping {
+export default class SolutionWorkspaceMapping {
     constructor(organizationId?: string, solutionId?: string, path?: string) {
         this.organizationId = organizationId;
         this.solutionId = solutionId;

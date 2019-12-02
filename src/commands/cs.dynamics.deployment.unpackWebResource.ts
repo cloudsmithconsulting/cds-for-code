@@ -6,7 +6,7 @@ import { CdsSolutions } from '../api/CdsSolutions';
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
 import { Utilities } from "../core/Utilities";
-import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
+import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
 
 /**
  * This command can be invoked by the Dynamics Explorer tree view and creates or updates a web resource in the local workspace.

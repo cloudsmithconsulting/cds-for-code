@@ -6,7 +6,7 @@ import { DynamicsWebApi } from "../../api/cds-webapi/DynamicsWebApi";
 import IContributor from '../../core/CommandBuilder';
 import { Utilities } from '../../core/Utilities';
 import SolutionMap from "./SolutionMap";
-import { SolutionWorkspaceMapping } from "./Types";
+import SolutionWorkspaceMapping from "./SolutionWorkspaceMapping";
 import TemplateManager from "../Templates/TemplateManager";
 import ApiRepository from '../../repositories/apiRepository';
 import EnumParser from '../../core/EnumParser';
