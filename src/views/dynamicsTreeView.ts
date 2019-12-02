@@ -507,7 +507,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 displayName, 
                 "Connection", 
                 vscode.TreeItemCollapsibleState.Collapsed, 
-                connection.credentials ? connection.credentials.username.toString() : "",
+                connection.webApiUrl, 
                 {
                     command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
                     title: connection.webApiUrl,
