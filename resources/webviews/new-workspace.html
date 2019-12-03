@@ -22,46 +22,51 @@
 <!-- viewRenderer.addStyleSheet('webviewStyles.css') -->
 <!-- changeTab() function comes from tabs.js -->
 <!-- viewRenderer.addScript('tabs.js') -->
-<ul class="tab" id="tabs">
-    <li class="tab__item tab__item--active" data-tab="GettingStarted">
-        Getting Started
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#home">Getting Started</a>
     </li>
-    <li class="tab__item" data-tab="Plugins">
-        Plugins
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#plugins">Plugins</a>
     </li>
-    <li class="tab__item" data-tab="WebResources">
-        Web Resources
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#webResources">Web Resources</a>
     </li>
-    <li class="tab__item" data-tab="CodeGeneration">
-        Code Generation
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#codeGeneration">Code Generation</a>
     </li>
 </ul>
 
-<div id="GettingStarted" class="tab__content">
-    <h2>Getting started</h2>
-    <p>
-        This extension for Code allows developers to work with their solutions and data in Dynamics 365 Customer Engagement.  You'll want to do these things to get started.
-    </p>
-    <ol>
-        <li>
-            <a id="ConnectLink" href="#">Connect to a Dynamics 365 instance</a>
-        </li>
-        <li>
-            <a id="OpenWorkspaceLink" href="#">Open a workspace</a>
-        </li>
-    </ol>
-</div>
-
-<div id="Plugins" class="tab__content" hidden>
-
-</div>
-
-<div id="WebResources" class="tab__content" hidden>
-
-</div>
-
-<div id="CodeGeneration" class="tab__content" hidden>
-
+<div class="tab-content">
+    <div class="tab-pane container active" id="home">
+        <h1>Getting Started with CDS for Code</h1>
+        <p>
+            This extension for Code allows developers to work with their solutions and data in Dynamics 365 Customer Engagement.  You'll want to do these things to get started.
+        </p>
+        <div class="d-flex flex-column">
+            <div class="p-2"><a id="ConnectLink" href="#">Connect to a Dynamics 365 instance</a></div>
+            <div class="p-2"><a id="OpenWorkspaceLink" href="#">Open a workspace</a></div>
+            <div class="p-2 bg-primary">Do something else</div>
+        </div>
+    </div>
+    <div class="tab-pane container fade" id="plugins">
+        <h1>Authoring plugin projects</h1>
+        <p>
+            Those are pretty neat.
+        </p>
+    </div>
+    <div class="tab-pane container fade" id="webResources">
+        <h1>Writing web resources</h1>
+        <p>
+            Those are pretty neat.
+        </p>
+    </div>
+    <div class="tab-pane container fade" id="codeGeneration">
+        <h1>Generating entity code</h1>
+        <p>
+            Those are pretty neat.
+        </p>
+    </div>
 </div>
 
 <div>

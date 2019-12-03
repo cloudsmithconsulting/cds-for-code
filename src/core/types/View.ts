@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
+import * as FileSystem from '../io/FileSystem';
 import * as path from 'path';
 import * as _ from 'lodash';
 import Dictionary from './Dictionary';
@@ -41,6 +41,10 @@ export class ViewRenderer {
 		this._scripts.insert(0, scriptName, this.getFileUri('node_modules', scriptName));
 	}
 
+	private addFrameworkStylesheet(cssName: string) {
+		this._styleSheets.insert(0, cssName, this.getFileUri('node_modules', cssName));
+	}
+
 	addStyleSheet(styleSheetName: string) {
 		this._styleSheets.add(styleSheetName, this.getFileUri('resources', 'styles', styleSheetName));
 	}
@@ -69,7 +73,7 @@ export class ViewRenderer {
 		// get the file path
 		const pathOnDisk = path.join(this._view.extensionPath, 'resources', 'webviews', webviewFileName);
 		// read file contents from disk
-		const fileHtml = fs.readFileSync(pathOnDisk).toString();
+		const fileHtml = FileSystem.readFileSync(pathOnDisk).toString();
 		// use custom delimiter #{ }
 		_.templateSettings.interpolate = /#{([\s\S]+?)}/g;
 		// compile the template
@@ -90,11 +94,6 @@ export class ViewRenderer {
 	}
 
 	renderHtml(htmlParial: string): string {
-		let cssHtml: string = '';
-		this._styleSheets.values.forEach(uri => {
-			cssHtml += `<link rel="stylesheet" type="text/css" href="${uri}">`;
-		});
-
 		// add some default scripts
 		this.insertScriptAt(0, 'main.js');
 		// these are framework scripts hosted out of node_modules
@@ -102,6 +101,11 @@ export class ViewRenderer {
 		this.addFrameworkScript('@iconify/iconify/dist/iconify.min.js');
 		this.addFrameworkScript('mustache/mustache.min.js');
 		this.addFrameworkScript('jquery/dist/jquery.min.js');
+
+		let cssHtml: string = '';
+		this._styleSheets.values.forEach(uri => {
+			cssHtml += `<link rel="stylesheet" type="text/css" href="${uri}" />`;
+		});
 
 		let scriptHtml: string = '';
 		this._scripts.values.forEach(uri => {
