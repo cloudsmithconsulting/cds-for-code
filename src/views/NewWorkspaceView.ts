@@ -65,10 +65,10 @@ export default class NewWorkspaceViewManager implements IContributor {
 class NewWorkspaceView extends View {
     public getHtmlForWebview(viewRenderer: ViewRenderer): string {
         // add script and css assets
-        //viewRenderer.framework = "core";
         viewRenderer.addScript('new-workspace.js');
-        //viewRenderer.addScript('tabs.js');
+        viewRenderer.addScript('materialize.js');
 
+        viewRenderer.addStyleSheet("materialize.css");
         viewRenderer.addStyleSheet('webviewStyles.css');
 
         // add image assets

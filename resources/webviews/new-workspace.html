@@ -22,26 +22,20 @@
 <!-- viewRenderer.addStyleSheet('webviewStyles.css') -->
 <!-- changeTab() function comes from tabs.js -->
 <!-- viewRenderer.addScript('tabs.js') -->
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#home">Getting Started</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#plugins">Plugins</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#webResources">Web Resources</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#codeGeneration">Code Generation</a>
-    </li>
-</ul>
-
-<div class="tab-content">
-    <div class="tab-pane container active" id="home">
+<div class="row">
+    <div class="col s12">
+        <ul class="tabs">
+            <li class="tab col s3"><a href="#home">Getting Started</a></li>
+            <li class="tab col s3"><a class="active" href="#plugins">Plugins</a></li>
+            <li class="tab col s3 disabled"><a href="#webResources">Web Resources</a></li>
+            <li class="tab col s3"><a href="#codeGeneration">Code Generation</a></li>
+        </ul>
+    </div>
+    <div class="col s12" id="home">
         <h1>Getting Started with CDS for Code</h1>
         <p>
-            This extension for Code allows developers to work with their solutions and data in Dynamics 365 Customer Engagement.  You'll want to do these things to get started.
+            This extension for Code allows developers to work with their solutions and data in Dynamics 365 Customer
+            Engagement. You'll want to do these things to get started.
         </p>
         <div class="d-flex flex-column">
             <div class="p-2"><a id="ConnectLink" href="#">Connect to a Dynamics 365 instance</a></div>
@@ -49,19 +43,19 @@
             <div class="p-2 bg-primary">Do something else</div>
         </div>
     </div>
-    <div class="tab-pane container fade" id="plugins">
+    <div class="col s12" id="plugins">
         <h1>Authoring plugin projects</h1>
         <p>
             Those are pretty neat.
         </p>
     </div>
-    <div class="tab-pane container fade" id="webResources">
+    <div class="col s12" id="webResources">
         <h1>Writing web resources</h1>
         <p>
             Those are pretty neat.
         </p>
     </div>
-    <div class="tab-pane container fade" id="codeGeneration">
+    <div class="col s12" id="codeGeneration">
         <h1>Generating entity code</h1>
         <p>
             Those are pretty neat.
