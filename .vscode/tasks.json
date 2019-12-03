@@ -22,26 +22,11 @@
 				"isDefault": true
 			}
 		},
-		{
-			"type": "shell",
-			"command": "grunt monitor",
-			"problemMatcher": "$gulp-tsc",
-			"label": "Grunt",
-			"presentation": {
-				"echo": true,
-				"reveal": "never",
-				"focus": false,
-				"panel": "shared",
-				"showReuseMessage": true,
-				"clear": false
-			}
-		},
-		{
-			"type": "grunt",
-			"task": "monitor",
-			"problemMatcher": [
-				"$gulp-tsc"
-			]
-		}
+        {
+            "type": "shell",
+            "label": "grunt monitor",
+            "command": "grunt monitor",
+            "problemMatcher": [ "$gulp-tsc" ],
+        }
 	]
 }

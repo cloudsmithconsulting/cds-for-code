@@ -305,7 +305,6 @@ module.exports = function (grunt) {
     // load the tasks
     // grunt.loadNpmTasks('grunt-gitinfo');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-compress');
@@ -317,6 +316,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-rename-util');
     grunt.loadNpmTasks('grunt-postcss');
     grunt.loadNpmTasks('grunt-babel');
+    grunt.loadNpmTasks('grunt-sass');
 
     // define the tasks
     grunt.registerTask('release', [
@@ -340,6 +340,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('js_compile', ['concat:temp', 'configureBabel', 'babel:bin', 'clean:temp', 'notify:js_compile']);
     grunt.registerTask('sass_compile', [
+        'sass:expanded',
+        'sass:min',
         'sass:bin',
         'postcss:bin',
         'notify:sass_compile'

@@ -35,8 +35,8 @@
 // ==========================================================================
 
 $primary-color: color("cloudsmith-primary", "base") !default;
-$primary-color-light: lighten($primary-color, 15%) !default;
-$primary-color-dark: darken($primary-color, 15%) !default;
+$primary-color-light: lighten(color("cloudsmith-primary", "base"), 15%) !default;
+$primary-color-dark: darken(color("cloudsmith-primary", "base"), 15%) !default;
 
 $secondary-color: color("cloudsmith-secondary", "base") !default;
 $success-color: color("green", "base") !default;
