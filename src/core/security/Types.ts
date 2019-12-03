@@ -218,7 +218,7 @@ export abstract class Credential implements ICredential {
         let cred:Credential;
 
         if (this.isCdsOnlineUserCredential(value)) {
-            cred = new CdsOnlineCredential(value.username, value.password, value.orgUrl, value.token);
+            cred = new CdsOnlineCredential(value.username, value.password, value.authority, value.tenant, value.clientId, value.resource, value.token);
         } else if (this.isAzureAdClientCredential(value)) {
             cred = new AzureAdClientCredential(value.clientId, value.clientSecret, value.authority, value.callbackUrl);
         } else if (this.isAzureAdUserCredential(value)) {
@@ -249,7 +249,7 @@ export abstract class Credential implements ICredential {
     }
 
     static isAzureAdClientCredential(value:ICredential): boolean {
-        return value && this.isOauthCredential(value) && value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority") && value.hasOwnProperty("callback");
+        return value && value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority") && value.hasOwnProperty("callback");
     }
 
     static isAzureAdUserCredential(value:ICredential): boolean {
@@ -257,7 +257,7 @@ export abstract class Credential implements ICredential {
     }
 
     static isCdsOnlineUserCredential(value:ICredential): boolean {
-        return value && this.isOauthCredential(value) && value.hasOwnProperty("region");
+        return value && this.isOauthCredential(value) && value.hasOwnProperty("resource");
     }
 
     static needsToken(value:ICredential): boolean { 
@@ -323,7 +323,7 @@ export class OAuthCredential extends Credential {
     }
 }
 
-export class AzureAdClientCredential extends OAuthCredential {
+export class AzureAdClientCredential extends Credential {
     constructor(public clientId: Securable | SecureItem, public clientSecret: Securable | SecureItem, public authority: string, public callbackUrl?: string) {
         super(clientId, clientSecret);
     }
@@ -337,9 +337,18 @@ export class AzureAdUserCredential extends OAuthCredential {
 
 export class CdsOnlineCredential extends OAuthCredential {
     static readonly defaultClientId:string = "51f81489-12ee-4a9e-aaae-a2591f45987d";
-    static readonly defaultAuthority:string = "https://login.microsoftonline.com/common/oauth2/authorize?resource=";
+    //static readonly defaultAuthority:string = "https://login.microsoftonline.com/common/oauth2/authorize?resource=";
+    static readonly defaultAuthority:string = "https://login.microsoftonline.com";
+    static readonly defaultTenant:string = "common";
 
-    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public region?: string, token?: string) {
+    constructor(
+        username: SecureItem | Securable,
+        password: SecureItem | Securable, 
+        public authority: string = CdsOnlineCredential.defaultAuthority, 
+        public tenant: string = CdsOnlineCredential.defaultTenant,
+        public clientId: string = CdsOnlineCredential.defaultClientId,
+        public resource: string,
+        token?: string) {
         super(username, password, token);
     }
 }

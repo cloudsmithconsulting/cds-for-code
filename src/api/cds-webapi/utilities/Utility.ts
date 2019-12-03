@@ -1,6 +1,6 @@
-import buildFunctionParameters from './buildFunctionParameters';
-import getFetchXmlPagingCookie from './getFetchXmlPagingCookie';
-import convertToReferenceObject, { ReferenceObject } from './convertToReferenceObject';
+import buildFunctionParameters from '../odata/buildFunctionParameters';
+import getFetchXmlPagingCookie from '../odata/getFetchXmlPagingCookie';
+import convertToReferenceObject, { ReferenceObject } from '../odata/convertToReferenceObject';
 import { Utilities } from "../../../core/Utilities";
 
 export default class Utility {

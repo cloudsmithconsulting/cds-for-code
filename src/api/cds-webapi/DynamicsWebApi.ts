@@ -3,8 +3,8 @@
 import { ICredential } from "../../core/security/Types";
 
 import Utility from './utilities/Utility';
-import ErrorHelper from './helpers/ErrorHelper';
-import * as Request from './requests/sendRequest';
+import * as Parameters from '../../core/helpers/Parameters';
+import * as Request from './odata/sendRequest';
 import { Query } from "./FetchQuery";
 import FetchQueryResolver from "./FetchQueryResolver";
 
@@ -329,12 +329,12 @@ export namespace DynamicsWebApi {
          */
         setConfig(config: DynamicsWebApi.Config): void {
             if (config.webApiVersion) {
-                ErrorHelper.stringParameterCheck(config.webApiVersion, "DynamicsWebApi.setConfig", "config.webApiVersion");
+                Parameters.stringParameterCheck(config.webApiVersion, "DynamicsWebApi.setConfig", "config.webApiVersion");
                 this._internalConfig.webApiVersion = config.webApiVersion;
             }
 
             if (config.webApiUrl) {
-                ErrorHelper.stringParameterCheck(config.webApiUrl, "DynamicsWebApi.setConfig", "config.webApiUrl");
+                Parameters.stringParameterCheck(config.webApiUrl, "DynamicsWebApi.setConfig", "config.webApiUrl");
                 this._internalConfig.webApiUrl = Utility.initWebApiUrl(config.webApiUrl, this._internalConfig.webApiVersion); 
                 this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(config.webApiUrl, this._internalConfig.webApiVersion);
             } else {
@@ -355,41 +355,41 @@ export namespace DynamicsWebApi {
             }
 
             if (config.id) {
-                ErrorHelper.guidParameterCheck(config.id, "DynamicsWebApi.setConfig", "config.id");
+                Parameters.guidParameterCheck(config.id, "DynamicsWebApi.setConfig", "config.id");
                 this._internalConfig.id = config.id;
             }
 
             if (config.impersonate) {
-                this._internalConfig.impersonate = ErrorHelper.guidParameterCheck(config.impersonate, "DynamicsWebApi.setConfig", "config.impersonate");
+                this._internalConfig.impersonate = Parameters.guidParameterCheck(config.impersonate, "DynamicsWebApi.setConfig", "config.impersonate");
             }
 
             if (config.onTokenRefresh) {
-                ErrorHelper.callbackParameterCheck(config.onTokenRefresh, "DynamicsWebApi.setConfig", "config.onTokenRefresh");
+                Parameters.callbackParameterCheck(config.onTokenRefresh, "DynamicsWebApi.setConfig", "config.onTokenRefresh");
                 this._internalConfig.onTokenRefresh = config.onTokenRefresh;
             }
 
             if (config.includeAnnotations) {
-                ErrorHelper.stringParameterCheck(config.includeAnnotations, "DynamicsWebApi.setConfig", "config.includeAnnotations");
+                Parameters.stringParameterCheck(config.includeAnnotations, "DynamicsWebApi.setConfig", "config.includeAnnotations");
                 this._internalConfig.includeAnnotations = config.includeAnnotations;
             }
 
             if (config.timeout) {
-                ErrorHelper.numberParameterCheck(config.timeout, "DynamicsWebApi.setConfig", "config.timeout");
+                Parameters.numberParameterCheck(config.timeout, "DynamicsWebApi.setConfig", "config.timeout");
                 this._internalConfig.timeout = config.timeout;
             }
 
             if (config.maxPageSize) {
-                ErrorHelper.numberParameterCheck(config.maxPageSize, "DynamicsWebApi.setConfig", "config.maxPageSize");
+                Parameters.numberParameterCheck(config.maxPageSize, "DynamicsWebApi.setConfig", "config.maxPageSize");
                 this._internalConfig.maxPageSize = config.maxPageSize;
             }
 
             if (config.returnRepresentation) {
-                ErrorHelper.boolParameterCheck(config.returnRepresentation, "DynamicsWebApi.setConfig", "config.returnRepresentation");
+                Parameters.boolParameterCheck(config.returnRepresentation, "DynamicsWebApi.setConfig", "config.returnRepresentation");
                 this._internalConfig.returnRepresentation = config.returnRepresentation;
             }
 
             if (config.useEntityNames) {
-                ErrorHelper.boolParameterCheck(config.useEntityNames, 'DynamicsWebApi.setConfig', 'config.useEntityNames');
+                Parameters.boolParameterCheck(config.useEntityNames, 'DynamicsWebApi.setConfig', 'config.useEntityNames');
                 this._internalConfig.useEntityNames = config.useEntityNames;
             }
         }
@@ -433,7 +433,7 @@ export namespace DynamicsWebApi {
             *});
          */
         createRequest(request: DynamicsWebApi.CreateRequest): Promise<any> {
-            ErrorHelper.parameterCheck(request, 'DynamicsWebApi.create', 'request');
+            Parameters.parameterCheck(request, 'DynamicsWebApi.create', 'request');
 
             return this._makeRequest('POST', request, 'create')
                 .then(function (response) {
@@ -461,15 +461,15 @@ export namespace DynamicsWebApi {
             *});
          */
         create(object: Object, collection: string, prefer?: string | string[], select?: string[]): Promise<any> {
-            ErrorHelper.parameterCheck(object, "DynamicsWebApi.create", "object");
-            ErrorHelper.stringParameterCheck(collection, "DynamicsWebApi.create", "collection");
+            Parameters.parameterCheck(object, "DynamicsWebApi.create", "object");
+            Parameters.stringParameterCheck(collection, "DynamicsWebApi.create", "collection");
 
             if (prefer) {
-                ErrorHelper.stringOrArrayParameterCheck(prefer, "DynamicsWebApi.create", "prefer");
+                Parameters.stringOrArrayParameterCheck(prefer, "DynamicsWebApi.create", "prefer");
             }
 
             if (select) {
-                ErrorHelper.arrayParameterCheck(select, "DynamicsWebApi.create", "select");
+                Parameters.arrayParameterCheck(select, "DynamicsWebApi.create", "select");
             }
 
             const request = {
@@ -488,7 +488,7 @@ export namespace DynamicsWebApi {
          * @param request - An object that represents all possible options for a current request.
          */
         updateRequest(request: DynamicsWebApi.UpdateRequest): Promise<any> {
-            ErrorHelper.parameterCheck(request, "DynamicsWebApi.update", "request");
+            Parameters.parameterCheck(request, "DynamicsWebApi.update", "request");
 
             if (request.ifmatch === null) {
                 request.ifmatch = '*'; //to prevent upsert
@@ -524,17 +524,17 @@ export namespace DynamicsWebApi {
          * @param select - An Array representing the $select Query Option to control which attributes will be returned.
          */
         update(key: string, collection: string, object: Object, prefer?: string | string[], select?: string[]): Promise<any> {
-            ErrorHelper.stringParameterCheck(key, "DynamicsWebApi.update", "key");
-            key = ErrorHelper.keyParameterCheck(key, "DynamicsWebApi.update", "key");
-            ErrorHelper.parameterCheck(object, "DynamicsWebApi.update", "object");
-            ErrorHelper.stringParameterCheck(collection, "DynamicsWebApi.update", "collection");
+            Parameters.stringParameterCheck(key, "DynamicsWebApi.update", "key");
+            key = Parameters.keyParameterCheck(key, "DynamicsWebApi.update", "key");
+            Parameters.parameterCheck(object, "DynamicsWebApi.update", "object");
+            Parameters.stringParameterCheck(collection, "DynamicsWebApi.update", "collection");
 
             if (prefer) {
-                ErrorHelper.stringOrArrayParameterCheck(prefer, "DynamicsWebApi.update", "prefer");
+                Parameters.stringOrArrayParameterCheck(prefer, "DynamicsWebApi.update", "prefer");
             }
 
             if (select) {
-                ErrorHelper.arrayParameterCheck(select, "DynamicsWebApi.update", "select");
+                Parameters.arrayParameterCheck(select, "DynamicsWebApi.update", "select");
             }
 
             const request = {
@@ -558,20 +558,20 @@ export namespace DynamicsWebApi {
          * @param select - An Array representing the $select Query Option to control which attributes will be returned.
          */
         updateSingleProperty(key: string, collection: string, keyValuePair: Object, prefer?: string | string[], select?: string[]): Promise<any> {
-            ErrorHelper.stringParameterCheck(key, "DynamicsWebApi.updateSingleProperty", "key");
-            key = ErrorHelper.keyParameterCheck(key, "DynamicsWebApi.updateSingleProperty", "key");
-            ErrorHelper.parameterCheck(keyValuePair, "DynamicsWebApi.updateSingleProperty", "keyValuePair");
-            ErrorHelper.stringParameterCheck(collection, "DynamicsWebApi.updateSingleProperty", "collection");
+            Parameters.stringParameterCheck(key, "DynamicsWebApi.updateSingleProperty", "key");
+            key = Parameters.keyParameterCheck(key, "DynamicsWebApi.updateSingleProperty", "key");
+            Parameters.parameterCheck(keyValuePair, "DynamicsWebApi.updateSingleProperty", "keyValuePair");
+            Parameters.stringParameterCheck(collection, "DynamicsWebApi.updateSingleProperty", "collection");
 
             const field = Object.keys(keyValuePair)[0];
             const fieldValue = keyValuePair[field];
 
             if (prefer) {
-                ErrorHelper.stringOrArrayParameterCheck(prefer, "DynamicsWebApi.updateSingleProperty", "prefer");
+                Parameters.stringOrArrayParameterCheck(prefer, "DynamicsWebApi.updateSingleProperty", "prefer");
             }
 
             if (select) {
-                ErrorHelper.arrayParameterCheck(select, "DynamicsWebApi.updateSingleProperty", "select");
+                Parameters.arrayParameterCheck(select, "DynamicsWebApi.updateSingleProperty", "select");
             }
 
             const request = {
@@ -595,7 +595,7 @@ export namespace DynamicsWebApi {
          * @param request - An object that represents all possible options for a current request.
          */
         deleteRequest(request: DynamicsWebApi.DeleteRequest): Promise<any> {
-            ErrorHelper.parameterCheck(request, 'DynamicsWebApi.delete', 'request');
+            Parameters.parameterCheck(request, 'DynamicsWebApi.delete', 'request');
 
             //copy locally
             const ifmatch = request.ifmatch;
@@ -623,10 +623,10 @@ export namespace DynamicsWebApi {
          * @param propertyName - The name of the property which needs to be emptied. Instead of removing a whole record only the specified property will be cleared.
          */
         deleteRecord(key: string, collection: string, propertyName?: string): Promise<any> {
-            ErrorHelper.stringParameterCheck(collection, 'DynamicsWebApi.deleteRecord', 'collection');
+            Parameters.stringParameterCheck(collection, 'DynamicsWebApi.deleteRecord', 'collection');
 
             if (propertyName !== null) {
-                ErrorHelper.stringParameterCheck(propertyName, 'DynamicsWebApi.deleteRecord', 'propertyName');
+                Parameters.stringParameterCheck(propertyName, 'DynamicsWebApi.deleteRecord', 'propertyName');
             }
 
             const request = {
@@ -644,7 +644,7 @@ export namespace DynamicsWebApi {
          * @param request - An object that represents all possible options for a current request.
          */
         retrieveRequest(request: DynamicsWebApi.RetrieveRequest): Promise<any> {
-            ErrorHelper.parameterCheck(request, 'DynamicsWebApi.retrieve', 'request');
+            Parameters.parameterCheck(request, 'DynamicsWebApi.retrieve', 'request');
 
             //copy locally
             const isRef = request.select && request.select.length === 1 && request.select[0].endsWith("/$ref");
@@ -661,16 +661,16 @@ export namespace DynamicsWebApi {
          * @param expand - A String or Array of Expand Objects representing the $expand Query Option value to control which related records need to be returned.
          */
         retrieve(key: string, collection: string, select?: string[], expand?: DynamicsWebApi.Expand[]): Promise<any> {
-            ErrorHelper.stringParameterCheck(key, "DynamicsWebApi.retrieve", "key");
-            key = ErrorHelper.keyParameterCheck(key, "DynamicsWebApi.retrieve", "key");
-            ErrorHelper.stringParameterCheck(collection, "DynamicsWebApi.retrieve", "collection");
+            Parameters.stringParameterCheck(key, "DynamicsWebApi.retrieve", "key");
+            key = Parameters.keyParameterCheck(key, "DynamicsWebApi.retrieve", "key");
+            Parameters.stringParameterCheck(collection, "DynamicsWebApi.retrieve", "collection");
 
             if (select && select.length) {
-                ErrorHelper.arrayParameterCheck(select, "DynamicsWebApi.retrieve", "select");
+                Parameters.arrayParameterCheck(select, "DynamicsWebApi.retrieve", "select");
             }
 
             if (expand && expand.length) {
-                ErrorHelper.stringOrArrayParameterCheck(expand, "DynamicsWebApi.retrieve", "expand");
+                Parameters.stringOrArrayParameterCheck(expand, "DynamicsWebApi.retrieve", "expand");
             }
 
             const request = {
@@ -689,7 +689,7 @@ export namespace DynamicsWebApi {
          * @param request - An object that represents all possible options for a current request.
          */
         upsertRequest(request: DynamicsWebApi.UpsertRequest): Promise<any> {
-            ErrorHelper.parameterCheck(request, "DynamicsWebApi.upsert", "request");
+            Parameters.parameterCheck(request, "DynamicsWebApi.upsert", "request");
 
             //copy locally
             const ifnonematch = request.ifnonematch;
@@ -723,18 +723,18 @@ export namespace DynamicsWebApi {
          * @param select - An Array representing the $select Query Option to control which attributes will be returned.
          */
         upsert(key: string, collection: string, object: Object, prefer?: string | string[], select?: string[]): Promise<any> {
-            ErrorHelper.stringParameterCheck(key, "DynamicsWebApi.upsert", "key");
-            key = ErrorHelper.keyParameterCheck(key, "DynamicsWebApi.upsert", "key");
+            Parameters.stringParameterCheck(key, "DynamicsWebApi.upsert", "key");
+            key = Parameters.keyParameterCheck(key, "DynamicsWebApi.upsert", "key");
 
-            ErrorHelper.parameterCheck(object, "DynamicsWebApi.upsert", "object");
-            ErrorHelper.stringParameterCheck(collection, "DynamicsWebApi.upsert", "collection");
+            Parameters.parameterCheck(object, "DynamicsWebApi.upsert", "object");
+            Parameters.stringParameterCheck(collection, "DynamicsWebApi.upsert", "collection");
 
             if (prefer) {
-                ErrorHelper.stringOrArrayParameterCheck(prefer, "DynamicsWebApi.upsert", "prefer");
+                Parameters.stringOrArrayParameterCheck(prefer, "DynamicsWebApi.upsert", "prefer");
             }
 
             if (select) {
-                ErrorHelper.arrayParameterCheck(select, "DynamicsWebApi.upsert", "select");
+                Parameters.arrayParameterCheck(select, "DynamicsWebApi.upsert", "select");
             }
 
             const request = {
@@ -782,7 +782,7 @@ export namespace DynamicsWebApi {
          * @param select - An Array representing the $select Query Option to control which attributes will be returned.
          */
         countAll(collection: string, filter?: string, select?: string[]): Promise<any> {
-            ErrorHelper.batchIncompatible('DynamicsWebApi.countAll', this._isBatch);
+            Parameters.batchIncompatible('DynamicsWebApi.countAll', this._isBatch);
 
             return this.retrieveAllRequest({
                 collection: collection,
@@ -819,7 +819,7 @@ export namespace DynamicsWebApi {
         * @param filter - Use the $filter system query option to set criteria for which entities will be returned.
         */
         retrieveAll(collection: string, select?: string[], filter?: string): Promise<any> {
-            ErrorHelper.batchIncompatible('DynamicsWebApi.retrieveAll', this._isBatch);
+            Parameters.batchIncompatible('DynamicsWebApi.retrieveAll', this._isBatch);
 
             return this.retrieveAllRequest({
                 collection: collection,
@@ -871,7 +871,7 @@ export namespace DynamicsWebApi {
          * @param impersonateUserId - A String representing the GUID value for the Dynamics 365 system user id. Impersonates the user.
          */
         fetch(query: Query, includeAnnotations?: string, pageNumber?: number, pagingCookie?: string, impersonateUserId?: string): Promise<any> {
-            return this.executeFetchXml(query.Query.EntityPath, FetchQueryResolver.ResolveQuery(query), includeAnnotations, pageNumber, pagingCookie, impersonateUserId);
+            return this.executeFetchXml(query.query.EntityPath, FetchQueryResolver.ResolveQuery(query), includeAnnotations, pageNumber, pagingCookie, impersonateUserId);
         }
 
         /**
@@ -894,7 +894,7 @@ export namespace DynamicsWebApi {
          * @param impersonateUserId - A String representing the GUID value for the Dynamics 365 system user id. Impersonates the user.
          */
         fetchAll(query: Query, includeAnnotations?: string, impersonateUserId?: string): Promise<any> {
-            return this.executeFetchXmlAll(query.Query.EntityPath, FetchQueryResolver.ResolveQuery(query), includeAnnotations, impersonateUserId);
+            return this.executeFetchXmlAll(query.query.EntityPath, FetchQueryResolver.ResolveQuery(query), includeAnnotations, impersonateUserId);
         }
 
         /**
@@ -908,10 +908,10 @@ export namespace DynamicsWebApi {
          * @param impersonateUserId - A String representing the GUID value for the Dynamics 365 system user id. Impersonates the user.
          */
         associate(collection: string, primaryKey: string, relationshipName: string, relatedCollection: string, relatedKey: string, impersonateUserId?: string): Promise<any> {
-            ErrorHelper.stringParameterCheck(relatedCollection, "DynamicsWebApi.associate", "relatedcollection");
-            ErrorHelper.stringParameterCheck(relationshipName, "DynamicsWebApi.associate", "relationshipName");
-            primaryKey = ErrorHelper.keyParameterCheck(primaryKey, "DynamicsWebApi.associate", "primaryKey");
-            relatedKey = ErrorHelper.keyParameterCheck(relatedKey, "DynamicsWebApi.associate", "relatedKey");
+            Parameters.stringParameterCheck(relatedCollection, "DynamicsWebApi.associate", "relatedcollection");
+            Parameters.stringParameterCheck(relationshipName, "DynamicsWebApi.associate", "relationshipName");
+            primaryKey = Parameters.keyParameterCheck(primaryKey, "DynamicsWebApi.associate", "primaryKey");
+            relatedKey = Parameters.keyParameterCheck(relatedKey, "DynamicsWebApi.associate", "relatedKey");
 
             const request = {
                 _additionalUrl: relationshipName + '/$ref',
@@ -934,8 +934,8 @@ export namespace DynamicsWebApi {
          * @param impersonateUserId - A String representing the GUID value for the Dynamics 365 system user id. Impersonates the user.
          */
         disassociate(collection: string, primaryKey: string, relationshipName: string, relatedKey: string, impersonateUserId?: string): Promise<any> {
-            ErrorHelper.stringParameterCheck(relationshipName, "DynamicsWebApi.disassociate", "relationshipName");
-            relatedKey = ErrorHelper.keyParameterCheck(relatedKey, "DynamicsWebApi.disassociate", "relatedId");
+            Parameters.stringParameterCheck(relationshipName, "DynamicsWebApi.disassociate", "relationshipName");
+            relatedKey = Parameters.keyParameterCheck(relatedKey, "DynamicsWebApi.disassociate", "relatedId");
 
             const request = {
                 _additionalUrl: relationshipName + '(' + relatedKey + ')/$ref',
@@ -958,9 +958,9 @@ export namespace DynamicsWebApi {
         * @param impersonateUserId - A String representing the GUID value for the Dynamics 365 system user id. Impersonates the user.
         */
         associateSingleValued(collection: string, key: string, singleValuedNavigationPropertyName: string, relatedCollection: string, relatedKey: string, impersonateUserId?: string): Promise<any> {
-            relatedKey = ErrorHelper.keyParameterCheck(relatedKey, "DynamicsWebApi.associateSingleValued", "relatedKey");
-            ErrorHelper.stringParameterCheck(singleValuedNavigationPropertyName, "DynamicsWebApi.associateSingleValued", "singleValuedNavigationPropertyName");
-            ErrorHelper.stringParameterCheck(relatedCollection, "DynamicsWebApi.associateSingleValued", "relatedcollection");
+            relatedKey = Parameters.keyParameterCheck(relatedKey, "DynamicsWebApi.associateSingleValued", "relatedKey");
+            Parameters.stringParameterCheck(singleValuedNavigationPropertyName, "DynamicsWebApi.associateSingleValued", "singleValuedNavigationPropertyName");
+            Parameters.stringParameterCheck(relatedCollection, "DynamicsWebApi.associateSingleValued", "relatedcollection");
 
             const request = {
                 _additionalUrl: singleValuedNavigationPropertyName + '/$ref',
@@ -982,7 +982,7 @@ export namespace DynamicsWebApi {
          * @param impersonateUserId - A String representing the GUID value for the Dynamics 365 system user id. Impersonates the user.
          */
         disassociateSingleValued(collection: string, key: string, singleValuedNavigationPropertyName: string, impersonateUserId?: string): Promise<any> {
-            ErrorHelper.stringParameterCheck(singleValuedNavigationPropertyName, "DynamicsWebApi.disassociateSingleValued", "singleValuedNavigationPropertyName");
+            Parameters.stringParameterCheck(singleValuedNavigationPropertyName, "DynamicsWebApi.disassociateSingleValued", "singleValuedNavigationPropertyName");
 
             const request = {
                 _additionalUrl: singleValuedNavigationPropertyName + "/$ref",
@@ -1048,7 +1048,7 @@ export namespace DynamicsWebApi {
          * @param entityDefinition - Entity Definition.
          */
         createEntity(entityDefinition: any): Promise<any> {
-            ErrorHelper.parameterCheck(entityDefinition, 'DynamicsWebApi.createEntity', 'entityDefinition');
+            Parameters.parameterCheck(entityDefinition, 'DynamicsWebApi.createEntity', 'entityDefinition');
 
             const request = {
                 collection: 'EntityDefinitions',
@@ -1065,8 +1065,8 @@ export namespace DynamicsWebApi {
          * @param mergeLabels - Sets MSCRM.MergeLabels header that controls whether to overwrite the existing labels or merge your new label with any existing language labels. Default value is false.
          */
         updateEntity(entityDefinition: any, mergeLabels?: boolean): Promise<any> {
-            ErrorHelper.parameterCheck(entityDefinition, 'DynamicsWebApi.updateEntity', 'entityDefinition');
-            ErrorHelper.guidParameterCheck(entityDefinition.MetadataId, 'DynamicsWebApi.updateEntity', 'entityDefinition.MetadataId');
+            Parameters.parameterCheck(entityDefinition, 'DynamicsWebApi.updateEntity', 'entityDefinition');
+            Parameters.guidParameterCheck(entityDefinition.MetadataId, 'DynamicsWebApi.updateEntity', 'entityDefinition.MetadataId');
 
             const request = {
                 collection: 'EntityDefinitions',
@@ -1086,7 +1086,7 @@ export namespace DynamicsWebApi {
          * @param expand - A String or Array of Expand Objects representing the $expand Query Option value to control which related records need to be returned.
          */
         retrieveEntity(entityKey: string, select?: string[], expand?: DynamicsWebApi.Expand[]): Promise<any> {
-            ErrorHelper.keyParameterCheck(entityKey, 'DynamicsWebApi.retrieveEntity', 'entityKey');
+            Parameters.keyParameterCheck(entityKey, 'DynamicsWebApi.retrieveEntity', 'entityKey');
 
             const request = {
                 collection: 'EntityDefinitions',
@@ -1121,8 +1121,8 @@ export namespace DynamicsWebApi {
          * @param attributeDefinition - Object that describes the attribute.
          */
         createAttribute(entityKey: string, attributeDefinition: any): Promise<any> {
-            ErrorHelper.keyParameterCheck(entityKey, 'DynamicsWebApi.createAttribute', 'entityKey');
-            ErrorHelper.parameterCheck(attributeDefinition, 'DynamicsWebApi.createAttribute', 'attributeDefinition');
+            Parameters.keyParameterCheck(entityKey, 'DynamicsWebApi.createAttribute', 'entityKey');
+            Parameters.parameterCheck(attributeDefinition, 'DynamicsWebApi.createAttribute', 'attributeDefinition');
 
             const request = {
                 collection: 'EntityDefinitions',
@@ -1143,12 +1143,12 @@ export namespace DynamicsWebApi {
          * @param mergeLabels - Sets MSCRM.MergeLabels header that controls whether to overwrite the existing labels or merge your new label with any existing language labels. Default value is false.
          */
         updateAttribute(entityKey: string, attributeDefinition: any, attributeType?: string, mergeLabels?: boolean): Promise<any> {
-            ErrorHelper.keyParameterCheck(entityKey, 'DynamicsWebApi.updateAttribute', 'entityKey');
-            ErrorHelper.parameterCheck(attributeDefinition, 'DynamicsWebApi.updateAttribute', 'attributeDefinition');
-            ErrorHelper.guidParameterCheck(attributeDefinition.MetadataId, 'DynamicsWebApi.updateAttribute', 'attributeDefinition.MetadataId');
+            Parameters.keyParameterCheck(entityKey, 'DynamicsWebApi.updateAttribute', 'entityKey');
+            Parameters.parameterCheck(attributeDefinition, 'DynamicsWebApi.updateAttribute', 'attributeDefinition');
+            Parameters.guidParameterCheck(attributeDefinition.MetadataId, 'DynamicsWebApi.updateAttribute', 'attributeDefinition.MetadataId');
 
             if (attributeType) {
-                ErrorHelper.stringParameterCheck(attributeType, 'DynamicsWebApi.updateAttribute', 'attributeType');
+                Parameters.stringParameterCheck(attributeType, 'DynamicsWebApi.updateAttribute', 'attributeType');
             }
 
             const request = {
@@ -1174,10 +1174,10 @@ export namespace DynamicsWebApi {
          * @param expand - A String or Array of Expand Objects representing the $expand Query Option value to control which related records need to be returned.
          */
         retrieveAttributes(entityKey: string, attributeType?: string, select?: string[], filter?: string, expand?: DynamicsWebApi.Expand[]): Promise<any> {
-            ErrorHelper.keyParameterCheck(entityKey, 'DynamicsWebApi.retrieveAttributes', 'entityKey');
+            Parameters.keyParameterCheck(entityKey, 'DynamicsWebApi.retrieveAttributes', 'entityKey');
 
             if (attributeType) {
-                ErrorHelper.stringParameterCheck(attributeType, 'DynamicsWebApi.retrieveAttributes', 'attributeType');
+                Parameters.stringParameterCheck(attributeType, 'DynamicsWebApi.retrieveAttributes', 'attributeType');
             }
 
             const request = {
@@ -1203,11 +1203,11 @@ export namespace DynamicsWebApi {
          * @param expand - A String or Array of Expand Objects representing the $expand Query Option value to control which related records need to be returned.
          */
         retrieveAttribute(entityKey: string, attributeKey: string, attributeType?: string, select?: string[], expand?: DynamicsWebApi.Expand[]): Promise<any> {
-            ErrorHelper.keyParameterCheck(entityKey, 'DynamicsWebApi.retrieveAttribute', 'entityKey');
-            ErrorHelper.keyParameterCheck(attributeKey, 'DynamicsWebApi.retrieveAttribute', 'attributeKey');
+            Parameters.keyParameterCheck(entityKey, 'DynamicsWebApi.retrieveAttribute', 'entityKey');
+            Parameters.keyParameterCheck(attributeKey, 'DynamicsWebApi.retrieveAttribute', 'attributeKey');
 
             if (attributeType) {
-                ErrorHelper.stringParameterCheck(attributeType, 'DynamicsWebApi.retrieveAttribute', 'attributeType');
+                Parameters.stringParameterCheck(attributeType, 'DynamicsWebApi.retrieveAttribute', 'attributeType');
             }
 
             const request = {
@@ -1229,7 +1229,7 @@ export namespace DynamicsWebApi {
          * @param relationshipDefinition - Relationship Definition.
          */
         createRelationship(relationshipDefinition: any): Promise<any> {
-            ErrorHelper.parameterCheck(relationshipDefinition, 'DynamicsWebApi.createRelationship', 'relationshipDefinition');
+            Parameters.parameterCheck(relationshipDefinition, 'DynamicsWebApi.createRelationship', 'relationshipDefinition');
 
             const request = {
                 collection: 'RelationshipDefinitions',
@@ -1247,8 +1247,8 @@ export namespace DynamicsWebApi {
          * @param mergeLabels - Sets MSCRM.MergeLabels header that controls whether to overwrite the existing labels or merge your new label with any existing language labels. Default value is false.
          */
         updateRelationship(relationshipDefinition: any, relationshipType?: string, mergeLabels?: boolean): Promise<any> {
-            ErrorHelper.parameterCheck(relationshipDefinition, 'DynamicsWebApi.updateRelationship', 'relationshipDefinition');
-            ErrorHelper.guidParameterCheck(relationshipDefinition.MetadataId, 'DynamicsWebApi.updateRelationship', 'relationshipDefinition.MetadataId');
+            Parameters.parameterCheck(relationshipDefinition, 'DynamicsWebApi.updateRelationship', 'relationshipDefinition');
+            Parameters.guidParameterCheck(relationshipDefinition.MetadataId, 'DynamicsWebApi.updateRelationship', 'relationshipDefinition.MetadataId');
 
             const request = {
                 collection: 'RelationshipDefinitions',
@@ -1267,7 +1267,7 @@ export namespace DynamicsWebApi {
          * @param metadataId - A String representing the GUID value.
          */
         deleteRelationship(metadataId: string): Promise<any> {
-            ErrorHelper.keyParameterCheck(metadataId, 'DynamicsWebApi.deleteRelationship', 'metadataId');
+            Parameters.keyParameterCheck(metadataId, 'DynamicsWebApi.deleteRelationship', 'metadataId');
 
             const request = {
                 collection: 'RelationshipDefinitions',
@@ -1303,7 +1303,7 @@ export namespace DynamicsWebApi {
          * @param select - Use the $select system query option to limit the properties returned.
          */
         retrieveRelationship(metadataId: string, relationshipType?: string, select?: string[]): Promise<any> {
-            ErrorHelper.keyParameterCheck(metadataId, 'DynamicsWebApi.retrieveRelationship', 'metadataId');
+            Parameters.keyParameterCheck(metadataId, 'DynamicsWebApi.retrieveRelationship', 'metadataId');
 
             const request = {
                 collection: 'RelationshipDefinitions',
@@ -1321,7 +1321,7 @@ export namespace DynamicsWebApi {
          * @param globalOptionSetDefinition - Global Option Set Definition.
          */
         createGlobalOptionSet(globalOptionSetDefinition: any): Promise<any> {
-            ErrorHelper.parameterCheck(globalOptionSetDefinition, 'DynamicsWebApi.createGlobalOptionSet', 'globalOptionSetDefinition');
+            Parameters.parameterCheck(globalOptionSetDefinition, 'DynamicsWebApi.createGlobalOptionSet', 'globalOptionSetDefinition');
 
             const request = {
                 collection: 'GlobalOptionSetDefinitions',
@@ -1338,8 +1338,8 @@ export namespace DynamicsWebApi {
          * @param mergeLabels - Sets MSCRM.MergeLabels header that controls whether to overwrite the existing labels or merge your new label with any existing language labels. Default value is false.
          */
         updateGlobalOptionSet(globalOptionSetDefinition: any, mergeLabels?: boolean): Promise<any> {
-            ErrorHelper.parameterCheck(globalOptionSetDefinition, 'DynamicsWebApi.updateGlobalOptionSet', 'globalOptionSetDefinition');
-            ErrorHelper.guidParameterCheck(globalOptionSetDefinition.MetadataId, 'DynamicsWebApi.updateGlobalOptionSet', 'globalOptionSetDefinition.MetadataId');
+            Parameters.parameterCheck(globalOptionSetDefinition, 'DynamicsWebApi.updateGlobalOptionSet', 'globalOptionSetDefinition');
+            Parameters.guidParameterCheck(globalOptionSetDefinition.MetadataId, 'DynamicsWebApi.updateGlobalOptionSet', 'globalOptionSetDefinition.MetadataId');
 
             const request = {
                 collection: 'GlobalOptionSetDefinitions',
@@ -1357,7 +1357,7 @@ export namespace DynamicsWebApi {
          * @param globalOptionSetKey - A String representing the GUID value or Alternate Key (such as Name).
          */
         deleteGlobalOptionSet(globalOptionSetKey: string): Promise<any> {
-            ErrorHelper.keyParameterCheck(globalOptionSetKey, 'DynamicsWebApi.deleteGlobalOptionSet', 'globalOptionSetKey');
+            Parameters.keyParameterCheck(globalOptionSetKey, 'DynamicsWebApi.deleteGlobalOptionSet', 'globalOptionSetKey');
 
             const request = {
                 collection: 'GlobalOptionSetDefinitions',
@@ -1375,7 +1375,7 @@ export namespace DynamicsWebApi {
          * @param select - Use the $select system query option to limit the properties returned
          */
         retrieveGlobalOptionSet(globalOptionSetKey: string, castType?: string, select?: string[]): Promise<any> {
-            ErrorHelper.keyParameterCheck(globalOptionSetKey, 'DynamicsWebApi.retrieveGlobalOptionSet', 'globalOptionSetKey');
+            Parameters.keyParameterCheck(globalOptionSetKey, 'DynamicsWebApi.retrieveGlobalOptionSet', 'globalOptionSetKey');
 
             const request = {
                 collection: 'GlobalOptionSetDefinitions',
@@ -1415,7 +1415,7 @@ export namespace DynamicsWebApi {
          * Executes a batch request. Please call DynamicsWebApi.startBatch() first to start a batch request.
          */
         executeBatch(): Promise<any[]> {
-            ErrorHelper.batchNotStarted(this._isBatch);
+            Parameters.batchNotStarted(this._isBatch);
 
             this._isBatch = false;
 
@@ -1435,7 +1435,7 @@ export namespace DynamicsWebApi {
         }
 
         private _executeAction(actionName: string, requestObject: any, collection?: string, id?: string, impersonateUserId?: string, isUnbound: boolean = false) {
-            ErrorHelper.stringParameterCheck(actionName, "DynamicsWebApi.executeAction", "actionName");
+            Parameters.stringParameterCheck(actionName, "DynamicsWebApi.executeAction", "actionName");
 
             const request = {
                 _additionalUrl: actionName,
@@ -1453,14 +1453,14 @@ export namespace DynamicsWebApi {
         }
 
         private _executeFetchXml(collection: string, fetchXml: string, includeAnnotations?: string, pageNumber?: number, pagingCookie?: string, impersonateUserId?: string): Promise<any> {
-            ErrorHelper.stringParameterCheck(fetchXml, "DynamicsWebApi.executeFetchXml", "fetchXml");
+            Parameters.stringParameterCheck(fetchXml, "DynamicsWebApi.executeFetchXml", "fetchXml");
             pageNumber = pageNumber || 1;
 
-            ErrorHelper.numberParameterCheck(pageNumber, "DynamicsWebApi.executeFetchXml", "pageNumber");
+            Parameters.numberParameterCheck(pageNumber, "DynamicsWebApi.executeFetchXml", "pageNumber");
             let replacementString = '$1 page="' + pageNumber + '"';
 
             if (pagingCookie !== null) {
-                ErrorHelper.stringParameterCheck(pagingCookie, "DynamicsWebApi.executeFetchXml", "pagingCookie");
+                Parameters.stringParameterCheck(pagingCookie, "DynamicsWebApi.executeFetchXml", "pagingCookie");
                 replacementString += ' paging-cookie="' + pagingCookie + '"';
             }
 
@@ -1481,7 +1481,7 @@ export namespace DynamicsWebApi {
         }
 
         private _executeFetchXmlAll(collection: string, fetchXml: string, includeAnnotations?: string, impersonateUserId?: string): Promise<any> {
-            ErrorHelper.batchIncompatible('DynamicsWebApi.executeFetchXmlAll', this._isBatch);
+            Parameters.batchIncompatible('DynamicsWebApi.executeFetchXmlAll', this._isBatch);
 
             const executeFetchXmlRecursive = (collection: string, fetchXml: string, includeAnnotations: string, pageNumber: number, pagingCookie: string, impersonateUserId?: string, records?: any[]): Promise<any> => {
                 records = records || [];
@@ -1502,7 +1502,7 @@ export namespace DynamicsWebApi {
         }
 
         private _executeFunction(functionName: string, parameters: any, collection?: string, id?: string, impersonateUserId?: string, isUnbound: boolean = false) {
-            ErrorHelper.stringParameterCheck(functionName, "DynamicsWebApi.executeFunction", "functionName");
+            Parameters.stringParameterCheck(functionName, "DynamicsWebApi.executeFunction", "functionName");
 
             const request = {
                 _additionalUrl: functionName + Utility.buildFunctionParameters(parameters),
@@ -1533,7 +1533,7 @@ export namespace DynamicsWebApi {
 
         private _retrieveMultipleRequest(request: any, oDataLink: string): Promise<any> {
             if (oDataLink) {
-                ErrorHelper.stringParameterCheck(oDataLink, 'DynamicsWebApi.retrieveMultiple', 'nextPageLink');
+                Parameters.stringParameterCheck(oDataLink, 'DynamicsWebApi.retrieveMultiple', 'nextPageLink');
                 request.url = oDataLink;
             }
 

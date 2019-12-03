@@ -2,6 +2,7 @@
 This extension is designed to help developers with a simple development loop for Microsoft Dynamics 365 using Visual Studio Code.  Many developers do not have access to a full Visual Studio license in order to use Microsoft's Dynamics CRM Development Toolkit.  This sample solution is designed to get you started.
 
 ---
+Release version: 0.81
 
 ## Features
 

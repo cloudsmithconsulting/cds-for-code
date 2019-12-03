@@ -4,6 +4,12 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "Create VSX file",
+			"type": "npm",
+			"script": "vscode:package",
+			"problemMatcher": []
+		},
+		{
 			"type": "npm",
 			"script": "watch",
 			"problemMatcher": "$tsc-watch",
@@ -15,6 +21,12 @@
 				"kind": "build",
 				"isDefault": true
 			}
-		}
+		},
+        {
+            "type": "shell",
+            "label": "grunt monitor",
+            "command": "grunt monitor",
+            "problemMatcher": [ "$gulp-tsc" ],
+        }
 	]
 }

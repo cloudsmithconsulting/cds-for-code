@@ -32,16 +32,7 @@ export namespace dynamics {
         public static readonly createTerminal:string = `${extension._namespace}.createTerminal`;
         public static readonly downloadRequiredIcons:string = `${extension._namespace}.downloadRequiredIcons`;
         public static readonly downloadRequiredScripts:string = `${extension._namespace}.downloadRequiredScripts`;
-        public static readonly outputChannelName:string = `${extension._namespace}.outputChannelName`;
-        private static _output:vscode.OutputChannel;
-        static get output():vscode.OutputChannel {
-            if (!this._output) {
-                this._output = vscode.window.createOutputChannel(extension.outputChannelName);
-            }
-
-            this._output.show(false);
-            return this._output;
-        }
+        public static readonly productName:string = `CloudSmith CDS for Code`;
     }
 
     // tslint:disable-next-line: class-name

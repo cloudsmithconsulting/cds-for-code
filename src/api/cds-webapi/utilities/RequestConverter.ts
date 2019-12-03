@@ -1,5 +1,5 @@
-﻿import ErrorHelper from '../helpers/ErrorHelper';
-import buildPreferHeader from './buildPreferHeader';
+﻿import * as Parameters from '../../../core/helpers/Parameters';
+import buildPreferHeader from '../odata/buildPreferHeader';
 
 /**
  * @typedef {Object} ConvertedRequestOptions
@@ -43,24 +43,24 @@ export default class RequestConverter {
 
         if (request) {
             if (request.navigationProperty) {
-                ErrorHelper.stringParameterCheck(request.navigationProperty, 'DynamicsWebApi.' + functionName, 'request.navigationProperty');
+                Parameters.stringParameterCheck(request.navigationProperty, 'DynamicsWebApi.' + functionName, 'request.navigationProperty');
                 url += '/' + request.navigationProperty;
 
                 if (request.navigationPropertyKey) {
-                    var navigationKey = ErrorHelper.keyParameterCheck(request.navigationPropertyKey, 'DynamicsWebApi.' + functionName, 'request.navigationPropertyKey');
+                    var navigationKey = Parameters.keyParameterCheck(request.navigationPropertyKey, 'DynamicsWebApi.' + functionName, 'request.navigationPropertyKey');
                     url += '(' + navigationKey + ')';
                 }
 
                 if (request.navigationProperty === 'Attributes') {
                     if (request.metadataAttributeType) {
-                        ErrorHelper.stringParameterCheck(request.metadataAttributeType, 'DynamicsWebApi.' + functionName, 'request.metadataAttributeType');
+                        Parameters.stringParameterCheck(request.metadataAttributeType, 'DynamicsWebApi.' + functionName, 'request.metadataAttributeType');
                         url += '/' + request.metadataAttributeType;
                     }
                 }
             }
 
             if (request.select && request.select.length) {
-                ErrorHelper.arrayParameterCheck(request.select, 'DynamicsWebApi.' + functionName, 'request.select');
+                Parameters.arrayParameterCheck(request.select, 'DynamicsWebApi.' + functionName, 'request.select');
 
                 if (functionName === 'retrieve' && request.select.length === 1 && request.select[0].endsWith('/$ref')) {
                     url += '/' + request.select[0];
@@ -81,7 +81,7 @@ export default class RequestConverter {
             }
 
             if (request.filter) {
-                ErrorHelper.stringParameterCheck(request.filter, 'DynamicsWebApi.' + functionName, "request.filter");
+                Parameters.stringParameterCheck(request.filter, 'DynamicsWebApi.' + functionName, "request.filter");
                 const removeBracketsFromGuidReg = /[^"']{([\w\d]{8}[-]?(?:[\w\d]{4}[-]?){3}[\w\d]{12})}(?:[^"']|$)/g;
                 let filterResult = request.filter;
                 let m, regex;                
@@ -100,25 +100,25 @@ export default class RequestConverter {
             }
 
             if (request.savedQuery) {
-                requestArray.push("savedQuery=" + ErrorHelper.guidParameterCheck(request.savedQuery, 'DynamicsWebApi.' + functionName, "request.savedQuery"));
+                requestArray.push("savedQuery=" + Parameters.guidParameterCheck(request.savedQuery, 'DynamicsWebApi.' + functionName, "request.savedQuery"));
             }
 
             if (request.userQuery) {
-                requestArray.push("userQuery=" + ErrorHelper.guidParameterCheck(request.userQuery, 'DynamicsWebApi.' + functionName, "request.userQuery"));
+                requestArray.push("userQuery=" + Parameters.guidParameterCheck(request.userQuery, 'DynamicsWebApi.' + functionName, "request.userQuery"));
             }
 
             if (request.count) {
-                ErrorHelper.boolParameterCheck(request.count, 'DynamicsWebApi.' + functionName, "request.count");
+                Parameters.boolParameterCheck(request.count, 'DynamicsWebApi.' + functionName, "request.count");
                 requestArray.push("$count=" + request.count);
             }
 
             if (request.top && request.top > 0) {
-                ErrorHelper.numberParameterCheck(request.top, 'DynamicsWebApi.' + functionName, "request.top");
+                Parameters.numberParameterCheck(request.top, 'DynamicsWebApi.' + functionName, "request.top");
                 requestArray.push("$top=" + request.top);
             }
 
             if (request.orderBy && request.orderBy.length) {
-                ErrorHelper.arrayParameterCheck(request.orderBy, 'DynamicsWebApi.' + functionName, "request.orderBy");
+                Parameters.arrayParameterCheck(request.orderBy, 'DynamicsWebApi.' + functionName, "request.orderBy");
                 requestArray.push("$orderby=" + request.orderBy.join(','));
             }
 
@@ -133,61 +133,61 @@ export default class RequestConverter {
             }
 
             if (request.ifmatch) {
-                ErrorHelper.stringParameterCheck(request.ifmatch, 'DynamicsWebApi.' + functionName, "request.ifmatch");
+                Parameters.stringParameterCheck(request.ifmatch, 'DynamicsWebApi.' + functionName, "request.ifmatch");
                 headers['If-Match'] = request.ifmatch;
             }
 
             if (request.ifnonematch) {
-                ErrorHelper.stringParameterCheck(request.ifnonematch, 'DynamicsWebApi.' + functionName, "request.ifnonematch");
+                Parameters.stringParameterCheck(request.ifnonematch, 'DynamicsWebApi.' + functionName, "request.ifnonematch");
                 headers['If-None-Match'] = request.ifnonematch;
             }
 
             if (request.impersonate) {
-                ErrorHelper.stringParameterCheck(request.impersonate, 'DynamicsWebApi.' + functionName, "request.impersonate");
-                headers['MSCRMCallerID'] = ErrorHelper.guidParameterCheck(request.impersonate, 'DynamicsWebApi.' + functionName, "request.impersonate");
+                Parameters.stringParameterCheck(request.impersonate, 'DynamicsWebApi.' + functionName, "request.impersonate");
+                headers['MSCRMCallerID'] = Parameters.guidParameterCheck(request.impersonate, 'DynamicsWebApi.' + functionName, "request.impersonate");
             }
 
             if (request.token) {
-                ErrorHelper.stringParameterCheck(request.token, 'DynamicsWebApi.' + functionName, "request.token");
+                Parameters.stringParameterCheck(request.token, 'DynamicsWebApi.' + functionName, "request.token");
                 headers['Authorization'] = 'Bearer ' + request.token;
             }
 
             if (request.duplicateDetection) {
-                ErrorHelper.boolParameterCheck(request.duplicateDetection, 'DynamicsWebApi.' + functionName, 'request.duplicateDetection');
+                Parameters.boolParameterCheck(request.duplicateDetection, 'DynamicsWebApi.' + functionName, 'request.duplicateDetection');
                 headers['MSCRM.SuppressDuplicateDetection'] = 'false';
             }
 
             if (request.entity) {
-                ErrorHelper.parameterCheck(request.entity, 'DynamicsWebApi.' + functionName, 'request.entity');
+                Parameters.parameterCheck(request.entity, 'DynamicsWebApi.' + functionName, 'request.entity');
             }
 
             if (request.data) {
-                ErrorHelper.parameterCheck(request.data, 'DynamicsWebApi.' + functionName, 'request.data');
+                Parameters.parameterCheck(request.data, 'DynamicsWebApi.' + functionName, 'request.data');
             }
 
             if (request.noCache) {
-                ErrorHelper.boolParameterCheck(request.noCache, 'DynamicsWebApi.' + functionName, 'request.noCache');
+                Parameters.boolParameterCheck(request.noCache, 'DynamicsWebApi.' + functionName, 'request.noCache');
                 headers['Cache-Control'] = 'no-cache';
             }
 
             if (request.mergeLabels) {
-                ErrorHelper.boolParameterCheck(request.mergeLabels, 'DynamicsWebApi.' + functionName, 'request.mergeLabels');
+                Parameters.boolParameterCheck(request.mergeLabels, 'DynamicsWebApi.' + functionName, 'request.mergeLabels');
                 headers['MSCRM.MergeLabels'] = 'true';
             }
 
             if (request.contentId) {
-                ErrorHelper.stringParameterCheck(request.contentId, 'DynamicsWebApi.' + functionName, 'request.contentId');
+                Parameters.stringParameterCheck(request.contentId, 'DynamicsWebApi.' + functionName, 'request.contentId');
                 if (!request.contentId.startsWith('$')) {
                     headers['Content-ID'] = request.contentId;
                 }
             }
 
             if (request.isBatch) {
-                ErrorHelper.boolParameterCheck(request.isBatch, 'DynamicsWebApi.' + functionName, 'request.isBatch');
+                Parameters.boolParameterCheck(request.isBatch, 'DynamicsWebApi.' + functionName, 'request.isBatch');
             }
 
             if (request.expand && request.expand.length) {
-                ErrorHelper.stringOrArrayParameterCheck(request.expand, 'DynamicsWebApi.' + functionName, "request.expand");
+                Parameters.stringOrArrayParameterCheck(request.expand, 'DynamicsWebApi.' + functionName, "request.expand");
                 if (typeof request.expand === 'string') {
                     requestArray.push('$expand=' + request.expand);
                 }
@@ -226,14 +226,14 @@ export default class RequestConverter {
         let result;
         if (!request.url) {
             if (!request._unboundRequest && !request.collection) {
-                ErrorHelper.parameterCheck(request.collection, 'DynamicsWebApi.' + functionName, "request.collection");
+                Parameters.parameterCheck(request.collection, 'DynamicsWebApi.' + functionName, "request.collection");
             }
             if (request.collection) {
-                ErrorHelper.stringParameterCheck(request.collection, 'DynamicsWebApi.' + functionName, "request.collection");
+                Parameters.stringParameterCheck(request.collection, 'DynamicsWebApi.' + functionName, "request.collection");
                 url = request.collection;
 
                 if (request.contentId) {
-                    ErrorHelper.stringParameterCheck(request.contentId, 'DynamicsWebApi.' + functionName, 'request.contentId');
+                    Parameters.stringParameterCheck(request.contentId, 'DynamicsWebApi.' + functionName, 'request.contentId');
                     if (request.contentId.startsWith('$')) {
                         url = request.contentId + '/' + url;
                     }
@@ -241,10 +241,10 @@ export default class RequestConverter {
 
                 //add alternate key feature
                 if (request.key) {
-                    request.key = ErrorHelper.keyParameterCheck(request.key, 'DynamicsWebApi.' + functionName, "request.key");
+                    request.key = Parameters.keyParameterCheck(request.key, 'DynamicsWebApi.' + functionName, "request.key");
                 }
                 else if (request.id) {
-                    request.key = ErrorHelper.guidParameterCheck(request.id, 'DynamicsWebApi.' + functionName, "request.id");
+                    request.key = Parameters.guidParameterCheck(request.id, 'DynamicsWebApi.' + functionName, "request.id");
                 }
 
                 if (request.key) {
@@ -261,7 +261,7 @@ export default class RequestConverter {
 
             result = RequestConverter.convertRequestOptions(request, functionName, url, '&', config);
             if (request.fetchXml) {
-                ErrorHelper.stringParameterCheck(request.fetchXml, 'DynamicsWebApi.' + functionName, "request.fetchXml");
+                Parameters.stringParameterCheck(request.fetchXml, 'DynamicsWebApi.' + functionName, "request.fetchXml");
                 result.url += "?fetchXml=" + encodeURIComponent(request.fetchXml);
             }
             else
@@ -270,13 +270,13 @@ export default class RequestConverter {
                 }
         }
         else {
-            ErrorHelper.stringParameterCheck(request.url, 'DynamicsWebApi.' + functionName, "request.url");
+            Parameters.stringParameterCheck(request.url, 'DynamicsWebApi.' + functionName, "request.url");
             url = request.url.replace(config.webApiUrl, '');
             result = RequestConverter.convertRequestOptions(request, functionName, url, '&', config);
         }
 
         if (request.hasOwnProperty('async') && request.async !== null) {
-            ErrorHelper.boolParameterCheck(request.async, 'DynamicsWebApi.' + functionName, "request.async");
+            Parameters.boolParameterCheck(request.async, 'DynamicsWebApi.' + functionName, "request.async");
             result.async = request.async;
         }
         else {

@@ -31,6 +31,8 @@
 
     // this part starts on document ready
     $(function () {
+        $('.tabs').tabs();
+
         $("#ShowWelcomeExperienceCheckbox").click(() => {
             vscode.postMessage({ command: 'updateWelcomeExperienceConfig', value: $("#ShowWelcomeExperienceCheckbox").is(':checked') });
         })

@@ -22,6 +22,7 @@ import TemplateTreeView from './views/TemplatesTreeView';
 import PluginStepImageViewManager from './views/PluginStepImageView';
 import WebResourceManager from './components/Solutions/WebResourceManager';
 import ExtensionContext from './core/ExtensionContext';
+import logger from './core/Logger';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -29,9 +30,7 @@ import ExtensionContext from './core/ExtensionContext';
 // More on activation events can be found here: https://code.visualstudio.com/api/references/activation-events#Start-up
 // *****************
 export function activate(context: vscode.ExtensionContext) {
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('[CloudSmith]: extension:activate');
+	logger.info("CloudSmith CDS for Code extension initializing.");
 
 	// We initialize this as it's a psuedo-singleton... no Internals here :)
 	// tslint:disable-next-line: no-unused-expression
@@ -66,7 +65,11 @@ export function activate(context: vscode.ExtensionContext) {
 	[   // templating engine.
 		new TemplateManager(context)
 	].forEach(c => c.contribute(context, templatesConfig));
+
+	logger.info("CloudSmith CDS for Code extension loaded.");
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() { 
+	logger.info("CloudSmith CDS for Code extension unloaded.");
+}

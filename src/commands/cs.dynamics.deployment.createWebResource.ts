@@ -7,7 +7,7 @@ import { CdsSolutions } from "../api/CdsSolutions";
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
 import { Utilities } from "../core/Utilities";
-import { SolutionWorkspaceMapping } from "../components/Solutions/Types";
+import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
 import SolutionFile from "../components/SolutionXml/SolutionFile";
 
 /**

@@ -26,15 +26,15 @@
         $title.html($title.html().replace("New", "Edit"));
         document.title = $title.text();
         
-        $("#AuthType1").prop("checked", message.type === 0);
-        $("#AuthType2").prop("checked", message.type === 1);
-        $("#AuthType3").prop("checked", message.type === 2);
-        $("#AuthType4").prop("checked", message.type === 3);
+        $("#AuthType1").prop("checked", message.type && message.type === 0);
+        $("#AuthType2").prop("checked", message.type && message.type === 1);
+        $("#AuthType3").prop("checked", message.type && message.type === 2);
+        $("#AuthType4").prop("checked", message.type && message.type === 3);
 
-        $domainField = $("#domainField");
-        $accessTokenField = $("#accessTokenField");
+        $domainField = $("#DomainField");
+        $oauthTokenPanel = $("#OAuthTokenPanel");
 
-        showOrHide($accessTokenField, message.type !== 0);
+        showOrHide($oauthTokenPanel, message.type !== 0);
         showOrHide($domainField, message.type === 0);
 
         $("#Id").val(message.id || "");
@@ -42,7 +42,7 @@
         $("#Name").val(message.name || "");
         $("#ServerUrl").val(message.webApiUrl || "");
         $("#Domain").val(message.credentials ? message.credentials.domain || "" : "");
-        $("#AccessToken").val(message.credentials ? message.credentials.token || "" : "");
+        $("#OAuthToken").val(message.credentials ? message.credentials.token || "" : "");
         $("#Username").val(message.credentials ? message.credentials.username || "" : "");
         $("#Password").val(message.credentials ? message.credentials.password || "" : "");
     }
@@ -52,10 +52,10 @@
         $("[name='AuthType']").click(function() {
             const authType = Number.parseInt(this.value);
 
-            $domainField = $("#domainField");
-            $accessTokenField = $("#accessTokenField");
-
-            showOrHide($accessTokenField, authType !== 0);
+            $domainField = $("#DomainField");
+            $oauthTokenPanel = $("#OAuthTokenPanel");
+    
+            showOrHide($oauthTokenPanel, authType !== 0);
             showOrHide($domainField, authType === 0);
         });
 
@@ -111,7 +111,7 @@
                 webApiUrl: $("#ServerUrl").val(),
                 credentials: {
                     domain: $("#Domain").val(),
-                    token: $("#AccessToken").val(),
+                    token: $("#OAuthToken").val(),
                     username: $("#Username").val(),
                     password: $("#Password").val()
                 }
