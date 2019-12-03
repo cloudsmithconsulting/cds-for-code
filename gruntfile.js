@@ -17,7 +17,7 @@ module.exports = function (grunt) {
                     sourcemap: false
                 },
                 files: {
-                    'resources/styles/materialize.vscode.css': 'resources/framework/materialize.vscode.scss'
+                    'resources/styles/materialize.vscode.css': 'resources/framework/scss/materialize.vscode.scss'
                 }
             },
             // Minify
@@ -27,7 +27,7 @@ module.exports = function (grunt) {
                     sourcemap: false
                 },
                 files: {
-                    'resources/styles/materialize.vscode.min.css': 'resources/framework/materialize.vscode.scss'
+                    'resources/styles/materialize.vscode.min.css': 'resources/framework/scss/materialize.vscode.scss'
                 }
             },
             // Compile bin css (just so you have a prod ready one)
@@ -37,7 +37,7 @@ module.exports = function (grunt) {
                     sourcemap: false
                 },
                 files: {
-                    'dist/web/materialize.vscode.css': 'resources/framework/materialize.vscode.scss'
+                    'dist/web/materialize.vscode.css': 'resources/framework/scss/materialize.vscode.scss'
                 }
             }
         },

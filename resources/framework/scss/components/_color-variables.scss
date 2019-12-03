@@ -1,5 +1,31 @@
 // Google Color Palette defined: http://www.google.com/design/spec/style/color.html
 
+$cloudsmith-primary: (
+  "base":       #1b75bc,
+  "lighten-5":  #E8F1F8,
+  "lighten-4":  #D1E3F1,
+  "lighten-3":  #A3C8E4,
+  "lighten-2":  #76ACD6,
+  "lighten-1":  #4891C9,
+  "darken-1":   #155E96,
+  "darken-2":   #125283,
+  "darken-3":   #0D3B5E,
+  "darken-4":   #082338,
+);
+
+$cloudsmith-secondary: (
+  "base":       #27A9E1,
+  "lighten-5":  #E9F6FC,
+  "lighten-4":  #D3EDF9,
+  "lighten-3":  #A8DCF3,
+  "lighten-2":  #7DCBED,
+  "lighten-1":  #52BAE7,
+  "darken-1":   #1F87B4,
+  "darken-2":   #1B769D,
+  "darken-3":   #176587,
+  "darken-4":   #0F435A,
+);
+
 $materialize-red: (
   "base":       #e51c23,
   "lighten-5":  #fdeaeb,

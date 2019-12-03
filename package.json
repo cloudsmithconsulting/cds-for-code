@@ -722,7 +722,7 @@
 		"vscode:prepublish": "npm run compile",
 		"vscode:package": "vsce package",
 		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./ && grunt monitor",
+		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && lint-staged",
 		"test": "grunt travis && node ./out/test/runTest.js"
 	},

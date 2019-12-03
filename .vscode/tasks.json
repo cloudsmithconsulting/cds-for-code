@@ -23,10 +23,24 @@
 			}
 		},
 		{
+			"type": "shell",
+			"command": "grunt monitor",
+			"problemMatcher": "$gulp-tsc",
+			"label": "Grunt",
+			"presentation": {
+				"echo": true,
+				"reveal": "never",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			}
+		},
+		{
 			"type": "grunt",
 			"task": "monitor",
 			"problemMatcher": [
-				"$node-sass"
+				"$gulp-tsc"
 			]
 		}
 	]
