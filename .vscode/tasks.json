@@ -4,6 +4,18 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "Run webpack jobs",
+			"type": "npm",
+			"script": "pack",
+			"problemMatcher": []
+		},
+		{
+			"label": "Create VSX file",
+			"type": "npm",
+			"script": "vscode:package",
+			"problemMatcher": []
+		},
+		{
 			"type": "npm",
 			"script": "watch",
 			"problemMatcher": "$tsc-watch",
@@ -15,6 +27,6 @@
 				"kind": "build",
 				"isDefault": true
 			}
-		}
+		}	
 	]
 }
