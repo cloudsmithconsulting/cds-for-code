@@ -4,12 +4,6 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Run webpack jobs",
-			"type": "npm",
-			"script": "pack",
-			"problemMatcher": []
-		},
-		{
 			"label": "Create VSX file",
 			"type": "npm",
 			"script": "vscode:package",
@@ -27,6 +21,13 @@
 				"kind": "build",
 				"isDefault": true
 			}
-		}	
+		},
+		{
+			"type": "grunt",
+			"task": "monitor",
+			"problemMatcher": [
+				"$node-sass"
+			]
+		}
 	]
 }
