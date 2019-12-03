@@ -2431,7 +2431,7 @@
 }
 
 .vscode-scrollbar-shadow {
-  color: var(--vscode-scrollbar-shadow) !important;
+  box-shadow: 4px 4px var(--vscode-scrollbar-shadow) !important;
 }
 
 .vscode-scrollbarSlider-activeBackground {
@@ -2479,7 +2479,7 @@
 }
 
 .vscode-widget-shadow {
-  color: var(--vscode-widget-shadow) !important;
+  box-shadow: 4px 4px var(--vscode-widget-shadow) !important;
 }
 
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
