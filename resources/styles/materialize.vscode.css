@@ -2294,6 +2294,194 @@
   color: transparent !important;
 }
 
+.vscode-contrastActiveBorder {
+  border-color: var(--vscode-contrastActiveBorder) !important;
+}
+
+.vscode-contrastBorder {
+  border-color: var(--vscode-contrastBorder) !important;
+}
+
+.vscode-focusBorder {
+  border-color: var(--vscode-focusBorder) !important;
+}
+
+.vscode-foreground {
+  color: var(--vscode-foreground) !important;
+}
+
+.vscode-errorForeground {
+  color: var(--vscode-errorForeground) !important;
+}
+
+.vscode-descriptionForeground {
+  color: var(--vscode-descriptionForeground) !important;
+}
+
+.vscode-badge-foreground {
+  color: var(--vscode-badge-foreground) !important;
+}
+
+.vscode-badge-background {
+  background-color: var(--vscode-badge-background) !important;
+}
+
+.vscode-button-background {
+  background-color: var(--vscode-button-background) !important;
+}
+
+.vscode-button-foreground {
+  color: var(--vscode-button-foreground) !important;
+}
+
+.vscode-button-hoverBackground {
+  background-color: var(--vscode-button-hoverBackground) !important;
+}
+
+.vscode-checkbox-background {
+  background-color: var(--vscode-checkbox-background) !important;
+}
+
+.vscode-checkbox-border {
+  border-color: var(--vscode-checkbox-border) !important;
+}
+
+.vscode-checkbox-foreground {
+  color: var(--vscode-checkbox-foreground) !important;
+}
+
+.vscode-dropdown-background {
+  background-color: var(--vscode-dropdown-background) !important;
+}
+
+.vscode-dropdown-border {
+  border-color: var(--vscode-dropdown-border) !important;
+}
+
+.vscode-dropdown-foreground {
+  color: var(--vscode-dropdown-foreground) !important;
+}
+
+.vscode-dropdown-listBackground {
+  background-color: var(--vscode-dropdown-listBackground) !important;
+}
+
+.vscode-icon-foreground {
+  color: var(--vscode-icon-foreground) !important;
+}
+
+.vscode-input-background {
+  background-color: var(--vscode-input-background) !important;
+}
+
+.vscode-input-border {
+  border-color: var(--vscode-input-border) !important;
+}
+
+.vscode-input-foreground {
+  color: var(--vscode-input-foreground) !important;
+}
+
+.vscode-input-placeholderForeground {
+  color: var(--vscode-input-placeholderForeground) !important;
+}
+
+.vscode-inputOption-activeBackground {
+  background-color: var(--vscode-inputOption-activeBackground) !important;
+}
+
+.vscode-inputOption-activeBorder {
+  border-color: var(--vscode-inputOption-activeBorder) !important;
+}
+
+.vscode-inputValidation-errorBackground {
+  background-color: var(--vscode-inputValidation-errorBackground) !important;
+}
+
+.vscode-inputValidation-errorForeground {
+  color: var(--vscode-inputValidation-errorForeground) !important;
+}
+
+.vscode-inputValidation-errorBorder {
+  border-color: var(--vscode-inputValidation-errorBorder) !important;
+}
+
+.vscode-inputValidation-infoBackground {
+  background-color: var(--vscode-inputValidation-infoBackground) !important;
+}
+
+.vscode-inputValidation-infoForeground {
+  color: var(--vscode-inputValidation-infoForeground) !important;
+}
+
+.vscode-inputValidation-infoBorder {
+  border-color: var(--vscode-inputValidation-infoBorder) !important;
+}
+
+.vscode-inputValidation-warningBackground {
+  background-color: var(--vscode-inputValidation-warningBackground) !important;
+}
+
+.vscode-inputValidation-warningForeground {
+  color: var(--vscode-inputValidation-warningForeground) !important;
+}
+
+.vscode-inputValidation-warningBorder {
+  border-color: var(--vscode-inputValidation-warningBorder) !important;
+}
+
+.vscode-scrollbar-shadow {
+  color: var(--vscode-scrollbar-shadow) !important;
+}
+
+.vscode-scrollbarSlider-activeBackground {
+  background-color: var(--vscode-scrollbarSlider-activeBackground) !important;
+}
+
+.vscode-scrollbarSlider-background {
+  background-color: var(--vscode-scrollbarSlider-background) !important;
+}
+
+.vscode-scrollbarSlider-hoverBackground {
+  background-color: var(--vscode-scrollbarSlider-hoverBackground) !important;
+}
+
+.vscode-selection-background {
+  background-color: var(--vscode-selection-background) !important;
+}
+
+.vscode-textBlockQuote-background {
+  background-color: var(--vscode-textBlockQuote-background) !important;
+}
+
+.vscode-textBlockQuote-border {
+  border-color: var(--vscode-textBlockQuote-border) !important;
+}
+
+.vscode-textCodeBlock-background {
+  background-color: var(--vscode-textCodeBlock-background) !important;
+}
+
+.vscode-textLink-activeForeground {
+  color: var(--vscode-textLink-activeForeground) !important;
+}
+
+.vscode-textLink-foreground {
+  color: var(--vscode-textLink-foreground) !important;
+}
+
+.vscode-textPreFormat-foreground {
+  color: var(--vscode-textPreFormat-foreground) !important;
+}
+
+.vscode-textSeparator-foreground {
+  color: var(--vscode-textSeparator-foreground) !important;
+}
+
+.vscode-widget-shadow {
+  color: var(--vscode-widget-shadow) !important;
+}
+
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */

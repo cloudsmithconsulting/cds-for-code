@@ -1,33 +1,33 @@
 $vscode: (
-    "contrastActiveBorder": var(--vscode-contrastActiveBorder)
-    "contrastBorder": var(--vscode-contrastBorder)
-    "focusBorder": var(--vscode-focusBorder)
-    "foreground": var(--vscode-foreground)
-    "errorForeground": var(--vscode-errorForeground)
+    "contrastActiveBorder": var(--vscode-contrastActiveBorder),
+    "contrastBorder": var(--vscode-contrastBorder),
+    "focusBorder": var(--vscode-focusBorder),
+    "foreground": var(--vscode-foreground),
+    "errorForeground": var(--vscode-errorForeground),
     "descriptionForeground": var(--vscode-descriptionForeground)
 );
 
 $vscode-badge: (
-    "foreground": var(--vscode-badge-foreground)
+    "foreground": var(--vscode-badge-foreground),
     "background": var(--vscode-badge-background)
 );
 
 $vscode-button: (
-    "background": var(--vscode-button-background)
-    "foreground": var(--vscode-button-foreground)
+    "background": var(--vscode-button-background),
+    "foreground": var(--vscode-button-foreground),
     "hoverBackground": var(--vscode-button-hoverBackground)
 );
 
 $vscode-checkbox: (
-    "background": var(--vscode-checkbox-background)
-    "border": var(--vscode-checkbox-border)
+    "background": var(--vscode-checkbox-background),
+    "border": var(--vscode-checkbox-border),
     "foreground": var(--vscode-checkbox-foreground)
 );
 
 $vscode-dropdown: (
-    "background": var(--vscode-dropdown-background)
-    "border": var(--vscode-dropdown-border)
-    "foreground": var(--vscode-dropdown-foreground)
+    "background": var(--vscode-dropdown-background),
+    "border": var(--vscode-dropdown-border),
+    "foreground": var(--vscode-dropdown-foreground),
     "listBackground": var(--vscode-dropdown-listBackground)
 );
 
@@ -36,26 +36,26 @@ $vscode-icon: (
 );
 
 $vscode-input: (
-    "background": var(--vscode-input-background)
-    "border": var(--vscode-input-border)
-    "foreground": var(--vscode-input-foreground)
+    "background": var(--vscode-input-background),
+    "border": var(--vscode-input-border),
+    "foreground": var(--vscode-input-foreground),
     "placeholderForeground": var(--vscode-input-placeholderForeground)
 );
 
 $vscode-inputOption: (
-    "activeBackground": var(--vscode-inputOption-activeBackground)
+    "activeBackground": var(--vscode-inputOption-activeBackground),
     "activeBorder": var(--vscode-inputOption-activeBorder)
 );
 
 $vscode-inputValidation: (
-    "errorBackground": var(--vscode-inputValidation-errorBackground)
-    "errorForeground": var(--vscode-inputValidation-errorForeground)
-    "errorBorder": var(--vscode-inputValidation-errorBorder)
-    "infoBackground": var(--vscode-inputValidation-infoBackground)
-    "infoForeground": var(--vscode-inputValidation-infoForeground)
-    "infoBorder": var(--vscode-inputValidation-infoBorder)
-    "warningBackground": var(--vscode-inputValidation-warningBackground)
-    "warningForeground": var(--vscode-inputValidation-warningForeground)
+    "errorBackground": var(--vscode-inputValidation-errorBackground),
+    "errorForeground": var(--vscode-inputValidation-errorForeground),
+    "errorBorder": var(--vscode-inputValidation-errorBorder),
+    "infoBackground": var(--vscode-inputValidation-infoBackground),
+    "infoForeground": var(--vscode-inputValidation-infoForeground),
+    "infoBorder": var(--vscode-inputValidation-infoBorder),
+    "warningBackground": var(--vscode-inputValidation-warningBackground),
+    "warningForeground": var(--vscode-inputValidation-warningForeground),
     "warningBorder": var(--vscode-inputValidation-warningBorder)
 );
 
@@ -64,8 +64,8 @@ $vscode-scrollbar: (
 );
 
 $vscode-scrollbarSlider: (
-    "activeBackground": var(--vscode-scrollbarSlider-activeBackground)
-    "background": var(--vscode-scrollbarSlider-background)
+    "activeBackground": var(--vscode-scrollbarSlider-activeBackground),
+    "background": var(--vscode-scrollbarSlider-background),
     "hoverBackground": var(--vscode-scrollbarSlider-hoverBackground)
 );
 
@@ -74,7 +74,7 @@ $vscode-selection: (
 );
 
 $vscode-textBlockQuote: (
-    "background": var(--vscode-textBlockQuote-background)
+    "background": var(--vscode-textBlockQuote-background),
     "border": var(--vscode-textBlockQuote-border)
 );
 
@@ -83,7 +83,7 @@ $vscode-textCodeBlock: (
 );
 
 $vscode-textLink: (
-    "activeForeground": var(--vscode-textLink-activeForeground)
+    "activeForeground": var(--vscode-textLink-activeForeground),
     "foreground": var(--vscode-textLink-foreground)
 );
 
@@ -97,7 +97,4 @@ $vscode-textSeparator: (
 
 $vscode-widget: (
     "shadow": var(--vscode-widget-shadow)
-);
-
-$vscode-newItem: (
 );

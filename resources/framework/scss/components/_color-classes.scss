@@ -1,5 +1,4 @@
 // Color Classes
-
 @each $color_name, $color in $colors {
   @each $color_type, $color_value in $color {
     @if $color_type == "base" {
@@ -28,5 +27,47 @@
   }
   .#{$color}-text {
     color: $color_value !important;
+  }
+}
+
+$vscode-all: (
+  "vscode": $vscode,
+  "vscode-badge": $vscode-badge,
+  "vscode-button": $vscode-button,
+  "vscode-checkbox": $vscode-checkbox,
+  "vscode-dropdown": $vscode-dropdown,
+  "vscode-icon": $vscode-icon,
+  "vscode-input": $vscode-input,
+  "vscode-inputOption": $vscode-inputOption,
+  "vscode-inputValidation": $vscode-inputValidation,
+  "vscode-scrollbar": $vscode-scrollbar,
+  "vscode-scrollbarSlider": $vscode-scrollbarSlider,
+  "vscode-selection": $vscode-selection,
+  "vscode-textBlockQuote": $vscode-textBlockQuote,
+  "vscode-textCodeBlock": $vscode-textCodeBlock,
+  "vscode-textLink": $vscode-textLink,
+  "vscode-textPreFormat": $vscode-textPreFormat,
+  "vscode-textSeparator": $vscode-textSeparator,
+  "vscode-widget": $vscode-widget
+) !default;
+
+// Color Classes
+@each $color_name, $color in $vscode-all {
+  @each $color_type, $color_value in $color {
+    @if $color_type == "background" or str-index($color_type, "Background") != null {
+      .#{$color_name}-#{$color_type} {
+        background-color: $color_value !important;
+      }
+    }
+    @else if $color_type == "border" or str-index($color_type, "Border") != null {
+      .#{$color_name}-#{$color_type} {
+        border-color: $color_value !important;
+      }      
+    }
+    @else {
+      .#{$color_name}-#{$color_type} {
+        color: $color_value !important;
+      }      
+    }
   }
 }
