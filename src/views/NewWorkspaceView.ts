@@ -68,7 +68,7 @@ class NewWorkspaceView extends View {
         viewRenderer.addScript('new-workspace.js');
         viewRenderer.addScript('materialize.js');
 
-        viewRenderer.addStyleSheet("materialize.css");
+        viewRenderer.addStyleSheet("materialize.vscode.css");
         viewRenderer.addStyleSheet('webviewStyles.css');
 
         // add image assets
