@@ -23,91 +23,103 @@
     </div>
 </blockquote>
 
-<div>
-    <fieldset>
-        <legend>Connection Settings</legend>
-        <input type="hidden" id="Id" name="Id" value="" />
-        <div class="field field--checkbox">
-            <input type="radio" class="field__input" id="AuthType1" name="AuthType" value="0" />
-            <label class="field__label" for="AuthType1">
-                Windows (On-Premises)
-            </label>
-            <input type="radio" class="field__input" id="AuthType2" name="AuthType" value="1" checked="checked" />
-            <label class="field__label" for="AuthType2">
-                Dynamics 365 Online
-            </label>
-            <input type="radio" class="field__input" id="AuthType3" name="AuthType" value="2" />
-            <label class="field__label" for="AuthType3">
-                Azure AD
-            </label>
-            <input type="radio" class="field__input" id="AuthType4" name="AuthType" value="3" disabled="disabled" />
-            <label class="field__label" for="AuthType4">
-                IFD (On-Premises)
-            </label>
-        </div>
-        <div class="field">
-            <label class="field__label" for="WebApiVersion">
-                Web API Version
-            </label>
-            <select id="WebApiVersion" name="WebApiVersion" class="field__input">
-                <option>auto</option>
-                <option>v8.0</option>
-                <option>v8.1</option>
-                <option>v8.2</option>
-                <option>v9.0</option>
-                <option>v9.1</option>
-            </select>
-            <div class="help-tip">
-                <p>Only set this option if you wish to force API compatibility</p>
-            </div>
-        </div>
-        <div class="field">
-            <label class="field__label" for="Name">
-                Name
-            </label>
-            <input type="text" class="field__input" id="Name" name="Name" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="ServerUrl">
-                Server URL
-            </label>
-            <input type="text" class="field__input" id="ServerUrl" name="ServerUrl" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="Username">
-                Username
-            </label>
-            <input type="text" class="field__input" id="Username" name="Username" />
-        </div>
-        <div class="field">
-            <label class="field__label" for="Password">
-                Password
-            </label>
-            <input type="password" class="field__input" id="Password" name="Password" />
-        </div>
-        <div id="DomainField" class="field">
-            <label class="field__label" for="Domain">
-                Domain
-            </label>
-            <input type="text" class="field__input" id="Domain" name="Domain" />
-        </div>
-    </fieldset>
+<form class="row">
+    <input type="hidden" id="ConnectionId" />
+    <input type="hidden" id="ConnectionType" />
 
-    <fieldset id="AdvancedOptionsPanel">
-        <div id="OAuthTokenPanel">
-            <div class="field">
-                <input type="checkbox" class="field__input" id="AccessTokenCheckbox" name="AccessToken"
-                    title="Select this option if you want to attempt authentication with an already established access token." />
-                <label for="AccessTokenCheckbox" class="field__label">
-                    Use a pre-determined OAuth token to complete this request
-                </label>
+    <ul class="collapsible col s12">
+        <li>
+            <div class="collapsible-header">
+                <i class="iconify" data-icon="uil-cloud-data-connection"></i>
+                Connect using a connection string
             </div>
-            <div id="OAuthTokenField" class="field">
-                <label class="field__label" for="OAuthToken">
-                    OAuth Token
-                </label>
-                <input type="text" class="field__input" id="OAuthToken" name="OAuthToken" />
+            <div class="collapsible-body">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="ConnectionString" type="text"
+                            placeholder="AuthType=Office365; ServiceUri=https://myurl.crm.dynamics.com; Username=username; Password=password" />
+                        <label for="ConnectionString">Connection String</label>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="active">
+            <div class="collapsible-header icon-text-height">
+                <i class="iconify" data-icon="uil-cloud-data-connection"></i>
+                Connect using discovery services using these authentication methods
+            </div>
+            <div class="collapsible-body row">
+                <div class="col s12">
+                    <ul class="tabs">
+                        <li class="tab col s3"><a class="active" href="#windowsAuth">Windows (On-Premises)</a></li>
+                        <li class="tab col s3"><a href="#onlineAuth">Dynamics 365 Online</a></li>
+                        <li class="tab col s3"><a href="#azureAdAuth">Azure AD</a></li>
+                        <li class="tab col s3"><a class="disabled" href="#ifd">IFD / ADFS</a></li>
+                    </ul>
+                </div>
+                <div class="row" id="windowsAuth">
+                    <div class="col s12"></div>
+                    <div class="col s12 input-field">
+                        <input id="OnPrem-ServerUrl" type="text" placeholder="http://crm/" />
+                        <label for="OnPrem-ServerUrl">Server URL</label>
+                    </div>
+                    <div class="col s12 input-field">
+                        <input id="OnPrem-Username" type="text" placeholder="http://crm/" />
+                        <label for="OnPrem-Username">Username</label>
+                    </div>
+                    <div class="col s12 input-field">
+                        <input id="OnPrem-Password" type="password" />
+                        <label for="OnPrem-Password">Password</label>
+                    </div>
+                    <div class="col s12 input-field">
+                        <input id="OnPrem-Domain" type="text" placeholder="COMPANYNAME" />
+                        <label for="OnPrem-Domain">Domain</label>
+                    </div>
+                </div>
+                <div class="row" id="onlineAuth">
+
+                </div>
+                <div class="row" id="azureAdAuth">
+
+                </div>
+                <div class="row" id="ifd">
+
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="collapsible-header">
+                Advanced Options
+            </div>
+            <div class="collapsible-body s12 m10 l7 xl6">
+                <div class="row">
+                    <label>
+                        <input type="checkbox" class="filled-in" id="WebApiVersion-Select" />
+                        <span>Specify the API version to use when issuing requests</span>
+                    </label>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <select id="WebApiVersion">
+                            <option value="" disabled selected>Auto-select API</option>
+                            <option value="v8.0">Dynamics CRM 8.0</option>
+                            <option value="v8.1">Dynamics CRM 8.1</option>
+                            <option value="v8.2">Dynamics 365 for Customer Engagement 8.2</option>
+                            <option value="v9.0">Common Data Service 9.0</option>
+                        </select>
+                        <label>API Version to use</label>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div class="col s12">
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="ConnectionName" type="text" class="validate">
+                <label for="ConnectionName">Connection Name</label>
+                <span class="helper-text" data-error="We're sorry, no special characters in the connection name" data-success="Got it!">What would you like to call this connection in the future?</span>
             </div>
         </div>
-    </fieldset>
-</div>
+    </div>
+</form>

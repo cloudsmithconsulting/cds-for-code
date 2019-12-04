@@ -21,43 +21,39 @@
         });
     });
 
-    function setInitialState(message) {
+    function setInitialState(apiConfig) {
         const $title = $("#title");
         $title.html($title.html().replace("New", "Edit"));
         document.title = $title.text();
-        
-        $("#AuthType1").prop("checked", message.type && message.type === 0);
-        $("#AuthType2").prop("checked", message.type && message.type === 1);
-        $("#AuthType3").prop("checked", message.type && message.type === 2);
-        $("#AuthType4").prop("checked", message.type && message.type === 3);
 
-        $domainField = $("#DomainField");
-        $oauthTokenPanel = $("#OAuthTokenPanel");
+        // The uusal.
+        $("#ConnectionId").val(apiConfig.id || "");
+        $("#ConnectionType").val(apiConfig.type || 0);
+        $("#ConnectionName").val(apiConfig.name || "");
 
-        showOrHide($oauthTokenPanel, message.type !== 0);
-        showOrHide($domainField, message.type === 0);
+        // Advanced options.
+        M.FormSelect.getInstance("WebApiVersion").wrapper.val(apiConfig.webApiVersion || "");
 
-        $("#Id").val(message.id || "");
-        $("#WebApiVersion").val(message.webApiVersion || "");
-        $("#Name").val(message.name || "");
-        $("#ServerUrl").val(message.webApiUrl || "");
-        $("#Domain").val(message.credentials ? message.credentials.domain || "" : "");
-        $("#OAuthToken").val(message.credentials ? message.credentials.token || "" : "");
-        $("#Username").val(message.credentials ? message.credentials.username || "" : "");
-        $("#Password").val(message.credentials ? message.credentials.password || "" : "");
+        switch (apiConfig.type) {
+            case 0:
+                $("#OnPrem-ServerUrl").val(apiConfig.webApiUrl || "");
+                $("#OnPrem-Domain").val(apiConfig.credentials ? apiConfig.credentials.domain || "" : "");
+                $("#OnPrem-Username").val(apiConfig.credentials ? apiConfig.credentials.username || "" : "");
+                $("#OnPrem-Password").val(apiConfig.credentials ? apiConfig.credentials.password || "" : "");
+
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+        }
     }
 
     // this part starts on document ready
     $(function () {
-        $("[name='AuthType']").click(function() {
-            const authType = Number.parseInt(this.value);
-
-            $domainField = $("#DomainField");
-            $oauthTokenPanel = $("#OAuthTokenPanel");
-    
-            showOrHide($oauthTokenPanel, authType !== 0);
-            showOrHide($domainField, authType === 0);
-        });
+        M.AutoInit();
 
         function showOrHide(target, value) {
             if (value) {
@@ -102,12 +98,12 @@
         }
 
         $("#submitButton").click(function() {
-            const id = $("#Id").val();
+            const id = $("#ConnectionId").val();
             const settings = {
                 id: (id.length > 0) ? id: null, // pass the id or null
                 type: parseInt($("[name='AuthType']:checked").val()),
                 webApiVersion: $("#WebApiVersion").val(),
-                name: $("#Name").val(),
+                name: $("#ConnectionName").val(),
                 webApiUrl: $("#ServerUrl").val(),
                 credentials: {
                     domain: $("#Domain").val(),

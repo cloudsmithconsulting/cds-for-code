@@ -31,7 +31,10 @@ export default class ConnectionViewManager implements IContributor {
 class ConnectionView extends View {
     getHtmlForWebview(viewRenderer: ViewRenderer): string {
         // add script and css assets
+        viewRenderer.addScript('materialize.js');
         viewRenderer.addScript('connectionView.js');
+
+        viewRenderer.addStyleSheet("materialize.vscode.css");
         viewRenderer.addStyleSheet('webviewStyles.css');
 
         // add image assets
