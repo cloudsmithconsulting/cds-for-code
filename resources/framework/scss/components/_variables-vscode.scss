@@ -118,8 +118,8 @@ $carousel-item-width: $carousel-item-height !default;
 
 $collapsible-height: 3rem !default;
 $collapsible-line-height: $collapsible-height !default;
-$collapsible-header-color: #fff !default;
-$collapsible-border-color: #ddd !default;
+$collapsible-header-color: vscode-color("panel", "background") !default;
+$collapsible-border-color: vscode-color("panel", "border") !default;
 
 
 // 7. Chips

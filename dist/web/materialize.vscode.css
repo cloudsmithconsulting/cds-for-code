@@ -5068,6 +5068,36 @@ input[type=range] + .thumb {
   padding: 0 !important;
 }
 
+ol.bigNumber {
+  list-style: none;
+  counter-reset: bignumber-list;
+}
+
+ol.bigNumber li {
+  counter-increment: bignumber-list;
+  position: relative;
+}
+
+ol.bigNumber li::before {
+  content: counter(bignumber-list);
+  color: #1b75bc;
+  font-size: 1.5rem;
+  font-weight: bold;
+  position: absolute;
+  --size: 32px;
+  left: calc(-1 * var(--size) - 10px);
+  line-height: var(--size);
+  width: var(--size);
+  height: var(--size);
+  top: 0;
+  -webkit-transform: rotate(-10deg);
+          transform: rotate(-10deg);
+  background: var(--vscode-selection-background);
+  border-radius: 50%;
+  text-align: center;
+  box-shadow: 1px 1px 0 var(--vscode-widget-shadow);
+}
+
 span.badge {
   min-width: 3rem;
   padding: 0 6px;
@@ -6718,16 +6748,16 @@ small {
 .tabs.tabs-transparent .tab a,
 .tabs.tabs-transparent .tab.disabled a,
 .tabs.tabs-transparent .tab.disabled a:hover {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--vscode-tab-inactiveForeground);
 }
 
 .tabs.tabs-transparent .tab a:hover,
 .tabs.tabs-transparent .tab a.active {
-  color: #fff;
+  color: var(--vscode-tab-activeForeground);
 }
 
 .tabs.tabs-transparent .indicator {
-  background-color: #fff;
+  background-color: var(--vscode-tab-activeBorder);
 }
 
 .tabs.tabs-fixed-width {
@@ -7502,9 +7532,9 @@ body.keyboard-focused .dropdown-content li:focus {
 }
 
 .collapsible {
-  border-top: 1px solid #ddd;
-  border-right: 1px solid #ddd;
-  border-left: 1px solid #ddd;
+  border-top: 1px solid var(--vscode-panel-border);
+  border-right: 1px solid var(--vscode-panel-border);
+  border-left: 1px solid var(--vscode-panel-border);
   margin: 0.5rem 0 1rem 0;
 }
 
@@ -7515,8 +7545,8 @@ body.keyboard-focused .dropdown-content li:focus {
   -webkit-tap-highlight-color: transparent;
   line-height: 1.5;
   padding: 1rem;
-  background-color: #fff;
-  border-bottom: 1px solid #ddd;
+  background-color: var(--vscode-panel-background);
+  border-bottom: 1px solid var(--vscode-panel-border);
 }
 
 .collapsible-header:focus {
@@ -7537,7 +7567,7 @@ body.keyboard-focused .dropdown-content li:focus {
 
 .collapsible-body {
   display: none;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--vscode-panel-border);
   box-sizing: border-box;
   padding: 2rem;
 }
@@ -7575,7 +7605,7 @@ body.keyboard-focused .dropdown-content li:focus {
 .sidenav .collapsible-body,
 .sidenav.fixed .collapsible-body {
   border: 0;
-  background-color: #fff;
+  background-color: var(--vscode-panel-background);
 }
 
 .sidenav .collapsible-body li a,
