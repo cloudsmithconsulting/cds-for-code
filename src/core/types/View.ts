@@ -96,6 +96,7 @@ export class ViewRenderer {
 	renderHtml(htmlParial: string): string {
 		// add some default scripts
 		this.insertScriptAt(0, 'main.js');
+		
 		// these are framework scripts hosted out of node_modules
 		this.addFrameworkScript('lodash/lodash.min.js');
 		this.addFrameworkScript('@iconify/iconify/dist/iconify.min.js');

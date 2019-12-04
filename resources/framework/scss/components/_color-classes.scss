@@ -30,27 +30,6 @@
   }
 }
 
-$vscode-all: (
-  "base": $vscode,
-  "badge": $vscode-badge,
-  "button": $vscode-button,
-  "checkbox": $vscode-checkbox,
-  "dropdown": $vscode-dropdown,
-  "icon": $vscode-icon,
-  "input": $vscode-input,
-  "inputOption": $vscode-inputOption,
-  "inputValidation": $vscode-inputValidation,
-  "scrollbar": $vscode-scrollbar,
-  "scrollbarSlider": $vscode-scrollbarSlider,
-  "selection": $vscode-selection,
-  "textBlockQuote": $vscode-textBlockQuote,
-  "textCodeBlock": $vscode-textCodeBlock,
-  "textLink": $vscode-textLink,
-  "textPreFormat": $vscode-textPreFormat,
-  "textSeparator": $vscode-textSeparator,
-  "widget": $vscode-widget
-) !default;
-
 // Color Classes
 @each $color_name, $color in $vscode-all {
   @each $color_type, $color_value in $color {

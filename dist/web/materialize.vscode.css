@@ -2318,12 +2318,68 @@
   color: var(--vscode-descriptionForeground) !important;
 }
 
+.vscode-activityBar-background {
+  background-color: var(--vscode-activityBar-background) !important;
+}
+
+.vscode-activityBar-dropBackground {
+  background-color: var(--vscode-activityBar-dropBackground) !important;
+}
+
+.vscode-activityBar-foreground {
+  color: var(--vscode-activityBar-foreground) !important;
+}
+
+.vscode-activityBar-inactiveForeground {
+  color: var(--vscode-activityBar-inactiveForeground) !important;
+}
+
+.vscode-activityBar-border {
+  border-color: var(--vscode-activityBar-border) !important;
+}
+
+.vscode-activityBar-activeBorder {
+  border-color: var(--vscode-activityBar-activeBorder) !important;
+}
+
+.vscode-activityBar-activeBackground {
+  background-color: var(--vscode-activityBar-activeBackground) !important;
+}
+
+.vscode-activityBarBadge-background {
+  background-color: var(--vscode-activityBarBadge-background) !important;
+}
+
+.vscode-activityBarBadge-foreground {
+  color: var(--vscode-activityBarBadge-foreground) !important;
+}
+
 .vscode-badge-foreground {
   color: var(--vscode-badge-foreground) !important;
 }
 
 .vscode-badge-background {
   background-color: var(--vscode-badge-background) !important;
+}
+
+.vscode-breadcrumb-foreground {
+  color: var(--vscode-breadcrumb-foreground) !important;
+}
+
+.vscode-breadcrumb-background {
+  background-color: var(--vscode-breadcrumb-background) !important;
+}
+
+.vscode-breadcrumb-focusForeground {
+  color: var(--vscode-breadcrumb-focusForeground) !important;
+}
+
+.vscode-breadcrumb-activeSelectionForeground {
+  color: var(--vscode-breadcrumb-activeSelectionForeground) !important;
+}
+
+.vscode-breadcrumbPicker-background {
+  background-color: var(--vscode-breadcrumbPicker-background) !important;
 }
 
 .vscode-button-background {
@@ -2350,6 +2406,42 @@
   color: var(--vscode-checkbox-foreground) !important;
 }
 
+.vscode-debugExceptionWidget-background {
+  background-color: var(--vscode-debugExceptionWidget-background) !important;
+}
+
+.vscode-debugExceptionWidget-border {
+  border-color: var(--vscode-debugExceptionWidget-border) !important;
+}
+
+.vscode-debugToolBar-background {
+  background-color: var(--vscode-debugToolBar-background) !important;
+}
+
+.vscode-debugToolBar-border {
+  border-color: var(--vscode-debugToolBar-border) !important;
+}
+
+.vscode-diffEditor-insertedTextBackground {
+  background-color: var(--vscode-diffEditor-insertedTextBackground) !important;
+}
+
+.vscode-diffEditor-insertedTextBorder {
+  border-color: var(--vscode-diffEditor-insertedTextBorder) !important;
+}
+
+.vscode-diffEditor-removedTextBackground {
+  background-color: var(--vscode-diffEditor-removedTextBackground) !important;
+}
+
+.vscode-diffEditor-removedTextBorder {
+  border-color: var(--vscode-diffEditor-removedTextBorder) !important;
+}
+
+.vscode-diffEditor-border {
+  border-color: var(--vscode-diffEditor-border) !important;
+}
+
 .vscode-dropdown-background {
   background-color: var(--vscode-dropdown-background) !important;
 }
@@ -2366,8 +2458,452 @@
   background-color: var(--vscode-dropdown-listBackground) !important;
 }
 
+.vscode-editor-background {
+  background-color: var(--vscode-editor-background) !important;
+}
+
+.vscode-editor-tokenColorCustomizations {
+  color: var(--vscode-editor-tokenColorCustomizations) !important;
+}
+
+.vscode-editor-foreground {
+  color: var(--vscode-editor-foreground) !important;
+}
+
+.vscode-editor-selectionBackground {
+  background-color: var(--vscode-editor-selectionBackground) !important;
+}
+
+.vscode-editor-selectionForeground {
+  color: var(--vscode-editor-selectionForeground) !important;
+}
+
+.vscode-editor-inactiveSelectionBackground {
+  background-color: var(--vscode-editor-inactiveSelectionBackground) !important;
+}
+
+.vscode-editor-selectionHighlightBackground {
+  background-color: var(--vscode-editor-selectionHighlightBackground) !important;
+}
+
+.vscode-editor-selectionHighlightBorder {
+  border-color: var(--vscode-editor-selectionHighlightBorder) !important;
+}
+
+.vscode-editor-wordHighlightBackground {
+  background-color: var(--vscode-editor-wordHighlightBackground) !important;
+}
+
+.vscode-editor-wordHighlightBorder {
+  border-color: var(--vscode-editor-wordHighlightBorder) !important;
+}
+
+.vscode-editor-wordHighlightStrongBackground {
+  background-color: var(--vscode-editor-wordHighlightStrongBackground) !important;
+}
+
+.vscode-editor-wordHighlightStrongBorder {
+  border-color: var(--vscode-editor-wordHighlightStrongBorder) !important;
+}
+
+.vscode-editor-findMatchBackground {
+  background-color: var(--vscode-editor-findMatchBackground) !important;
+}
+
+.vscode-editor-findMatchHighlightBackground {
+  background-color: var(--vscode-editor-findMatchHighlightBackground) !important;
+}
+
+.vscode-editor-findRangeHighlightBackground {
+  background-color: var(--vscode-editor-findRangeHighlightBackground) !important;
+}
+
+.vscode-editor-findMatchBorder {
+  border-color: var(--vscode-editor-findMatchBorder) !important;
+}
+
+.vscode-editor-findMatchHighlightBorder {
+  border-color: var(--vscode-editor-findMatchHighlightBorder) !important;
+}
+
+.vscode-editor-findRangeHighlightBorder {
+  border-color: var(--vscode-editor-findRangeHighlightBorder) !important;
+}
+
+.vscode-editor-hoverHighlightBackground {
+  background-color: var(--vscode-editor-hoverHighlightBackground) !important;
+}
+
+.vscode-editor-lineHighlightBackground {
+  background-color: var(--vscode-editor-lineHighlightBackground) !important;
+}
+
+.vscode-editor-lineHighlightBorder {
+  border-color: var(--vscode-editor-lineHighlightBorder) !important;
+}
+
+.vscode-editor-rangeHighlightBackground {
+  background-color: var(--vscode-editor-rangeHighlightBackground) !important;
+}
+
+.vscode-editor-rangeHighlightBorder {
+  border-color: var(--vscode-editor-rangeHighlightBorder) !important;
+}
+
+.vscode-editor-rulers {
+  color: var(--vscode-editor-rulers) !important;
+}
+
+.vscode-editor-stackFrameHighlightBackground {
+  background-color: var(--vscode-editor-stackFrameHighlightBackground) !important;
+}
+
+.vscode-editor-focusedStackFrameHighlightBackground {
+  background-color: var(--vscode-editor-focusedStackFrameHighlightBackground) !important;
+}
+
+.vscode-editor-snippetTabstopHighlightBackground {
+  background-color: var(--vscode-editor-snippetTabstopHighlightBackground) !important;
+}
+
+.vscode-editor-snippetTabstopHighlightBorder {
+  border-color: var(--vscode-editor-snippetTabstopHighlightBorder) !important;
+}
+
+.vscode-editor-snippetFinalTabstopHighlightBackground {
+  background-color: var(--vscode-editor-snippetFinalTabstopHighlightBackground) !important;
+}
+
+.vscode-editor-snippetFinalTabstopHighlightBorder {
+  border-color: var(--vscode-editor-snippetFinalTabstopHighlightBorder) !important;
+}
+
+.vscode-editorBracketMatch-background {
+  background-color: var(--vscode-editorBracketMatch-background) !important;
+}
+
+.vscode-editorBracketMatch-border {
+  border-color: var(--vscode-editorBracketMatch-border) !important;
+}
+
+.vscode-editorCodeLens-foreground {
+  color: var(--vscode-editorCodeLens-foreground) !important;
+}
+
+.vscode-editorCursor-background {
+  background-color: var(--vscode-editorCursor-background) !important;
+}
+
+.vscode-editorCursor-foreground {
+  color: var(--vscode-editorCursor-foreground) !important;
+}
+
+.vscode-editorError-foreground {
+  color: var(--vscode-editorError-foreground) !important;
+}
+
+.vscode-editorError-border {
+  border-color: var(--vscode-editorError-border) !important;
+}
+
+.vscode-editorGroup-border {
+  border-color: var(--vscode-editorGroup-border) !important;
+}
+
+.vscode-editorGroup-dropBackground {
+  background-color: var(--vscode-editorGroup-dropBackground) !important;
+}
+
+.vscode-editorGroup-emptyBackground {
+  background-color: var(--vscode-editorGroup-emptyBackground) !important;
+}
+
+.vscode-editorGroup-focusedEmptyBorder {
+  border-color: var(--vscode-editorGroup-focusedEmptyBorder) !important;
+}
+
+.vscode-editorGroupHeader-noTabsBackground {
+  background-color: var(--vscode-editorGroupHeader-noTabsBackground) !important;
+}
+
+.vscode-editorGroupHeader-tabsBackground {
+  background-color: var(--vscode-editorGroupHeader-tabsBackground) !important;
+}
+
+.vscode-editorGroupHeader-tabsBorder {
+  border-color: var(--vscode-editorGroupHeader-tabsBorder) !important;
+}
+
+.vscode-editorGutter-background {
+  background-color: var(--vscode-editorGutter-background) !important;
+}
+
+.vscode-editorGutter-modifiedBackground {
+  background-color: var(--vscode-editorGutter-modifiedBackground) !important;
+}
+
+.vscode-editorGutter-addedBackground {
+  background-color: var(--vscode-editorGutter-addedBackground) !important;
+}
+
+.vscode-editorGutter-deletedBackground {
+  background-color: var(--vscode-editorGutter-deletedBackground) !important;
+}
+
+.vscode-editorGutter-commentRangeForeground {
+  color: var(--vscode-editorGutter-commentRangeForeground) !important;
+}
+
+.vscode-editorHint-foreground {
+  color: var(--vscode-editorHint-foreground) !important;
+}
+
+.vscode-editorHint-border {
+  border-color: var(--vscode-editorHint-border) !important;
+}
+
+.vscode-editorHoverWidget-background {
+  background-color: var(--vscode-editorHoverWidget-background) !important;
+}
+
+.vscode-editorHoverWidget-border {
+  border-color: var(--vscode-editorHoverWidget-border) !important;
+}
+
+.vscode-editorHoverWidget-statusBarBackground {
+  background-color: var(--vscode-editorHoverWidget-statusBarBackground) !important;
+}
+
+.vscode-editorIndentGuide-background {
+  background-color: var(--vscode-editorIndentGuide-background) !important;
+}
+
+.vscode-editorIndentGuide-activeBackground {
+  background-color: var(--vscode-editorIndentGuide-activeBackground) !important;
+}
+
+.vscode-editorInfo-foreground {
+  color: var(--vscode-editorInfo-foreground) !important;
+}
+
+.vscode-editorInfo-border {
+  border-color: var(--vscode-editorInfo-border) !important;
+}
+
+.vscode-editorLightBulb-foreground {
+  color: var(--vscode-editorLightBulb-foreground) !important;
+}
+
+.vscode-editorLineNumber-foreground {
+  color: var(--vscode-editorLineNumber-foreground) !important;
+}
+
+.vscode-editorLineNumber-activeForeground {
+  color: var(--vscode-editorLineNumber-activeForeground) !important;
+}
+
+.vscode-editorLink-activeForeground {
+  color: var(--vscode-editorLink-activeForeground) !important;
+}
+
+.vscode-editorMarkerNavigation-background {
+  background-color: var(--vscode-editorMarkerNavigation-background) !important;
+}
+
+.vscode-editorMarkerNavigationError-background {
+  background-color: var(--vscode-editorMarkerNavigationError-background) !important;
+}
+
+.vscode-editorMarkerNavigationInfo-background {
+  background-color: var(--vscode-editorMarkerNavigationInfo-background) !important;
+}
+
+.vscode-editorMarkerNavigationWarning-background {
+  background-color: var(--vscode-editorMarkerNavigationWarning-background) !important;
+}
+
+.vscode-editorOverviewRuler-border {
+  border-color: var(--vscode-editorOverviewRuler-border) !important;
+}
+
+.vscode-editorOverviewRuler-findMatchForeground {
+  color: var(--vscode-editorOverviewRuler-findMatchForeground) !important;
+}
+
+.vscode-editorOverviewRuler-rangeHighlightForeground {
+  color: var(--vscode-editorOverviewRuler-rangeHighlightForeground) !important;
+}
+
+.vscode-editorOverviewRuler-selectionHighlightForeground {
+  color: var(--vscode-editorOverviewRuler-selectionHighlightForeground) !important;
+}
+
+.vscode-editorOverviewRuler-wordHighlightForeground {
+  color: var(--vscode-editorOverviewRuler-wordHighlightForeground) !important;
+}
+
+.vscode-editorOverviewRuler-wordHighlightStrongForeground {
+  color: var(--vscode-editorOverviewRuler-wordHighlightStrongForeground) !important;
+}
+
+.vscode-editorOverviewRuler-modifiedForeground {
+  color: var(--vscode-editorOverviewRuler-modifiedForeground) !important;
+}
+
+.vscode-editorOverviewRuler-addedForeground {
+  color: var(--vscode-editorOverviewRuler-addedForeground) !important;
+}
+
+.vscode-editorOverviewRuler-deletedForeground {
+  color: var(--vscode-editorOverviewRuler-deletedForeground) !important;
+}
+
+.vscode-editorOverviewRuler-errorForeground {
+  color: var(--vscode-editorOverviewRuler-errorForeground) !important;
+}
+
+.vscode-editorOverviewRuler-warningForeground {
+  color: var(--vscode-editorOverviewRuler-warningForeground) !important;
+}
+
+.vscode-editorOverviewRuler-infoForeground {
+  color: var(--vscode-editorOverviewRuler-infoForeground) !important;
+}
+
+.vscode-editorOverviewRuler-bracketMatchForeground {
+  color: var(--vscode-editorOverviewRuler-bracketMatchForeground) !important;
+}
+
+.vscode-editorOverviewRuler-currentContentForeground {
+  color: var(--vscode-editorOverviewRuler-currentContentForeground) !important;
+}
+
+.vscode-editorOverviewRuler-incomingContentForeground {
+  color: var(--vscode-editorOverviewRuler-incomingContentForeground) !important;
+}
+
+.vscode-editorOverviewRuler-commonContentForeground {
+  color: var(--vscode-editorOverviewRuler-commonContentForeground) !important;
+}
+
+.vscode-editorPane-background {
+  background-color: var(--vscode-editorPane-background) !important;
+}
+
+.vscode-editorRuler-foreground {
+  color: var(--vscode-editorRuler-foreground) !important;
+}
+
+.vscode-editorSuggestWidget-background {
+  background-color: var(--vscode-editorSuggestWidget-background) !important;
+}
+
+.vscode-editorSuggestWidget-border {
+  border-color: var(--vscode-editorSuggestWidget-border) !important;
+}
+
+.vscode-editorSuggestWidget-foreground {
+  color: var(--vscode-editorSuggestWidget-foreground) !important;
+}
+
+.vscode-editorSuggestWidget-highlightForeground {
+  color: var(--vscode-editorSuggestWidget-highlightForeground) !important;
+}
+
+.vscode-editorSuggestWidget-selectedBackground {
+  background-color: var(--vscode-editorSuggestWidget-selectedBackground) !important;
+}
+
+.vscode-editorWarning-foreground {
+  color: var(--vscode-editorWarning-foreground) !important;
+}
+
+.vscode-editorWarning-border {
+  border-color: var(--vscode-editorWarning-border) !important;
+}
+
+.vscode-editorWhitespace-foreground {
+  color: var(--vscode-editorWhitespace-foreground) !important;
+}
+
+.vscode-editorWidget-foreground {
+  color: var(--vscode-editorWidget-foreground) !important;
+}
+
+.vscode-editorWidget-background {
+  background-color: var(--vscode-editorWidget-background) !important;
+}
+
+.vscode-editorWidget-border {
+  border-color: var(--vscode-editorWidget-border) !important;
+}
+
+.vscode-editorWidget-resizeBorder {
+  border-color: var(--vscode-editorWidget-resizeBorder) !important;
+}
+
+.vscode-editorUnnecessaryCode-border {
+  border-color: var(--vscode-editorUnnecessaryCode-border) !important;
+}
+
+.vscode-editorUnnecessaryCode-opacity {
+  color: var(--vscode-editorUnnecessaryCode-opacity) !important;
+}
+
+.vscode-extensionBadge-remoteBackground {
+  background-color: var(--vscode-extensionBadge-remoteBackground) !important;
+}
+
+.vscode-extensionBadge-remoteForeground {
+  color: var(--vscode-extensionBadge-remoteForeground) !important;
+}
+
+.vscode-extensionButton-prominentForeground {
+  color: var(--vscode-extensionButton-prominentForeground) !important;
+}
+
+.vscode-extensionButton-prominentBackground {
+  background-color: var(--vscode-extensionButton-prominentBackground) !important;
+}
+
+.vscode-extensionButton-prominentHoverBackground {
+  background-color: var(--vscode-extensionButton-prominentHoverBackground) !important;
+}
+
+.vscode-gitDecoration-addedResourceForeground {
+  color: var(--vscode-gitDecoration-addedResourceForeground) !important;
+}
+
+.vscode-gitDecoration-modifiedResourceForeground {
+  color: var(--vscode-gitDecoration-modifiedResourceForeground) !important;
+}
+
+.vscode-gitDecoration-deletedResourceForeground {
+  color: var(--vscode-gitDecoration-deletedResourceForeground) !important;
+}
+
+.vscode-gitDecoration-untrackedResourceForeground {
+  color: var(--vscode-gitDecoration-untrackedResourceForeground) !important;
+}
+
+.vscode-gitDecoration-ignoredResourceForeground {
+  color: var(--vscode-gitDecoration-ignoredResourceForeground) !important;
+}
+
+.vscode-gitDecoration-conflictingResourceForeground {
+  color: var(--vscode-gitDecoration-conflictingResourceForeground) !important;
+}
+
+.vscode-gitDecoration-submoduleResourceForeground {
+  color: var(--vscode-gitDecoration-submoduleResourceForeground) !important;
+}
+
 .vscode-icon-foreground {
   color: var(--vscode-icon-foreground) !important;
+}
+
+.vscode-imagePreview-border {
+  border-color: var(--vscode-imagePreview-border) !important;
 }
 
 .vscode-input-background {
@@ -2430,6 +2966,362 @@
   border-color: var(--vscode-inputValidation-warningBorder) !important;
 }
 
+.vscode-list-activeSelectionBackground {
+  background-color: var(--vscode-list-activeSelectionBackground) !important;
+}
+
+.vscode-list-activeSelectionForeground {
+  color: var(--vscode-list-activeSelectionForeground) !important;
+}
+
+.vscode-list-dropBackground {
+  background-color: var(--vscode-list-dropBackground) !important;
+}
+
+.vscode-list-errorForeground {
+  color: var(--vscode-list-errorForeground) !important;
+}
+
+.vscode-list-filterMatchBackground {
+  background-color: var(--vscode-list-filterMatchBackground) !important;
+}
+
+.vscode-list-filterMatchBorder {
+  border-color: var(--vscode-list-filterMatchBorder) !important;
+}
+
+.vscode-list-focusBackground {
+  background-color: var(--vscode-list-focusBackground) !important;
+}
+
+.vscode-list-focusForeground {
+  color: var(--vscode-list-focusForeground) !important;
+}
+
+.vscode-list-highlightForeground {
+  color: var(--vscode-list-highlightForeground) !important;
+}
+
+.vscode-list-hoverBackground {
+  background-color: var(--vscode-list-hoverBackground) !important;
+}
+
+.vscode-list-hoverForeground {
+  color: var(--vscode-list-hoverForeground) !important;
+}
+
+.vscode-list-inactiveSelectionBackground {
+  background-color: var(--vscode-list-inactiveSelectionBackground) !important;
+}
+
+.vscode-list-inactiveSelectionForeground {
+  color: var(--vscode-list-inactiveSelectionForeground) !important;
+}
+
+.vscode-list-inactiveFocusBackground {
+  background-color: var(--vscode-list-inactiveFocusBackground) !important;
+}
+
+.vscode-list-invalidItemForeground {
+  color: var(--vscode-list-invalidItemForeground) !important;
+}
+
+.vscode-list-warningForeground {
+  color: var(--vscode-list-warningForeground) !important;
+}
+
+.vscode-listFilterWidget-background {
+  background-color: var(--vscode-listFilterWidget-background) !important;
+}
+
+.vscode-listFilterWidget-outline {
+  color: var(--vscode-listFilterWidget-outline) !important;
+}
+
+.vscode-listFilterWidget-noMatchesOutline {
+  color: var(--vscode-listFilterWidget-noMatchesOutline) !important;
+}
+
+.vscode-minimap-findMatchHighlight {
+  color: var(--vscode-minimap-findMatchHighlight) !important;
+}
+
+.vscode-minimap-selectionHighlight {
+  color: var(--vscode-minimap-selectionHighlight) !important;
+}
+
+.vscode-menu-foreground {
+  color: var(--vscode-menu-foreground) !important;
+}
+
+.vscode-menu-background {
+  background-color: var(--vscode-menu-background) !important;
+}
+
+.vscode-menu-selectionForeground {
+  color: var(--vscode-menu-selectionForeground) !important;
+}
+
+.vscode-menu-selectionBackground {
+  background-color: var(--vscode-menu-selectionBackground) !important;
+}
+
+.vscode-menu-selectionBorder {
+  border-color: var(--vscode-menu-selectionBorder) !important;
+}
+
+.vscode-menu-separatorBackground {
+  background-color: var(--vscode-menu-separatorBackground) !important;
+}
+
+.vscode-menu-border {
+  border-color: var(--vscode-menu-border) !important;
+}
+
+.vscode-menubar-selectionForeground {
+  color: var(--vscode-menubar-selectionForeground) !important;
+}
+
+.vscode-menubar-selectionBackground {
+  background-color: var(--vscode-menubar-selectionBackground) !important;
+}
+
+.vscode-menubar-selectionBorder {
+  border-color: var(--vscode-menubar-selectionBorder) !important;
+}
+
+.vscode-merge-currentHeaderBackground {
+  background-color: var(--vscode-merge-currentHeaderBackground) !important;
+}
+
+.vscode-merge-currentContentBackground {
+  background-color: var(--vscode-merge-currentContentBackground) !important;
+}
+
+.vscode-merge-incomingHeaderBackground {
+  background-color: var(--vscode-merge-incomingHeaderBackground) !important;
+}
+
+.vscode-merge-incomingContentBackground {
+  background-color: var(--vscode-merge-incomingContentBackground) !important;
+}
+
+.vscode-merge-border {
+  border-color: var(--vscode-merge-border) !important;
+}
+
+.vscode-merge-commonContentBackground {
+  background-color: var(--vscode-merge-commonContentBackground) !important;
+}
+
+.vscode-merge-commonHeaderBackground {
+  background-color: var(--vscode-merge-commonHeaderBackground) !important;
+}
+
+.vscode-notification-background {
+  background-color: var(--vscode-notification-background) !important;
+}
+
+.vscode-notification-foreground {
+  color: var(--vscode-notification-foreground) !important;
+}
+
+.vscode-notification-buttonBackground {
+  background-color: var(--vscode-notification-buttonBackground) !important;
+}
+
+.vscode-notification-buttonForeground {
+  color: var(--vscode-notification-buttonForeground) !important;
+}
+
+.vscode-notification-buttonHoverBackground {
+  background-color: var(--vscode-notification-buttonHoverBackground) !important;
+}
+
+.vscode-notification-errorBackground {
+  background-color: var(--vscode-notification-errorBackground) !important;
+}
+
+.vscode-notification-errorForeground {
+  color: var(--vscode-notification-errorForeground) !important;
+}
+
+.vscode-notification-infoBackground {
+  background-color: var(--vscode-notification-infoBackground) !important;
+}
+
+.vscode-notification-infoForeground {
+  color: var(--vscode-notification-infoForeground) !important;
+}
+
+.vscode-notification-warningBackground {
+  background-color: var(--vscode-notification-warningBackground) !important;
+}
+
+.vscode-notification-warningForeground {
+  color: var(--vscode-notification-warningForeground) !important;
+}
+
+.vscode-notifications-foreground {
+  color: var(--vscode-notifications-foreground) !important;
+}
+
+.vscode-notifications-background {
+  background-color: var(--vscode-notifications-background) !important;
+}
+
+.vscode-notifications-border {
+  border-color: var(--vscode-notifications-border) !important;
+}
+
+.vscode-notificationCenter-border {
+  border-color: var(--vscode-notificationCenter-border) !important;
+}
+
+.vscode-notificationCenterHeader-foreground {
+  color: var(--vscode-notificationCenterHeader-foreground) !important;
+}
+
+.vscode-notificationCenterHeader-background {
+  background-color: var(--vscode-notificationCenterHeader-background) !important;
+}
+
+.vscode-notificationsErrorIcon-foreground {
+  color: var(--vscode-notificationsErrorIcon-foreground) !important;
+}
+
+.vscode-notificationsInfoIcon-foreground {
+  color: var(--vscode-notificationsInfoIcon-foreground) !important;
+}
+
+.vscode-notificationLink-foreground {
+  color: var(--vscode-notificationLink-foreground) !important;
+}
+
+.vscode-notificationToast-border {
+  border-color: var(--vscode-notificationToast-border) !important;
+}
+
+.vscode-notificationsWarningIcon-foreground {
+  color: var(--vscode-notificationsWarningIcon-foreground) !important;
+}
+
+.vscode-panel-background {
+  background-color: var(--vscode-panel-background) !important;
+}
+
+.vscode-panel-border {
+  border-color: var(--vscode-panel-border) !important;
+}
+
+.vscode-panel-inactiveForeground {
+  color: var(--vscode-panel-inactiveForeground) !important;
+}
+
+.vscode-panelInput-border {
+  border-color: var(--vscode-panelInput-border) !important;
+}
+
+.vscode-panelTitle-activeBorder {
+  border-color: var(--vscode-panelTitle-activeBorder) !important;
+}
+
+.vscode-panelTitle-activeForeground {
+  color: var(--vscode-panelTitle-activeForeground) !important;
+}
+
+.vscode-panelTitle-dropBackground {
+  background-color: var(--vscode-panelTitle-dropBackground) !important;
+}
+
+.vscode-peekView-border {
+  border-color: var(--vscode-peekView-border) !important;
+}
+
+.vscode-peekViewEditor-background {
+  background-color: var(--vscode-peekViewEditor-background) !important;
+}
+
+.vscode-peekViewEditor-matchHighlightBackground {
+  background-color: var(--vscode-peekViewEditor-matchHighlightBackground) !important;
+}
+
+.vscode-peekViewEditor-matchHighlightBorder {
+  border-color: var(--vscode-peekViewEditor-matchHighlightBorder) !important;
+}
+
+.vscode-peekViewEditorGutter-background {
+  background-color: var(--vscode-peekViewEditorGutter-background) !important;
+}
+
+.vscode-peekViewResult-background {
+  background-color: var(--vscode-peekViewResult-background) !important;
+}
+
+.vscode-peekViewResult-fileForeground {
+  color: var(--vscode-peekViewResult-fileForeground) !important;
+}
+
+.vscode-peekViewResult-lineForeground {
+  color: var(--vscode-peekViewResult-lineForeground) !important;
+}
+
+.vscode-peekViewResult-matchHighlightBackground {
+  background-color: var(--vscode-peekViewResult-matchHighlightBackground) !important;
+}
+
+.vscode-peekViewResult-selectionBackground {
+  background-color: var(--vscode-peekViewResult-selectionBackground) !important;
+}
+
+.vscode-peekViewResult-selectionForeground {
+  color: var(--vscode-peekViewResult-selectionForeground) !important;
+}
+
+.vscode-peekViewTitle-background {
+  background-color: var(--vscode-peekViewTitle-background) !important;
+}
+
+.vscode-peekViewTitleDescription-foreground {
+  color: var(--vscode-peekViewTitleDescription-foreground) !important;
+}
+
+.vscode-peekViewTitleLabel-foreground {
+  color: var(--vscode-peekViewTitleLabel-foreground) !important;
+}
+
+.vscode-pickerGroup-border {
+  border-color: var(--vscode-pickerGroup-border) !important;
+}
+
+.vscode-pickerGroup-foreground {
+  color: var(--vscode-pickerGroup-foreground) !important;
+}
+
+.vscode-problemsErrorIcon-foreground {
+  color: var(--vscode-problemsErrorIcon-foreground) !important;
+}
+
+.vscode-problemsInfoIcon-foreground {
+  color: var(--vscode-problemsInfoIcon-foreground) !important;
+}
+
+.vscode-problemsWarningIcon-foreground {
+  color: var(--vscode-problemsWarningIcon-foreground) !important;
+}
+
+.vscode-progressBar-background {
+  background-color: var(--vscode-progressBar-background) !important;
+}
+
+.vscode-quickInput-background {
+  background-color: var(--vscode-quickInput-background) !important;
+}
+
+.vscode-quickInput-foreground {
+  color: var(--vscode-quickInput-foreground) !important;
+}
+
 .vscode-scrollbar-shadow {
   box-shadow: 4px 4px var(--vscode-scrollbar-shadow) !important;
 }
@@ -2448,6 +3340,458 @@
 
 .vscode-selection-background {
   background-color: var(--vscode-selection-background) !important;
+}
+
+.vscode-settings-headerForeground {
+  color: var(--vscode-settings-headerForeground) !important;
+}
+
+.vscode-settings-modifiedItemIndicator {
+  color: var(--vscode-settings-modifiedItemIndicator) !important;
+}
+
+.vscode-settings-dropdownBackground {
+  background-color: var(--vscode-settings-dropdownBackground) !important;
+}
+
+.vscode-settings-dropdownForeground {
+  color: var(--vscode-settings-dropdownForeground) !important;
+}
+
+.vscode-settings-dropdownBorder {
+  border-color: var(--vscode-settings-dropdownBorder) !important;
+}
+
+.vscode-settings-dropdownListBorder {
+  border-color: var(--vscode-settings-dropdownListBorder) !important;
+}
+
+.vscode-settings-checkboxBackground {
+  background-color: var(--vscode-settings-checkboxBackground) !important;
+}
+
+.vscode-settings-checkboxForeground {
+  color: var(--vscode-settings-checkboxForeground) !important;
+}
+
+.vscode-settings-checkboxBorder {
+  border-color: var(--vscode-settings-checkboxBorder) !important;
+}
+
+.vscode-settings-textInputBackground {
+  background-color: var(--vscode-settings-textInputBackground) !important;
+}
+
+.vscode-settings-textInputForeground {
+  color: var(--vscode-settings-textInputForeground) !important;
+}
+
+.vscode-settings-textInputBorder {
+  border-color: var(--vscode-settings-textInputBorder) !important;
+}
+
+.vscode-settings-numberInputBackground {
+  background-color: var(--vscode-settings-numberInputBackground) !important;
+}
+
+.vscode-settings-numberInputForeground {
+  color: var(--vscode-settings-numberInputForeground) !important;
+}
+
+.vscode-settings-numberInputBorder {
+  border-color: var(--vscode-settings-numberInputBorder) !important;
+}
+
+.vscode-sideBar-background {
+  background-color: var(--vscode-sideBar-background) !important;
+}
+
+.vscode-sideBar-foreground {
+  color: var(--vscode-sideBar-foreground) !important;
+}
+
+.vscode-sideBar-border {
+  border-color: var(--vscode-sideBar-border) !important;
+}
+
+.vscode-sideBar-dropBackground {
+  background-color: var(--vscode-sideBar-dropBackground) !important;
+}
+
+.vscode-sideBarTitle-foreground {
+  color: var(--vscode-sideBarTitle-foreground) !important;
+}
+
+.vscode-sideBarSectionHeader-background {
+  background-color: var(--vscode-sideBarSectionHeader-background) !important;
+}
+
+.vscode-sideBarSectionHeader-foreground {
+  color: var(--vscode-sideBarSectionHeader-foreground) !important;
+}
+
+.vscode-sideBarSectionHeader-border {
+  border-color: var(--vscode-sideBarSectionHeader-border) !important;
+}
+
+.vscode-statusBar-background {
+  background-color: var(--vscode-statusBar-background) !important;
+}
+
+.vscode-statusBar-foreground {
+  color: var(--vscode-statusBar-foreground) !important;
+}
+
+.vscode-statusBar-border {
+  border-color: var(--vscode-statusBar-border) !important;
+}
+
+.vscode-statusBar-debuggingBackground {
+  background-color: var(--vscode-statusBar-debuggingBackground) !important;
+}
+
+.vscode-statusBar-debuggingForeground {
+  color: var(--vscode-statusBar-debuggingForeground) !important;
+}
+
+.vscode-statusBar-debuggingBorder {
+  border-color: var(--vscode-statusBar-debuggingBorder) !important;
+}
+
+.vscode-statusBar-noFolderForeground {
+  color: var(--vscode-statusBar-noFolderForeground) !important;
+}
+
+.vscode-statusBar-noFolderBackground {
+  background-color: var(--vscode-statusBar-noFolderBackground) !important;
+}
+
+.vscode-statusBar-noFolderBorder {
+  border-color: var(--vscode-statusBar-noFolderBorder) !important;
+}
+
+.vscode-statusBarItem-activeBackground {
+  background-color: var(--vscode-statusBarItem-activeBackground) !important;
+}
+
+.vscode-statusBarItem-hoverBackground {
+  background-color: var(--vscode-statusBarItem-hoverBackground) !important;
+}
+
+.vscode-statusBarItem-prominentForeground {
+  color: var(--vscode-statusBarItem-prominentForeground) !important;
+}
+
+.vscode-statusBarItem-prominentBackground {
+  background-color: var(--vscode-statusBarItem-prominentBackground) !important;
+}
+
+.vscode-statusBarItem-prominentHoverBackground {
+  background-color: var(--vscode-statusBarItem-prominentHoverBackground) !important;
+}
+
+.vscode-statusBarItem-remoteBackground {
+  background-color: var(--vscode-statusBarItem-remoteBackground) !important;
+}
+
+.vscode-statusBarItem-remoteForeground {
+  color: var(--vscode-statusBarItem-remoteForeground) !important;
+}
+
+.vscode-symbolIcon-arrayForeground {
+  color: var(--vscode-symbolIcon-arrayForeground) !important;
+}
+
+.vscode-symbolIcon-booleanForeground {
+  color: var(--vscode-symbolIcon-booleanForeground) !important;
+}
+
+.vscode-symbolIcon-classForeground {
+  color: var(--vscode-symbolIcon-classForeground) !important;
+}
+
+.vscode-symbolIcon-colorForeground {
+  color: var(--vscode-symbolIcon-colorForeground) !important;
+}
+
+.vscode-symbolIcon-constantForeground {
+  color: var(--vscode-symbolIcon-constantForeground) !important;
+}
+
+.vscode-symbolIcon-constructorForeground {
+  color: var(--vscode-symbolIcon-constructorForeground) !important;
+}
+
+.vscode-symbolIcon-enumeratorForeground {
+  color: var(--vscode-symbolIcon-enumeratorForeground) !important;
+}
+
+.vscode-symbolIcon-enumeratorMemberForeground {
+  color: var(--vscode-symbolIcon-enumeratorMemberForeground) !important;
+}
+
+.vscode-symbolIcon-eventForeground {
+  color: var(--vscode-symbolIcon-eventForeground) !important;
+}
+
+.vscode-symbolIcon-fieldForeground {
+  color: var(--vscode-symbolIcon-fieldForeground) !important;
+}
+
+.vscode-symbolIcon-fileForeground {
+  color: var(--vscode-symbolIcon-fileForeground) !important;
+}
+
+.vscode-symbolIcon-folderForeground {
+  color: var(--vscode-symbolIcon-folderForeground) !important;
+}
+
+.vscode-symbolIcon-functionForeground {
+  color: var(--vscode-symbolIcon-functionForeground) !important;
+}
+
+.vscode-symbolIcon-interfaceForeground {
+  color: var(--vscode-symbolIcon-interfaceForeground) !important;
+}
+
+.vscode-symbolIcon-keyForeground {
+  color: var(--vscode-symbolIcon-keyForeground) !important;
+}
+
+.vscode-symbolIcon-keywordForeground {
+  color: var(--vscode-symbolIcon-keywordForeground) !important;
+}
+
+.vscode-symbolIcon-methodForeground {
+  color: var(--vscode-symbolIcon-methodForeground) !important;
+}
+
+.vscode-symbolIcon-moduleForeground {
+  color: var(--vscode-symbolIcon-moduleForeground) !important;
+}
+
+.vscode-symbolIcon-namespaceForeground {
+  color: var(--vscode-symbolIcon-namespaceForeground) !important;
+}
+
+.vscode-symbolIcon-nullForeground {
+  color: var(--vscode-symbolIcon-nullForeground) !important;
+}
+
+.vscode-symbolIcon-numberForeground {
+  color: var(--vscode-symbolIcon-numberForeground) !important;
+}
+
+.vscode-symbolIcon-objectForeground {
+  color: var(--vscode-symbolIcon-objectForeground) !important;
+}
+
+.vscode-symbolIcon-operatorForeground {
+  color: var(--vscode-symbolIcon-operatorForeground) !important;
+}
+
+.vscode-symbolIcon-packageForeground {
+  color: var(--vscode-symbolIcon-packageForeground) !important;
+}
+
+.vscode-symbolIcon-propertyForeground {
+  color: var(--vscode-symbolIcon-propertyForeground) !important;
+}
+
+.vscode-symbolIcon-referenceForeground {
+  color: var(--vscode-symbolIcon-referenceForeground) !important;
+}
+
+.vscode-symbolIcon-snippetForeground {
+  color: var(--vscode-symbolIcon-snippetForeground) !important;
+}
+
+.vscode-symbolIcon-stringForeground {
+  color: var(--vscode-symbolIcon-stringForeground) !important;
+}
+
+.vscode-symbolIcon-structForeground {
+  color: var(--vscode-symbolIcon-structForeground) !important;
+}
+
+.vscode-symbolIcon-textForeground {
+  color: var(--vscode-symbolIcon-textForeground) !important;
+}
+
+.vscode-symbolIcon-typeParameterForeground {
+  color: var(--vscode-symbolIcon-typeParameterForeground) !important;
+}
+
+.vscode-symbolIcon-unitForeground {
+  color: var(--vscode-symbolIcon-unitForeground) !important;
+}
+
+.vscode-symbolIcon-variableForeground {
+  color: var(--vscode-symbolIcon-variableForeground) !important;
+}
+
+.vscode-tab-activeBackground {
+  background-color: var(--vscode-tab-activeBackground) !important;
+}
+
+.vscode-tab-activeBorder {
+  border-color: var(--vscode-tab-activeBorder) !important;
+}
+
+.vscode-tab-activeBorderTop {
+  border-color: var(--vscode-tab-activeBorderTop) !important;
+}
+
+.vscode-tab-activeForeground {
+  color: var(--vscode-tab-activeForeground) !important;
+}
+
+.vscode-tab-activeModifiedBorder {
+  border-color: var(--vscode-tab-activeModifiedBorder) !important;
+}
+
+.vscode-tab-border {
+  border-color: var(--vscode-tab-border) !important;
+}
+
+.vscode-tab-hoverBackground {
+  background-color: var(--vscode-tab-hoverBackground) !important;
+}
+
+.vscode-tab-hoverBorder {
+  border-color: var(--vscode-tab-hoverBorder) !important;
+}
+
+.vscode-tab-inactiveBackground {
+  background-color: var(--vscode-tab-inactiveBackground) !important;
+}
+
+.vscode-tab-inactiveForeground {
+  color: var(--vscode-tab-inactiveForeground) !important;
+}
+
+.vscode-tab-unfocusedActiveBackground {
+  background-color: var(--vscode-tab-unfocusedActiveBackground) !important;
+}
+
+.vscode-tab-unfocusedActiveBorder {
+  border-color: var(--vscode-tab-unfocusedActiveBorder) !important;
+}
+
+.vscode-tab-unfocusedActiveBorderTop {
+  border-color: var(--vscode-tab-unfocusedActiveBorderTop) !important;
+}
+
+.vscode-tab-unfocusedActiveForeground {
+  color: var(--vscode-tab-unfocusedActiveForeground) !important;
+}
+
+.vscode-tab-unfocusedActiveModifiedBorder {
+  border-color: var(--vscode-tab-unfocusedActiveModifiedBorder) !important;
+}
+
+.vscode-tab-unfocusedHoverBackground {
+  background-color: var(--vscode-tab-unfocusedHoverBackground) !important;
+}
+
+.vscode-tab-unfocusedHoverBorder {
+  border-color: var(--vscode-tab-unfocusedHoverBorder) !important;
+}
+
+.vscode-tab-unfocusedInactiveModifiedBorder {
+  border-color: var(--vscode-tab-unfocusedInactiveModifiedBorder) !important;
+}
+
+.vscode-tab-unfocusedInactiveForeground {
+  color: var(--vscode-tab-unfocusedInactiveForeground) !important;
+}
+
+.vscode-terminal-background {
+  background-color: var(--vscode-terminal-background) !important;
+}
+
+.vscode-terminal-border {
+  border-color: var(--vscode-terminal-border) !important;
+}
+
+.vscode-terminal-foreground {
+  color: var(--vscode-terminal-foreground) !important;
+}
+
+.vscode-terminal-ansiBlack {
+  color: var(--vscode-terminal-ansiBlack) !important;
+}
+
+.vscode-terminal-ansiBlue {
+  color: var(--vscode-terminal-ansiBlue) !important;
+}
+
+.vscode-terminal-ansiBrightBlack {
+  color: var(--vscode-terminal-ansiBrightBlack) !important;
+}
+
+.vscode-terminal-ansiBrightBlue {
+  color: var(--vscode-terminal-ansiBrightBlue) !important;
+}
+
+.vscode-terminal-ansiBrightCyan {
+  color: var(--vscode-terminal-ansiBrightCyan) !important;
+}
+
+.vscode-terminal-ansiBrightGreen {
+  color: var(--vscode-terminal-ansiBrightGreen) !important;
+}
+
+.vscode-terminal-ansiBrightMagenta {
+  color: var(--vscode-terminal-ansiBrightMagenta) !important;
+}
+
+.vscode-terminal-ansiBrightRed {
+  color: var(--vscode-terminal-ansiBrightRed) !important;
+}
+
+.vscode-terminal-ansiBrightWhite {
+  color: var(--vscode-terminal-ansiBrightWhite) !important;
+}
+
+.vscode-terminal-ansiBrightYellow {
+  color: var(--vscode-terminal-ansiBrightYellow) !important;
+}
+
+.vscode-terminal-ansiCyan {
+  color: var(--vscode-terminal-ansiCyan) !important;
+}
+
+.vscode-terminal-ansiGreen {
+  color: var(--vscode-terminal-ansiGreen) !important;
+}
+
+.vscode-terminal-ansiMagenta {
+  color: var(--vscode-terminal-ansiMagenta) !important;
+}
+
+.vscode-terminal-ansiRed {
+  color: var(--vscode-terminal-ansiRed) !important;
+}
+
+.vscode-terminal-ansiWhite {
+  color: var(--vscode-terminal-ansiWhite) !important;
+}
+
+.vscode-terminal-ansiYellow {
+  color: var(--vscode-terminal-ansiYellow) !important;
+}
+
+.vscode-terminal-selectionBackground {
+  background-color: var(--vscode-terminal-selectionBackground) !important;
+}
+
+.vscode-terminalCursor-background {
+  background-color: var(--vscode-terminalCursor-background) !important;
+}
+
+.vscode-terminalCursor-foreground {
+  color: var(--vscode-terminalCursor-foreground) !important;
 }
 
 .vscode-textBlockQuote-background {
@@ -2478,8 +3822,52 @@
   color: var(--vscode-textSeparator-foreground) !important;
 }
 
+.vscode-titleBar-activeBackground {
+  background-color: var(--vscode-titleBar-activeBackground) !important;
+}
+
+.vscode-titleBar-activeForeground {
+  color: var(--vscode-titleBar-activeForeground) !important;
+}
+
+.vscode-titleBar-inactiveBackground {
+  background-color: var(--vscode-titleBar-inactiveBackground) !important;
+}
+
+.vscode-titleBar-inactiveForeground {
+  color: var(--vscode-titleBar-inactiveForeground) !important;
+}
+
+.vscode-titleBar-border {
+  border-color: var(--vscode-titleBar-border) !important;
+}
+
+.vscode-tree-indentGuidesStroke {
+  color: var(--vscode-tree-indentGuidesStroke) !important;
+}
+
+.vscode-walkThrough-embeddedEditorBackground {
+  background-color: var(--vscode-walkThrough-embeddedEditorBackground) !important;
+}
+
+.vscode-welcomePage-background {
+  background-color: var(--vscode-welcomePage-background) !important;
+}
+
+.vscode-welcomePage-buttonBackground {
+  background-color: var(--vscode-welcomePage-buttonBackground) !important;
+}
+
+.vscode-welcomePage-buttonHoverBackground {
+  background-color: var(--vscode-welcomePage-buttonHoverBackground) !important;
+}
+
 .vscode-widget-shadow {
   box-shadow: 4px 4px var(--vscode-widget-shadow) !important;
+}
+
+.vscode-workbench-colorCustomizations {
+  color: var(--vscode-workbench-colorCustomizations) !important;
 }
 
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
@@ -2943,7 +4331,7 @@ ul:not(.browser-default) > li {
 }
 
 a {
-  color: #039be5;
+  color: var(--vscode-textLink-foreground);
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -4835,39 +6223,39 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 }
 
 h1 {
-  font-size: 4.2rem;
+  font-size: 2.1rem;
   line-height: 110%;
-  margin: 2.8rem 0 1.68rem 0;
+  margin: 1.4rem 0 0.84rem 0;
 }
 
 h2 {
-  font-size: 3.56rem;
+  font-size: 1.9rem;
   line-height: 110%;
-  margin: 2.3733333333rem 0 1.424rem 0;
+  margin: 1.2666666667rem 0 0.76rem 0;
 }
 
 h3 {
-  font-size: 2.92rem;
+  font-size: 1.7rem;
   line-height: 110%;
-  margin: 1.9466666667rem 0 1.168rem 0;
+  margin: 1.1333333333rem 0 0.68rem 0;
 }
 
 h4 {
-  font-size: 2.28rem;
+  font-size: 1.5rem;
   line-height: 110%;
-  margin: 1.52rem 0 0.912rem 0;
+  margin: 1rem 0 0.6rem 0;
 }
 
 h5 {
-  font-size: 1.64rem;
+  font-size: 1.4rem;
   line-height: 110%;
-  margin: 1.0933333333rem 0 0.656rem 0;
+  margin: 0.9333333333rem 0 0.56rem 0;
 }
 
 h6 {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   line-height: 110%;
-  margin: 0.7666666667rem 0 0.46rem 0;
+  margin: 0.8333333333rem 0 0.5rem 0;
 }
 
 em {
@@ -5318,7 +6706,7 @@ small {
   overflow-y: hidden;
   height: 48px;
   width: 100%;
-  background-color: #fff;
+  background-color: var(--vscode-tab-activeBackground);
   margin: 0 auto;
   white-space: nowrap;
 }
@@ -5363,7 +6751,7 @@ small {
 }
 
 .tabs .tab a {
-  color: rgba(27, 117, 188, 0.7);
+  color: rgba(var(--vscode-tab-activeForeground), 0.7);
   display: block;
   width: 100%;
   height: 100%;
@@ -5376,18 +6764,18 @@ small {
 }
 
 .tabs .tab a:focus, .tabs .tab a:focus.active {
-  background-color: rgba(64, 155, 228, 0.2);
+  background-color: rgba(var(--vscode-tab-activeBorder), 0.8);
   outline: none;
 }
 
 .tabs .tab a:hover, .tabs .tab a.active {
   background-color: transparent;
-  color: #1b75bc;
+  color: var(--vscode-tab-activeForeground);
 }
 
 .tabs .tab.disabled a,
 .tabs .tab.disabled a:hover {
-  color: rgba(27, 117, 188, 0.4);
+  color: rgba(var(--vscode-tab-activeForeground), 0.4);
   cursor: default;
 }
 
@@ -5395,7 +6783,7 @@ small {
   position: absolute;
   bottom: 0;
   height: 2px;
-  background-color: #409be4;
+  background-color: var(--vscode-tab-activeBorder);
   will-change: left, right;
 }
 
@@ -5534,7 +6922,7 @@ small {
 
 .btn, .btn-large, .btn-small {
   text-decoration: none;
-  color: #fff;
+  color: var(--vscode-button-background);
   background-color: #27A9E1;
   text-align: center;
   letter-spacing: .5px;
@@ -5769,7 +7157,7 @@ button.btn-floating {
 .btn-flat {
   box-shadow: none;
   background-color: transparent;
-  color: #343434;
+  color: var(--vscode-button-background);
   cursor: pointer;
   -webkit-transition: background-color .2s;
   transition: background-color .2s;
@@ -6516,7 +7904,7 @@ input[type=tel]:not(.browser-default):focus.valid ~ label,
 input[type=number]:not(.browser-default):focus.valid ~ label,
 input[type=search]:not(.browser-default):focus.valid ~ label,
 textarea.materialize-textarea:focus.valid ~ label {
-  color: #4CAF50;
+  color: var(--vscode-inputValidation-infoForeground);
 }
 
 input:not([type]):focus.invalid ~ label,
@@ -6532,7 +7920,7 @@ input[type=tel]:not(.browser-default):focus.invalid ~ label,
 input[type=number]:not(.browser-default):focus.invalid ~ label,
 input[type=search]:not(.browser-default):focus.invalid ~ label,
 textarea.materialize-textarea:focus.invalid ~ label {
-  color: #F44336;
+  color: var(--vscode-inputValidation-errorForeground);
 }
 
 input:not([type]).validate + label,
@@ -6577,8 +7965,8 @@ input.valid[type=search]:not(.browser-default),
 input.valid[type=search]:not(.browser-default):focus,
 textarea.materialize-textarea.valid,
 textarea.materialize-textarea.valid:focus, .select-wrapper.valid > input.select-dropdown {
-  border-bottom: 1px solid #4CAF50;
-  box-shadow: 0 1px 0 0 #4CAF50;
+  border-bottom: 1px solid var(--vscode-inputValidation-infoForeground);
+  box-shadow: 0 1px 0 0 var(--vscode-inputValidation-infoForeground);
 }
 
 input.invalid:not([type]), input.invalid:not([type]):focus,
@@ -6607,8 +7995,8 @@ input.invalid[type=search]:not(.browser-default):focus,
 textarea.materialize-textarea.invalid,
 textarea.materialize-textarea.invalid:focus, .select-wrapper.invalid > input.select-dropdown,
 .select-wrapper.invalid > input.select-dropdown:focus {
-  border-bottom: 1px solid #F44336;
-  box-shadow: 0 1px 0 0 #F44336;
+  border-bottom: 1px solid var(--vscode-inputValidation-errorForeground);
+  box-shadow: 0 1px 0 0 var(--vscode-inputValidation-errorForeground);
 }
 
 input:not([type]).valid ~ .helper-text[data-success],
@@ -6699,7 +8087,7 @@ input[type=search]:not(.browser-default):focus.valid ~ .helper-text:after,
 textarea.materialize-textarea.valid ~ .helper-text:after,
 textarea.materialize-textarea:focus.valid ~ .helper-text:after, .select-wrapper.valid ~ .helper-text:after {
   content: attr(data-success);
-  color: #4CAF50;
+  color: var(--vscode-inputValidation-infoForeground);
 }
 
 input:not([type]).invalid ~ .helper-text:after,
@@ -6729,7 +8117,7 @@ input[type=search]:not(.browser-default):focus.invalid ~ .helper-text:after,
 textarea.materialize-textarea.invalid ~ .helper-text:after,
 textarea.materialize-textarea:focus.invalid ~ .helper-text:after, .select-wrapper.invalid ~ .helper-text:after {
   content: attr(data-error);
-  color: #F44336;
+  color: var(--vscode-inputValidation-errorForeground);
 }
 
 input:not([type]) + label:after,
@@ -7834,11 +9222,11 @@ input[type=range]::-ms-thumb {
 }
 
 .sidenav li > a.btn, .sidenav li > a.btn-large, .sidenav li > a.btn-small, .sidenav li > a.btn-large, .sidenav li > a.btn-floating {
-  color: #fff;
+  color: var(--vscode-button-background);
 }
 
 .sidenav li > a.btn-flat {
-  color: #343434;
+  color: var(--vscode-button-background);
 }
 
 .sidenav li > a.btn:hover, .sidenav li > a.btn-large:hover, .sidenav li > a.btn-small:hover, .sidenav li > a.btn-large:hover {
@@ -9038,7 +10426,7 @@ input[type=range]::-ms-thumb {
 }
 
 .datepicker-clear {
-  color: #F44336;
+  color: var(--vscode-inputValidation-errorForeground);
 }
 
 /* Media Queries */
@@ -9237,7 +10625,7 @@ input[type=range]::-ms-thumb {
 }
 
 .timepicker-clear {
-  color: #F44336;
+  color: var(--vscode-inputValidation-errorForeground);
 }
 
 .timepicker-close {

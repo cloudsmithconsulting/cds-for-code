@@ -39,9 +39,9 @@ $primary-color-light: lighten(color("cloudsmith-primary", "base"), 15%) !default
 $primary-color-dark: darken(color("cloudsmith-primary", "base"), 15%) !default;
 
 $secondary-color: color("cloudsmith-secondary", "base") !default;
-$success-color: color("green", "base") !default;
-$error-color: color("red", "base") !default;
-$link-color: color("light-blue", "darken-1") !default;
+$success-color: vscode-color("inputValidation", "infoForeground") !default;
+$error-color: vscode-color("inputValidation", "errorForeground") !default;
+$link-color: vscode-color("textLink", "foreground") !default;
 
  
 // 2. Badges
@@ -70,7 +70,7 @@ $button-disabled-color: #9F9F9F !default;
 // Raised buttons
 $button-raised-background: $secondary-color !default;
 $button-raised-background-hover: lighten($button-raised-background, 5%) !default;
-$button-raised-color: #fff !default;
+$button-raised-color: vscode-color("button", "background") !default;
 
 // Large buttons
 $button-large-font-size: 15px !default;
@@ -85,7 +85,7 @@ $button-small-height: $button-height * .9 !default;
 $button-floating-small-size: $button-height * .9 !default;
 
 // Flat buttons
-$button-flat-color: #343434 !default;
+$button-flat-color: vscode-color("button", "background") !default;
 $button-flat-disabled-color: lighten(#999, 10%) !default;
 
 // Floating buttons
@@ -279,9 +279,9 @@ $spinner-default-color: $secondary-color !default;
 // 17. Tabs
 // ==========================================================================
 
-$tabs-underline-color: $primary-color-light !default;
-$tabs-text-color: $primary-color !default;
-$tabs-bg-color: #fff !default;
+$tabs-underline-color: vscode-color("tab", "activeBorder") !default;
+$tabs-text-color: vscode-color("tab", "activeForeground") !default;
+$tabs-bg-color: vscode-color("tab", "activeBackground") !default;
 
 
 // 18. Tables
@@ -306,12 +306,12 @@ $toast-action-color: #eeff41;
 $font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !default;
 $off-black: rgba(0, 0, 0, 0.87) !default;
 // Header Styles
-$h1-fontsize: 4.2rem !default;
-$h2-fontsize: 3.56rem !default;
-$h3-fontsize: 2.92rem !default;
-$h4-fontsize: 2.28rem !default;
-$h5-fontsize: 1.64rem !default;
-$h6-fontsize: 1.15rem !default;
+$h1-fontsize: 2.1rem !default;
+$h2-fontsize: 1.9rem !default;
+$h3-fontsize: 1.7rem !default;
+$h4-fontsize: 1.5rem !default;
+$h5-fontsize: 1.4rem !default;
+$h6-fontsize: 1.25rem !default;
 
 
 // 21. Footer

@@ -70,7 +70,7 @@ module.exports = function (grunt) {
                     sourceMap: true
                 },
                 files: {
-                    'resources/scripts/materialize.js': 'out/web/materialize_concat.js'
+                    'resources/scripts/materialize.translated.js': 'out/web/materialize_concat.js'
                 }
             },
             dist: {
@@ -178,7 +178,7 @@ module.exports = function (grunt) {
             },
             bin: {
                 files: {
-                    'resources/scripts/materialize.min.js': ['resources/scripts/materialize.js']
+                    'resources/scripts/materialize.translated.min.js': ['resources/scripts/materialize.translated.js']
                 }
             }
         },

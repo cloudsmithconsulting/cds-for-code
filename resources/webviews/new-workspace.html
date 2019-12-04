@@ -14,7 +14,7 @@
 <blockquote class="panel_info" id="loadingPanel" hidden>
     <div class="panel__text">
         <h4>Hang tight</h4>
-        We're getting your development experience ready.  This won't take long.
+        We're getting your development experience ready. This won't take long.
     </div>
 </blockquote>
 
@@ -37,11 +37,40 @@
             This extension for Code allows developers to work with their solutions and data in Dynamics 365 Customer
             Engagement. You'll want to do these things to get started.
         </p>
-        <div class="d-flex flex-column">
-            <div class="p-2"><a id="ConnectLink" href="#">Connect to a Dynamics 365 instance</a></div>
-            <div class="p-2"><a id="OpenWorkspaceLink" href="#">Open a workspace</a></div>
-            <div class="p-2 bg-primary">Do something else</div>
-        </div>
+        <ul class="collapsible">
+            <li>
+                <div class="collapsible-header"><i class="material-icons">filter_drama</i>Connect to a CDS or Dynamics
+                    365 instance</div>
+                <div class="collapsible-body">
+                    You can connect to a CDS or Dynamics 365 instance in 3 ways - Online, On-Premises using
+                    Windows/NTLM, and Online or On-Premises using Azure Active Directory.
+
+                    <ol>
+                        <li>
+                            <a id="ConnectLink" href="#">Connect to a Dynamics 365 instance</a>
+                        </li>
+                    </ol>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">place</i>Open a workspace and start editing
+                    files</div>
+                <div class="collapsible-body">
+                    <ol>
+                        <li><a id="OpenWorkspaceLink" href="#">Open a workspace</a></li>
+                        <li><a id="CreateSolutionLink" href="#">Create a CDS or Dynamics solution if you don't already
+                                have one</a></li>
+                        <li><a id="ExportSolutionLink" href="#">Export a solution to your workspace</a></li>
+                    </ol>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">whatshot</i>Code faster with templates</div>
+                <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+            </li>
+        </ul>
     </div>
     <div class="col s12" id="plugins">
         <h1>Authoring plugin projects</h1>
