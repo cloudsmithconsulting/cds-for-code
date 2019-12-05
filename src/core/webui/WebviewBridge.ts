@@ -1,9 +1,10 @@
 import PromiseInfo, { IPromiseInfo } from "../types/PromiseInfo";
+import { Utilities } from "../Utilities";
 
 export interface IWebviewBridge {
     invoke(method: string, params?: any): Promise<any>;
-    request(id: number, method: string, params?: any[]): void;
-    respond(id: number, response: any, success?: boolean): void;
+    request(guid: string, method: string, params?: any[]): void;
+    respond(guid: string, response: any, success?: boolean): void;
     handleResponse(message: any): void;
     handleRequest(message: any): void;
     add(method: IFunctionReference): void;
@@ -20,9 +21,9 @@ export interface IFunctionReference {
 }
 
 export default abstract class WebviewBridge implements IWebviewBridge {
-    abstract request(id: number, method: string, params?: any[]): void;
-    abstract respond(id: number, response: any, success?: boolean): void;
-    protected promises: Map<number, IPromiseInfo<any>>; // promise resolve and reject callbacks that are called when returning from remote
+    abstract request(guid: string, method: string, params?: any[]): void;
+    abstract respond(guid: string, response: any, success?: boolean): void;
+    protected promises: Map<string, IPromiseInfo<any>>; // promise resolve and reject callbacks that are called when returning from remote
     protected functions: Map<string, IFunctionReference>;
     // TODO: timeouts do not make sense for user interactions. consider not using timeouts by default
     protected timeout: number = 3600000; // timeout for response from remote in milliseconds
@@ -30,7 +31,7 @@ export default abstract class WebviewBridge implements IWebviewBridge {
     constructor() {
         this.promises = new Map();
         this.functions = new Map();
-        this.add({ func: this.locals, thisArg: this });
+        this.add({ func: this.locals, thisArg: this, name: "WebViewBridge:list" });
     }
 
     setTimeout(timeout: number): void {
@@ -50,12 +51,12 @@ export default abstract class WebviewBridge implements IWebviewBridge {
     }
 
     remote(): Promise<string[]> {
-        return this.invoke("listLocalMethods");
+        return this.invoke("WebViewBridge:list");
     }
 
     invoke(method: string, params?: any[]): Promise<any> {
         // TODO: change to something more unique (or check to see if id doesn't alreday exist in this.promiseCallbacks)
-        const id = Math.random();
+        const id = Utilities.Guid.newGuid();
 
         const promise = new Promise((resolve, reject) => {
             this.promises.set(id, new PromiseInfo(resolve, reject));

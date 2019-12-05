@@ -7,41 +7,42 @@ export class LocalBridge extends WebviewBridge {
 
     constructor(webview: vscode.Webview) {
         super();
+        
         this.webview = webview;
         this.webview.onDidReceiveMessage(message => {
             switch (message.command) {
-                case "rpc-response":
+                case "WebViewBridge:response":
                     this.handleResponse(message);
                     break;
-                case "rpc-request":
+                case "WebViewBridge:request":
                     this.handleRequest(message);
                     break;
             }
         });
     }
 
-    request(id: number, method: string, params?: any[]) {
+    request(guid: string, method: string, params?: any[]) {
         // consider cancelling the timer if the promise if fulfilled before timeout is reached
         setTimeout(() => {
-            const promiseCallbacks: IPromiseInfo<any> | undefined = this.promises.get(id);
+            const promiseCallbacks: IPromiseInfo<any> | undefined = this.promises.get(guid);
             if (promiseCallbacks) {
                 promiseCallbacks.reject("Request timed out");
-                this.promises.delete(id);
+                this.promises.delete(guid);
             }
         }, this.timeout);
 
         this.webview.postMessage({
-            command: "rpc-request",
-            id: id,
+            command: "WebViewBridge:request",
+            id: guid,
             method: method,
             params: params
         });
     }
 
-    respond(id: number, response: any, success: boolean = true): void {
+    respond(guid: string, response: any, success: boolean = true): void {
         this.webview.postMessage({
-            command: "rpc-response",
-            id: id,
+            command: "WebViewBridge:response",
+            id: guid,
             response: response,
             success: success
         });

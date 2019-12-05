@@ -2,7 +2,17 @@ import * as vscode from 'vscode';
 import * as FileSystem from '../io/FileSystem';
 import * as path from 'path';
 import * as _ from 'lodash';
+import * as WebSocket from "ws";
 import Dictionary from '../types/Dictionary';
+import WebviewBridge from './WebviewBridge';
+import { LocalBridge } from './LocalBridge';
+import { WebSocketBridge } from './WebSocketBridge';
+
+export enum BridgeCommunicationMethod {
+	None,
+	Ipc,
+	WebSockets
+}
 
 export interface IViewOptions {
 	preserveFocus?: boolean;
@@ -10,10 +20,12 @@ export interface IViewOptions {
 	viewTitle: string;
 	viewType: string;
 	iconPath?: string;
+	bridgeType?: BridgeCommunicationMethod;
+	bridgeChannel?: WebSocket;
 }
 
 export class ViewRenderer {
-	private readonly _view: View;
+	private readonly view: View;
 	private _images: Dictionary<string, vscode.Uri> = new Dictionary();
 	private _scripts: Dictionary<string, vscode.Uri> = new Dictionary();
 	private _styleSheets: Dictionary<string, vscode.Uri> = new Dictionary();
@@ -22,9 +34,9 @@ export class ViewRenderer {
 
 	constructor(view: View) {
 		this.nonce = this.getNonce();
-		this._view = view;
+		this.view = view;
 	}
-
+	
 	addImage(imageName: string) {
 		this._images.add(imageName, this.getFileUri('resources', 'images', imageName));
 	}
@@ -51,10 +63,10 @@ export class ViewRenderer {
 
 	private getFileUri(...paths: string[]): vscode.Uri {
 		const pathOnDisk = vscode.Uri.file(
-			path.join(this._view.extensionPath, ...paths)
+			path.join(this.view.extensionPath, ...paths)
 		);
 
-		return this._view.panel.webview.asWebviewUri(pathOnDisk);
+		return this.view.panel.webview.asWebviewUri(pathOnDisk);
 	}
 
 	getImageUri(imageName: string): vscode.Uri {
@@ -72,7 +84,7 @@ export class ViewRenderer {
 
 	renderFile(webviewFileName: string): string {
 		// get the file path
-		const pathOnDisk = path.join(this._view.extensionPath, 'resources', 'webviews', webviewFileName);
+		const pathOnDisk = path.join(this.view.extensionPath, 'resources', 'webviews', webviewFileName);
 		// read file contents from disk
 		const fileHtml = FileSystem.readFileSync(pathOnDisk).toString();
 		// use custom delimiter #{ }
@@ -81,7 +93,7 @@ export class ViewRenderer {
 		const compiled = _.template(fileHtml);
 		// create a base viewModel
 		const viewModel = {
-			viewTitle: this._view.viewOptions.viewTitle,
+			viewTitle: this.view.options.viewTitle,
 			images: {}
 		};
 		// add images to viewModel
@@ -105,14 +117,46 @@ export class ViewRenderer {
 		this.addFrameworkScript('jquery/dist/jquery.min.js');
 
 		let cssHtml: string = '';
+		let scriptHtml: string = '';
+		let bridgeHtml: string[] = [];
+		let bridgeConstructor: string = '';
+		let bridgeImportStatement: string = '';
+
 		this._styleSheets.values.forEach(uri => {
 			cssHtml += `<link rel="stylesheet" type="text/css" href="${uri}" />`;
 		});
 
-		let scriptHtml: string = '';
 		this._scripts.values.forEach(uri => {
 			scriptHtml += `<script src="${uri}"></script>`;
 		});
+		
+		if (this.view.options.bridgeType === BridgeCommunicationMethod.Ipc) {
+			bridgeHtml.push(`<script src="${this.getFileUri("out", "core/webui/LocalBridge.browser.js")}"></script>`);
+			bridgeImportStatement = "import { LocalBridge } from './out/core/webui/LocalBridge.browser';";
+			bridgeConstructor = 'new LocalBridge(window, vscode)';
+		} else if (this.view.options.bridgeType === BridgeCommunicationMethod.WebSockets) {
+			bridgeHtml.push(`<script src="${this.getFileUri("out", "core/webui/WebSocketBridge.browser.js")}"></script>`);
+			bridgeImportStatement = "import { WebSocketBridge } from './out/core/webui/WebSocketBridge.browser';";
+			// TODO: add init address for client.
+			bridgeConstructor = 'new WebSocketBridge(new WebSocket())';
+		}
+		
+		if (bridgeConstructor && bridgeConstructor !== "") {
+			bridgeHtml.push(`
+			<script type="text/javascript">
+				${bridgeImportStatement}
+				
+				(function() {
+					const vscode = vscode || acquireVsCodeApi();
+					let bridge = ${bridgeConstructor};
+	
+					if (bridge && window && !window.bridge) {
+						window.bridge = bridge;
+					}
+				})
+			</script>
+			`);
+		}
 
 		return `<!DOCTYPE html>
 <html lang="en">
@@ -124,17 +168,18 @@ export class ViewRenderer {
 	-->
 	<meta http-equiv="Content-Security-Policy" 
 		content="default-src 'none'; 
-		img-src ${this._view.panel.webview.cspSource} https:; 
-		style-src 'self' 'unsafe-inline' ${this._view.panel.webview.cspSource}; 
-		script-src 'unsafe-inline' ${this._view.panel.webview.cspSource} https://api.iconify.design;">
+		img-src ${this.view.panel.webview.cspSource} https:; 
+		style-src 'self' 'unsafe-inline' ${this.view.panel.webview.cspSource}; 
+		script-src 'unsafe-inline' ${this.view.panel.webview.cspSource} https://api.iconify.design;">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	${cssHtml}
-	<title>${this._view.viewOptions.viewTitle}</title>
+	<title>${this.view.options.viewTitle}</title>
 </head>
 <body>
 	<div class="container">
 		${htmlParial}
 	</div>
+	${bridgeHtml && bridgeHtml.length > 0 ? bridgeHtml.join("") : ""}
 	${scriptHtml}
 </body>
 </html>`;
@@ -179,9 +224,11 @@ export abstract class View {
 				// Enable javascript in the webview
 				enableScripts: true,
 
-				// And restrict the webview to only loading content from our extension's `resources` directory.
+				// And restrict the webview to only loading content from our extension's `resources` directory, or the extension itself, or node_modules.				
 				localResourceRoots: [
 					vscode.Uri.file(path.join(extensionPath, 'resources')),
+					//TODO: replace this with grunt task to copy files.
+					vscode.Uri.file(path.join(extensionPath, 'out')),
 					vscode.Uri.file(path.join(extensionPath, 'node_modules'))
 				]
 			}
@@ -199,6 +246,7 @@ export abstract class View {
 		const arrIconPath = iconPath.split('/');
 		panel.iconPath = vscode.Uri.file(path.join(extensionPath, ...arrIconPath));
 
+		// Render the view now.
 		const result: T = new viewInstance(viewOptions, panel);
 
 		// cache this
@@ -209,9 +257,10 @@ export abstract class View {
 		return result;
 	}
 
+	readonly bridge: WebviewBridge;
 	readonly extensionPath: string;
 	readonly panel: vscode.WebviewPanel;
-	readonly viewOptions: IViewOptions;
+	readonly options: IViewOptions;
 
 	protected _disposables: vscode.Disposable[] = [];
 	protected readonly _viewRenderer: ViewRenderer;
@@ -221,10 +270,16 @@ export abstract class View {
 	abstract onDidReceiveMessage(instance: View, message: any): vscode.Event<any>;
 
 	constructor(viewOptions: IViewOptions, panel: vscode.WebviewPanel) {
-		this.viewOptions = viewOptions;
+		this.options = viewOptions;
 		this.panel = panel;
 		this._viewRenderer = new ViewRenderer(this);
 		this.extensionPath = viewOptions.extensionPath;
+
+		if (this.options.bridgeType && this.options.bridgeType === BridgeCommunicationMethod.Ipc) {
+			this.bridge = new LocalBridge(this.panel.webview);
+		} else if (this.options.bridgeType && this.options.bridgeType === BridgeCommunicationMethod.WebSockets && this.options.bridgeChannel) {
+			this.bridge = new WebSocketBridge(this.options.bridgeChannel);
+		}
 
 		// Set the webview's initial html content
 		this._update();
@@ -268,7 +323,7 @@ export abstract class View {
 		// 	View.openPanels.splice(panelIndex, 1);
 		// }
 
-		delete View.openPanels[this.viewOptions.viewType];
+		delete View.openPanels[this.options.viewType];
 
 		while (this._disposables.length) {
 			const x = this._disposables.pop();
@@ -284,7 +339,7 @@ export abstract class View {
 	}
 
 	private _update() {
-		this.panel.title = this.viewOptions.viewTitle;
+		this.panel.title = this.options.viewTitle;
 		this.panel.webview.html = this.init(this._viewRenderer);
 	}
 }

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import { View, ViewRenderer } from '../core/webui/View';
+import { View, ViewRenderer, BridgeCommunicationMethod } from '../core/webui/View';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import ExtensionContext from '../core/ExtensionContext';
@@ -13,7 +13,8 @@ export default async function openView(config?: DynamicsWebApi.Config): Promise<
         iconPath: './resources/images/cloudsmith-logo-only-50px.png',
         viewTitle: (config && config.name) ? `Edit CDS Connection - ${config.name}` : 'New CDS Connection',
         viewType: cs.dynamics.views.connectionEditor,
-        preserveFocus: false
+        preserveFocus: false,
+        bridgeType: BridgeCommunicationMethod.Ipc
     });
 
     view.setInitialState(config);
