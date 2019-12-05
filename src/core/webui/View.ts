@@ -281,9 +281,6 @@ export abstract class View {
 
 	private _update() {
 		this.panel.title = this.viewOptions.viewTitle;
-
-		if (!this.panel.webview.html || this.panel.webview.html === "") {
-			this.panel.webview.html = this.init(this._viewRenderer);
-		}
+		this.panel.webview.html = this.init(this._viewRenderer);
 	}
 }

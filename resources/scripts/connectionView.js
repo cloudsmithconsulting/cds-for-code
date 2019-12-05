@@ -16,8 +16,6 @@
                         setInitialState(message.message);
                     }
 
-                    M.AutoInit();
-                    
                     break;
                 case "error":
                     CloudSmith.ErrorPanel.showError([`${message.message}`]);
@@ -57,7 +55,8 @@
     }
     // this part starts on document ready
     $(function () {
-
+        M.AutoInit();
+        
         function showOrHide(target, value) {
             if (value) {
                 target.show();
