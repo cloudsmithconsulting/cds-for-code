@@ -1,11 +1,13 @@
 ol.bigNumber {
     list-style: none;
     counter-reset: bignumber-list;
+    margin: 10px 0;
 }
  
 ol.bigNumber li {
     counter-increment: bignumber-list;
-    position: relative;    
+    position: relative;
+    margin: 10px 0;    
 }
  
 ol.bigNumber li::before {
