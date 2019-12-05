@@ -3,24 +3,6 @@
     #{viewTitle}
 </h1>
 
-<div class="field field--buttons">
-    <button id="submitButton" class="button button--primary">
-        <span class="iconify" data-icon="fa:save"></span>
-        Save Connection
-    </button>
-    <button id="cancelButton" class="button button">
-        <span class="iconify" data-icon="fa:ban"></span>
-        Cancel
-    </button>
-</div>
-
-<blockquote class="panel_error" id="errorPanel" hidden>
-    <div class="panel__text">
-        <h4>Oops! Slight problem</h4>
-        <span id="errorMessage"></span>
-    </div>
-</blockquote>
-
 <nav class="nav-extended">
     <div class="nav-wrapper">
         <a href="#" class="brand-logo">
@@ -28,17 +10,17 @@
                 alt="CloudSmith Conulting"
                 title="CloudSmith Conulting" />
         </a>
-        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><span class="iconify" data-icon="ion-menu" data-width="32" data-height="24"></span></a>
+        <a href="#" data-target="extended-navigation" class="sidenav-trigger"><span class="iconify" data-icon="ion-menu" data-width="32" data-height="24"></span></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="#">Save</a></li>
-            <li><a href="#">Cancel</a></li>
+            <li><a href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
+            <li><a href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
         </ul>
     </div>
 </nav>
 
-<ul class="sidenav" id="mobile-demo">
-    <li><a href="#">Save</a></li>
-    <li><a href="#">Cancel</a></li>
+<ul class="sidenav" id="extended-navigation">
+    <li><a href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
+    <li><a href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
 </ul>
 
 <form class="row">

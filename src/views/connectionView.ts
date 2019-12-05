@@ -4,25 +4,26 @@ import { View, ViewRenderer } from '../core/webui/View';
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import Quickly from '../core/Quickly';
 
 export default class ConnectionViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+        let view;
+
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.editConnection, async (config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-                const view = ConnectionView.show<ConnectionView>(ConnectionView, {
+                view = ConnectionView.show<ConnectionView>(ConnectionView, {
                     extensionPath: context.extensionPath,
                     iconPath: './resources/images/cloudsmith-logo-only-50px.png',
                     viewTitle: (config && config.name) ? `Edit Connection - ${config.name}` : 'New Connection - Dynamics 365 CE',
-                    viewType: cs.dynamics.views.connectionView
+                    viewType: cs.dynamics.views.connectionView,
+                    preserveFocus: true
                 });
 
-                // only do this if we are editing
-                if (config && config.id) {
-                    view.setInitialState(config);
-                }
+                view.setInitialState(config);
             }) // <-- no semi-colon, comma starts next command registration
         );
     }
@@ -61,7 +62,6 @@ class ConnectionView extends View {
             })
             .catch(err => {
                 this.panel.webview.postMessage({ command: 'error', message: err.message });
-                console.log(err);
             });
     }
     
@@ -76,6 +76,8 @@ class ConnectionView extends View {
     setInitialState(config?: DynamicsWebApi.Config) {
         if (config) {
             this.panel.webview.postMessage({ command: 'load', message: config });
+        } else {
+            this.panel.webview.postMessage({ command: "load" });
         }
     }
 }

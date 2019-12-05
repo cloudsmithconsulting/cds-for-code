@@ -1,7 +1,6 @@
 // This script will be run within the webview itself
 // It cannot access the main VS Code APIs directly.
 (function() {
-    /*
     // this stuff will be available on script load
     const vscode = CloudSmith.acquireVsCodeApi();
     //const oldState = vscode.getState();
@@ -13,7 +12,12 @@
             const message = event.data; // The json data that the extension sent
             switch (message.command) {
                 case "load":
-                    setInitialState(message.message);
+                    if (message.message) {
+                        setInitialState(message.message);
+                    }
+
+                    M.AutoInit();
+                    
                     break;
                 case "error":
                     CloudSmith.ErrorPanel.showError([`${message.message}`]);
@@ -51,11 +55,9 @@
                 break;
         }
     }
-*/
     // this part starts on document ready
     $(function () {
-        M.AutoInit();
-/*
+
         function showOrHide(target, value) {
             if (value) {
                 target.show();
@@ -121,6 +123,5 @@
                 settings
             });
         });
-        */
     });
 }());

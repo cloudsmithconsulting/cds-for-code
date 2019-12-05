@@ -8,7 +8,7 @@ import DiscoveryRepository from '../repositories/discoveryRepository';
 export default class NewWorkspaceViewManager implements IContributor {
     private static _initialized:boolean = false;
 
-    public showWelcomeExperience() {
+    showWelcomeExperience() {
         if (!NewWorkspaceViewManager._initialized) {
             const showWelcome:boolean = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience);
 
@@ -20,7 +20,7 @@ export default class NewWorkspaceViewManager implements IContributor {
         }
     }
 
-	public contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         let view;
 
         context.subscriptions.push(
@@ -63,7 +63,7 @@ export default class NewWorkspaceViewManager implements IContributor {
 }
 
 class NewWorkspaceView extends View {
-    public init(viewRenderer: ViewRenderer): string {
+    init(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('materialize.js');
         viewRenderer.addScript('new-workspace.js');
@@ -78,7 +78,7 @@ class NewWorkspaceView extends View {
         return viewRenderer.renderFile('new-workspace.html');
     }    
     
-    public onDidReceiveMessage(instance: NewWorkspaceView, message: any): vscode.Event<any> {
+    onDidReceiveMessage(instance: NewWorkspaceView, message: any): vscode.Event<any> {
         switch (message.command) {
             case 'updateWelcomeExperienceConfig':
                 ExtensionConfiguration.setConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience, message.value);
@@ -89,7 +89,7 @@ class NewWorkspaceView extends View {
         }
     }
 
-    public postMessage(command:string, parameters?: any) {
+    postMessage(command:string, parameters?: any) {
         if (command) {
             this.panel.webview.postMessage({ command, parameters });
         }
