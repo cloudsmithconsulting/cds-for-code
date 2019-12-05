@@ -15,7 +15,7 @@
 </nav>
 
 <ul class="sidenav" id="extended-navigation">
-    <li><a href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
+    <li><a id="submitButton" href="javascript://"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
     <li><a href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
 </ul>
 
@@ -53,19 +53,19 @@
                         <li class="tab col s3"><a class="disabled" href="#ifd">IFD / ADFS</a></li>
                     </ul>
                 </div>
-                <div class="row" id="windowsAuth">
-                    <div class="col s12"></div>
+                <div id="windowsAuth">
+                    <div class="divider">&nbsp;</div>
+                    <div class="col s6 input-field">
+                        <input id="OnPrem-Username" type="text" />
+                        <label for="OnPrem-Username">Username</label>
+                    </div>
+                    <div class="col s6 input-field">
+                        <input id="OnPrem-Password" type="password" />
+                        <label for="OnPrem-Password">Password</label>
+                    </div>
                     <div class="col s12 input-field">
                         <input id="OnPrem-ServerUrl" type="text" placeholder="http://crm/" />
                         <label for="OnPrem-ServerUrl">Server URL</label>
-                    </div>
-                    <div class="col s12 input-field">
-                        <input id="OnPrem-Username" type="text" placeholder="http://crm/" />
-                        <label for="OnPrem-Username">Username</label>
-                    </div>
-                    <div class="col s12 input-field">
-                        <input id="OnPrem-Password" type="password" />
-                        <label for="OnPrem-Password">Password</label>
                     </div>
                     <div class="col s12 input-field">
                         <input id="OnPrem-Domain" type="text" placeholder="COMPANYNAME" />
@@ -73,6 +73,7 @@
                     </div>
                 </div>
                 <div class="row" id="onlineAuth">
+                    <!--
                     <div class="col s12 input-field">
                         <input id="Online-Username" type="text" />
                         <label for="Online-Username">Username</label>
@@ -81,6 +82,7 @@
                         <input id="Online-Password" type="password" />
                         <label for="Online-Password">Password</label>
                     </div>
+                    -->
                 </div>
                 <div class="row" id="azureAdAuth">
 

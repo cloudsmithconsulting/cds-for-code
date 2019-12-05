@@ -101,7 +101,9 @@
 
         $("#submitButton").click(function() {
             const id = $("#ConnectionId").val();
-            const settings = {
+            let settings = {};
+            
+            settings = {
                 id: (id.length > 0) ? id: null, // pass the id or null
                 type: parseInt($("[name='AuthType']:checked").val()),
                 webApiVersion: $("#WebApiVersion").val(),

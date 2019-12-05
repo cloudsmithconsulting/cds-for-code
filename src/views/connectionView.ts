@@ -35,7 +35,7 @@ class ConnectionView extends View {
         viewRenderer.addScript('connectionView.js');
 
         viewRenderer.addStyleSheet("materialize.vscode.css");
-        //viewRenderer.addStyleSheet('webviewStyles.css');
+        viewRenderer.addStyleSheet('webviewStyles.css');
 
         // add image assets
         viewRenderer.addImage('cloudsmith-logo-only-50px.png');

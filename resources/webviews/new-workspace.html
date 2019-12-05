@@ -37,13 +37,6 @@
             This extension for Code allows developers to work with their solutions and data in Dynamics 365 Customer
             Engagement. You'll want to do these things to get started.
         </p>
-        <div class="row">
-            <div class="input-field col s12">
-                <input id="ConnectionString" type="text"
-                    placeholder="AuthType=Office365; ServiceUri=https://myurl.crm.dynamics.com; Username=username; Password=password" />
-                <label for="ConnectionString">Connection String</label>
-            </div>
-        </div>
         <ul class="collapsible">
             <li>
                 <div class="collapsible-header">
@@ -52,11 +45,20 @@
                 </div>
                 <div class="collapsible-body">
                     You can connect to a CDS or Dynamics 365 instance in 3 ways - Online, On-Premises using
-                    Windows/NTLM, and Online or On-Premises using Azure Active Directory.
+                    Windows/NTLM, and Online or On-Premises using Azure Active Directory.  
 
                     <ol class="bigNumber">
                         <li>
-                            <a id="ConnectLink" href="#">Connect to a Dynamics 365 instance</a>
+                            <div class="row">
+                                If you've got a connection string handy, you may enter it below, otherwise, <a id="ConnectLink" href="#">click here to open the connection window</a>.
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="ConnectionString" type="text"
+                                        placeholder="AuthType=Office365; ServiceUri=https://myurl.crm.dynamics.com; Username=username; Password=password" />
+                                    <label for="ConnectionString">Connection String</label>
+                                </div>
+                            </div>
                         </li>
                     </ol>
 
