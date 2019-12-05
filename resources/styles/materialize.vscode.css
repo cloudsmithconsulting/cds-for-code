@@ -5953,7 +5953,7 @@ table span.badge {
 }
 
 nav {
-  color: #fff;
+  color: var(--vscode-foreground);
   background-color: #1b75bc;
   width: 100%;
   height: 56px;
@@ -5975,7 +5975,7 @@ nav.nav-extended .nav-content {
 }
 
 nav a {
-  color: #fff;
+  color: var(--vscode-foreground);
 }
 
 nav i,
@@ -6013,7 +6013,7 @@ nav .sidenav-trigger i {
 
 nav .brand-logo {
   position: absolute;
-  color: #fff;
+  color: var(--vscode-foreground);
   display: inline-block;
   font-size: 2.1rem;
   padding: 0;
@@ -6077,7 +6077,7 @@ nav ul li.active {
 nav ul a {
   transition: background-color .3s;
   font-size: 1rem;
-  color: #fff;
+  color: var(--vscode-foreground);
   display: block;
   padding: 0 15px;
   cursor: pointer;
@@ -6134,7 +6134,7 @@ nav .input-field label i {
 }
 
 nav .input-field label.active i {
-  color: #fff;
+  color: var(--vscode-foreground);
 }
 
 .navbar-fixed {

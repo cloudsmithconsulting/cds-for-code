@@ -1,16 +1,12 @@
-
-<h1 id="title">
-    #{viewTitle}
-</h1>
-
 <nav class="nav-extended">
     <div class="nav-wrapper">
         <a href="#" class="brand-logo">
-            <img src="#{images['cloudsmith-logo-only-50px.png']}" 
-                alt="CloudSmith Conulting"
+            <img src="#{images['cloudsmith-logo-only-50px.png']}" alt="CloudSmith Conulting"
                 title="CloudSmith Conulting" />
+                #{viewTitle}
         </a>
-        <a href="#" data-target="extended-navigation" class="sidenav-trigger"><span class="iconify" data-icon="ion-menu" data-width="32" data-height="24"></span></a>
+        <a href="#" data-target="extended-navigation" class="sidenav-trigger"><span class="iconify" data-icon="ion-menu"
+                data-width="32" data-height="24"></span></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
             <li><a href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
@@ -30,7 +26,7 @@
     <ul class="collapsible col s12">
         <li>
             <div class="collapsible-header">
-                <i class="iconify" data-icon="uil-cloud-data-connection"></i>
+                <span class="iconify" data-icon="uil-cloud-data-connection" data-width="60" data-height="24"></span>
                 Connect using a connection string
             </div>
             <div class="collapsible-body">
@@ -45,7 +41,7 @@
         </li>
         <li class="active">
             <div class="collapsible-header icon-text-height">
-                <i class="iconify" data-icon="uil-cloud-data-connection"></i>
+                <span class="iconify" data-icon="uil-cloud-data-connection" data-width="60" data-height="24"></span>
                 Connect using discovery services using these authentication methods
             </div>
             <div class="collapsible-body row">
@@ -77,7 +73,14 @@
                     </div>
                 </div>
                 <div class="row" id="onlineAuth">
-
+                    <div class="col s12 input-field">
+                        <input id="Online-Username" type="text" />
+                        <label for="Online-Username">Username</label>
+                    </div>
+                    <div class="col s12 input-field">
+                        <input id="Online-Password" type="password" />
+                        <label for="Online-Password">Password</label>
+                    </div>
                 </div>
                 <div class="row" id="azureAdAuth">
 
@@ -118,7 +121,8 @@
             <div class="input-field col s12">
                 <input id="ConnectionName" type="text" class="validate">
                 <label for="ConnectionName">Connection Name</label>
-                <span class="helper-text" data-error="We're sorry, no special characters in the connection name" data-success="Got it!">What would you like to call this connection in the future?</span>
+                <span class="helper-text" data-error="We're sorry, no special characters in the connection name"
+                    data-success="Got it!">What would you like to call this connection in the future?</span>
             </div>
         </div>
     </div>

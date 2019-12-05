@@ -4,7 +4,6 @@ import { View, ViewRenderer } from '../core/webui/View';
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
-import Quickly from '../core/Quickly';
 
 export default class ConnectionViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
