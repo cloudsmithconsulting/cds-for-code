@@ -10,6 +10,7 @@ import { TS } from 'typescript-linq';
 import { TextEncoder, TextDecoder } from 'util';
 import Dictionary from '../core/types/Dictionary';
 import { ICredentialStore, Credential, SecureOutput } from '../core/security/Types';
+import PromiseInfo from "../core/types/PromiseInfo";
 
 export class TerminalCommand {
 	private _command:string;
@@ -195,16 +196,6 @@ export class TerminalCommand {
 		}
 
 		return this;
-	}
-}
-
-class PromiseInfo<T> { 
-	resolve: (value?: T | PromiseLike<T>) => void;
-	reject: (reason?: any) => void;
-
-	constructor(resolve: (value?: T | PromiseLike<T>) => void, reject: (reason?: any) => void) {
-		this.resolve = resolve;
-		this.reject = reject;
 	}
 }
 

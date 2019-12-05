@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { View, ViewRenderer } from '../core/types/View';
+import { View, ViewRenderer } from '../core/webui/View';
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';

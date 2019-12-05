@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as FileSystem from '../io/FileSystem';
 import * as path from 'path';
 import * as _ from 'lodash';
-import Dictionary from './Dictionary';
+import Dictionary from '../types/Dictionary';
 
 export interface IViewOptions {
 	preserveFocus?: boolean;
@@ -281,6 +281,9 @@ export abstract class View {
 
 	private _update() {
 		this.panel.title = this.viewOptions.viewTitle;
-		this.panel.webview.html = this.init(this._viewRenderer);
+
+		if (!this.panel.webview.html || this.panel.webview.html === "") {
+			this.panel.webview.html = this.init(this._viewRenderer);
+		}
 	}
 }
