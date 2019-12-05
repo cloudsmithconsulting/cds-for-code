@@ -27,7 +27,7 @@ export default class NewWorkspaceViewManager implements IContributor {
             vscode.commands.registerCommand(cs.dynamics.controls.newWorkspace.open, (showLoadingMessage:boolean = false) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-                view = View.createOrShow(NewWorkspaceView, {
+                view = View.show(NewWorkspaceView, {
                     extensionPath: context.extensionPath,
                     iconPath: './resources/images/cloudsmith-logo-only-50px.png',
                     viewTitle: 'Welcome to Dynamics 365 for Code',
@@ -63,7 +63,7 @@ export default class NewWorkspaceViewManager implements IContributor {
 }
 
 class NewWorkspaceView extends View {
-    public getHtmlForWebview(viewRenderer: ViewRenderer): string {
+    public init(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('materialize.js');
         viewRenderer.addScript('new-workspace.js');
@@ -75,7 +75,7 @@ class NewWorkspaceView extends View {
         viewRenderer.addImage('cloudsmith-logo-only-50px.png');
 
         // return rendered html
-        return viewRenderer.renderPartialFile('new-workspace.html');
+        return viewRenderer.renderFile('new-workspace.html');
     }    
     
     public onDidReceiveMessage(instance: NewWorkspaceView, message: any): vscode.Event<any> {

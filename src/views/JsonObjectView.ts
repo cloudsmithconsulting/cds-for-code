@@ -10,7 +10,7 @@ export default class JsonObjectViewManager implements IContributor {
             vscode.commands.registerCommand(cs.dynamics.controls.jsonInspector.inspect, async (item: any) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-                const view = View.createOrShow(JsonObjectView, {
+                const view = View.show(JsonObjectView, {
                     extensionPath: context.extensionPath,
                     iconPath: './resources/images/cloudsmith-logo-only-50px.png',
                     viewTitle: 'Object inspector',
@@ -27,7 +27,7 @@ export default class JsonObjectViewManager implements IContributor {
 }
 
 class JsonObjectView extends View {
-    public getHtmlForWebview(viewRenderer: ViewRenderer): string {
+    public init(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('jsoneditor.min.js');
         viewRenderer.addScript('jsonInspectorView.js');
@@ -40,7 +40,7 @@ class JsonObjectView extends View {
         viewRenderer.addImage('cloudsmith-logo-only-50px.png');
 
         // return rendered html
-        return viewRenderer.renderPartialFile('jsonInspector.html');
+        return viewRenderer.renderFile('jsonInspector.html');
     }    
     
     public onDidReceiveMessage(instance: JsonObjectView, message: any): vscode.Event<any> {

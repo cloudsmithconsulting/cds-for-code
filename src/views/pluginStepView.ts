@@ -17,7 +17,7 @@ export default class PluginStepViewManager implements IContributor {
 				if (!config) { return; }
 
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-                const view = View.createOrShow(PluginStepView, {
+                const view = View.show(PluginStepView, {
                     extensionPath: context.extensionPath,
                     iconPath: './resources/images/cloudsmith-logo-only-50px.png',
                     viewTitle: 'Configure Plugin Step - Dynamics 365 CE',
@@ -61,7 +61,7 @@ export default class PluginStepViewManager implements IContributor {
 class PluginStepView extends View {
     public config: DynamicsWebApi.Config;
 
-    public getHtmlForWebview(viewRenderer: ViewRenderer): string {
+    public init(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('pluginStepView.js');
         viewRenderer.addStyleSheet('webviewStyles.css');
@@ -70,7 +70,7 @@ class PluginStepView extends View {
         viewRenderer.addImage('cloudsmith-logo-only-50px.png');
 
         // return rendered html
-        return viewRenderer.renderPartialFile('plugin-step.html');
+        return viewRenderer.renderFile('plugin-step.html');
     }
 
     private save(step :any) {

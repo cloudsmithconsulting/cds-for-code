@@ -1,6 +1,7 @@
 // This script will be run within the webview itself
 // It cannot access the main VS Code APIs directly.
 (function() {
+    /*
     // this stuff will be available on script load
     const vscode = CloudSmith.acquireVsCodeApi();
     //const oldState = vscode.getState();
@@ -50,11 +51,11 @@
                 break;
         }
     }
-
+*/
     // this part starts on document ready
     $(function () {
         M.AutoInit();
-
+/*
         function showOrHide(target, value) {
             if (value) {
                 target.show();
@@ -120,5 +121,6 @@
                 settings
             });
         });
+        */
     });
 }());

@@ -12,7 +12,7 @@ export default class ConnectionViewManager implements IContributor {
             vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.editConnection, async (config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-                const view = ConnectionView.createOrShow<ConnectionView>(ConnectionView, {
+                const view = ConnectionView.show<ConnectionView>(ConnectionView, {
                     extensionPath: context.extensionPath,
                     iconPath: './resources/images/cloudsmith-logo-only-50px.png',
                     viewTitle: (config && config.name) ? `Edit Connection - ${config.name}` : 'New Connection - Dynamics 365 CE',
@@ -29,19 +29,19 @@ export default class ConnectionViewManager implements IContributor {
 }
 
 class ConnectionView extends View {
-    getHtmlForWebview(viewRenderer: ViewRenderer): string {
+    init(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('materialize.js');
         viewRenderer.addScript('connectionView.js');
 
         viewRenderer.addStyleSheet("materialize.vscode.css");
-        viewRenderer.addStyleSheet('webviewStyles.css');
+        //viewRenderer.addStyleSheet('webviewStyles.css');
 
         // add image assets
         viewRenderer.addImage('cloudsmith-logo-only-50px.png');
 
         // return rendered html
-        return viewRenderer.renderPartialFile('connection.html');
+        return viewRenderer.renderFile('connection.html');
     } 
     
     private save(config: DynamicsWebApi.Config) {

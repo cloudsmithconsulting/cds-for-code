@@ -5022,11 +5022,13 @@ input[type=range] + .thumb {
 ol.bigNumber {
   list-style: none;
   counter-reset: bignumber-list;
+  margin: 10px 0;
 }
 
 ol.bigNumber li {
   counter-increment: bignumber-list;
   position: relative;
+  margin: 10px 0;
 }
 
 ol.bigNumber li::before {
@@ -7430,6 +7432,10 @@ body.keyboard-focused .dropdown-content li:focus {
   border-right: 1px solid var(--vscode-panel-border);
   border-left: 1px solid var(--vscode-panel-border);
   margin: 0.5rem 0 1rem 0;
+}
+
+div.indent-30 {
+  text-indent: 30%;
 }
 
 .collapsible-header {

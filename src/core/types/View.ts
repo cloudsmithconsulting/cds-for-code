@@ -53,6 +53,7 @@ export class ViewRenderer {
 		const pathOnDisk = vscode.Uri.file(
 			path.join(this._view.extensionPath, ...paths)
 		);
+
 		return this._view.panel.webview.asWebviewUri(pathOnDisk);
 	}
 
@@ -69,7 +70,7 @@ export class ViewRenderer {
 		return result;
 	}
 
-	renderPartialFile(webviewFileName: string) : string {
+	renderFile(webviewFileName: string) : string {
 		// get the file path
 		const pathOnDisk = path.join(this._view.extensionPath, 'resources', 'webviews', webviewFileName);
 		// read file contents from disk
@@ -90,10 +91,10 @@ export class ViewRenderer {
 		});
 		const result = compiled(viewModel);
 		// return output
-		return this.renderHtml(result);
+		return this.render(result);
 	}
 
-	renderHtml(htmlParial: string): string {
+	render(htmlParial: string): string {
 		// add some default scripts
 		this.insertScriptAt(0, 'main.js');
 		
@@ -146,7 +147,7 @@ export abstract class View {
 	 */
 	static openPanels: { [key: string]: View } = {};
 
-	static createOrShow<T extends View>(
+	static show<T extends View>(
 		c: new(viewOptions: IViewOptions, panel: vscode.WebviewPanel) => T, 
 		viewOptions: IViewOptions, alwaysNew?: boolean): T {
 		
@@ -211,7 +212,7 @@ export abstract class View {
 	protected _disposables: vscode.Disposable[] = [];
 	protected readonly _viewRenderer: ViewRenderer;
 
-	abstract getHtmlForWebview(renderer: ViewRenderer): string;
+	abstract init(renderer: ViewRenderer): string;
 
 	abstract onDidReceiveMessage(instance: View, message: any): vscode.Event<any>;
 
@@ -280,6 +281,6 @@ export abstract class View {
 
 	private _update() {
 		this.panel.title = this.viewOptions.viewTitle;
-		this.panel.webview.html = this.getHtmlForWebview(this._viewRenderer);
+		this.panel.webview.html = this.init(this._viewRenderer);
 	}
 }
