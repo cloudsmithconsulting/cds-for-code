@@ -374,13 +374,18 @@
 				"category": "Dynamics 365 CE"
 			},
 			{
-				"command": "cs.dynamics.deployment.createWebResource",
-				"title": "Create a web resource in your workspace or on a Dynamics 365 instance",
+				"command": "cs.dynamics.deployment.compareWebResource",
+				"title": "Compare a local web resource file to a version deployed on a Dynamics 365 instance",
 				"category": "Dynamics 365 CE"
 			},
 			{
-				"command": "cs.dynamics.deployment.compareWebResource",
-				"title": "Compare a local web resource file to a version deployed on a Dynamics 365 instance",
+				"command": "cs.dynamics.deployment.connectToCds",
+				"title": "Create or Edit a connection to the Common Data Service",
+				"category": "Dynamics 365 CE"
+			},
+			{
+				"command": "cs.dynamics.deployment.createWebResource",
+				"title": "Create a web resource in your workspace or on a Dynamics 365 instance",
 				"category": "Dynamics 365 CE"
 			},
 			{

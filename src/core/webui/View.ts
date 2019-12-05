@@ -70,7 +70,7 @@ export class ViewRenderer {
 		return result;
 	}
 
-	renderFile(webviewFileName: string) : string {
+	renderFile(webviewFileName: string): string {
 		// get the file path
 		const pathOnDisk = path.join(this._view.extensionPath, 'resources', 'webviews', webviewFileName);
 		// read file contents from disk
@@ -82,7 +82,7 @@ export class ViewRenderer {
 		// create a base viewModel
 		const viewModel = {
 			viewTitle: this._view.viewOptions.viewTitle,
-			images: { }
+			images: {}
 		};
 		// add images to viewModel
 		Object.keys(this._images).forEach(key => {
@@ -97,7 +97,7 @@ export class ViewRenderer {
 	render(htmlParial: string): string {
 		// add some default scripts
 		this.insertScriptAt(0, 'main.js');
-		
+
 		// these are framework scripts hosted out of node_modules
 		this.addFrameworkScript('lodash/lodash.min.js');
 		this.addFrameworkScript('@iconify/iconify/dist/iconify.min.js');
@@ -148,9 +148,9 @@ export abstract class View {
 	static openPanels: { [key: string]: View } = {};
 
 	static show<T extends View>(
-		viewInstance: new(viewOptions: IViewOptions, panel: vscode.WebviewPanel) => T, 
+		viewInstance: new (viewOptions: IViewOptions, panel: vscode.WebviewPanel) => T,
 		viewOptions: IViewOptions, alwaysNew?: boolean): T {
-		
+
 		const column = vscode.window.activeTextEditor
 			? vscode.window.activeTextEditor.viewColumn
 			: undefined;
@@ -160,6 +160,7 @@ export abstract class View {
 			if (View.openPanels[viewOptions.viewType]) {
 				const result = View.openPanels[viewOptions.viewType];
 				result.panel.reveal(column);
+
 				return <T>result;
 			}
 		}
@@ -172,6 +173,9 @@ export abstract class View {
 			viewOptions.viewTitle,
 			{ viewColumn: column || vscode.ViewColumn.One, preserveFocus: viewOptions.preserveFocus || true },
 			{
+				// Required for our more complex views.
+				retainContextWhenHidden: true,
+
 				// Enable javascript in the webview
 				enableScripts: true,
 
@@ -196,12 +200,12 @@ export abstract class View {
 		panel.iconPath = vscode.Uri.file(path.join(extensionPath, ...arrIconPath));
 
 		const result: T = new viewInstance(viewOptions, panel);
-		
+
 		// cache this
 		if (!alwaysNew) {
 			View.openPanels[viewOptions.viewType] = result;
 		}
-		
+
 		return result;
 	}
 
@@ -259,7 +263,7 @@ export abstract class View {
 		// 	View.openPanels.findIndex(
 		// 		p => p.panel.title === this.viewOptions.viewTitle
 		// 	);
-		
+
 		// if (panelIndex >= 0) {
 		// 	View.openPanels.splice(panelIndex, 1);
 		// }

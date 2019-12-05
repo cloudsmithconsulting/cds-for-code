@@ -454,8 +454,8 @@ export default class Quickly {
     static async pickCdsOrganization(context:vscode.ExtensionContext, placeHolder?:string, ignoreFocusOut: boolean = true) : Promise<DynamicsWebApi.Config> {
         return DiscoveryRepository.getOrgConnections(context)
             .then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(`${Octicon.database} ${org.name}`, undefined, undefined, org)).toArray())
-            .then(options => options && options.length === 1 ? options[0] : vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }))
-            .then(chosen => <DynamicsWebApi.Config>chosen.context);
+            .then(options => options && options.length === 1 ? options[0] : options.length > 0 ? vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }) : null)
+            .then(chosen => chosen ? <DynamicsWebApi.Config>chosen.context: null);
     }
 
     static async pickCdsSolutionComponentType(placeHolder?:string, choices?:CdsSolutions.SolutionComponent[]): Promise<CdsSolutions.SolutionComponent> {

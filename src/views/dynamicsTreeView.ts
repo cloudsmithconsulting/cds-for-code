@@ -160,7 +160,7 @@ export default class DynamicsTreeView implements IContributor {
             }) 
             , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.addEntry, async (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item) {
-                    vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editConnection);
+                    setTimeout(() => vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editConnection), 500);
                     //vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.open);
 
                     return;
@@ -169,8 +169,7 @@ export default class DynamicsTreeView implements IContributor {
                 let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.addEntry, item);
                 const hasWorkspace = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0;
 
-                switch (item.itemType)
-                {
+                switch (item.itemType) {
                     case "Solutions":
                         Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config), retryFunction);
                         break;

@@ -1,47 +1,39 @@
 import * as vscode from 'vscode';
-import DiscoveryRepository from '../repositories/discoveryRepository';
-import { View, ViewRenderer } from '../core/webui/View';
 import * as cs from '../cs';
-import IContributor from '../core/CommandBuilder';
+import { View, ViewRenderer } from '../core/webui/View';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import DiscoveryRepository from '../repositories/discoveryRepository';
+import ExtensionContext from '../core/ExtensionContext';
 
-export default class ConnectionViewManager implements IContributor {
-	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-        let view;
+let view: CdsConnectionEditor;
 
-        context.subscriptions.push(
+export default async function openView(config?: DynamicsWebApi.Config): Promise<View> {
+    view = View.show(CdsConnectionEditor, {
+        extensionPath: ExtensionContext.Instance.extensionPath,
+        iconPath: './resources/images/cloudsmith-logo-only-50px.png',
+        viewTitle: (config && config.name) ? `Edit CDS Connection - ${config.name}` : 'New CDS Connection',
+        viewType: cs.dynamics.views.connectionEditor,
+        preserveFocus: false
+    });
 
-            vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.editConnection, async (config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
-                // Run command code
-                //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-                view = View.show(ConnectionView, {
-                    extensionPath: context.extensionPath,
-                    iconPath: './resources/images/cloudsmith-logo-only-50px.png',
-                    viewTitle: (config && config.name) ? `Edit Connection - ${config.name}` : 'New Connection - Dynamics 365 CE',
-                    viewType: cs.dynamics.views.connectionEditor,
-                    preserveFocus: true
-                });
+    view.setInitialState(config);
 
-                view.setInitialState(config);
-            }) // <-- no semi-colon, comma starts next command registration
-        );
-    }
+    return view;
 }
 
-class ConnectionView extends View {
+class CdsConnectionEditor extends View {
     init(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('materialize.js');
-        viewRenderer.addScript('connectionView.js');
+        viewRenderer.addScript('connection-editor.js');
 
         viewRenderer.addStyleSheet("materialize.vscode.css");
-        viewRenderer.addStyleSheet('webviewStyles.css');
 
         // add image assets
         viewRenderer.addImage('cloudsmith-logo-only-50px.png');
 
         // return rendered html
-        return viewRenderer.renderFile('connection.html');
+        return viewRenderer.renderFile('connection-editor.html');
     } 
     
     private save(config: DynamicsWebApi.Config) {
@@ -64,7 +56,7 @@ class ConnectionView extends View {
             });
     }
     
-    onDidReceiveMessage(instance: ConnectionView, message: any): vscode.Event<any> {
+    onDidReceiveMessage(instance: CdsConnectionEditor, message: any): vscode.Event<any> {
         switch (message.command) {
             case 'save':
                 instance.save(message.settings);

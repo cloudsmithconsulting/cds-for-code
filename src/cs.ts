@@ -5,8 +5,9 @@ export namespace dynamics {
     export class deployment {
         public static readonly _namespace:string = "cs.dynamics.deployment";
         public static readonly addSolutionComponent:string = `${deployment._namespace}.addSolutionComponent`;
-        public static readonly createWebResource:string = `${deployment._namespace}.createWebResource`;
         public static readonly compareWebResource:string = `${deployment._namespace}.compareWebResource`;
+        public static readonly connectToCds:string = `${deployment._namespace}.connectToCds`;
+        public static readonly createWebResource:string = `${deployment._namespace}.createWebResource`;
         public static readonly dotNetBuild:string = `${deployment._namespace}.dotNetBuild`;
         public static readonly dotNetTest:string = `${deployment._namespace}.dotNetTest`;
         public static readonly packWebResource:string = `${deployment._namespace}.packWebResource`;
@@ -65,7 +66,7 @@ export namespace dynamics {
     // tslint:disable-next-line: class-name
     export class views {
         public static readonly _namespace:string = "cs.dynamics.views";
-        public static readonly connectionView:string = `${viewContainers._namespace}.connectionView`;
+        public static readonly connectionEditor:string = `${viewContainers._namespace}.connectionEditor`;
         public static readonly jsonInspectorView:string = `${viewContainers._namespace}.jsonInspectorView`;
         public static readonly newWorkspaceView:string = `${viewContainers._namespace}.newWorkspaceView`;
         public static readonly pluginStepView:string = `${viewContainers._namespace}.pluginStepView`;

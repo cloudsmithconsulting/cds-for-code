@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import * as cs from './cs';
 // config
 import ExtensionConfiguration from './core/ExtensionConfiguration';
-import ConnectionViewManager from './views/ConnectionView';
+import ViewManager from './views/ViewManager';
 import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
 import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
 import DynamicsTreeView from './views/DynamicsTreeView';
@@ -44,7 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
 	[   // our views
 		new DynamicsTreeView(),
 		new TemplateTreeView(),
-		new ConnectionViewManager(),
+		new ViewManager(),
 		new JsonObjectViewManager(),
 		new SvcUtilConfigViewManager(),
 		new DynamicsTerminal(),
