@@ -8105,7 +8105,7 @@ textarea.materialize-textarea + label:after, .select-wrapper + label:after {
   min-height: 18px;
   display: block;
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.54);
+  color: rgba(var(--vscode-foreground), 0.54);
 }
 
 .input-field .helper-text::after {
@@ -8172,7 +8172,7 @@ textarea.materialize-textarea + label:after, .select-wrapper + label:after {
 }
 
 .input-field input[type=search]:focus:not(.browser-default) {
-  background-color: #fff;
+  background-color: var(--vscode-input-background);
   border: 0;
   box-shadow: none;
   color: #444;
@@ -8498,8 +8498,8 @@ textarea.materialize-textarea {
   height: 13px;
   border-top: 2px solid transparent;
   border-left: 2px solid transparent;
-  border-right: 2px solid #fff;
-  border-bottom: 2px solid #fff;
+  border-right: 2px solid var(--vscode-input-background);
+  border-bottom: 2px solid var(--vscode-input-background);
   transform: rotateZ(37deg);
   transform-origin: 100% 100%;
 }
@@ -8873,7 +8873,7 @@ input[type=range] + .thumb.active {
 }
 
 input[type=range] + .thumb.active .value {
-  color: #fff;
+  color: var(--vscode-input-background);
   margin-left: -1px;
   margin-top: 8px;
   font-size: 10px;

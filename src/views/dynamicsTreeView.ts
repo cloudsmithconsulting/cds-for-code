@@ -161,6 +161,7 @@ export default class DynamicsTreeView implements IContributor {
             , vscode.commands.registerCommand(cs.dynamics.controls.dynamicsTreeView.addEntry, async (item: TreeEntry) => { // Match name of command to package.json command
                 if (!item) {
                     vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editConnection);
+                    //vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.open);
 
                     return;
                 }

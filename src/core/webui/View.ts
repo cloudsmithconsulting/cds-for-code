@@ -148,7 +148,7 @@ export abstract class View {
 	static openPanels: { [key: string]: View } = {};
 
 	static show<T extends View>(
-		c: new(viewOptions: IViewOptions, panel: vscode.WebviewPanel) => T, 
+		viewInstance: new(viewOptions: IViewOptions, panel: vscode.WebviewPanel) => T, 
 		viewOptions: IViewOptions, alwaysNew?: boolean): T {
 		
 		const column = vscode.window.activeTextEditor
@@ -195,7 +195,7 @@ export abstract class View {
 		const arrIconPath = iconPath.split('/');
 		panel.iconPath = vscode.Uri.file(path.join(extensionPath, ...arrIconPath));
 
-		const result: T = new c(viewOptions, panel);
+		const result: T = new viewInstance(viewOptions, panel);
 		
 		// cache this
 		if (!alwaysNew) {
