@@ -20,7 +20,7 @@ export default class ConnectionViewManager implements IContributor {
                     viewTitle: (config && config.name) ? `Edit Connection - ${config.name}` : 'New Connection - Dynamics 365 CE',
                     viewType: cs.dynamics.views.connectionView,
                     preserveFocus: true
-                });
+                }, true);
 
                 view.setInitialState(config);
             }) // <-- no semi-colon, comma starts next command registration

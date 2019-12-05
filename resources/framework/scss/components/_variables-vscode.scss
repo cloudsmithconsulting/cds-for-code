@@ -166,7 +166,7 @@ $dropdown-item-height: 50px !default;
 $input-height: 3rem !default;
 $input-border-color: color("grey", "base") !default;
 $input-border: 1px solid $input-border-color !default;
-$input-background: #fff !default;
+$input-background: vscode-color("input", "background") !default;
 $input-error-color: $error-color !default;
 $input-success-color: $success-color !default;
 $input-focus-color: $secondary-color !default;
