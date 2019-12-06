@@ -1,8 +1,6 @@
 import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as archiver from 'archiver';
-import * as StreamZip from 'node-stream-zip';
 
 /**
  * Recursively copy folder from src to dest
@@ -75,7 +73,7 @@ export function exists(path:string): boolean {
 	return fs.existsSync(path);
 }
 
-export function stats(item:string): fs.Stats {
+export function stats(item:string): fs.Stats | null {
 	if (fs.existsSync(item)) {
 		return fs.lstatSync(item);
 	}
@@ -83,7 +81,7 @@ export function stats(item:string): fs.Stats {
 	return null;
 }
 
-export function walk(item:string, predicate?:(item:string) => boolean): Promise<any[]> {
+export function walk(item:string, predicate?:(item:string) => boolean): Promise<any[] | null> {
 	return new Promise((resolve, reject) => {
 		_walk(item, predicate, (error, result) => {
 			if (error) {
@@ -96,7 +94,7 @@ export function walk(item:string, predicate?:(item:string) => boolean): Promise<
 }
 
 export function walkSync(item: string): string[] {
-	let list = []
+	let list: any[] = []
 		, files = fs.readdirSync(item)
 		, stats;
 
@@ -139,7 +137,7 @@ export async function recurse(source: string, destination: string, func: (src: s
 			const destPath = path.join(destination, entry);
 
 			// if directory, recursively copy, otherwise copy file
-			success = await this.recurse(srcPath, destPath, func);
+			success = await recurse(srcPath, destPath, func);
 
 			if (!success) {
 				return false;
@@ -150,8 +148,8 @@ export async function recurse(source: string, destination: string, func: (src: s
 	return true;
 }
 
-async function _walk(dir: string, predicate?:(item:string) => boolean, done?: (error:any, result:any[]) => void) {
-	let results = [];
+async function _walk(dir: string, predicate?:(item:string) => boolean, done?: (error: any, result: any[] | null) => void) {
+	let results: any[] = [];
 	const applyPredicate = (results:any[]) => {
 		if (results && predicate) {
 			results = results.filter(predicate);
@@ -287,72 +285,6 @@ export function readFileSync(source: string, options?: string | { encoding: stri
 
 export function writeFileSync(destination: string, data: any, options?: { encoding?: string | null; mode?: number | string; flag?: string; } | string | null): void {
 	fs.writeFileSync(destination, data, options || 'utf8');
-}
-
-export async function unzip(archive:string, destination:string): Promise<number> {
-	const zip = new StreamZip({
-		file: archive,
-		storeEntries: true
-	});
-
-	return new Promise((resolve, reject) => {
-		zip.on('ready', () => {
-			makeFolderSync(destination);
-
-			zip.extract(null, destination, (err, count) => {
-				zip.close();
-
-				if (err) {
-					reject(err);
-				}
-
-				resolve(count);
-			});
-		});	
-	});
-}
-
-export async function zip(out:string, items:string[], rootPath?:string): Promise<void> {
-	const archive = archiver('zip', { zlib: { level: 9 }});
-	const stream = fs.createWriteStream(out);
-
-	return new Promise((resolve, reject) => {
-		items.forEach(s => {
-			if (fs.existsSync(s)) {
-				if (rootPath) {
-					archive.file(s, { name: path.relative(rootPath, s) });
-				} else {
-					archive.file(s, { name: path.basename(s) });
-				}
-			}
-		});
-
-		archive
-		  .on('error', err => reject(err))
-		  .pipe(stream);
-	
-		stream.on('close', () => resolve());
-		archive.finalize();
-	  });
-}
-
-export async function zipFolder(out:string, source:string, subfolderName:string | false = false): Promise<void> {
-	if (path.extname(out) === "") {
-		out = path.join(out, `${path.dirname(source)}.zip`);
-	}
-
-	const archive = archiver('zip', { zlib: { level: 9 }});
-	const stream = fs.createWriteStream(out);
-
-	return new Promise((resolve, reject) => {
-		archive
-		  .directory(source, subfolderName)
-		  .on('error', err => reject(err))
-		  .pipe(stream);
-	
-		stream.on('close', () => resolve());
-		archive.finalize();
-	  });
 }
 
 /**

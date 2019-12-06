@@ -10,7 +10,7 @@ export class LocalBridge extends WebviewBridge {
         super();
         this.window = window;
         this.vscode = vscode;
-        this.window.addEventListener("message", (event) => {
+        this.window.addEventListener("message", (event: any) => {
             const message = event.data;
             switch (message.command) {
                 case "WebViewBridge:response":

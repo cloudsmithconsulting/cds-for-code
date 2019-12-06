@@ -1,11 +1,9 @@
 import * as vscode from 'vscode';
-import * as cs from '../cs';
 import ExtensionContext from './ExtensionContext';
 
 export default class ExtensionConfiguration {
     private static _configurations: { [key: string]: vscode.WorkspaceConfiguration } = {};
     private static _notifiers: { [key: string]: (config: vscode.WorkspaceConfiguration) => void } = {};
-    private static _validConfigurations: { [key: string]: boolean } = {};
 
     static get extensionPath():string {
         return ExtensionContext.Instance.extensionPath;
@@ -18,7 +16,7 @@ export default class ExtensionConfiguration {
     }
 
     static getConfiguration(namespace:string): vscode.WorkspaceConfiguration {
-        if (!this._configurations || !this._configurations[namespace] || !this._validConfigurations || !this._validConfigurations[namespace]) {
+        if (!this._configurations || !this._configurations[namespace]) {
             // get root config
             const config = vscode.workspace.getConfiguration(namespace);
             
@@ -38,7 +36,6 @@ export default class ExtensionConfiguration {
             }
 
             this._configurations[namespace] = config;
-            this._validConfigurations[namespace] = this.validateConfiguration(namespace, config);
         }
         
         // return the configuration
@@ -73,7 +70,7 @@ export default class ExtensionConfiguration {
         return undefined;
     }
 
-    static setConfigurationValue<T>(config:string, value?:T, configurationTarget:vscode.ConfigurationTarget = vscode.ConfigurationTarget.Global): Thenable<void> {
+    static setConfigurationValue<T>(config:string, value?:T, configurationTarget:vscode.ConfigurationTarget = vscode.ConfigurationTarget.Global): Thenable<void> | undefined {
         const parsedKey = this.parseConfigurationString(...config);
 
         if (parsedKey && parsedKey.namespace) {
@@ -87,8 +84,8 @@ export default class ExtensionConfiguration {
         return undefined;
     }
 
-    static getConfigurationValueOrDefault<T>(config:string, defaultValue:T): T {
-        const returnValue:T = this.getConfigurationValue(config);
+    static getConfigurationValueOrDefault<T>(config:string, defaultValue:T): T | undefined {
+        const returnValue:T | undefined = this.getConfigurationValue(config);
 
         return returnValue || defaultValue;
     }
@@ -114,32 +111,8 @@ export default class ExtensionConfiguration {
         }
     }
 
-    private static validateConfiguration(namespace:string, workspaceConfig:vscode.WorkspaceConfiguration): boolean {
-        let returnValue:boolean = true;
-
-        switch (namespace)
-        {
-            case cs.dynamics.configuration.tools._namespace:
-                // Check SDK Install Path
-                const sdkInstallPath = this.parseConfigurationValue<string>(workspaceConfig, cs.dynamics.configuration.tools.sdkInstallPath);
-
-                if (!sdkInstallPath
-                    || sdkInstallPath === undefined
-                    || sdkInstallPath.length === 0) {
-                        returnValue = false;
-                        vscode.window.showErrorMessage(
-                            `The configuration setting ${cs.dynamics.configuration.tools.sdkInstallPath} is invalid or not set.`
-                    );
-                }
-
-                break;
-        }
-
-        return returnValue;
-    }
-
-    private static parseConfigurationString(...config:string[]): { namespace:string, configKey:string } {
-        let namespace:string, configKey:string;
+    private static parseConfigurationString(...config:string[]): { namespace: string | undefined, configKey: string } {
+        let namespace:string | undefined, configKey:string;
         // Join and split, in case one of the config array items includes "." as in ... parseConfigurationString("ns.something", "somethingElse", "oneMore");
         const splitValues = config.join(".").split(".");
         configKey = splitValues[splitValues.length - 1];

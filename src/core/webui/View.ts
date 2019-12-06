@@ -70,38 +70,47 @@ export class ViewRenderer {
 	}
 
 	getImageUri(imageName: string): vscode.Uri {
-		return this._images[imageName];
+		return this._images.get(imageName);
 	}
 
 	private getNonce(): string {
 		let result = '';
 		const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
 		for (let i = 0; i < 32; i++) {
 			result += possible.charAt(Math.floor(Math.random() * possible.length));
 		}
+		
 		return result;
 	}
 
 	renderFile(webviewFileName: string): string {
 		// get the file path
 		const pathOnDisk = path.join(this.view.extensionPath, 'resources', 'webviews', webviewFileName);
+
 		// read file contents from disk
 		const fileHtml = FileSystem.readFileSync(pathOnDisk).toString();
+
 		// use custom delimiter #{ }
 		_.templateSettings.interpolate = /#{([\s\S]+?)}/g;
+
 		// compile the template
 		const compiled = _.template(fileHtml);
+
 		// create a base viewModel
 		const viewModel = {
 			viewTitle: this.view.options.viewTitle,
 			images: {}
 		};
+
 		// add images to viewModel
 		Object.keys(this._images).forEach(key => {
 			//viewModel.images.push(this._images[key]);
-			viewModel.images[key] = this._images[key];
+			(<any>viewModel.images)[key] = this._images.get(key);
 		});
+
 		const result = compiled(viewModel);
+
 		// return output
 		return this.render(result);
 	}
@@ -236,14 +245,14 @@ export abstract class View {
 
 		// do some icon path fixing here
 		let iconPath = viewOptions.iconPath;
-		if (iconPath.startsWith('./')) {
+		if (iconPath && iconPath.startsWith('./')) {
 			iconPath = iconPath.substr(2);
 		}
-		else if (iconPath.startsWith('/')) {
+		else if (iconPath && iconPath.startsWith('/')) {
 			iconPath = iconPath.substr(1);
 		}
 
-		const arrIconPath = iconPath.split('/');
+		const arrIconPath = iconPath ? iconPath.split('/') : [];
 		panel.iconPath = vscode.Uri.file(path.join(extensionPath, ...arrIconPath));
 
 		// Render the view now.
@@ -257,7 +266,7 @@ export abstract class View {
 		return result;
 	}
 
-	readonly bridge: WebviewBridge;
+	readonly bridge: WebviewBridge | undefined;
 	readonly extensionPath: string;
 	readonly panel: vscode.WebviewPanel;
 	readonly options: IViewOptions;

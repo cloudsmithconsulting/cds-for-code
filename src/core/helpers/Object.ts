@@ -1,33 +1,33 @@
-export function isNullOrEmpty(value: any): boolean {
-    return !(value && value.length > 0);
+export function isNullOrEmpty(source: any): boolean {
+    return !(source && source.length > 0);
 }
 
-export function isNull(value: any): boolean {
-    return typeof value === "undefined" || value === null;
+export function isNull(source: any): boolean {
+    return typeof source === "undefined" || source === null;
 }        
 
-export function isObject(obj):boolean {
-    const type = typeof obj;
+export function isObject(source: any):boolean {
+    const type = typeof source;
 
-    return type === 'function' || type === 'object' && !!obj;
+    return type === 'function' || type === 'object' && !!source;
 }
 
 export function asQuerystring(source:any):string {
     return global.Object.keys(source).map(key => key + '=' + encodeURIComponent(source[key])).join('&');
 }
 
-export function clone<T>(src: T, target?: any): T {
+export function clone<T extends Object>(source: T, target?: any): T {
     if (!target) { 
         target = {};
     }
 
-    for (let prop in src) {
-        if (src.hasOwnProperty(prop)) {
+    for (let prop in source) {
+        if (source.hasOwnProperty(prop)) {
             // if the value is a nested object, recursively copy all it's properties
-            if (this.isObject(src[prop])) {
-                target[prop] = this.clone(src[prop]);
+            if (isObject(source[prop])) {
+                target[prop] = clone(source[prop]);
             } else {
-                target[prop] = src[prop];
+                target[prop] = source[prop];
             }
         }
     }

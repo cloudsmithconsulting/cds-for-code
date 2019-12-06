@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as BrowserHelper from "./helpers/Browser";
 import * as EncodingHelper from "./helpers/Encoding";
 import * as GuidHelper from "./helpers/Guid";
 import * as ObjectHelper from "./helpers/Object";
@@ -28,11 +27,11 @@ export interface GuidUtility {
 }
 
 export interface ObjectUtility {
-   isNullOrEmpty(value: any): boolean;
-   isNull(value: any): boolean;
-   isObject(obj):boolean;
+   isNullOrEmpty(source: any): boolean;
+   isNull(source: any): boolean;
+   isObject(source: any):boolean;
    asQuerystring(source:any): string;
-   clone<T>(src: T, target?: any): T;
+   clone<T>(source: T, target?: any): T;
 }
 
 export interface StringUtility {
@@ -54,7 +53,6 @@ export interface UtilityObject {
 }
 
 export class Utilities {
-   static get Browser(): BrowserUtility { return BrowserHelper; }
    static get Encoding(): EncodingUtility { return EncodingHelper; }
    static get Guid(): GuidUtility { return GuidHelper; }
    static get $Object(): ObjectUtility { return ObjectHelper; }

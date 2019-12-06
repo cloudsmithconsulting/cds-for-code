@@ -24,9 +24,12 @@ class SymetricCryptography {
     private key: Securable;
     private iv: Securable;
 
-    encrypt(value: Securable, algorithm: string = SymetricCryptography.defaultAlgorithm, key?: Securable, iv?: Securable): SecureItem {
+    encrypt(value: Securable, algorithm: string = SymetricCryptography.defaultAlgorithm, key?: Securable, iv?: Securable): SecureItem | null {
         key = key || this.key;
         iv = iv || this.iv || crypto.randomBytes(16);
+
+        if (!value) { return null; }
+        if (!key) { return null; }
 
         const output: SecureOutput = Buffer.isBuffer(value) ? SecureOutput.Buffer : SecureOutput.String;
 
@@ -54,8 +57,10 @@ class SymetricCryptography {
         return returnValue;
     }
 
-    decrypt(value: SecureItem, algorithm: string = SymetricCryptography.defaultAlgorithm, key?: Securable, preferredOutput: SecureOutput = SecureOutput.Buffer): Buffer {
+    decrypt(value: SecureItem, algorithm: string = SymetricCryptography.defaultAlgorithm, key?: Securable, preferredOutput: SecureOutput = SecureOutput.Buffer): Buffer | null {
         key = key || this.key;
+
+        if (!key) { return null; }
 
         if (!Buffer.isBuffer(key)) {
             key = Buffer.from(key);
@@ -105,11 +110,11 @@ class MachineCryptography implements ICryptography {
         this.symetricCrypto = new SymetricCryptography(machineIdSync().substr(0, 32));
     }
 
-    encrypt(value:Securable): SecureItem {
+    encrypt(value:Securable): SecureItem | null {
         return this.symetricCrypto.encrypt(value);
     }
 
-    decrypt(value:SecureItem, preferredOutput?: SecureOutput): Securable {
+    decrypt(value:SecureItem, preferredOutput?: SecureOutput): Securable | null {
         return this.symetricCrypto.decrypt(value, undefined, undefined, preferredOutput);
     }
 }
@@ -130,37 +135,35 @@ class ProcessCryptography implements ICryptography {
         return this._instance;
     }
 
-    private readonly symetricCrypto;
+    private readonly symetricCrypto: SymetricCryptography;
 
     private constructor() {
         this.symetricCrypto = new SymetricCryptography(Guid.newGuid().replace(/(-)/, "").substr(0, 32));
     }
 
-    encrypt(value:Securable): SecureItem {
+    encrypt(value:Securable): SecureItem | null {
         return this.symetricCrypto.encrypt(value);
     }
 
-    decrypt(value:SecureItem, preferredOutput: SecureOutput = SecureOutput.Buffer): Securable {
+    decrypt(value:SecureItem, preferredOutput: SecureOutput = SecureOutput.Buffer): Securable | null {
         return this.symetricCrypto.decrypt(value, undefined, undefined, preferredOutput);
     }
 }
 
 class LocalCryptography implements ICryptography {
-    private readonly symetricCrypto;
+    private readonly symetricCrypto: SymetricCryptography;
+    public readonly key: Securable | undefined;
 
     constructor(key?:Securable) {
         this.symetricCrypto = new SymetricCryptography(key);
+        this.key = key;
     }
 
-    get key(): Securable {
-        return this.symetricCrypto.key;
-    }
-
-    encrypt(value:Securable): SecureItem {
+    encrypt(value:Securable): SecureItem | null {
         return this.symetricCrypto.encrypt(value);
     }
 
-    decrypt(value:SecureItem, preferredOutput: SecureOutput = SecureOutput.Buffer): Securable {
+    decrypt(value:SecureItem, preferredOutput: SecureOutput = SecureOutput.Buffer): Securable | null {
         return this.symetricCrypto.decrypt(value, undefined, undefined, preferredOutput);
     }
 }
@@ -189,16 +192,18 @@ export default class Encryption {
         return Buffer.isBuffer(item) || typeof(item) === "string";
     }
 
-    static decrypt(item: ISecureItem, store: ICryptography, preferredOutput?: SecureOutput): Securable {
+    static decrypt(item: ISecureItem, store: ICryptography, preferredOutput?: SecureOutput): Securable | null {
         return item.decrypt(store, preferredOutput);
     }
 
-    static encrypt(item: Securable, store: ICryptography): ISecureItem {
+    static encrypt(item: Securable, store: ICryptography): SecureItem | null {
         return store.encrypt(item);
     }
 
-    static async salt(passphrase: Securable, byteLength: number = 32, iterations: number = 150): Promise<Securable> {
+    static async salt(passphrase: Securable, byteLength: number = 32, iterations: number = 150): Promise<Securable | null> {
         const salt = crypto.randomBytes(32);
+
+        if (!passphrase) { return null; }
 
         return await new Promise((resolve, reject) => {
             crypto.pbkdf2(passphrase.toString(), salt, iterations, byteLength, 'sha256', (err, bytes) => {

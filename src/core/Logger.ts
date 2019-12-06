@@ -1,9 +1,8 @@
 import { Console } from 'console';
 import { Writable } from 'stream';
 import * as vscode from 'vscode';
-import * as cs from "../cs";
 
-const outputChannel = vscode.window.createOutputChannel(cs.dynamics.extension.productName);
+const outputChannel = vscode.window.createOutputChannel("CloudSmith Extension");
 const writableStream: Writable = new Writable({
     write: (chunk: any, _: string, done: () => void) => {
         outputChannel.append(chunk.toString(chunk.encoding || 'utf8'));
