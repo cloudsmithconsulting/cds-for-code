@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as BrowserHelper from "./helpers/Browser";
 import * as EncodingHelper from "./helpers/Encoding";
 import * as GuidHelper from "./helpers/Guid";
 import * as ObjectHelper from "./helpers/Object";
@@ -53,6 +54,7 @@ export interface UtilityObject {
 }
 
 export class Utilities {
+   static get Browser(): BrowserUtility { return BrowserHelper; }
    static get Encoding(): EncodingUtility { return EncodingHelper; }
    static get Guid(): GuidUtility { return GuidHelper; }
    static get $Object(): ObjectUtility { return ObjectHelper; }

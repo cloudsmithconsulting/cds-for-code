@@ -138,33 +138,35 @@ export class ViewRenderer {
 		this._scripts.values.forEach(uri => {
 			scriptHtml += `<script src="${uri}"></script>`;
 		});
+
+		if (this.view.bridge) {
+			bridgeHtml.push(`<script src="${this.getFileUri("resources", "scripts", "cs.vscode.webviews")}"></script>`);
+
+			if (this.view.options.bridgeType === BridgeCommunicationMethod.Ipc) {
+				bridgeImportStatement = "import { LocalBridge } from './resources/scripts/cs.vscode.webviews';";
+				bridgeConstructor = 'new LocalBridge(window, vscode)';
+			} else if (this.view.options.bridgeType === BridgeCommunicationMethod.WebSockets) {
+				bridgeImportStatement = "import { WebSocketBridge } from './resources/scripts/cs.vscode.webviews';";
+				// TODO: add init address for client.
+				bridgeConstructor = 'new WebSocketBridge(new WebSocket())';
+			}
+			
+			if (bridgeConstructor && bridgeConstructor !== "") {
+				bridgeHtml.push(`
+				<script type="text/javascript">
+					${bridgeImportStatement}
+					
+					(function() {
+						const vscode = vscode || acquireVsCodeApi();
+						let bridge = ${bridgeConstructor};
 		
-		if (this.view.options.bridgeType === BridgeCommunicationMethod.Ipc) {
-			bridgeHtml.push(`<script src="${this.getFileUri("out", "core/webui/LocalBridge.browser.js")}"></script>`);
-			bridgeImportStatement = "import { LocalBridge } from './out/core/webui/LocalBridge.browser';";
-			bridgeConstructor = 'new LocalBridge(window, vscode)';
-		} else if (this.view.options.bridgeType === BridgeCommunicationMethod.WebSockets) {
-			bridgeHtml.push(`<script src="${this.getFileUri("out", "core/webui/WebSocketBridge.browser.js")}"></script>`);
-			bridgeImportStatement = "import { WebSocketBridge } from './out/core/webui/WebSocketBridge.browser';";
-			// TODO: add init address for client.
-			bridgeConstructor = 'new WebSocketBridge(new WebSocket())';
-		}
-		
-		if (bridgeConstructor && bridgeConstructor !== "") {
-			bridgeHtml.push(`
-			<script type="text/javascript">
-				${bridgeImportStatement}
-				
-				(function() {
-					const vscode = vscode || acquireVsCodeApi();
-					let bridge = ${bridgeConstructor};
-	
-					if (bridge && window && !window.bridge) {
-						window.bridge = bridge;
-					}
-				})
-			</script>
-			`);
+						if (bridge && window && !window.bridge) {
+							window.bridge = bridge;
+						}
+					})
+				</script>
+				`);
+			}
 		}
 
 		return `<!DOCTYPE html>
