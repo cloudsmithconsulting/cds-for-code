@@ -189,10 +189,10 @@ export namespace DynamicsWebApi {
     }
 
     export enum ConfigType { 
-        OnPremises = 0,
-        Online = 1,
-        AzureAdAuth = 2,
-        IFD = 3
+        OnPremises = 1,
+        Online = 2,
+        AzureAdAuth = 3,
+        IFD = 4
     }
 
     /**

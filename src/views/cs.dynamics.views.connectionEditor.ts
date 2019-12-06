@@ -4,6 +4,8 @@ import { View, ViewRenderer, BridgeCommunicationMethod } from '../core/webui/Vie
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import ExtensionContext from '../core/ExtensionContext';
+import CdsConnectionString from '../api/CdsConnectionString';
+import Quickly from '../core/Quickly';
 
 let view: CdsConnectionEditor;
 
@@ -23,12 +25,13 @@ export default async function openView(config?: DynamicsWebApi.Config): Promise<
 }
 
 class CdsConnectionEditor extends View {
-    init(viewRenderer: ViewRenderer): string {
+    construct(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('materialize.js');
         viewRenderer.addScript('connection-editor.js');
 
         viewRenderer.addStyleSheet("materialize.vscode.css");
+        viewRenderer.addStyleSheet("webViewStyles.css");
 
         // add image assets
         viewRenderer.addImage('cloudsmith-logo-only-50px.png');
@@ -53,12 +56,31 @@ class CdsConnectionEditor extends View {
                 });
             })
             .catch(err => {
+                let message: string;
+
+                if (err && err.message && err.message.startsWith("getaddrinfo ENOTFOUND")) {
+                    message = `We could not connect to '${config.webApiUrl}': The host name is not valid`;
+                } else if (err.message) {
+                    message = err.message;
+                }
+
                 this.panel.webview.postMessage({ command: 'error', message: err.message });
             });
     }
     
     onDidReceiveMessage(instance: CdsConnectionEditor, message: any): vscode.Event<any> {
         switch (message.command) {
+            case 'parseConnectionString':
+                try {
+                    const connection = CdsConnectionString.from(message.connectionString);                
+                    const config = connection ? connection.toConfig() : null;
+    
+                    view.setInitialState(config);
+                } catch (error) {
+                    Quickly.error(`The configuration string could not be parsed: ${error}`);
+                }
+
+                return;
             case 'save':
                 instance.save(message.settings);
                 return;

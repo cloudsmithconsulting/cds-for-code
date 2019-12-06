@@ -129,7 +129,6 @@ export class ViewRenderer {
 		let scriptHtml: string = '';
 		let bridgeHtml: string[] = [];
 		let bridgeConstructor: string = '';
-		let bridgeImportStatement: string = '';
 
 		this._styleSheets.values.forEach(uri => {
 			cssHtml += `<link rel="stylesheet" type="text/css" href="${uri}" />`;
@@ -143,10 +142,8 @@ export class ViewRenderer {
 			bridgeHtml.push(`<script src="${this.getFileUri("resources", "scripts", "cs.vscode.webviews.js")}"></script>`);
 
 			if (this.view.options.bridgeType === BridgeCommunicationMethod.Ipc) {
-				bridgeImportStatement = "import { LocalBridge } from './resources/scripts/cs.vscode.webviews';";
 				bridgeConstructor = 'new LocalBridge(window, vscode)';
 			} else if (this.view.options.bridgeType === BridgeCommunicationMethod.WebSockets) {
-				bridgeImportStatement = "import { WebSocketBridge } from './resources/scripts/cs.vscode.webviews';";
 				// TODO: add init address for client.
 				bridgeConstructor = 'new WebSocketBridge(new WebSocket())';
 			}
@@ -154,9 +151,14 @@ export class ViewRenderer {
 			if (bridgeConstructor && bridgeConstructor !== "") {
 				bridgeHtml.push(`
 				<script type="text/javascript">
-					${bridgeImportStatement}
-					
 					(function() {
+						var CloudSmith = window.CloudSmith || {};
+						
+						CloudSmith.LocalBridge = require('./LocalBridge');
+						CloudSmith.WebSocketBridge = require('./WebSocketBridge');
+						
+						window.CloudSmith = CloudSmith;
+
 						const vscode = vscode || acquireVsCodeApi();
 						let bridge = ${bridgeConstructor};
 		
@@ -276,7 +278,7 @@ export abstract class View {
 	protected _disposables: vscode.Disposable[] = [];
 	protected readonly _viewRenderer: ViewRenderer;
 
-	abstract init(renderer: ViewRenderer): string;
+	abstract construct(renderer: ViewRenderer): string;
 
 	abstract onDidReceiveMessage(instance: View, message: any): vscode.Event<any>;
 
@@ -351,6 +353,6 @@ export abstract class View {
 
 	private _update() {
 		this.panel.title = this.options.viewTitle;
-		this.panel.webview.html = this.init(this._viewRenderer);
+		this.panel.webview.html = this.construct(this._viewRenderer);
 	}
 }

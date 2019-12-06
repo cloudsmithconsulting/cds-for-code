@@ -63,7 +63,7 @@ export default class NewWorkspaceViewManager implements IContributor {
 }
 
 class NewWorkspaceView extends View {
-    init(viewRenderer: ViewRenderer): string {
+    construct(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('materialize.js');
         viewRenderer.addScript('new-workspace.js');

@@ -4,7 +4,7 @@ import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 
 export default class SvcUtilConfigViewManager implements IContributor {
-	public contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.svcUtilConfig.configure, async (item: any) => { // Match name of command to package.json command
@@ -27,7 +27,7 @@ export default class SvcUtilConfigViewManager implements IContributor {
 }
 
 class SvcUtilConfigView extends View {
-    public init(viewRenderer: ViewRenderer): string {
+    construct(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('tabs.js');
         viewRenderer.addScript('crmSvcUtilConfigView.js');
@@ -40,14 +40,14 @@ class SvcUtilConfigView extends View {
         return viewRenderer.renderFile('svcutil-config.html');
     }    
     
-    public onDidReceiveMessage(instance: SvcUtilConfigView, message: any): vscode.Event<any> {
+    onDidReceiveMessage(instance: SvcUtilConfigView, message: any): vscode.Event<any> {
         switch (message.command) {
             case 'default':                
                 return;
         }
     }
 
-    public setInitialState(item?: any) {
+    setInitialState(item?: any) {
         if (item) {
             this.panel.webview.postMessage({ command: 'configure', message: item });
         }

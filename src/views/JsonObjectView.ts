@@ -27,7 +27,7 @@ export default class JsonObjectViewManager implements IContributor {
 }
 
 class JsonObjectView extends View {
-    public init(viewRenderer: ViewRenderer): string {
+    construct(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('jsoneditor.min.js');
         viewRenderer.addScript('jsonInspectorView.js');
@@ -43,14 +43,14 @@ class JsonObjectView extends View {
         return viewRenderer.renderFile('jsonInspector.html');
     }    
     
-    public onDidReceiveMessage(instance: JsonObjectView, message: any): vscode.Event<any> {
+    onDidReceiveMessage(instance: JsonObjectView, message: any): vscode.Event<any> {
         switch (message.command) {
             case 'default':                
                 return;
         }
     }
 
-    public setInitialState(item?: any) {
+    setInitialState(item?: any) {
         if (item) {
             this.panel.webview.postMessage({ command: 'inspect', message: item });
         }
