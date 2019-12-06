@@ -1,5 +1,5 @@
 import PromiseInfo, { IPromiseInfo } from "../types/PromiseInfo";
-import { Utilities } from "../Utilities";
+import * as Guid from "../helpers/Guid";
 
 export interface IWebviewBridge {
     invoke(method: string, params?: any): Promise<any>;
@@ -56,7 +56,7 @@ export default abstract class WebviewBridge implements IWebviewBridge {
 
     invoke(method: string, params?: any[]): Promise<any> {
         // TODO: change to something more unique (or check to see if id doesn't alreday exist in this.promiseCallbacks)
-        const id = Utilities.Guid.newGuid();
+        const id = Guid.newGuid();
 
         const promise = new Promise((resolve, reject) => {
             this.promises.set(id, new PromiseInfo(resolve, reject));

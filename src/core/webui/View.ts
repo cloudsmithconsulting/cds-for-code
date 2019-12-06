@@ -140,7 +140,7 @@ export class ViewRenderer {
 		});
 
 		if (this.view.bridge) {
-			bridgeHtml.push(`<script src="${this.getFileUri("resources", "scripts", "cs.vscode.webviews")}"></script>`);
+			bridgeHtml.push(`<script src="${this.getFileUri("resources", "scripts", "cs.vscode.webviews.js")}"></script>`);
 
 			if (this.view.options.bridgeType === BridgeCommunicationMethod.Ipc) {
 				bridgeImportStatement = "import { LocalBridge } from './resources/scripts/cs.vscode.webviews';";
