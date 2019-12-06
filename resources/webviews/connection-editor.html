@@ -75,22 +75,24 @@
                     </ul>
                 </div>
                 <div id="windowsAuth">
-                    <div class="divider">&nbsp;</div>
-                    <div class="col s6 input-field">
+                    <div class="section">
+                        On-Premises deployments are linked to local Active Directory domains.  Please enter your Windows credentials below.  
+                    </div>
+                    <div class="col s4 input-field">
+                        <input id="OnPrem-Domain" type="text" placeholder="COMPANYNAME" />
+                        <label for="OnPrem-Domain">Domain</label>
+                    </div>
+                    <div class="col s4 input-field">
                         <input id="OnPrem-Username" type="text" />
                         <label for="OnPrem-Username">Username</label>
                     </div>
-                    <div class="col s6 input-field">
+                    <div class="col s4 input-field">
                         <input id="OnPrem-Password" type="password" />
                         <label for="OnPrem-Password">Password</label>
                     </div>
                     <div class="col s12 input-field">
                         <input id="OnPrem-ServerUrl" type="text" placeholder="http://crm/" />
                         <label for="OnPrem-ServerUrl">Server URL</label>
-                    </div>
-                    <div class="col s12 input-field">
-                        <input id="OnPrem-Domain" type="text" placeholder="COMPANYNAME" />
-                        <label for="OnPrem-Domain">Domain</label>
                     </div>
                 </div>
                 <div class="row" id="onlineAuth">
@@ -164,4 +166,8 @@
             </div>
         </li>
     </ul>
+
+    <p>
+        Your security is important: All credentials are securely stored with keys you control.  See our <a href="https://github.com/cloudsmith-consulting/cds-for-code/privacy.md">security and privacy</a> notice.
+    </p>
 </form>

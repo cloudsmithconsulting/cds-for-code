@@ -59,7 +59,7 @@ class CdsConnectionEditor extends View {
                 let message: string;
 
                 if (err && err.message && err.message.startsWith("getaddrinfo ENOTFOUND")) {
-                    message = `We could not connect to '${config.webApiUrl}': The host name is not valid`;
+                    message = `Could not connect to '${config.webApiUrl}': The host name is not valid`;
                 } else if (err.message) {
                     message = err.message;
                 }
