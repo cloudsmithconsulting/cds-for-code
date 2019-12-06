@@ -244,7 +244,7 @@ module.exports = function (grunt) {
             },
             dev: {
                 files: {
-                    'resources/scripts/materialize.js': ['out/temp/materialize.js']
+                    'dist/web/materialize.dev.js': ['out/temp/materialize.js']
                 },
                 options: {
                     mangle: false,
