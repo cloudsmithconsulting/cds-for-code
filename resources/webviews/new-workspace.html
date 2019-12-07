@@ -14,7 +14,7 @@
 <blockquote class="panel_info" id="loadingPanel" hidden>
     <div class="panel__text">
         <h4>Hang tight</h4>
-        We're getting your development experience ready.  This won't take long.
+        We're getting your development experience ready. This won't take long.
     </div>
 </blockquote>
 
@@ -25,23 +25,69 @@
 <div class="row">
     <div class="col s12">
         <ul class="tabs">
-            <li class="tab col s3"><a href="#home">Getting Started</a></li>
-            <li class="tab col s3"><a class="active" href="#plugins">Plugins</a></li>
-            <li class="tab col s3 disabled"><a href="#webResources">Web Resources</a></li>
+            <li class="tab col s3"><a class="active" href="#home">Getting Started</a></li>
+            <li class="tab col s3"><a href="#plugins">Plugins</a></li>
+            <li class="tab col s3"><a href="#webResources">Web Resources</a></li>
             <li class="tab col s3"><a href="#codeGeneration">Code Generation</a></li>
         </ul>
     </div>
     <div class="col s12" id="home">
-        <h1>Getting Started with CDS for Code</h1>
+        <h2>Getting Started with CDS for Code</h2>
         <p>
             This extension for Code allows developers to work with their solutions and data in Dynamics 365 Customer
             Engagement. You'll want to do these things to get started.
         </p>
-        <div class="d-flex flex-column">
-            <div class="p-2"><a id="ConnectLink" href="#">Connect to a Dynamics 365 instance</a></div>
-            <div class="p-2"><a id="OpenWorkspaceLink" href="#">Open a workspace</a></div>
-            <div class="p-2 bg-primary">Do something else</div>
-        </div>
+        
+        <ul class="collapsible">
+            <li>
+                <div class="collapsible-header">
+                    <span class="iconify" data-width="60" data-height="24" data-icon="uil-cloud-data-connection"></span>
+                    Connect to a CDS or Dynamics 365 instance
+                </div>
+                <div class="collapsible-body">
+                    You can connect to a CDS or Dynamics 365 instance in 3 ways - Online, On-Premises using
+                    Windows/NTLM, and Online or On-Premises using Azure Active Directory.  
+
+                    <ol class="bigNumber">
+                        <li>
+                            <div class="row">
+                                If you've got a connection string handy, you may enter it below, otherwise, <a id="ConnectLink" href="#">click here to open the connection window</a>.
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="ConnectionString" type="text"
+                                        placeholder="AuthType=Office365; ServiceUri=https://myurl.crm.dynamics.com; Username=username; Password=password" />
+                                    <label for="ConnectionString">Connection String</label>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    <span class="iconify" data-width="60" data-height="24" data-icon="ant-design:folder-open-twotone"></span>
+                    Open a workspace and start editing files
+                </div>
+                <div class="collapsible-body">
+                    <ol class ="bigNumber">
+                        <li><a id="OpenWorkspaceLink" href="#">Open a workspace</a></li>
+                        <li><a id="CreateSolutionLink" href="#">Create a CDS or Dynamics solution if you don't already
+                                have one</a></li>
+                        <li><a id="ExportSolutionLink" href="#">Export a solution to your workspace</a></li>
+                    </ol>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    <span class="iconify" data-width="60" data-height="24" data-icon="icomoon-free:insert-template"></span>
+                    Code faster with templates
+                </div>
+                <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+            </li>
+        </ul>
     </div>
     <div class="col s12" id="plugins">
         <h1>Authoring plugin projects</h1>

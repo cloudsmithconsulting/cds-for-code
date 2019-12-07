@@ -1,18 +1,18 @@
 import * as vscode from 'vscode';
-import { View, ViewRenderer } from '../core/types/View';
+import { View, ViewRenderer } from '../core/webui/View';
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import ApiRepository from '../repositories/apiRepository';
 
 export default class PluginStepImageViewManager implements IContributor {
-	public contribute(context: vscode.ExtensionContext, wsConfig?:vscode.WorkspaceConfiguration) {
+	contribute(context: vscode.ExtensionContext, wsConfig?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
             vscode.commands.registerCommand(cs.dynamics.controls.pluginStepImage.open, (sdkmessageprocessingstepid: string, pluginStepImage: any, config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-                const view = PluginStepImageView.createOrShow<PluginStepImageView>(PluginStepImageView, {
+                const view = PluginStepImageView.show<PluginStepImageView>(PluginStepImageView, {
                     extensionPath: context.extensionPath,
                     iconPath: './resources/images/cloudsmith-logo-only-50px.png',
                     viewTitle: 'Configure Plugin Step Image - Dynamics 365 CE',
@@ -26,9 +26,9 @@ export default class PluginStepImageViewManager implements IContributor {
 }
 
 class PluginStepImageView extends View {
-    public config: DynamicsWebApi.Config;
+    config: DynamicsWebApi.Config;
 
-    public getHtmlForWebview(viewRenderer: ViewRenderer): string {
+    construct(viewRenderer: ViewRenderer): string {
         // add script and css assets
         viewRenderer.addScript('pluginStepImageView.js');
         viewRenderer.addStyleSheet('webviewStyles.css');
@@ -37,7 +37,7 @@ class PluginStepImageView extends View {
         viewRenderer.addImage('cloudsmith-logo-only-50px.png');
 
         // return rendered html
-        return viewRenderer.renderPartialFile('plugin-step-image.html');
+        return viewRenderer.renderFile('plugin-step-image.html');
     }    
 
     private save(pluginStepImage: any) {
@@ -51,7 +51,7 @@ class PluginStepImageView extends View {
             });
     }
     
-    public onDidReceiveMessage(instance: PluginStepImageView, message: any): vscode.Event<any> {
+    onDidReceiveMessage(instance: PluginStepImageView, message: any): vscode.Event<any> {
         switch (message.command) {
             case 'save':                
                 instance.save(message.pluginStepImage);
@@ -59,7 +59,7 @@ class PluginStepImageView extends View {
         }
     }
 
-    public setInitialState(sdkmessageprocessingstepid: string, viewModel: any, config: DynamicsWebApi.Config) {
+    setInitialState(sdkmessageprocessingstepid: string, viewModel: any, config: DynamicsWebApi.Config) {
         this.config = config;
         this.panel.webview.postMessage({ command: 'load', viewModel, sdkmessageprocessingstepid });
     }

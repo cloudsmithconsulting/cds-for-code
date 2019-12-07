@@ -1,6 +1,6 @@
 ﻿"use strict";
 
-import { ICredential } from "../../core/security/Types";
+import { ICredential, Credential } from "../../core/security/Types";
 
 import Utility from './utilities/Utility';
 import * as Parameters from '../../core/helpers/Parameters';
@@ -189,10 +189,10 @@ export namespace DynamicsWebApi {
     }
 
     export enum ConfigType { 
-        OnPremises = 0,
-        Online = 1,
-        AzureAdAuth = 2,
-        IFD = 3
+        OnPremises = 1,
+        Online = 2,
+        AzureAdAuth = 3,
+        IFD = 4
     }
 
     /**
@@ -343,7 +343,7 @@ export namespace DynamicsWebApi {
             }
 
             if (config.credentials) {
-                this._internalConfig.credentials = config.credentials;
+                this._internalConfig.credentials = Credential.from(config.credentials);
             }
 
             if (config.name) {

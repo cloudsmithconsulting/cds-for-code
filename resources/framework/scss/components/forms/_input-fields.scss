@@ -213,7 +213,7 @@ textarea.materialize-textarea {
     min-height: 18px;
     display: block;
     font-size: 12px;
-    color: rgba(0,0,0,.54);
+    color: rgba(vscode-color("base", "foreground"), .54);
   }
 
   // Prefix Icons

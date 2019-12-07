@@ -1,16 +1,34 @@
 module.exports = function (grunt) {
     const sass = require('node-sass');
-    let concatFile = 'out/web/materialize_concat.js.map';
+    let concatFile = 'out/temp/materialize_concat.js.map';
 
     // configure the tasks
     let config = {
+        mkdir: {
+            all: {
+                options: {
+                    create: ['out/temp', 'out/temp/browser', 'dist/web', 'dist/release' ]
+                },
+            },
+            dev: {
+                options: {
+                    create: ['out/temp', 'out/temp/browser', 'dist/web' ]
+                },
+            },
+            release: {
+                options: {
+                    create: ['out/temp', 'out/temp/browser', 'dist/release' ]
+                },
+            }
+        },
+
         //  Sass
         sass: {
             options: {
                 implementation: sass
             },
             // Task
-            expanded: {
+            dev: {
                 // Target options
                 options: {
                     outputStyle: 'expanded',
@@ -21,17 +39,17 @@ module.exports = function (grunt) {
                 }
             },
             // Minify
-            min: {
+            release_min: {
                 options: {
                     outputStyle: 'compressed',
                     sourcemap: false
                 },
                 files: {
-                    'resources/styles/materialize.vscode.min.css': 'resources/framework/scss/materialize.vscode.scss'
+                    'dist/web/materialize.vscode.min.css': 'resources/framework/scss/materialize.vscode.scss'
                 }
             },
             // Compile bin css (just so you have a prod ready one)
-            bin: {
+            release: {
                 options: {
                     outputStyle: 'expanded',
                     sourcemap: false
@@ -49,33 +67,82 @@ module.exports = function (grunt) {
                     require('autoprefixer')()
                 ]
             },
-            expanded: {
+            dev: {
                 src: 'resources/styles/materialize.vscode.css'
             },
-            min: {
-                src: 'resources/styles/materialize.vscode.min.css'
+            release_min: {
+                src: 'dist/web/materialize.vscode.min.css'
             },
-            bin: {
+            release: {
                 src: 'dist/web/materialize.vscode.css'
+            }
+        },
+
+        ts: {
+            browser: {
+                src: ["src/core/webui/LocalBridge.browser.ts", "src/core/webui/WebSocketBridge.browser.ts"],        // "!node_modules/**"
+                outDir: "out/temp/browser",
+                options: {
+                    rootDir: "src/core",
+                    fast: 'never',
+                    failOnTypeErrors: false,
+                    target: "es6",
+                    lib: ["es6", "dom"],
+                    sourceMap: true,
+                    moduleResolution: "node"
+                }
+            },
+            extension: {
+                tsconfig: './tsconfig.json'
+            }
+        },
+
+        browserify: {
+            dev: {
+                src: [
+                    'out/temp/browser/**/*.js'
+                ],
+                dest: 'resources/scripts/cs.vscode.webviews.js',
+                options: {
+                    browserifyOptions: { debug: true },
+                    transform: [["babelify", { "presets": ['@babel/preset-env'] }]],
+                }
+            },
+            release: {
+                src: [
+                    'out/temp/browser/**/*.js'
+                ],
+                dest: 'dist/web/cs.vscode.webviews.js',
+                options: {
+                    browserifyOptions: { debug: false },
+                    transform: [["babelify", { "presets": ['@babel/preset-env'] }]],
+                }
             }
         },
 
         babel: {
             options: {
                 sourceMap: false,
-                presets: ['@babel/preset-env']
+                presets: ['@babel/preset-env'],
+                plugins: [
+                    'transform-es2015-arrow-functions',
+                    'transform-es2015-block-scoping',
+                    'transform-es2015-classes',
+                    'transform-es2015-template-literals',
+                    'transform-es2015-object-super'
+                  ]
             },
-            bin: {
+            dev: {
                 options: {
                     sourceMap: true
                 },
                 files: {
-                    'resources/scripts/materialize.js': 'out/web/materialize_concat.js'
+                    'out/temp/materialize.js': 'out/temp/materialize_concat.js'
                 }
             },
-            dist: {
+            release: {
                 files: {
-                    'dist/web/materialize.js': 'out/web/materialize.js'
+                    'dist/web/materialize.js': 'out/temp/materialize.js'
                 }
             }
         },
@@ -85,7 +152,7 @@ module.exports = function (grunt) {
             options: {
                 separator: ';'
             },
-            dist: {
+            release: {
                 // the files to concatenate
                 src: [
                     'resources/framework/js/cash.js',
@@ -119,9 +186,9 @@ module.exports = function (grunt) {
                     'resources/framework/js/range.js'
                 ],
                 // the location of the resulting JS file
-                dest: 'out/web/materialize.js'
+                dest: 'out/temp/materialize.js'
             },
-            temp: {
+            dev: {
                 // the files to concatenate
                 options: {
                     sourceMap: true,
@@ -159,26 +226,30 @@ module.exports = function (grunt) {
                     'resources/framework/js/range.js'
                 ],
                 // the location of the resulting JS file
-                dest: 'out/web/materialize_concat.js'
+                dest: 'out/temp/materialize_concat.js'
             }
         },
 
         //  Uglify
         uglify: {
-            options: {
-                // Use these options when debugging
-                mangle: false,
-                compress: false,
-                beautify: true
-            },
-            dist: {
+            release: {
                 files: {
                     'dist/web/materialize.min.js': ['dist/web/materialize.js']
+                },
+                options: {
+                    mangle: true,
+                    compress: true,
+                    beautify: false
                 }
             },
-            bin: {
+            dev: {
                 files: {
-                    'resources/scripts/materialize.min.js': ['resources/scripts/materialize.js']
+                    'dist/web/materialize.dev.js': ['out/temp/materialize.js']
+                },
+                options: {
+                    mangle: false,
+                    compress: false,
+                    beautify: true
                 }
             }
         },
@@ -186,7 +257,7 @@ module.exports = function (grunt) {
         //  Clean
         clean: {
             temp: {
-                src: ['out/web']
+                src: ['out/temp']
             }
         },
 
@@ -208,6 +279,15 @@ module.exports = function (grunt) {
                     interrupt: false,
                     spawn: false
                 }
+            },
+
+            ts: {
+                files: ['src/**/*.browser.ts'],
+                tasks: ['ts_compile_browser'],
+                options: {
+                    interrupt: false,
+                    spawn: false
+                }
             }
         },
 
@@ -221,6 +301,8 @@ module.exports = function (grunt) {
                 tasks: [
                     'sass_compile',
                     'js_compile',
+                    'ts_compile_browser',
+                    'watch:ts',
                     'watch:js',
                     'watch:sass',
                     'notify:watching'
@@ -254,6 +336,16 @@ module.exports = function (grunt) {
                 options: {
                     enabled: true,
                     message: 'JS files compiled',
+                    title: 'CDS for Code',
+                    success: true,
+                    duration: 1
+                }
+            },
+
+            ts_compile_browser: {
+                options: {
+                    enabled: true,
+                    message: 'TS files transpiled',
                     title: 'CDS for Code',
                     success: true,
                     duration: 1
@@ -304,29 +396,32 @@ module.exports = function (grunt) {
 
     // load the tasks
     // grunt.loadNpmTasks('grunt-gitinfo');
-    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-babel');
+    grunt.loadNpmTasks('grunt-banner');
+    grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-concurrent');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-compress');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-concurrent');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-mkdir');
     grunt.loadNpmTasks('grunt-notify');
-    grunt.loadNpmTasks('grunt-text-replace');
-    grunt.loadNpmTasks('grunt-banner');
-    grunt.loadNpmTasks('grunt-rename-util');
     grunt.loadNpmTasks('grunt-postcss');
-    grunt.loadNpmTasks('grunt-babel');
+    grunt.loadNpmTasks('grunt-rename-util');
     grunt.loadNpmTasks('grunt-sass');
+    grunt.loadNpmTasks('grunt-text-replace');
+    grunt.loadNpmTasks('grunt-ts');
 
     // define the tasks
     grunt.registerTask('release', [
-        'sass:expanded',
-        'sass:min',
-        'postcss:expanded',
-        'postcss:min',
-        'concat:dist',
-        'babel:dist',
-        'uglify:dist',
+        'sass:release',
+        'sass:release_min',
+        'postcss:release',
+        'postcss:release_min',
+        'concat:release',
+        'babel:release',
+        'uglify:release',
         'usebanner:release',
         'compress:main',
         'replace:version',
@@ -338,14 +433,16 @@ module.exports = function (grunt) {
         config.babel.bin.options.inputSourceMap = grunt.file.readJSON(concatFile);
     });
 
-    grunt.registerTask('js_compile', ['concat:temp', 'configureBabel', 'babel:bin', 'clean:temp', 'notify:js_compile']);
+    grunt.registerTask('js_compile', ['concat:dev', 'configureBabel', 'babel:dev', 'uglify:dev', 'clean:temp', 'notify:js_compile']);
     grunt.registerTask('sass_compile', [
-        'sass:expanded',
-        'sass:min',
-        'sass:bin',
-        'postcss:bin',
+        'sass:dev',
+        'sass:release',
+        'sass:release_min',
+        'postcss:dev',
         'notify:sass_compile'
     ]);
+    grunt.registerTask('ts_compile_browser', ['mkdir:dev', 'ts:browser', 'browserify:dev', 'clean:temp', 'notify:ts_compile_browser']);
+
     grunt.registerTask('monitor', ['concurrent:monitor']);
-    grunt.registerTask('travis', ['js_compile', 'sass_compile']);
+    grunt.registerTask('travis', ['ts_compile_browser', 'js_compile', 'sass_compile']);
 };

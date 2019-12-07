@@ -5,6 +5,7 @@
 // Color
 @import "components/color-variables";
 @import "components/color-variables-vscode";
+
 @import "components/color-classes";
 
 // Variables;
@@ -15,6 +16,7 @@
 
 // components
 @import "components/global";
+@import "components/bigNumberList";
 @import "components/badges";
 @import "components/icons-material-design";
 @import "components/grid";

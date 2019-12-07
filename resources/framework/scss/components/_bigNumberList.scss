@@ -1,0 +1,30 @@
+ol.bigNumber {
+    list-style: none;
+    counter-reset: bignumber-list;
+    margin: 10px 0;
+}
+ 
+ol.bigNumber li {
+    counter-increment: bignumber-list;
+    position: relative;
+    margin: 10px 0;    
+}
+ 
+ol.bigNumber li::before {
+    content: counter(bignumber-list);
+    color: color("cloudsmith-primary", "base");
+    font-size: 1.5rem;
+    font-weight: bold;
+    position: absolute;
+    --size: 32px;
+    left: calc(-1 * var(--size) - 10px);
+    line-height: var(--size);
+    width: var(--size);
+    height: var(--size);
+    top: 0;
+    transform: rotate(-10deg);
+    background: vscode-color("selection", "background");
+    border-radius: 50%;
+    text-align: center;
+    box-shadow: 1px 1px 0 vscode-color("widget", "shadow");
+}

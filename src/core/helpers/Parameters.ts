@@ -78,7 +78,7 @@ export function stringOrArrayParameterCheck(parameter: any[] | string | undefine
     }
 }
 
-export function numberParameterCheck(parameter: number | string | undefined, functionName: string, parameterName: string): number {
+export function numberParameterCheck(parameter: number | string | undefined, functionName: string, parameterName: string): number | undefined {
     ///<summary>
     /// Private function used to check whether required parameters are null or undefined
     ///</summary>
@@ -116,7 +116,7 @@ export function boolParameterCheck(parameter: boolean | undefined, functionName:
     return <boolean>parameter;
 }
 
-export function guidParameterCheck(parameter: string | undefined, functionName: string, parameterName: string): string {
+export function guidParameterCheck(parameter: string | undefined, functionName: string, parameterName: string): string | undefined {
     ///<summary>
     /// Private function used to check whether required parameter is a valid GUID
     ///</summary>
@@ -128,8 +128,11 @@ export function guidParameterCheck(parameter: string | undefined, functionName: 
     ///</param>
     /// <returns type="String" />
 
+    if (!parameter) { return; }
+    
     try {
-        var match = /[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}/i.exec(parameter)[0];
+        const matches = /[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}/i.exec(parameter);
+        const match = matches && matches.length > 0 ? matches[0] : undefined;
 
         return match;
     }
@@ -155,8 +158,10 @@ export function keyParameterCheck(parameter: any | undefined, functionName: stri
         if (alternateKeys.length) {
             for (var i = 0; i < alternateKeys.length; i++) {
                 alternateKeys[i] = alternateKeys[i].trim().replace('"', "'");
-                // tslint:disable-next-line: no-unused-expression
-                /^[\w\d\_]+\=('[^\'\r\n]+'|\d+)$/i.exec(alternateKeys[i])[0];
+                if (alternateKeys[i] && alternateKeys[i] !== null) {
+                    const alternateMatches = /^[\w\d\_]+\=('[^\'\r\n]+'|\d+)$/i.exec(alternateKeys[i]);
+                    const alternateMatch = alternateMatches && alternateMatches.length > 0 ? alternateMatches[0] : undefined;
+                }
             }
         }
 
@@ -198,7 +203,7 @@ export function batchNotStarted(isBatch: boolean): void {
 }
 
 export function handleHttpError(parsedError: any, parameters?: any): Error {
-    let error = new Error();
+    let error: any = new Error();
 
     Object.keys(parsedError).forEach(k => {
         error[k] = parsedError[k];

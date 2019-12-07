@@ -22,7 +22,11 @@ if (typeof define === 'function' && define.amd) {
     exports = module.exports = M;
   }
   exports.default = M;
+}  else {
+  window.M = {};
 }
+
+M = M || window.M;
 
 M.version = '1.0.0';
 
@@ -130,7 +134,10 @@ M.AutoInit = function(context) {
 
   for (let pluginName in registry) {
     let plugin = M[pluginName];
-    plugin.init(registry[pluginName]);
+
+    if (plugin && plugin !== null) {
+      plugin.init(registry[pluginName]);
+    }
   }
 };
 

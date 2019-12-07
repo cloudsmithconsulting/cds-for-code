@@ -6,10 +6,15 @@
   @extend .z-depth-1;
 }
 
+div.indent-30 {
+  text-indent: 30%;
+}
+
 .collapsible-header {
   &:focus {
     outline: 0
   }
+  
 
   display: flex;
   cursor: pointer;

@@ -168,8 +168,7 @@ export default class DynamicsTreeView implements IContributor {
                 let retryFunction = () => vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.addEntry, item);
                 const hasWorkspace = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0;
 
-                switch (item.itemType)
-                {
+                switch (item.itemType) {
                     case "Solutions":
                         Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config), retryFunction);
                         break;

@@ -19,19 +19,17 @@
                     $("#loadingPanel").hide();
                     break;
                 case "load":
-                    window.initializeState(message.parameters);
+                    window.viewModel = message.parameters;
                     break;
             }
         });
     });
 
-    window.initializeState = (viewModel) => {
-        $("#ShowWelcomeExperienceCheckbox").prop("checked") = viewModel.showWelcomeExperience;
-    }
-
     // this part starts on document ready
     $(function () {
-        $('.tabs').tabs();
+        M.AutoInit();
+
+        $("#ShowWelcomeExperienceCheckbox").prop("checked") = window.viewModel.showWelcomeExperience;
 
         $("#ShowWelcomeExperienceCheckbox").click(() => {
             vscode.postMessage({ command: 'updateWelcomeExperienceConfig', value: $("#ShowWelcomeExperienceCheckbox").is(':checked') });

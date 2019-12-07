@@ -1,5 +1,4 @@
 // Color Classes
-
 @each $color_name, $color in $colors {
   @each $color_type, $color_value in $color {
     @if $color_type == "base" {
@@ -28,5 +27,41 @@
   }
   .#{$color}-text {
     color: $color_value !important;
+  }
+}
+
+// Color Classes
+@each $color_name, $color in $vscode-all {
+  @each $color_type, $color_value in $color {
+    $className: "vscode-";
+
+    @if $color_name != "base" {
+      $className: $className + $color_name + "-";
+    }
+
+    @if $color_type != "base" { 
+      $className: $className + $color_type
+    }
+
+    @if $color_type == "background" or str-index($color_type, "Background") != null {
+      .#{$className} {
+        background-color: $color_value !important;
+      }
+    }
+    @else if $color_type == "border" or str-index($color_type, "Border") != null {
+      .#{$className} {
+        border-color: $color_value !important;
+      }      
+    }
+    @else if $color_type == "shadow" or str-index($color_type, "Shadow") != null {
+      .#{$className} {
+        box-shadow: 4px 4px $color_value !important;
+      }      
+    }
+    @else {
+      .#{$className} {
+        color: $color_value !important;
+      }      
+    }
   }
 }

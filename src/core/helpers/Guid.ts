@@ -19,7 +19,8 @@ export function newGuid(): string {
 
 export function isGuid(parameter:string): boolean {
     try {
-        const match = /[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}/i.exec(parameter)[0];
+        const matches = /[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}/i.exec(parameter);
+        const match = matches && matches.length > 0 ? matches[0] : undefined;
 
         return !(typeof match === "undefined" || match === null);
     }

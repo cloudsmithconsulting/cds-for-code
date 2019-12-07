@@ -1,5 +1,5 @@
 export function parseUtcDate(date: string): Date {
-    let regexMatch: RegExpExecArray | (string | number)[];
+    let regexMatch: RegExpExecArray | null | (string | number)[];
     
     if (typeof date === 'string') {
         regexMatch = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:Z|[-+]\d{2}:\d{2})$/.exec(date);

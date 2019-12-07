@@ -1,0 +1,284 @@
+<html>
+
+<head>
+    <style type="text/css">
+        span.iconify,
+        i.iconify,
+        iconify-icon {
+            display: inline-block;
+            width: 1em;
+        }
+    </style>
+    <style id="_defaultStyles">
+        body {
+            background-color: var(--vscode-editor-background);
+            color: var(--vscode-editor-foreground);
+            font-family: var(--vscode-font-family);
+            font-weight: var(--vscode-font-weight);
+            font-size: var(--vscode-font-size);
+            margin: 0;
+            padding: 0 20px;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        a {
+            color: var(--vscode-textLink-foreground);
+        }
+
+        a:hover {
+            color: var(--vscode-textLink-activeForeground);
+        }
+
+        a:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 1px solid -webkit-focus-ring-color;
+            outline-offset: -1px;
+        }
+
+        code {
+            color: var(--vscode-textPreformat-foreground);
+        }
+
+        blockquote {
+            background: var(--vscode-textBlockQuote-background);
+            border-color: var(--vscode-textBlockQuote-border);
+        }
+
+        kbd {
+            color: var(--vscode-editor-foreground);
+            border-radius: 3px;
+            vertical-align: middle;
+            padding: 1px 3px;
+
+            background-color: hsla(0, 0%, 50%, .17);
+            border: 1px solid rgba(71, 71, 71, .4);
+            border-bottom-color: rgba(88, 88, 88, .4);
+            box-shadow: inset 0 -1px 0 rgba(88, 88, 88, .4);
+        }
+
+        .vscode-light kbd {
+            background-color: hsla(0, 0%, 87%, .5);
+            border: 1px solid hsla(0, 0%, 80%, .7);
+            border-bottom-color: hsla(0, 0%, 73%, .7);
+            box-shadow: inset 0 -1px 0 hsla(0, 0%, 73%, .7);
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--vscode-scrollbarSlider-background);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: var(--vscode-scrollbarSlider-hoverBackground);
+        }
+
+        ::-webkit-scrollbar-thumb:active {
+            background-color: var(--vscode-scrollbarSlider-activeBackground);
+        }
+    </style>
+    <script>
+        const acquireVsCodeApi = (function () {
+            const originalPostMessage = window.parent.postMessage.bind(window.parent);
+            const targetOrigin = '*';
+            let acquired = false;
+
+            let state = undefined;
+
+            return () => {
+                if (acquired) {
+                    throw new Error('An instance of the VS Code API has already been acquired');
+                }
+                acquired = true;
+                return Object.freeze({
+                    postMessage: function (msg) {
+                        return originalPostMessage({ command: 'onmessage', data: msg }, targetOrigin);
+                    },
+                    setState: function (newState) {
+                        state = newState;
+                        originalPostMessage({ command: 'do-update-state', data: JSON.stringify(newState) }, targetOrigin);
+                        return newState;
+                    },
+                    getState: function () {
+                        return state;
+                    }
+                });
+            };
+        })();
+        delete window.parent;
+        delete window.top;
+        delete window.frameElement;
+    </script>
+    <meta charset="UTF-8">
+    <!--
+	Use a content security policy to only allow loading images from https or from our extension directory,
+	and only allow scripts that have a specific nonce.
+	-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css"
+        href="../styles/materialize.vscode.css">
+    <title>New Connection - Dynamics 365 CE</title>
+    <script type="text/javascript" src="https://api.iconify.design/ion.js?icons=menu" async="true"></script>
+    <script type="text/javascript" src="https://api.iconify.design/fa.js?icons=save,ban" async="true"></script>
+    <script type="text/javascript" src="https://api.iconify.design/uil.js?icons=cloud-data-connection"
+        async="true"></script>
+</head>
+
+<body class="vscode-dark">
+    <div class="container">
+
+        <nav class="nav-extended">
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">
+                    <img src="#{images['cloudsmith-logo-only-50px.png']}" alt="CloudSmith Conulting"
+                        title="CloudSmith Conulting" />
+                        #{viewTitle}
+                </a>
+                <a href="#" data-target="extended-navigation" class="sidenav-trigger"><span class="iconify" data-icon="ion-menu"
+                        data-width="32" data-height="24"></span></a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
+                    <li><a href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <ul class="sidenav" id="extended-navigation">
+            <li><a id="submitButton" href="javascript://"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
+            <li><a href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
+        </ul>
+        
+        <form class="row">
+            <input type="hidden" id="ConnectionId" />
+            <input type="hidden" id="ConnectionType" />
+        
+            <ul class="collapsible col s12">
+                <li>
+                    <div class="collapsible-header">
+                        <span class="iconify" data-icon="uil-cloud-data-connection" data-width="60" data-height="24"></span>
+                        Connect using a connection string
+                    </div>
+                    <div class="collapsible-body">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="ConnectionString" type="text"
+                                    placeholder="AuthType=Office365; ServiceUri=https://myurl.crm.dynamics.com; Username=username; Password=password" />
+                                <label for="ConnectionString">Connection String</label>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="active">
+                    <div class="collapsible-header icon-text-height">
+                        <span class="iconify" data-icon="uil-cloud-data-connection" data-width="60" data-height="24"></span>
+                        Connect using discovery services using these authentication methods
+                    </div>
+                    <div class="collapsible-body row">
+                        <div class="col s12">
+                            <ul class="tabs">
+                                <li class="tab col s3"><a class="active" href="#windowsAuth">Windows (On-Premises)</a></li>
+                                <li class="tab col s3"><a href="#onlineAuth">Dynamics 365 Online</a></li>
+                                <li class="tab col s3"><a href="#azureAdAuth">Azure AD</a></li>
+                                <li class="tab col s3"><a class="disabled" href="#ifd">IFD / ADFS</a></li>
+                            </ul>
+                        </div>
+                        <div class="row" id="windowsAuth">
+                            <div class="col s12"></div>
+                            <div class="col s12 input-field">
+                                <input id="OnPrem-ServerUrl" type="text" placeholder="http://crm/" />
+                                <label for="OnPrem-ServerUrl">Server URL</label>
+                            </div>
+                            <div class="col s12 input-field">
+                                <input id="OnPrem-Username" type="text" placeholder="http://crm/" />
+                                <label for="OnPrem-Username">Username</label>
+                            </div>
+                            <div class="col s12 input-field">
+                                <input id="OnPrem-Password" type="password" />
+                                <label for="OnPrem-Password">Password</label>
+                            </div>
+                            <div class="col s12 input-field">
+                                <input id="OnPrem-Domain" type="text" placeholder="COMPANYNAME" />
+                                <label for="OnPrem-Domain">Domain</label>
+                            </div>
+                        </div>
+                        <div class="row" id="onlineAuth">
+                            <div class="col s12 input-field">
+                                <input id="Online-Username" type="text" />
+                                <label for="Online-Username">Username</label>
+                            </div>
+                            <div class="col s12 input-field">
+                                <input id="Online-Password" type="password" />
+                                <label for="Online-Password">Password</label>
+                            </div>
+                        </div>
+                        <div class="row" id="azureAdAuth">
+        
+                        </div>
+                        <div class="row" id="ifd">
+        
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header">
+                        Advanced Options
+                    </div>
+                    <div class="collapsible-body s12 m10 l7 xl6">
+                        <div class="row">
+                            <label>
+                                <input type="checkbox" class="filled-in" id="WebApiVersion-Select" />
+                                <span>Specify the API version to use when issuing requests</span>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <select id="WebApiVersion">
+                                    <option value="" disabled selected>Auto-select API</option>
+                                    <option value="v8.0">Dynamics CRM 8.0</option>
+                                    <option value="v8.1">Dynamics CRM 8.1</option>
+                                    <option value="v8.2">Dynamics 365 for Customer Engagement 8.2</option>
+                                    <option value="v9.0">Common Data Service 9.0</option>
+                                </select>
+                                <label>API Version to use</label>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="col s12">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="ConnectionName" type="text" class="validate">
+                        <label for="ConnectionName">Connection Name</label>
+                        <span class="helper-text" data-error="We're sorry, no special characters in the connection name"
+                            data-success="Got it!">What would you like to call this connection in the future?</span>
+                    </div>
+                </div>
+            </div>
+        </form>        
+    </div>
+    <script
+        src="file://C:/Dev/Internal/cds-for-code/node_modules/jquery/dist/jquery.min.js"></script>
+    <script
+        src="file://C:/Dev/Internal/cds-for-code/node_modules/mustache/mustache.min.js"></script>
+    <script
+        src="file://C:/Dev/Internal/cds-for-code/node_modules/%40iconify/iconify/dist/iconify.min.js"></script>
+    <script src="vscode-resource://file///c%3A/Dev/Internal/cds-for-code/node_modules/lodash/lodash.min.js"></script>
+    <script src="file://C:/Dev/Internal/cds-for-code/resources/scripts/main.js"></script>
+    <script src="file://C:/Dev/Internal/cds-for-code/resources/scripts/materialize.js"></script>
+    <script src="file://C:/Dev/Internal/cds-for-code/resources/scripts/connectionView.js"></script>
+
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+</body>
+
+</html>

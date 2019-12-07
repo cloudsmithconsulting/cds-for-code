@@ -1,9 +1,9 @@
 export interface IDictionary<TKey, T> {
     add(key: TKey, value: T): void;
-    insert(index: number, key: TKey, value: T);
+    insert(index: number, key: TKey, value: T): void;
     containsKey(key: TKey): boolean;
     get(key: TKey): T;
-    getKey(value: T): TKey;
+    getKey(value: T): TKey | undefined;
     keys: TKey[];
     length: number;
     remove(key: TKey): void;
@@ -22,15 +22,15 @@ export default class Dictionary<TKey, T> implements IDictionary<TKey, T> {
         }
     }
 
-    add(key: TKey, value: T) {
-        this[key.toString()] = value;
+    add(key: TKey, value: T): void {
+        (<any>this)[key] = value;
 
         this._keys.push(key);
         this._values.push(value);
     }
 
-    insert(index: number, key: TKey, value: T) {
-        this[key.toString()] = value;
+    insert(index: number, key: TKey, value: T): void {
+        (<any>this)[key] = value;
 
         this._keys.splice(index, 0, key);
         this._values.splice(index, 0, value);
@@ -42,14 +42,14 @@ export default class Dictionary<TKey, T> implements IDictionary<TKey, T> {
         this._keys.splice(index, 1);
         this._values.splice(index, 1);
         
-        delete this[key.toString()];
+        delete (<any>this)[key];
     }
 
     get(key: TKey): T {
-        return this[key.toString()];
+        return (<any>this)[key];
     }
 
-    getKey(value: T): TKey {
+    getKey(value: T): TKey | undefined {
         const index = this._values.indexOf(value);
 
         if (index > -1) {
@@ -72,7 +72,7 @@ export default class Dictionary<TKey, T> implements IDictionary<TKey, T> {
     }
 
     containsKey(key: TKey) {
-        if (typeof this[key.toString()] === "undefined") {
+        if (typeof (<any>this)[key] === "undefined") {
             return false;
           }
   

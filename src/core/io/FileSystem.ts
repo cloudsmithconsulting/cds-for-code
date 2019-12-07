@@ -75,7 +75,7 @@ export function exists(path:string): boolean {
 	return fs.existsSync(path);
 }
 
-export function stats(item:string): fs.Stats {
+export function stats(item:string): fs.Stats | null {
 	if (fs.existsSync(item)) {
 		return fs.lstatSync(item);
 	}
@@ -83,7 +83,7 @@ export function stats(item:string): fs.Stats {
 	return null;
 }
 
-export function walk(item:string, predicate?:(item:string) => boolean): Promise<any[]> {
+export function walk(item:string, predicate?:(item:string) => boolean): Promise<any[] | null> {
 	return new Promise((resolve, reject) => {
 		_walk(item, predicate, (error, result) => {
 			if (error) {
@@ -96,7 +96,7 @@ export function walk(item:string, predicate?:(item:string) => boolean): Promise<
 }
 
 export function walkSync(item: string): string[] {
-	let list = []
+	let list: any[] = []
 		, files = fs.readdirSync(item)
 		, stats;
 
@@ -139,7 +139,7 @@ export async function recurse(source: string, destination: string, func: (src: s
 			const destPath = path.join(destination, entry);
 
 			// if directory, recursively copy, otherwise copy file
-			success = await this.recurse(srcPath, destPath, func);
+			success = await recurse(srcPath, destPath, func);
 
 			if (!success) {
 				return false;
@@ -150,8 +150,8 @@ export async function recurse(source: string, destination: string, func: (src: s
 	return true;
 }
 
-async function _walk(dir: string, predicate?:(item:string) => boolean, done?: (error:any, result:any[]) => void) {
-	let results = [];
+async function _walk(dir: string, predicate?:(item:string) => boolean, done?: (error: any, result: any[] | null) => void) {
+	let results: any[] = [];
 	const applyPredicate = (results:any[]) => {
 		if (results && predicate) {
 			results = results.filter(predicate);

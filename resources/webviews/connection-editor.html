@@ -1,0 +1,170 @@
+<nav class="nav-extended">
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">
+            <img src="#{images['cloudsmith-logo-only-50px.png']}" alt="CloudSmith Conulting"
+                title="CloudSmith Conulting" />
+                #{viewTitle}
+        </a>
+        <a href="#" data-target="extended-navigation" class="sidenav-trigger"><span class="iconify" data-icon="ion-menu"
+                data-width="32" data-height="24"></span></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a data-action="save" href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
+            <li><a data-action="cancel" href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
+        </ul>
+    </div>
+</nav>
+
+<ul class="sidenav" id="extended-navigation">
+    <li><a data-action="save" href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
+    <li><a data-action="cancel" href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
+</ul>
+
+<form class="row">
+    <blockquote class="panel_error" id="errorPanel" hidden>
+        <div class="panel__text">
+            <h4>Oops! Slight problem</h4>
+            <span id="errorMessage"></span>
+        </div>
+    </blockquote>
+                
+    <input type="hidden" id="ConnectionId" />
+    <input type="hidden" id="ConnectionType" />
+
+    <div class="col s12">
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="ConnectionName" type="text" class="validate">
+                <label for="ConnectionName">Connection Name</label>
+                <span class="helper-text" data-error="We're sorry, no special characters in the connection name"
+                    data-success="Got it!">What would you like to call this connection in the future?</span>
+            </div>
+        </div>
+    </div>
+
+    <ul class="collapsible col s12" id="ConnectionOptions">
+        <li>
+            <div class="collapsible-header">
+                <span class="iconify" data-icon="uil-cloud-data-connection" data-width="60" data-height="24"></span>
+                Connect using a connection string
+            </div>
+            <div class="collapsible-body">
+                <div class="row">
+                    <div class="input-field col s11">
+                        <input id="ConnectionString" type="text"
+                            placeholder="AuthType=Office365; ServiceUri=https://myurl.crm.dynamics.com; Username=username; Password=password" />
+                        <label for="ConnectionString">Connection String</label>
+                    </div>
+                    <div class="input-field col s1">
+                        <a id="ParseConnectionStringButton" class="waves-effect waves-light btn-small">Go</a>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="active">
+            <div class="collapsible-header icon-text-height">
+                <span class="iconify" data-icon="uil-cloud-data-connection" data-width="60" data-height="24"></span>
+                Connect using discovery services using these authentication methods
+            </div>
+            <div class="collapsible-body row">
+                <div class="col s12">
+                    <ul class="tabs" id="ConnectionTypeTabs">
+                        <li class="tab col s3"><a class="active" href="#windowsAuth">Windows (On-Premises)</a></li>
+                        <li class="tab col s3"><a href="#onlineAuth">Dynamics 365 Online</a></li>
+                        <li class="tab col s3"><a href="#azureAdAuth">Azure AD</a></li>
+                        <li class="tab col s3 disabled"><a href="#ifdAuth">IFD / ADFS</a></li>
+                    </ul>
+                </div>
+                <div id="windowsAuth">
+                    <div class="col s4 input-field">
+                        <input id="OnPrem-Domain" type="text" placeholder="COMPANYNAME" />
+                        <label for="OnPrem-Domain">Domain</label>
+                    </div>
+                    <div class="col s4 input-field">
+                        <input id="OnPrem-Username" type="text" />
+                        <label for="OnPrem-Username">Username</label>
+                    </div>
+                    <div class="col s4 input-field">
+                        <input id="OnPrem-Password" type="password" />
+                        <label for="OnPrem-Password">Password</label>
+                    </div>
+                    <div class="col s12 input-field">
+                        <input id="OnPrem-ServerUrl" type="text" placeholder="http://crm/" />
+                        <label for="OnPrem-ServerUrl">Server URL</label>
+                    </div>
+                </div>
+                <div class="row" id="onlineAuth">
+                    <div class="col s6 input-field">
+                        <input id="Online-Username" type="text" />
+                        <label for="Online-Username">Username</label>
+                    </div>
+                    <div class="col s6 input-field">
+                        <input id="Online-Password" type="password" />
+                        <label for="Online-Password">Password</label>
+                    </div>
+                    <div class="col s12 input-field">
+                        <input id="Online-OrgUrl" type="text" placeholder="https://tenant.crm.dynamics.com/" />
+                        <label for="Online-OrgUrl">Org URL</label>
+                    </div>
+                </div>
+                <div class="row" id="azureAdAuth">
+                    <div class="col s12 input-field">
+                        <input id="AzureAd-ClientId" type="text" />
+                        <label for="AzureAd-ClientId">Client ID</label>
+                    </div>
+                    <div class="col s12 input-field">
+                        <input id="AzureAd-ClientSecret" type="password" />
+                        <label for="AzureAd-ClientSecret">Client Secret</label>
+                    </div>
+                   <div class="col s12 input-field">
+                        <input id="AzureAd-ResourceUrl" type="url" />
+                        <label for="AzureAd-ResourceUrl">Resource URL</label>
+                    </div>
+                    <div class="col s12 input-field">
+                        <input id="AzureAd-AuthorityUrl" type="url" />
+                        <label for="AzureAd-AuthorityUrl">Authority URL</label>
+                    </div>
+                </div>
+                <div class="row" id="ifdAuth">
+
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="collapsible-header">
+                Advanced Options
+            </div>
+            <div class="collapsible-body">
+                <div class="row">
+                    <label class="s12 m6 l5 col">
+                        <input type="checkbox" class="filled-in" id="WebApiVersion-Select" data-enable-target="#WebApiVersion" />
+                        <span>Specify the API version to use when issuing requests</span>
+                    </label>
+                    <div class="s12 m6 l7 col input-field">
+                        <select id="WebApiVersion" disabled>
+                            <option value="" disabled selected>Auto-select API</option>
+                            <option value="v8.0">Dynamics CRM 8.0</option>
+                            <option value="v8.1">Dynamics CRM 8.1</option>
+                            <option value="v8.2">Dynamics 365 for Customer Engagement 8.2</option>
+                            <option value="v9.0">Common Data Service 9.0</option>
+                        </select>
+                        <label>API Version to use</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="s12 m6 l5 col">
+                        <input type="checkbox" class="filled-in" id="OAuthToken-Select" data-enable-target="#OAuthToken" />
+                        <span>Attempt authentication with an existing OAuth token</span>
+                    </label>
+                    <div class="s12 m6 l7 col input-field">
+                        <input id="OAuthToken" type="text" disabled />
+                        <label for="OAuthToken">OAuth Token</label>                            
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <p>
+        Your security is important: All credentials are securely stored with keys you control.  See our <a href="https://github.com/cloudsmith-consulting/cds-for-code/privacy.md">security and privacy</a> notice.
+    </p>
+</form>
