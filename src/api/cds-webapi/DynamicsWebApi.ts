@@ -1,6 +1,6 @@
 ﻿"use strict";
 
-import { ICredential } from "../../core/security/Types";
+import { ICredential, Credential } from "../../core/security/Types";
 
 import Utility from './utilities/Utility';
 import * as Parameters from '../../core/helpers/Parameters';
@@ -343,7 +343,7 @@ export namespace DynamicsWebApi {
             }
 
             if (config.credentials) {
-                this._internalConfig.credentials = config.credentials;
+                this._internalConfig.credentials = Credential.from(config.credentials);
             }
 
             if (config.name) {

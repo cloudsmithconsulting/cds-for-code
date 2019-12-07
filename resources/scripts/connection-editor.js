@@ -31,18 +31,20 @@
             document.title = $title.text();
         }
 
+        // Move to the connection panel
         M.Collapsible.getInstance($("#ConnectionOptions")).open(1);
 
-        // The uusal.
+        // Swap our tabs
+        $(`#ConnectionTypeTabs:nth-child(${apiConfig.type}):first-child`).addClass("active");
+        $(`#ConnectionTypeTabs:nth-child(${apiConfig.type}):first-child`).removeClass("active");
+
+        // The uusal
         $("#ConnectionId").val(apiConfig.id || "");
         $("#ConnectionName").val(apiConfig.name || "");
-        $("#ConnectionTypeTabs").children().eq(apiConfig.type - 1).children().first().addClass("active");
-        $("#ConnectionTypeTabs").children().not(apiConfig.type - 1).children().first().removeClass("active");
 
-        // Advanced options.
+        // Advanced options
         $("#WebApiVersion").val(apiConfig.webApiVersion);
         $("#WebApiVersion").formSelect();
-        //setTimeout( function() { element.formSelect(); }, 50 );
 
         switch (apiConfig.type) {
             case 1:
@@ -76,22 +78,18 @@
     $(function () {
         M.AutoInit();
 
-        function initializeFormRules() {
-            $("[data-enable-target]").each((index, t) => {
-                $(t).on('change', function() {
-                     var target = $(this).attr("data-enable-target");
-                     var element = $(target);
+        $("[data-enable-target]").each((index, t) => {
+            $(t).on('change', function() {
+                 var target = $(this).attr("data-enable-target");
+                 var element = $(target);
 
-                     element.prop('disabled', !this.checked);
+                 element.prop('disabled', !this.checked);
 
-                     if (element.prop("nodeName") === "SELECT") {
-                        setTimeout( function() { element.formSelect(); }, 50 );
-                     }
-                });
+                 if (element.prop("nodeName") === "SELECT") {
+                    element.formSelect();
+                 }
             });
-        }
-
-        initializeFormRules();
+        });
 
         function validateForm(settings) {
             const messages = [];

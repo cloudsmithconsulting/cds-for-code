@@ -23,9 +23,11 @@ export default class GlobalState {
     set DynamicsConnections(value: DynamicsWebApi.Config[]) {
         value.forEach(c => {
             if (c.credentials) {
-                GlobalStateCredentialStore.Instance.store(c.credentials, c.id);
+                const key = GlobalStateCredentialStore.Instance.store(c.credentials, c.id);
                 
                 delete c.credentials;
+
+                c.credentials = GlobalStateCredentialStore.Instance.retreive(key);
             }
         });
 
