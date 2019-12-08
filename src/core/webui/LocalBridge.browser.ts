@@ -6,7 +6,7 @@ export class LocalBridge extends WebviewBridge {
     window: any;
     vscode: Webview;
 
-    constructor(window: any, vscode: Webview) {
+    constructor(window: HTMLElement, vscode: Webview) {
         super();
         this.window = window;
         this.vscode = vscode;

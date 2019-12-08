@@ -23,7 +23,7 @@ export function clone<T extends Object>(source: T, target?: any): T {
 
     for (let prop in source) {
         if (source.hasOwnProperty(prop)) {
-            // if the value is a nested object, recursively copy all it's properties
+            // we deep clone here
             if (isObject(source[prop])) {
                 target[prop] = clone(source[prop]);
             } else {

@@ -98,7 +98,7 @@
             if (settings.type !== 2) {
                 if (CloudSmith.Utilities.isNullOrEmpty(settings.webApiUrl))
                     messages.push("The Server URL or Resource URL is required");
-                if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.webApiUrl))
+                else if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.webApiUrl))
                     messages.push("The Server URL or Resource URL is invalid");
             }
 

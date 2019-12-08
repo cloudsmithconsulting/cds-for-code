@@ -25,8 +25,7 @@
         }
     });
 
-    function inspect(item)
-    {
+    function inspect(item) {
         // create the editor
         const container = document.getElementById("container");
         const options = {
@@ -37,5 +36,4 @@
 
         return editor;
     }
-
 }());

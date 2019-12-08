@@ -1,16 +1,17 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import { View, ViewRenderer, BridgeCommunicationMethod } from '../core/webui/View';
+import { View, BridgeCommunicationMethod } from '../core/webui/View';
+import { ViewRenderer } from "../core/webui/ViewRenderer";
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import ExtensionContext from '../core/ExtensionContext';
 import CdsConnectionString from '../api/CdsConnectionString';
 import Quickly from '../core/Quickly';
-
-let view: CdsConnectionEditor;
+import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
+import { Utilities } from '../core/Utilities';
 
 export default async function openView(config?: DynamicsWebApi.Config): Promise<View> {
-    view = View.show(CdsConnectionEditor, {
+    const view = View.show(CdsConnectionEditor, {
         extensionPath: ExtensionContext.Instance.extensionPath,
         iconPath: './resources/images/cloudsmith-logo-only-50px.png',
         viewTitle: (config && config.name) ? `Edit CDS Connection - ${config.name}` : 'New CDS Connection',
@@ -68,14 +69,22 @@ class CdsConnectionEditor extends View {
             });
     }
     
+    view:{ $:JQueryStatic, window:HTMLElement };
+
     onDidReceiveMessage(instance: CdsConnectionEditor, message: any): vscode.Event<any> {
         switch (message.command) {
+            case 'ready':
+                if (message.view) {
+                    Utilities.$Object.clone(message.view, this.view);
+                }
+
+                return;
             case 'parseConnectionString':
                 try {
                     const connection = CdsConnectionString.from(message.connectionString);                
                     const config = connection ? connection.toConfig() : null;
     
-                    view.setInitialState(config);
+                    this.setInitialState(config);
                 } catch (error) {
                     Quickly.error(`The configuration string could not be parsed: ${error}`);
                 }
@@ -89,6 +98,10 @@ class CdsConnectionEditor extends View {
 
     setInitialState(config?: DynamicsWebApi.Config) {
         if (config) {
+            if (config.credentials.isSecure && config.id) {
+                config.credentials = GlobalStateCredentialStore.Instance.decrypt(config.id, config.credentials);
+            }
+
             this.panel.webview.postMessage({ command: 'load', message: config });
         } else {
             this.panel.webview.postMessage({ command: "load" });

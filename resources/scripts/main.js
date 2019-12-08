@@ -1,13 +1,27 @@
 // this will happen when the script is loaded
 (function() {
-    let currentVsCodeApi;
+    let host;
     
     // cloudsmith utilities
     const CloudSmith = window.CloudSmith || {};
     
-    CloudSmith.acquireVsCodeApi = function() {
-        currentVsCodeApi = currentVsCodeApi || acquireVsCodeApi();
-        return currentVsCodeApi;
+    CloudSmith.getHost = function() {
+        host = host || acquireVsCodeApi();
+
+        if (!host) {
+            throw "Could not obtain a context for vscode";
+        }
+
+        return host;
+    };
+
+    CloudSmith.System = {
+        closeWindow = function() {
+            CloudSmith.getHost().postMessage({command: "system:closeWindow" });
+        },
+        ready = function() {
+            CloudSmith.getHost().postMessage({command: "system:ready" });
+        }
     };
 
     CloudSmith.ErrorPanel = {
@@ -48,15 +62,10 @@
     
     // this will happen on document ready
     $(function () {
-        // wire up cancel button event for default behavior
-        $("#cancelButton").click(function() {
-            // get the vscode api
-            const vscode = CloudSmith.acquireVsCodeApi();
-            if (!vscode) throw "vscode was undefined";
-            // call default "closeWindow"
-            vscode.postMessage({
-                command: "closeWindow"
-            });
+        $("#[data-action='cancel']").click(() => {
+             CloudSmith.System.closeWindow(); 
         });
+
+        CloudSmith.System.ready();
     });
 }());

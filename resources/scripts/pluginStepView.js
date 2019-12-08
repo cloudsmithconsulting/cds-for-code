@@ -251,7 +251,7 @@
         }
 
         // wire up submit click handler
-        $("#submitButton").click(function() {
+        $("[data-action='save']").click(function() {
             const dataCache = window.dataCache;
             
             const selectedMessageid = () => {

@@ -52,7 +52,7 @@
             return messages.length === 0;
         }
 
-        $("#submitButton").click(function() {
+        $("[data-action='save']").click(function() {
             const id = $("#Id").val();
 
             const preImage = $("#PreImage").prop("checked");
