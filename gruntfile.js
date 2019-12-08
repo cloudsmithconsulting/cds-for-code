@@ -32,7 +32,7 @@ module.exports = function (grunt) {
                 // Target options
                 options: {
                     outputStyle: 'expanded',
-                    sourcemap: false
+                    sourcemap: true
                 },
                 files: {
                     'resources/styles/materialize.vscode.css': 'resources/framework/scss/materialize.vscode.scss'
@@ -113,7 +113,6 @@ module.exports = function (grunt) {
                 src: [
                     'out/temp/browser/**/*.js'
                 ],
-                sourceType: module,
                 dest: 'dist/web/cs.vscode.webviews.js',
                 options: {
                     browserifyOptions: { debug: false }
