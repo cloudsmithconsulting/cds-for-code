@@ -2,7 +2,7 @@
 // It cannot access the main VS Code APIs directly.
 (function() {
     // this stuff will be available on script load
-    const vscode = CloudSmith.acquireVsCodeApi();
+    const vscode = CloudSmith.getHost();
     //const oldState = vscode.getState();
 
     // Handle messages sent from the extension to the webview

@@ -6,8 +6,8 @@
     // cloudsmith utilities
     const CloudSmith = window.CloudSmith || {};
 
-    CloudSmith.LocalBridge = require("./LocalBridge");
-    CloudSmith.WebSocketBridge = require('./WebSocketBridge');
+    CloudSmith.LocalBridge = typeof require !== "undefined" && require("./LocalBridge");
+    CloudSmith.WebSocketBridge = typeof require !== "undefined" && require('./WebSocketBridge');
 
     CloudSmith.getHost = function() {
         host = host || acquireVsCodeApi();
@@ -21,12 +21,12 @@
 
     CloudSmith.getBridge = function(options) { 
         if (!bridge && options) {
-            if ((options.type && options.type === 'local')
+            if ((options.type && options.type === 'local' && CloudSmith.LocalBridge)
                 || (typeof options === 'string' && options === 'local')) {
                 bridge = new CloudSmith.LocalBridge(window, CloudSmith.getHost());
             }
     
-            if ((options.type && options.type === 'websocket')
+            if ((options.type && options.type === 'websocket' && CloudSmith.WebSocketBridge)
                 || (typeof options === 'string' && options === 'websocket')) {
                 bridge = new CloudSmith.WebSocketBridge(options.address || 'localhost:8080');
             }
@@ -36,10 +36,10 @@
     };
 
     CloudSmith.System = {
-        closeWindow = function() {
+        closeWindow: function() {
             CloudSmith.getHost().postMessage({command: "system:closeWindow" });
         },
-        ready = function() {
+        ready: function() {
             CloudSmith.getHost().postMessage({command: "system:ready" });
         }
     };
@@ -82,7 +82,7 @@
     
     // this will happen on document ready
     $(function () {
-        $("#[data-action='cancel']").click(() => {
+        $("[data-action='cancel']").click(() => {
              CloudSmith.System.closeWindow(); 
         });
 

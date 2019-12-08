@@ -288,6 +288,10 @@ export abstract class Credential implements ICredential {
         }
     }
 
+    static isSecureCredential<T extends ICredential>(credential: T): boolean {
+        return credential.isSecure;
+    }
+
     get isSecure(): boolean {
         return SecureItem.isSecure(this.username) && SecureItem.isSecure(this.password);
     }

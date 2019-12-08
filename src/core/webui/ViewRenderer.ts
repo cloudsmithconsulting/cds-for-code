@@ -96,7 +96,6 @@ export class ViewRenderer {
     
         let cssHtml: string = '';
 		let scriptHtml: string = '';
-		let bridgeHtml: string = '';
     
         this._styleSheets.values.forEach(uri => {
 			cssHtml += `<link rel="stylesheet" type="text/css" href="${uri}" />`;
@@ -124,10 +123,9 @@ export class ViewRenderer {
 	<title>${this.view.options.title}</title>
 </head>
 <body>
-	<div class="container">
+	<div class="main-container">
 		${htmlParial}
 	</div>
-	${bridgeHtml}
 	${scriptHtml}
 </body>
 </html>`;

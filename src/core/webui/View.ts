@@ -121,10 +121,6 @@ export abstract class View {
 			this.bridge = new WebSocketBridge(this.options.channel);
 		}
 
-		if (this.options.onReady) {
-			this.onReady(view => this.options.onReady(this)); 
-		}
-
 		// Set the webview's initial html content
 		this.update();
 
@@ -188,14 +184,18 @@ export abstract class View {
 
 	private processSystemMessages(message: any): boolean {
 		if (message.command && message.command.toString().indexOf(":") > -1) {
-			const pairs = message.command.toLower().split(":");
+			const pairs = message.command.toLowerCase().split(":");
 
 			if (pairs[0] === "system") {
 				switch (pairs[1]) {
-					case "closeWindow":
+					case "closewindow":
 						this.dispose();
 						break;
 					case "ready":
+						if (this.options && this.options.onReady) {
+							this.options.onReady(this);
+						}
+
 						this._onReady.fire(this);
 						break;
 				}
