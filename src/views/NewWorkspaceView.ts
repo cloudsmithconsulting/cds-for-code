@@ -5,6 +5,7 @@ import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import DiscoveryRepository from '../repositories/discoveryRepository';
+import Dictionary from '../core/types/Dictionary';
 
 export default class NewWorkspaceViewManager implements IContributor {
     private static _initialized:boolean = false;
@@ -79,15 +80,11 @@ class NewWorkspaceView extends View {
         // return rendered html
         return viewRenderer.renderFile('new-workspace.html');
     }    
-    
-    onDidReceiveMessage(instance: NewWorkspaceView, message: any): vscode.Event<any> {
-        switch (message.command) {
-            case 'updateWelcomeExperienceConfig':
-                ExtensionConfiguration.setConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience, message.value);
-                return;
-            case 'openConnectionView':
-                vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editConnection);
-                return;
-        }
+
+    get commands(): Dictionary<string, Function> {
+        return new Dictionary<string, Function>([
+            { key: 'updateWelcomeExperienceConfig', value: message => ExtensionConfiguration.setConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience, message.value) },
+            { key: 'openConnectionView', value: message => vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editConnection) }
+         ]);
     }
 }

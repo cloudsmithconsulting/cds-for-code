@@ -7,6 +7,7 @@ import ApiRepository from '../repositories/apiRepository';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import Quickly from '../core/Quickly';
 import async = require('async');
+import Dictionary from '../core/types/Dictionary';
 
 export default class PluginStepViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -74,6 +75,12 @@ class PluginStepView extends View {
         return viewRenderer.renderFile('plugin-step.html');
     }
 
+    get commands(): Dictionary<string, Function> {
+        return new Dictionary<string, Function>([
+            { key: 'save', value: message => this.save(message.step) }
+         ]);
+    }
+
     private save(step :any) {
         const api = new ApiRepository(this.config);
         api.upsertPluginStep(step)
@@ -83,15 +90,7 @@ class PluginStepView extends View {
                 console.error(err);
             });
     }
-    
-    onDidReceiveMessage(instance: PluginStepView, message: any): vscode.Event<any> {
-        switch (message.command) {
-            case 'save':                
-                instance.save(message.step);
-                return;
-        }
-    }
-
+   
     setInitialState(viewModel: any, config: DynamicsWebApi.Config) {
         this.config = config;
         this.postMessage({ command: 'load', viewModel });

@@ -3,7 +3,8 @@ import * as FileSystem from '../io/FileSystem';
 import * as path from 'path';
 import * as _ from 'lodash';
 import Dictionary from '../types/Dictionary';
-import { View, BridgeCommunicationMethod } from './View';
+import { View } from './View';
+import ExtensionContext from '../ExtensionContext';
 
 export class ViewRenderer {
 	private readonly view: View;
@@ -43,7 +44,7 @@ export class ViewRenderer {
 	}
 	
     private getFileUri(...paths: string[]): vscode.Uri {
-		const pathOnDisk = vscode.Uri.file(path.join(this.view.extensionPath, ...paths));
+		const pathOnDisk = vscode.Uri.file(path.join(ExtensionContext.Instance.extensionPath, ...paths));
 		return this.view.asWebviewUri(pathOnDisk);
 	}
     
@@ -63,34 +64,23 @@ export class ViewRenderer {
 	}
     
     renderFile(webviewFileName: string): string {
-		// get the file path
-		const pathOnDisk = path.join(this.view.extensionPath, 'resources', 'webviews', webviewFileName);
-    
-        // read file contents from disk
+		const pathOnDisk = path.join(ExtensionContext.Instance.extensionPath, 'resources', 'webviews', webviewFileName);
 		const fileHtml = FileSystem.readFileSync(pathOnDisk).toString();
     
-        // use custom delimiter #{ }
 		_.templateSettings.interpolate = /#{([\s\S]+?)}/g;
     
-        // compile the template
 		const compiled = _.template(fileHtml);
-    
-        // create a base viewModel
 		const viewModel = {
 			viewTitle: this.view.options.title,
 			images: {}
 		};
     
-        // add images to viewModel
 		Object.keys(this._images).forEach(key => {
 			//viewModel.images.push(this._images[key]);
 			(<any>viewModel.images)[key] = this._images.get(key);
 		});
     
-        const result = compiled(viewModel);
-    
-        // return output
-		return this.render(result);
+        return this.render(compiled(viewModel));
 	}
     
     render(htmlParial: string): string {

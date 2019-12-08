@@ -7,6 +7,7 @@ import { LocalBridge } from './LocalBridge';
 import { WebSocketBridge } from './WebSocketBridge';
 import { ViewRenderer } from './ViewRenderer';
 import ExtensionContext from '../ExtensionContext';
+import Dictionary from '../types/Dictionary';
 
 export enum BridgeCommunicationMethod {
 	None,
@@ -21,19 +22,19 @@ export interface IViewOptions {
 	icon?: string;
 	alwaysNew?: boolean;
 	bridge?: BridgeCommunicationMethod;
-	bridgeChannel?: WebSocket;
+	channel?: WebSocket;
+	onReady?: (view: any) => void;
 }
+
+export type ViewConstructor<T extends View> = new (panel: vscode.WebviewPanel, options: IViewOptions) => T;
 
 export abstract class View {
     /**
 	 * Track the currently panel. Only allow a single panel to exist at a time.
 	 */
 	static openViews: { [key: string]: View } = {};
-	private static extensionPath: string = ExtensionContext.Instance.extensionPath;
 
-	static show<T extends View>(
-		viewInstance: new (viewOptions: IViewOptions, panel: vscode.WebviewPanel) => T,
-		options: IViewOptions): T {
+	static show<T extends View>(constructor: ViewConstructor<T>, options: IViewOptions): T {
 		const column = vscode.window.activeTextEditor
 			? vscode.window.activeTextEditor.viewColumn
 			: undefined;
@@ -53,7 +54,7 @@ export abstract class View {
 			options.title,
 			{ viewColumn: column || vscode.ViewColumn.One, preserveFocus: options.preserveFocus || true },
 			{
-				// Required for our more complex views.
+				// How dare you.  You know what you did.
 				retainContextWhenHidden: true,
 
 				// Enable javascript in the webview
@@ -61,8 +62,8 @@ export abstract class View {
 
 				// And restrict the webview to only loading content from our extension's `resources` directory, or the extension itself, or node_modules.				
 				localResourceRoots: [
-					vscode.Uri.file(path.join(this.extensionPath, 'resources')),
-					vscode.Uri.file(path.join(this.extensionPath, 'node_modules'))
+					vscode.Uri.file(path.join(ExtensionContext.Instance.extensionPath, 'resources')),
+					vscode.Uri.file(path.join(ExtensionContext.Instance.extensionPath, 'node_modules'))
 				]
 			}
 		);
@@ -77,10 +78,10 @@ export abstract class View {
 		}
 
 		const arrIconPath = iconPath ? iconPath.split('/') : [];
-		panel.iconPath = vscode.Uri.file(path.join(this.extensionPath, ...arrIconPath));
+		panel.iconPath = vscode.Uri.file(path.join(ExtensionContext.Instance.extensionPath, ...arrIconPath));
 
 		// Render the view now.
-		const result: T = new viewInstance(options, panel);
+		const result: T = new constructor(panel, options);
 
 		// cache this
 		if (typeof options.alwaysNew !== 'undefined' && !options.alwaysNew) {
@@ -91,32 +92,37 @@ export abstract class View {
 	}
 
 	readonly bridge: WebviewBridge | undefined;
-	readonly extensionPath: string;
-	private readonly panel: vscode.WebviewPanel;
 	readonly options: IViewOptions;
 
 	protected disposables: vscode.Disposable[] = [];
 	protected readonly renderer: ViewRenderer;
 
 	abstract construct(renderer: ViewRenderer): string;
+	abstract get commands(): Dictionary<string, Function>;
+
+	private readonly panel: vscode.WebviewPanel;
 
 	private _onDidClose: vscode.EventEmitter<View> = new vscode.EventEmitter();
+	private _onDidReceiveMessage: vscode.EventEmitter<any> = new vscode.EventEmitter();
 	private _onReady: vscode.EventEmitter<View> = new vscode.EventEmitter();
 
 	onDidClose: vscode.Event<View> = this._onDidClose.event;
+	onDidReceiveMessage: vscode.Event<any> = this._onDidReceiveMessage.event;
 	onReady: vscode.Event<View> = this._onReady.event;
 
-	abstract onDidReceiveMessage(instance: View, message: any): vscode.Event<any>;
-
-	constructor(viewOptions: IViewOptions, panel: vscode.WebviewPanel) {
-		this.options = viewOptions;
+	constructor(panel: vscode.WebviewPanel, options: IViewOptions) {
+		this.options = options;
 		this.panel = panel;
 		this.renderer = new ViewRenderer(this);
 
 		if (this.options.bridge && this.options.bridge === BridgeCommunicationMethod.Ipc) {
 			this.bridge = new LocalBridge(this.panel.webview);
-		} else if (this.options.bridge && this.options.bridge === BridgeCommunicationMethod.WebSockets && this.options.bridgeChannel) {
-			this.bridge = new WebSocketBridge(this.options.bridgeChannel);
+		} else if (this.options.bridge && this.options.bridge === BridgeCommunicationMethod.WebSockets && this.options.channel) {
+			this.bridge = new WebSocketBridge(this.options.channel);
+		}
+
+		if (this.options.onReady) {
+			this.onReady(view => this.options.onReady(this)); 
 		}
 
 		// Set the webview's initial html content
@@ -142,22 +148,15 @@ export abstract class View {
 				return;
 			}
 
+			if (m && m.command && typeof m.command === 'string' && this.commands && this.commands.containsKey(m.command)) {
+				this.commands[m.command](m);
+			}
+
 			// give the message to the event handler
-			this.onDidReceiveMessage(this, m);
+			this.onDidReceiveMessage(m);
 		});
 	}
 
-	/**
-	 * Convert a uri for the local file system to one that can be used inside webviews.
-	 *
-	 * Webviews cannot directly load resources from the workspace or local file system using `file:` uris. The
-	 * `asWebviewUri` function takes a local `file:` uri and converts it into a uri that can be used inside of
-	 * a webview to load the same resource:
-	 *
-	 * ```ts
-	 * webview.html = `<img src="${webview.asWebviewUri(vscode.Uri.file('/Users/codey/workspace/cat.gif'))}">`
-	 * ```
-	 */
 	asWebviewUri(localResource: vscode.Uri): vscode.Uri {
 		return this.panel.webview.asWebviewUri(localResource);
 	}
@@ -171,6 +170,7 @@ export abstract class View {
 
 		while (this.disposables.length) {
 			const x = this.disposables.pop();
+			
 			if (x) {
 				x.dispose();
 			}

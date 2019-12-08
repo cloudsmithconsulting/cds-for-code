@@ -4,11 +4,10 @@ import { View, BridgeCommunicationMethod } from '../core/webui/View';
 import { ViewRenderer } from "../core/webui/ViewRenderer";
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import DiscoveryRepository from '../repositories/discoveryRepository';
-import ExtensionContext from '../core/ExtensionContext';
 import CdsConnectionString from '../api/CdsConnectionString';
 import Quickly from '../core/Quickly';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
-import { Utilities } from '../core/Utilities';
+import Dictionary from '../core/types/Dictionary';
 
 export default async function openView(config?: DynamicsWebApi.Config): Promise<View> {
     const view = View.show(CdsConnectionEditor, {
@@ -16,10 +15,9 @@ export default async function openView(config?: DynamicsWebApi.Config): Promise<
         title: (config && config.name) ? `Edit CDS Connection - ${config.name}` : 'New CDS Connection',
         type: cs.dynamics.views.connectionEditor,
         preserveFocus: false,
-        bridge: BridgeCommunicationMethod.Ipc
+        bridge: BridgeCommunicationMethod.Ipc,
+        onReady: view => view.setInitialState(config)
     });
-
-    view.setInitialState(config);
 
     return view;
 }
@@ -39,8 +37,26 @@ class CdsConnectionEditor extends View {
         // return rendered html
         return viewRenderer.renderFile('connection-editor.html');
     } 
-    
-    private save(config: DynamicsWebApi.Config) {
+
+    get commands(): Dictionary<string, Function> {
+        return new Dictionary<string, Function>([
+            { key: 'parseConnectionString', value: message => this.parseConnectionString(message.connectionString) }, 
+            { key: 'save', value: message => this.save(message.settings) }
+        ]);
+    }
+        
+    private parseConnectionString(connectionString: string): void {
+        try {
+            const connection = CdsConnectionString.from(connectionString);                
+            const config = connection ? connection.toConfig() : null;
+
+            this.setInitialState(config);
+        } catch (error) {
+            Quickly.error(`The configuration string could not be parsed: ${error}`);
+        }
+    }
+
+    private save(config: DynamicsWebApi.Config): void {
         // set a timeout if it doesn't exist
         config.timeout = config.timeout || (1000 * 3); // 3 seconds
         // construct the api repo
@@ -67,27 +83,8 @@ class CdsConnectionEditor extends View {
                 this.postMessage({ command: 'error', message: err.message });
             });
     }
-    
-    onDidReceiveMessage(instance: CdsConnectionEditor, message: any): vscode.Event<any> {
-        switch (message.command) {
-            case 'parseConnectionString':
-                try {
-                    const connection = CdsConnectionString.from(message.connectionString);                
-                    const config = connection ? connection.toConfig() : null;
-    
-                    this.setInitialState(config);
-                } catch (error) {
-                    Quickly.error(`The configuration string could not be parsed: ${error}`);
-                }
 
-                return;
-            case 'save':
-                instance.save(message.settings);
-                return;
-        }
-    }
-
-    setInitialState(config?: DynamicsWebApi.Config) {
+    setInitialState(config?: DynamicsWebApi.Config): void {
         if (config) {
             if (config.credentials.isSecure && config.id) {
                 config.credentials = GlobalStateCredentialStore.Instance.decrypt(config.id, config.credentials);

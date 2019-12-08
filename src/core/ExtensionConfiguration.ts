@@ -4,10 +4,6 @@ import ExtensionContext from './ExtensionContext';
 export default class ExtensionConfiguration {
     private static _configurations: { [key: string]: vscode.WorkspaceConfiguration } = {};
     private static _notifiers: { [key: string]: (config: vscode.WorkspaceConfiguration) => void } = {};
-
-    static get extensionPath():string {
-        return ExtensionContext.Instance.extensionPath;
-    }
     
     static updateConfiguration(namespace:string): void {
         if (this._configurations && this._configurations[namespace]) {

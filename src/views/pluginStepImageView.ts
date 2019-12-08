@@ -5,6 +5,7 @@ import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import ApiRepository from '../repositories/apiRepository';
+import Dictionary from '../core/types/Dictionary';
 
 export default class PluginStepImageViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, wsConfig?:vscode.WorkspaceConfiguration) {
@@ -41,6 +42,12 @@ class PluginStepImageView extends View {
         return viewRenderer.renderFile('plugin-step-image.html');
     }    
 
+    get commands(): Dictionary<string, Function> {
+        return new Dictionary<string, Function>([
+            { key: 'save', value: message => this.save(message.pluginStepImage) }
+         ]);
+    }
+    
     private save(pluginStepImage: any) {
         const api = new ApiRepository(this.config);
         
@@ -51,15 +58,7 @@ class PluginStepImageView extends View {
                 console.error(err);
             });
     }
-    
-    onDidReceiveMessage(instance: PluginStepImageView, message: any): vscode.Event<any> {
-        switch (message.command) {
-            case 'save':                
-                instance.save(message.pluginStepImage);
-                return;
-        }
-    }
-
+   
     setInitialState(sdkmessageprocessingstepid: string, viewModel: any, config: DynamicsWebApi.Config) {
         this.config = config;
         this.postMessage({ command: 'load', viewModel, sdkmessageprocessingstepid });

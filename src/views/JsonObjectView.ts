@@ -3,6 +3,7 @@ import { View } from '../core/webui/View';
 import { ViewRenderer } from "../core/webui/ViewRenderer";
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
+import Dictionary from '../core/types/Dictionary';
 
 export default class JsonObjectViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -42,12 +43,9 @@ class JsonObjectView extends View {
         // return rendered html
         return viewRenderer.renderFile('jsonInspector.html');
     }    
-    
-    onDidReceiveMessage(instance: JsonObjectView, message: any): vscode.Event<any> {
-        switch (message.command) {
-            case 'default':                
-                return;
-        }
+
+    get commands(): Dictionary<string, Function> {
+        return new Dictionary<string, Function>([ ]);
     }
 
     setInitialState(item?: any) {
