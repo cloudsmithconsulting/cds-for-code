@@ -12,12 +12,11 @@ import { Utilities } from '../core/Utilities';
 
 export default async function openView(config?: DynamicsWebApi.Config): Promise<View> {
     const view = View.show(CdsConnectionEditor, {
-        extensionPath: ExtensionContext.Instance.extensionPath,
-        iconPath: './resources/images/cloudsmith-logo-only-50px.png',
-        viewTitle: (config && config.name) ? `Edit CDS Connection - ${config.name}` : 'New CDS Connection',
-        viewType: cs.dynamics.views.connectionEditor,
+        icon: './resources/images/cloudsmith-logo-only-50px.png',
+        title: (config && config.name) ? `Edit CDS Connection - ${config.name}` : 'New CDS Connection',
+        type: cs.dynamics.views.connectionEditor,
         preserveFocus: false,
-        bridgeType: BridgeCommunicationMethod.Ipc
+        bridge: BridgeCommunicationMethod.Ipc
     });
 
     view.setInitialState(config);
@@ -65,20 +64,12 @@ class CdsConnectionEditor extends View {
                     message = err.message;
                 }
 
-                this.panel.webview.postMessage({ command: 'error', message: err.message });
+                this.postMessage({ command: 'error', message: err.message });
             });
     }
     
-    view:{ $:JQueryStatic, window:HTMLElement };
-
     onDidReceiveMessage(instance: CdsConnectionEditor, message: any): vscode.Event<any> {
         switch (message.command) {
-            case 'ready':
-                if (message.view) {
-                    Utilities.$Object.clone(message.view, this.view);
-                }
-
-                return;
             case 'parseConnectionString':
                 try {
                     const connection = CdsConnectionString.from(message.connectionString);                
@@ -102,9 +93,9 @@ class CdsConnectionEditor extends View {
                 config.credentials = GlobalStateCredentialStore.Instance.decrypt(config.id, config.credentials);
             }
 
-            this.panel.webview.postMessage({ command: 'load', message: config });
+            this.postMessage({ command: 'load', message: config });
         } else {
-            this.panel.webview.postMessage({ command: "load" });
+            this.postMessage({ command: "load" });
         }
     }
 }

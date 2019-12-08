@@ -12,10 +12,9 @@ export default class SvcUtilConfigViewManager implements IContributor {
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 const view = View.show(SvcUtilConfigView, {
-                    extensionPath: context.extensionPath,
-                    iconPath: './resources/images/cloudsmith-logo-only-50px.png',
-                    viewTitle: 'Configure entity code generation - Dynamics 365 CE',
-                    viewType: cs.dynamics.views.svcUtilConfigView
+                    icon: './resources/images/cloudsmith-logo-only-50px.png',
+                    title: 'Configure entity code generation - Dynamics 365 CE',
+                    type: cs.dynamics.views.svcUtilConfigView
                 });
 
                 // only do this if we are editing
@@ -50,7 +49,7 @@ class SvcUtilConfigView extends View {
 
     setInitialState(item?: any) {
         if (item) {
-            this.panel.webview.postMessage({ command: 'configure', message: item });
+            this.postMessage({ command: 'configure', message: item });
         }
     }
 }

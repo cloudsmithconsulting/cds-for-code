@@ -41,10 +41,10 @@ export class ViewRenderer {
     addStyleSheet(styleSheetName: string) {
 		this._styleSheets.add(styleSheetName, this.getFileUri('resources', 'styles', styleSheetName));
 	}
-    
+	
     private getFileUri(...paths: string[]): vscode.Uri {
 		const pathOnDisk = vscode.Uri.file(path.join(this.view.extensionPath, ...paths));
-		return this.view.panel.webview.asWebviewUri(pathOnDisk);
+		return this.view.asWebviewUri(pathOnDisk);
 	}
     
     getImageUri(imageName: string): vscode.Uri {
@@ -77,7 +77,7 @@ export class ViewRenderer {
     
         // create a base viewModel
 		const viewModel = {
-			viewTitle: this.view.options.viewTitle,
+			viewTitle: this.view.options.title,
 			images: {}
 		};
     
@@ -96,6 +96,7 @@ export class ViewRenderer {
     render(htmlParial: string): string {
 		// add some default scripts
 		this.insertScriptAt(0, 'main.js');
+		this.insertScriptAt(0, "cs.vscode.webviews.js");
     
         // these are framework scripts hosted out of node_modules
 		this.addFrameworkScript('lodash/lodash.min.js');
@@ -105,8 +106,7 @@ export class ViewRenderer {
     
         let cssHtml: string = '';
 		let scriptHtml: string = '';
-		let bridgeHtml: string[] = [];
-		let bridgeConstructor: string = '';
+		let bridgeHtml: string = '';
     
         this._styleSheets.values.forEach(uri => {
 			cssHtml += `<link rel="stylesheet" type="text/css" href="${uri}" />`;
@@ -115,41 +115,6 @@ export class ViewRenderer {
         this._scripts.values.forEach(uri => {
 			scriptHtml += `<script src="${uri}"></script>`;
 		});
-    
-        if (this.view.bridge) {
-			bridgeHtml.push(`<script src="${this.getFileUri("resources", "scripts", "cs.vscode.webviews.js")}"></script>`);
-    
-            if (this.view.options.bridgeType === BridgeCommunicationMethod.Ipc) {
-				bridgeConstructor = 'new LocalBridge(window, vscode)';
-			}
-    
-            else if (this.view.options.bridgeType === BridgeCommunicationMethod.WebSockets) {
-				// TODO: add init address for client.
-				bridgeConstructor = 'new WebSocketBridge(new WebSocket())';
-			}
-    
-            if (bridgeConstructor && bridgeConstructor !== "") {
-				bridgeHtml.push(`
-				<script type="text/javascript">
-					(function() {
-						var CloudSmith = window.CloudSmith || {};
-						
-						CloudSmith.LocalBridge = require('./LocalBridge');
-						CloudSmith.WebSocketBridge = require('./WebSocketBridge');
-						
-						window.CloudSmith = CloudSmith;
-
-						const vscode = vscode || acquireVsCodeApi();
-						let bridge = ${bridgeConstructor};
-		
-						if (bridge && window && !window.bridge) {
-							window.bridge = bridge;
-						}
-					})
-				</script>
-				`);
-			}
-		}
     
         return `<!DOCTYPE html>
 <html lang="en">
@@ -161,18 +126,18 @@ export class ViewRenderer {
 	-->
 	<meta http-equiv="Content-Security-Policy" 
 		content="default-src 'none'; 
-		img-src ${this.view.panel.webview.cspSource} https:; 
-		style-src 'self' 'unsafe-inline' ${this.view.panel.webview.cspSource}; 
-		script-src 'unsafe-inline' ${this.view.panel.webview.cspSource} https://api.iconify.design;">
+		img-src ${this.view.cspSource} https:; 
+		style-src 'self' 'unsafe-inline' ${this.view.cspSource}; 
+		script-src 'unsafe-inline' ${this.view.cspSource} https://api.iconify.design;">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	${cssHtml}
-	<title>${this.view.options.viewTitle}</title>
+	<title>${this.view.options.title}</title>
 </head>
 <body>
 	<div class="container">
 		${htmlParial}
 	</div>
-	${bridgeHtml && bridgeHtml.length > 0 ? bridgeHtml.join("") : ""}
+	${bridgeHtml}
 	${scriptHtml}
 </body>
 </html>`;

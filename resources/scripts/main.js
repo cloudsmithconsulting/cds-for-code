@@ -1,10 +1,14 @@
 // this will happen when the script is loaded
 (function() {
     let host;
-    
+    let bridge;
+
     // cloudsmith utilities
     const CloudSmith = window.CloudSmith || {};
-    
+
+    CloudSmith.LocalBridge = require("./LocalBridge");
+    CloudSmith.WebSocketBridge = require('./WebSocketBridge');
+
     CloudSmith.getHost = function() {
         host = host || acquireVsCodeApi();
 
@@ -13,6 +17,22 @@
         }
 
         return host;
+    };
+
+    CloudSmith.getBridge = function(options) { 
+        if (!bridge && options) {
+            if ((options.type && options.type === 'local')
+                || (typeof options === 'string' && options === 'local')) {
+                bridge = new CloudSmith.LocalBridge(window, CloudSmith.getHost());
+            }
+    
+            if ((options.type && options.type === 'websocket')
+                || (typeof options === 'string' && options === 'websocket')) {
+                bridge = new CloudSmith.WebSocketBridge(options.address || 'localhost:8080');
+            }
+        }
+
+        return bridge;
     };
 
     CloudSmith.System = {

@@ -6,6 +6,7 @@ import WebviewBridge from './WebviewBridge';
 import { LocalBridge } from './LocalBridge';
 import { WebSocketBridge } from './WebSocketBridge';
 import { ViewRenderer } from './ViewRenderer';
+import ExtensionContext from '../ExtensionContext';
 
 export enum BridgeCommunicationMethod {
 	None,
@@ -15,11 +16,11 @@ export enum BridgeCommunicationMethod {
 
 export interface IViewOptions {
 	preserveFocus?: boolean;
-	extensionPath: string;
-	viewTitle: string;
-	viewType: string;
-	iconPath?: string;
-	bridgeType?: BridgeCommunicationMethod;
+	title: string;
+	type: string;
+	icon?: string;
+	alwaysNew?: boolean;
+	bridge?: BridgeCommunicationMethod;
 	bridgeChannel?: WebSocket;
 }
 
@@ -28,31 +29,28 @@ export abstract class View {
 	 * Track the currently panel. Only allow a single panel to exist at a time.
 	 */
 	static openViews: { [key: string]: View } = {};
+	private static extensionPath: string = ExtensionContext.Instance.extensionPath;
 
 	static show<T extends View>(
 		viewInstance: new (viewOptions: IViewOptions, panel: vscode.WebviewPanel) => T,
-		options: IViewOptions, alwaysNew?: boolean): T {
-
+		options: IViewOptions): T {
 		const column = vscode.window.activeTextEditor
 			? vscode.window.activeTextEditor.viewColumn
 			: undefined;
 
 		// If we already have a panel, show it.
 		if (Object.keys(this.openViews).length > 0) {
-			if (View.openViews[options.viewType]) {
-				const result = View.openViews[options.viewType];
+			if (View.openViews[options.type]) {
+				const result = View.openViews[options.type];
 				result.panel.reveal(column);
 
 				return <T>result;
 			}
 		}
 
-		const extensionPath = options.extensionPath;
-
-		// Otherwise, create a new panel.
 		const panel = vscode.window.createWebviewPanel(
-			options.viewType,
-			options.viewTitle,
+			options.type,
+			options.title,
 			{ viewColumn: column || vscode.ViewColumn.One, preserveFocus: options.preserveFocus || true },
 			{
 				// Required for our more complex views.
@@ -63,16 +61,14 @@ export abstract class View {
 
 				// And restrict the webview to only loading content from our extension's `resources` directory, or the extension itself, or node_modules.				
 				localResourceRoots: [
-					vscode.Uri.file(path.join(extensionPath, 'resources')),
-					//TODO: replace this with grunt task to copy files.
-					vscode.Uri.file(path.join(extensionPath, 'out')),
-					vscode.Uri.file(path.join(extensionPath, 'node_modules'))
+					vscode.Uri.file(path.join(this.extensionPath, 'resources')),
+					vscode.Uri.file(path.join(this.extensionPath, 'node_modules'))
 				]
 			}
 		);
 
 		// do some icon path fixing here
-		let iconPath = options.iconPath;
+		let iconPath = options.icon;
 		if (iconPath && iconPath.startsWith('./')) {
 			iconPath = iconPath.substr(2);
 		}
@@ -81,14 +77,14 @@ export abstract class View {
 		}
 
 		const arrIconPath = iconPath ? iconPath.split('/') : [];
-		panel.iconPath = vscode.Uri.file(path.join(extensionPath, ...arrIconPath));
+		panel.iconPath = vscode.Uri.file(path.join(this.extensionPath, ...arrIconPath));
 
 		// Render the view now.
 		const result: T = new viewInstance(options, panel);
 
 		// cache this
-		if (!alwaysNew) {
-			View.openViews[options.viewType] = result;
+		if (typeof options.alwaysNew !== 'undefined' && !options.alwaysNew) {
+			View.openViews[options.type] = result;
 		}
 
 		return result;
@@ -96,13 +92,19 @@ export abstract class View {
 
 	readonly bridge: WebviewBridge | undefined;
 	readonly extensionPath: string;
-	readonly panel: vscode.WebviewPanel;
+	private readonly panel: vscode.WebviewPanel;
 	readonly options: IViewOptions;
 
-	protected _disposables: vscode.Disposable[] = [];
+	protected disposables: vscode.Disposable[] = [];
 	protected readonly renderer: ViewRenderer;
 
 	abstract construct(renderer: ViewRenderer): string;
+
+	private _onDidClose: vscode.EventEmitter<View> = new vscode.EventEmitter();
+	private _onReady: vscode.EventEmitter<View> = new vscode.EventEmitter();
+
+	onDidClose: vscode.Event<View> = this._onDidClose.event;
+	onReady: vscode.Event<View> = this._onReady.event;
 
 	abstract onDidReceiveMessage(instance: View, message: any): vscode.Event<any>;
 
@@ -110,11 +112,10 @@ export abstract class View {
 		this.options = viewOptions;
 		this.panel = panel;
 		this.renderer = new ViewRenderer(this);
-		this.extensionPath = viewOptions.extensionPath;
 
-		if (this.options.bridgeType && this.options.bridgeType === BridgeCommunicationMethod.Ipc) {
+		if (this.options.bridge && this.options.bridge === BridgeCommunicationMethod.Ipc) {
 			this.bridge = new LocalBridge(this.panel.webview);
-		} else if (this.options.bridgeType && this.options.bridgeType === BridgeCommunicationMethod.WebSockets && this.options.bridgeChannel) {
+		} else if (this.options.bridge && this.options.bridge === BridgeCommunicationMethod.WebSockets && this.options.bridgeChannel) {
 			this.bridge = new WebSocketBridge(this.options.bridgeChannel);
 		}
 
@@ -123,7 +124,7 @@ export abstract class View {
 
 		// Listen for when the panel is disposed
 		// This happens when the user closes the panel or when the panel is closed programatically
-		this.panel.onDidDispose(() => this.dispose(), null, this._disposables);
+		this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
 
 		// Update the content based on view changes
 		this.panel.onDidChangeViewState(e => {
@@ -132,7 +133,7 @@ export abstract class View {
 				}
 			},
 			null,
-			this._disposables
+			this.disposables
 		);
 
 		// Handle messages from the webview
@@ -146,11 +147,30 @@ export abstract class View {
 		});
 	}
 
-	dispose() {
-		delete View.openViews[this.options.viewType];
+	/**
+	 * Convert a uri for the local file system to one that can be used inside webviews.
+	 *
+	 * Webviews cannot directly load resources from the workspace or local file system using `file:` uris. The
+	 * `asWebviewUri` function takes a local `file:` uri and converts it into a uri that can be used inside of
+	 * a webview to load the same resource:
+	 *
+	 * ```ts
+	 * webview.html = `<img src="${webview.asWebviewUri(vscode.Uri.file('/Users/codey/workspace/cat.gif'))}">`
+	 * ```
+	 */
+	asWebviewUri(localResource: vscode.Uri): vscode.Uri {
+		return this.panel.webview.asWebviewUri(localResource);
+	}
 
-		while (this._disposables.length) {
-			const x = this._disposables.pop();
+	get cspSource(): string {
+		return this.panel.webview.cspSource;
+	}
+
+	dispose() {
+		delete View.openViews[this.options.type];
+
+		while (this.disposables.length) {
+			const x = this.disposables.pop();
 			if (x) {
 				x.dispose();
 			}
@@ -162,6 +182,10 @@ export abstract class View {
 		}
 	}
 
+	postMessage(message:any): Thenable<boolean> {
+		return this.panel.webview.postMessage(message);
+	}
+
 	private processSystemMessages(message: any): boolean {
 		if (message.command && message.command.toString().indexOf(":") > -1) {
 			const pairs = message.command.toLower().split(":");
@@ -170,6 +194,9 @@ export abstract class View {
 				switch (pairs[1]) {
 					case "closeWindow":
 						this.dispose();
+						break;
+					case "ready":
+						this._onReady.fire(this);
 						break;
 				}
 
@@ -181,7 +208,7 @@ export abstract class View {
 	}
 
 	private update() {
-		this.panel.title = this.options.viewTitle;
+		this.panel.title = this.options.title;
 		this.panel.webview.html = this.construct(this.renderer);
 	}
 }

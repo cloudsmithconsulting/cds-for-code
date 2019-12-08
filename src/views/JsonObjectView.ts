@@ -12,10 +12,9 @@ export default class JsonObjectViewManager implements IContributor {
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 const view = View.show(JsonObjectView, {
-                    extensionPath: context.extensionPath,
-                    iconPath: './resources/images/cloudsmith-logo-only-50px.png',
-                    viewTitle: 'Object inspector',
-                    viewType: cs.dynamics.views.jsonInspectorView
+                    icon: './resources/images/cloudsmith-logo-only-50px.png',
+                    title: 'Object inspector',
+                    type: cs.dynamics.views.jsonInspectorView
                 });
 
                 // only do this if we are editing
@@ -53,7 +52,7 @@ class JsonObjectView extends View {
 
     setInitialState(item?: any) {
         if (item) {
-            this.panel.webview.postMessage({ command: 'inspect', message: item });
+            this.postMessage({ command: 'inspect', message: item });
         }
     }
 }
