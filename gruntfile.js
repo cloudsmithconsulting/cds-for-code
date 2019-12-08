@@ -80,13 +80,14 @@ module.exports = function (grunt) {
 
         ts: {
             browser: {
-                src: ["src/core/webui/LocalBridge.browser.ts", "src/core/webui/WebSocketBridge.browser.ts"],        // "!node_modules/**"
+                src: ["src/core/webui/LocalBridge.browser.ts", "src/core/webui/WebSocketBridge.browser.ts"],
                 outDir: "out/temp/browser",
                 options: {
                     rootDir: "src/core",
                     fast: 'never',
                     failOnTypeErrors: false,
                     target: "es6",
+                    module: "commonjs",
                     lib: ["es6", "dom"],
                     sourceMap: true,
                     moduleResolution: "node"
@@ -104,18 +105,19 @@ module.exports = function (grunt) {
                 ],
                 dest: 'resources/scripts/cs.vscode.webviews.js',
                 options: {
-                    browserifyOptions: { debug: true },
-                    transform: [["babelify", { "presets": ['@babel/preset-env'] }]],
+                    browserifyOptions: { debug: true }
+                    //transform: [["babelify", { "presets": ['@babel/preset-env'] }]],
                 }
             },
             release: {
                 src: [
                     'out/temp/browser/**/*.js'
                 ],
+                sourceType: module,
                 dest: 'dist/web/cs.vscode.webviews.js',
                 options: {
-                    browserifyOptions: { debug: false },
-                    transform: [["babelify", { "presets": ['@babel/preset-env'] }]],
+                    browserifyOptions: { debug: false }
+                    //transform: [["babelify", { "presets": ['@babel/preset-env'] }]],
                 }
             }
         },

@@ -2,7 +2,7 @@
 // It cannot access the main VS Code APIs directly.
 (function() {
     // this stuff will be available on script load
-    const vscode = CloudSmith.acquireVsCodeApi();
+    const vscode = CloudSmith.getHost();
     //const oldState = vscode.getState();
 
     // Handle messages sent from the extension to the webview
@@ -52,7 +52,7 @@
             return messages.length === 0;
         }
 
-        $("#submitButton").click(function() {
+        $("[data-action='save']").click(function() {
             const id = $("#Id").val();
 
             const preImage = $("#PreImage").prop("checked");

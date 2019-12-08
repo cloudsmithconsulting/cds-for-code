@@ -1,7 +1,7 @@
 // This script will be run within the webview itself
 // It cannot access the main VS Code APIs directly.
 (function () {
-    const vscode = CloudSmith.acquireVsCodeApi();
+    const vscode = CloudSmith.getHost();
     window.initializeComplete = false;
     window.dataCache = {};
 
@@ -251,7 +251,7 @@
         }
 
         // wire up submit click handler
-        $("#submitButton").click(function() {
+        $("[data-action='save']").click(function() {
             const dataCache = window.dataCache;
             
             const selectedMessageid = () => {

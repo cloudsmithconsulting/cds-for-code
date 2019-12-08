@@ -1,9 +1,11 @@
 import * as vscode from 'vscode';
-import { View, ViewRenderer } from '../core/webui/View';
+import { View } from '../core/webui/View';
+import { ViewRenderer } from "../core/webui/ViewRenderer";
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import ApiRepository from '../repositories/apiRepository';
+import Dictionary from '../core/types/Dictionary';
 
 export default class PluginStepImageViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, wsConfig?:vscode.WorkspaceConfiguration) {
@@ -12,12 +14,12 @@ export default class PluginStepImageViewManager implements IContributor {
             vscode.commands.registerCommand(cs.dynamics.controls.pluginStepImage.open, (sdkmessageprocessingstepid: string, pluginStepImage: any, config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
-                const view = PluginStepImageView.show<PluginStepImageView>(PluginStepImageView, {
-                    extensionPath: context.extensionPath,
-                    iconPath: './resources/images/cloudsmith-logo-only-50px.png',
-                    viewTitle: 'Configure Plugin Step Image - Dynamics 365 CE',
-                    viewType: cs.dynamics.views.pluginStepImageView
-                }, true);
+                const view = PluginStepImageView.show(PluginStepImageView, {
+                    icon: './resources/images/cloudsmith-logo-only-50px.png',
+                    title: 'Configure Plugin Step Image - Dynamics 365 CE',
+                    type: cs.dynamics.views.pluginStepImageView,
+                    alwaysNew: true
+                });
 
                 view.setInitialState(sdkmessageprocessingstepid, pluginStepImage, config);
             }) // <-- no semi-colon, comma starts next command registration
@@ -40,27 +42,25 @@ class PluginStepImageView extends View {
         return viewRenderer.renderFile('plugin-step-image.html');
     }    
 
+    get commands(): Dictionary<string, Function> {
+        return new Dictionary<string, Function>([
+            { key: 'save', value: message => this.save(message.pluginStepImage) }
+         ]);
+    }
+    
     private save(pluginStepImage: any) {
         const api = new ApiRepository(this.config);
         
         api.upsertPluginStepImage(pluginStepImage)
             .then(() => this.dispose())
             .catch(err => {
-                this.panel.webview.postMessage({ command: 'error', message: err.message });
+                this.postMessage({ command: 'error', message: err.message });
                 console.error(err);
             });
     }
-    
-    onDidReceiveMessage(instance: PluginStepImageView, message: any): vscode.Event<any> {
-        switch (message.command) {
-            case 'save':                
-                instance.save(message.pluginStepImage);
-                return;
-        }
-    }
-
+   
     setInitialState(sdkmessageprocessingstepid: string, viewModel: any, config: DynamicsWebApi.Config) {
         this.config = config;
-        this.panel.webview.postMessage({ command: 'load', viewModel, sdkmessageprocessingstepid });
+        this.postMessage({ command: 'load', viewModel, sdkmessageprocessingstepid });
     }
 }

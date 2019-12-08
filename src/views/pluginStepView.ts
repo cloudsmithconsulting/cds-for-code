@@ -1,11 +1,13 @@
 import * as vscode from 'vscode';
-import { View, ViewRenderer } from '../core/webui/View';
+import { View } from '../core/webui/View';
+import { ViewRenderer } from "../core/webui/ViewRenderer";
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import ApiRepository from '../repositories/apiRepository';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import Quickly from '../core/Quickly';
 import async = require('async');
+import Dictionary from '../core/types/Dictionary';
 
 export default class PluginStepViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -18,11 +20,11 @@ export default class PluginStepViewManager implements IContributor {
 
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 const view = View.show(PluginStepView, {
-                    extensionPath: context.extensionPath,
-                    iconPath: './resources/images/cloudsmith-logo-only-50px.png',
-                    viewTitle: 'Configure Plugin Step - Dynamics 365 CE',
-                    viewType: cs.dynamics.views.pluginStepView
-                }, true); // always new
+                    icon: './resources/images/cloudsmith-logo-only-50px.png',
+                    title: 'Configure Plugin Step - Dynamics 365 CE',
+                    type: cs.dynamics.views.pluginStepView,
+                    alwaysNew: true
+                }); // always new
 
                 const api = new ApiRepository(config);
 
@@ -49,7 +51,7 @@ export default class PluginStepViewManager implements IContributor {
                         }
                         callback(null, await api.retrievePluginStep(step.sdkmessageprocessingstepid));
                     }
-                }, function(error: any, viewModel: any) {
+                }, (error: any, viewModel: any) => {
                     // set the initial state
                     view.setInitialState(viewModel, config);
                 });
@@ -73,26 +75,24 @@ class PluginStepView extends View {
         return viewRenderer.renderFile('plugin-step.html');
     }
 
+    get commands(): Dictionary<string, Function> {
+        return new Dictionary<string, Function>([
+            { key: 'save', value: message => this.save(message.step) }
+         ]);
+    }
+
     private save(step :any) {
         const api = new ApiRepository(this.config);
         api.upsertPluginStep(step)
             .then(() => this.dispose())
             .catch(err => {
-                this.panel.webview.postMessage({ command: 'error', message: err.message });
+                this.postMessage({ command: 'error', message: err.message });
                 console.error(err);
             });
     }
-    
-    onDidReceiveMessage(instance: PluginStepView, message: any): vscode.Event<any> {
-        switch (message.command) {
-            case 'save':                
-                instance.save(message.step);
-                return;
-        }
-    }
-
+   
     setInitialState(viewModel: any, config: DynamicsWebApi.Config) {
         this.config = config;
-        this.panel.webview.postMessage({ command: 'load', viewModel });
+        this.postMessage({ command: 'load', viewModel });
     }
 }

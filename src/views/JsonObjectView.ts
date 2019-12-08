@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
-import { View, ViewRenderer } from '../core/webui/View';
+import { View } from '../core/webui/View';
+import { ViewRenderer } from "../core/webui/ViewRenderer";
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
+import Dictionary from '../core/types/Dictionary';
 
 export default class JsonObjectViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -11,10 +13,9 @@ export default class JsonObjectViewManager implements IContributor {
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 const view = View.show(JsonObjectView, {
-                    extensionPath: context.extensionPath,
-                    iconPath: './resources/images/cloudsmith-logo-only-50px.png',
-                    viewTitle: 'Object inspector',
-                    viewType: cs.dynamics.views.jsonInspectorView
+                    icon: './resources/images/cloudsmith-logo-only-50px.png',
+                    title: 'Object inspector',
+                    type: cs.dynamics.views.jsonInspectorView
                 });
 
                 // only do this if we are editing
@@ -42,17 +43,14 @@ class JsonObjectView extends View {
         // return rendered html
         return viewRenderer.renderFile('jsonInspector.html');
     }    
-    
-    onDidReceiveMessage(instance: JsonObjectView, message: any): vscode.Event<any> {
-        switch (message.command) {
-            case 'default':                
-                return;
-        }
+
+    get commands(): Dictionary<string, Function> {
+        return new Dictionary<string, Function>([ ]);
     }
 
     setInitialState(item?: any) {
         if (item) {
-            this.panel.webview.postMessage({ command: 'inspect', message: item });
+            this.postMessage({ command: 'inspect', message: item });
         }
     }
 }

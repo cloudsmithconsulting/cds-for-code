@@ -1,25 +1,24 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import { View, ViewRenderer, BridgeCommunicationMethod } from '../core/webui/View';
+import { View, BridgeCommunicationMethod } from '../core/webui/View';
+import { ViewRenderer } from "../core/webui/ViewRenderer";
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import DiscoveryRepository from '../repositories/discoveryRepository';
-import ExtensionContext from '../core/ExtensionContext';
 import CdsConnectionString from '../api/CdsConnectionString';
 import Quickly from '../core/Quickly';
-
-let view: CdsConnectionEditor;
+import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
+import Dictionary from '../core/types/Dictionary';
+import { Credential } from "../core/security/Types";
 
 export default async function openView(config?: DynamicsWebApi.Config): Promise<View> {
-    view = View.show(CdsConnectionEditor, {
-        extensionPath: ExtensionContext.Instance.extensionPath,
-        iconPath: './resources/images/cloudsmith-logo-only-50px.png',
-        viewTitle: (config && config.name) ? `Edit CDS Connection - ${config.name}` : 'New CDS Connection',
-        viewType: cs.dynamics.views.connectionEditor,
+    const view = View.show(CdsConnectionEditor, {
+        icon: './resources/images/cloudsmith-logo-only-50px.png',
+        title: (config && config.name) ? `Edit CDS Connection - ${config.name}` : 'New CDS Connection',
+        type: cs.dynamics.views.connectionEditor,
         preserveFocus: false,
-        bridgeType: BridgeCommunicationMethod.Ipc
+        bridge: BridgeCommunicationMethod.Ipc,
+        onReady: view => view.setInitialState(config)
     });
-
-    view.setInitialState(config);
 
     return view;
 }
@@ -39,8 +38,26 @@ class CdsConnectionEditor extends View {
         // return rendered html
         return viewRenderer.renderFile('connection-editor.html');
     } 
-    
-    private save(config: DynamicsWebApi.Config) {
+
+    get commands(): Dictionary<string, Function> {
+        return new Dictionary<string, Function>([
+            { key: 'parseConnectionString', value: message => this.parseConnectionString(message.connectionString) }, 
+            { key: 'save', value: message => this.save(message.settings) }
+        ]);
+    }
+        
+    private parseConnectionString(connectionString: string): void {
+        try {
+            const connection = CdsConnectionString.from(connectionString);                
+            const config = connection ? connection.toConfig() : null;
+
+            this.setInitialState(config);
+        } catch (error) {
+            Quickly.error(`The configuration string could not be parsed: ${error}`);
+        }
+    }
+
+    private save(config: DynamicsWebApi.Config): void {
         // set a timeout if it doesn't exist
         config.timeout = config.timeout || (1000 * 3); // 3 seconds
         // construct the api repo
@@ -64,34 +81,19 @@ class CdsConnectionEditor extends View {
                     message = err.message;
                 }
 
-                this.panel.webview.postMessage({ command: 'error', message: err.message });
+                this.postMessage({ command: 'error', message: err.message });
             });
     }
-    
-    onDidReceiveMessage(instance: CdsConnectionEditor, message: any): vscode.Event<any> {
-        switch (message.command) {
-            case 'parseConnectionString':
-                try {
-                    const connection = CdsConnectionString.from(message.connectionString);                
-                    const config = connection ? connection.toConfig() : null;
-    
-                    view.setInitialState(config);
-                } catch (error) {
-                    Quickly.error(`The configuration string could not be parsed: ${error}`);
-                }
 
-                return;
-            case 'save':
-                instance.save(message.settings);
-                return;
-        }
-    }
-
-    setInitialState(config?: DynamicsWebApi.Config) {
+    setInitialState(config?: DynamicsWebApi.Config): void {
         if (config) {
-            this.panel.webview.postMessage({ command: 'load', message: config });
+            if (Credential.isSecureCredential(config.credentials) && config.id) {
+                config.credentials = GlobalStateCredentialStore.Instance.decrypt(config.id, config.credentials);
+            }
+
+            this.postMessage({ command: 'load', message: config });
         } else {
-            this.panel.webview.postMessage({ command: "load" });
+            this.postMessage({ command: "load" });
         }
     }
 }

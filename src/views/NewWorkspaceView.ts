@@ -1,9 +1,11 @@
 import * as vscode from 'vscode';
-import { View, ViewRenderer } from '../core/webui/View';
+import { View } from '../core/webui/View';
+import { ViewRenderer } from "../core/webui/ViewRenderer";
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import DiscoveryRepository from '../repositories/discoveryRepository';
+import Dictionary from '../core/types/Dictionary';
 
 export default class NewWorkspaceViewManager implements IContributor {
     private static _initialized:boolean = false;
@@ -28,17 +30,18 @@ export default class NewWorkspaceViewManager implements IContributor {
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 view = View.show(NewWorkspaceView, {
-                    extensionPath: context.extensionPath,
-                    iconPath: './resources/images/cloudsmith-logo-only-50px.png',
-                    viewTitle: 'Welcome to Dynamics 365 for Code',
-                    viewType: cs.dynamics.views.newWorkspaceView,
+                    icon: './resources/images/cloudsmith-logo-only-50px.png',
+                    title: 'Welcome to Dynamics 365 for Code',
+                    type: cs.dynamics.views.newWorkspaceView,
                     preserveFocus: true
                 });
 
-                view.postMessage("load", {
-                    showWelcomeExperience: ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience),
-                    connections: DiscoveryRepository.getOrgConnections(context)
-                });
+                view.postMessage({ 
+                    command: "load", 
+                    parameters: {
+                        showWelcomeExperience: ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience),
+                        connections: DiscoveryRepository.getOrgConnections(context)
+                    }});
 
                 return view;
             }) // <-- no semi-colon, comma starts next command registration
@@ -46,14 +49,14 @@ export default class NewWorkspaceViewManager implements IContributor {
                 if (!view) {
                     view = await vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.open, true);                    
                 } else {
-                    view.postMessage("showLoadingMessage");
+                    view.postMessage({ command: "showLoadingMessage" });
                 }
             })
             , vscode.commands.registerCommand(cs.dynamics.controls.newWorkspace.hideLoadingMessage, async () => {
                 if (!view) {
                     view = await vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.open, false);
                 } else {
-                    view.postMessage("hideLoadingMessage");
+                    view.postMessage({ command: "hideLoadingMessage" });
                 }
             })
         );
@@ -77,21 +80,11 @@ class NewWorkspaceView extends View {
         // return rendered html
         return viewRenderer.renderFile('new-workspace.html');
     }    
-    
-    onDidReceiveMessage(instance: NewWorkspaceView, message: any): vscode.Event<any> {
-        switch (message.command) {
-            case 'updateWelcomeExperienceConfig':
-                ExtensionConfiguration.setConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience, message.value);
-                return;
-            case 'openConnectionView':
-                vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editConnection);
-                return;
-        }
-    }
 
-    postMessage(command:string, parameters?: any) {
-        if (command) {
-            this.panel.webview.postMessage({ command, parameters });
-        }
+    get commands(): Dictionary<string, Function> {
+        return new Dictionary<string, Function>([
+            { key: 'updateWelcomeExperienceConfig', value: message => ExtensionConfiguration.setConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience, message.value) },
+            { key: 'openConnectionView', value: message => vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editConnection) }
+         ]);
     }
 }

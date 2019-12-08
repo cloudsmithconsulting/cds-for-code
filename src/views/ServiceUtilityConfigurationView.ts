@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
-import { View, ViewRenderer } from '../core/webui/View';
+import { View } from '../core/webui/View';
+import { ViewRenderer } from "../core/webui/ViewRenderer";
 import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
+import Dictionary from '../core/types/Dictionary';
 
 export default class SvcUtilConfigViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -11,10 +13,9 @@ export default class SvcUtilConfigViewManager implements IContributor {
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 const view = View.show(SvcUtilConfigView, {
-                    extensionPath: context.extensionPath,
-                    iconPath: './resources/images/cloudsmith-logo-only-50px.png',
-                    viewTitle: 'Configure entity code generation - Dynamics 365 CE',
-                    viewType: cs.dynamics.views.svcUtilConfigView
+                    icon: './resources/images/cloudsmith-logo-only-50px.png',
+                    title: 'Configure entity code generation - Dynamics 365 CE',
+                    type: cs.dynamics.views.svcUtilConfigView
                 });
 
                 // only do this if we are editing
@@ -39,17 +40,14 @@ class SvcUtilConfigView extends View {
         // return rendered html
         return viewRenderer.renderFile('svcutil-config.html');
     }    
-    
-    onDidReceiveMessage(instance: SvcUtilConfigView, message: any): vscode.Event<any> {
-        switch (message.command) {
-            case 'default':                
-                return;
-        }
+
+    get commands(): Dictionary<string, Function> {
+        return new Dictionary<string, Function>([ ]);
     }
 
     setInitialState(item?: any) {
         if (item) {
-            this.panel.webview.postMessage({ command: 'configure', message: item });
+            this.postMessage({ command: 'configure', message: item });
         }
     }
 }
