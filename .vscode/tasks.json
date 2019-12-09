@@ -4,29 +4,32 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Create VSX file",
-			"type": "npm",
-			"script": "vscode:package",
-			"problemMatcher": []
-		},
-		{
 			"type": "npm",
 			"script": "watch",
-			"problemMatcher": "$tsc-watch",
+			"problemMatcher": [ "$tsc-watch" ],
 			"isBackground": true,
 			"presentation": {
-				"reveal": "never"
+				"reveal": "never",
+				"panel": "dedicated"
 			},
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			}
 		},
-        {
-			"type": "shell",			
-            "label": "Monitor using Grunt",
-            "command": "grunt monitor",
-            "problemMatcher": [ "$gulp-tsc" ],
-        }
+		{
+			"type": "npm",
+			"script": "monitor",
+			"problemMatcher": [],
+			"isBackground": true,
+			"presentation": {
+				"reveal": "never",
+				"panel": "dedicated"
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
 	]
 }

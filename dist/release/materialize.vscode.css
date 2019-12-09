@@ -7146,7 +7146,7 @@ button.btn-floating {
 }
 
 .dropdown-content {
-  background-color: #fff;
+  background-color: var(--vscode-input-background);
   margin: 0;
   display: none;
   min-width: 100px;
@@ -7164,6 +7164,7 @@ button.btn-floating {
 }
 
 .dropdown-content li {
+  background-color: var(--vscode-input-background);
   clear: both;
   color: rgba(0, 0, 0, 0.87);
   cursor: pointer;
@@ -7174,7 +7175,7 @@ button.btn-floating {
 }
 
 .dropdown-content li:hover, .dropdown-content li.active {
-  background-color: #eee;
+  background-color: var(--vscode-input-background);
 }
 
 .dropdown-content li:focus {
@@ -7209,7 +7210,7 @@ button.btn-floating {
 }
 
 body.keyboard-focused .dropdown-content li:focus {
-  background-color: #dadada;
+  background-color: var(--vscode-input-background);
 }
 
 .input-field.col .dropdown-content [type="checkbox"] + label {
@@ -8647,7 +8648,7 @@ select.browser-default {
 }
 
 select {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: var(--vscode-input-background);
   width: 100%;
   padding: 5px;
   border: 1px solid #f2f2f2;
@@ -8741,7 +8742,7 @@ body.keyboard-focused .select-dropdown.dropdown-content li:focus {
 }
 
 .select-dropdown.dropdown-content li {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: var(--vscode-input-background);
 }
 
 .select-dropdown.dropdown-content li:hover {
@@ -8770,7 +8771,7 @@ body.keyboard-focused .select-dropdown.dropdown-content li:focus {
 }
 
 .select-dropdown li.optgroup {
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--vscode-input-background);
 }
 
 .select-dropdown li.optgroup.selected > span {
