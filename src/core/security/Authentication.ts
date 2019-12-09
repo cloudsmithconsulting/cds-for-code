@@ -30,22 +30,21 @@ function decryptCredential<T extends Security.ICredential>(credential:T, storeKe
     return store.decrypt<T>(storeKey, credential, Security.SecureOutput.String);
 }
 
-async function performCdsOnlineAuthenticate(connectionId: string, credential:Security.CdsOnlineCredential): Promise<AuthenticationResult> {
-    let message:string;
-
+async function performCdsOnlineAuthenticate(connectionId: string, credential:Security.CdsOnlineCredential, resource?: string): Promise<AuthenticationResult> {
     const authorityUri = `${Utilities.String.noTrailingSlash(credential.authority)}/${credential.tenant}`;
     const decrypted = decryptCredential(credential, connectionId);
     const context = new adal.AuthenticationContext(authorityUri, false);
 
     return new Promise<AuthenticationResult>((resolve, reject) => {
         context.acquireTokenWithUsernamePassword(
-            decrypted.resource.toString(), 
+            resource || decrypted.resource.toString(), 
             decrypted.username.toString(), 
             decrypted.password.toString(), 
             decrypted.clientId.toString(),
             (error, response) => {
                 if (error) {
                     reject(error);    
+                    resolve({ success: false, message: error && error.message ? error.message : ""});
                 } else {
                     resolve({ success: true, message: response.toString() });
                 }

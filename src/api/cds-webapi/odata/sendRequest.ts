@@ -1,4 +1,5 @@
 ﻿import Utility from '../utilities/Utility';
+import Authentication from "../../../core/security/Authentication";
 import RequestConverter from '../utilities/RequestConverter';
 import BatchConverter from '../utilities/BatchConverter';
 import xhrRequest from "../../../core/http/xhrRequest";
@@ -241,8 +242,18 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
     };
 
     //call a token refresh callback only if it is set and there is no "Authorization" header set yet
-    if (config.credentials && Credential.requireToken(config.credentials) && config.onTokenRefresh && (!additionalHeaders || (additionalHeaders && !additionalHeaders['Authorization']))) {
-        config.onTokenRefresh(sendInternalRequest);
+    if (config.credentials && Credential.requireToken(config.credentials) && typeof config.onTokenRefresh !== 'undefined' && (!additionalHeaders || (additionalHeaders && !additionalHeaders['Authorization']))) {
+        // Attempt authentication this way.
+        if (config.id && config.credentials && config.type !== DynamicsWebApi.ConfigType.OnPremises) {
+            Authentication(config.id, config.credentials)
+                .then(auth  => {
+                    if (!auth.success) {
+                        config.onTokenRefresh(sendInternalRequest);
+                    } 
+
+                    sendInternalRequest();
+                });
+        }
     }
     else {
         sendInternalRequest();
@@ -325,7 +336,17 @@ function _getCollectionName(entityName: string, config: DynamicsWebApi.Config, r
 }
 
 export function makeDiscoveryRequest(request:any, config:DynamicsWebApi.Config, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {
-    return sendRequest("GET", `${request ? request.collection : "Instances"}`, config, null, null, null, resolve, reject, request ? request.isBatch : false, true);
+    switch (config.type) {
+        case DynamicsWebApi.ConfigType.OnPremises:
+            return sendRequest("GET", `${request ? request.collection : "Instances"}`, config, null, null, null, resolve, reject, request ? request.isBatch : false, true);
+        case DynamicsWebApi.ConfigType.Online:
+            config.webApiUrl = "https://globaldisco.crm.dynamics.com/";
+            config.webApiVersion = "v1.0";
+
+            return sendRequest("GET", `${request ? request.collection : "Instances"}`, config, null, null, null, resolve, reject, request ? request.isBatch : false, true);
+        default: 
+            throw new Error(`No discovery method is available for a connection of type '${config.type}'`);
+    }
 }
 
 export function makeRequest(method: string, request: any, functionName: string, config: any, responseParams?: any, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {
