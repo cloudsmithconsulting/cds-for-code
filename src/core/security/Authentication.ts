@@ -18,22 +18,22 @@ export class AuthenticationError extends Error {
     httpResponse?: any;
 }
 
-export default async function authenticate(connectionId: string, credential:Security.ICredential, resource?:string): Promise<AuthenticationResult> {
+export default async function authenticate(key: string, credential:Security.ICredential, resource?:string): Promise<AuthenticationResult> {
     if (Security.Credential.isCdsOnlineUserCredential(credential)) {
-        return await performCdsOnlineAuthenticate(connectionId, <Security.CdsOnlineCredential>credential, resource);
+        return await performCdsOnlineAuthenticate(key, <Security.CdsOnlineCredential>credential, resource);
     } else if (Security.Credential.isAzureAdClientCredential(credential)) {
-        return await performAzureAdClientAuthenticate(connectionId, <Security.AzureAdClientCredential>credential);
+        return await performAzureAdClientAuthenticate(key, <Security.AzureAdClientCredential>credential);
     } else if (Security.Credential.isAzureAdUserCredential(credential)) {
-        return await performAzureAdUserAuthenticate(connectionId, <Security.AzureAdUserCredential>credential);
+        return await performAzureAdUserAuthenticate(key, <Security.AzureAdUserCredential>credential);
     } else if (Security.Credential.isWindowsCredential(credential)) {
-        return await performWindowsAuthenticate(connectionId, <Security.WindowsCredential>credential);
+        return await performWindowsAuthenticate(key, <Security.WindowsCredential>credential);
     } else if (Security.Credential.isOauthCredential(credential)) {
-        return await performOAuthAuthenticate(connectionId, <Security.OAuthCredential>credential);
+        return await performOAuthAuthenticate(key, <Security.OAuthCredential>credential);
     }
 
     const error = new AuthenticationError("There is no authentication provide configured that can perform authentication against the supplied credentials.");
     error.type = 'no_provider_found';
-    
+
     return { success: false, error };
 }
 
@@ -49,24 +49,40 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
     const context = new adal.AuthenticationContext(authorityUri, false);
 
     return new Promise<AuthenticationResult>((resolve, reject) => {
-        context.acquireTokenWithUsernamePassword(
-            resource || decrypted.resource.toString(), 
-            decrypted.username.toString(), 
-            decrypted.password.toString(), 
-            decrypted.clientId.toString(),
-            (error, response) => {
-                if (error) {
-                    const exception = ErrorParser.parseAdalError(error);
-                    if (exception.type === 'interaction_required') {
-                        Quickly.inform("Your credentials use multi-factor authentication.  You will need to authenticate interactively.");
-                    } else {
-                        reject(exception);    
-                        resolve({ success: false, error: exception });
-                    }
+        const callback = (error, response) => { 
+            if (error) {
+                const exception = ErrorParser.parseAdalError(error);
+                if (exception.type === 'interaction_required') {
+                    Quickly.inform("Your credentials use multi-factor authentication.  You will need to authenticate interactively.");
                 } else {
-                    resolve({ success: true, response });
+                    reject(exception);    
+                    resolve({ success: false, error: exception });
                 }
-        });
+            } else {
+                const result = { success: true, response };
+
+                credential.onAuthenticate(result);
+
+                resolve(result);
+            }
+        };
+
+        if (decrypted.refreshToken && decrypted.refreshToken.length > 0) {
+            context.acquireTokenWithRefreshToken(
+                decrypted.refreshToken.toString(), 
+                decrypted.clientId.toString(), 
+                resource || decrypted.resource.toString(), 
+                callback);
+        } else {
+            context.acquireTokenWithUsernamePassword(
+                resource || decrypted.resource.toString(), 
+                decrypted.username.toString(), 
+                decrypted.password.toString(), 
+                decrypted.clientId.toString(),
+                callback);
+        }
+
+
     });
 }
 

@@ -248,14 +248,12 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
         // Attempt authentication this way.
         if (((config.id && config.credentials && config.credentials.isSecure) || config.credentials) && config.type !== DynamicsWebApi.ConfigType.OnPremises) {
             Authentication(config.id, config.credentials, isDiscovery ? `https://disco.${Utility.crmHostSuffix(config.webApiUrl)}/` : undefined)
-                .then(auth  => {
+                .then(auth => {
                     if (!auth.success) {
                         config.onTokenRefresh(sendInternalRequest);
                     } else {
-                        (<OAuthCredential>config.credentials).token = auth.response.accessToken;
+                        sendInternalRequest(auth.response);
                     }
-
-                    sendInternalRequest(auth.response);
                 });
         }
     }

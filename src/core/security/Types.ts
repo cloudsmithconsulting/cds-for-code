@@ -1,5 +1,6 @@
 import Encryption from "./Encryption";
 import { Utilities } from "../Utilities";
+import Authentication, { AuthenticationResult } from "./Authentication";
 
 /**
  * @type represents an item that can be secured.
@@ -255,7 +256,7 @@ export abstract class Credential implements ICredential {
     }
 
     static isOauthCredential(value:ICredential): boolean {
-        return value && this.isCredential(value) && value.hasOwnProperty("token");
+        return value && this.isCredential(value) && value.hasOwnProperty("refreshToken") && value.hasOwnProperty("accessToken");
     }
 
     static isAzureAdClientCredential(value:ICredential): boolean {
@@ -271,7 +272,7 @@ export abstract class Credential implements ICredential {
     }
 
     static needsToken(value:ICredential): boolean { 
-        return this.requireToken(value) && !Utilities.$Object.isNullOrEmpty((<OAuthCredential>value).token);
+        return this.requireToken(value) && !Utilities.$Object.isNullOrEmpty((<OAuthCredential>value).refreshToken);
     }
 
     static requireToken(value:ICredential): boolean { 
@@ -286,7 +287,7 @@ export abstract class Credential implements ICredential {
 
     static setToken(value:ICredential, token:string) {
         if (this.isOauthCredential(value)) {            
-            (<OAuthCredential>value).token = token;
+            (<OAuthCredential>value).refreshToken = token;
         }
     }
 
@@ -332,8 +333,24 @@ export class WindowsCredential extends Credential {
 }
 
 export class OAuthCredential extends Credential {
-    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public token?:string) {
+    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public accessToken?:string, public refreshToken?:string) {
         super(username, password);
+    }
+
+    onAuthenticate(result: AuthenticationResult) {
+        if (result.success) {
+            this.accessToken = result.response.accessToken;
+            this.refreshToken = result.response.refreshToken;
+        }
+
+        if (result.response.expiresIn) {
+            const seconds = Number.parseInt(result.response.expiresIn);
+
+            // Auto-expire this token, forcing us to get a new one with our refresh token.
+            if (!Number.isNaN(seconds)) {
+                global.setTimeout(() => this.accessToken = null, seconds * 1000);
+            }
+        }
     }
 }
 
@@ -363,7 +380,7 @@ export class CdsOnlineCredential extends OAuthCredential {
         public tenant: string = CdsOnlineCredential.defaultTenant,
         public clientId: string = CdsOnlineCredential.defaultClientId,
         public resource: string = CdsOnlineCredential.defaultResource,
-        token?: string) {
-        super(username, password, token);
+        public refreshToken?: string) {
+        super(username, password, undefined, refreshToken);
     }
 }
