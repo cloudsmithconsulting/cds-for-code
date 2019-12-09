@@ -23,8 +23,8 @@
 			}
 		},
         {
-            "type": "shell",
-            "label": "grunt monitor",
+			"type": "shell",			
+            "label": "Monitor using Grunt",
             "command": "grunt monitor",
             "problemMatcher": [ "$gulp-tsc" ],
         }

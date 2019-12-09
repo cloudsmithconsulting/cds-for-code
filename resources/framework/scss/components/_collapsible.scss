@@ -33,7 +33,7 @@ div.indent-30 {
   }
 }
 .keyboard-focused .collapsible-header:focus {
-  background-color: #eee;
+  background-color: vscode-color("activityBar", "background");
 }
 
 .collapsible-body {

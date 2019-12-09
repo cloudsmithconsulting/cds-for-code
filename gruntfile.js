@@ -1,6 +1,5 @@
 module.exports = function (grunt) {
     const sass = require('node-sass');
-    let concatFile = 'out/temp/materialize_concat.js.map';
 
     // configure the tasks
     let config = {
@@ -32,7 +31,7 @@ module.exports = function (grunt) {
                 // Target options
                 options: {
                     outputStyle: 'expanded',
-                    sourcemap: false
+                    sourcemap: true
                 },
                 files: {
                     'resources/styles/materialize.vscode.css': 'resources/framework/scss/materialize.vscode.scss'
@@ -55,7 +54,7 @@ module.exports = function (grunt) {
                     sourcemap: false
                 },
                 files: {
-                    'dist/web/materialize.vscode.css': 'resources/framework/scss/materialize.vscode.scss'
+                    'dist/release/materialize.vscode.css': 'resources/framework/scss/materialize.vscode.scss'
                 }
             }
         },
@@ -113,7 +112,6 @@ module.exports = function (grunt) {
                 src: [
                     'out/temp/browser/**/*.js'
                 ],
-                sourceType: module,
                 dest: 'dist/web/cs.vscode.webviews.js',
                 options: {
                     browserifyOptions: { debug: false }
@@ -127,11 +125,11 @@ module.exports = function (grunt) {
                 sourceMap: false,
                 presets: ['@babel/preset-env'],
                 plugins: [
-                    'transform-es2015-arrow-functions',
-                    'transform-es2015-block-scoping',
-                    'transform-es2015-classes',
-                    'transform-es2015-template-literals',
-                    'transform-es2015-object-super'
+                    '@babel/transform-arrow-functions',
+                    '@babel/transform-block-scoped-functions',
+                    '@babel/transform-classes',
+                    '@babel/transform-template-literals',
+                    '@babel/transform-object-super'
                   ]
             },
             dev: {
@@ -260,7 +258,13 @@ module.exports = function (grunt) {
         clean: {
             temp: {
                 src: ['out/temp']
-            }
+            },
+            temp_js: {
+                src: ['out/temp/**/materialize*.*']
+            },
+            temp_ts: {
+                src: ['out/temp/browser']
+            }            
         },
 
         //  Watch Files
@@ -432,10 +436,10 @@ module.exports = function (grunt) {
     ]);
 
     grunt.task.registerTask('configureBabel', 'configures babel options', function () {
-        config.babel.bin.options.inputSourceMap = grunt.file.readJSON(concatFile);
+        config.babel.dev.options.inputSourceMap = grunt.file.readJSON('out/temp/materialize_concat.js.map');
     });
 
-    grunt.registerTask('js_compile', ['concat:dev', 'configureBabel', 'babel:dev', 'uglify:dev', 'clean:temp', 'notify:js_compile']);
+    grunt.registerTask('js_compile', ['concat:dev', 'configureBabel', 'babel:dev', 'uglify:dev', 'clean:temp_js', 'notify:js_compile']);
     grunt.registerTask('sass_compile', [
         'sass:dev',
         'sass:release',
@@ -443,7 +447,7 @@ module.exports = function (grunt) {
         'postcss:dev',
         'notify:sass_compile'
     ]);
-    grunt.registerTask('ts_compile_browser', ['mkdir:dev', 'ts:browser', 'browserify:dev', 'clean:temp', 'notify:ts_compile_browser']);
+    grunt.registerTask('ts_compile_browser', ['mkdir:dev', 'ts:browser', 'browserify:dev', 'clean:temp_ts', 'notify:ts_compile_browser']);
 
     grunt.registerTask('monitor', ['concurrent:monitor']);
     grunt.registerTask('travis', ['ts_compile_browser', 'js_compile', 'sass_compile']);
