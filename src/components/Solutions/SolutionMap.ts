@@ -242,9 +242,9 @@ export default class SolutionMap implements IContributor {
         if (!component) {
             returnPath = path.join(solutionPath, "Other", "Solution.xml");
         } else {
-            //TODO: complete this switch statement.
             switch (component) {
-                case CdsSolutions.SolutionComponent.PluginAssembly:
+                case CdsSolutions.SolutionComponent.PluginAssembly:                    
+                    //TODO: Ira - complete this switch statement as part of work item 380
                     break;
                 case CdsSolutions.SolutionComponent.WebResource:
                     returnPath = path.join(solutionPath, "WebResources");
