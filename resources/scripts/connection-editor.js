@@ -35,13 +35,19 @@
         M.Collapsible.getInstance($("#ConnectionOptions")).open(1);
 
         // Swap our tabs
-        $(`#ConnectionTypeTabs:nth-child(${apiConfig.type}):first-child`).addClass("active");
-        $(`#ConnectionTypeTabs:nth-child(${apiConfig.type}):first-child`).removeClass("active");
-        $('#ConnectionTypeTabs').tabs();
+        const selectedTab = 
+            apiConfig.type === 1 ? "#windowsAuth" : 
+            apiConfig.type === 2 ? "#onlineAuth" : 
+            apiConfig.type === 3 ? "#azureAuth" :
+            apiConfig.type === 4 ? "#ifdAuth" : undefined;
+
+        if (selectedTab) {
+            setTimeout(M.Tabs.getInstance($('#ConnectionTypeTabs')).select(selectedTab), 100);
+        }
 
         // The uusal
-        $("#ConnectionId").val(apiConfig.id || "");
-        $("#ConnectionName").val(apiConfig.name || "");
+        $("#ConnectionId").val(apiConfig.id || $("#ConnectionId").val() || "");
+        $("#ConnectionName").val(apiConfig.name || $("#ConnectionName").val() || "");
 
         // Advanced options
         $("#WebApiVersion").val(apiConfig.webApiVersion);

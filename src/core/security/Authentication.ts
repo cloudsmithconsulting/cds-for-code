@@ -44,14 +44,19 @@ function decryptCredential<T extends Security.ICredential>(credential:T, storeKe
 }
 
 async function performCdsOnlineAuthenticate(connectionId: string, credential:Security.CdsOnlineCredential, resource?: string): Promise<AuthenticationResult> {
-    const authorityUri = `${Utilities.String.noTrailingSlash(credential.authority)}/${credential.tenant}`;
+    const authority = credential.authority || Security.CdsOnlineCredential.defaultAuthority;
+    const tenant = credential.tenant || Security.CdsOnlineCredential.defaultTenant;
+    const clientId = credential.clientId || Security.CdsOnlineCredential.defaultClientId;
+
+    const authorityUri = `${Utilities.String.noTrailingSlash(authority)}/${tenant}`;
     const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
     const context = new adal.AuthenticationContext(authorityUri, false);
 
-    return new Promise<AuthenticationResult>((resolve, reject) => {
+    return await new Promise<AuthenticationResult>((resolve, reject) => {
         const callback = (error, response) => { 
             if (error) {
                 const exception = ErrorParser.parseAdalError(error);
+
                 if (exception.type === 'interaction_required') {
                     Quickly.inform("Your credentials use multi-factor authentication.  You will need to authenticate interactively.");
                 } else {
@@ -61,7 +66,12 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
             } else {
                 const result = { success: true, response };
 
-                credential.onAuthenticate(result);
+                if (credential.onAuthenticate) {
+                    credential.onAuthenticate(result);
+                } else {
+                    credential.accessToken = result.response.accessToken;
+                    credential.refreshToken = result.response.refreshToken;
+                }
 
                 resolve(result);
             }
@@ -70,7 +80,7 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
         if (decrypted.refreshToken && decrypted.refreshToken.length > 0) {
             context.acquireTokenWithRefreshToken(
                 decrypted.refreshToken.toString(), 
-                decrypted.clientId.toString(), 
+                clientId, 
                 resource || decrypted.resource.toString(), 
                 callback);
         } else {
@@ -78,7 +88,7 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
                 resource || decrypted.resource.toString(), 
                 decrypted.username.toString(), 
                 decrypted.password.toString(), 
-                decrypted.clientId.toString(),
+                clientId,
                 callback);
         }
 

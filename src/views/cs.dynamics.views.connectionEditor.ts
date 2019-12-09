@@ -57,20 +57,20 @@ class CdsConnectionEditor extends View {
         }
     }
 
-    private save(config: DynamicsWebApi.Config): void {
+    private async save(config: DynamicsWebApi.Config): Promise<void> {
         // set a timeout if it doesn't exist
         config.timeout = config.timeout || (1000 * 3); // 3 seconds
         // construct the api repo
         const api = new DiscoveryRepository(config);
         
         // try a discovery request
-        api.retrieveOrganizations()
-            .then(orgs => {
+        await api.authenticate()
+            .then(results => {
                 // success, add it to connection window
-                vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.addConnection, config)
-                .then(() => {
-                    this.dispose();
-                });
+                vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.addConnection, api.config)
+                    .then(() => {
+                        this.dispose();
+                    });
             })
             .catch(err => {
                 let message: string;

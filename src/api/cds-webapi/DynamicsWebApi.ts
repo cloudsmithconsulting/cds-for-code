@@ -214,7 +214,9 @@ export namespace DynamicsWebApi {
         name: string;
         /** The type of connection/configuration this relates to */
         type: ConfigType;
-        /**A String representing the GUID value for the Dynamics 365 system user id.Impersonates the user. */
+        /** A string representing the Url to use when attempting a web operation against this org  */
+        appUrl?: string;
+        /**A String representing the URL prefix to use when attempting a web API operation against this org */
         webApiUrl?: string;
         /** A string representation of a URL that can discovery this instance. */
         discoveryUrl?: string;

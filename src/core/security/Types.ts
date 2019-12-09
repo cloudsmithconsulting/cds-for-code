@@ -1,6 +1,6 @@
 import Encryption from "./Encryption";
 import { Utilities } from "../Utilities";
-import Authentication, { AuthenticationResult } from "./Authentication";
+import { AuthenticationResult } from "./Authentication";
 
 /**
  * @type represents an item that can be secured.
@@ -224,10 +224,24 @@ export abstract class Credential implements ICredential {
     }
 
     static from<T extends ICredential>(value:any, key?:string): T {
+        if (value && 
+            (value instanceof CdsOnlineCredential 
+            || value instanceof AzureAdClientCredential 
+            || value instanceof AzureAdUserCredential 
+            || value instanceof WindowsCredential 
+            || value instanceof OAuthCredential 
+            || value instanceof Credential)) {
+                if (key) {
+                    value.storeKey = key;
+                }
+        
+                return <T>value;
+        }
+
         let cred:Credential = Credential.Empty;
 
         if (this.isCdsOnlineUserCredential(value)) {
-            cred = new CdsOnlineCredential(value.username, value.password, value.authority, value.tenant, value.clientId, value.resource, value.token);
+            cred = new CdsOnlineCredential(value.username, value.password, value.authority, value.tenant, value.clientId, value.resource, value.refreshToken, value.accessToken);
         } else if (this.isAzureAdClientCredential(value)) {
             cred = new AzureAdClientCredential(value.clientId, value.clientSecret, value.authority, value.callbackUrl);
         } else if (this.isAzureAdUserCredential(value)) {
@@ -235,7 +249,7 @@ export abstract class Credential implements ICredential {
         } else if (this.isWindowsCredential(value)) {
             cred = new WindowsCredential(value.domain, value.username, value.password);
         } else if (this.isOauthCredential(value)) {
-            cred = new OAuthCredential(value.username, value.password, value.token);
+            cred = new OAuthCredential(value.username, value.password, value.refreshToken, value.accessToken);
         } else if (this.isCredential(value)) {
             cred = <Credential>value;
         }
@@ -333,7 +347,7 @@ export class WindowsCredential extends Credential {
 }
 
 export class OAuthCredential extends Credential {
-    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public accessToken?:string, public refreshToken?:string) {
+    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public refreshToken?: string, public accessToken?: string) {
         super(username, password);
     }
 
@@ -380,7 +394,8 @@ export class CdsOnlineCredential extends OAuthCredential {
         public tenant: string = CdsOnlineCredential.defaultTenant,
         public clientId: string = CdsOnlineCredential.defaultClientId,
         public resource: string = CdsOnlineCredential.defaultResource,
-        public refreshToken?: string) {
-        super(username, password, undefined, refreshToken);
+        refreshToken?: string,
+        accessToken?: string) {
+        super(username, password, refreshToken, accessToken);
     }
 }
