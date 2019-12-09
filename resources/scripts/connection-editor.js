@@ -37,6 +37,7 @@
         // Swap our tabs
         $(`#ConnectionTypeTabs:nth-child(${apiConfig.type}):first-child`).addClass("active");
         $(`#ConnectionTypeTabs:nth-child(${apiConfig.type}):first-child`).removeClass("active");
+        $('#ConnectionTypeTabs').tabs();
 
         // The uusal
         $("#ConnectionId").val(apiConfig.id || "");
@@ -172,11 +173,13 @@
 
                     break;
                 case 2: 
+                    credentials.resource = $("#Online-OrgUrl").val();
+
                     if (token) {
                         credentials.token = token;
                     } else {
                         credentials.username = $("#Online-Username").val();
-                        credentials.password = $("#Online-Password").val();
+                        credentials.password = $("#Online-Password").val();                        
                     }
 
                     break;

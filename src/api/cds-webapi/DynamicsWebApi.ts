@@ -336,10 +336,10 @@ export namespace DynamicsWebApi {
             if (config.webApiUrl) {
                 Parameters.stringParameterCheck(config.webApiUrl, "DynamicsWebApi.setConfig", "config.webApiUrl");
                 this._internalConfig.webApiUrl = Utility.initWebApiUrl(config.webApiUrl, this._internalConfig.webApiVersion); 
-                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(config.webApiUrl, this._internalConfig.webApiVersion);
+                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(config.webApiUrl, this._internalConfig.webApiVersion, config.type);
             } else {
                 this._internalConfig.webApiUrl = Utility.initWebApiUrl(undefined, this._internalConfig.webApiVersion);
-                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(undefined, this._internalConfig.webApiVersion);
+                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(undefined, this._internalConfig.webApiVersion, config.type);
             }
 
             if (config.credentials) {

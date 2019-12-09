@@ -235,6 +235,8 @@ export abstract class Credential implements ICredential {
             cred = new WindowsCredential(value.domain, value.username, value.password);
         } else if (this.isOauthCredential(value)) {
             cred = new OAuthCredential(value.username, value.password, value.token);
+        } else if (this.isCredential(value)) {
+            cred = <Credential>value;
         }
 
         if (cred && key) {
@@ -265,7 +267,7 @@ export abstract class Credential implements ICredential {
     }
 
     static isCdsOnlineUserCredential(value:ICredential): boolean {
-        return value && this.isOauthCredential(value) && value.hasOwnProperty("resource");
+        return value && this.isCredential(value) && value.hasOwnProperty("resource");
     }
 
     static needsToken(value:ICredential): boolean { 
@@ -352,6 +354,7 @@ export class CdsOnlineCredential extends OAuthCredential {
     //static readonly defaultAuthority:string = "https://login.microsoftonline.com/common/oauth2/authorize?resource=";
     static readonly defaultAuthority:string = "https://login.microsoftonline.com";
     static readonly defaultTenant:string = "common";
+    static readonly defaultResource:string = "https://disco.crm.dynamics.com/";
 
     constructor(
         username: SecureItem | Securable,
@@ -359,7 +362,7 @@ export class CdsOnlineCredential extends OAuthCredential {
         public authority: string = CdsOnlineCredential.defaultAuthority, 
         public tenant: string = CdsOnlineCredential.defaultTenant,
         public clientId: string = CdsOnlineCredential.defaultClientId,
-        public resource: string,
+        public resource: string = CdsOnlineCredential.defaultResource,
         token?: string) {
         super(username, password, token);
     }

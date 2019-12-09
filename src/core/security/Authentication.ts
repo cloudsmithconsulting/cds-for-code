@@ -8,9 +8,9 @@ export type AuthenticationResult = {
     message: string
 };
 
-export default async function authenticate(connectionId: string, credential:Security.ICredential): Promise<AuthenticationResult> {
+export default async function authenticate(connectionId: string, credential:Security.ICredential, resource?:string): Promise<AuthenticationResult> {
     if (Security.Credential.isCdsOnlineUserCredential(credential)) {
-        return await performCdsOnlineAuthenticate(connectionId, <Security.CdsOnlineCredential>credential);
+        return await performCdsOnlineAuthenticate(connectionId, <Security.CdsOnlineCredential>credential, resource);
     } else if (Security.Credential.isAzureAdClientCredential(credential)) {
         return await performAzureAdClientAuthenticate(connectionId, <Security.AzureAdClientCredential>credential);
     } else if (Security.Credential.isAzureAdUserCredential(credential)) {
@@ -32,7 +32,7 @@ function decryptCredential<T extends Security.ICredential>(credential:T, storeKe
 
 async function performCdsOnlineAuthenticate(connectionId: string, credential:Security.CdsOnlineCredential, resource?: string): Promise<AuthenticationResult> {
     const authorityUri = `${Utilities.String.noTrailingSlash(credential.authority)}/${credential.tenant}`;
-    const decrypted = decryptCredential(credential, connectionId);
+    const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
     const context = new adal.AuthenticationContext(authorityUri, false);
 
     return new Promise<AuthenticationResult>((resolve, reject) => {
