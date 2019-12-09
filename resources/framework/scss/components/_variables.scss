@@ -193,12 +193,12 @@ $range-width: 14px !default;
 $track-height: 3px !default;
 
 // Select
-$select-border: 1px solid #f2f2f2 !default;
-$select-background: rgba(255, 255, 255, 0.90) !default;
+$select-border: 1px solid vscode-color("input", "border") !default;
+$select-background: vscode-color("input", "background") !default;
 $select-focus: 1px solid lighten($secondary-color, 47%) !default;
-$select-option-hover: rgba(0,0,0,.08) !default;
-$select-option-focus: rgba(0,0,0,.08) !default;
-$select-option-selected: rgba(0,0,0,.03) !default;
+$select-option-hover: vscode-color("inputOption", "activeBackground") !default;
+$select-option-focus: vscode-color("inputOption", "activeBackground") !default;
+$select-option-selected: vscode-color("inputOption", "activeBackground") !default;
 $select-padding: 5px !default;
 $select-radius: 2px !default;
 $select-disabled-color: rgba(0,0,0,.3) !default;
