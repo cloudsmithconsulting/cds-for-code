@@ -7,7 +7,7 @@ import nodeJsRequest from "../../../core/http/nodeJsRequest";
 import odataResponseNodeJs from "./odataResponse.nodejs";
 import odataResponseXhr from "./odataResponse.xhr";
 import { DynamicsWebApi } from "../DynamicsWebApi";
-import { Credential } from '../../../core/security/Types';
+import { Credential, OAuthCredential } from '../../../core/security/Types';
 
 let _entityNames;
 
@@ -251,9 +251,11 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
                 .then(auth  => {
                     if (!auth.success) {
                         config.onTokenRefresh(sendInternalRequest);
-                    } 
+                    } else {
+                        (<OAuthCredential>config.credentials).token = auth.response.accessToken;
+                    }
 
-                    sendInternalRequest();
+                    sendInternalRequest(auth.response);
                 });
         }
     }

@@ -65,7 +65,7 @@ class CdsConnectionEditor extends View {
         
         // try a discovery request
         api.retrieveOrganizations()
-            .then(() => {
+            .then(orgs => {
                 // success, add it to connection window
                 vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.addConnection, config)
                 .then(() => {
