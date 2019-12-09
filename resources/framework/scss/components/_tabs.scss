@@ -1,6 +1,7 @@
 .tabs {
   &.tabs-transparent {
     background-color: transparent;
+    
 
     .tab a,
     .tab.disabled a,
@@ -45,6 +46,10 @@
     text-transform: uppercase;
 
     a {
+      &.active {
+        border-bottom: 1px solid vscode-color("panelTitle", "activeForeground");
+      }
+      
       &:focus,
       &:focus.active {
         //background-color: transparentize($tabs-underline-color, .8);
