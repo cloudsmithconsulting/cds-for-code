@@ -1,10 +1,16 @@
+.babelrc
+.browserlistrc
+azure-pipelines.yml
+gruntfile.js
 .vscode/**
 .vscode-test/**
+dist/**
 out/test/**
+resources/framework/**
 src/**
 .gitignore
 vsc-extension-quickstart.md
-**/tsconfig.json
+**/tsconfig*.json
 **/tslint.json
 **/*.map
 **/*.ts
