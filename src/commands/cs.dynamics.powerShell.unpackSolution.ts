@@ -11,6 +11,7 @@ import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import ExtensionContext from '../core/ExtensionContext';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 import { Credential } from '../core/security/Types';
+import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.
@@ -81,6 +82,8 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	if (serverUrl.endsWith("//")) {
 		serverUrl = serverUrl.substring(0, serverUrl.length - 1);
 	}
+
+	await ScriptDownloader.installCdsSdk();
 
 	return DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => { 

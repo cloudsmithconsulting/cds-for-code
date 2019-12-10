@@ -96,17 +96,7 @@ export default class ScriptDownloader implements IContributor {
 								return localPath;
 							}).then(localPath => {
 								if (localPath.endsWith("Install-Sdk.ps1")) {
-									const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
-
-									if (!FileSystem.exists(sdkInstallPath)) {
-										FileSystem.makeFolderSync(sdkInstallPath);
-									}
-
-									DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
-										.then(terminal => { 
-											terminal.run(new TerminalCommand(`.\\Install-Sdk.ps1 `)
-												.text(`-Path ${sdkInstallPath} `));
-									});
+									ScriptDownloader.installCdsSdk();
 								}
 							}).then(() => {
 								GlobalState.Instance.PowerShellScriptVersion = version;
@@ -232,4 +222,19 @@ export default class ScriptDownloader implements IContributor {
 			return -1;
 		});
 	}
+
+	static async installCdsSdk(): Promise<TerminalCommand> {
+		const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
+
+		if (!FileSystem.exists(sdkInstallPath) && FileSystem.exists(path.join(ExtensionContext.Instance.globalStoragePath, "/Scripts/Install-Sdk.ps1"))) {
+			FileSystem.makeFolderSync(sdkInstallPath);
+		
+			return await DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "/Scripts/"))
+				.then(async terminal => {
+					return await terminal.run(new TerminalCommand(`.\\Install-Sdk.ps1 `)
+						.text(`-Path "${sdkInstallPath}" `));
+				});
+		}
+	}
 }
+
