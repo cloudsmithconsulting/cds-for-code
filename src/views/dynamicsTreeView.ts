@@ -25,7 +25,7 @@ export default class DynamicsTreeView implements IContributor {
         if (isNew) {
             TreeEntryCache.Context = context;
             DynamicsTreeView.Instance = treeProvider;
-            vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.dynamicsExplorer, treeProvider);        
+            vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.cdsExplorer, treeProvider);        
         }
         
         // setup commands

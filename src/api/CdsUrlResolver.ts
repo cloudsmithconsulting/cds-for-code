@@ -1,4 +1,3 @@
-import * as vscode from 'vscode';
 import { Utilities } from '../core/Utilities';
 import { CdsSolutions } from './CdsSolutions';
 import { DynamicsWebApi } from './cds-webapi/DynamicsWebApi';
@@ -17,7 +16,7 @@ export default class CdsUrlResolver {
     }
 
     static getManageSolutionUri(config:DynamicsWebApi.Config, solutionId?:string): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}tools/solution/edit.aspx`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}tools/solution/edit.aspx`;
 
         if (solutionId) {
             uriString += `?id=${CdsUrlResolver.crmGuid(solutionId)}`;
@@ -27,7 +26,7 @@ export default class CdsUrlResolver {
     }
 
     static getManageEntityUri(config:DynamicsWebApi.Config, entityId?:string, solutionId?:string): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}tools/systemcustomization/entities/manageentity.aspx?`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}tools/systemcustomization/entities/manageentity.aspx?`;
 
         if (entityId) {
             uriString += `id=${CdsUrlResolver.crmGuid(entityId)}`;
@@ -37,7 +36,7 @@ export default class CdsUrlResolver {
     }
 
     static getManageAttributeUri(config:DynamicsWebApi.Config, entityId:string, attributeId?:string, solutionId?:string): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}tools/systemcustomization/attributes/manageAttribute.aspx?entityId=${CdsUrlResolver.crmGuid(entityId)}`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}tools/systemcustomization/attributes/manageAttribute.aspx?entityId=${CdsUrlResolver.crmGuid(entityId)}`;
 
         if (attributeId) {
             uriString += `&attributeId=${CdsUrlResolver.crmGuid(attributeId)}`;
@@ -57,7 +56,7 @@ export default class CdsUrlResolver {
     }
 
     static getOpenEntityFormUri(config:DynamicsWebApi.Config, entityLogicalName:string, formId?:string, showNavigationBar:boolean = true, showCommandBar:boolean = true): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}main.aspx?pagetype=entityrecord&etn=${entityLogicalName}`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}main.aspx?pagetype=entityrecord&etn=${entityLogicalName}`;
 
         if (!showNavigationBar) {
             uriString += "&navbar=off";
@@ -75,7 +74,7 @@ export default class CdsUrlResolver {
     }
 
     static getManageEntityFormUri(config:DynamicsWebApi.Config, entityTypeCode:string, formType:CdsSolutions.DynamicsForm = CdsSolutions.DynamicsForm.Main, formId?:string, solutionId?:string): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}main.aspx?pagetype=formeditor&etc=${entityTypeCode}`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}main.aspx?pagetype=formeditor&etc=${entityTypeCode}`;
         let options;
 
         // This one's fun, if you put the guid braces on it doesn't work :)
@@ -101,7 +100,7 @@ export default class CdsUrlResolver {
     }
 
     static getOpenEntityViewUri(config:DynamicsWebApi.Config, entityLogicalName:string, viewId:string, showNavigationBar:boolean = true, showCommandBar:boolean = true): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}main.aspx?pagetype=entitylist&etn=${entityLogicalName}&viewid=${CdsUrlResolver.crmGuid(viewId)}&viewtype=1039`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}main.aspx?pagetype=entitylist&etn=${entityLogicalName}&viewid=${CdsUrlResolver.crmGuid(viewId)}&viewtype=1039`;
 
         if (!showNavigationBar) {
             uriString += "&navbar=off";
@@ -115,7 +114,7 @@ export default class CdsUrlResolver {
     }
 
     static getManageEntityViewUri(config:DynamicsWebApi.Config, entityId:string, entityTypeCode?:string, viewId?:string, solutionId?:string): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}tools/vieweditor/viewManager.aspx?entityId=${CdsUrlResolver.crmGuid(entityId)}`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}tools/vieweditor/viewManager.aspx?entityId=${CdsUrlResolver.crmGuid(entityId)}`;
 
         if (viewId) {
             uriString += `&id=${CdsUrlResolver.crmGuid(viewId)}`;
@@ -133,7 +132,7 @@ export default class CdsUrlResolver {
     }
 
     static getManageEntityDashboardUri(config:DynamicsWebApi.Config, entityTypeCode?:string, layoutType?:CdsSolutions.InteractiveDashboardLayout, dashboardType?:string, dashboardId?:string, solutionId?:string): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}main.aspx?pagetype=icdashboardeditor`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}main.aspx?pagetype=icdashboardeditor`;
         
         if (entityTypeCode) {
             uriString += `&entitytypecode=${entityTypeCode}&isentitydashboard=1`;
@@ -159,7 +158,7 @@ export default class CdsUrlResolver {
     }
 
     static getManageEntityChartUrl(config:DynamicsWebApi.Config, entityTypeCode?:string, chartId?:string, solutionId?:string): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}main.aspx?pagetype=vizdesigner`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}main.aspx?pagetype=vizdesigner`;
         let options;
 
         if (chartId) {
@@ -174,7 +173,7 @@ export default class CdsUrlResolver {
     }
 
     static getManageEntityKeyUrl(config:DynamicsWebApi.Config, entityId?:string, keyId?:string, solutionId?:string): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}tools/systemcustomization/AlternateKeys/manageAlternateKeys.aspx?entityId=${CdsUrlResolver.crmGuid(entityId)}`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}tools/systemcustomization/AlternateKeys/manageAlternateKeys.aspx?entityId=${CdsUrlResolver.crmGuid(entityId)}`;
 
         if (keyId) {
             uriString += `&entityKeyId=${CdsUrlResolver.crmGuid(keyId)}`;
@@ -184,7 +183,7 @@ export default class CdsUrlResolver {
     }
 
     static getManageEntityRelationshipUrl(config:DynamicsWebApi.Config, entityId?:string, relationshipId?:string, solutionId?:string): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}tools/systemcustomization/relationships/manageRelationship.aspx?entityId=${CdsUrlResolver.crmGuid(entityId)}`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}tools/systemcustomization/relationships/manageRelationship.aspx?entityId=${CdsUrlResolver.crmGuid(entityId)}`;
 
         if (relationshipId) {
             uriString += `&entityRelationshipId=${CdsUrlResolver.crmGuid(relationshipId)}`;
@@ -202,7 +201,7 @@ export default class CdsUrlResolver {
         switch (processType)
         {
             case CdsSolutions.ProcessType.BusinessRule:
-                uriString = `${Utilities.String.withTrailingSlash(config.webApiUrl)}tools/systemcustomization/businessrules/businessRulesDesigner.aspx?BRLaunchpoint=BRGrid&otc=${entityTypeCode}&templateId=0`;
+                uriString = `${Utilities.String.withTrailingSlash(config.appUrl)}tools/systemcustomization/businessrules/businessRulesDesigner.aspx?BRLaunchpoint=BRGrid&otc=${entityTypeCode}&templateId=0`;
 
                 if (processId) {
                     uriString += `id=${CdsUrlResolver.crmGuid(processId)}`;  
@@ -213,7 +212,7 @@ export default class CdsUrlResolver {
             case CdsSolutions.ProcessType.Flow:
                 break;
             case CdsSolutions.ProcessType.BusinessProcessFlow:
-                uriString = `${Utilities.String.withTrailingSlash(config.webApiUrl)}Tools/ProcessControl/UnifiedProcessDesigner.aspx?`;
+                uriString = `${Utilities.String.withTrailingSlash(config.appUrl)}Tools/ProcessControl/UnifiedProcessDesigner.aspx?`;
 
                 if (processId) {
                     uriString += `id=${CdsUrlResolver.crmGuid(processId)}`;  
@@ -224,7 +223,7 @@ export default class CdsUrlResolver {
             case CdsSolutions.ProcessType.Dialog:
             case CdsSolutions.ProcessType.Action:
             case CdsSolutions.ProcessType.Workflow:
-                uriString = `${Utilities.String.withTrailingSlash(config.webApiUrl)}sfa/workflow/edit.aspx?`;
+                uriString = `${Utilities.String.withTrailingSlash(config.appUrl)}sfa/workflow/edit.aspx?`;
 
                 if (processId) {
                     uriString += `id=${CdsUrlResolver.crmGuid(processId)}`;  
@@ -238,7 +237,7 @@ export default class CdsUrlResolver {
     }
 
     static getManageWebResourceUri(config:DynamicsWebApi.Config, webResourceId?:string, solutionId?:string): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}main.aspx?etc=9333&pagetype=webresourceedit`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}main.aspx?etc=9333&pagetype=webresourceedit`;
 
         if (webResourceId) {
             uriString += `&id=${CdsUrlResolver.crmGuid(webResourceId)}`;
@@ -248,7 +247,7 @@ export default class CdsUrlResolver {
     }
 
     static getManageOptionSetUri(config:DynamicsWebApi.Config, entityId?:string, entityTypeCode?:string, optionSetId?:string, solutionId?:string): string {
-        let uriString:string = `${Utilities.String.withTrailingSlash(config.webApiUrl)}tools/systemcustomization/optionset/optionset.aspx?`;
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}tools/systemcustomization/optionset/optionset.aspx?`;
 
         if (entityId) {
             uriString += `&_CreateFromId=${CdsUrlResolver.crmGuid(entityId)}`;
