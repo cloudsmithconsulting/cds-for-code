@@ -117,7 +117,7 @@ export class ViewRenderer {
 		content="default-src 'none'; 
 		img-src ${this.view.cspSource} https:; 
 		style-src 'self' 'unsafe-inline' ${this.view.cspSource}; 
-		script-src 'unsafe-inline' ${this.view.cspSource} https://api.iconify.design;">
+		script-src 'unsafe-inline' 'unsafe-eval' ${this.view.cspSource} https://api.iconify.design;">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	${cssHtml}
 	<title>${this.view.options.title}</title>

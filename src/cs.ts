@@ -59,7 +59,7 @@ export namespace dynamics {
     // tslint:disable-next-line: class-name
     export class viewContainers {
         public static readonly _namespace:string = "cs.dynamics.viewContainers";
-        public static readonly dynamicsExplorer:string = `${viewContainers._namespace}.dynamicsExplorer`;
+        public static readonly cdsExplorer:string = `${viewContainers._namespace}.cdsExplorer`;
         public static readonly templateExplorer:string = `${viewContainers._namespace}.templateExplorer`;
     }
 

@@ -1,9 +1,7 @@
 <nav class="nav-extended">
     <div class="nav-wrapper">
-        <a href="#" class="brand-logo">
-            <img src="#{images['cloudsmith-logo-only-50px.png']}" alt="CloudSmith Conulting"
-                title="CloudSmith Conulting" />
-                <span id="title">#{viewTitle}</span>
+        <a href="#" class="brand-logo left">
+            &nbsp;<span id="title">#{viewTitle}</span>
         </a>
         <a href="#" data-target="extended-navigation" class="sidenav-trigger"><span class="iconify" data-icon="ion-menu"
                 data-width="32" data-height="24"></span></a>
@@ -45,7 +43,7 @@
     <ul class="collapsible col s12" id="ConnectionOptions">
         <li>
             <div class="collapsible-header">
-                <span class="iconify" data-icon="uil-cloud-data-connection" data-width="60" data-height="24"></span>
+                <span class="iconify" data-icon="entypo-text" data-width="60" data-height="24"></span>
                 Connect using a connection string
             </div>
             <div class="collapsible-body">
@@ -94,7 +92,7 @@
                     </div>
                 </div>
                 <div class="row" id="onlineAuth">
-                    <div class="col s6 input-field">
+                    <div class="col s5 input-field">
                         <input id="Online-Username" type="text" />
                         <label for="Online-Username">Username</label>
                     </div>
@@ -102,7 +100,7 @@
                         <input id="Online-Password" type="password" />
                         <label for="Online-Password">Password</label>
                     </div>
-                    <div class="col s1 input-field">
+                    <div class="col s2 input-field">
                         <a id="PerformGlobalDiscoButton" class="waves-effect waves-light btn-small">Discover</a>
                     </div>
                     <div class="col s12 input-field">
@@ -135,6 +133,7 @@
         </li>
         <li>
             <div class="collapsible-header">
+                <span class="iconify" data-icon="dashicons-admin-settings" data-width="60" data-height="24"></span>
                 Advanced Options
             </div>
             <div class="collapsible-body">

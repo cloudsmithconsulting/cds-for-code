@@ -14,6 +14,10 @@
 		"Other"
 	],
 	"keywords": [
+		"CDS",
+		"PowerApps",
+		"Common Data Service",
+		"Power Platform",
 		"Dynamics",
 		"Dynamics 365",
 		"Dynamics 365 Customer Engagement",
@@ -22,7 +26,7 @@
 	],
 	"license": "MIT",
 	"activationEvents": [
-		"onView:cs.dynamics.viewContainers.dynamicsExplorer",
+		"onView:cs.dynamics.viewContainers.cdsExplorer",
 		"onView:cs.dynamics.viewContainers.templateExplorer",
 		"onCommand:cs.dynamics.controls.explorer.dotNetBuild",
 		"onCommand:cs.dynamics.controls.explorer.dotNetTest",
@@ -52,7 +56,7 @@
 	"contributes": {
 		"configuration": {
 			"type": "object",
-			"title": "Dynamics 365 for Code",
+			"title": "CDS for Code",
 			"properties": {
 				"cs.dynamics.configuration.tools.sdkInstallPath": {
 					"type": "string",
@@ -249,27 +253,27 @@
 			},
 			{
 				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
-				"title": "Generate Dynamics entity classes",
+				"title": "Generate CDS entity classes",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
-				"title": "Generate Dynamics entity classes",
+				"title": "Generate CDS entity classes",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
-				"title": "Deploy solution to Dynamics 365",
+				"title": "Deploy solution to CDS",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.dynamics.controls.explorer.packWebResource",
-				"title": "Deploy web resource to Dynamics 365",
+				"title": "Deploy web resource to CDS",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.dynamics.controls.explorer.registerPluginFile",
-				"title": "Deploy assembly to Dynamics 365",
+				"title": "Deploy assembly to CDS",
 				"category": "UserInterface"
 			},
 			{
@@ -284,12 +288,12 @@
 			},
 			{
 				"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
-				"title": "Download & unpack Dynamics 365 solution here",
+				"title": "Download & unpack CDS solution here",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.dynamics.controls.newWorkspace.hideLoadingMessage",
-				"title": "Show the loading message in the New Workspace screen",
+				"title": "Hide the loading message in the New Workspace screen",
 				"category": "UserInterface"
 			},
 			{
@@ -305,7 +309,7 @@
 			{
 				"command": "cs.dynamics.controls.svcUtilConfig.configure",
 				"title": "Configure entity code generation for use with CrmSvcUtil.exe",
-				"category": "Dynamics 365 CE"
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
@@ -370,149 +374,149 @@
 			},
 			{
 				"command": "cs.dynamics.deployment.addSolutionComponent",
-				"title": "Add component to a Dynamics 365 Solution",
-				"category": "Dynamics 365 CE"
+				"title": "Add component to a CDS Solution",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.deployment.compareWebResource",
-				"title": "Compare a local web resource file to a version deployed on a Dynamics 365 instance",
-				"category": "Dynamics 365 CE"
+				"title": "Compare a local web resource file to a version deployed on a CDS instance",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.deployment.connectToCds",
 				"title": "Create or Edit a connection to the Common Data Service",
-				"category": "Dynamics 365 CE"
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.deployment.createWebResource",
-				"title": "Create a web resource in your workspace or on a Dynamics 365 instance",
-				"category": "Dynamics 365 CE"
+				"title": "Create a web resource in your workspace or on a CDS instance",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.deployment.dotNetBuild",
 				"title": "Build a .Net Core project in the current workspace",
-				"category": "Dynamics 365 CE"
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.deployment.dotNetTest",
 				"title": "Build and Test a .Net Core project in the current workspace",
-				"category": "Dynamics 365 CE"
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.deployment.packWebResource",
-				"title": "Deploy a Web Resource to Dynamics 365",
-				"category": "Dynamics 365 CE"
+				"title": "Deploy a Web Resource to CDS",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.deployment.publishCustomizations",
-				"title": "Publish solution changes on a Dynamics 365 server",
-				"category": "Dynamics 365 CE"
+				"title": "Publish solution changes on a CDS environment",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.deployment.registerPluginAssembly",
 				"title": "Register or update a plugin assembly",
-				"category": "Dynamics 365 CE"
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.deployment.removeSolutionComponent",
-				"title": "Remove a component from a Dynamics 365 Solution",
-				"category": "Dynamics 365 CE"
+				"title": "Remove a component from a CDS Solution",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.deployment.removeSolutionMapping",
-				"title": "Remove remembered locations where Dynamics solutions are stored in this workspace",
-				"category": "Dynamics 365 CE"
+				"title": "Remove remembered locations where CDS solutions are stored in this workspace",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.deployment.unpackWebResource",
-				"title": "Download a Web Resource from Dynamics 365",
-				"category": "Dynamics 365 CE"
+				"title": "Download a Web Resource from CDS",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.deployment.updateSolutionMapping",
-				"title": "Create or update where Dynamics solutions are stored in this workspace",
-				"category": "Dynamics 365 CE"
+				"title": "Create or update where CDS solutions are stored in this workspace",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.extension.clearTerminal",
-				"title": "Clear the Dynamics 365 terminal",
-				"category": "Dynamics 365 CE"
+				"title": "Clear the CDS for Code terminal",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.extension.createTerminal",
-				"title": "Open the Dynamics 365 terminal",
-				"category": "Dynamics 365 CE"
+				"title": "Open the CDS for Code terminal",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.extension.downloadRequiredScripts",
-				"title": "Download required PowerShell scripts for VSCode extension from GitHub",
-				"category": "Dynamics 365 CE"
+				"title": "Download required PowerShell scripts from GitHub",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.powerShell.unpackSolution",
-				"title": "Download & unpack solution from a registered Dynamics server",
-				"category": "Dynamics 365 CE"
+				"title": "Download & unpack solution from a registered CDS environment",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.powerShell.packSolution",
-				"title": "Pack & deploy solution to a registerd Dynamics server",
-				"category": "Dynamics 365 CE"
+				"title": "Pack & deploy solution to a registerd CDS environment",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.powerShell.generateEntities",
-				"title": "Generate entity code from metadata on a registered Dynamics server",
-				"category": "Dynamics 365 CE"
+				"title": "Generate entity code from metadata on a registered CDS environment",
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.templates.createFromTemplate",
 				"title": "Create new items or projects from a template",
-				"category": "Dynamics 365 CE"
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.templates.deleteTemplate",
 				"title": "Delete a template from the catalog",
-				"category": "Dynamics 365 CE"
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.templates.editTemplateCatalog",
 				"title": "Open template catalog in code editor",
-				"category": "Dynamics 365 CE"
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.templates.exportTemplate",
 				"title": "Export template from the template catalog",
-				"category": "Dynamics 365 CE"
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.templates.importTemplate",
 				"title": "Import template into the template catalog",
-				"category": "Dynamics 365 CE"
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.templates.openTemplateFolder",
 				"title": "Open template folder in explorer",
-				"category": "Dynamics 365 CE"
+				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.dynamics.templates.saveTemplate",
 				"title": "Save workspace items as a template in the template catalog",
-				"category": "Dynamics 365 CE"
+				"category": "CDS for Code"
 			}
 		],
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "dynamics365-explorer",
-					"title": "Dynamics 365 CE",
+					"id": "cdsExplorer",
+					"title": "CDS for Code",
 					"icon": "resources/images/dynamics.png"
 				}
 			]
 		},
 		"views": {
-			"dynamics365-explorer": [
+			"cdsExplorer": [
 				{
-					"id": "cs.dynamics.viewContainers.dynamicsExplorer",
-					"name": "Dynamics Explorer"
+					"id": "cs.dynamics.viewContainers.cdsExplorer",
+					"name": "CDS Explorer"
 				}
 			],
 			"explorer": [
@@ -594,12 +598,12 @@
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
 					"group": "navigation",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.addEntry",
 					"group": "navigation",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer"
 				},
 				{
 					"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
@@ -616,62 +620,62 @@
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.addEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.editEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.deleteEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
 					"group": "group@1",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.inspectEntry",
 					"group": "group@2",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canInspectItem)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canInspectItem)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.openInApp",
 					"group": "group@3",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canOpenInApp)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInApp)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.openInBrowser",
 					"group": "group@4",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canOpenInBrowser)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInBrowser)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.openInEditor",
 					"group": "group@5",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.unpackSolution",
 					"group": "deployment@1",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.moveSolution",
 					"group": "deployment@1",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canMoveSolution)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canMoveSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.addEntryToSolution",
 					"group": "deployment@2",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canAddToSolution)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canAddToSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.dynamicsTreeView.removeEntryFromSolution",
 					"group": "deployment@3",
-					"when": "view == cs.dynamics.viewContainers.dynamicsExplorer && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
+					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
 				},
 				{
 					"command": "cs.dynamics.controls.templateTreeView.addEntry",
