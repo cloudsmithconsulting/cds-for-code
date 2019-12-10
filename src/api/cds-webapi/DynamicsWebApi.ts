@@ -284,6 +284,8 @@ export namespace DynamicsWebApi {
         private _internalConfig: DynamicsWebApi.Config;
         private _isBatch: boolean;
 
+        private static defaultTimeout: number = 30 * 1000;
+
         /**
          * Constructor.
          * @constructor
@@ -378,6 +380,8 @@ export namespace DynamicsWebApi {
             if (config.timeout) {
                 Parameters.numberParameterCheck(config.timeout, "DynamicsWebApi.setConfig", "config.timeout");
                 this._internalConfig.timeout = config.timeout;
+            } else {
+                this._internalConfig.timeout = WebApiClient.defaultTimeout;
             }
 
             if (config.maxPageSize) {

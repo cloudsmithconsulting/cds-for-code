@@ -61,7 +61,7 @@ class CdsConnectionEditor extends View {
 
     private async save(config: DynamicsWebApi.Config, discoverOnly: boolean = false): Promise<void> {
         // set a timeout if it doesn't exist
-        config.timeout = config.timeout || (1000 * 3); // 3 seconds
+        config.timeout = config.timeout || (1000 * 5); // 3 seconds
 
         if (!config.webApiUrl && (<CdsOnlineCredential>config.credentials).resource) {
             config.webApiUrl = (<CdsOnlineCredential>config.credentials).resource;
@@ -82,7 +82,7 @@ class CdsConnectionEditor extends View {
                     }
                 } else {
                     // success, add it to connection window
-                    vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.addConnection, api.config)
+                    vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.addConnection, config)
                         .then(() => {
                             this.dispose();
                         });

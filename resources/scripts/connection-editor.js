@@ -181,7 +181,7 @@
                     if ($("#Online-OrgUrl").val() !== null) {
                         credentials.resource = $("#Online-OrgUrl").val();
                     } else {
-                        credentials.resource = 'https://disco.crm.dynamics.com';
+                        credentials.resource = 'https://disco.crm.dynamics.com/';
                     }
 
                     if (token) {

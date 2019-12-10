@@ -4,6 +4,7 @@ import * as ErrorParser from '../ErrorParser';
 import { Utilities } from "../Utilities";
 import GlobalStateCredentialStore from "./GlobalStateCredentialStore";
 import Quickly from "../Quickly";
+import TokenCache, { TokenType } from "./TokenCache";
 
 export type AuthenticationResult = {
     success: boolean,
@@ -52,6 +53,8 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
     const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
     const context = new adal.AuthenticationContext(authorityUri, false);
 
+    resource = resource || decrypted.resource.toString();
+
     return await new Promise<AuthenticationResult>((resolve, reject) => {
         const callback = (error, response) => { 
             if (error) {
@@ -73,19 +76,25 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
                     credential.refreshToken = result.response.refreshToken;
                 }
 
+                TokenCache.Instance.addToken(TokenType.AccessToken, resource, result.response.accessToken);
+                TokenCache.Instance.addToken(TokenType.RefreshToken, resource, result.response.refreshToken);
+
                 resolve(result);
             }
         };
 
-        if (decrypted.refreshToken && decrypted.refreshToken.length > 0) {
+        let refreshToken = decrypted.refreshToken ? decrypted.refreshToken.toString() : undefined;
+        refreshToken = refreshToken || TokenCache.Instance.getToken(TokenType.RefreshToken, resource);
+
+        if (refreshToken) {
             context.acquireTokenWithRefreshToken(
-                decrypted.refreshToken.toString(), 
+                refreshToken, 
                 clientId, 
-                resource || decrypted.resource.toString(), 
+                resource, 
                 callback);
         } else {
             context.acquireTokenWithUsernamePassword(
-                resource || decrypted.resource.toString(), 
+                resource, 
                 decrypted.username.toString(), 
                 decrypted.password.toString(), 
                 clientId,

@@ -2,9 +2,6 @@ import * as vscode from 'vscode';
 import { Utilities } from '../core/Utilities';
 import GlobalState from '../components/Configuration/GlobalState';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
-import Authentication from "../core/security/Authentication";
-import Utility from '../api/cds-webapi/utilities/Utility';
-import { OAuthCredential } from '../core/security/Types';
 import Quickly from '../core/Quickly';
 
 export default class DiscoveryRepository {
@@ -16,21 +13,6 @@ export default class DiscoveryRepository {
     }
 
     private webapi: DynamicsWebApi.WebApiClient;
-
-    async authenticate(): Promise<any> {
-        let result: any;
-
-        if (this.config.type === DynamicsWebApi.ConfigType.OnPremises) {
-            result = await this.webapi.discover();
-        } else {
-            result = await Authentication(this.config.id, this.config.credentials, `https://disco.${Utility.crmHostSuffix(this.config.webApiUrl)}/`);
-
-            (<OAuthCredential>this.config.credentials).accessToken = result.response.accessToken;
-            (<OAuthCredential>this.config.credentials).refreshToken = result.response.accessToken;
-        }
-
-        return result;
-    }
 
     async retrieveOrganizations() : Promise<any> {
         return this.webapi.discover()
@@ -72,6 +54,14 @@ export default class DiscoveryRepository {
         const versionSplit = org.Version.split('.');
         // Clone the current connection and override the endpoint and version.
         const orgConnection = Utilities.$Object.clone<DynamicsWebApi.Config>(connection);
+
+        if ((<any>orgConnection).accessToken) {
+            delete (<any>orgConnection).accessToken;
+        }
+
+        if (orgConnection.timeout) {
+            delete orgConnection.timeout;       
+        }
 
         orgConnection.appUrl = org.Url;
         orgConnection.webApiUrl = org.ApiUrl;
