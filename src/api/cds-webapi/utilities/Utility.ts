@@ -75,6 +75,8 @@ export default class Utility {
             version = version.substring(1, version.length);
         }
 
+        prefix = prefix || "";
+        
         return prefix + (!prefix.endsWith("/") ? "/" : "") + 'api/data/v' + version + '/';
     }
 
@@ -91,7 +93,7 @@ export default class Utility {
             if (prefix && !prefix.endsWith(".dynamics.com")) {
                 return prefix +  '/api/discovery/v' + version + '/';
             } else {
-                return "https://globaldisco.crm.dynamics.com/api/discovery/v1.0/";
+                return "https://globaldisco.crm.dynamics.com/api/discovery/v2.0/";
             }
         }
     }

@@ -27,7 +27,7 @@ export default class GlobalState {
         // Store each connection without creds.
         value.forEach((c, index) => {
             if (c.credentials) {
-                const key = GlobalStateCredentialStore.Instance.store(c.credentials, c.id);
+                const key = GlobalStateCredentialStore.Instance.store(c.credentials, c.id, [ "accessToken", "refreshToken" ]);
                 
                 delete c.credentials;
 

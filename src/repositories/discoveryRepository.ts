@@ -36,7 +36,7 @@ export default class DiscoveryRepository {
         return this.webapi.discover()
             .then(result => result.value)
             .catch(error => {
-                Quickly.error(`There were errors retreiving organizations from '${this.webapi.config.discoveryUrl}': ${error.message}`);
+                Quickly.error(`There were errors retreiving organizations from '${this.webapi.config.name ? this.webapi.config.name : "your connection"}': ${error.message}`);
             });
     }
 

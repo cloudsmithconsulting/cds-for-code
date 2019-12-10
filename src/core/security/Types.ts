@@ -60,7 +60,7 @@ export interface ICredential {
 
     readonly isSecure: boolean;
 
-    decrypt<T extends ICredential>(store: ICredentialStore, key: string, preferredOutput?: SecureOutput): T | null;
+    decrypt<T extends ICredential>(store: ICredentialStore, key: string, preferredOutput?: SecureOutput, keepEncrypted?: string[]): T | null;
     store(store: ICredentialStore): string | null;
     toString(): string;
 }
@@ -68,11 +68,11 @@ export interface ICredential {
 export interface ICredentialStore { 
     readonly cryptography: ICryptography;
 
-    decrypt<T extends ICredential>(key: string, credential?: T | undefined, preferredOutput?: SecureOutput): T | null;
+    decrypt<T extends ICredential>(key: string, credential?: T | undefined, preferredOutput?: SecureOutput, keepEncrypted?: string[]): T | null;
     delete(key: string): void;
     retreive<T extends ICredential>(key: string, credential?: T | undefined): T | null;
     secure(securable: Securable): SecureItem | null;
-    store<T extends ICredential>(credential: T, key?: string): string | null;
+    store<T extends ICredential>(credential: T, key?: string, keepDecrypted?: string[]): string | null;
 }
 
 /**
@@ -137,7 +137,7 @@ export abstract class CredentialStore implements ICredentialStore {
         this.onDelete(key);
     }
 
-    decrypt<T extends ICredential>(key: string, credential?:T, preferredOutput?: SecureOutput): T | null {
+    decrypt<T extends ICredential>(key: string, credential?:T, preferredOutput?: SecureOutput, keepEncrypted?: string[]): T | null {
         let encrypted = this.onRetreive(key);
 
         // We don't really want byte arrays for creds (most of the time).
@@ -155,7 +155,9 @@ export abstract class CredentialStore implements ICredentialStore {
 
         if (credential) { 
             Object.keys(encrypted).forEach(k => {
-                if (SecureItem.isSecure(encrypted[k])) {
+                if (keepEncrypted && keepEncrypted.length > 0 && keepEncrypted.find(key => k.toLowerCase() === key.toLowerCase())) {
+                    (<any>credential)[k] = encrypted[k];
+                } else if (SecureItem.isSecure(encrypted[k])) {
                     (<any>credential)[k] = this.cryptography.decrypt(<SecureItem>encrypted[k], preferredOutput);
                 } else {
                     (<any>credential)[k] = encrypted[k];
@@ -190,16 +192,20 @@ export abstract class CredentialStore implements ICredentialStore {
         return this.cryptography.encrypt(securable);
     }
 
-    store<T extends ICredential>(credential: T, key?: string): string {        
+    store<T extends ICredential>(credential: T, key?: string, keepDecrypted?: string[]): string {        
         let storeObject:any = {};
         key = key || credential.storeKey || Utilities.Guid.newGuid();
 
         Object.keys(credential).forEach(k => {
             if (Encryption.isSecurable((<any>credential)[k])) {
-                const secured: any | null = this.cryptography.encrypt((<any>credential)[k]);
+                if (keepDecrypted && keepDecrypted.length > 0 && keepDecrypted.find(key => key.toLowerCase() === k.toLowerCase())) {
+                    storeObject[k] = credential[k];
+                } else {
+                    const secured: any | null = this.cryptography.encrypt((<any>credential)[k]);
 
-                if (secured !== null) {
-                    storeObject[k] = secured.string;
+                    if (secured !== null) {
+                        storeObject[k] = secured.string;
+                    }
                 }
             } else if (SecureItem.isSecure((<any>credential)[k])) {
                 storeObject[k] = (<ISecureItem>(<any>credential)[k]).string;
@@ -313,10 +319,10 @@ export abstract class Credential implements ICredential {
         return SecureItem.isSecure(this.username) && SecureItem.isSecure(this.password);
     }
 
-    decrypt<T extends ICredential>(store:ICredentialStore, key:string, preferredOutput?: SecureOutput): T | null {
+    decrypt<T extends ICredential>(store:ICredentialStore, key:string, preferredOutput?: SecureOutput, keepEncrypted?: string[]): T | null {
         if (!store) { return null; }
 
-        const decrypted = store.decrypt<T>(key, undefined, preferredOutput);
+        const decrypted = store.decrypt<T>(key, undefined, preferredOutput, keepEncrypted);
 
         if (!Utilities.$Object.isNullOrEmpty(decrypted)) {
             Utilities.$Object.clone(decrypted, this);

@@ -20,9 +20,16 @@
                 case "error":
                     CloudSmith.ErrorPanel.showError([`${message.message}`]);
                     break;
+                case "bindDiscovery": 
+                    bindDiscovery(message.organization);
+                    break;
             }
         });
     });
+
+    function bindDiscovery(org) {
+        $("#Online-OrgUrl").val(org);
+    }
 
     function setInitialState(apiConfig) {
         if (apiConfig.id && apiConfig.id !== "") {
@@ -62,7 +69,7 @@
 
                 break;
             case 2:
-                $("#Online-OrgUrl").val(apiConfig.webApiUrl || "");
+                $("#Online-OrgUrl").val(apiConfig.appUrl || apiConfig.webApiUrl || "");
                 $("#Online-Username").val(apiConfig.credentials ? apiConfig.credentials.username || "" : "");
                 $("#Online-Password").val(apiConfig.credentials ? apiConfig.credentials.password || "" : "");
 
@@ -145,15 +152,7 @@
             return messages.length === 0;
         }
 
-        // Send this back to our extension for parsing.
-        $("#ParseConnectionStringButton").click(function() {
-            vscode.postMessage({
-                command: "parseConnectionString",
-                connectionString: $("#ConnectionString").val()
-            });
-        });
-
-        $("[data-action='save']").click(function() {
+        function createSettings() {
             const id = $("#ConnectionId").val();
             let settings = {};
 
@@ -179,10 +178,14 @@
 
                     break;
                 case 2: 
-                    credentials.resource = $("#Online-OrgUrl").val();
+                    if ($("#Online-OrgUrl").val() !== null) {
+                        credentials.resource = $("#Online-OrgUrl").val();
+                    } else {
+                        credentials.resource = 'https://disco.crm.dynamics.com';
+                    }
 
                     if (token) {
-                        credentials.token = token;
+                        credentials.refreshToken = token;
                     } else {
                         credentials.username = $("#Online-Username").val();
                         credentials.password = $("#Online-Password").val();                        
@@ -205,6 +208,29 @@
                 webApiUrl: apiUri,
                 credentials: credentials
             };
+
+            return settings;
+        }
+
+        // Send this back to our extension for parsing.
+        $("#ParseConnectionStringButton").click(function() {
+            vscode.postMessage({
+                command: "parseConnectionString",
+                connectionString: $("#ConnectionString").val()
+            });
+        });
+
+        $("#PerformGlobalDiscoButton").click(function() {
+            const settings = createSettings();
+
+            vscode.postMessage({
+                command: "performGlobalDisco",
+                settings
+            });
+        });
+
+        $("[data-action='save']").click(function() {
+           const settings = createSettings();
 
             if (!validateForm(settings)) return;
 
