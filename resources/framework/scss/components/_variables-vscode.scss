@@ -153,11 +153,14 @@ $timepicker-clock-plate-bg: #eee !default;
 // 9. Dropdown
 // ==========================================================================
 
-$dropdown-bg-color: #fff !default;
-$dropdown-hover-bg-color: #eee !default;
+$dropdown-bg-color: vscode-color("input", "background") !default;
+$dropdown-hover-bg-color: vscode-color("input", "background") !default;
 $dropdown-color: $secondary-color !default;
 $dropdown-item-height: 50px !default;
 
+// Editor colors
+$editor-background: vscode-color("editor", "background");
+$editor-foreground: vscode-color("editor", "foreground");
 
 // 10. Forms
 // ==========================================================================
@@ -167,6 +170,7 @@ $input-height: 3rem !default;
 $input-border-color: color("grey", "base") !default;
 $input-border: 1px solid $input-border-color !default;
 $input-background: vscode-color("input", "background") !default;
+$input-foreground: vscode-color("input", "foreground") !default;
 $input-error-color: $error-color !default;
 $input-success-color: $success-color !default;
 $input-focus-color: $secondary-color !default;
@@ -175,7 +179,7 @@ $input-margin-bottom: 8px;
 $input-margin: 0 0 $input-margin-bottom 0 !default;
 $input-padding: 0 !default;
 $label-font-size: .8rem !default;
-$input-disabled-color: rgba(0,0,0, .42) !default;
+$input-disabled-color: #9F9F9F !default;
 $input-disabled-solid-color: #949494 !default;
 $input-disabled-border: 1px dotted $input-disabled-color !default;
 $input-invalid-border: 1px solid $input-error-color !default;
@@ -194,7 +198,7 @@ $track-height: 3px !default;
 
 // Select
 $select-border: 1px solid #f2f2f2 !default;
-$select-background: rgba(255, 255, 255, 0.90) !default;
+$select-background: vscode-color("input", "background") !default;
 $select-focus: 1px solid lighten($secondary-color, 47%) !default;
 $select-option-hover: rgba(0,0,0,.08) !default;
 $select-option-focus: rgba(0,0,0,.08) !default;

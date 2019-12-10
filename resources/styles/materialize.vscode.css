@@ -6004,7 +6004,7 @@ table span.badge {
 
 nav {
   color: var(--vscode-foreground);
-  background-color: #1b75bc;
+  background-color: var(--vscode-editor-background);
   width: 100%;
   height: 56px;
   line-height: 56px;
@@ -6795,6 +6795,10 @@ small {
   transition: color .28s ease, background-color .28s ease;
 }
 
+.tabs .tab a.active {
+  border-bottom: 1px solid var(--vscode-panelTitle-activeForeground);
+}
+
 .tabs .tab a:focus, .tabs .tab a:focus.active {
   background-color: rgba(var(--vscode-tab-activeBorder), 0.8);
   outline: none;
@@ -7235,7 +7239,7 @@ button.btn-floating {
 }
 
 .dropdown-content {
-  background-color: #fff;
+  background-color: var(--vscode-input-background);
   margin: 0;
   display: none;
   min-width: 100px;
@@ -7254,6 +7258,7 @@ button.btn-floating {
 }
 
 .dropdown-content li {
+  background-color: var(--vscode-input-background);
   clear: both;
   color: rgba(0, 0, 0, 0.87);
   cursor: pointer;
@@ -7264,7 +7269,7 @@ button.btn-floating {
 }
 
 .dropdown-content li:hover, .dropdown-content li.active {
-  background-color: #eee;
+  background-color: var(--vscode-input-background);
 }
 
 .dropdown-content li:focus {
@@ -7299,7 +7304,7 @@ button.btn-floating {
 }
 
 body.keyboard-focused .dropdown-content li:focus {
-  background-color: #dadada;
+  background-color: var(--vscode-input-background);
 }
 
 .input-field.col .dropdown-content [type="checkbox"] + label {
@@ -7824,6 +7829,7 @@ textarea.materialize-textarea {
   border: none;
   border-bottom: 1px solid #9e9e9e;
   border-radius: 0;
+  color: var(--vscode-input-foreground);
   outline: none;
   height: 3rem;
   width: 100%;
@@ -7861,8 +7867,8 @@ input[type=search]:not(.browser-default):disabled,
 input[type=search]:not(.browser-default)[readonly="readonly"],
 textarea.materialize-textarea:disabled,
 textarea.materialize-textarea[readonly="readonly"] {
-  color: rgba(0, 0, 0, 0.42);
-  border-bottom: 1px dotted rgba(0, 0, 0, 0.42);
+  color: #9F9F9F;
+  border-bottom: 1px dotted #9F9F9F;
 }
 
 input:not([type]):disabled + label,
@@ -7891,7 +7897,7 @@ input[type=search]:not(.browser-default):disabled + label,
 input[type=search]:not(.browser-default)[readonly="readonly"] + label,
 textarea.materialize-textarea:disabled + label,
 textarea.materialize-textarea[readonly="readonly"] + label {
-  color: rgba(0, 0, 0, 0.42);
+  color: #9F9F9F;
 }
 
 input:not([type]):focus:not([readonly]),
@@ -8484,31 +8490,31 @@ textarea.materialize-textarea {
 
 /* Disabled Radio With gap */
 [type="radio"].with-gap:disabled:checked + span:before {
-  border: 2px solid rgba(0, 0, 0, 0.42);
+  border: 2px solid #9F9F9F;
 }
 
 [type="radio"].with-gap:disabled:checked + span:after {
   border: none;
-  background-color: rgba(0, 0, 0, 0.42);
+  background-color: #9F9F9F;
 }
 
 /* Disabled style */
 [type="radio"]:disabled:not(:checked) + span:before,
 [type="radio"]:disabled:checked + span:before {
   background-color: transparent;
-  border-color: rgba(0, 0, 0, 0.42);
+  border-color: #9F9F9F;
 }
 
 [type="radio"]:disabled + span {
-  color: rgba(0, 0, 0, 0.42);
+  color: #9F9F9F;
 }
 
 [type="radio"]:disabled:not(:checked) + span:before {
-  border-color: rgba(0, 0, 0, 0.42);
+  border-color: #9F9F9F;
 }
 
 [type="radio"]:disabled:checked + span:after {
-  background-color: rgba(0, 0, 0, 0.42);
+  background-color: #9F9F9F;
   border-color: #949494;
 }
 
@@ -8564,7 +8570,7 @@ textarea.materialize-textarea {
 
 [type="checkbox"]:not(:checked):disabled + span:not(.lever):before {
   border: none;
-  background-color: rgba(0, 0, 0, 0.42);
+  background-color: #9F9F9F;
 }
 
 [type="checkbox"].tabbed:focus + span:not(.lever):after {
@@ -8594,8 +8600,8 @@ textarea.materialize-textarea {
 }
 
 [type="checkbox"]:checked:disabled + span:before {
-  border-right: 2px solid rgba(0, 0, 0, 0.42);
-  border-bottom: 2px solid rgba(0, 0, 0, 0.42);
+  border-right: 2px solid #9F9F9F;
+  border-bottom: 2px solid #9F9F9F;
 }
 
 /* Indeterminate checkbox */
@@ -8617,7 +8623,7 @@ textarea.materialize-textarea {
 }
 
 [type="checkbox"]:indeterminate:disabled + span:not(.lever):before {
-  border-right: 2px solid rgba(0, 0, 0, 0.42);
+  border-right: 2px solid #9F9F9F;
   background-color: transparent;
 }
 
@@ -8819,7 +8825,7 @@ select.browser-default {
 }
 
 select {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: var(--vscode-input-background);
   width: 100%;
   padding: 5px;
   border: 1px solid #f2f2f2;
@@ -8883,19 +8889,19 @@ select {
 }
 
 select:disabled {
-  color: rgba(0, 0, 0, 0.42);
+  color: #9F9F9F;
 }
 
 .select-wrapper.disabled + label {
-  color: rgba(0, 0, 0, 0.42);
+  color: #9F9F9F;
 }
 
 .select-wrapper.disabled .caret {
-  fill: rgba(0, 0, 0, 0.42);
+  fill: #9F9F9F;
 }
 
 .select-wrapper input.select-dropdown:disabled {
-  color: rgba(0, 0, 0, 0.42);
+  color: #9F9F9F;
   cursor: default;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -8910,12 +8916,16 @@ select:disabled {
 .select-dropdown li.disabled,
 .select-dropdown li.disabled > span,
 .select-dropdown li.optgroup {
-  color: rgba(0, 0, 0, 0.3);
+  color: var(--vscode-input-foreground);
   background-color: transparent;
 }
 
 body.keyboard-focused .select-dropdown.dropdown-content li:focus {
   background-color: rgba(0, 0, 0, 0.08);
+}
+
+.select-dropdown.dropdown-content li {
+  background-color: var(--vscode-input-background);
 }
 
 .select-dropdown.dropdown-content li:hover {
@@ -8944,7 +8954,7 @@ body.keyboard-focused .select-dropdown.dropdown-content li:focus {
 }
 
 .select-dropdown li.optgroup {
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--vscode-input-background);
 }
 
 .select-dropdown li.optgroup.selected > span {
@@ -10152,10 +10162,10 @@ input[type=range]::-ms-thumb {
   visibility: visible;
   -webkit-animation: pulse-animation 1s cubic-bezier(0.24, 0, 0.38, 1) infinite;
           animation: pulse-animation 1s cubic-bezier(0.24, 0, 0.38, 1) infinite;
-  -webkit-transition: opacity .3s, visibility 0s 1s, -webkit-transform .3s;
-  transition: opacity .3s, visibility 0s 1s, -webkit-transform .3s;
-  transition: opacity .3s, transform .3s, visibility 0s 1s;
-  transition: opacity .3s, transform .3s, visibility 0s 1s, -webkit-transform .3s;
+  -webkit-transition: opacity .3s, visibility 0s 1s, -webkit-transform .3s;
+  transition: opacity .3s, visibility 0s 1s, -webkit-transform .3s;
+  transition: opacity .3s, transform .3s, visibility 0s 1s;
+  transition: opacity .3s, transform .3s, visibility 0s 1s, -webkit-transform .3s;
 }
 
 .tap-target {
@@ -10207,10 +10217,10 @@ input[type=range]::-ms-thumb {
 
 .tap-target-wave::after {
   visibility: hidden;
-  -webkit-transition: opacity .3s, visibility 0s, -webkit-transform .3s;
-  transition: opacity .3s, visibility 0s, -webkit-transform .3s;
-  transition: opacity .3s, transform .3s, visibility 0s;
-  transition: opacity .3s, transform .3s, visibility 0s, -webkit-transform .3s;
+  -webkit-transition: opacity .3s, visibility 0s, -webkit-transform .3s;
+  transition: opacity .3s, visibility 0s, -webkit-transform .3s;
+  transition: opacity .3s, transform .3s, visibility 0s;
+  transition: opacity .3s, transform .3s, visibility 0s, -webkit-transform .3s;
   z-index: -1;
 }
 

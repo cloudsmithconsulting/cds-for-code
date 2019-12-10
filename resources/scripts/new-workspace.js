@@ -29,7 +29,11 @@
     $(function () {
         M.AutoInit();
 
-        $("#ShowWelcomeExperienceCheckbox").prop("checked") = window.viewModel.showWelcomeExperience;
+        const showWelcomeExperience = (window.viewModel && window.viewModel.showWelcomeExperience)
+            ? window.viewModel.showWelcomeExperience
+            : true;
+
+        $("#ShowWelcomeExperienceCheckbox").prop("checked", showWelcomeExperience);
 
         $("#ShowWelcomeExperienceCheckbox").click(() => {
             vscode.postMessage({ command: 'updateWelcomeExperienceConfig', value: $("#ShowWelcomeExperienceCheckbox").is(':checked') });

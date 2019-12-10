@@ -19,6 +19,8 @@
 
 
   li {
+    background-color: $dropdown-hover-bg-color;
+
     &:hover, &.active {
       background-color: $dropdown-hover-bg-color;
     }
@@ -68,7 +70,7 @@
 
 body.keyboard-focused {
   .dropdown-content li:focus {
-    background-color: darken($dropdown-hover-bg-color, 8%);
+    background-color: $dropdown-hover-bg-color;
   }
 }
 

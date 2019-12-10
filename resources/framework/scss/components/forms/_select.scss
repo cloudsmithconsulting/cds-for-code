@@ -121,7 +121,7 @@ select:disabled {
 .select-dropdown li.disabled,
 .select-dropdown li.disabled > span,
 .select-dropdown li.optgroup {
-  color: $select-disabled-color;
+  color: vscode-color("input", "foreground");
   background-color: transparent;
 }
 
@@ -133,6 +133,8 @@ body.keyboard-focused {
 
 .select-dropdown.dropdown-content {
   li {
+    background-color: $select-background;
+
     &:hover {
       background-color: $select-option-hover;
     }
