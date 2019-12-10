@@ -17,8 +17,11 @@ steps:
 
 - script: |
     npm install
-    npm run vscode:publish
-  displayName: 'npm install and vscode:package'
+  displayName: 'npm install'
+
+- script: |
+    vscode:package
+  displayName: 'vscode:package'
 
 - task: CopyFiles@2
   inputs:
