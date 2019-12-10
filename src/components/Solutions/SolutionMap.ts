@@ -224,7 +224,7 @@ export default class SolutionMap implements IContributor {
         return this;
     }
 
-    static async loadFromWorkspace(context?: ExtensionContext): Promise<SolutionMap> {
+    static async loadFromWorkspace(context?: ExtensionContext, forceWorkspaceOpen: boolean = true): Promise<SolutionMap> {
         if (context) {
             const value = context.workspaceState.get<SolutionMap>(cs.dynamics.configuration.workspaceState.solutionMap);
 
@@ -232,7 +232,7 @@ export default class SolutionMap implements IContributor {
                 return new SolutionMap(value);
             }
         } else {
-            return SolutionMap.read();
+            return await SolutionMap.read(undefined, forceWorkspaceOpen);
         }
 
         return new SolutionMap();
@@ -263,8 +263,13 @@ export default class SolutionMap implements IContributor {
         return returnPath;
     }    
     
-    static async read(filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap> {
-        const workspacePath = await Quickly.pickWorkspaceRoot(undefined, "Choose a location that houses your .dynamics folder.", true).then(uri => uri ? uri.fsPath : null);
+    static async read(filename: string = ".dynamics/solutionMap.json", forceWorkspaceOpen: boolean = true): Promise<SolutionMap> {
+        let workspacePath = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
+
+        if (forceWorkspaceOpen) {
+            workspacePath = workspacePath || await Quickly.pickWorkspaceRoot(undefined, "Choose a location that houses your .dynamics folder.", true).then(uri => uri ? uri.fsPath : null);
+        }
+
         if (!workspacePath) { return; }
 
         const file = path.join(workspacePath, filename);
@@ -275,6 +280,8 @@ export default class SolutionMap implements IContributor {
 
                 if (returnObject && returnObject instanceof SolutionMap) {
                     return <SolutionMap>returnObject;
+                } else { 
+                    return new SolutionMap(returnObject);
                 }
             } catch (error) {
                 vscode.window.showErrorMessage(`The file '${filename}' file was found but could not be parsed.  A new file will be created.${error ? '  The error returned was: ' + error : ''}`);

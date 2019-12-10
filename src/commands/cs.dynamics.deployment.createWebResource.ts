@@ -36,7 +36,7 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
             folder = path.dirname(fsPath);
         }
 
-        map = await this.getSolutionMapping(fsPath, config.orgId);
+        map = await this.getSolutionMapping(fsPath, config ? config.orgId : undefined);
     } else if (config.orgId && solutionId) {
         map = await this.getSolutionMapping(undefined, config.orgId, solutionId);
     }

@@ -538,6 +538,168 @@
 			]
 		},
 		"menus": {
+			"commandPalette": [
+				{
+					"command": "cs.dynamics.controls.explorer.createFromItemTemplate",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.createFromProjectTemplate",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.createWebResource",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.dotNetBuild",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.dotNetTest",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.packWebResource",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.saveTemplateFile",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.saveTemplateFolder",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.registerPluginFile",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.newWorkspace.hideLoadingMessage",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.newWorkspace.open",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.newWorkspace.showLoadingMessage",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.svcUtilConfig.configure",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.addEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.addEntryToSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.clickEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.deleteEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.editConnection",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.editEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.inspectEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.moveSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.openInApp",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.openInBrowser",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.openInEditor",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.removeEntryFromSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.unpackSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.addEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.clickEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.createInWorkspace",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.deleteEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.editEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.exportEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.importEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.openEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
+					"when": "false"
+				}
+			],
 			"explorer/context": [
 				{
 					"command": "cs.dynamics.controls.explorer.dotNetBuild",

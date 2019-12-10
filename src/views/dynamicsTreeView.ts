@@ -24,7 +24,7 @@ export default class DynamicsTreeView implements IContributor {
 
         if (isNew) {
             TreeEntryCache.Context = context;
-            TreeEntryCache.Instance.SolutionMap = await SolutionMap.loadFromWorkspace();
+            TreeEntryCache.Instance.SolutionMap = await SolutionMap.loadFromWorkspace(undefined, false);
     
             DynamicsTreeView.Instance = treeProvider;
             vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.cdsExplorer, treeProvider);        
