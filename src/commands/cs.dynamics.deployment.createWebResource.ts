@@ -8,7 +8,6 @@ import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
 import { Utilities } from "../core/Utilities";
 import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
-import SolutionFile from "../components/SolutionXml/SolutionFile";
 import ExtensionContext from "../core/ExtensionContext";
 import DiscoveryRepository from "../repositories/discoveryRepository";
 
@@ -143,7 +142,12 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
 
     try {
         if (solution && map) {
-            await this.writeDataXmlFile(map, webResource, fsPath);
+            // We are pretty sure adding root nodes to customizations.xml is only required in 9.1+
+            const version = config.webApiVersion.split(".");
+            const minimumVersionToEditCustomizationFiles = 9.1;
+            const providedVersion = parseFloat(version[0] + "." + version[1]);
+
+            await this.writeDataXmlFile(map, webResource, fsPath, providedVersion >= minimumVersionToEditCustomizationFiles);
 
             if (inform) {
                 await Quickly.inform(`The web resource '${webResource.name}' was saved to the local workspace.`);

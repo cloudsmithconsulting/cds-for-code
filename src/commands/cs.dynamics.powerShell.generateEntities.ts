@@ -43,10 +43,18 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder to use when generating code");
 	if (Utilities.$Object.isNullOrEmpty(folder)) { return; }
 
-	outputFileName = outputFileName || await Quickly.pickWorkspaceFile(vscode.Uri.file(folder), "Choose the filename to use when generating code");
+	if (Utilities.$Object.isNullOrEmpty(outputFileName)) {
+		const choice = await Quickly.pickWorkspaceFile(vscode.Uri.file(folder), "Choose the filename to use when generating code", undefined, true, [ ".cs", ".vb" ]);
+
+		if (choice) {
+			outputFileName = path.basename(choice);
+			folder = path.dirname(choice);
+		}
+	}
+
 	if (Utilities.$Object.isNullOrEmpty(outputFileName)) { return; }
 
-	namespace = namespace || await Quickly.ask("Enter the namespace for the generated code", undefined, path.dirname(folder));
+	namespace = namespace || await Quickly.ask("Enter the namespace for the generated code", undefined, path.basename(folder));
 	if (Utilities.$Object.isNullOrEmpty(namespace)) { return; }
 
 	// build a powershell terminal
