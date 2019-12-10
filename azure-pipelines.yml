@@ -19,3 +19,19 @@ steps:
     npm install
     npm run vscode:publish
   displayName: 'npm install and vscode:package'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: |
+      dist/**
+      **/*.vsix
+      **/*.nupkg
+      README.md
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'extension'
+    publishLocation: 'Container'
