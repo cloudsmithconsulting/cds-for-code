@@ -25,7 +25,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
 	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
-	const solutionMap:SolutionMap = WorkspaceState.Instance(ExtensionContext.Instance).SolutionMap;
+	const solutionMap:SolutionMap = await SolutionMap.loadFromWorkspace();
 
 	if (solution && config && !folder) {
 		if (solutionMap.hasSolutionMap(solution.solutionid, config.orgId))					 {

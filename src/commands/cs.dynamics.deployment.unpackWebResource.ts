@@ -7,6 +7,7 @@ import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
 import { Utilities } from "../core/Utilities";
 import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
+import ExtensionContext from '../core/ExtensionContext';
 
 /**
  * This command can be invoked by the Dynamics Explorer tree view and creates or updates a web resource in the local workspace.
@@ -17,7 +18,7 @@ import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceM
  * @returns void
  */
 export default async function run(config?:DynamicsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
-    config = config || await Quickly.pickCdsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
+    config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
     if (!config) { return; }
 
     let fsPath:string;

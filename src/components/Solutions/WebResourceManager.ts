@@ -22,6 +22,7 @@ import SolutionFile from '../SolutionXml/SolutionFile';
 import Quickly from '../../core/Quickly';
 import ExtensionContext from '../../core/ExtensionContext';
 import { CdsSolutions } from '../../api/CdsSolutions';
+import CustomizationsFile from '../SolutionXml/CustomizationsFile';
 
 export default class WebResourceManager implements IContributor {
     contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
@@ -36,8 +37,8 @@ export default class WebResourceManager implements IContributor {
         );
     }
 
-    getSolutionMapping(fsPath?:string, orgId?:string, solutionId?:string): SolutionWorkspaceMapping {
-        const solutionMap = SolutionMap.loadFromWorkspace(ExtensionContext.Instance);
+    async getSolutionMapping(fsPath?:string, orgId?:string, solutionId?:string): Promise<SolutionWorkspaceMapping> {
+        const solutionMap = await SolutionMap.loadFromWorkspace();
         let mappings;
 
         if (fsPath && FileSystem.exists(fsPath)) {
@@ -128,8 +129,14 @@ export default class WebResourceManager implements IContributor {
         // Edit the solution.xml file and add the component there, too.
         const solutionFile = await SolutionFile.from(SolutionMap.mapWorkspacePath(map.path));
 
-        await solutionFile.addComponent(CdsSolutions.SolutionComponent.WebResource, undefined, webResource.name, 0).then(() => {
-            solutionFile.save(SolutionMap.mapWorkspacePath(map.path));
-        });
+        await solutionFile.addComponent(CdsSolutions.SolutionComponent.WebResource, undefined, webResource.name, 0);
+        await solutionFile.save(SolutionMap.mapWorkspacePath(map.path));
+        
+        // Edit the customizations.xml file and add the component type there, too.
+        const customizationsFileLocation = path.join(path.dirname(SolutionMap.mapWorkspacePath(map.path)), "Customizations.xml");
+        const customizationsFile = await CustomizationsFile.from(customizationsFileLocation);
+
+        await customizationsFile.addElement("WebResources");
+        await customizationsFile.save(customizationsFileLocation);
     }
 }

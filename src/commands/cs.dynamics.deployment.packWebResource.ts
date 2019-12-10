@@ -5,6 +5,7 @@ import { CdsSolutions } from "../api/CdsSolutions";
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
 import EnumParser from "../core/EnumParser";
+import ExtensionContext from "../core/ExtensionContext";
 
 /**
  * This command can be invoked by the Explorer file viewer and creates or updates a web resource in Dynamics
@@ -21,7 +22,7 @@ export default async function run(config?:DynamicsWebApi.Config, solution?:any, 
         fileUri = fileUri.with({ path: fileUri.path.substr(0, fileUri.path.length - 9)});
     }
     
-    config = config || await Quickly.pickCdsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
+    config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
     if (!config) { return; }
 
     const map = this.getSolutionMapping(fileUri.fsPath, config.orgId);

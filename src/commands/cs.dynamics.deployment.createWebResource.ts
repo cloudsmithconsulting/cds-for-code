@@ -9,6 +9,8 @@ import ApiRepository from "../repositories/apiRepository";
 import { Utilities } from "../core/Utilities";
 import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
 import SolutionFile from "../components/SolutionXml/SolutionFile";
+import ExtensionContext from "../core/ExtensionContext";
+import DiscoveryRepository from "../repositories/discoveryRepository";
 
 /**
  * This command can be invoked by the by either the file explorer view or the Dynamics TreeView
@@ -25,9 +27,6 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
 
     workspaceRoot = vscode.workspace && vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
 
-    config = config || await Quickly.pickCdsOrganization(this.context, "Choose a Dynamics 365 Organization", true);
-    if (!config) { return; }
-
     if (fileUri && fileUri.fsPath) {
         fsPath = fileUri.fsPath;
 
@@ -37,10 +36,19 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
             folder = path.dirname(fsPath);
         }
 
-        map = this.getSolutionMapping(fsPath, config.orgId);
+        map = await this.getSolutionMapping(fsPath, config ? config.orgId : undefined);
     } else if (config.orgId && solutionId) {
-        map = this.getSolutionMapping(undefined, config.orgId, solutionId);
+        map = await this.getSolutionMapping(undefined, config.orgId, solutionId);
     }
+
+    if (map && !config) {
+        const connections = await DiscoveryRepository.getOrgConnections(ExtensionContext.Instance);
+
+        config = connections.find(c => c.orgId === map.organizationId);
+    }
+
+    config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
+    if (!config) { return; }
 
     let content: string;
 
@@ -122,13 +130,13 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
     }
 
     // Double check as we have calculated a path now, is there a map?
-    if (!map) { map = this.getSolutionMapping(fsPath, config.orgId); }
+    if (!map) { map = await this.getSolutionMapping(fsPath, config.orgId); }
 
     let solution;
 
     if ((!map || !map.solutionId) && !solutionId) {
         solution = await Quickly.pickCdsSolution(config, "Would you like to add this web resource to a solution?");
-        map = this.getSolutionMapping(undefined, config.orgId, solution.solutionid);
+        map = await this.getSolutionMapping(undefined, config.orgId, solution.solutionid);
     } else {
         solution = await api.retrieveSolution(solutionId || map.solutionId);
     }
