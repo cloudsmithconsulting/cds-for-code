@@ -409,8 +409,8 @@ export namespace DynamicsWebApi {
          *  }.catch(function (error) {
          *  });
         */
-        discover(): Promise<any> {
-            return this._makeDiscoveryRequest({ collection: 'Instances' })
+        discover(filter?:string): Promise<any> {
+            return this._makeDiscoveryRequest({ collection: 'Instances', filter })
                 .then(response => {
                      return response.data; 
                 });

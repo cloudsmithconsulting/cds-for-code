@@ -130,7 +130,7 @@ let responseParseParams = [];
 export function sendRequest(method: string, path: string, config: DynamicsWebApi.Config, data: any, additionalHeaders: { [key: string]: string }, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void, isBatch: boolean, isAsync: boolean, isDiscovery?: boolean): DynamicsWebApi.Config {
     additionalHeaders = additionalHeaders || {};
     responseParams = responseParams || {};
-    isDiscovery = isDiscovery || path === "Instances";
+    isDiscovery = isDiscovery || path.match(/.*(\/|)Instances.*/) !== null;
 
     //add response parameters to parse
     responseParseParams.push(responseParams);
@@ -342,7 +342,11 @@ function _getCollectionName(entityName: string, config: DynamicsWebApi.Config, r
 }
 
 export function makeDiscoveryRequest(request:any, config:DynamicsWebApi.Config, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {
-    sendRequest("GET", `${request ? request.collection : "Instances"}`, config, null, null, null, resolve, reject, request ? request.isBatch : false, true);
+    request.collection = request.collection || "Instances";
+
+    const result = RequestConverter.convertRequest(request, 'discover', config);
+
+    sendRequest("GET", result.url, config, null, null, null, resolve, reject, request.isBatch, result.async);
 }
 
 export function makeRequest(method: string, request: any, functionName: string, config: any, responseParams?: any, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {

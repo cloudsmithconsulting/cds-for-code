@@ -522,7 +522,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
     private getConnectionDetails(element: TreeEntry, commandPrefix?:string): Promise<TreeEntry[]> {
         const connection = element.config;
 		const api = new DiscoveryRepository(connection);
-        const returnValue = this.createTreeEntries(api.retrieveOrganizations(), 
+        const returnValue = this.createTreeEntries(api.retrieveOrganizations(`Url eq '${connection.appUrl || connection.webApiUrl}'`), 
             org =>  new TreeEntry(
                 org.FriendlyName, 
                 "Organization",

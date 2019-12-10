@@ -14,8 +14,8 @@ export default class DiscoveryRepository {
 
     private webapi: DynamicsWebApi.WebApiClient;
 
-    async retrieveOrganizations() : Promise<any> {
-        return this.webapi.discover()
+    async retrieveOrganizations(filter?:string) : Promise<any> {
+        return this.webapi.discover(filter)
             .then(result => result.value)
             .catch(error => {
                 Quickly.error(`There were errors retreiving organizations from '${this.webapi.config.name ? this.webapi.config.name : "your connection"}': ${error.message}`);
@@ -37,8 +37,10 @@ export default class DiscoveryRepository {
                 const api = new DiscoveryRepository(connections[i]);
                 const orgs = await api.retrieveOrganizations();
 
-                for (var j = 0; j < orgs.length; j++) {
-                    returnObject.push(this.createOrganizationConnection(orgs[j], connections[i]));
+                if (orgs) {
+                    for (var j = 0; j < orgs.length; j++) {
+                        returnObject.push(this.createOrganizationConnection(orgs[j], connections[i]));
+                    }
                 }
             }
         }
