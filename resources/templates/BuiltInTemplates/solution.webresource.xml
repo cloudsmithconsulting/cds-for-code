@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WebResource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <WebResourceId>{#{webresource.webresourceid}}</WebResourceId>
+  <Name>#{webresource.name}</Name>
+  <DisplayName>#{webresource.displayname}</DisplayName>
+  <Description>#{webresource.description}</Description>
+  <WebResourceType>#{webresource.webresourcetype}</WebResourceType>
+  <IntroducedVersion>#{webresource.introducedversion}</IntroducedVersion>
+  <IsEnabledForMobileClient>#{webresource.isenabledformobileclient ? "1" : "0"}</IsEnabledForMobileClient>
+  <IsAvailableForMobileOffline>#{webresource.isavailableformobileoffline ? "1" : "0"}</IsAvailableForMobileOffline>
+  <DependencyXml>&lt;Dependencies&gt;&lt;Dependency componentType="WebResource"/&gt;&lt;/Dependencies&gt;</DependencyXml>
+  <IsCustomizable>#{webresource.iscustomizable.Value ? "1" : "0"}</IsCustomizable>
+  <CanBeDeleted>#{webresource.canbedeleted.Value ? "1" : "0"}</CanBeDeleted>
+  <IsHidden>#{webresource.ishidden.Value ? "1" : "0"}</IsHidden>
+  <FileName>#{resolver.resolvefilename(webresource)}</FileName>
+</WebResource>

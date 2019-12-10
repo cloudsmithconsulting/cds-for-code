@@ -97,7 +97,7 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
     webResource.displayname = webResource.displayname || await Quickly.ask("What is the display name for this web resource?");
     webResource.webresourcetype = webResource.webresourcetype || defaultType || CdsSolutions.CodeMappings.getWebResourceTypeCode(await Quickly.pickEnum<CdsSolutions.WebResourceFileType>(CdsSolutions.WebResourceFileType, "What type of web resource is this?"));
     webResource.description = webResource.description || await Quickly.ask("Describe this web resource");
-    webResource.languagecode = webResource.languagecode || parseInt(await Quickly.ask("What is the language code for this web resource?", undefined, "1033"));
+    //webResource.languagecode = webResource.languagecode || parseInt(await Quickly.ask("What is the language code for this web resource?", undefined, "1033"));
     webResource.isenabledformobileclient = webResource.isenabledformobileclient || await Quickly.pickBoolean("Enable this web resource for mobile use?", "Yes", "No");
     webResource.isavailableformobileoffline = webResource.isavailableformobileoffline || (webResource.isenabledformobileclient && await Quickly.pickBoolean("Enable this web resource for mobile offline use?", "Yes", "No"));
     webResource.introducedversion = webResource.inintroducedversion || "1.0";

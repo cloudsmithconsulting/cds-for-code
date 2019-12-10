@@ -345,7 +345,7 @@ export default class ApiRepository {
             .then(response => response.value || []);
     }
 
-    uploadPluginAssembly(assemblyUri:vscode.Uri, pluginAssemblyId?:string): Thenable<any> {
+    uploadPluginAssembly(assemblyUri:vscode.Uri, pluginAssemblyId?:string, isSandboxed: boolean = true): Thenable<any> {
         const fs = vscode.workspace.fs;
         let fileContents;
 
@@ -377,8 +377,10 @@ export default class ApiRepository {
                     .catch(error => console.error(error));                }
             }).then(pluginassembly => { 
                 pluginAssemblyId = pluginassembly.pluginassemblyid;
-                pluginassembly.content = fileContents; 
                 
+                pluginassembly.content = fileContents; 
+                pluginassembly.isolationmode = isSandboxed ? 2 : 1;
+
                 return pluginassembly; 
             }).then(pluginAssembly => {
                 if (!pluginAssemblyId) {
