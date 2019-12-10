@@ -43,13 +43,13 @@
 
         // Swap our tabs
         const selectedTab = 
-            apiConfig.type === 1 ? "#windowsAuth" : 
-            apiConfig.type === 2 ? "#onlineAuth" : 
-            apiConfig.type === 3 ? "#azureAuth" :
-            apiConfig.type === 4 ? "#ifdAuth" : undefined;
+            apiConfig.type === 1 ? "windowsAuth" : 
+            apiConfig.type === 2 ? "onlineAuth" : 
+            apiConfig.type === 3 ? "azureAuth" :
+            apiConfig.type === 4 ? "ifdAuth" : undefined;
 
         if (selectedTab) {
-            setTimeout(M.Tabs.getInstance($('#ConnectionTypeTabs')).select(selectedTab), 100);
+            M.Tabs.getInstance($('#ConnectionTypeTabs')).select(selectedTab);
         }
 
         // The uusal
