@@ -20,8 +20,8 @@ steps:
   displayName: 'npm install'
 
 - script: |
-    vscode:package
-  displayName: 'vscode:package'
+    npm run vscode:package
+  displayName: 'npm run vscode:package'
 
 - task: CopyFiles@2
   inputs:
