@@ -214,7 +214,9 @@ export namespace DynamicsWebApi {
         name: string;
         /** The type of connection/configuration this relates to */
         type: ConfigType;
-        /**A String representing the GUID value for the Dynamics 365 system user id.Impersonates the user. */
+        /** A string representing the Url to use when attempting a web operation against this org  */
+        appUrl?: string;
+        /**A String representing the URL prefix to use when attempting a web API operation against this org */
         webApiUrl?: string;
         /** A string representation of a URL that can discovery this instance. */
         discoveryUrl?: string;
@@ -282,6 +284,8 @@ export namespace DynamicsWebApi {
         private _internalConfig: DynamicsWebApi.Config;
         private _isBatch: boolean;
 
+        private static defaultTimeout: number = 30 * 1000;
+
         /**
          * Constructor.
          * @constructor
@@ -336,10 +340,10 @@ export namespace DynamicsWebApi {
             if (config.webApiUrl) {
                 Parameters.stringParameterCheck(config.webApiUrl, "DynamicsWebApi.setConfig", "config.webApiUrl");
                 this._internalConfig.webApiUrl = Utility.initWebApiUrl(config.webApiUrl, this._internalConfig.webApiVersion); 
-                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(config.webApiUrl, this._internalConfig.webApiVersion);
+                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(config.webApiUrl, this._internalConfig.webApiVersion, config.type);
             } else {
                 this._internalConfig.webApiUrl = Utility.initWebApiUrl(undefined, this._internalConfig.webApiVersion);
-                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(undefined, this._internalConfig.webApiVersion);
+                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(undefined, this._internalConfig.webApiVersion, config.type);
             }
 
             if (config.credentials) {
@@ -376,6 +380,8 @@ export namespace DynamicsWebApi {
             if (config.timeout) {
                 Parameters.numberParameterCheck(config.timeout, "DynamicsWebApi.setConfig", "config.timeout");
                 this._internalConfig.timeout = config.timeout;
+            } else {
+                this._internalConfig.timeout = WebApiClient.defaultTimeout;
             }
 
             if (config.maxPageSize) {
@@ -403,8 +409,8 @@ export namespace DynamicsWebApi {
          *  }.catch(function (error) {
          *  });
         */
-        discover(): Promise<any> {
-            return this._makeDiscoveryRequest({ collection: 'Instances' })
+        discover(filter?:string): Promise<any> {
+            return this._makeDiscoveryRequest({ collection: 'Instances', filter })
                 .then(response => {
                      return response.data; 
                 });

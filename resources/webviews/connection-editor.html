@@ -35,7 +35,8 @@
             <div class="input-field col s12">
                 <input id="ConnectionName" type="text" class="validate">
                 <label for="ConnectionName">Connection Name</label>
-                <span class="helper-text" data-error="We're sorry, no special characters in the connection name"
+                <span class="helper-text" 
+                    data-error="We're sorry, no special characters in the connection name"
                     data-success="Got it!">What would you like to call this connection in the future?</span>
             </div>
         </div>
@@ -97,13 +98,16 @@
                         <input id="Online-Username" type="text" />
                         <label for="Online-Username">Username</label>
                     </div>
-                    <div class="col s6 input-field">
+                    <div class="col s5 input-field">
                         <input id="Online-Password" type="password" />
                         <label for="Online-Password">Password</label>
                     </div>
+                    <div class="col s1 input-field">
+                        <a id="PerformGlobalDiscoButton" class="waves-effect waves-light btn-small">Discover</a>
+                    </div>
                     <div class="col s12 input-field">
-                        <input id="Online-OrgUrl" type="text" placeholder="https://tenant.crm.dynamics.com/" />
-                        <label for="Online-OrgUrl">Org URL</label>
+                        <input id="Online-OrgUrl" type="url" />
+                        <label for="Online-OrgUrl">Organization URL</label>
                     </div>
                 </div>
                 <div class="row" id="azureAdAuth">
@@ -153,11 +157,11 @@
                 <div class="row">
                     <label class="s12 m6 l5 col">
                         <input type="checkbox" class="filled-in" id="OAuthToken-Select" data-enable-target="#OAuthToken" />
-                        <span>Attempt authentication with an existing OAuth token</span>
+                        <span>Attempt authentication with an existing OAuth refresh token</span>
                     </label>
                     <div class="s12 m6 l7 col input-field">
                         <input id="OAuthToken" type="text" disabled />
-                        <label for="OAuthToken">OAuth Token</label>                            
+                        <label for="OAuthToken">Refresh Token</label>                            
                     </div>
                 </div>
             </div>

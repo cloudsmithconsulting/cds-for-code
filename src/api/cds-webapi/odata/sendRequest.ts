@@ -7,7 +7,7 @@ import nodeJsRequest from "../../../core/http/nodeJsRequest";
 import odataResponseNodeJs from "./odataResponse.nodejs";
 import odataResponseXhr from "./odataResponse.xhr";
 import { DynamicsWebApi } from "../DynamicsWebApi";
-import { Credential } from '../../../core/security/Types';
+import { Credential, OAuthCredential } from '../../../core/security/Types';
 
 let _entityNames;
 
@@ -125,10 +125,12 @@ let responseParseParams = [];
  * @param {Function} errorCallback - A callback called when a request failed.
  * @param {boolean} [isBatch] - Indicates whether the request is a Batch request or not. Default: false
  * @param {boolean} [isAsync] - Indicates whether the request should be made synchronously or asynchronously.
+ * @param {boolean} [isDiscovery] - Indicates whether the request should be a discovery request.
  */
-export function sendRequest(method: string, path: string, config: DynamicsWebApi.Config, data: any, additionalHeaders: { [key: string]: string }, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void, isBatch: boolean, isAsync: boolean): void {
+export function sendRequest(method: string, path: string, config: DynamicsWebApi.Config, data: any, additionalHeaders: { [key: string]: string }, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void, isBatch: boolean, isAsync: boolean, isDiscovery?: boolean): DynamicsWebApi.Config {
     additionalHeaders = additionalHeaders || {};
     responseParams = responseParams || {};
+    isDiscovery = isDiscovery || path.match(/.*(\/|)Instances.*/) !== null;
 
     //add response parameters to parse
     responseParseParams.push(responseParams);
@@ -229,7 +231,7 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
             credentials: config.credentials,
             method: method,
             connectionId: config.id,
-            uri: (path === "Instances" ? config.discoveryUrl : config.webApiUrl) + path,
+            uri: (isDiscovery ? config.discoveryUrl : config.webApiUrl) + path,
             data: stringifiedData,
             additionalHeaders: additionalHeaders,
             responseParams: responseParseParams,
@@ -244,15 +246,19 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
     //call a token refresh callback only if it is set and there is no "Authorization" header set yet
     if (config.credentials && Credential.requireToken(config.credentials) && typeof config.onTokenRefresh !== 'undefined' && (!additionalHeaders || (additionalHeaders && !additionalHeaders['Authorization']))) {
         // Attempt authentication this way.
-        if (config.id && config.credentials && config.type !== DynamicsWebApi.ConfigType.OnPremises) {
-            Authentication(config.id, config.credentials)
-                .then(auth  => {
-                    if (!auth.success) {
-                        config.onTokenRefresh(sendInternalRequest);
-                    } 
-
-                    sendInternalRequest();
-                });
+        if (((config.id && config.credentials && config.credentials.isSecure) || config.credentials) && config.type !== DynamicsWebApi.ConfigType.OnPremises) {
+            if ((<OAuthCredential>config.credentials).accessToken) {
+                sendInternalRequest((<OAuthCredential>config.credentials).accessToken);
+            } else {
+                Authentication(config.id, config.credentials, isDiscovery ? `https://disco.${Utility.crmHostSuffix(config.webApiUrl)}/` : undefined)
+                    .then(auth => {
+                        if (!auth.success) {
+                            config.onTokenRefresh(sendInternalRequest);
+                        } else {
+                            sendInternalRequest(auth.response);
+                        }
+                    });
+            }
         }
     }
     else {
@@ -336,21 +342,15 @@ function _getCollectionName(entityName: string, config: DynamicsWebApi.Config, r
 }
 
 export function makeDiscoveryRequest(request:any, config:DynamicsWebApi.Config, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {
-    switch (config.type) {
-        case DynamicsWebApi.ConfigType.OnPremises:
-            return sendRequest("GET", `${request ? request.collection : "Instances"}`, config, null, null, null, resolve, reject, request ? request.isBatch : false, true);
-        case DynamicsWebApi.ConfigType.Online:
-            config.webApiUrl = "https://globaldisco.crm.dynamics.com/";
-            config.webApiVersion = "v1.0";
+    request.collection = request.collection || "Instances";
 
-            return sendRequest("GET", `${request ? request.collection : "Instances"}`, config, null, null, null, resolve, reject, request ? request.isBatch : false, true);
-        default: 
-            throw new Error(`No discovery method is available for a connection of type '${config.type}'`);
-    }
+    const result = RequestConverter.convertRequest(request, 'discover', config);
+
+    sendRequest("GET", result.url, config, null, null, null, resolve, reject, request.isBatch, result.async);
 }
 
 export function makeRequest(method: string, request: any, functionName: string, config: any, responseParams?: any, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {
-    var successCallback = (collectionName: string) => {
+    const successCallback = (collectionName: string) => {
         request.collection = collectionName;
         
         const result = RequestConverter.convertRequest(request, functionName, config);

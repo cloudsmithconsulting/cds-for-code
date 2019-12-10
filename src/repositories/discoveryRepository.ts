@@ -2,9 +2,10 @@ import * as vscode from 'vscode';
 import { Utilities } from '../core/Utilities';
 import GlobalState from '../components/Configuration/GlobalState';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import Quickly from '../core/Quickly';
 
 export default class DiscoveryRepository {
-    private config:DynamicsWebApi.Config;
+    config:DynamicsWebApi.Config;
 
     constructor (config:DynamicsWebApi.Config) {
         this.config = config;
@@ -13,9 +14,12 @@ export default class DiscoveryRepository {
 
     private webapi: DynamicsWebApi.WebApiClient;
 
-    async retrieveOrganizations() : Promise<any> {
-        return this.webapi.discover()
-            .then(result => result.value);
+    async retrieveOrganizations(filter?:string) : Promise<any> {
+        return this.webapi.discover(filter)
+            .then(result => result.value)
+            .catch(error => {
+                Quickly.error(`There were errors retreiving organizations from '${this.webapi.config.name ? this.webapi.config.name : "your connection"}': ${error.message}`);
+            });
     }
 
     static getConnections(context: vscode.ExtensionContext): DynamicsWebApi.Config[] {
@@ -33,8 +37,10 @@ export default class DiscoveryRepository {
                 const api = new DiscoveryRepository(connections[i]);
                 const orgs = await api.retrieveOrganizations();
 
-                for (var j = 0; j < orgs.length; j++) {
-                    returnObject.push(this.createOrganizationConnection(orgs[j], connections[i]));
+                if (orgs) {
+                    for (var j = 0; j < orgs.length; j++) {
+                        returnObject.push(this.createOrganizationConnection(orgs[j], connections[i]));
+                    }
                 }
             }
         }
@@ -51,6 +57,15 @@ export default class DiscoveryRepository {
         // Clone the current connection and override the endpoint and version.
         const orgConnection = Utilities.$Object.clone<DynamicsWebApi.Config>(connection);
 
+        if ((<any>orgConnection).accessToken) {
+            delete (<any>orgConnection).accessToken;
+        }
+
+        if (orgConnection.timeout) {
+            delete orgConnection.timeout;       
+        }
+
+        orgConnection.appUrl = org.Url;
         orgConnection.webApiUrl = org.ApiUrl;
         orgConnection.webApiVersion = `${versionSplit[0]}.${versionSplit[1]}`;
         orgConnection.name = org.FriendlyName;

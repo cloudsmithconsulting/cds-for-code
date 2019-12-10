@@ -20,9 +20,16 @@
                 case "error":
                     CloudSmith.ErrorPanel.showError([`${message.message}`]);
                     break;
+                case "bindDiscovery": 
+                    bindDiscovery(message.organization);
+                    break;
             }
         });
     });
+
+    function bindDiscovery(org) {
+        $("#Online-OrgUrl").val(org);
+    }
 
     function setInitialState(apiConfig) {
         if (apiConfig.id && apiConfig.id !== "") {
@@ -35,12 +42,19 @@
         M.Collapsible.getInstance($("#ConnectionOptions")).open(1);
 
         // Swap our tabs
-        $(`#ConnectionTypeTabs:nth-child(${apiConfig.type}):first-child`).addClass("active");
-        $(`#ConnectionTypeTabs:nth-child(${apiConfig.type}):first-child`).removeClass("active");
+        const selectedTab = 
+            apiConfig.type === 1 ? "#windowsAuth" : 
+            apiConfig.type === 2 ? "#onlineAuth" : 
+            apiConfig.type === 3 ? "#azureAuth" :
+            apiConfig.type === 4 ? "#ifdAuth" : undefined;
+
+        if (selectedTab) {
+            setTimeout(M.Tabs.getInstance($('#ConnectionTypeTabs')).select(selectedTab), 100);
+        }
 
         // The uusal
-        $("#ConnectionId").val(apiConfig.id || "");
-        $("#ConnectionName").val(apiConfig.name || "");
+        $("#ConnectionId").val(apiConfig.id || $("#ConnectionId").val() || "");
+        $("#ConnectionName").val(apiConfig.name || $("#ConnectionName").val() || "");
 
         // Advanced options
         $("#WebApiVersion").val(apiConfig.webApiVersion);
@@ -55,7 +69,7 @@
 
                 break;
             case 2:
-                $("#Online-OrgUrl").val(apiConfig.webApiUrl || "");
+                $("#Online-OrgUrl").val(apiConfig.appUrl || apiConfig.webApiUrl || "");
                 $("#Online-Username").val(apiConfig.credentials ? apiConfig.credentials.username || "" : "");
                 $("#Online-Password").val(apiConfig.credentials ? apiConfig.credentials.password || "" : "");
 
@@ -138,15 +152,7 @@
             return messages.length === 0;
         }
 
-        // Send this back to our extension for parsing.
-        $("#ParseConnectionStringButton").click(function() {
-            vscode.postMessage({
-                command: "parseConnectionString",
-                connectionString: $("#ConnectionString").val()
-            });
-        });
-
-        $("[data-action='save']").click(function() {
+        function createSettings() {
             const id = $("#ConnectionId").val();
             let settings = {};
 
@@ -172,11 +178,17 @@
 
                     break;
                 case 2: 
+                    if ($("#Online-OrgUrl").val() !== null) {
+                        credentials.resource = $("#Online-OrgUrl").val();
+                    } else {
+                        credentials.resource = 'https://disco.crm.dynamics.com/';
+                    }
+
                     if (token) {
-                        credentials.token = token;
+                        credentials.refreshToken = token;
                     } else {
                         credentials.username = $("#Online-Username").val();
-                        credentials.password = $("#Online-Password").val();
+                        credentials.password = $("#Online-Password").val();                        
                     }
 
                     break;
@@ -196,6 +208,29 @@
                 webApiUrl: apiUri,
                 credentials: credentials
             };
+
+            return settings;
+        }
+
+        // Send this back to our extension for parsing.
+        $("#ParseConnectionStringButton").click(function() {
+            vscode.postMessage({
+                command: "parseConnectionString",
+                connectionString: $("#ConnectionString").val()
+            });
+        });
+
+        $("#PerformGlobalDiscoButton").click(function() {
+            const settings = createSettings();
+
+            vscode.postMessage({
+                command: "performGlobalDisco",
+                settings
+            });
+        });
+
+        $("[data-action='save']").click(function() {
+           const settings = createSettings();
 
             if (!validateForm(settings)) return;
 

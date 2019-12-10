@@ -1,7 +1,9 @@
+import * as vscode from 'vscode';
 import buildFunctionParameters from '../odata/buildFunctionParameters';
 import getFetchXmlPagingCookie from '../odata/getFetchXmlPagingCookie';
 import convertToReferenceObject, { ReferenceObject } from '../odata/convertToReferenceObject';
 import { Utilities } from "../../../core/Utilities";
+import { DynamicsWebApi } from '../DynamicsWebApi';
 
 export default class Utility {
     /**
@@ -73,15 +75,39 @@ export default class Utility {
             version = version.substring(1, version.length);
         }
 
+        prefix = prefix || "";
+        
         return prefix + (!prefix.endsWith("/") ? "/" : "") + 'api/data/v' + version + '/';
     }
 
-    static initDiscoveryApiUrl(prefix: string = this.getClientUrl(), version: string = "8.2"): string {
+    static initDiscoveryApiUrl(prefix: string = this.getClientUrl(), version: string = "8.2", configType?: DynamicsWebApi.ConfigType): string {
         if (version && version.startsWith("v")) {
             version = version.substring(1, version.length);
         }
 
-        return prefix + (!prefix.endsWith("/") ? "/" : "") + 'api/discovery/v' + version + '/';
+        prefix = Utilities.String.noTrailingSlash(prefix);
+
+        if (!configType || configType !== DynamicsWebApi.ConfigType.Online) {
+            return prefix +  '/api/discovery/v' + version + '/';
+        } else {
+            if (prefix && !prefix.endsWith(".dynamics.com")) {
+                return prefix +  '/api/discovery/v' + version + '/';
+            } else {
+                return "https://globaldisco.crm.dynamics.com/api/discovery/v2.0/";
+            }
+        }
+    }
+
+    static crmHostSuffix(url: string) {
+        const hostparts = vscode.Uri.parse(url).authority.split(".");
+
+        if (hostparts.length > 3) {
+            hostparts.splice(0, hostparts.length - 3);
+
+            return hostparts.join(".");
+        }
+
+        return null;
     }
 
     static getXrmInternal(): any { 
