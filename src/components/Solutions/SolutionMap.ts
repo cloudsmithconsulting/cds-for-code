@@ -31,13 +31,11 @@ export default class SolutionMap implements IContributor {
         if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
             // Watch the files in the workspace for changes.
             vscode.workspace.workspaceFolders.forEach(f => WorkspaceFileSystemWatcher.Instance.openWorkspace(f));
-            // Load the solution map from the workspace.
-            SolutionMap.loadFromWorkspace(context);
         }
 
         context.subscriptions.push(
             vscode.commands.registerCommand(cs.dynamics.deployment.removeSolutionMapping, async (item?: SolutionWorkspaceMapping): Promise<boolean> => {
-                const map = SolutionMap.loadFromWorkspace(context);
+                const map = await SolutionMap.loadFromWorkspace();
                 let returnValue = false;
 
                 if (!item) { 
@@ -57,7 +55,7 @@ export default class SolutionMap implements IContributor {
                     }
                 }
                 
-                map.saveToWorkspace(context);
+                map.saveToWorkspace();
 
                 return returnValue;
             })
@@ -88,7 +86,7 @@ export default class SolutionMap implements IContributor {
 				folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a workplace folder containing solution items.");
                 if (Utilities.$Object.isNullOrEmpty(folder)) { return; }
                 
-                const map = SolutionMap.loadFromWorkspace(context);
+                const map = await SolutionMap.loadFromWorkspace();
                 item = item || map.hasSolutionMap(solutionId, organizationId) ? map.getBySolutionId(solutionId, organizationId)[0] : null;
                 
                 if (item && item.path && item.path !== folder) {
@@ -209,9 +207,11 @@ export default class SolutionMap implements IContributor {
         return SolutionMap.write(this, filename);
     }
 
-    saveToWorkspace(context: ExtensionContext): SolutionMap {
+    async saveToWorkspace(context?: ExtensionContext): Promise<SolutionMap> {
         if (context) {
             context.workspaceState.update(cs.dynamics.configuration.workspaceState.solutionMap, this);
+        } else {
+            await SolutionMap.write(this);
         }
 
         return this;
@@ -224,13 +224,15 @@ export default class SolutionMap implements IContributor {
         return this;
     }
 
-    static loadFromWorkspace(context: ExtensionContext): SolutionMap {
+    static async loadFromWorkspace(context?: ExtensionContext): Promise<SolutionMap> {
         if (context) {
             const value = context.workspaceState.get<SolutionMap>(cs.dynamics.configuration.workspaceState.solutionMap);
 
             if (value) {
                 return new SolutionMap(value);
             }
+        } else {
+            return SolutionMap.read();
         }
 
         return new SolutionMap();

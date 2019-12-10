@@ -1,22 +1,23 @@
-import { ExtensionContext } from 'vscode';
 import SolutionMap from '../Solutions/SolutionMap';
+import ExtensionContext from '../../core/ExtensionContext';
+import * as cs from "../../cs";
 
 export default class WorkspaceState {
-    private _context: ExtensionContext;
-
-    constructor (context: ExtensionContext) {
-        this._context = context;
-    }
+    private constructor() { }
 
     get SolutionMap(): SolutionMap {
-        return SolutionMap.loadFromWorkspace(this._context);
+        const value = ExtensionContext.Instance.workspaceState.get<SolutionMap>(cs.dynamics.configuration.workspaceState.solutionMap);
+
+        if (value) {
+            return new SolutionMap(value);
+        }
     }
 
     set SolutionMap(value: SolutionMap) {
-        value.saveToWorkspace(this._context);
+        ExtensionContext.Instance.workspaceState.update(cs.dynamics.configuration.workspaceState.solutionMap, this);
     }
 
-    static Instance(context: ExtensionContext): WorkspaceState {
-        return new WorkspaceState(context);
+    static get Instance(): WorkspaceState {
+        return new WorkspaceState();
     }
 }

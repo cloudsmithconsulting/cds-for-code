@@ -16,14 +16,16 @@ import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceM
 import { CdsSolutions } from '../api/CdsSolutions';
 
 export default class DynamicsTreeView implements IContributor {
-    public static Instance:DynamicsServerTreeProvider;
+    static Instance:DynamicsServerTreeProvider;
 
-    public contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
+    async contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         const isNew = !DynamicsTreeView.Instance;        
         const treeProvider = isNew ? new DynamicsServerTreeProvider(context) : DynamicsTreeView.Instance;
 
         if (isNew) {
             TreeEntryCache.Context = context;
+            TreeEntryCache.Instance.SolutionMap = await SolutionMap.loadFromWorkspace();
+    
             DynamicsTreeView.Instance = treeProvider;
             vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.cdsExplorer, treeProvider);        
         }
@@ -1238,7 +1240,6 @@ class TreeEntryCache {
     private static _context:vscode.ExtensionContext;
 
     private _items:TreeEntry[] = [];
-    private _solutionMap:SolutionMap;
 
     private constructor() { 
     }
@@ -1264,20 +1265,14 @@ class TreeEntryCache {
     }
 
     ClearMap(): void { 
-        this._solutionMap = null;
+        this.SolutionMap = null;
     }
 
     get Items(): TS.Linq.Enumerator<TreeEntry> {
         return new TS.Linq.Enumerator(this._items);
     }
 
-    get SolutionMap(): SolutionMap {
-        if (!this._solutionMap && TreeEntryCache._context) {
-            this._solutionMap = SolutionMap.loadFromWorkspace(TreeEntryCache._context);
-        }
-
-        return this._solutionMap;
-    }
+    SolutionMap: SolutionMap;
 
     Under(path:string): TS.Linq.Enumerator<TreeEntry> {
         return this.Items.where(item => item.id.startsWith(path));

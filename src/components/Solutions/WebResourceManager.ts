@@ -36,8 +36,8 @@ export default class WebResourceManager implements IContributor {
         );
     }
 
-    getSolutionMapping(fsPath?:string, orgId?:string, solutionId?:string): SolutionWorkspaceMapping {
-        const solutionMap = SolutionMap.loadFromWorkspace(ExtensionContext.Instance);
+    async getSolutionMapping(fsPath?:string, orgId?:string, solutionId?:string): Promise<SolutionWorkspaceMapping> {
+        const solutionMap = await SolutionMap.loadFromWorkspace();
         let mappings;
 
         if (fsPath && FileSystem.exists(fsPath)) {

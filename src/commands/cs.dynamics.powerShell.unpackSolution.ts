@@ -23,7 +23,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
 	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
-	const map:SolutionMap = SolutionMap.loadFromWorkspace(ExtensionContext.Instance);
+	const map:SolutionMap = await SolutionMap.loadFromWorkspace();
 
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
 	if (!config) { return; }
@@ -102,9 +102,9 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 				.if(() => !Utilities.$Object.isNullOrEmpty(templateResourceCode), c => c.text(` -TemplateResourceLanguageCode "${templateResourceCode}"`))
 				.if(() => includeResourceFiles, c => c.text(` -IncludeResourceFiles`))
 				.if(() => allowDelete, c => c.text(` -AllowDelete`)))
-				.then(tc => { 
+				.then(async tc => { 
 					map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename));
-					map.saveToWorkspace(ExtensionContext.Instance);
+					await map.saveToWorkspace();
 				}).then(() => {
 					if (logFile) {
 						vscode.workspace.openTextDocument(logFile)
