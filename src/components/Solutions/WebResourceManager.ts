@@ -110,7 +110,7 @@ export default class WebResourceManager implements IContributor {
             });        
     }
 
-    async writeDataXmlFile(map:SolutionWorkspaceMapping, webResource:any, fsPath:string) {
+    async writeDataXmlFile(map:SolutionWorkspaceMapping, webResource:any, fsPath:string, updateCustomizationsFile: boolean) {
         const dataFile = fsPath + ".data.xml";
         const resolver = (webResource) => {
             const parts = path.relative(map.path, fsPath).split(".").join("").split("\\");
@@ -132,11 +132,13 @@ export default class WebResourceManager implements IContributor {
         await solutionFile.addComponent(CdsSolutions.SolutionComponent.WebResource, undefined, webResource.name, 0);
         await solutionFile.save(SolutionMap.mapWorkspacePath(map.path));
         
-        // Edit the customizations.xml file and add the component type there, too.
-        const customizationsFileLocation = path.join(path.dirname(SolutionMap.mapWorkspacePath(map.path)), "Customizations.xml");
-        const customizationsFile = await CustomizationsFile.from(customizationsFileLocation);
+        if (updateCustomizationsFile) {
+            // Edit the customizations.xml file and add the component type there, too.
+            const customizationsFileLocation = path.join(path.dirname(SolutionMap.mapWorkspacePath(map.path)), "Customizations.xml");
+            const customizationsFile = await CustomizationsFile.from(customizationsFileLocation);
 
-        await customizationsFile.addElement("WebResources");
-        await customizationsFile.save(customizationsFileLocation);
+            await customizationsFile.addElement("WebResources");
+            await customizationsFile.save(customizationsFileLocation);
+        }
     }
 }
