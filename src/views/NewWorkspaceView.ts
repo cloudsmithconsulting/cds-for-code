@@ -10,12 +10,12 @@ import Dictionary from '../core/types/Dictionary';
 export default class NewWorkspaceViewManager implements IContributor {
     private static _initialized:boolean = false;
 
-    showWelcomeExperience() {
+    async showWelcomeExperience() {
         if (!NewWorkspaceViewManager._initialized) {
             const showWelcome:boolean = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.explorer.showWelcomeExperience);
 
             if (showWelcome) {
-                vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.open);
+                await vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.open);
             }
 
             NewWorkspaceViewManager._initialized = true;
@@ -61,7 +61,7 @@ export default class NewWorkspaceViewManager implements IContributor {
             })
         );
 
-        this.showWelcomeExperience();
+        //this.showWelcomeExperience();
     }
 }
 

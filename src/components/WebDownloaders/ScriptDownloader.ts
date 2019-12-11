@@ -58,8 +58,6 @@ export default class ScriptDownloader implements IContributor {
 		const updateChannel:string = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateChannel);
 		let isDownloading = false;
 
-		vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.showLoadingMessage);
-
 		const returnValue = this.checkVersion(remoteFolderPath, updateChannel)
 			.then(async version => {
 				if (version === -1) {
@@ -100,8 +98,6 @@ export default class ScriptDownloader implements IContributor {
 								}
 							}).then(() => {
 								GlobalState.Instance.PowerShellScriptVersion = version;
-							}).then(() => {
-								vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.hideLoadingMessage);
 							});
 					}
 				}
@@ -150,16 +146,10 @@ export default class ScriptDownloader implements IContributor {
 							})
 							.then(() => {
 								GlobalState.Instance.PowerShellScriptVersion = version;
-							}).then(() => {
-								vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.hideLoadingMessage);
 							});
 					}
 				}
 			});
-
-		if (!isDownloading) {
-			vscode.commands.executeCommand(cs.dynamics.controls.newWorkspace.hideLoadingMessage);
-		}
 
 		return returnValue;
     }
