@@ -26,7 +26,7 @@ The VsCode addin handles these tasks in your development loop.
 
 Get started by adding a CDS connection and exporting a solution to your workspace.
 
-![gif](\resources\images\Instructions-gif.gif)
+![gif](https://cloudsmithstatics.azureedge.net/web/vscode/Instructions-gif.gif)
 
 ---
 
