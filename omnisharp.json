@@ -1,6 +1,6 @@
 {
     "fileOptions": {
-      "excludeSearchPatterns": [
+      "userExcludeSearchPatterns": [
         "resources/templates/**/*"
       ]
     }
