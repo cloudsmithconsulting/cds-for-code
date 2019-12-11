@@ -7,6 +7,7 @@ gruntfile.js
 dist/**
 out/test/**
 resources/framework/**
+resources/templates/**
 src/**
 .gitignore
 vsc-extension-quickstart.md
