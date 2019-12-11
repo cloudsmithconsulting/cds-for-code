@@ -13,5 +13,6 @@ src/**
 vsc-extension-quickstart.md
 **/tsconfig*.json
 **/tslint.json
+**/omnisharp.json
 **/*.map
 **/*.ts
