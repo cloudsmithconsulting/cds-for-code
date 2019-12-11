@@ -1,8 +1,8 @@
 {
 	"name": "dynamics-365-for-code",
-	"displayName": "Dynamics365 for Code",
+	"displayName": "CDS for Code",
 	"publisher": "CloudSmith",
-	"description": "Code extension providing development capabilities for Dynamics 365 written by CloudSmith Consulting LLC",
+	"description": "Code extension providing development capabilities for Microsoft&trade; Common Data Service written by CloudSmith Consulting LLC",
 	"repository": {
 		"url": "https://cloudsmith-consulting@dev.azure.com/cloudsmith-consulting/CloudSmith/_git/cds-for-code"
 	},
@@ -965,8 +965,6 @@
 		"grunt-text-replace": "^0.4.0",
 		"grunt-ts": "^6.0.0-beta.22",
 		"husky": "^3.1.0",
-		"jquery": "^3.4.1",
-		"jsoneditor": "^7.4.0",
 		"lint-staged": "^9.5.0",
 		"materialize-css": "^1.0.0",
 		"mocha": "^6.1.4",
@@ -986,6 +984,8 @@
 		"async": "^3.1.0",
 		"eol": "^0.9.1",
 		"httpntlm": "^1.7.6",
+		"jquery": "^3.4.1",
+		"jsoneditor": "^7.4.0",
 		"lodash": "^4.17.15",
 		"mustache": "^3.1.0",
 		"node-archiver": "^0.3.0",
