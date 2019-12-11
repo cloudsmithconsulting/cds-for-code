@@ -4,7 +4,6 @@ azure-pipelines.yml
 gruntfile.js
 .vscode/**
 .vscode-test/**
-dist/**
 out/test/**
 resources/framework/**
 resources/templates/**
