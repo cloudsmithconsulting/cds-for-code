@@ -1,8 +1,8 @@
 {
 	"name": "dynamics-365-for-code",
-	"displayName": "Dynamics365 for Code",
+	"displayName": "CDS for Code",
 	"publisher": "CloudSmith",
-	"description": "Code extension providing development capabilities for Dynamics 365 written by CloudSmith Consulting LLC",
+	"description": "Code extension providing development capabilities for Microsoft&trade; Common Data Service written by CloudSmith Consulting LLC",
 	"repository": {
 		"url": "https://cloudsmith-consulting@dev.azure.com/cloudsmith-consulting/CloudSmith/_git/cds-for-code"
 	},
