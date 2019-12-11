@@ -1,0 +1,7 @@
+{
+    "fileOptions": {
+      "userExcludeSearchPatterns": [
+        "resources/templates/**/*"
+      ]
+    }
+  }

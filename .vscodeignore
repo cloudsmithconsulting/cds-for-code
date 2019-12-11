@@ -7,10 +7,12 @@ gruntfile.js
 dist/**
 out/test/**
 resources/framework/**
+resources/templates/**
 src/**
 .gitignore
 vsc-extension-quickstart.md
 **/tsconfig*.json
 **/tslint.json
+**/omnisharp.json
 **/*.map
 **/*.ts
