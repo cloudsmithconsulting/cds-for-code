@@ -85,7 +85,7 @@ We are currently on the insider preview stage of CDS for Code. This build may co
 ## Feedback
 
 - Drop us a line in [CDS For Code Early Preview Teams Channel](https://teams.microsoft.com/l/channel/19%3aeb4e28a080cc4330b10effdef32b0ca0%40thread.skype/General?groupId=da1048fb-6db5-4fcf-8a87-27ceb8ac7b68&tenantId=b7d98656-670d-4ae0-b419-b03097edb814)
-- File a bug in [CloudSmith Azure DevOps](https://dev.azure.com/cloudsmith-consulting/CloudSmith)
+- File a bug in [CloudSmith Azure DevOps Dashboard](http://cslink.co/cds-for-code-dashboard)
 
 ---
 
