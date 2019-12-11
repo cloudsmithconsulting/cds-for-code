@@ -13,46 +13,52 @@ export default class GlobalState {
     get DynamicsConnections(): DynamicsWebApi.Config[] {
         const connections = ExtensionContext.Instance.globalState.get<DynamicsWebApi.Config[]>(cs.dynamics.configuration.globalState.dynamicsConnections);
 
-        connections.forEach(c => {
-            const creds = GlobalStateCredentialStore.Instance.retreive(c.id);
-
-            if (creds) {
-                c.credentials = Credential.from(creds, c.id);
-            }
-        });
+        if (connections && connections.length > 0) {
+            connections.forEach(c => {
+                const creds = GlobalStateCredentialStore.Instance.retreive(c.id);
+    
+                if (creds) {
+                    c.credentials = Credential.from(creds, c.id);
+                }
+            });
+        }
 
         return connections;
     }
     set DynamicsConnections(value: DynamicsWebApi.Config[]) {
         const keys = new Dictionary<number, string>();
         
-        // Store each connection without creds.
-        value.forEach((c, index) => {
-            if (c.credentials) {
-                const anyCreds = <any>c.credentials;
+        if (value && value.length > 0) {
+            // Store each connection without creds.
+            value.forEach((c, index) => {
+                if (c.credentials) {
+                    const anyCreds = <any>c.credentials;
 
-                if (c.type !== DynamicsWebApi.ConfigType.OnPremises) {
-                    if (!anyCreds.refreshToken) {
-                        anyCreds.refreshToken = TokenCache.Instance.getToken(TokenType.RefreshToken, 'https://disco.crm.dynamics.com/');
+                    if (c.type !== DynamicsWebApi.ConfigType.OnPremises) {
+                        if (!anyCreds.refreshToken) {
+                            anyCreds.refreshToken = TokenCache.Instance.getToken(TokenType.RefreshToken, 'https://disco.crm.dynamics.com/');
+                        }
                     }
+
+                    const key = GlobalStateCredentialStore.Instance.store(anyCreds, c.id, [ "accessToken", "refreshToken" ]);
+                    
+                    delete c.credentials;
+
+                    keys.add(index, key);
                 }
-
-                const key = GlobalStateCredentialStore.Instance.store(anyCreds, c.id, [ "accessToken", "refreshToken" ]);
-                
-                delete c.credentials;
-
-                keys.add(index, key);
-            }
-        });
+            });
+        }
 
         ExtensionContext.Instance.globalState.update(cs.dynamics.configuration.globalState.dynamicsConnections, value);
 
-        // Reload the creds (encrypted) for use in the session.
-        value.forEach((c, index) => {
-            if (keys.containsKey(index)) {
-                c.credentials = GlobalStateCredentialStore.Instance.retreive(keys[index]);
-            }
-        });
+        if (value && value.length > 0) {
+            // Reload the creds (encrypted) for use in the session.
+            value.forEach((c, index) => {
+                if (keys.containsKey(index)) {
+                    c.credentials = GlobalStateCredentialStore.Instance.retreive(keys[index]);
+                }
+            });
+        }
     }
 
     get PowerShellScriptVersion(): number {

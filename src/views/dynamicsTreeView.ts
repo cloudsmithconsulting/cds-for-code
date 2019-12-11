@@ -14,6 +14,7 @@ import Quickly from '../core/Quickly';
 import SolutionMap from '../components/Solutions/SolutionMap';
 import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
 import { CdsSolutions } from '../api/CdsSolutions';
+import logger from '../core/Logger';
 
 export default class DynamicsTreeView implements IContributor {
     static Instance:DynamicsServerTreeProvider;
@@ -436,6 +437,10 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
     }
 
     addConnection(...options: DynamicsWebApi.Config[]): void {
+        if (!this._connections) {
+            this._connections = [];
+        }
+        
         options.forEach(o => {
             // Make sure the connection has an id
             if (!o.id) {
@@ -764,7 +769,9 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
     }
 
     private getSolutionDetails(element: TreeEntry, commandPrefix?:string): Promise<TreeEntry[]> {
-		const api = new ApiRepository(element.config);
+        const api = new ApiRepository(element.config);
+        logger.log(`cdsTreeView: Getting Solutions from ${element.config.webApiUrl}`);
+
         const returnValue = this.createTreeEntries(
             api.retrieveSolutions(), 
             solution => new TreeEntry(
@@ -1207,6 +1214,8 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
     private createTreeEntries(whenComplete: Promise<any[]>, parser: (item: any) => TreeEntry, errorMessage?:string, retryFunction?:any): Promise<TreeEntry[]> {
         return whenComplete
             .then(items => {
+                logger.log(`createTreeEntries: items = ${items && items.length ? 'new Array(' + items.length + ')' : 'undefined' }`);
+
                 const result : TreeEntry[] = new Array();
 
                 if (!items)
@@ -1216,15 +1225,25 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
                 for (let i = 0; i < items.length; i++) {
                     const item: any = items[i];
-                    const treeItem = parser(item);
+                    let treeItem;
 
-                    result.push(treeItem);
+                    try {
+                        treeItem = parser(item);
+                    } catch (error) {
+                        Quickly.error(`There was an error parsing one of the tree entries: ${error && error.message ? error.message : error.toString() }`);
+                    }
+
+                    if (treeItem) {
+                        result.push(treeItem);
+                    }
                 }
+
+                logger.log(`createTreeEntries: result = ${result && result.length ? 'new Array(' + result.length + ')' : 'undefined' }`);
 
                 return result;
             })
             .catch(err => {
-                console.error(err.innererror ? err.innererror : err);
+                console.error(err);
 
                 if (errorMessage && retryFunction) {
                     Quickly.askToRetry(errorMessage, retryFunction);
@@ -1242,6 +1261,11 @@ class TreeEntryCache {
     private _items:TreeEntry[] = [];
 
     private constructor() { 
+        this.SolutionMap = new SolutionMap();
+
+        if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+            SolutionMap.loadFromWorkspace().then(map => this.SolutionMap = map || this.SolutionMap);
+        }
     }
 
     static get Instance(): TreeEntryCache {
@@ -1391,11 +1415,13 @@ class TreeEntry extends vscode.TreeItem {
 
     get solutionMapping(): SolutionWorkspaceMapping {
         if (this.id && this.itemType === "Solution") {
-            const maps = TreeEntryCache.Instance.SolutionMap.getBySolutionId(this.context.solutionid, this.config.orgId);
+            if (TreeEntryCache.Instance && TreeEntryCache.Instance.SolutionMap) {
+                const maps = TreeEntryCache.Instance.SolutionMap.getBySolutionId(this.context.solutionid, this.config.orgId);
 
-            if (maps && maps.length > 0) {
-                return maps[0];
-            }            
+                if (maps && maps.length > 0) {
+                    return maps[0];
+                }            
+            }
         }
 
         return null;
