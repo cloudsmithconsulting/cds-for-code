@@ -336,7 +336,7 @@ export default class SolutionMap implements IContributor {
                                 });
                             }
                         } else if (change.event === "Delete") {
-                            const items = this.getByPath(change.sourceUri.fsPath).;
+                            const items = this.getByPath(change.sourceUri.fsPath);
                             
                             if (items && items.length > 0) {
                                 items.forEach(async m => {
