@@ -387,9 +387,11 @@ export default class Quickly {
 
                             if (isFolder) {
                                 FileSystem.makeFolderSync(newUri.fsPath);
-                            }
 
-                            return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem, allowedFileTypes);
+                                return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem, allowedFileTypes);
+                            } else {
+                                return new WorkspaceFileItem(newUri.fsPath, itemType);
+                            }
                         }
                     } else {
                         newUri = defaultUri.with({ path: `${defaultUri.path.endsWith("/") ? defaultUri.path : defaultUri.path + "/" }${path.basename(choice.context[0])}` }); 

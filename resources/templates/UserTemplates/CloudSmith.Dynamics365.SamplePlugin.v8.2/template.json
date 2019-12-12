@@ -1,0 +1,23 @@
+{
+    "type": "Project Template",
+    "name": "CloudSmith.Dynamics365.SamplePlugin.v8.2",
+    "displayName": "Dynamics365 8.2 Plugin with validation and tests",
+    "publisher": "CloudSmith Consulting LLC",
+    "location": "CloudSmith.Dynamics365.SamplePlugin.v8.2",
+    "outputPath": "#{Namespace}",
+    "categories": ["Dynamics", "Plugins"],
+    "placeholders": [{
+        "name": "PluginName",
+        "displayName": "Plugin Class Name",
+        "required": true
+    }, {
+        "name": "Namespace",
+        "displayName": "Project namespace and assembly name",
+        "required": true
+    }],
+    "directives": [{
+        "name": "#{Namespace}.snk",
+        "usePlaceholdersInFilename": true,
+        "usePlaceholders": false
+    }]
+}

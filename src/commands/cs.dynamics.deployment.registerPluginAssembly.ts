@@ -11,6 +11,7 @@ import DotNetProjectManager from '../components/DotNetCore/DotNetProjectManager'
 import { Octicon } from "../core/types/Octicon";
 import Quickly, { QuickPickOption } from '../core/Quickly';
 import ExtensionContext from '../core/ExtensionContext';
+import logger from '../core/Logger';
 
 export default async function run(config?:DynamicsWebApi.Config, pluginAssembly?:any, file?:vscode.Uri, solution?:any): Promise<any> {
     const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
@@ -60,8 +61,12 @@ export default async function run(config?:DynamicsWebApi.Config, pluginAssembly?
    
     const api = new ApiRepository(config);
 
+    logger.log(`Plugin ${file}: Attempting registration of plugin on '${config.appUrl}'`);
+
     return DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Tools\\CloudSmith.Dynamics365.AssemblyScanner\\"))
         .then(async terminal => { 
+            logger.log(`Plugin ${file}:  Scanning for plugin types.`);
+
             return await terminal.run(new TerminalCommand(`.\\AssemblyScanner.exe "${file.fsPath}"`))
                 .then(tc => {
                     const assemblyInfo = JSON.parse(tc.output);
@@ -74,16 +79,25 @@ export default async function run(config?:DynamicsWebApi.Config, pluginAssembly?
                         return;
                     }
 
+                    logger.log(`Plugin ${file}: ${types.length} plugins found.`);
+                    logger.log(`Plugin ${file}:  Uploading plugin assembly.`);
+
                     return api.uploadPluginAssembly(file, pluginAssembly ? pluginAssembly.pluginassemblyid : null)
                         .then(pluginAssemblyId => {
                             assemblyId = pluginAssemblyId;
 
+                            logger.log(`Plugin ${file}:  Upload successful for ${assemblyId}`);
+
                             if (!pluginAssembly && solution) {
+                                logger.log(`Plugin ${file}:  Adding plugin to ${solution.uniquename}`);
+
                                 return api.addSolutionComponent(solution, pluginAssemblyId, CdsSolutions.SolutionComponent.PluginAssembly, true, false);
                             }                        
                         })
                         .then(response => {
                             const promises:Promise<void>[] = [];
+
+                            logger.log(`Plugin ${file}:  Adding plugin types`);
 
                             for (let i = 0; i < types.length; i++) {
                                 promises.push(api.upsertPluginType(assemblyId, types[i].Name));
@@ -91,13 +105,26 @@ export default async function run(config?:DynamicsWebApi.Config, pluginAssembly?
                             
                             return Promise.all(promises);
                         }).then(responses => {
+                            logger.log(`Plugin ${file}:  Opening step window`);
+
                             if (!pluginAssembly) {
-                                vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, assemblyId);
+                                vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, assemblyId, undefined, config);
                             }
                         }).then(() => {
-                            vscode.window.showInformationMessage(`The plugin assembly '${file.fsPath}' has been registered on the Dynamics 365 server.`);
+                            logger.log(`Plugin ${file}:  Registration complete`);
+
+                            Quickly.inform(`The plugin assembly '${path.basename(file.fsPath)}' has been registered on the Dynamics 365 server.`);
                         });
                 });                      
+        })
+        .catch((error) => {
+            logger.log(`Plugin ${file}: Error occurred.  Output is as follows: \r\n${JSON.stringify(error)}`);
+
+            Quickly.error(
+                `The plugin ${path.basename(file.fsPath)} was not registered successfully.  See the output window for details.`, 
+                undefined, 
+                'Retry', 
+                () => run(config, pluginAssembly, file, solution) );
         });
 
 }

@@ -1,9 +1,12 @@
 {
-	"name": "dynamics-365-for-code",
-	"displayName": "Dynamics365 for Code",
+	"name": "cds-for-code",
+	"displayName": "CDS for Code",
 	"publisher": "CloudSmith",
-	"description": "Code extension providing development capabilities for Dynamics 365 written by CloudSmith Consulting LLC",
-	"version": "0.8.1",
+	"description": "Code extension providing development capabilities for Microsoft&trade; Common Data Service written by CloudSmith Consulting LLC",
+	"repository": {
+		"url": "https://cloudsmith-consulting@dev.azure.com/cloudsmith-consulting/CloudSmith/_git/cds-for-code"
+	},
+	"version": "0.8.2",
 	"preview": true,
 	"engines": {
 		"vscode": "^1.38.0"
@@ -28,18 +31,32 @@
 	"activationEvents": [
 		"onView:cs.dynamics.viewContainers.cdsExplorer",
 		"onView:cs.dynamics.viewContainers.templateExplorer",
+		"onCommand:cs.dynamics.controls.explorer.createWebResource",
+		"onCommand:cs.dynamics.controls.explorer.createFromItemTemplate",
+		"onCommand:cs.dynamics.controls.explorer.createFromProjectTemplate",
 		"onCommand:cs.dynamics.controls.explorer.dotNetBuild",
 		"onCommand:cs.dynamics.controls.explorer.dotNetTest",
 		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFolder",
 		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFile",
 		"onCommand:cs.dynamics.controls.explorer.packSolutionFromFolder",
+		"onCommand:cs.dynamics.controls.explorer.packWebResource",
 		"onCommand:cs.dynamics.controls.explorer.registerPluginFile",
+		"onCommand:cs.dynamics.controls.explorer.saveTemplateFile",
+		"onCommand:cs.dynamics.controls.explorer.saveTemplateFolder",
 		"onCommand:cs.dynamics.controls.explorer.unpackSolutionToFolder",
 		"onCommand:cs.dynamics.controls.svcUtilConfig.configure",
 		"onCommand:cs.dynamics.deployment.addSolutionComponent",
+		"onCommand:cs.dynamics.deployment.compareWebResource",
+		"onCommand:cs.dynamics.deployment.connectToCds",
+		"onCommand:cs.dynamics.deployment.createWebResource",
+		"onCommand:cs.dynamics.deployment.dotNetBuild",
+		"onCommand:cs.dynamics.deployment.dotNetTest",
+		"onCommand:cs.dynamics.deployment.packWebResource",
 		"onCommand:cs.dynamics.deployment.publishCustomizations",
-		"onCommand:cs.dynamics.deployment.removeSolutionComponent",
 		"onCommand:cs.dynamics.deployment.registerPluginAssembly",
+		"onCommand:cs.dynamics.deployment.removeSolutionComponent",
+		"onCommand:cs.dynamics.deployment.removeSolutionMapping",
+		"onCommand:cs.dynamics.deployment.unpackWebResource",
 		"onCommand:cs.dynamics.deployment.updateSolutionMapping",
 		"onCommand:cs.dynamics.extension.clearTerminal",
 		"onCommand:cs.dynamics.extension.createTerminal",
@@ -47,10 +64,13 @@
 		"onCommand:cs.dynamics.powerShell.generateEntities",
 		"onCommand:cs.dynamics.powerShell.packSolution",
 		"onCommand:cs.dynamics.powerShell.unpackSolution",
-		"onCommand:cs.dynamics.templates.createProjectFromTemplate",
-		"onCommand:cs.dynamics.templates.deleteProjectTemplate",
-		"onCommand:cs.dynamics.templates.openProjectTemplatesFolder",
-		"onCommand:cs.dynamics.templates.saveProjectAsTemplate"
+		"onCommand:cs.dynamics.templates.createFromTemplate",
+		"onCommand:cs.dynamics.templates.deleteTemplate",
+		"onCommand:cs.dynamics.templates.editTemplateCatalog",
+		"onCommand:cs.dynamics.templates.exportTemplate",
+		"onCommand:cs.dynamics.templates.importTemplate",
+		"onCommand:cs.dynamics.templates.openTemplateFolder",
+		"onCommand:cs.dynamics.templates.saveTemplate"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -527,6 +547,168 @@
 			]
 		},
 		"menus": {
+			"commandPalette": [
+				{
+					"command": "cs.dynamics.controls.explorer.createFromItemTemplate",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.createFromProjectTemplate",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.createWebResource",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.dotNetBuild",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.dotNetTest",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.packWebResource",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.saveTemplateFile",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.saveTemplateFolder",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.registerPluginFile",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.newWorkspace.hideLoadingMessage",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.newWorkspace.open",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.newWorkspace.showLoadingMessage",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.svcUtilConfig.configure",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.addEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.addEntryToSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.clickEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.deleteEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.editConnection",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.editEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.inspectEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.moveSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.openInApp",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.openInBrowser",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.openInEditor",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.removeEntryFromSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.dynamicsTreeView.unpackSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.addEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.clickEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.createInWorkspace",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.deleteEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.editEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.exportEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.importEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.openEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
+					"when": "false"
+				}
+			],
 			"explorer/context": [
 				{
 					"command": "cs.dynamics.controls.explorer.dotNetBuild",
@@ -783,8 +965,6 @@
 		"grunt-text-replace": "^0.4.0",
 		"grunt-ts": "^6.0.0-beta.22",
 		"husky": "^3.1.0",
-		"jquery": "^3.4.1",
-		"jsoneditor": "^7.4.0",
 		"lint-staged": "^9.5.0",
 		"materialize-css": "^1.0.0",
 		"mocha": "^6.1.4",
@@ -804,6 +984,8 @@
 		"async": "^3.1.0",
 		"eol": "^0.9.1",
 		"httpntlm": "^1.7.6",
+		"jquery": "^3.4.1",
+		"jsoneditor": "^7.4.0",
 		"lodash": "^4.17.15",
 		"mustache": "^3.1.0",
 		"node-archiver": "^0.3.0",

@@ -9,6 +9,7 @@ import { Utilities } from '../core/Utilities';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 import * as Security from "../core/security/Types";
+import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
 
 /**
  * This command can be invoked by the Command Pallette or external sources and generates .Net code
@@ -43,12 +44,22 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder to use when generating code");
 	if (Utilities.$Object.isNullOrEmpty(folder)) { return; }
 
-	outputFileName = outputFileName || await Quickly.pickWorkspaceFile(vscode.Uri.file(folder), "Choose the filename to use when generating code");
+	if (Utilities.$Object.isNullOrEmpty(outputFileName)) {
+		const choice = await Quickly.pickWorkspaceFile(vscode.Uri.file(folder), "Choose the filename to use when generating code", undefined, true, [ ".cs", ".vb" ]);
+
+		if (choice) {
+			outputFileName = path.basename(choice);
+			folder = path.dirname(choice);
+		}
+	}
+
 	if (Utilities.$Object.isNullOrEmpty(outputFileName)) { return; }
 
-	namespace = namespace || await Quickly.ask("Enter the namespace for the generated code", undefined, path.dirname(folder));
+	namespace = namespace || await Quickly.ask("Enter the namespace for the generated code", undefined, path.basename(folder));
 	if (Utilities.$Object.isNullOrEmpty(namespace)) { return; }
 
+	await ScriptDownloader.installCdsSdk();
+	
 	// build a powershell terminal
 	return DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => {

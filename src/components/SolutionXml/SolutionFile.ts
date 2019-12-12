@@ -109,6 +109,11 @@ export default class SolutionFile {
         }
 
         if (this._data) {
+            // No root component node, we need to initialize it.
+            if (this._data.ImportExportXml.SolutionManifest[0].RootComponents[0] === '') {
+                this._data.ImportExportXml.SolutionManifest[0].RootComponents[0] = { RootComponent: [] };
+            }
+
             this._data.ImportExportXml.SolutionManifest[0].RootComponents[0].RootComponent = components.map(c => c.xml);
         }
     }

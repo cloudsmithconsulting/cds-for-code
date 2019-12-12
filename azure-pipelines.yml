@@ -28,8 +28,12 @@ steps:
     SourceFolder: '$(Build.SourcesDirectory)'
     Contents: |
       dist/**
+      docs/**
       **/*.vsix
       **/*.nupkg
+      CHANGELOG.md
+      LICENSE
+      package.json
       README.md
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 

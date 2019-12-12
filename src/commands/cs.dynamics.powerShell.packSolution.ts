@@ -13,6 +13,7 @@ import SolutionFile from '../components/SolutionXml/SolutionFile';
 import ExtensionContext from '../core/ExtensionContext';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 import { Credential } from '../core/security/Types';
+import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.
@@ -25,7 +26,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
 	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
-	const solutionMap:SolutionMap = WorkspaceState.Instance(ExtensionContext.Instance).SolutionMap;
+	const solutionMap:SolutionMap = await SolutionMap.loadFromWorkspace();
 
 	if (solution && config && !folder) {
 		if (solutionMap.hasSolutionMap(solution.solutionid, config.orgId))					 {
@@ -94,6 +95,8 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 		serverUrl = serverUrl.substring(0, serverUrl.length - 1);
 	}
 	
+	await ScriptDownloader.installCdsSdk();
+
 	return DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => { 
 			return await terminal.run(new TerminalCommand(`.\\Deploy-XrmSolution.ps1 `)
