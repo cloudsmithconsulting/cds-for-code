@@ -1243,8 +1243,6 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 return result;
             })
             .catch(err => {
-                console.error(err);
-
                 if (errorMessage && retryFunction) {
                     Quickly.askToRetry(errorMessage, retryFunction);
                 }

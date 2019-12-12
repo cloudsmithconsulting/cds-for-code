@@ -284,7 +284,7 @@ export default class SolutionMap implements IContributor {
                     return new SolutionMap(returnObject);
                 }
             } catch (error) {
-                vscode.window.showErrorMessage(`The file '${filename}' file was found but could not be parsed.  A new file will be created.${error ? '  The error returned was: ' + error : ''}`);
+                Quickly.error(`The file '${filename}' file was found but could not be parsed.  A new file will be created.${error ? '  The error returned was: ' + error : ''}`);
             }
         }
 
@@ -306,7 +306,7 @@ export default class SolutionMap implements IContributor {
         try {
             FileSystem.writeFileSync(file, JSON.stringify(map));
         } catch (error) {
-            vscode.window.showErrorMessage(`The file '${filename}' could not be saved to the workspace.${error ? '  The error returned was: ' + error : ''}`);
+            Quickly.error(`The file '${filename}' could not be saved to the workspace.${error ? '  The error returned was: ' + error : ''}`);
         }
 
         return map;
