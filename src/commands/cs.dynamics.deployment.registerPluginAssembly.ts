@@ -40,7 +40,7 @@ export default async function run(config?:DynamicsWebApi.Config, pluginAssembly?
             }))
             .then(async results => { 
                 if (results.length === 0) {
-                    vscode.window.showErrorMessage(`No build output was found when building ${file}`);
+                    Quickly.error(`No build output was found when building ${file}`);
 
                     return;
                 } else {

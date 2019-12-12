@@ -17,8 +17,10 @@ export function run(): Promise<void> {
 				return e(err);
 			}
 
-			// Add files to the test suite
-			files.forEach(f => mocha.addFile(path.resolve(testsRoot, f)));
+			if (files && files.length > 0) {
+				// Add files to the test suite
+				files.forEach(f => mocha.addFile(path.resolve(testsRoot, f)));
+			}
 
 			try {
 				// Run the mocha test

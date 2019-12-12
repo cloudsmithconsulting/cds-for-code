@@ -73,19 +73,21 @@ export class FileWatcherDeclaration {
     invoke(change:FileWatcherChange): boolean {
         let returnValue = true;
 
-        this._actions.forEach(a => {
-            try {
-                a(change);
-            } catch (error) {
-                returnValue = false;
-
-                if (this._handler) {
-                    this._handler(error);
-                } else {
-                    throw error;
+        if (this._actions && this._actions.length > 0) {
+            this._actions.forEach(a => {
+                try {
+                    a(change);
+                } catch (error) {
+                    returnValue = false;
+    
+                    if (this._handler) {
+                        this._handler(error);
+                    } else {
+                        throw error;
+                    }
                 }
-            }
-        });
+            });
+        }
 
         return returnValue;
     }
@@ -200,41 +202,45 @@ export class WorkspaceFileSystemWatcher {
 
         const returnList:FileWatcherChange[] = [];
 
-        changesToProcess.forEach(c => {
-            // Create into this folder means we have a corresponding create/modify pair.
-            if (c.event === "Create" && workspaceContains(c.sourceUri, "Create", "Delete")) {
-                const sourceUri = workspaceFilter(undefined, "Delete").first().sourceUri;
-
-                // If source + target = same path, it's a rename.
-                if (sourceUri.path.substr(0, sourceUri.path.lastIndexOf("/")) === c.sourceUri.path.substr(0, c.sourceUri.path.lastIndexOf("/"))) {
-                    returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Rename", sourceUri, c.sourceUri));
+        if (changesToProcess && changesToProcess.length > 0) {
+            changesToProcess.forEach(c => {
+                // Create into this folder means we have a corresponding create/modify pair.
+                if (c.event === "Create" && workspaceContains(c.sourceUri, "Create", "Delete")) {
+                    const sourceUri = workspaceFilter(undefined, "Delete").first().sourceUri;
+    
+                    // If source + target = same path, it's a rename.
+                    if (sourceUri.path.substr(0, sourceUri.path.lastIndexOf("/")) === c.sourceUri.path.substr(0, c.sourceUri.path.lastIndexOf("/"))) {
+                        returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Rename", sourceUri, c.sourceUri));
+                    }
+                    else {
+                        returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Move", sourceUri, c.sourceUri));
+                    }
+    
+                    return;
                 }
-                else {
-                    returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Move", sourceUri, c.sourceUri));
+    
+                // Delete into this folder means we have a corresponding delete/modify pair.
+                if (c.event === "Delete" && workspaceContains(c.sourceUri, "Create", "Delete")) {
+                    const targetUri = workspaceFilter(undefined, "Create").first().sourceUri;
+    
+                    if (targetUri.path.substr(0, targetUri.path.lastIndexOf("/")) === c.sourceUri.path.substr(0, c.sourceUri.path.lastIndexOf("/"))) {
+                        returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Rename", c.sourceUri, targetUri));
+                    } else {
+                        returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Move", c.sourceUri, targetUri));
+                    }
+    
+                    return;
                 }
-
-                return;
-            }
-
-            // Delete into this folder means we have a corresponding delete/modify pair.
-            if (c.event === "Delete" && workspaceContains(c.sourceUri, "Create", "Delete")) {
-                const targetUri = workspaceFilter(undefined, "Create").first().sourceUri;
-
-                if (targetUri.path.substr(0, targetUri.path.lastIndexOf("/")) === c.sourceUri.path.substr(0, c.sourceUri.path.lastIndexOf("/"))) {
-                    returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Rename", c.sourceUri, targetUri));
-                } else {
-                    returnList.push(new FileWatcherChange(c.rule, c.pattern, c.source, "Move", c.sourceUri, targetUri));
-                }
-
-                return;
-            }
-
-            returnList.push(c);
-        });
+    
+                returnList.push(c);
+            });
+        }
 
         this._changes.splice(0, removeTo);
 
-        returnList.forEach(c => c.source.invoke(c));
+        if (returnList && returnList.length > 0) {
+            returnList.forEach(c => c.source.invoke(c));
+        }
     }
 }
 

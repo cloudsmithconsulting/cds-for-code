@@ -42,5 +42,5 @@ export default async function run(config?:DynamicsWebApi.Config, solution?:any, 
 
 	return api.removeSolutionComponent(solution, componentId, componentType)
 		.then(() => solution)
-		.catch(error => vscode.window.showErrorMessage(`Could not remove ${componentType.toString()} from solution.  The error returned was: ${error && error.message ? error.message : error}`));
+		.catch(error => Quickly.error(`Could not remove ${componentType.toString()} from solution.  The error returned was: ${error && error.message ? error.message : error}`));
 }

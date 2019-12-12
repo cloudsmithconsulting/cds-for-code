@@ -54,7 +54,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 			const solutionFileXml:SolutionFile = await SolutionFile.from(solutionFile);
 			
 			if (!solutionFileXml.isValid) {
-				vscode.window.showErrorMessage(`The solution file ${solutionFile} is not a valid Dynamics 365 solution manifest.`); 
+				Quickly.error(`The solution file ${solutionFile} is not a valid Dynamics 365 solution manifest.`); 
 
 				return;
 			}

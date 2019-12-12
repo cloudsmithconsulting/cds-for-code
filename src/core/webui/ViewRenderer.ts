@@ -74,11 +74,13 @@ export class ViewRenderer {
 			viewTitle: this.view.options.title,
 			images: {}
 		};
-    
-		Object.keys(this._images).forEach(key => {
-			//viewModel.images.push(this._images[key]);
-			(<any>viewModel.images)[key] = this._images.get(key);
-		});
+	
+		if (this._images && this._images.length > 0) {
+			Object.keys(this._images).forEach(key => {
+				//viewModel.images.push(this._images[key]);
+				(<any>viewModel.images)[key] = this._images.get(key);
+			});
+		}
     
         return this.render(compiled(viewModel));
 	}
@@ -96,14 +98,18 @@ export class ViewRenderer {
     
         let cssHtml: string = '';
 		let scriptHtml: string = '';
-    
-        this._styleSheets.values.forEach(uri => {
-			cssHtml += `<link rel="stylesheet" type="text/css" href="${uri}" />`;
-		});
-    
-        this._scripts.values.forEach(uri => {
-			scriptHtml += `<script src="${uri}"></script>`;
-		});
+	
+		if (this._styleSheets.values && this._styleSheets.values.length > 0) {
+			this._styleSheets.values.forEach(uri => {
+				cssHtml += `<link rel="stylesheet" type="text/css" href="${uri}" />`;
+			});
+		}
+
+		if (this._scripts.values && this._scripts.values.length > 0) {
+			this._scripts.values.forEach(uri => {
+				scriptHtml += `<script src="${uri}"></script>`;
+			});
+		}
     
         return `<!DOCTYPE html>
 <html lang="en">
