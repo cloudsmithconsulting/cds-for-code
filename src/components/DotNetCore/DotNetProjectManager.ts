@@ -23,7 +23,9 @@ export default class VisualStudioProjectCommands implements IContributor {
     static fileIsProject(file:vscode.Uri):boolean {
         let fileIsProject = false;
 
-        this.projectFileTypes.forEach(t => { if (file.path.endsWith(t)) { fileIsProject = true; } });   
+        if (this.projectFileTypes) {
+            this.projectFileTypes.forEach(t => { if (file.path.endsWith(t)) { fileIsProject = true; } });   
+        }
 
         return fileIsProject;
     }

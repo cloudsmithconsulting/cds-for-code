@@ -315,38 +315,52 @@ export default class SolutionMap implements IContributor {
     private monitorMappedFolders(mapping?:SolutionWorkspaceMapping): void {
         const toMonitor:SolutionWorkspaceMapping[] = mapping ? [ mapping ] : this.mappings;
         
-        toMonitor.forEach(m => {
-            const pattern = SolutionWorkspaceMapping.getSolutionWatcherPattern(m);
+        if (toMonitor && toMonitor.length > 0) {
+            toMonitor.forEach(m => {
+                const pattern = SolutionWorkspaceMapping.getSolutionWatcherPattern(m);
 
-            WorkspaceFileSystemWatcher.Instance.watch(SolutionMap.patternName(pattern), pattern, "Create", "Modify", "Delete", "Move", "Rename")
-                .then(change => {
-                    if (change.event === "Move" || change.event === "Rename") {
-                        this.getByPath(change.sourceUri.fsPath).forEach(async m => {
-                            this.unmonitorMappedFolders(m);
+                WorkspaceFileSystemWatcher.Instance.watch(SolutionMap.patternName(pattern), pattern, "Create", "Modify", "Delete", "Move", "Rename")
+                    .then(change => {
+                        if (change.event === "Move" || change.event === "Rename") {
+                            const items = this.getByPath(change.sourceUri.fsPath);
 
-                            const mappedItems = <SolutionWorkspaceMapping[]>await vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, m, undefined, change.targetUri.fsPath);
+                            if (items && items.length > 0) {
+                                items.forEach(async m => {
+                                    this.unmonitorMappedFolders(m);
+    
+                                    const mappedItems = <SolutionWorkspaceMapping[]>await vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, m, undefined, change.targetUri.fsPath);
 
-                            mappedItems.forEach(m => this.monitorMappedFolders(m));
-                        });
-                    } else if (change.event === "Delete") {
-                        this.getByPath(change.sourceUri.fsPath).forEach(async m => {
-                            this.unmonitorMappedFolders(m);
-
-                            await vscode.commands.executeCommand(cs.dynamics.deployment.removeSolutionMapping, m);
-                        });
-                    }
-                });
-        });
+                                    if (mappedItems && mappedItems.length > 0) {
+                                        mappedItems.forEach(m => this.monitorMappedFolders(m));
+                                    }
+                                });
+                            }
+                        } else if (change.event === "Delete") {
+                            const items = this.getByPath(change.sourceUri.fsPath).;
+                            
+                            if (items && items.length > 0) {
+                                items.forEach(async m => {
+                                    this.unmonitorMappedFolders(m);
+    
+                                    await vscode.commands.executeCommand(cs.dynamics.deployment.removeSolutionMapping, m);
+                                });
+                            }
+                        }
+                    });
+            });
+        }
     }
 
     private unmonitorMappedFolders(mapping?:SolutionWorkspaceMapping): void {
         const toUnmonitor:SolutionWorkspaceMapping[] = mapping ? [ mapping ] : this.mappings;
 
-        toUnmonitor.forEach(m => {
-            const pattern = SolutionWorkspaceMapping.getSolutionWatcherPattern(m);
-
-            WorkspaceFileSystemWatcher.Instance.stopWatching(SolutionMap.patternName(pattern));
-        });
+        if (toUnmonitor && toUnmonitor.length > 0) {
+            toUnmonitor.forEach(m => {
+                const pattern = SolutionWorkspaceMapping.getSolutionWatcherPattern(m);
+    
+                WorkspaceFileSystemWatcher.Instance.stopWatching(SolutionMap.patternName(pattern));
+            });
+        }
     }
 
     private static patternName(pattern:vscode.GlobPattern): string {
