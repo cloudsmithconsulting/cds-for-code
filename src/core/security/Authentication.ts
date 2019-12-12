@@ -45,12 +45,12 @@ function decryptCredential<T extends Security.ICredential>(credential:T, storeKe
 }
 
 async function performCdsOnlineAuthenticate(connectionId: string, credential:Security.CdsOnlineCredential, resource?: string): Promise<AuthenticationResult> {
-    const authority = credential.authority || Security.CdsOnlineCredential.defaultAuthority;
-    const tenant = credential.tenant || Security.CdsOnlineCredential.defaultTenant;
-    const clientId = credential.clientId || Security.CdsOnlineCredential.defaultClientId;
+    const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
+    const authority = decrypted.authority || Security.CdsOnlineCredential.defaultAuthority;
+    const tenant = decrypted.tenant || Security.CdsOnlineCredential.defaultTenant;
+    const clientId = decrypted.clientId || Security.CdsOnlineCredential.defaultClientId;
 
     const authorityUri = `${Utilities.String.noTrailingSlash(authority)}/${tenant}`;
-    const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
     const context = new adal.AuthenticationContext(authorityUri, false);
 
     resource = resource || decrypted.resource.toString();
@@ -69,11 +69,11 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
             } else {
                 const result = { success: true, response };
 
-                if (credential.onAuthenticate) {
-                    credential.onAuthenticate(result);
+                if (decrypted.onAuthenticate) {
+                    decrypted.onAuthenticate(result);
                 } else {
-                    credential.accessToken = result.response.accessToken;
-                    credential.refreshToken = result.response.refreshToken;
+                    decrypted.accessToken = result.response.accessToken;
+                    decrypted.refreshToken = result.response.refreshToken;
                 }
 
                 TokenCache.Instance.addToken(TokenType.AccessToken, resource, result.response.accessToken);
@@ -87,6 +87,7 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
         refreshToken = refreshToken || TokenCache.Instance.getToken(TokenType.RefreshToken, resource);
 
         if (refreshToken) {
+            // If this errors, re-attempt this with username/password, as our refresh token has expired.
             context.acquireTokenWithRefreshToken(
                 refreshToken, 
                 clientId, 
