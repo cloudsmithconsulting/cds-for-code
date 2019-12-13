@@ -69,17 +69,21 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
 
                     // seems like the azure extension uses: https://vscode-redirect.azurewebsites.net to do it's token redirection
 
-                    const port = process.env.PORT || 3999;
-                    //const redirectUri = `http://localhost:${port}/getAToken`;
-                    const redirectUri = 'https://vscode-redirect.azurewebsites.net';
+                    //TODO: make this configurable
+                    const port = 3999;
+                    const redirectUri = `https://localhost:${port}/getAToken`;
+                    //const redirectUri = `https://callbackurl`;
 
                     // resource might have to be hard coded to '00000002-0000-0000-c000-000000000000'
+
+                    //https://login.microsoftonline.com/common/oauth2/authorize?resource=https://cloudsmithconsulting-qa.crm.dynamics.com&response_type=token&state=&client_id=51f81489-12ee-4a9e-aaae-a2591f45987d&scope=&redirect_uri=https%3A%2F%2Fcallbackurl 
 
                     // construct MFA url
                     const mfaAuthUrl = `https://login.windows.net/${tenant}`
                         + `/oauth2/authorize?response_type=code&client_id=${clientId}`
                         + `&redirect_uri=${redirectUri}`
-                        + `&state=<state>&resource=${resource}`;
+                        + `&state=<state>&resource=${resource}`
+                        + `&grant_type=implicit`;
 
                     // create a state token
                     const generatedToken = await new Promise<string>((resolveToken, rejectToken) => {

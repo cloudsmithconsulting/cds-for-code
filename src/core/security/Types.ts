@@ -392,7 +392,6 @@ export class AzureAdUserCredential extends OAuthCredential {
 
 export class CdsOnlineCredential extends OAuthCredential {
     static readonly defaultClientId:string = "51f81489-12ee-4a9e-aaae-a2591f45987d";
-    //static readonly defaultAuthority:string = "https://login.microsoftonline.com/common/oauth2/authorize?resource=";
     static readonly defaultAuthority:string = "https://login.microsoftonline.com";
     static readonly defaultTenant:string = "common";
     static readonly defaultResource:string = "https://disco.crm.dynamics.com/";

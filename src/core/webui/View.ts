@@ -23,6 +23,7 @@ export interface IViewOptions {
 	alwaysNew?: boolean;
 	bridge?: BridgeCommunicationMethod;
 	channel?: WebSocket;
+	useCsp?: boolean;
 	onReady?: (view: any) => void;
 }
 
