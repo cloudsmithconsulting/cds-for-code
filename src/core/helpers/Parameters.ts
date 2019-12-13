@@ -205,9 +205,11 @@ export function batchNotStarted(isBatch: boolean): void {
 export function handleHttpError(parsedError: any, parameters?: any): Error {
     let error: any = new Error();
 
-    Object.keys(parsedError).forEach(k => {
-        error[k] = parsedError[k];
-    });
+    if (parsedError) {
+        Object.keys(parsedError).forEach(k => {
+            error[k] = parsedError[k];
+        });
+    }
 
     if (parameters) {
         Object.keys(parameters).forEach(k => {

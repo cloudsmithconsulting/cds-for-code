@@ -6,7 +6,7 @@ import * as os from 'os';
 import * as FileSystem from '../../core/io/FileSystem';
 import * as EnvironmentVariables from '../../core/EnvironmentVariables';
 import * as _ from 'lodash';
-import { TemplatePlaceholder, TemplateItem, TemplateType } from './Types';
+import { TemplatePlaceholder, TemplateItem, TemplateType, TemplateDirective } from './Types';
 
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import IContributor from '../../core/CommandBuilder';
@@ -484,31 +484,33 @@ export default class TemplateManager implements IContributor {
 
         await this.getTemplateFolderItems(folder)
             .then(items => {
-                items.forEach(async (i) => {
-                    let templateItem:TemplateItem;
-                    let type:TemplateType;
-                    const isExclusion:boolean = exclusions && exclusions.length > 0 ? exclusions.findIndex(e => e === i.name) > -1 ? true : false : false;
-
-                    if (!isExclusion) {
-                        if (mergeWith && mergeWith.length > 0) {
-                            const current = mergeWith.find(m => m.name === i.name);
-
-                            if (current) {
-                                templateItem = current;
+                if (items && items.length > 0) {
+                    items.forEach(async (i) => {
+                        let templateItem:TemplateItem;
+                        let type:TemplateType;
+                        const isExclusion:boolean = exclusions && exclusions.length > 0 ? exclusions.findIndex(e => e === i.name) > -1 ? true : false : false;
+    
+                        if (!isExclusion) {
+                            if (mergeWith && mergeWith.length > 0) {
+                                const current = mergeWith.find(m => m.name === i.name);
+    
+                                if (current) {
+                                    templateItem = current;
+                                }
                             }
+    
+                            templateItem = templateItem || new TemplateItem();
+                            type = templateItem.type ? templateItem.type : i.type === vscode.FileType.Directory ? TemplateType.ProjectTemplate : TemplateType.ItemTemplate;
+    
+                            templateItem.name = templateItem.name || i.name;
+                            templateItem.type = type;
+                            templateItem.location = templateItem.location || i.name;
+                            templateItem.placeholders = TemplateManager.mergePlaceholders(templateItem.placeholders, this.getPlaceholders(path.join(folder, i.name), placeholderRegExp, i.type === vscode.FileType.Directory).map(i => new TemplatePlaceholder(i)));
+    
+                            templates.push(templateItem);
                         }
-
-                        templateItem = templateItem || new TemplateItem();
-                        type = templateItem.type ? templateItem.type : i.type === vscode.FileType.Directory ? TemplateType.ProjectTemplate : TemplateType.ItemTemplate;
-
-                        templateItem.name = templateItem.name || i.name;
-                        templateItem.type = type;
-                        templateItem.location = templateItem.location || i.name;
-                        templateItem.placeholders = TemplateManager.mergePlaceholders(templateItem.placeholders, this.getPlaceholders(path.join(folder, i.name), placeholderRegExp, i.type === vscode.FileType.Directory).map(i => new TemplatePlaceholder(i)));
-
-                        templates.push(templateItem);
-                    }
-                });
+                    });
+                }
             });
 
         return templates;
@@ -615,18 +617,20 @@ export default class TemplateManager implements IContributor {
     private static async createTemplatesDirIfNotExists() {
         const templatesDirs = [ await TemplateManager.getTemplatesFolder(true), await TemplateManager.getTemplatesFolder(false) ];
         
-		templatesDirs.forEach(templatesDir => {
-            if (templatesDir && !fs.existsSync(templatesDir)) {
-                try {
-                    FileSystem.makeFolderSync(templatesDir, 0o775);
-                    fs.mkdirSync(templatesDir);
-                } catch (err) {
-                    if (err.code !== 'EEXIST') {
-                        throw err;
+        if (templatesDirs && templatesDirs.length > 0) {
+            templatesDirs.forEach(templatesDir => {
+                if (templatesDir && !fs.existsSync(templatesDir)) {
+                    try {
+                        FileSystem.makeFolderSync(templatesDir, 0o775);
+                        fs.mkdirSync(templatesDir);
+                    } catch (err) {
+                        if (err.code !== 'EEXIST') {
+                            throw err;
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     private static getPlaceholders(fsItem: string, placeholderRegExp: string, isFolder:boolean): string[] {
@@ -669,13 +673,33 @@ export default class TemplateManager implements IContributor {
         if (isFolder) {
             const paths = FileSystem.walkSync(fsItem);
 
-            paths.forEach(p => {
-                _getPlaceholders(p).forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
-                _getPlaceholders(FileSystem.readFileSync(p)).forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
-            });        
+            if (paths && paths.length > 0) {
+                paths.forEach(p => {
+                    const filenamePlaceholders = _getPlaceholders(p);
+
+                    if (filenamePlaceholders && filenamePlaceholders.length > 0) {
+                        filenamePlaceholders.forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
+                    }
+
+                    const projectTemplatePlaceholders = _getPlaceholders(FileSystem.readFileSync(p));
+
+                    if (projectTemplatePlaceholders && projectTemplatePlaceholders.length > 0) {
+                        projectTemplatePlaceholders.forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
+                    }
+                });        
+            }
         } else {
-            _getPlaceholders(fsItem).forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
-            _getPlaceholders(FileSystem.readFileSync(fsItem)).forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
+            const filenamePlaceholders = _getPlaceholders(fsItem);
+
+            if (filenamePlaceholders && filenamePlaceholders.length > 0) {
+                filenamePlaceholders.forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
+            }
+
+            const projectTemplatePlaceholders = _getPlaceholders(FileSystem.readFileSync(fsItem));
+            
+            if (projectTemplatePlaceholders && projectTemplatePlaceholders.length > 0) {
+                projectTemplatePlaceholders.forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
+            }
         }
 
         return returnValue;
@@ -688,13 +712,15 @@ export default class TemplateManager implements IContributor {
             merged.push(...source);
         }
 
-        merge.forEach(i => {
-            const index = merged.findIndex(m => m.name === i.name);
+        if (merge && merge.length > 0) {
+            merge.forEach(i => {
+                const index = merged.findIndex(m => m.name === i.name);
 
-            if (index === -1) {
-                merged.push(i);
-            }
-        });
+                if (index === -1) {
+                    merged.push(i);
+                }
+            });
+        }
 
         return merged;
     }
@@ -726,9 +752,11 @@ export default class TemplateManager implements IContributor {
 
         data = await this.defaultResolver(data, regex, templateInfo, placeholders);
 
-        await resolvers.forEach(async resolver => {
-            data = await resolver(data, regex, templateInfo, placeholders);
-        });
+        if (resolvers && resolvers.length > 0) {
+            await resolvers.forEach(async resolver => {
+                data = await resolver(data, regex, templateInfo, placeholders);
+            });
+        }
 
         return data;
     }

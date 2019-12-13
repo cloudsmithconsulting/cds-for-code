@@ -4,6 +4,7 @@ import * as FileSystem from '../../core/io/FileSystem';
 import { TS } from 'typescript-linq/TS';
 import { TemplateItem, TemplateType } from './Types';
 import TemplateManager from './TemplateManager';
+import Quickly from '../../core/Quickly';
 
 export class TemplateCatalog {
     constructor(catalog?: TemplateCatalog) {
@@ -90,7 +91,7 @@ export class TemplateCatalog {
                 }
             }
             catch (error) {
-                vscode.window.showErrorMessage(`The template catalog '${filename}' was found but could not be parsed.  A new file will be created.${error ? '  The error returned was: ' + error : ''}`);
+                Quickly.error(`The template catalog '${filename}' was found but could not be parsed.  A new file will be created.${error ? '  The error returned was: ' + error : ''}`);
             }
         }
 
@@ -110,7 +111,7 @@ export class TemplateCatalog {
             FileSystem.writeFileSync(file, JSON.stringify(catalog));
         }
         catch (error) {
-            vscode.window.showErrorMessage(`The template catalog '${filename}' could not be saved to the templates folder.${error ? '  The error returned was: ' + error : ''}`);
+            Quickly.error(`The template catalog '${filename}' could not be saved to the templates folder.${error ? '  The error returned was: ' + error : ''}`);
         }
         
         return catalog;

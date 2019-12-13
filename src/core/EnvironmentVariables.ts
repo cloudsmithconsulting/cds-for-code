@@ -27,23 +27,27 @@ export default class EnvironmentVariables {
         if (process.platform === 'win32') {
             this._envVariables = Object.create(null);
             
-			Object.keys(envVariables).forEach(key => {
-                let val : string | undefined = envVariables[key];
-                
-                if (val) {
-                    this._envVariables[key.toLowerCase()] = val;
-                }
-			});
+            if (Object.keys(envVariables)) {
+                Object.keys(envVariables).forEach(key => {
+                    let val : string | undefined = envVariables[key];
+                    
+                    if (val) {
+                        this._envVariables[key.toLowerCase()] = val;
+                    }
+                });
+            }
 		} else {
             this._envVariables = Object.create(null);
 
-			Object.keys(envVariables).forEach(key => {
-                let val : string | undefined = envVariables[key];
-                
-                if (val) {
-                    this._envVariables[key] = val;
-                }
-			});
+            if (Object.keys(envVariables)) {
+                Object.keys(envVariables).forEach(key => {
+                    let val : string | undefined = envVariables[key];
+                    
+                    if (val) {
+                        this._envVariables[key] = val;
+                    }
+                });
+            }
         }
     }
 

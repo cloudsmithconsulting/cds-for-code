@@ -19,9 +19,9 @@ export class AuthenticationError extends Error {
     httpResponse?: any;
 }
 
-export default async function authenticate(key: string, credential:Security.ICredential, resource?:string): Promise<AuthenticationResult> {
+export default async function authenticate(key: string, credential:Security.ICredential, resource?:string, options?: any): Promise<AuthenticationResult> {
     if (Security.Credential.isCdsOnlineUserCredential(credential)) {
-        return await performCdsOnlineAuthenticate(key, <Security.CdsOnlineCredential>credential, resource);
+        return await performCdsOnlineAuthenticate(key, <Security.CdsOnlineCredential>credential, resource, options);
     } else if (Security.Credential.isAzureAdClientCredential(credential)) {
         return await performAzureAdClientAuthenticate(key, <Security.AzureAdClientCredential>credential);
     } else if (Security.Credential.isAzureAdUserCredential(credential)) {
@@ -44,7 +44,7 @@ function decryptCredential<T extends Security.ICredential>(credential:T, storeKe
     return store.decrypt<T>(storeKey, credential, Security.SecureOutput.String);
 }
 
-async function performCdsOnlineAuthenticate(connectionId: string, credential:Security.CdsOnlineCredential, resource?: string): Promise<AuthenticationResult> {
+async function performCdsOnlineAuthenticate(connectionId: string, credential:Security.CdsOnlineCredential, resource?: string, options?: any): Promise<AuthenticationResult> {
     const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
     const authority = decrypted.authority || Security.CdsOnlineCredential.defaultAuthority;
     const tenant = decrypted.tenant || Security.CdsOnlineCredential.defaultTenant;
@@ -52,6 +52,8 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
 
     const authorityUri = `${Utilities.String.noTrailingSlash(authority)}/${tenant}`;
     const context = new adal.AuthenticationContext(authorityUri, false);
+    
+    if (options) { context.options = options; }
 
     resource = resource || decrypted.resource.toString();
 

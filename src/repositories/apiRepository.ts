@@ -307,13 +307,15 @@ export default class ApiRepository {
                 return response && response.value ? response.value : null;
             })
             .then(async response => {
-                await response.forEach(async r => {
-                    // here we are getting some basic stuff the api would normally expand
-                    // but since we're in a collection we have to do it manually
-                    //r.sdkmessagefilterid = await this.webapi.retrieve(r._sdkmessagefilterid_value, "sdkmessagefilters");
-                    r.eventhandler_plugintype = await this.webapi.retrieve(r._eventhandler_value, "plugintypes", ["plugintypeid", "_pluginassemblyid_value", "name"]);
-                    //r.sdkmessageprocessingstepsecureconfigid = await this.webapi.retrieve(r._sdkmessageprocessingstepsecureconfigid_value, "sdkmessageprocessingstepsecureconfigs");
-                 });
+                if (response) { 
+                    await response.forEach(async r => {
+                        // here we are getting some basic stuff the api would normally expand
+                        // but since we're in a collection we have to do it manually
+                        //r.sdkmessagefilterid = await this.webapi.retrieve(r._sdkmessagefilterid_value, "sdkmessagefilters");
+                        r.eventhandler_plugintype = await this.webapi.retrieve(r._eventhandler_value, "plugintypes", ["plugintypeid", "_pluginassemblyid_value", "name"]);
+                        //r.sdkmessageprocessingstepsecureconfigid = await this.webapi.retrieve(r._sdkmessageprocessingstepsecureconfigid_value, "sdkmessageprocessingstepsecureconfigs");
+                     });
+                }
 
                  return response;
             });

@@ -154,15 +154,17 @@ export abstract class CredentialStore implements ICredentialStore {
         }
 
         if (credential) { 
-            Object.keys(encrypted).forEach(k => {
-                if (keepEncrypted && keepEncrypted.length > 0 && keepEncrypted.find(key => k.toLowerCase() === key.toLowerCase())) {
-                    (<any>credential)[k] = encrypted[k];
-                } else if (SecureItem.isSecure(encrypted[k])) {
-                    (<any>credential)[k] = this.cryptography.decrypt(<SecureItem>encrypted[k], preferredOutput);
-                } else {
-                    (<any>credential)[k] = encrypted[k];
-                }
-            });
+            if (encrypted) {
+                Object.keys(encrypted).forEach(k => {
+                    if (keepEncrypted && keepEncrypted.length > 0 && keepEncrypted.find(key => k.toLowerCase() === key.toLowerCase())) {
+                        (<any>credential)[k] = encrypted[k];
+                    } else if (SecureItem.isSecure(encrypted[k])) {
+                        (<any>credential)[k] = this.cryptography.decrypt(<SecureItem>encrypted[k], preferredOutput);
+                    } else {
+                        (<any>credential)[k] = encrypted[k];
+                    }
+                });
+            }
         }
 
         return credential;
@@ -196,21 +198,23 @@ export abstract class CredentialStore implements ICredentialStore {
         let storeObject:any = {};
         key = key || credential.storeKey || Utilities.Guid.newGuid();
 
-        Object.keys(credential).forEach(k => {
-            if (Encryption.isSecurable((<any>credential)[k])) {
-                if (keepDecrypted && keepDecrypted.length > 0 && keepDecrypted.find(key => key.toLowerCase() === k.toLowerCase())) {
-                    storeObject[k] = credential[k];
-                } else {
-                    const secured: any | null = this.cryptography.encrypt((<any>credential)[k]);
-
-                    if (secured !== null) {
-                        storeObject[k] = secured.string;
+        if (credential) {
+            Object.keys(credential).forEach(k => {
+                if (Encryption.isSecurable((<any>credential)[k])) {
+                    if (keepDecrypted && keepDecrypted.length > 0 && keepDecrypted.find(key => key.toLowerCase() === k.toLowerCase())) {
+                        storeObject[k] = credential[k];
+                    } else {
+                        const secured: any | null = this.cryptography.encrypt((<any>credential)[k]);
+    
+                        if (secured !== null) {
+                            storeObject[k] = secured.string;
+                        }
                     }
+                } else if (SecureItem.isSecure((<any>credential)[k])) {
+                    storeObject[k] = (<ISecureItem>(<any>credential)[k]).string;
                 }
-            } else if (SecureItem.isSecure((<any>credential)[k])) {
-                storeObject[k] = (<ISecureItem>(<any>credential)[k]).string;
-            }
-        });
+            });
+        }
     
         this.onStore(storeObject, key);
 

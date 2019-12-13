@@ -440,19 +440,21 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         if (!this._connections) {
             this._connections = [];
         }
-        
-        options.forEach(o => {
-            // Make sure the connection has an id
-            if (!o.id) {
-                // give this an id
-                o.id = Utilities.Guid.newGuid();
-                // add it to the list
-                this._connections.push(o); 
-            } else {
-                const updateIndex = this._connections.findIndex(c => c.id === o.id);
-                this._connections[updateIndex] = o;
-            }
-        });
+    
+        if (options && options.length > 0) {
+            options.forEach(o => {
+                // Make sure the connection has an id
+                if (!o.id) {
+                    // give this an id
+                    o.id = Utilities.Guid.newGuid();
+                    // add it to the list
+                    this._connections.push(o); 
+                } else {
+                    const updateIndex = this._connections.findIndex(c => c.id === o.id);
+                    this._connections[updateIndex] = o;
+                }
+            });
+        }
 
         // save to state
         DiscoveryRepository.saveConnections(this._context, this._connections);
@@ -504,24 +506,26 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 	private getConnectionEntries(): TreeEntry[] {
         const result: TreeEntry[] = [];
         
-        this._connections.forEach(connection => {
-            const displayName = (connection.name)
-                ? connection.name
-                : connection.webApiUrl.replace("http://", "").replace("https://", "");
-
-            result.push(new TreeEntry(
-                displayName, 
-                "Connection", 
-                vscode.TreeItemCollapsibleState.Collapsed, 
-                connection.webApiUrl, 
-                {
-                    command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
-                    title: connection.webApiUrl,
-                    arguments: [connection.webApiUrl]
-                },
-                connection                
-            ));
-        });
+        if (this._connections) {
+            this._connections.forEach(connection => {
+                const displayName = (connection.name)
+                    ? connection.name
+                    : connection.webApiUrl.replace("http://", "").replace("https://", "");
+    
+                result.push(new TreeEntry(
+                    displayName, 
+                    "Connection", 
+                    vscode.TreeItemCollapsibleState.Collapsed, 
+                    connection.webApiUrl, 
+                    {
+                        command: cs.dynamics.controls.dynamicsTreeView.clickEntry,
+                        title: connection.webApiUrl,
+                        arguments: [connection.webApiUrl]
+                    },
+                    connection                
+                ));
+            });
+        }
 
         return result;
     }
@@ -922,7 +926,9 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             () => this.getWebResourcesDetails(element, commandPrefix, solution, folder))
             .then(results => { 
                 if (folder) {
-                    results.forEach(r => r.label = r.label.replace(Utilities.String.withTrailingSlash(r.folder), '')); 
+                    if (results && results.length > 0) {
+                        results.forEach(r => r.label = r.label.replace(Utilities.String.withTrailingSlash(r.folder), '')); 
+                    }
                 }
             
                 return results; 
@@ -1243,8 +1249,6 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 return result;
             })
             .catch(err => {
-                console.error(err);
-
                 if (errorMessage && retryFunction) {
                     Quickly.askToRetry(errorMessage, retryFunction);
                 }
