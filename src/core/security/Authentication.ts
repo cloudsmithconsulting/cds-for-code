@@ -1,5 +1,7 @@
 import * as Security from "./Types";
 import * as adal from "adal-node";
+import * as crypto from 'crypto';
+import * as opn from 'opn';
 import * as ErrorParser from '../ErrorParser';
 import { Utilities } from "../Utilities";
 import GlobalStateCredentialStore from "./GlobalStateCredentialStore";
@@ -56,12 +58,75 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
     resource = resource || decrypted.resource.toString();
 
     return await new Promise<AuthenticationResult>((resolve, reject) => {
-        const callback = (error, response) => { 
+        const callback = async (error, response) => { 
             if (error) {
                 const exception = ErrorParser.parseAdalError(error);
 
                 if (exception.type === 'interaction_required') {
                     Quickly.inform("Your credentials use multi-factor authentication.  You will need to authenticate interactively.");
+
+                    // seems like the azure extension uses: https://vscode-redirect.azurewebsites.net to do it's token redirection
+
+                    const port = process.env.PORT || 3999;
+                    //const redirectUri = `http://localhost:${port}/getAToken`;
+                    const redirectUri = 'https://vscode-redirect.azurewebsites.net';
+
+                    // resource might have to be hard coded to '00000002-0000-0000-c000-000000000000'
+
+                    // construct MFA url
+                    const mfaAuthUrl = `https://login.windows.net/${tenant}`
+                        + `/oauth2/authorize?response_type=code&client_id=${clientId}`
+                        + `&redirect_uri=${redirectUri}`
+                        + `&state=<state>&resource=${resource}`;
+
+                    // create a state token
+                    const generatedToken = await new Promise<string>((resolveToken, rejectToken) => {
+                        crypto.randomBytes(48, function(ex, buf) {
+                            if (ex) {
+                                rejectToken(ex);
+                            }
+                            // generate our token
+                            var token = buf.toString('base64').replace(/\//g,'_').replace(/\+/g,'-');
+                            resolveToken(token);
+                          });
+                    });
+
+                    const authorizationUrl = mfaAuthUrl.replace(/<state>/, generatedToken);
+                    opn(authorizationUrl);
+
+                    const app = require('express')();
+                    app.get('/auth', (req, res) => {
+                        res.cookie('authstate', generatedToken);
+                        // make the auth
+                        const authorizationUrl = mfaAuthUrl.replace(/<state>/, generatedToken);
+                        res.redirectUri(authorizationUrl);
+                      });
+
+                    app.get('/getAToken', (req, res) => {
+                        if (req.cookies.authstate !== req.query.state) {
+                          res.send('error: state does not match');
+                        }
+                      
+                        context.acquireTokenWithAuthorizationCode(
+                          req.query.code,
+                          redirectUri,
+                          resource,
+                          clientId, 
+                          null,
+                          function(err, response) {
+                            var errorMessage = '';
+                            if (err) {
+                              errorMessage = 'error: ' + err.message + '\n';
+                            }
+                            errorMessage += 'response: ' + JSON.stringify(response);
+                            res.send(errorMessage);
+                          }
+                        );
+                      });
+
+                    app.listen(port, function() {
+                        console.log("Listening on port " + port);
+                    });
                 } else {
                     reject(exception);    
                     resolve({ success: false, error: exception });
