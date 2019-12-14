@@ -284,7 +284,7 @@ export namespace DynamicsWebApi {
         private _internalConfig: DynamicsWebApi.Config;
         private _isBatch: boolean;
 
-        private static defaultTimeout: number = 30 * 1000;
+        static defaultTimeout: number = 30 * 1000;
 
         /**
          * Constructor.

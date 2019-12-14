@@ -100,14 +100,16 @@ export function walkSync(item: string): string[] {
 		, files = fs.readdirSync(item)
 		, stats;
 
-	files.forEach(file => {
-		stats = fs.lstatSync(path.join(item, file));
-		if (stats.isDirectory()) {
-			list = list.concat(walkSync(path.join(item, file)));
-		} else {
-			list.push(path.join(item, file));
-		}
-	});
+	if (files && files.length > 0) {
+		files.forEach(file => {
+			stats = fs.lstatSync(path.join(item, file));
+			if (stats.isDirectory()) {
+				list = list.concat(walkSync(path.join(item, file)));
+			} else {
+				list.push(path.join(item, file));
+			}
+		});
+	}
 
 	return list;
 }
@@ -166,21 +168,23 @@ async function _walk(dir: string, predicate?:(item:string) => boolean, done?: (e
 		let pending = list.length;
 		if (!pending) { return done ? done(null, results) : undefined; }
 
-		list.forEach(file => {
-			file = path.resolve(dir, file);
-
-			fs.stat(file, (err, stat) => {
-				if (stat && stat.isDirectory()) {
-					_walk(file, predicate, (err, res) => {
-						results = results.concat(res);
+		if (list && list.length > 0) {
+			list.forEach(file => {
+				file = path.resolve(dir, file);
+	
+				fs.stat(file, (err, stat) => {
+					if (stat && stat.isDirectory()) {
+						_walk(file, predicate, (err, res) => {
+							results = results.concat(res);
+							if (!--pending && done) { done(null, applyPredicate(results)); }
+						});
+					} else {
+						results.push(file);
 						if (!--pending && done) { done(null, applyPredicate(results)); }
-					});
-				} else {
-					results.push(file);
-					if (!--pending && done) { done(null, applyPredicate(results)); }
-				}
+					}
+				});
 			});
-		});
+		}
 	});
 }
 

@@ -89,29 +89,31 @@ export class ExtensionIconTheme {
 	//TODO: remove dependence on fetch.
 	downloadIcons(folder: string): string {
 		const destination = path.join(folder, this.name.replace(`${cs.dynamics.configuration.iconThemes._namespace}.`, ''));
-    
-        this.icons.forEach(icon => {
-			const localPath = path.join(destination, icon.mappedOutputFile);
-    
-            FileSystem.makeFolderSync(path.dirname(localPath));
-    
-            if (FileSystem.exists(localPath)) {
-				return;
-			}
-    
-            return fetch(icon.url, {
-				method: 'get',
-				headers: {
-					'Accepts': icon.mimeType
+	
+		if (this.icons) {
+			this.icons.forEach(icon => {
+				const localPath = path.join(destination, icon.mappedOutputFile);
+		
+				FileSystem.makeFolderSync(path.dirname(localPath));
+		
+				if (FileSystem.exists(localPath)) {
+					return;
 				}
-			})
-				.then(res => res.text())
-				.then(body => {
-					FileSystem.writeFileSync(localPath, body);
-    
-                    return localPath;
-				});
-        });
+		
+				return fetch(icon.url, {
+					method: 'get',
+					headers: {
+						'Accepts': icon.mimeType
+					}
+				})
+					.then(res => res.text())
+					.then(body => {
+						FileSystem.writeFileSync(localPath, body);
+		
+						return localPath;
+					});
+			});
+		}
         
 		return destination;
     }

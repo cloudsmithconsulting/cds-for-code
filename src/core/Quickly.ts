@@ -191,11 +191,13 @@ export default class Quickly {
 
             const option = await vscode.window.showQuickPick(quickPickOptions, { placeHolder, ignoreFocusOut: true, canPickMany: true });
 
-            quickPickOptions.forEach(o => {
-                if (o.label !== `${Octicon.plus}` && option.find(op => op.label === o.label)) {
-                    o.picked = true;
-                }
-            });
+            if (quickPickOptions && quickPickOptions.length > 0) {
+                quickPickOptions.forEach(o => {
+                    if (o.label !== `${Octicon.plus}` && option.find(op => op.label === o.label)) {
+                        o.picked = true;
+                    }
+                });
+            }
 
             if (option && option.find(o => o.label === `${Octicon.plus}`)) {
                 const newItem = await Quickly.ask("What is the name of the new item?");
@@ -240,7 +242,9 @@ export default class Quickly {
                     items = catalog.items;
                 }
                 
-                items.forEach(i => choices.push(new QuickPickOption(Utilities.$Object.isNullOrEmpty(i.displayName) ? i.location : i.displayName, undefined, i.description, i))); 
+                if (items && items.length > 0) {
+                    items.forEach(i => choices.push(new QuickPickOption(Utilities.$Object.isNullOrEmpty(i.displayName) ? i.location : i.displayName, undefined, i.description, i))); 
+                }
 
                 if (choices.length === 0) {
                     Quickly.warn(

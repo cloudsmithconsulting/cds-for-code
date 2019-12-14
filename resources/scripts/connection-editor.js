@@ -105,6 +105,9 @@
             });
         });
 
+        const urlRegEx = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi;
+        const onlineUrlRegEx = /^(http(|s):\/\/)?(.+).crm(|\d{1,2}).dynamics.com(|\/)/gi;
+
         function validateForm(settings) {
             const messages = [];
 
@@ -112,8 +115,12 @@
             if (settings.type !== 2) {
                 if (CloudSmith.Utilities.isNullOrEmpty(settings.webApiUrl))
                     messages.push("The Server URL or Resource URL is required");
-                else if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.webApiUrl))
+                else if (!urlRegEx.test(settings.webApiUrl))
                     messages.push("The Server URL or Resource URL is invalid");
+            } else {
+                if (!onlineUrlRegEx.test(settings.webApiUrl)) {
+                    messages.push(`The url '${settings.webApiUrl}' is not a valid CDS Online URL.  The format is 'https://{name}.crm{number}.dynamics.com'.`);
+                }
             }
 
             if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username))
@@ -152,7 +159,17 @@
             return messages.length === 0;
         }
 
-        function createSettings() {
+        function normalizeOnlineUrl(url) {
+            var matches = url.match(onlineUrlRegEx);
+
+            if (matches && matches.length >= 4) {
+                return "https://" + matches[3] + ".crm" + matches[4] + ".dynamics.com";
+            }
+
+            return url;
+        }
+
+         function createSettings() {
             const id = $("#ConnectionId").val();
             let settings = {};
 
@@ -179,6 +196,9 @@
                     break;
                 case 2: 
                     if ($("#Online-OrgUrl").val() !== null) {
+                        var url = normalizeOnlineUrl($("#Online-OrgUrl").val());
+                        $("#Online-OrgUrl").val(url);
+
                         credentials.resource = $("#Online-OrgUrl").val();
                     } else {
                         credentials.resource = 'https://disco.crm.dynamics.com/';
@@ -223,10 +243,14 @@
         $("#PerformGlobalDiscoButton").click(function() {
             const settings = createSettings();
 
-            vscode.postMessage({
-                command: "performGlobalDisco",
-                settings
-            });
+            if (!onlineUrlRegEx.test(settings.webApiUrl)) {
+                CloudSmith.ErrorPanel.showError([ `The url '${settings.webApiUrl}' is not a valid CDS Online URL.  The format is 'https://{name}.crm{number}.dynamics.com'.` ]);
+            } else {
+                vscode.postMessage({
+                    command: "performGlobalDisco",
+                    settings
+                });
+            }
         });
 
         $("[data-action='save']").click(function() {

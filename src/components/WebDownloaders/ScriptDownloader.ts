@@ -11,6 +11,7 @@ import TemplateManager from "../Templates/TemplateManager";
 import * as FileSystem from "../../core/io/FileSystem";
 import ExtensionContext from '../../core/ExtensionContext';
 import downloadRequiredScripts from "../../commands/cs.dynamics.extension.downloadRequiredScripts";
+import Quickly from '../../core/Quickly';
 
 export default class ScriptDownloader implements IContributor {
     contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -61,7 +62,7 @@ export default class ScriptDownloader implements IContributor {
 		const returnValue = this.checkVersion(remoteFolderPath, updateChannel)
 			.then(async version => {
 				if (version === -1) {
-					vscode.window.showErrorMessage(`The Dynamics 365 extension could not check for updates in the ${updateChannel} channel.  Please check the configuration updateSource and updateChannel to ensure they are set correctly.`);
+					Quickly.error(`The Dynamics 365 extension could not check for updates in the ${updateChannel} channel.  Please check the configuration updateSource and updateChannel to ensure they are set correctly.`);
 
 					return;
 				}
