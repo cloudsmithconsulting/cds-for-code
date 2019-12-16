@@ -391,9 +391,12 @@ export class AzureAdUserCredential extends OAuthCredential {
 }
 
 export class CdsOnlineCredential extends OAuthCredential {
-    static readonly defaultClientId:string = "51f81489-12ee-4a9e-aaae-a2591f45987d";
+    // These are public CRMOL auth values, we're using CloudSmith values here.
+    //static readonly defaultClientId:string = "51f81489-12ee-4a9e-aaae-a2591f45987d";
+    //static readonly defaultTenant:string = "common";
+    static readonly defaultClientId:string = "38496a28-9c28-4ff8-8dac-ef2fe85f6275";
     static readonly defaultAuthority:string = "https://login.microsoftonline.com";
-    static readonly defaultTenant:string = "common";
+    static readonly defaultTenant:string = "b7d98656-670d-4ae0-b419-b03097edb814";
     static readonly defaultResource:string = "https://disco.crm.dynamics.com/";
 
     constructor(

@@ -71,19 +71,15 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
 
                     //TODO: make this configurable
                     const port = 3999;
-                    const redirectUri = `https://localhost:${port}/getAToken`;
+                    const redirectUri = `http://localhost:${port}/getAToken`;
                     //const redirectUri = `https://callbackurl`;
-
                     // resource might have to be hard coded to '00000002-0000-0000-c000-000000000000'
-
-                    //https://login.microsoftonline.com/common/oauth2/authorize?resource=https://cloudsmithconsulting-qa.crm.dynamics.com&response_type=token&state=&client_id=51f81489-12ee-4a9e-aaae-a2591f45987d&scope=&redirect_uri=https%3A%2F%2Fcallbackurl 
 
                     // construct MFA url
                     const mfaAuthUrl = `https://login.windows.net/${tenant}`
                         + `/oauth2/authorize?response_type=code&client_id=${clientId}`
                         + `&redirect_uri=${redirectUri}`
-                        + `&state=<state>&resource=${resource}`
-                        + `&grant_type=implicit`;
+                        + `&state=<state>&resource=${resource}`;
 
                     // create a state token
                     const generatedToken = await new Promise<string>((resolveToken, rejectToken) => {
@@ -97,19 +93,17 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
                           });
                     });
 
-                    const authorizationUrl = mfaAuthUrl.replace(/<state>/, generatedToken);
-                    opn(authorizationUrl);
-
                     const app = require('express')();
+
                     app.get('/auth', (req, res) => {
                         res.cookie('authstate', generatedToken);
                         // make the auth
                         const authorizationUrl = mfaAuthUrl.replace(/<state>/, generatedToken);
-                        res.redirectUri(authorizationUrl);
+                        res.redirect(authorizationUrl);
                       });
 
                     app.get('/getAToken', (req, res) => {
-                        if (req.cookies.authstate !== req.query.state) {
+                        if (req.cookies && req.cookies.authstate !== req.query.state) {
                           res.send('error: state does not match');
                         }
                       
@@ -119,13 +113,31 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
                           resource,
                           clientId, 
                           null,
-                          function(err, response) {
-                            var errorMessage = '';
-                            if (err) {
-                              errorMessage = 'error: ' + err.message + '\n';
-                            }
-                            errorMessage += 'response: ' + JSON.stringify(response);
-                            res.send(errorMessage);
+                          (err, response) => {
+                              if (err) {
+                                const innerException = ErrorParser.parseAdalError(err);
+
+                                res.send(innerException.message);
+
+                                reject(innerException);    
+                                resolve({ success: false, error: innerException });
+                              } else {
+                                const result = { success: true, response };
+
+                                if (decrypted.onAuthenticate) {
+                                    decrypted.onAuthenticate(result);
+                                } else {
+                                    decrypted.accessToken = (<adal.TokenResponse>result.response).accessToken;
+                                    decrypted.refreshToken = (<adal.TokenResponse>result.response).refreshToken;
+                                }
+                
+                                TokenCache.Instance.addToken(TokenType.AccessToken, resource, (<adal.TokenResponse>result.response).accessToken);
+                                TokenCache.Instance.addToken(TokenType.RefreshToken, resource, (<adal.TokenResponse>result.response).refreshToken);
+                
+                                resolve(result);
+                              }
+
+                              app.removeAllListeners();
                           }
                         );
                       });
@@ -133,6 +145,10 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
                     app.listen(port, function() {
                         console.log("Listening on port " + port);
                     });
+
+                    //https://login.microsoftonline.com/common/oauth2/authorize?resource=https://cloudsmithconsulting-qa.crm.dynamics.com&response_type=token&state=&client_id=51f81489-12ee-4a9e-aaae-a2591f45987d&scope=&redirect_uri=https%3A%2F%2Fcallbackurl 
+
+                    opn(`http://localhost:${port}/auth`);
                 } else {
                     reject(exception);    
                     resolve({ success: false, error: exception });
@@ -172,8 +188,6 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
                 clientId,
                 callback);
         }
-
-
     });
 }
 
