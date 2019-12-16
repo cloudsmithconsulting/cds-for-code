@@ -42,8 +42,12 @@ export function noSlashes(string:string): string {
     return string.replace(/\/$/, "");
 }
 
-export function powerShellSafe(value: string): string {
-    return value.replace('$', '`$');
+export function powerShellSafe(value: string, delimiter: string): string {
+    // always replace delimiter with backtick and delimiter `' or `"
+    let result = value.replace(delimiter, '`' + delimiter);
+    // if delimiter is double quotes, replace $ with backtick $ like so `$
+    result = delimiter === '"' ? result.replace('$', '`$') : result;
+    return result;
 }
 
 export function plural(value:string): string { 
