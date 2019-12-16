@@ -8,7 +8,7 @@ import CdsConnectionString from '../api/CdsConnectionString';
 import Quickly, { QuickPickOption } from '../core/Quickly';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 import Dictionary from '../core/types/Dictionary';
-import { Credential, CdsOnlineCredential } from "../core/security/Types";
+import { Credential, CdsOnlineCredential, SecureOutput } from "../core/security/Types";
 import { Octicon } from '../core/types/Octicon';
 
 export default async function openView(config?: DynamicsWebApi.Config): Promise<View> {
@@ -104,7 +104,7 @@ class CdsConnectionEditor extends View {
     setInitialState(config?: DynamicsWebApi.Config): void {
         if (config) {
             if (Credential.isSecureCredential(config.credentials) && config.id) {
-                config.credentials = GlobalStateCredentialStore.Instance.decrypt(config.id, config.credentials);
+                config.credentials = GlobalStateCredentialStore.Instance.decrypt(config.id, config.credentials, SecureOutput.String, [ "password" ]);
             }
 
             this.postMessage({ command: 'load', message: config });

@@ -133,7 +133,9 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
                 
                                 TokenCache.Instance.addToken(TokenType.AccessToken, resource, (<adal.TokenResponse>result.response).accessToken);
                                 TokenCache.Instance.addToken(TokenType.RefreshToken, resource, (<adal.TokenResponse>result.response).refreshToken);
-                
+
+                                res.send(`<html><head><title>Authentication complete</title></head><body><script>window.self.close();</script></body></html>`);
+                                
                                 resolve(result);
                               }
 
@@ -145,8 +147,6 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential:Sec
                     app.listen(port, function() {
                         console.log("Listening on port " + port);
                     });
-
-                    //https://login.microsoftonline.com/common/oauth2/authorize?resource=https://cloudsmithconsulting-qa.crm.dynamics.com&response_type=token&state=&client_id=51f81489-12ee-4a9e-aaae-a2591f45987d&scope=&redirect_uri=https%3A%2F%2Fcallbackurl 
 
                     opn(`http://localhost:${port}/auth`);
                 } else {

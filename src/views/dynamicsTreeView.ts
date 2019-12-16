@@ -535,8 +535,10 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         const api = new DiscoveryRepository(connection);
         
         let filter;
+        const value = connection.appUrl || connection.webApiUrl;
+
         if (connection.type === DynamicsWebApi.ConfigType.Online) {
-            filter = `Url eq '${connection.appUrl || connection.webApiUrl}'`;
+            filter = `Url eq '${Utilities.String.noTrailingSlash(value)}'`;
         }
 
         const returnValue = this.createTreeEntries(api.retrieveOrganizations(filter), 

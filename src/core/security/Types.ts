@@ -361,6 +361,8 @@ export class OAuthCredential extends Credential {
         super(username, password);
     }
 
+    isMultiFactorAuthentication: boolean;
+
     onAuthenticate(result: AuthenticationResult) {
         if (result.success) {
             this.accessToken = result.response.accessToken;
