@@ -1,6 +1,7 @@
 import Encryption from "./Encryption";
 import { Utilities } from "../Utilities";
 import { AuthenticationResult } from "./Authentication";
+import { access } from "fs";
 
 /**
  * @type represents an item that can be secured.
@@ -357,7 +358,7 @@ export class WindowsCredential extends Credential {
 }
 
 export class OAuthCredential extends Credential {
-    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public refreshToken?: string, public accessToken?: string) {
+    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public refreshToken?: SecureItem | Securable, public accessToken?: SecureItem | Securable) {
         super(username, password);
     }
 
@@ -380,22 +381,37 @@ export class OAuthCredential extends Credential {
     }
 }
 
-export class AzureAdClientCredential extends Credential {
-    constructor(public clientId: Securable | SecureItem, public clientSecret: Securable | SecureItem, public authority: string, public callbackUrl?: string) {
-        super(clientId, clientSecret);
+export class AzureAdClientCredential extends OAuthCredential {
+    constructor(
+        public clientId: Securable | SecureItem, 
+        public clientSecret: Securable | SecureItem, 
+        public authority: string, 
+        public resource: string, 
+        public callbackUrl?: string,
+        refreshToken?: SecureItem | Securable,
+        accessToken?: SecureItem | Securable) {
+        super(clientId, clientSecret, refreshToken, accessToken);
     }
 }
 
 export class AzureAdUserCredential extends OAuthCredential {
-    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public clientId: Securable | SecureItem, public clientSecret: Securable | SecureItem, public authority: string) {
-        super(username, password);
+    constructor(
+        username: SecureItem | Securable, 
+        password: SecureItem | Securable, 
+        public clientId: Securable | SecureItem, 
+        public clientSecret: Securable | SecureItem, 
+        public authority: string,
+        refreshToken?: SecureItem | Securable,
+        accessToken?: SecureItem | Securable) {
+        super(username, password, refreshToken, accessToken);
     }
 }
 
 export class CdsOnlineCredential extends OAuthCredential {
     // These are public CRMOL auth values, we're using CloudSmith values here.
-    //static readonly defaultClientId:string = "51f81489-12ee-4a9e-aaae-a2591f45987d";
-    //static readonly defaultTenant:string = "common";
+    static readonly publicClientId:string = "51f81489-12ee-4a9e-aaae-a2591f45987d";
+    static readonly publicTenant:string = "common";
+
     static readonly defaultClientId:string = "38496a28-9c28-4ff8-8dac-ef2fe85f6275";
     static readonly defaultAuthority:string = "https://login.microsoftonline.com";
     static readonly defaultTenant:string = "b7d98656-670d-4ae0-b419-b03097edb814";
@@ -406,10 +422,10 @@ export class CdsOnlineCredential extends OAuthCredential {
         password: SecureItem | Securable, 
         public authority: string = CdsOnlineCredential.defaultAuthority, 
         public tenant: string = CdsOnlineCredential.defaultTenant,
-        public clientId: string = CdsOnlineCredential.defaultClientId,
+        public clientId: SecureItem | Securable = CdsOnlineCredential.defaultClientId,
         public resource: string = CdsOnlineCredential.defaultResource,
-        refreshToken?: string,
-        accessToken?: string) {
+        refreshToken?: SecureItem | Securable,
+        accessToken?: SecureItem | Securable) {
         super(username, password, refreshToken, accessToken);
     }
 }

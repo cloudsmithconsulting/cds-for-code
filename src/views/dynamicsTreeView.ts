@@ -437,10 +437,8 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
     }
 
     addConnection(...options: DynamicsWebApi.Config[]): void {
-        if (!this._connections) {
-            this._connections = [];
-        }
-    
+        const connections = this._connections || [];
+
         if (options && options.length > 0) {
             options.forEach(o => {
                 // Make sure the connection has an id
@@ -448,16 +446,16 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                     // give this an id
                     o.id = Utilities.Guid.newGuid();
                     // add it to the list
-                    this._connections.push(o); 
+                    connections.push(o); 
                 } else {
                     const updateIndex = this._connections.findIndex(c => c.id === o.id);
-                    this._connections[updateIndex] = o;
+                    connections[updateIndex] = o;
                 }
             });
         }
 
-        // save to state
-        DiscoveryRepository.saveConnections(this._context, this._connections);
+        // save to state and assign to our local connections variable.
+        this._connections = DiscoveryRepository.saveConnections(this._context, connections);
 
         // refresh the treeview
         this.refresh();

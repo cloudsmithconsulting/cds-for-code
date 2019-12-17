@@ -32,7 +32,11 @@
     }
 
     function setInitialState(apiConfig) {
+        let mode = 'add';
+
         if (apiConfig.id && apiConfig.id !== "") {
+            mode = 'edit';
+
             const $title = $("#title");
             $title.html($title.html().replace("New", "Edit"));
             document.title = $title.text();
@@ -66,19 +70,58 @@
                 $("#OnPrem-Domain").val(apiConfig.credentials ? apiConfig.credentials.domain || "" : "");
                 $("#OnPrem-Username").val(apiConfig.credentials ? apiConfig.credentials.username || "" : "");
                 $("#OnPrem-Password").val(apiConfig.credentials ? apiConfig.credentials.password || "" : "");
+                $("#OnPrem-Password").prop("disabled", mode === 'edit');
+
+                if (mode === 'edit') {
+                    // Show the edit link, hide the label, wire up change of username to enable password entry.
+                    $("label[for='OnPrem-Password'] > [data-action='edit-password']").prop("hidden", false);
+                    $("label[for='OnPrem-Password'] > span").prop("hidden", true);
+
+                    $("#OnPrem-Username").change(function() {
+                        $("#OnPrem-Password").prop("disabled", false);
+                        $("label[for='OnPrem-Password'] > [data-action='edit-password']").prop("hidden", true);
+                        $("label[for='OnPrem-Password'] > span").prop("hidden", false);
+                    });
+                }
 
                 break;
             case 2:
                 $("#Online-OrgUrl").val(apiConfig.appUrl || apiConfig.webApiUrl || "");
                 $("#Online-Username").val(apiConfig.credentials ? apiConfig.credentials.username || "" : "");
                 $("#Online-Password").val(apiConfig.credentials ? apiConfig.credentials.password || "" : "");
+                $("#Online-Password").prop("disabled", mode === 'edit');
+
+                if (mode === 'edit') {
+                    // Show the edit link, hide the label, wire up change of username to enable password entry.
+                    $("label[for='Online-Password'] > [data-action='edit-password']").prop("hidden", false);
+                    $("label[for='Online-Password'] > span").prop("hidden", true);
+
+                    $("#Online-Username").change(function() {
+                        $("#Online-Password").prop("disabled", false);
+                        $("label[for='Online-Password'] > [data-action='edit-password']").prop("hidden", true);
+                        $("label[for='Online-Password'] > span").prop("hidden", false);
+                    });
+                }
 
                 break;
             case 3:
                 $("#AzureAd-ResourceUrl").val(apiConfig.webApiUrl || "");
                 $("#AzureAd-ClientId").val(apiConfig.credentials ? apiConfig.credentials.username || "" : "");
                 $("#AzureAd-ClientSecret").val(apiConfig.credentials ? apiConfig.credentials.password || "" : "");
-                $("AzureAd-AuthorityUrl").val(apiConfig.authorityUri ? apiConfig.authorityUri || "" : "");
+                $("#AzureAd-AuthorityUrl").val(apiConfig.authorityUri ? apiConfig.authorityUri || "" : "");
+                $("#AzureAd-ClientSecret").prop("disabled", mode === 'edit');
+
+                if (mode === 'edit') {
+                    // Show the edit link, hide the label, wire up change of username to enable password entry.
+                    $("label[for='AzureAd-ClientSecret'] > [data-action='edit-password']").prop("hidden", false);
+                    $("label[for='AzureAd-ClientSecret'] > span").prop("hidden", true);
+
+                    $("#AzureAd-ClientId").change(function() {
+                        $("#AzureAd-ClientSecret").prop("disabled", false);
+                        $("label[for='AzureAd-ClientSecret'] > [data-action='edit-password']").prop("hidden", true);
+                        $("label[for='AzureAd-ClientSecret'] > span").prop("hidden", false);
+                    });
+                }
 
                 break;
             case 4:
@@ -92,9 +135,9 @@
     $(function () {
         M.AutoInit();
 
-        $("[data-enable-target]").each((index, t) => {
+        $("[ux-enable-target]").each((index, t) => {
             $(t).on('change', function() {
-                 var target = $(this).attr("data-enable-target");
+                 var target = $(this).attr("ux-enable-target");
                  var element = $(target);
 
                  element.prop('disabled', !this.checked);
@@ -159,11 +202,15 @@
             return messages.length === 0;
         }
 
-        function normalizeOnlineUrl(url) {
+        function normalizeOnlineUrl(url, api) {
             var matches = url.match(onlineUrlRegEx);
 
             if (matches && matches.length >= 4) {
-                return "https://" + matches[3] + ".crm" + matches[4] + ".dynamics.com";
+                if (!api) {
+                    return "https://" + matches[3] + ".crm" + matches[4] + ".dynamics.com";
+                } else {
+                    return "https://" + matches[3] + ".api.crm" + matches[4] + ".dynamics.com";
+                }
             }
 
             return url;
@@ -171,6 +218,8 @@
 
          function createSettings() {
             const id = $("#ConnectionId").val();
+            const mode = id && id !== "" ? "edit" : "add";
+
             let settings = {};
 
             const type = $("#windowsAuth").hasClass("active") ? 1 :
@@ -181,40 +230,51 @@
             const apiVersion = $("#WebApiVersion-Select").prop("checked") ? $("#WebApiVersion").val() : "";
             const token = $("#OAuthToken-Select").prop("checked") ? $("#OAuthToken").val() : undefined;
             const apiUri = 
-                type && type == 1 ? $("#OnPrem-ServerUrl").val() : 
-                type && type == 2 ? $("#Online-OrgUrl").val() : 
-                type && type == 3 ? $("#AzureAd-ResourceUrl").val() : 
+                type && type === 1 ? $("#OnPrem-ServerUrl").val() : 
+                type && type === 2 ? normalizeOnlineUrl($("#Online-OrgUrl").val(), true) : 
+                type && type === 3 ? $("#AzureAd-ResourceUrl").val() : 
                 undefined;
+            
+            const appUri = type && type === 2 ? normalizeOnlineUrl($("#Online-OrgUrl").val(), false) : apiUri;
+
+            if (type && type === 2) {
+                $("#Online-OrgUrl").val(appUri);
+            }
 
             const credentials = {};            
+
             switch (type) {
                 case 1:
                     credentials.domain = $("#OnPrem-Domain").val();
                     credentials.username = $("#OnPrem-Username").val();
-                    credentials.password = $("#OnPrem-Password").val();
+
+                    if (mode !== 'edit') {
+                        credentials.password = $("#OnPrem-Password").val();
+                    }
 
                     break;
                 case 2: 
-                    if ($("#Online-OrgUrl").val() !== null) {
-                        var url = normalizeOnlineUrl($("#Online-OrgUrl").val());
-                        $("#Online-OrgUrl").val(url);
-
-                        credentials.resource = $("#Online-OrgUrl").val();
-                    } else {
-                        credentials.resource = 'https://disco.crm.dynamics.com/';
-                    }
+                    credentials.resource = appUri || 'https://disco.crm.dynamics.com/';
 
                     if (token) {
                         credentials.refreshToken = token;
-                    } else {
-                        credentials.username = $("#Online-Username").val();
+                    } 
+
+                    credentials.username = $("#Online-Username").val();
+
+                    if (mode !== 'edit') {
                         credentials.password = $("#Online-Password").val();                        
                     }
 
                     break;
                 case 3: 
                     credentials.clientId = $("#AzureAd-ClientId").val();
-                    credentials.clientSecret = $("#AzureAd-ClientSecret").val();
+
+                    if (mode !== 'edit') {
+                        credentials.clientSecret = $("#AzureAd-ClientSecret").val();
+                    }
+
+                    credentials.resource = $("#AzureAd-ResourceUrl").val();
                     credentials.authorityUri = $("#AzureAd-AuthorityUrl").val();
 
                     break;
@@ -226,6 +286,7 @@
                 webApiVersion: apiVersion,
                 name: $("#ConnectionName").val(),
                 webApiUrl: apiUri,
+                appUrl: appUri,
                 credentials: credentials
             };
 
@@ -233,26 +294,31 @@
         }
 
         // Send this back to our extension for parsing.
-        $("#ParseConnectionStringButton").click(function() {
+        $("[data-action='parse-connectionstring']").click(function() {
             vscode.postMessage({
-                command: "parseConnectionString",
+                command: "parse-connectionstring",
                 connectionString: $("#ConnectionString").val()
             });
         });
 
-        $("#PerformGlobalDiscoButton").click(function() {
+        $("[data-action='discover']").click(function() {
             const settings = createSettings();
 
-            if (!onlineUrlRegEx.test(settings.webApiUrl)) {
-                CloudSmith.ErrorPanel.showError([ `The url '${settings.webApiUrl}' is not a valid CDS Online URL.  The format is 'https://{name}.crm{number}.dynamics.com'.` ]);
-            } else {
-                vscode.postMessage({
-                    command: "performGlobalDisco",
-                    settings
-                });
-            }
+            vscode.postMessage({
+                command: "discover",
+                settings
+            });
         });
 
+        $("[data-action='edit-password']").click(function() {
+            const settings = createSettings();
+
+            vscode.postMessage({
+                 command: "edit-password",
+                 settings
+             });
+         });
+ 
         $("[data-action='save']").click(function() {
            const settings = createSettings();
 

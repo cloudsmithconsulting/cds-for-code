@@ -40,17 +40,24 @@ export default async function authenticate(key: string, credential:Security.ICre
     return { success: false, error };
 }
 
-function decryptCredential<T extends Security.ICredential>(credential:T, storeKey:string, store?:Security.CredentialStore): T {
+function decryptCredential<T extends Security.ICredential>(credential: T, storeKey:string, store?:Security.CredentialStore): T {
     store = store || GlobalStateCredentialStore.Instance;
 
     return store.decrypt<T>(storeKey, credential, Security.SecureOutput.String);
 }
 
-async function performCdsOnlineAuthenticate(connectionId: string, credential:Security.CdsOnlineCredential, resource?: string, options?: any): Promise<AuthenticationResult> {
+
+function encryptCredential<T extends Security.ICredential>(credential: T, storeKey: string, keepDecrypted?: string[], store?: Security.CredentialStore): string {
+    store = store || GlobalStateCredentialStore.Instance;
+
+    return store.store(credential, storeKey, keepDecrypted);
+}
+
+async function performCdsOnlineAuthenticate(connectionId: string, credential: Security.CdsOnlineCredential, resource?: string, options?: any): Promise<AuthenticationResult> {
     const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
     const authority = decrypted.authority || Security.CdsOnlineCredential.defaultAuthority;
     const tenant = decrypted.tenant || Security.CdsOnlineCredential.defaultTenant;
-    const clientId = decrypted.clientId || Security.CdsOnlineCredential.defaultClientId;
+    const clientId = decrypted.clientId.toString() || Security.CdsOnlineCredential.defaultClientId;
 
     const authorityUri = `${Utilities.String.noTrailingSlash(authority)}/${tenant}`;
     const context = new adal.AuthenticationContext(authorityUri, false);

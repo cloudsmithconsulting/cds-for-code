@@ -50,11 +50,11 @@
                 <div class="row">
                     <div class="input-field col s11">
                         <input id="ConnectionString" type="text"
-                            placeholder="AuthType=Office365; ServiceUri=https://myurl.crm.dynamics.com; Username=username; Password=password" />
+                            placeholder="AuthType=Office365; ServiceUri=https://orgname.crm.dynamics.com; Username=username; Password=password" />
                         <label for="ConnectionString">Connection String</label>
                     </div>
                     <div class="input-field col s1">
-                        <a id="ParseConnectionStringButton" class="waves-effect waves-light btn-small">Go</a>
+                        <a href="#" title="Parse Connection String" data-action="parse-connectionstring" class="waves-effect waves-light btn-small">Go</a>
                     </div>
                 </div>
             </div>
@@ -84,10 +84,10 @@
                     </div>
                     <div class="col s4 input-field">
                         <input id="OnPrem-Password" type="password" />
-                        <label for="OnPrem-Password">Password</label>
+                        <label for="OnPrem-Password"><span>Password </span><a href="#" title="Edit Password" data-action="edit-password" hidden>Edit Password</a></label>
                     </div>
                     <div class="col s12 input-field">
-                        <input id="OnPrem-ServerUrl" type="text" placeholder="http://crm/" />
+                        <input id="OnPrem-ServerUrl" type="text" placeholder="https://crm/" />
                         <label for="OnPrem-ServerUrl">Server URL</label>
                     </div>
                 </div>
@@ -98,10 +98,10 @@
                     </div>
                     <div class="col s5 input-field">
                         <input id="Online-Password" type="password" />
-                        <label for="Online-Password">Password</label>
+                        <label for="Online-Password"><span>Password </span><a href="#" title="Edit Password" data-action="edit-password" hidden>Edit Password</a></label>
                     </div>
                     <div class="col s2 input-field">
-                        <a id="PerformGlobalDiscoButton" class="waves-effect waves-light btn-small">Discover</a>
+                        <a href="#" title="Discover Online Organizations" data-action="discover" class="waves-effect waves-light btn-small">Discover</a>
                     </div>
                     <div class="col s12 input-field">
                         <input id="Online-OrgUrl" type="url" />
@@ -115,7 +115,7 @@
                     </div>
                     <div class="col s12 input-field">
                         <input id="AzureAd-ClientSecret" type="password" />
-                        <label for="AzureAd-ClientSecret">Client Secret</label>
+                        <label for="AzureAd-ClientSecret"><span>Client Secret </span><a href="#" title="Edit Password" data-action="edit-password" hidden>Edit Secret</a></label>
                     </div>
                    <div class="col s12 input-field">
                         <input id="AzureAd-ResourceUrl" type="url" />
@@ -139,7 +139,7 @@
             <div class="collapsible-body">
                 <div class="row">
                     <label class="s12 m6 l5 col">
-                        <input type="checkbox" class="filled-in" id="WebApiVersion-Select" data-enable-target="#WebApiVersion" />
+                        <input type="checkbox" class="filled-in" id="WebApiVersion-Select" ux-enable-target="#WebApiVersion" />
                         <span>Specify the API version to use when issuing requests</span>
                     </label>
                     <div class="s12 m6 l7 col input-field">
@@ -155,7 +155,7 @@
                 </div>
                 <div class="row">
                     <label class="s12 m6 l5 col">
-                        <input type="checkbox" class="filled-in" id="OAuthToken-Select" data-enable-target="#OAuthToken" />
+                        <input type="checkbox" class="filled-in" id="OAuthToken-Select" ux-enable-target="#OAuthToken" />
                         <span>Attempt authentication with an existing OAuth refresh token</span>
                     </label>
                     <div class="s12 m6 l7 col input-field">

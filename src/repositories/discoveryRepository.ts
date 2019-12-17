@@ -48,8 +48,10 @@ export default class DiscoveryRepository {
         return returnObject;
     }
 
-    static saveConnections(context: vscode.ExtensionContext, connections:DynamicsWebApi.Config[]): void {
+    static saveConnections(context: vscode.ExtensionContext, connections:DynamicsWebApi.Config[]): DynamicsWebApi.Config[] {
         GlobalState.Instance.DynamicsConnections = connections;
+
+        return GlobalState.Instance.DynamicsConnections;
     }
 
     static createOrganizationConnection(org: any, connection: DynamicsWebApi.Config): DynamicsWebApi.Config {
