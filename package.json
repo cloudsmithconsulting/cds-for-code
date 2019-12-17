@@ -911,7 +911,7 @@
 	"sass": "resources/framework/materialize.vscode.scss",
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"vscode:package": "vsce package",
+		"vscode:package": "vsce package --baseContentUrl none --baseImagesUrl none",
 		"monitor": "grunt monitor",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
