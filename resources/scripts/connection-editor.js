@@ -29,6 +29,8 @@
 
     function bindDiscovery(org) {
         $("#Online-OrgUrl").val(org);
+
+        M.updateTextFields();
     }
 
     function setInitialState(apiConfig) {
@@ -151,6 +153,21 @@
         const urlRegEx = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi;
         const onlineUrlRegEx = /^(http(|s):\/\/)?(.+).crm(|\d{1,2}).dynamics.com(|\/)/gi;
 
+        function validateDiscovery(settings) { 
+            const messages = [];
+
+            if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username))
+                messages.push("The Username is required");
+            if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password))
+                messages.push('The Password is required');
+
+                // show errors
+            CloudSmith.ErrorPanel.showError(messages);
+
+            // if false, we have errors
+            return messages.length === 0;
+        }
+
         function validateForm(settings) {
             const messages = [];
 
@@ -203,13 +220,13 @@
         }
 
         function normalizeOnlineUrl(url, api) {
-            var matches = url.match(onlineUrlRegEx);
-
-            if (matches && matches.length >= 4) {
-                if (!api) {
-                    return "https://" + matches[3] + ".crm" + matches[4] + ".dynamics.com";
-                } else {
-                    return "https://" + matches[3] + ".api.crm" + matches[4] + ".dynamics.com";
+            for (match of url.matchAll(onlineUrlRegEx)) {
+                if (match && match.length >= 4) {
+                    if (!api) {
+                        return "https://" + match[3] + ".crm" + match[4] + ".dynamics.com";
+                    } else {
+                        return "https://" + match[3] + ".api.crm" + match[4] + ".dynamics.com";
+                    }
                 }
             }
 
@@ -304,10 +321,12 @@
         $("[data-action='discover']").click(function() {
             const settings = createSettings();
 
-            vscode.postMessage({
-                command: "discover",
-                settings
-            });
+            if (validateDiscovery(settings)) {
+                vscode.postMessage({
+                    command: "discover",
+                    settings
+                });
+            }
         });
 
         $("[data-action='edit-password']").click(function() {
@@ -322,12 +341,12 @@
         $("[data-action='save']").click(function() {
            const settings = createSettings();
 
-            if (!validateForm(settings)) return;
-
-            vscode.postMessage({
-                command: "save",
-                settings
-            });
+            if (validateForm(settings)) {
+                vscode.postMessage({
+                    command: "save",
+                    settings
+                });
+            }
         });
     });
 }());

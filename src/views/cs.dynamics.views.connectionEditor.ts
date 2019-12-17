@@ -90,6 +90,10 @@ class CdsConnectionEditor extends View {
             config.webApiUrl = apiUrl;
         }
 
+        if (config.type === DynamicsWebApi.ConfigType.Online && (!config.webApiUrl || config.webApiUrl === "")) {
+            config.webApiUrl = CdsOnlineCredential.defaultResource;
+        }
+
         // construct the api repo
         const api = new DiscoveryRepository(config);
         
