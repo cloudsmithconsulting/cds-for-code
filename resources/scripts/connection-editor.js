@@ -184,10 +184,12 @@
                 }
             }
 
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username))
-                messages.push("The Username is required");
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password) && mode !== "edit")
-                messages.push('The Password is required');
+            if (settings.type !== 3) {
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username))
+                    messages.push("The Username is required");
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password) && mode !== "edit")
+                    messages.push('The Password is required');
+            }
     
             if (settings.type === 1) {
                 if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.domain))
@@ -211,7 +213,7 @@
                     && mode !== 'edit')
                     messages.push('The Client Secret is required');
 
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.authorityUri))
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.authority))
                     messages.push('The Authority Url is required');
             }
             
@@ -294,7 +296,7 @@
                     }
 
                     credentials.resource = $("#AzureAd-ResourceUrl").val();
-                    credentials.authorityUri = $("#AzureAd-AuthorityUrl").val();
+                    credentials.authority = $("#AzureAd-AuthorityUrl").val();
 
                     break;
             } 

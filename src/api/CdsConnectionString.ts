@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { DynamicsWebApi } from './cds-webapi/DynamicsWebApi';
-import { ICredential, WindowsCredential, OAuthCredential, AzureAdUserCredential } from '../core/security/Types';
+import { ICredential, WindowsCredential, OAuthCredential, AzureAdUserCredential, AzureAdClientCredential, CdsOnlineCredential } from '../core/security/Types';
 
 export default class CdsConnectionString {
     constructor(connectionString?:string | undefined) {
@@ -198,7 +198,7 @@ export default class CdsConnectionString {
                 credentials = new OAuthCredential(this.username, this.password);
                 break;
             case DynamicsWebApi.ConfigType.AzureAdAuth:
-                credentials = new AzureAdUserCredential(this.username, this.password, this.clientId, undefined, this.uri.toString());
+                credentials = new AzureAdClientCredential(this.username, this.password, CdsOnlineCredential.defaultAuthority, (this.redirectUri || this.uri).toString());
                 break;
         }
 

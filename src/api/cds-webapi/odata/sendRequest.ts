@@ -251,7 +251,11 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
             if ((<OAuthCredential>config.credentials).accessToken) {
                 sendInternalRequest((<OAuthCredential>config.credentials).accessToken);
             } else {
-                Authentication(config.id, config.credentials, isDiscovery ? `https://disco.${Utility.crmHostSuffix(config.webApiUrl)}/` : undefined, { timeout: config.timeout || DynamicsWebApi.WebApiClient.defaultTimeout })
+                Authentication(
+                    config.id, 
+                    config.credentials, 
+                    isDiscovery && config.type === DynamicsWebApi.ConfigType.Online ? `https://disco.${Utility.crmHostSuffix(config.webApiUrl)}/` : (<any>config.credentials).resource, 
+                    { timeout: config.timeout || DynamicsWebApi.WebApiClient.defaultTimeout })
                     .then(auth => {
                         if (!auth.success) {
                             config.onTokenRefresh(sendInternalRequest);

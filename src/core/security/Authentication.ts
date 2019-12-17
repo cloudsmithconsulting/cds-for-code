@@ -25,13 +25,13 @@ export default async function authenticate(key: string, credential: Security.ICr
     if (Security.Credential.isCdsOnlineUserCredential(credential)) {
         return await performCdsOnlineAuthenticate(key, <Security.CdsOnlineCredential>credential, resource, options);
     } else if (Security.Credential.isAzureAdClientCredential(credential)) {
-        return await performAzureAdClientAuthenticate(key, <Security.AzureAdClientCredential>credential);
+        return await performAzureAdClientAuthenticate(key, <Security.AzureAdClientCredential>credential, resource, options);
     } else if (Security.Credential.isAzureAdUserCredential(credential)) {
-        return await performAzureAdUserAuthenticate(key, <Security.AzureAdUserCredential>credential);
+        return await performAzureAdUserAuthenticate(key, <Security.AzureAdUserCredential>credential, resource, options);
     } else if (Security.Credential.isWindowsCredential(credential)) {
         return await performWindowsAuthenticate(key, <Security.WindowsCredential>credential);
     } else if (Security.Credential.isOauthCredential(credential)) {
-        return await performOAuthAuthenticate(key, <Security.OAuthCredential>credential);
+        return await performOAuthAuthenticate(key, <Security.OAuthCredential>credential, resource, options);
     }
 
     const error = new AuthenticationError("There is no authentication provide configured that can perform authentication against the supplied credentials.");
@@ -66,19 +66,35 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential: Se
 
     resource = resource || decrypted.resource.toString();
 
-    return await performAdalAuthentication(authority, tenant, clientId, resource, context, credential, decrypted);
+    return await performAdalAuthentication(authority, tenant, clientId, undefined, resource, context, credential, decrypted);
 }
 
-async function performAzureAdClientAuthenticate(connectionId: string, credential: Security.AzureAdClientCredential): Promise<AuthenticationResult> {
-    let message: string;
+async function performAzureAdClientAuthenticate(connectionId: string, credential: Security.AzureAdClientCredential, resource?: string, options?: any): Promise<AuthenticationResult> {
+    const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
+    const authority = decrypted.authority || Security.CdsOnlineCredential.defaultAuthority;
+    const clientId = decrypted.clientId.toString();
+    const clientSecret = decrypted.clientSecret.toString();    
+    const context = new adal.AuthenticationContext(authority, false);
 
-    return { success: true };
+    if (options) { context.options = options; }
+
+    resource = resource || decrypted.resource.toString();
+
+    return await performAdalAuthentication(authority, undefined, clientId, clientSecret, resource, context, credential, decrypted);
 }
 
-async function performAzureAdUserAuthenticate(connectionId: string, credential: Security.AzureAdUserCredential): Promise<AuthenticationResult> {
-    let message: string;
+async function performAzureAdUserAuthenticate(connectionId: string, credential: Security.AzureAdUserCredential, resource?: string, options?: any): Promise<AuthenticationResult> {
+    const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
+    const authority = decrypted.authority || Security.CdsOnlineCredential.defaultAuthority;
+    const clientId = decrypted.clientId.toString();
+    const clientSecret = decrypted.clientSecret.toString();    
+    const context = new adal.AuthenticationContext(authority, false);
 
-    return { success: true };
+    if (options) { context.options = options; }
+
+    resource = resource || decrypted.resource.toString();
+
+    return await performAdalAuthentication(authority, undefined, clientId, clientSecret, resource, context, credential, decrypted);
 }
 
 async function performWindowsAuthenticate(connectionId: string, credential: Security.WindowsCredential): Promise<AuthenticationResult> {
@@ -87,13 +103,21 @@ async function performWindowsAuthenticate(connectionId: string, credential: Secu
     return { success: true };
 }
 
-async function performOAuthAuthenticate(connectionId: string, credential: Security.OAuthCredential): Promise<AuthenticationResult> {
-    let message: string;
+async function performOAuthAuthenticate(connectionId: string, credential: Security.OAuthCredential, resource?: string, options?: any): Promise<AuthenticationResult> {
+    const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
+    const authority = Security.CdsOnlineCredential.defaultAuthority;
+    const clientId = Security.CdsOnlineCredential.defaultClientId;
+    const tenant = Security.CdsOnlineCredential.defaultTenant;
+    const context = new adal.AuthenticationContext(authority, false);
 
-    return { success: true };
+    if (options) { context.options = options; }
+
+    resource = resource || Security.CdsOnlineCredential.defaultResource;
+
+    return await performAdalAuthentication(authority, tenant, clientId, undefined, resource, context, credential, decrypted);
 }
 
-async function performAdalAuthentication(authority: string, tenant: string, clientId: string, resource: string, context: adal.AuthenticationContext, credential: Security.CdsOnlineCredential, decrypted: Security.CdsOnlineCredential): Promise<AuthenticationResult> {
+async function performAdalAuthentication(authority: string, tenant: string, clientId: string, clientSecret: string, resource: string, context: adal.AuthenticationContext, credential: Security.OAuthCredential, decrypted: Security.OAuthCredential): Promise<AuthenticationResult> {
     return await new Promise<AuthenticationResult>((resolve, reject) => {
         const callback = async (error, response) => {
             if (error) {
@@ -104,10 +128,14 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
 
                     const port = 3999;
                     const redirectUri = `http://localhost:${port}/getAToken`;
-                    const mfaAuthUrl = `${Utilities.String.noTrailingSlash(authority)}/${tenant}`
+                    let mfaAuthUrl = `${Utilities.String.noTrailingSlash(authority)}${tenant ? '/' + Utilities.String.noTrailingSlash(tenant) : ""}`
                         + `/oauth2/authorize?response_type=code&client_id=${clientId}`
                         + `&redirect_uri=${redirectUri}`
                         + `&state=<state>&resource=${resource}`;
+
+                    if (clientSecret) {
+                        mfaAuthUrl += `&client_secret=${clientSecret}`;
+                    }
 
                     // create a state token
                     const generatedToken = await new Promise<string>((resolveToken, rejectToken) => {

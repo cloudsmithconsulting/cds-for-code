@@ -259,9 +259,9 @@ export abstract class Credential implements ICredential {
         if (this.isCdsOnlineUserCredential(value)) {
             cred = new CdsOnlineCredential(value.username, value.password, value.authority, value.tenant, value.clientId, value.resource, value.refreshToken, value.accessToken);
         } else if (this.isAzureAdClientCredential(value)) {
-            cred = new AzureAdClientCredential(value.clientId, value.clientSecret, value.authority, value.callbackUrl);
+            cred = new AzureAdClientCredential(value.clientId, value.clientSecret, value.authority, value.resource);
         } else if (this.isAzureAdUserCredential(value)) {
-            cred = new AzureAdUserCredential(value.username, value.password, value.clientId, value.clientSecret, value.authority);
+            cred = new AzureAdUserCredential(value.username, value.password, value.clientId, value.clientSecret, value.authority, value.resource);
         } else if (this.isWindowsCredential(value)) {
             cred = new WindowsCredential(value.domain, value.username, value.password);
         } else if (this.isOauthCredential(value)) {
@@ -290,11 +290,11 @@ export abstract class Credential implements ICredential {
     }
 
     static isAzureAdClientCredential(value:ICredential): boolean {
-        return value && value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority") && value.hasOwnProperty("callback");
+        return value && value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority") && value.hasOwnProperty("resource");
     }
 
     static isAzureAdUserCredential(value:ICredential): boolean {
-        return value && this.isOauthCredential(value) && value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority");
+        return value && this.isOauthCredential(value) && value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority") && value.hasOwnProperty("resource");
     }
 
     static isCdsOnlineUserCredential(value:ICredential): boolean {
@@ -306,7 +306,7 @@ export abstract class Credential implements ICredential {
     }
 
     static requireToken(value:ICredential): boolean { 
-        return this.isOauthCredential(value);
+        return value.hasOwnProperty("accessToken") && value.hasOwnProperty("refreshToken");
     }
 
     static retreive<T extends ICredential>(store:ICredentialStore, key: string): T | null {
@@ -392,7 +392,6 @@ export class AzureAdClientCredential extends OAuthCredential {
         public clientSecret: Securable | SecureItem, 
         public authority: string, 
         public resource: string, 
-        public callbackUrl?: string,
         refreshToken?: SecureItem | Securable,
         accessToken?: SecureItem | Securable) {
         super(clientId, clientSecret, refreshToken, accessToken);
@@ -406,6 +405,7 @@ export class AzureAdUserCredential extends OAuthCredential {
         public clientId: Securable | SecureItem, 
         public clientSecret: Securable | SecureItem, 
         public authority: string,
+        public resource: string, 
         refreshToken?: SecureItem | Securable,
         accessToken?: SecureItem | Securable) {
         super(username, password, refreshToken, accessToken);
