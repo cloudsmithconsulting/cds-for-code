@@ -8,6 +8,7 @@ import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import Quickly from '../core/Quickly';
 import async = require('async');
 import Dictionary from '../core/types/Dictionary';
+import { CdsSolutions } from '../api/CdsSolutions';
 
 export default class PluginStepViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
@@ -84,6 +85,16 @@ class PluginStepView extends View {
     private save(step :any) {
         const api = new ApiRepository(this.config);
         api.upsertPluginStep(step)
+            .then(async (step) => {
+                const solution = await Quickly.pickCdsSolution(this.config, "Choose a dynamics 365 Solution", true);
+                if (solution) {
+                    await api.addSolutionComponent(solution, 
+                        step.sdkmessageprocessingstepid, 
+                        CdsSolutions.SolutionComponent.SdkMessageProcessingStep, 
+                        true,
+                        false);
+                }
+            })
             .then(() => this.dispose())
             .catch(err => {
                 this.postMessage({ command: 'error', message: err.message });
