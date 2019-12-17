@@ -421,13 +421,13 @@ export default class ApiRepository {
                     collection: "sdkmessageprocessingstepsecureconfigs",
                     entity: secureConfig
                 })
-                .then(result => {
+                .then(configid => {
                     // after create, associate it to the plugin step
                     const sdkmessageprocessingstepid = step.sdkmessageprocessingstepid;
                     // create a smaller step message to associate the record back to the step
                     step = {
                         sdkmessageprocessingstepid,
-                        "sdkmessageprocessingstepsecureconfigid@odata.bind": `sdkmessageprocessingstepsecureconfigs(${result})`
+                        "sdkmessageprocessingstepsecureconfigid@odata.bind": `sdkmessageprocessingstepsecureconfigs(${configid})`
                     };
                 })
                 .then(() => {
@@ -447,15 +447,19 @@ export default class ApiRepository {
                 id: step.sdkmessageprocessingstepid,
                 collection: "sdkmessageprocessingsteps",
                 entity: step
-            }).then((result) => secureConfigCreate(result, step));
+            }).then(async (result) => {
+                await secureConfigCreate(result, step);
+                return step;
+            });
         } else {
             delete step.sdkmessageprocessingstepid;
             return this.webapi.createRequest({
                 collection: "sdkmessageprocessingsteps",
                 entity: step
-            }).then((result) => {
+            }).then(async (result) => {
                 step.sdkmessageprocessingstepid = result;
-                return secureConfigCreate(result, step);
+                await secureConfigCreate(result, step);
+                return step;
             });
         }
     }
@@ -471,7 +475,8 @@ export default class ApiRepository {
                 id: stepImage.sdkmessageprocessingstepimageid,
                 collection: "sdkmessageprocessingstepimages",
                 entity: stepImage
-            });
+            })
+            .then(() => stepImage);
         } else {
             if (stepImage.sdkmessageprocessingstepimageid === null) {
                 delete stepImage.sdkmessageprocessingstepimageid;
@@ -479,6 +484,10 @@ export default class ApiRepository {
             return this.webapi.createRequest({
                 collection: "sdkmessageprocessingstepimages",
                 entity: stepImage
+            })
+            .then((result) => {
+                stepImage.sdkmessageprocessingstepimageid = result;
+                return stepImage;
             })
             .catch(err => console.error(err));
         }

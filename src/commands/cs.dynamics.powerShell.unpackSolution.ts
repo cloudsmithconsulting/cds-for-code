@@ -97,7 +97,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 					c.text(`-Credential (New-Object System.Management.Automation.PSCredential ("`)
 					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
 					 .text(`", (ConvertTo-SecureString "`)
-					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.password.toString())
+					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => Utilities.String.powerShellSafe(creds.password.toString(), '"'))
 					 .text(`" -AsPlainText -Force))) `);
 				})
 				.if(() => !Utilities.$Object.isNullOrEmpty(mappingFile), c => c.text(` -MapFile "${mappingFile}"`))

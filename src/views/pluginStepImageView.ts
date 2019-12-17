@@ -6,6 +6,8 @@ import IContributor from '../core/CommandBuilder';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import ApiRepository from '../repositories/apiRepository';
 import Dictionary from '../core/types/Dictionary';
+import Quickly from '../core/Quickly';
+import { CdsSolutions } from '../api/CdsSolutions';
 
 export default class PluginStepImageViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, wsConfig?:vscode.WorkspaceConfiguration) {
@@ -52,6 +54,16 @@ class PluginStepImageView extends View {
         const api = new ApiRepository(this.config);
         
         api.upsertPluginStepImage(pluginStepImage)
+            .then(async result => {
+                const solution = await Quickly.pickCdsSolution(this.config, "Choose a dynamics 365 Solution", true);
+                if (solution) {
+                    await api.addSolutionComponent(solution, 
+                        pluginStepImage.sdkmessageprocessingstepimageid, 
+                        CdsSolutions.SolutionComponent.SdkMessageProcessingStepImage, 
+                        true,
+                        false);
+                }
+            })
             .then(() => this.dispose())
             .catch(err => {
                 this.postMessage({ command: 'error', message: err.message });

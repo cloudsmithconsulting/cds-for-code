@@ -26,6 +26,7 @@ import saveTemplate from '../../commands/cs.dynamics.templates.saveTemplate';
 import saveTemplateFile from "../../commands/cs.dynamics.controls.explorer.saveTemplateFile";
 import saveTemplateFolder from "../../commands/cs.dynamics.controls.explorer.saveTemplateFolder";
 import { TemplateCatalog } from './TemplateCatalog';
+import TemplateTreeView from '../../views/TemplatesTreeView';
 
 /**
  * Main class to handle the logic of the Project Templates
@@ -422,6 +423,8 @@ export default class TemplateManager implements IContributor {
                 }
 
                 templateCatalog.save();
+
+                TemplateTreeView.Instance.refresh();
 
                 return templateItem;
             }
