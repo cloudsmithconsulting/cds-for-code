@@ -138,7 +138,7 @@ export abstract class CredentialStore implements ICredentialStore {
         this.onDelete(key);
     }
 
-    decrypt<T extends ICredential>(key: string, credential?:T, preferredOutput?: SecureOutput, keepEncrypted?: string[]): T | null {
+    decrypt<T extends ICredential>(key: string, credential?: T, preferredOutput?: SecureOutput, keepEncrypted?: string[]): T | null {
         let encrypted = this.onRetreive(key);
 
         // We don't really want byte arrays for creds (most of the time).
@@ -154,21 +154,23 @@ export abstract class CredentialStore implements ICredentialStore {
             credential = <T>{ storeKey: key };
         }
 
-        if (credential) { 
+        const returnCredential = Utilities.$Object.clone(credential);
+
+        if (returnCredential) { 
             if (encrypted) {
                 Object.keys(encrypted).forEach(k => {
                     if (keepEncrypted && keepEncrypted.length > 0 && keepEncrypted.find(key => k.toLowerCase() === key.toLowerCase())) {
-                        (<any>credential)[k] = encrypted[k];
+                        (<any>returnCredential)[k] = encrypted[k];
                     } else if (SecureItem.isSecure(encrypted[k])) {
-                        (<any>credential)[k] = this.cryptography.decrypt(<SecureItem>encrypted[k], preferredOutput);
+                        (<any>returnCredential)[k] = this.cryptography.decrypt(<SecureItem>encrypted[k], preferredOutput);
                     } else {
-                        (<any>credential)[k] = encrypted[k];
+                        (<any>returnCredential)[k] = encrypted[k];
                     }
                 });
             }
         }
 
-        return credential;
+        return returnCredential;
     }
 
     retreive<T extends ICredential>(key: string, credential?:T): T | null {
@@ -200,6 +202,9 @@ export abstract class CredentialStore implements ICredentialStore {
         key = key || credential.storeKey || Utilities.Guid.newGuid();
 
         if (credential) {
+            keepDecrypted = keepDecrypted || [];
+            keepDecrypted.push("isSecure", "storeKey");
+
             Object.keys(credential).forEach(k => {
                 if (Encryption.isSecurable((<any>credential)[k])) {
                     if (keepDecrypted && keepDecrypted.length > 0 && keepDecrypted.find(key => key.toLowerCase() === k.toLowerCase())) {
