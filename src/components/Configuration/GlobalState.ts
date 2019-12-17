@@ -40,7 +40,7 @@ export default class GlobalState {
                         }
                     }
 
-                    const key = GlobalStateCredentialStore.Instance.store(anyCreds, c.id, [ "accessToken", "refreshToken" ]);
+                    const key = GlobalStateCredentialStore.Instance.store(anyCreds, c.id, [ "accessToken", "isMultiFactorAuthentication", "resource" ]);
                     
                     delete c.credentials;
 

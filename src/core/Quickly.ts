@@ -29,6 +29,19 @@ export default class Quickly {
     }
 
     /**
+     * shows an input box with a question and returns a response masked as a password
+     * @param prompt prompt to display when asking
+     * @param placeHolder text to display when nothing was chosen
+     * @param value pre-selected value, if any
+     * @param ignoreFocusOut boolean indicating if the input box should be closed if it loses focus
+     */
+    static async password(prompt: string, placeHolder?:string, value?: string, ignoreFocusOut: boolean = true): Promise<string> {
+        return vscode.window
+            .showInputBox({ prompt, placeHolder, value, ignoreFocusOut, password: true })
+            .then(chosen => chosen);
+    }
+
+    /**
      * Quickly informs you of information and optionally gives you primary/secondary actions.
      *
      * @static

@@ -1,6 +1,7 @@
 import Encryption from "./Encryption";
 import { Utilities } from "../Utilities";
 import { AuthenticationResult } from "./Authentication";
+import { access } from "fs";
 
 /**
  * @type represents an item that can be secured.
@@ -137,7 +138,7 @@ export abstract class CredentialStore implements ICredentialStore {
         this.onDelete(key);
     }
 
-    decrypt<T extends ICredential>(key: string, credential?:T, preferredOutput?: SecureOutput, keepEncrypted?: string[]): T | null {
+    decrypt<T extends ICredential>(key: string, credential?: T, preferredOutput?: SecureOutput, keepEncrypted?: string[]): T | null {
         let encrypted = this.onRetreive(key);
 
         // We don't really want byte arrays for creds (most of the time).
@@ -153,21 +154,23 @@ export abstract class CredentialStore implements ICredentialStore {
             credential = <T>{ storeKey: key };
         }
 
-        if (credential) { 
+        const returnCredential = Utilities.$Object.clone(credential);
+
+        if (returnCredential) { 
             if (encrypted) {
                 Object.keys(encrypted).forEach(k => {
                     if (keepEncrypted && keepEncrypted.length > 0 && keepEncrypted.find(key => k.toLowerCase() === key.toLowerCase())) {
-                        (<any>credential)[k] = encrypted[k];
+                        (<any>returnCredential)[k] = encrypted[k];
                     } else if (SecureItem.isSecure(encrypted[k])) {
-                        (<any>credential)[k] = this.cryptography.decrypt(<SecureItem>encrypted[k], preferredOutput);
+                        (<any>returnCredential)[k] = this.cryptography.decrypt(<SecureItem>encrypted[k], preferredOutput);
                     } else {
-                        (<any>credential)[k] = encrypted[k];
+                        (<any>returnCredential)[k] = encrypted[k];
                     }
                 });
             }
         }
 
-        return credential;
+        return returnCredential;
     }
 
     retreive<T extends ICredential>(key: string, credential?:T): T | null {
@@ -199,6 +202,9 @@ export abstract class CredentialStore implements ICredentialStore {
         key = key || credential.storeKey || Utilities.Guid.newGuid();
 
         if (credential) {
+            keepDecrypted = keepDecrypted || [];
+            keepDecrypted.push("isSecure", "storeKey");
+
             Object.keys(credential).forEach(k => {
                 if (Encryption.isSecurable((<any>credential)[k])) {
                     if (keepDecrypted && keepDecrypted.length > 0 && keepDecrypted.find(key => key.toLowerCase() === k.toLowerCase())) {
@@ -253,9 +259,9 @@ export abstract class Credential implements ICredential {
         if (this.isCdsOnlineUserCredential(value)) {
             cred = new CdsOnlineCredential(value.username, value.password, value.authority, value.tenant, value.clientId, value.resource, value.refreshToken, value.accessToken);
         } else if (this.isAzureAdClientCredential(value)) {
-            cred = new AzureAdClientCredential(value.clientId, value.clientSecret, value.authority, value.callbackUrl);
+            cred = new AzureAdClientCredential(value.clientId, value.clientSecret, value.authority, value.resource);
         } else if (this.isAzureAdUserCredential(value)) {
-            cred = new AzureAdUserCredential(value.username, value.password, value.clientId, value.clientSecret, value.authority);
+            cred = new AzureAdUserCredential(value.username, value.password, value.clientId, value.clientSecret, value.authority, value.resource);
         } else if (this.isWindowsCredential(value)) {
             cred = new WindowsCredential(value.domain, value.username, value.password);
         } else if (this.isOauthCredential(value)) {
@@ -284,11 +290,11 @@ export abstract class Credential implements ICredential {
     }
 
     static isAzureAdClientCredential(value:ICredential): boolean {
-        return value && value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority") && value.hasOwnProperty("callback");
+        return value && value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority") && value.hasOwnProperty("resource");
     }
 
     static isAzureAdUserCredential(value:ICredential): boolean {
-        return value && this.isOauthCredential(value) && value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority");
+        return value && this.isOauthCredential(value) && value.hasOwnProperty("clientId") && value.hasOwnProperty("clientSecret") && value.hasOwnProperty("authority") && value.hasOwnProperty("resource");
     }
 
     static isCdsOnlineUserCredential(value:ICredential): boolean {
@@ -300,7 +306,7 @@ export abstract class Credential implements ICredential {
     }
 
     static requireToken(value:ICredential): boolean { 
-        return this.isOauthCredential(value);
+        return value.hasOwnProperty("accessToken") && value.hasOwnProperty("refreshToken");
     }
 
     static retreive<T extends ICredential>(store:ICredentialStore, key: string): T | null {
@@ -357,9 +363,11 @@ export class WindowsCredential extends Credential {
 }
 
 export class OAuthCredential extends Credential {
-    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public refreshToken?: string, public accessToken?: string) {
+    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public refreshToken?: SecureItem | Securable, public accessToken?: SecureItem | Securable) {
         super(username, password);
     }
+
+    isMultiFactorAuthentication: boolean;
 
     onAuthenticate(result: AuthenticationResult) {
         if (result.success) {
@@ -378,23 +386,40 @@ export class OAuthCredential extends Credential {
     }
 }
 
-export class AzureAdClientCredential extends Credential {
-    constructor(public clientId: Securable | SecureItem, public clientSecret: Securable | SecureItem, public authority: string, public callbackUrl?: string) {
-        super(clientId, clientSecret);
+export class AzureAdClientCredential extends OAuthCredential {
+    constructor(
+        public clientId: Securable | SecureItem, 
+        public clientSecret: Securable | SecureItem, 
+        public authority: string, 
+        public resource: string, 
+        refreshToken?: SecureItem | Securable,
+        accessToken?: SecureItem | Securable) {
+        super(clientId, clientSecret, refreshToken, accessToken);
     }
 }
 
 export class AzureAdUserCredential extends OAuthCredential {
-    constructor(username: SecureItem | Securable, password: SecureItem | Securable, public clientId: Securable | SecureItem, public clientSecret: Securable | SecureItem, public authority: string) {
-        super(username, password);
+    constructor(
+        username: SecureItem | Securable, 
+        password: SecureItem | Securable, 
+        public clientId: Securable | SecureItem, 
+        public clientSecret: Securable | SecureItem, 
+        public authority: string,
+        public resource: string, 
+        refreshToken?: SecureItem | Securable,
+        accessToken?: SecureItem | Securable) {
+        super(username, password, refreshToken, accessToken);
     }
 }
 
 export class CdsOnlineCredential extends OAuthCredential {
-    static readonly defaultClientId:string = "51f81489-12ee-4a9e-aaae-a2591f45987d";
-    //static readonly defaultAuthority:string = "https://login.microsoftonline.com/common/oauth2/authorize?resource=";
+    // These are public CRMOL auth values, we're using CloudSmith values here.
+    static readonly publicClientId:string = "51f81489-12ee-4a9e-aaae-a2591f45987d";
+    static readonly publicTenant:string = "common";
+
+    static readonly defaultClientId:string = "38496a28-9c28-4ff8-8dac-ef2fe85f6275";
     static readonly defaultAuthority:string = "https://login.microsoftonline.com";
-    static readonly defaultTenant:string = "common";
+    static readonly defaultTenant:string = "b7d98656-670d-4ae0-b419-b03097edb814";
     static readonly defaultResource:string = "https://disco.crm.dynamics.com/";
 
     constructor(
@@ -402,10 +427,10 @@ export class CdsOnlineCredential extends OAuthCredential {
         password: SecureItem | Securable, 
         public authority: string = CdsOnlineCredential.defaultAuthority, 
         public tenant: string = CdsOnlineCredential.defaultTenant,
-        public clientId: string = CdsOnlineCredential.defaultClientId,
+        public clientId: SecureItem | Securable = CdsOnlineCredential.defaultClientId,
         public resource: string = CdsOnlineCredential.defaultResource,
-        refreshToken?: string,
-        accessToken?: string) {
+        refreshToken?: SecureItem | Securable,
+        accessToken?: SecureItem | Securable) {
         super(username, password, refreshToken, accessToken);
     }
 }

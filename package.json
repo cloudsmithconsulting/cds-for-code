@@ -6,7 +6,7 @@
 	"repository": {
 		"url": "https://cloudsmith-consulting@dev.azure.com/cloudsmith-consulting/CloudSmith/_git/cds-for-code"
 	},
-	"version": "0.8.3",
+	"version": "0.8.4",
 	"preview": true,
 	"engines": {
 		"vscode": "^1.38.0"
