@@ -170,6 +170,7 @@
 
         function validateForm(settings) {
             const messages = [];
+            const mode = settings.id && settings.id !== "" ? 'edit' : 'add';
 
             // Online can do global disco
             if (settings.type !== 2) {
@@ -185,7 +186,7 @@
 
             if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username))
                 messages.push("The Username is required");
-            if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password))
+            if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password) && mode !== "edit")
                 messages.push('The Password is required');
     
             if (settings.type === 1) {
@@ -198,14 +199,16 @@
                 }
                 if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.token)
                     && !CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username)
-                    && CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password)) {
+                    && CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password)
+                    && mode !== "edit") {
                         messages.push('The Password is required');
                 }
             } else if (settings.type === 3) {
                 if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.clientId))
                     messages.push('The Client ID is required');
 
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.clientSecret))
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.clientSecret) 
+                    && mode !== 'edit')
                     messages.push('The Client Secret is required');
 
                 if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.authorityUri))
@@ -235,7 +238,6 @@
 
          function createSettings() {
             const id = $("#ConnectionId").val();
-            const mode = id && id !== "" ? "edit" : "add";
 
             let settings = {};
 
@@ -265,7 +267,7 @@
                     credentials.domain = $("#OnPrem-Domain").val();
                     credentials.username = $("#OnPrem-Username").val();
 
-                    if (mode !== 'edit') {
+                    if ($("#OnPrem-Password").prop("disabled") === false) {
                         credentials.password = $("#OnPrem-Password").val();
                     }
 
@@ -279,7 +281,7 @@
 
                     credentials.username = $("#Online-Username").val();
 
-                    if (mode !== 'edit') {
+                    if ($("#Online-Password").prop("disabled") === false) {
                         credentials.password = $("#Online-Password").val();                        
                     }
 
@@ -287,7 +289,7 @@
                 case 3: 
                     credentials.clientId = $("#AzureAd-ClientId").val();
 
-                    if (mode !== 'edit') {
+                    if ($("#AzureAd-ClientSecret").prop("disabled") === false) {
                         credentials.clientSecret = $("#AzureAd-ClientSecret").val();
                     }
 

@@ -79,6 +79,13 @@ class CdsConnectionEditor extends View {
 
         const resource = (<CdsOnlineCredential>config.credentials).resource;
 
+        if (config.id && (!config.credentials.password || config.credentials.password === "")) {
+            // We don't edit passwords here, so if we don't have one, that's ok, let's go get it.
+            const existingCreds = GlobalStateCredentialStore.Instance.retreive(config.id);
+
+            config.credentials.password = existingCreds.password;                            
+        }
+
         if (!config.appUrl && resource && resource !== CdsOnlineCredential.defaultResource) {
             config.appUrl = resource;
         }

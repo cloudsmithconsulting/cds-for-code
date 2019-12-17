@@ -21,7 +21,7 @@ export class AuthenticationError extends Error {
     httpResponse?: any;
 }
 
-export default async function authenticate(key: string, credential:Security.ICredential, resource?:string, options?: any): Promise<AuthenticationResult> {
+export default async function authenticate(key: string, credential: Security.ICredential, resource?: string, options?: any): Promise<AuthenticationResult> {
     if (Security.Credential.isCdsOnlineUserCredential(credential)) {
         return await performCdsOnlineAuthenticate(key, <Security.CdsOnlineCredential>credential, resource, options);
     } else if (Security.Credential.isAzureAdClientCredential(credential)) {
@@ -40,7 +40,7 @@ export default async function authenticate(key: string, credential:Security.ICre
     return { success: false, error };
 }
 
-function decryptCredential<T extends Security.ICredential>(credential: T, storeKey:string, store?:Security.CredentialStore): T {
+function decryptCredential<T extends Security.ICredential>(credential: T, storeKey: string, store?: Security.CredentialStore): T {
     store = store || GlobalStateCredentialStore.Instance;
 
     return store.decrypt<T>(storeKey, credential, Security.SecureOutput.String);
@@ -61,117 +61,148 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential: Se
 
     const authorityUri = `${Utilities.String.noTrailingSlash(authority)}/${tenant}`;
     const context = new adal.AuthenticationContext(authorityUri, false);
-    
+
     if (options) { context.options = options; }
 
     resource = resource || decrypted.resource.toString();
 
+    return await performAdalAuthentication(authority, tenant, clientId, resource, context, credential, decrypted);
+}
+
+async function performAzureAdClientAuthenticate(connectionId: string, credential: Security.AzureAdClientCredential): Promise<AuthenticationResult> {
+    let message: string;
+
+    return { success: true };
+}
+
+async function performAzureAdUserAuthenticate(connectionId: string, credential: Security.AzureAdUserCredential): Promise<AuthenticationResult> {
+    let message: string;
+
+    return { success: true };
+}
+
+async function performWindowsAuthenticate(connectionId: string, credential: Security.WindowsCredential): Promise<AuthenticationResult> {
+    let message: string;
+
+    return { success: true };
+}
+
+async function performOAuthAuthenticate(connectionId: string, credential: Security.OAuthCredential): Promise<AuthenticationResult> {
+    let message: string;
+
+    return { success: true };
+}
+
+async function performAdalAuthentication(authority: string, tenant: string, clientId: string, resource: string, context: adal.AuthenticationContext, credential: Security.CdsOnlineCredential, decrypted: Security.CdsOnlineCredential): Promise<AuthenticationResult> {
     return await new Promise<AuthenticationResult>((resolve, reject) => {
-        const callback = async (error, response) => { 
+        const callback = async (error, response) => {
             if (error) {
                 const exception = ErrorParser.parseAdalError(error);
 
                 if (exception.type === 'interaction_required') {
                     Quickly.inform("Your credentials use multi-factor authentication.  You will need to authenticate interactively.");
 
-                    // seems like the azure extension uses: https://vscode-redirect.azurewebsites.net to do it's token redirection
-
-                    //TODO: make this configurable
                     const port = 3999;
                     const redirectUri = `http://localhost:${port}/getAToken`;
-                    //const redirectUri = `https://callbackurl`;
-                    // resource might have to be hard coded to '00000002-0000-0000-c000-000000000000'
-
-                    // construct MFA url
-                    const mfaAuthUrl = `https://login.windows.net/${tenant}`
+                    const mfaAuthUrl = `${Utilities.String.noTrailingSlash(authority)}/${tenant}`
                         + `/oauth2/authorize?response_type=code&client_id=${clientId}`
                         + `&redirect_uri=${redirectUri}`
                         + `&state=<state>&resource=${resource}`;
 
                     // create a state token
                     const generatedToken = await new Promise<string>((resolveToken, rejectToken) => {
-                        crypto.randomBytes(48, function(ex, buf) {
+                        crypto.randomBytes(48, function (ex, buf) {
                             if (ex) {
                                 rejectToken(ex);
                             }
+
                             // generate our token
-                            var token = buf.toString('base64').replace(/\//g,'_').replace(/\+/g,'-');
+                            var token = buf.toString('base64').replace(/\//g, '_').replace(/\+/g, '-');
+                            
                             resolveToken(token);
-                          });
+                        });
                     });
 
                     const app = require('express')();
-
+                    
                     app.get('/auth', (req, res) => {
                         res.cookie('authstate', generatedToken);
+
                         // make the auth
                         const authorizationUrl = mfaAuthUrl.replace(/<state>/, generatedToken);
+                        
                         res.redirect(authorizationUrl);
-                      });
-
+                    });
+                    
                     app.get('/getAToken', (req, res) => {
                         if (req.cookies && req.cookies.authstate !== req.query.state) {
-                          res.send('error: state does not match');
+                            res.send('error: state does not match');
                         }
-                      
-                        context.acquireTokenWithAuthorizationCode(
-                          req.query.code,
-                          redirectUri,
-                          resource,
-                          clientId, 
-                          null,
-                          (err, response) => {
-                              if (err) {
+
+                        context.acquireTokenWithAuthorizationCode(req.query.code, redirectUri, resource, clientId, null, (err, response) => {
+                            if (err) {
                                 const innerException = ErrorParser.parseAdalError(err);
 
                                 res.send(innerException.message);
-
-                                reject(innerException);    
+                                
+                                reject(innerException);
                                 resolve({ success: false, error: innerException });
-                              } else {
+                            }
+                            else {
                                 const result = { success: true, response };
-
-                                if (decrypted.onAuthenticate) {
-                                    decrypted.onAuthenticate(result);
+                                
+                                if (credential.onAuthenticate) {
+                                    credential.onAuthenticate(result);
                                 } else {
-                                    decrypted.accessToken = (<adal.TokenResponse>result.response).accessToken;
-                                    decrypted.refreshToken = (<adal.TokenResponse>result.response).refreshToken;
+                                    credential.accessToken = (<adal.TokenResponse>result.response).accessToken;
+                                    credential.refreshToken = (<adal.TokenResponse>result.response).refreshToken;
                                 }
-                
+
+                                credential.isMultiFactorAuthentication = true;
+
                                 TokenCache.Instance.addToken(TokenType.AccessToken, resource, (<adal.TokenResponse>result.response).accessToken);
                                 TokenCache.Instance.addToken(TokenType.RefreshToken, resource, (<adal.TokenResponse>result.response).refreshToken);
-
+                                
                                 res.send(`<html><head><title>Authentication complete</title></head><body><script>window.self.close();</script></body></html>`);
                                 
+                                if (credential.storeKey) {
+                                    GlobalStateCredentialStore.Instance.store(credential, credential.storeKey, [ "accessToken", "isMultiFactorAuthentication", "resource" ]);
+                                }
+
                                 resolve(result);
-                              }
+                            }
 
-                              app.removeAllListeners();
-                          }
-                        );
-                      });
-
-                    app.listen(port, function() {
-                        console.log("Listening on port " + port);
+                            app.removeAllListeners();
+                        });
                     });
 
-                    opn(`http://localhost:${port}/auth`);
-                } else {
-                    reject(exception);    
+                    app.listen(port, function () {
+                        opn(`http://localhost:${port}/auth`);
+                    });
+                }
+                else {
+                    reject(exception);
                     resolve({ success: false, error: exception });
                 }
-            } else {
+            }
+            else {
                 const result = { success: true, response };
 
-                if (decrypted.onAuthenticate) {
-                    decrypted.onAuthenticate(result);
+                if (credential.onAuthenticate) {
+                    credential.onAuthenticate(result);
                 } else {
-                    decrypted.accessToken = result.response.accessToken;
-                    decrypted.refreshToken = result.response.refreshToken;
+                    credential.accessToken = result.response.accessToken;
+                    credential.refreshToken = result.response.refreshToken;
                 }
+                
+                credential.isMultiFactorAuthentication = false;
 
                 TokenCache.Instance.addToken(TokenType.AccessToken, resource, result.response.accessToken);
                 TokenCache.Instance.addToken(TokenType.RefreshToken, resource, result.response.refreshToken);
+
+                if (credential.storeKey) {
+                    GlobalStateCredentialStore.Instance.store(credential, credential.storeKey, [ "accessToken", "isMultiFactorAuthentication", "resource" ]);
+                }
 
                 resolve(result);
             }
@@ -179,45 +210,12 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential: Se
 
         let refreshToken = decrypted.refreshToken ? decrypted.refreshToken.toString() : undefined;
         refreshToken = refreshToken || TokenCache.Instance.getToken(TokenType.RefreshToken, resource);
-
+        
         if (refreshToken) {
             // If this errors, re-attempt this with username/password, as our refresh token has expired.
-            context.acquireTokenWithRefreshToken(
-                refreshToken, 
-                clientId, 
-                resource, 
-                callback);
+            context.acquireTokenWithRefreshToken(refreshToken, clientId, resource, callback);
         } else {
-            context.acquireTokenWithUsernamePassword(
-                resource, 
-                decrypted.username.toString(), 
-                decrypted.password.toString(), 
-                clientId,
-                callback);
+            context.acquireTokenWithUsernamePassword(resource, decrypted.username.toString(), decrypted.password.toString(), clientId, callback);
         }
     });
-}
-
-async function performAzureAdClientAuthenticate(connectionId: string, credential:Security.AzureAdClientCredential): Promise<AuthenticationResult> {
-    let message:string;
-
-    return { success: true };
-}
-
-async function performAzureAdUserAuthenticate(connectionId: string, credential:Security.AzureAdUserCredential): Promise<AuthenticationResult> {
-    let message:string;
-
-    return { success: true };
-}
-
-async function performWindowsAuthenticate(connectionId: string, credential:Security.WindowsCredential): Promise<AuthenticationResult> {
-    let message:string;
-
-    return { success: true };
-}
-
-async function performOAuthAuthenticate(connectionId: string, credential:Security.OAuthCredential): Promise<AuthenticationResult> {
-    let message:string;
-
-    return { success: true };
 }
