@@ -107,6 +107,9 @@ class CdsConnectionEditor extends View {
         // try a discovery request
         await api.retrieveOrganizations()
             .then(async results => {
+                // delete the prior timeout for the config
+                delete config.timeout;
+                
                 if (!results) {
                     this.postMessage({ command: 'error', message: "The discovery request could not be completed.  Check the credentials and URL and try again." });
                 } else {

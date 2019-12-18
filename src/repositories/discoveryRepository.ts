@@ -73,6 +73,7 @@ export default class DiscoveryRepository {
         orgConnection.name = org.FriendlyName;
         orgConnection.orgName = org.UniqueName || org.Name;
         orgConnection.orgId = org.Id;
+        orgConnection.environmentId = org.EnvironmentId;
 
         return orgConnection;
     }

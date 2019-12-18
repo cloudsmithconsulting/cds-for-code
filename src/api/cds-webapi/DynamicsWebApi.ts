@@ -226,6 +226,8 @@ export namespace DynamicsWebApi {
         credentials: ICredential;
         /**The ID of the organization */
         orgId?: string;
+        /** The CDS Environment ID of the organization */
+        environmentId?: string;
         /**The name of the organization */
         orgName?: string;
         /**A String representing a URL to Web API(webApiVersion not required if webApiUrl specified)[not used inside of CRM] */
