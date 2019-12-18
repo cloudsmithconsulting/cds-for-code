@@ -76,6 +76,12 @@ export namespace dynamics {
 
     export namespace configuration {
         // tslint:disable-next-line: class-name
+        export class web {
+            public static readonly _namespace:string = "cs.dynamics.configuration.web";
+            public static readonly usePowerAppsUi:string = `${web._namespace}.usePowerAppsUi`;
+        }
+        
+        // tslint:disable-next-line: class-name
         export class explorer {
             public static readonly _namespace:string = "cs.dynamics.configuration.explorer";
             public static readonly showDefaultSolution:string = `${explorer._namespace}.showDefaultSolution`;

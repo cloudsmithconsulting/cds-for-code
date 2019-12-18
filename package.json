@@ -78,6 +78,11 @@
 			"type": "object",
 			"title": "CDS for Code",
 			"properties": {
+				"cs.dynamics.configuration.web.usePowerAppsUi": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Use the PowerApps Online UI where possible"
+				},
 				"cs.dynamics.configuration.tools.sdkInstallPath": {
 					"type": "string",
 					"default": "C:\\Deploy\\Tools",
