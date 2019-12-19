@@ -19,6 +19,9 @@
                     break;
                 case "error":
                     CloudSmith.ErrorPanel.showError([`${message.message}`]);
+
+                    M.updateTextFields();
+
                     break;
                 case "bindDiscovery": 
                     bindDiscovery(message.organization);
