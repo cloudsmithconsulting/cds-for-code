@@ -7,6 +7,8 @@ import { Utilities } from "../Utilities";
 import GlobalStateCredentialStore from "./GlobalStateCredentialStore";
 import Quickly from "../Quickly";
 import TokenCache, { TokenType } from "./TokenCache";
+import * as express from 'express';
+import { Server } from "http";
 
 export type AuthenticationResult = {
     success: boolean,
@@ -156,7 +158,8 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                         });
                     });
 
-                    const app = require('express')();
+                    const app: express.Application = express();
+                    let server: Server;
                     
                     app.get('/auth', (req, res) => {
                         res.cookie('authstate', generatedToken);
@@ -173,16 +176,16 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                         }
 
                         context.acquireTokenWithAuthorizationCode(req.query.code, redirectUri, resource, clientId, null, (err, response) => {
-                            app.removeAllListeners();
-                            app.close();
-
                             if (err) {
                                 const innerException = ErrorParser.parseAdalError(err);
 
                                 res.send(innerException.message);
                                 
+                                // shut down express stuff
+                                app.removeAllListeners();
+                                server.close();
+                                // reject our promise here
                                 reject(innerException);
-                                resolve({ success: false, error: innerException });
                             }
                             else {
                                 const result = { success: true, response };
@@ -205,12 +208,16 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                                     GlobalStateCredentialStore.Instance.store(credential, credential.storeKey, [ "accessToken", "isMultiFactorAuthentication", "resource" ]);
                                 }
 
+                                // shut down express stuff
+                                app.removeAllListeners();
+                                server.close();
+                                // resolve our promise here
                                 resolve(result);
                             }
                         });
                     });
 
-                    app.listen(port, function () {
+                    server = app.listen(port, function () {
                         opn(`http://localhost:${port}/auth`);
                     });
                 }
