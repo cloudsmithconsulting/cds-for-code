@@ -8,6 +8,7 @@ import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import Quickly from '../core/Quickly';
 import async = require('async');
 import Dictionary from '../core/types/Dictionary';
+import { CdsSolutions } from '../api/CdsSolutions';
 
 export default class PluginStepViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {

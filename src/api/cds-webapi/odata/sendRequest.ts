@@ -1,5 +1,5 @@
 ﻿import Utility from '../utilities/Utility';
-import Authentication from "../../../core/security/Authentication";
+import Authentication, { AuthenticationError } from "../../../core/security/Authentication";
 import RequestConverter from '../utilities/RequestConverter';
 import BatchConverter from '../utilities/BatchConverter';
 import xhrRequest from "../../../core/http/xhrRequest";
@@ -8,6 +8,7 @@ import odataResponseNodeJs from "./odataResponse.nodejs";
 import odataResponseXhr from "./odataResponse.xhr";
 import { DynamicsWebApi } from "../DynamicsWebApi";
 import { Credential, OAuthCredential } from '../../../core/security/Types';
+import Quickly from '../../../core/Quickly';
 
 let _entityNames;
 
@@ -230,6 +231,7 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
         executeRequest({
             credentials: config.credentials,
             method: method,
+            timeout: config.timeout || DynamicsWebApi.WebApiClient.defaultTimeout,
             connectionId: config.id,
             uri: (isDiscovery ? config.discoveryUrl : config.webApiUrl) + path,
             data: stringifiedData,
@@ -238,8 +240,7 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
             responseHandler: responseHandler,
             successCallback: successCallback,
             errorCallback: errorCallback,
-            isAsync: isAsync,
-            timeout: config.timeout
+            isAsync: isAsync
         });
     };
 
@@ -250,12 +251,26 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
             if ((<OAuthCredential>config.credentials).accessToken) {
                 sendInternalRequest((<OAuthCredential>config.credentials).accessToken);
             } else {
-                Authentication(config.id, config.credentials, isDiscovery ? `https://disco.${Utility.crmHostSuffix(config.webApiUrl)}/` : undefined)
+                Authentication(
+                    config.id, 
+                    config.credentials, 
+                    isDiscovery && config.type === DynamicsWebApi.ConfigType.Online ? `https://disco.${Utility.crmHostSuffix(config.webApiUrl)}/` : (<any>config.credentials).resource, 
+                    { timeout: config.timeout || DynamicsWebApi.WebApiClient.defaultTimeout })
                     .then(auth => {
                         if (!auth.success) {
                             config.onTokenRefresh(sendInternalRequest);
                         } else {
                             sendInternalRequest(auth.response);
+                        }
+                    }).catch(error => {
+                        if (error instanceof AuthenticationError) {
+                            const type = (<AuthenticationError>error).type || "unknown_type";
+                            const message = (<AuthenticationError>error).message || "";
+                            const status = (<AuthenticationError>error).httpStatus;
+
+                            Quickly.error(`Authentication for this request failed: ${status && status !== -1 ? '(' + status.toString() + '): ' : ''}${type} - ${message}`);
+                        } else {
+                            Quickly.error("Authentication for this request failed.");
                         }
                     });
             }

@@ -29,10 +29,16 @@
 
     function bindDiscovery(org) {
         $("#Online-OrgUrl").val(org);
+
+        M.updateTextFields();
     }
 
     function setInitialState(apiConfig) {
+        let mode = 'add';
+
         if (apiConfig.id && apiConfig.id !== "") {
+            mode = 'edit';
+
             const $title = $("#title");
             $title.html($title.html().replace("New", "Edit"));
             document.title = $title.text();
@@ -66,19 +72,58 @@
                 $("#OnPrem-Domain").val(apiConfig.credentials ? apiConfig.credentials.domain || "" : "");
                 $("#OnPrem-Username").val(apiConfig.credentials ? apiConfig.credentials.username || "" : "");
                 $("#OnPrem-Password").val(apiConfig.credentials ? apiConfig.credentials.password || "" : "");
+                $("#OnPrem-Password").prop("disabled", mode === 'edit');
+
+                if (mode === 'edit') {
+                    // Show the edit link, hide the label, wire up change of username to enable password entry.
+                    $("label[for='OnPrem-Password'] > [data-action='edit-password']").prop("hidden", false);
+                    $("label[for='OnPrem-Password'] > span").prop("hidden", true);
+
+                    $("#OnPrem-Username").change(function() {
+                        $("#OnPrem-Password").prop("disabled", false);
+                        $("label[for='OnPrem-Password'] > [data-action='edit-password']").prop("hidden", true);
+                        $("label[for='OnPrem-Password'] > span").prop("hidden", false);
+                    });
+                }
 
                 break;
             case 2:
                 $("#Online-OrgUrl").val(apiConfig.appUrl || apiConfig.webApiUrl || "");
                 $("#Online-Username").val(apiConfig.credentials ? apiConfig.credentials.username || "" : "");
                 $("#Online-Password").val(apiConfig.credentials ? apiConfig.credentials.password || "" : "");
+                $("#Online-Password").prop("disabled", mode === 'edit');
+
+                if (mode === 'edit') {
+                    // Show the edit link, hide the label, wire up change of username to enable password entry.
+                    $("label[for='Online-Password'] > [data-action='edit-password']").prop("hidden", false);
+                    $("label[for='Online-Password'] > span").prop("hidden", true);
+
+                    $("#Online-Username").change(function() {
+                        $("#Online-Password").prop("disabled", false);
+                        $("label[for='Online-Password'] > [data-action='edit-password']").prop("hidden", true);
+                        $("label[for='Online-Password'] > span").prop("hidden", false);
+                    });
+                }
 
                 break;
             case 3:
                 $("#AzureAd-ResourceUrl").val(apiConfig.webApiUrl || "");
                 $("#AzureAd-ClientId").val(apiConfig.credentials ? apiConfig.credentials.username || "" : "");
                 $("#AzureAd-ClientSecret").val(apiConfig.credentials ? apiConfig.credentials.password || "" : "");
-                $("AzureAd-AuthorityUrl").val(apiConfig.authorityUri ? apiConfig.authorityUri || "" : "");
+                $("#AzureAd-AuthorityUrl").val(apiConfig.authorityUri ? apiConfig.authorityUri || "" : "");
+                $("#AzureAd-ClientSecret").prop("disabled", mode === 'edit');
+
+                if (mode === 'edit') {
+                    // Show the edit link, hide the label, wire up change of username to enable password entry.
+                    $("label[for='AzureAd-ClientSecret'] > [data-action='edit-password']").prop("hidden", false);
+                    $("label[for='AzureAd-ClientSecret'] > span").prop("hidden", true);
+
+                    $("#AzureAd-ClientId").change(function() {
+                        $("#AzureAd-ClientSecret").prop("disabled", false);
+                        $("label[for='AzureAd-ClientSecret'] > [data-action='edit-password']").prop("hidden", true);
+                        $("label[for='AzureAd-ClientSecret'] > span").prop("hidden", false);
+                    });
+                }
 
                 break;
             case 4:
@@ -92,9 +137,9 @@
     $(function () {
         M.AutoInit();
 
-        $("[data-enable-target]").each((index, t) => {
+        $("[ux-enable-target]").each((index, t) => {
             $(t).on('change', function() {
-                 var target = $(this).attr("data-enable-target");
+                 var target = $(this).attr("ux-enable-target");
                  var element = $(target);
 
                  element.prop('disabled', !this.checked);
@@ -105,21 +150,46 @@
             });
         });
 
-        function validateForm(settings) {
-            const messages = [];
+        const urlRegEx = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi;
+        const onlineUrlRegEx = /^(http(|s):\/\/)?(.+).crm(|\d{1,2}).dynamics.com(|\/)/gi;
 
-            // Online can do global disco
-            if (settings.type !== 2) {
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.webApiUrl))
-                    messages.push("The Server URL or Resource URL is required");
-                else if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*(\.[a-z]{2,5})?(:[0-9]{1,5})?(\/.*)?$/gi.test(settings.webApiUrl))
-                    messages.push("The Server URL or Resource URL is invalid");
-            }
+        function validateDiscovery(settings) { 
+            const messages = [];
 
             if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username))
                 messages.push("The Username is required");
             if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password))
                 messages.push('The Password is required');
+
+                // show errors
+            CloudSmith.ErrorPanel.showError(messages);
+
+            // if false, we have errors
+            return messages.length === 0;
+        }
+
+        function validateForm(settings) {
+            const messages = [];
+            const mode = settings.id && settings.id !== "" ? 'edit' : 'add';
+
+            // Online can do global disco
+            if (settings.type !== 2) {
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.webApiUrl))
+                    messages.push("The Server URL or Resource URL is required");
+                else if (!urlRegEx.test(settings.webApiUrl))
+                    messages.push("The Server URL or Resource URL is invalid");
+            } else {
+                if (!onlineUrlRegEx.test(settings.webApiUrl)) {
+                    messages.push(`The url '${settings.webApiUrl}' is not a valid CDS Online URL.  The format is 'https://{name}.crm{number}.dynamics.com'.`);
+                }
+            }
+
+            if (settings.type !== 3) {
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username))
+                    messages.push("The Username is required");
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password) && mode !== "edit")
+                    messages.push('The Password is required');
+            }
     
             if (settings.type === 1) {
                 if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.domain))
@@ -131,17 +201,19 @@
                 }
                 if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.token)
                     && !CloudSmith.Utilities.isNullOrEmpty(settings.credentials.username)
-                    && CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password)) {
+                    && CloudSmith.Utilities.isNullOrEmpty(settings.credentials.password)
+                    && mode !== "edit") {
                         messages.push('The Password is required');
                 }
             } else if (settings.type === 3) {
                 if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.clientId))
                     messages.push('The Client ID is required');
 
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.clientSecret))
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.clientSecret) 
+                    && mode !== 'edit')
                     messages.push('The Client Secret is required');
 
-                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.authorityUri))
+                if (CloudSmith.Utilities.isNullOrEmpty(settings.credentials.authority))
                     messages.push('The Authority Url is required');
             }
             
@@ -152,8 +224,23 @@
             return messages.length === 0;
         }
 
-        function createSettings() {
+        function normalizeOnlineUrl(url, api) {
+            for (match of url.matchAll(onlineUrlRegEx)) {
+                if (match && match.length >= 4) {
+                    if (!api) {
+                        return "https://" + match[3] + ".crm" + match[4] + ".dynamics.com";
+                    } else {
+                        return "https://" + match[3] + ".api.crm" + match[4] + ".dynamics.com";
+                    }
+                }
+            }
+
+            return url;
+        }
+
+         function createSettings() {
             const id = $("#ConnectionId").val();
+
             let settings = {};
 
             const type = $("#windowsAuth").hasClass("active") ? 1 :
@@ -164,38 +251,52 @@
             const apiVersion = $("#WebApiVersion-Select").prop("checked") ? $("#WebApiVersion").val() : "";
             const token = $("#OAuthToken-Select").prop("checked") ? $("#OAuthToken").val() : undefined;
             const apiUri = 
-                type && type == 1 ? $("#OnPrem-ServerUrl").val() : 
-                type && type == 2 ? $("#Online-OrgUrl").val() : 
-                type && type == 3 ? $("#AzureAd-ResourceUrl").val() : 
+                type && type === 1 ? $("#OnPrem-ServerUrl").val() : 
+                type && type === 2 ? normalizeOnlineUrl($("#Online-OrgUrl").val(), true) : 
+                type && type === 3 ? $("#AzureAd-ResourceUrl").val() : 
                 undefined;
+            
+            const appUri = type && type === 2 ? normalizeOnlineUrl($("#Online-OrgUrl").val(), false) : apiUri;
+
+            if (type && type === 2) {
+                $("#Online-OrgUrl").val(appUri);
+            }
 
             const credentials = {};            
+
             switch (type) {
                 case 1:
                     credentials.domain = $("#OnPrem-Domain").val();
                     credentials.username = $("#OnPrem-Username").val();
-                    credentials.password = $("#OnPrem-Password").val();
+
+                    if ($("#OnPrem-Password").prop("disabled") === false) {
+                        credentials.password = $("#OnPrem-Password").val();
+                    }
 
                     break;
                 case 2: 
-                    if ($("#Online-OrgUrl").val() !== null) {
-                        credentials.resource = $("#Online-OrgUrl").val();
-                    } else {
-                        credentials.resource = 'https://disco.crm.dynamics.com/';
-                    }
+                    credentials.resource = appUri || 'https://disco.crm.dynamics.com/';
 
                     if (token) {
                         credentials.refreshToken = token;
-                    } else {
-                        credentials.username = $("#Online-Username").val();
+                    } 
+
+                    credentials.username = $("#Online-Username").val();
+
+                    if ($("#Online-Password").prop("disabled") === false) {
                         credentials.password = $("#Online-Password").val();                        
                     }
 
                     break;
                 case 3: 
                     credentials.clientId = $("#AzureAd-ClientId").val();
-                    credentials.clientSecret = $("#AzureAd-ClientSecret").val();
-                    credentials.authorityUri = $("#AzureAd-AuthorityUrl").val();
+
+                    if ($("#AzureAd-ClientSecret").prop("disabled") === false) {
+                        credentials.clientSecret = $("#AzureAd-ClientSecret").val();
+                    }
+
+                    credentials.resource = $("#AzureAd-ResourceUrl").val();
+                    credentials.authority = $("#AzureAd-AuthorityUrl").val();
 
                     break;
             } 
@@ -206,6 +307,7 @@
                 webApiVersion: apiVersion,
                 name: $("#ConnectionName").val(),
                 webApiUrl: apiUri,
+                appUrl: appUri,
                 credentials: credentials
             };
 
@@ -213,31 +315,42 @@
         }
 
         // Send this back to our extension for parsing.
-        $("#ParseConnectionStringButton").click(function() {
+        $("[data-action='parse-connectionstring']").click(function() {
             vscode.postMessage({
-                command: "parseConnectionString",
+                command: "parse-connectionstring",
                 connectionString: $("#ConnectionString").val()
             });
         });
 
-        $("#PerformGlobalDiscoButton").click(function() {
+        $("[data-action='discover']").click(function() {
+            const settings = createSettings();
+
+            if (validateDiscovery(settings)) {
+                vscode.postMessage({
+                    command: "discover",
+                    settings
+                });
+            }
+        });
+
+        $("[data-action='edit-password']").click(function() {
             const settings = createSettings();
 
             vscode.postMessage({
-                command: "performGlobalDisco",
-                settings
-            });
-        });
-
+                 command: "edit-password",
+                 settings
+             });
+         });
+ 
         $("[data-action='save']").click(function() {
            const settings = createSettings();
 
-            if (!validateForm(settings)) return;
-
-            vscode.postMessage({
-                command: "save",
-                settings
-            });
+            if (validateForm(settings)) {
+                vscode.postMessage({
+                    command: "save",
+                    settings
+                });
+            }
         });
     });
 }());

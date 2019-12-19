@@ -31,4 +31,16 @@ export default class GlobalStateCredentialStore extends Security.CredentialStore
     protected onRetreive(key: string): any {
         return ExtensionContext.Instance.globalState.get<any>(`${GlobalStateCredentialStore.keyPrefix}${key}`);
     }
+
+    editPassword(key: string, password: Security.Securable): Security.ICredential {
+        const credential = this.retreive(key);  
+
+        if (credential) {
+            credential.password = password;
+
+            this.store(credential, key, [ "accessToken", "isMultiFactorAuthentication", "resource" ]);
+
+            return this.retreive(key);
+        }
+    }
 }

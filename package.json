@@ -6,7 +6,7 @@
 	"repository": {
 		"url": "https://cloudsmith-consulting@dev.azure.com/cloudsmith-consulting/CloudSmith/_git/cds-for-code"
 	},
-	"version": "0.8.3",
+	"version": "0.8.4",
 	"preview": true,
 	"engines": {
 		"vscode": "^1.38.0"
@@ -911,7 +911,7 @@
 	"sass": "resources/framework/materialize.vscode.scss",
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"vscode:package": "vsce package",
+		"vscode:package": "vsce package --baseContentUrl none --baseImagesUrl none",
 		"monitor": "grunt monitor",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
@@ -983,6 +983,7 @@
 		"archiver": "^3.1.1",
 		"async": "^3.1.0",
 		"eol": "^0.9.1",
+		"express": "^4.17.1",
 		"httpntlm": "^1.7.6",
 		"jquery": "^3.4.1",
 		"jsoneditor": "^7.4.0",

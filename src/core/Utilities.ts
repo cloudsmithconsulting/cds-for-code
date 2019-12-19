@@ -41,7 +41,7 @@ export interface StringUtility {
    withTrailingSlash(path: string | undefined): string;
    noTrailingSlash(string: string): string;
    noSlashes(string:string): string;
-   powerShellSafe(value: string): string;
+   powerShellSafe(value: string, delimiter: string): string;
    plural(value:string): string;
 }
 
