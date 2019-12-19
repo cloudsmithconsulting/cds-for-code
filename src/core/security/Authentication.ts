@@ -126,6 +126,11 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                 if (exception.type === 'interaction_required') {
                     Quickly.inform("Your credentials use multi-factor authentication.  You will need to authenticate interactively.");
 
+                    decrypted.onInteractiveLogin({ success: false, error: exception });
+                    authority = (<any>decrypted).authority || authority;
+                    tenant = (<any>decrypted).tenant || tenant;
+                    clientId = (<any>decrypted).clientId.toString() || clientId;
+                
                     const port = 3999;
                     const redirectUri = `http://localhost:${port}/getAToken`;
                     let mfaAuthUrl = `${Utilities.String.noTrailingSlash(authority)}${tenant ? '/' + Utilities.String.noTrailingSlash(tenant) : ""}`
@@ -168,6 +173,9 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                         }
 
                         context.acquireTokenWithAuthorizationCode(req.query.code, redirectUri, resource, clientId, null, (err, response) => {
+                            app.removeAllListeners();
+                            app.close();
+
                             if (err) {
                                 const innerException = ErrorParser.parseAdalError(err);
 
@@ -199,8 +207,6 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
 
                                 resolve(result);
                             }
-
-                            app.removeAllListeners();
                         });
                     });
 

@@ -2,6 +2,7 @@ import Encryption from "./Encryption";
 import { Utilities } from "../Utilities";
 import { AuthenticationResult } from "./Authentication";
 import { access } from "fs";
+import * as vscode from 'vscode';
 
 /**
  * @type represents an item that can be secured.
@@ -369,6 +370,18 @@ export class OAuthCredential extends Credential {
 
     isMultiFactorAuthentication: boolean;
 
+    private _onDidAuthenticate: vscode.EventEmitter<AuthenticationResult> = new vscode.EventEmitter();
+    private _onInteractiveLoginRequired: vscode.EventEmitter<AuthenticationResult> = new vscode.EventEmitter();
+
+    onInteractiveLoginRequired: vscode.Event<AuthenticationResult> = this._onInteractiveLoginRequired.event;
+    onDidAuthenticate: vscode.Event<AuthenticationResult> = this._onDidAuthenticate.event;
+
+    onInteractiveLogin(result: AuthenticationResult) {
+        if (this._onInteractiveLoginRequired) {
+            this._onInteractiveLoginRequired.fire(result);
+        }
+    }
+
     onAuthenticate(result: AuthenticationResult) {
         if (result.success) {
             this.accessToken = result.response.accessToken;
@@ -383,7 +396,12 @@ export class OAuthCredential extends Credential {
                 global.setTimeout(() => this.accessToken = null, seconds * 1000);
             }
         }
+
+        if (this._onDidAuthenticate) {
+            this._onDidAuthenticate.fire(result);
+        }
     }
+
 }
 
 export class AzureAdClientCredential extends OAuthCredential {
@@ -426,11 +444,23 @@ export class CdsOnlineCredential extends OAuthCredential {
         username: SecureItem | Securable,
         password: SecureItem | Securable, 
         public authority: string = CdsOnlineCredential.defaultAuthority, 
-        public tenant: string = CdsOnlineCredential.defaultTenant,
-        public clientId: SecureItem | Securable = CdsOnlineCredential.defaultClientId,
+        public tenant: string = CdsOnlineCredential.publicTenant,
+        public clientId: SecureItem | Securable = CdsOnlineCredential.publicClientId,
         public resource: string = CdsOnlineCredential.defaultResource,
         refreshToken?: SecureItem | Securable,
         accessToken?: SecureItem | Securable) {
         super(username, password, refreshToken, accessToken);
+
+        // We use the public endpoint by default, but it cannot complete MFA because it redirects to https://callbackurl and 
+        // we don't spoof that or play dirty tricks :)
+        this.onInteractiveLoginRequired((result) => {
+            if (this.clientId === CdsOnlineCredential.publicClientId) {
+                this.clientId = CdsOnlineCredential.defaultClientId;
+            }
+
+            if (this.tenant === CdsOnlineCredential.publicTenant) {
+                this.tenant = CdsOnlineCredential.defaultTenant;
+            }
+        });
     }
 }
