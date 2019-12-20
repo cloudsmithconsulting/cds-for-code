@@ -43,9 +43,7 @@ export default class ApiRepository {
         return this.webapi.retrieveAllRequest(request)
             .then(response => {
                 return response.value;
-            }).catch(error => {
-                throw error;
-            });
+            }).catch(error => console.log(error));
     }
 
     retrieveProcesses(entityName?:string, solutionId?:string) : Promise<any[]> {
@@ -182,9 +180,7 @@ export default class ApiRepository {
             return this.webapi.update(webResource.webresourceid, "webresourceset", webResource, "return=representation");
         } else {
             return this.webapi.create(webResource, "webresourceset", "return=representation")
-                .catch(error => {
-                    throw error;
-                });
+                .catch(error => console.log(error));
         }
     }
 
