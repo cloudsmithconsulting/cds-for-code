@@ -20,7 +20,11 @@ export default class CdsUrlResolver {
      * @memberof CdsUrlResolver
      */
     static parseFormType(formType:number): CdsSolutions.DynamicsForm {
-        return formType ? CdsSolutions.CodeMappings.DynamicsForms[formType] : undefined;
+        // See: parseProcessType comments to see what happened here
+        //return formType ? CdsSolutions.CodeMappings.DynamicsForms[formType] : undefined;
+        return CdsSolutions.CodeMappings.DynamicsForms.keys[
+            CdsSolutions.CodeMappings.DynamicsForms._values.indexOf(formType)
+        ];
     }
 
     /**
@@ -32,7 +36,23 @@ export default class CdsUrlResolver {
      * @memberof CdsUrlResolver
      */
     static parseProcessType(processType:number): CdsSolutions.ProcessType {
-        return processType ? CdsSolutions.CodeMappings.ProcessTypes[processType] : undefined;
+        /**
+         * Ok this is strange. The following code doesn't work because processType needs to be a key
+         * but what we're getting in here is the integer value.
+         * 
+         * return processType ? CdsSolutions.CodeMappings.ProcessTypes[processType] : undefined;
+         * 
+         * But wait! There's more!
+         * 
+         * The code you really want to see here would leverage Dictionary like so:
+         * return processType ? CdsSolutions.CodeMappings.ProcessTypes.getKey(processType) : undefined;
+         * 
+         * This should return the key based on the value within the dictionary.
+         * But sadly it doesn't work if the value = 0 Wawawaaaaaa :(
+         */
+        return CdsSolutions.CodeMappings.ProcessTypes.keys[
+            CdsSolutions.CodeMappings.ProcessTypes._values.indexOf(processType)
+        ];
     }
 
     /**
@@ -424,8 +444,8 @@ export default class CdsUrlResolver {
      * @returns {string}
      * @memberof CdsUrlResolver
      */
-    static getManageBusinessProcessUri(config:DynamicsWebApi.Config, processType:CdsSolutions.ProcessType, entityTypeCode?:number, processId?:string, solutionId?:string): string {
-        let uriString:string;
+    static getManageBusinessProcessUri(config:DynamicsWebApi.Config, processType:CdsSolutions.ProcessType, processId?:string, solutionId?:string, entityTypeCode?:number): string {
+        let  uriString:string;
         let uri: string;
 
         switch (processType)
