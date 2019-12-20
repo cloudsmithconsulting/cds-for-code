@@ -57,6 +57,7 @@ This extension contributes the following settings:
 - `cs.dynamics.configuration.templates.templatesDirectory`: Filesystem path that stores template folders.
 - `cs.dynamics.configuration.templates.treeViewGroupPreference`: Preference for grouping template items in the Template Explorer.
 - `cs.dynamics.configuration.templates.usePlaceholders`: Look for and replace placeholders in template (e.g. #{author})
+- `cs.dynamics.configuration.web.usePowerAppsUi`: Use the PowerApps Online UI where possible.
 
 ---
 

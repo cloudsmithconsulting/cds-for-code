@@ -7,14 +7,15 @@ import * as path from 'path';
 import { TS } from "typescript-linq";
 
 export default class ApiRepository {
-    private config:DynamicsWebApi.Config;
-
-    constructor (config:DynamicsWebApi.Config) {
-        this.config = config;
-        this.webapi = new DynamicsWebApi.WebApiClient(this.config);
+    constructor (config: DynamicsWebApi.Config) {
+        this.webapi = new DynamicsWebApi.WebApiClient(config);
     }
 
     private webapi: DynamicsWebApi.WebApiClient;
+
+    get config(): DynamicsWebApi.Config {
+        return this.webapi ? this.webapi.config : null;
+    }
 
     publishXml(xml:string) : Promise<any> {
         return this.webapi.executeUnboundAction("PublishXml", { ParameterXml: xml });
@@ -42,9 +43,7 @@ export default class ApiRepository {
         return this.webapi.retrieveAllRequest(request)
             .then(response => {
                 return response.value;
-            }).catch(error => {
-                throw error;
-            });
+            }).catch(error => console.log(error));
     }
 
     retrieveProcesses(entityName?:string, solutionId?:string) : Promise<any[]> {
@@ -181,9 +180,7 @@ export default class ApiRepository {
             return this.webapi.update(webResource.webresourceid, "webresourceset", webResource, "return=representation");
         } else {
             return this.webapi.create(webResource, "webresourceset", "return=representation")
-                .catch(error => {
-                    throw error;
-                });
+                .catch(error => console.log(error));
         }
     }
 

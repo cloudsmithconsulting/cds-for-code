@@ -5,14 +5,15 @@ import { CdsSolutions } from '../api/CdsSolutions';
 
 export default class MetadataRepository
 {
-    private config:DynamicsWebApi.Config;
-
     constructor (config:DynamicsWebApi.Config) {
-        this.config = config;
-        this.webapi = new DynamicsWebApi.WebApiClient(this.config);
+        this.webapi = new DynamicsWebApi.WebApiClient(config);
     }
 
     private webapi: DynamicsWebApi.WebApiClient;
+
+    get config(): DynamicsWebApi.Config {
+        return this.webapi ? this.webapi.config : null;
+    }
 
     retrieveEntities(solutionId?:string) : Promise<any[]> {
         return this.webapi.retrieveEntities(undefined, "IsIntersect eq false")

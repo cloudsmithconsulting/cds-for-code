@@ -5,14 +5,15 @@ import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import Quickly from '../core/Quickly';
 
 export default class DiscoveryRepository {
-    config:DynamicsWebApi.Config;
-
     constructor (config:DynamicsWebApi.Config) {
-        this.config = config;
-        this.webapi = new DynamicsWebApi.WebApiClient(this.config);
+        this.webapi = new DynamicsWebApi.WebApiClient(config);
     }
 
     private webapi: DynamicsWebApi.WebApiClient;
+    
+    get config(): DynamicsWebApi.Config {
+        return this.webapi ? this.webapi.config : null;
+    }
 
     async retrieveOrganizations(filter?:string) : Promise<any> {
         return this.webapi.discover(filter)
@@ -73,6 +74,7 @@ export default class DiscoveryRepository {
         orgConnection.name = org.FriendlyName;
         orgConnection.orgName = org.UniqueName || org.Name;
         orgConnection.orgId = org.Id;
+        orgConnection.environmentId = org.EnvironmentId;
 
         return orgConnection;
     }

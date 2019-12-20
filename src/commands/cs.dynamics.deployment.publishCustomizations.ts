@@ -15,9 +15,6 @@ export default async function run(config?: DynamicsWebApi.Config, components?:{t
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
     if (!config) { return; }
 
-    // this operation might run long, we need a longer timeout here
-    config.timeout = (1000 * 30); // 30 seconds
-
     const api = new ApiRepository(config);
 
     if (!components) {

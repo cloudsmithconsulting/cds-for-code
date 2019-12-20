@@ -107,17 +107,28 @@ class CdsConnectionEditor extends View {
         // try a discovery request
         await api.retrieveOrganizations()
             .then(async results => {
+                config.credentials = api.config ? api.config.credentials : config.credentials;
+
                 if (!results) {
                     this.postMessage({ command: 'error', message: "The discovery request could not be completed.  Check the credentials and URL and try again." });
                 } else {
                     if (discoverOnly) {
                         const options = results.map(r => new QuickPickOption(`${Octicon.database} ${r.FriendlyName}`, undefined, undefined, r));
                         const option = await Quickly.pick("Choose an organization", ...options);
-    
+                        const anyCreds: any = config.credentials;
+
                          if (option) {
-                            this.postMessage({ command: 'bindDiscovery', organization: option.context.Url });
+                            this.postMessage({ 
+                                command: 'bindDiscovery', 
+                                organization: option.context.Url, 
+                                accessToken: anyCreds.accessToken, 
+                                refreshToken: anyCreds.refreshToken, 
+                                isMultiFactorAuthentication: anyCreds.isMultiFactorAuthentication });
                         }
                     } else {
+                        // delete the prior timeout for the config
+                        delete config.timeout;
+
                         // success, add it to connection window
                         vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.addConnection, config)
                             .then(() => {

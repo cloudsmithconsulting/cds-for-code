@@ -176,7 +176,7 @@ export default class DynamicsTreeView implements IContributor {
                         Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config), retryFunction);
                         break;
                     case "Entities":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, undefined, item.solutionId), retryFunction);
+                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, undefined, item.solution), retryFunction);
                         break;
                     case "Attributes":
                         Utilities.Browser.openWindow(CdsUrlResolver.getManageAttributeUri(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
@@ -246,10 +246,10 @@ export default class DynamicsTreeView implements IContributor {
                         vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.editConnection, item.config);
                         break;
                     case "Solution":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config, item.context.solutionid), retryFunction);
+                        Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config, item.context), retryFunction);
                         break;
                     case "Entity":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, item.context.MetadataId, item.solutionId), retryFunction);
+                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, item.context, item.solution), retryFunction);
                         break;
                     case "Attribute":
                         Utilities.Browser.openWindow(CdsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
@@ -533,10 +533,11 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         const api = new DiscoveryRepository(connection);
         
         let filter;
-        const value = connection.appUrl || connection.webApiUrl;
 
-        if (connection.type === DynamicsWebApi.ConfigType.Online) {
-            filter = `Url eq '${Utilities.String.noTrailingSlash(value)}'`;
+        if (connection.type === DynamicsWebApi.ConfigType.Online && connection.appUrl) {
+            filter = `Url eq '${Utilities.String.noTrailingSlash(connection.appUrl)}'`;
+        } else if (connection.type === DynamicsWebApi.ConfigType.Online && connection.webApiUrl) {
+            filter = `ApiUrl eq '${Utilities.String.noTrailingSlash(connection.webApiUrl)}'`;
         }
 
         const returnValue = this.createTreeEntries(api.retrieveOrganizations(filter), 
@@ -1401,6 +1402,26 @@ class TreeEntry extends vscode.TreeItem {
         }
        
         return null;
+    }
+
+    get solution(): any {
+        let solution: any;
+
+        if (this.id)
+        {
+            const split = this.id.split("/");
+            const index = split.indexOf("Solutions");
+            
+            if (index >= 0) {
+                const solutionTreeId = split.slice(0, index + 2).join('/');
+                const solutionTreeEntry = TreeEntryCache.Instance.Items.where(i => i.id === solutionTreeId).toArray();
+                if (solutionTreeEntry && solutionTreeEntry.length > 0) {
+                    solution = solutionTreeEntry[0].context;
+                }
+            }        
+        }
+
+        return solution;
     }
 
     get solutionIdPath(): string { 

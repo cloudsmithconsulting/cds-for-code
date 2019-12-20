@@ -24,14 +24,26 @@
 
                     break;
                 case "bindDiscovery": 
-                    bindDiscovery(message.organization);
+                    bindDiscovery(message);
                     break;
             }
         });
     });
 
-    function bindDiscovery(org) {
-        $("#Online-OrgUrl").val(org);
+    function bindDiscovery(discovery) {
+        $("#Online-OrgUrl").val(discovery.organization);
+
+        if (discovery.accessToken) {
+            $("#AccessToken").val(discovery.accessToken);
+        }
+
+        if (discovery.refreshToken) {
+            $("#RefreshToken").val(discovery.refreshToken);
+        }
+
+        if (discovery.isMultiFactorAuthentication) {
+            $("#IsMultiFactorAuthentication").val(true);
+        }
 
         M.updateTextFields();
     }
@@ -68,6 +80,18 @@
         // Advanced options
         $("#WebApiVersion").val(apiConfig.webApiVersion);
         $("#WebApiVersion").formSelect();
+
+        if (apiConfig.accessToken) {
+            $("#AccessToken").val(apiConfig.accessToken);
+        }
+
+        if (apiConfig.refreshToken) {
+            $("#RefreshToken").val(apiConfig.refreshToken);
+        }
+
+        if (apiConfig.isMultiFactorAuthentication) {
+            $("#IsMultiFactorAuthentication").val(true);
+        }
 
         switch (apiConfig.type) {
             case 1:
@@ -252,7 +276,10 @@
                 $("#ifdAuth").hasClass("active") ? 4 : undefined;
 
             const apiVersion = $("#WebApiVersion-Select").prop("checked") ? $("#WebApiVersion").val() : "";
-            const token = $("#OAuthToken-Select").prop("checked") ? $("#OAuthToken").val() : undefined;
+            const refreshToken = $("#OAuthToken-Select").prop("checked") ? $("#OAuthToken").val() : $("#RefreshToken").val() || undefined;
+            const accessToken = $("#AccessToken").val() || undefined;
+            const isMultiFactorAuthentication = $("#IsMultiFactorAuthentication").val() || undefined;
+
             const apiUri = 
                 type && type === 1 ? $("#OnPrem-ServerUrl").val() : 
                 type && type === 2 ? normalizeOnlineUrl($("#Online-OrgUrl").val(), true) : 
@@ -279,11 +306,6 @@
                     break;
                 case 2: 
                     credentials.resource = appUri || 'https://disco.crm.dynamics.com/';
-
-                    if (token) {
-                        credentials.refreshToken = token;
-                    } 
-
                     credentials.username = $("#Online-Username").val();
 
                     if ($("#Online-Password").prop("disabled") === false) {
@@ -303,6 +325,18 @@
 
                     break;
             } 
+
+            if (refreshToken) {
+                credentials.refreshToken = refreshToken;
+            } 
+
+            if (accessToken) {
+                credentials.accessToken = accessToken;
+            }
+
+            if (isMultiFactorAuthentication) {
+                credentials.isMultiFactorAuthentication = true;
+            }
 
             settings = {
                 id: (id.length > 0) ? id: null, // pass the id or null
