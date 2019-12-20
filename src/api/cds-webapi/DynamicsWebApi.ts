@@ -302,7 +302,7 @@ export namespace DynamicsWebApi {
         *    includeAnnotations: 'OData.Community.Display.V1.FormattedValue'
         *});
         */
-        constructor(readonly config?: DynamicsWebApi.Config) {
+        constructor(config?: DynamicsWebApi.Config) {
             this._internalConfig = {
                 id: null,
                 webApiVersion: "8.0",
@@ -318,87 +318,86 @@ export namespace DynamicsWebApi {
             };
 
             this._isBatch = false;
-
-            if (!config) {
-                config = this._internalConfig;
-            } else {
-                this.setConfig(config);
-            }
+            this.config = config || this._internalConfig;
+        }
+       
+        get config(): DynamicsWebApi.Config {
+            return this._internalConfig;
         }
 
         /**
          * Sets DynamicsWebApi configuration parameters.
          *
-         * @param config - configuration object
+         * @param value - configuration object
          * @example
             dynamicsWebApi.setConfig({ webApiVersion: '9.0' });
          */
-        setConfig(config: DynamicsWebApi.Config): void {
-            if (config.webApiVersion) {
-                Parameters.stringParameterCheck(config.webApiVersion, "DynamicsWebApi.setConfig", "config.webApiVersion");
-                this._internalConfig.webApiVersion = config.webApiVersion;
+        set config(value: DynamicsWebApi.Config) {
+            if (value.webApiVersion) {
+                Parameters.stringParameterCheck(value.webApiVersion, "DynamicsWebApi.setConfig", "config.webApiVersion");
+                this._internalConfig.webApiVersion = value.webApiVersion;
             }
 
-            if (config.webApiUrl) {
-                Parameters.stringParameterCheck(config.webApiUrl, "DynamicsWebApi.setConfig", "config.webApiUrl");
-                this._internalConfig.webApiUrl = Utility.initWebApiUrl(config.webApiUrl, this._internalConfig.webApiVersion); 
-                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(config.webApiUrl, this._internalConfig.webApiVersion, config.type);
+            if (value.webApiUrl) {
+                Parameters.stringParameterCheck(value.webApiUrl, "DynamicsWebApi.setConfig", "config.webApiUrl");
+                this._internalConfig.webApiUrl = Utility.initWebApiUrl(value.webApiUrl, this._internalConfig.webApiVersion); 
+                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(value.webApiUrl, this._internalConfig.webApiVersion, value.type);
             } else {
                 this._internalConfig.webApiUrl = Utility.initWebApiUrl(undefined, this._internalConfig.webApiVersion);
-                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(undefined, this._internalConfig.webApiVersion, config.type);
+                this._internalConfig.discoveryUrl = Utility.initDiscoveryApiUrl(undefined, this._internalConfig.webApiVersion, value.type);
             }
 
-            if (config.credentials) {
-                this._internalConfig.credentials = Credential.from(config.credentials);
+            if (value.credentials) {
+                this._internalConfig.credentials = Credential.from(value.credentials);
             }
 
-            if (config.name) {
-                this._internalConfig.name = config.name;
+            if (value.name) {
+                this._internalConfig.name = value.name;
             }
 
-            if (config.type) {
-                this._internalConfig.type = config.type;
+            if (value.type) {
+                this._internalConfig.type = value.type;
             }
 
-            if (config.id) {
-                Parameters.guidParameterCheck(config.id, "DynamicsWebApi.setConfig", "config.id");
-                this._internalConfig.id = config.id;
+            if (value.id) {
+                Parameters.guidParameterCheck(value.id, "DynamicsWebApi.setConfig", "config.id");
+                this._internalConfig.id = value.id;
             }
 
-            if (config.impersonate) {
-                this._internalConfig.impersonate = Parameters.guidParameterCheck(config.impersonate, "DynamicsWebApi.setConfig", "config.impersonate");
+            if (value.impersonate) {
+                this._internalConfig.impersonate = Parameters.guidParameterCheck(value.impersonate, "DynamicsWebApi.setConfig", "config.impersonate");
             }
 
-            if (config.onTokenRefresh) {
-                Parameters.callbackParameterCheck(config.onTokenRefresh, "DynamicsWebApi.setConfig", "config.onTokenRefresh");
-                this._internalConfig.onTokenRefresh = config.onTokenRefresh;
+            if (value.onTokenRefresh) {
+                Parameters.callbackParameterCheck(value.onTokenRefresh, "DynamicsWebApi.setConfig", "config.onTokenRefresh");
+                this._internalConfig.onTokenRefresh = value.onTokenRefresh;
             }
 
-            if (config.includeAnnotations) {
-                Parameters.stringParameterCheck(config.includeAnnotations, "DynamicsWebApi.setConfig", "config.includeAnnotations");
-                this._internalConfig.includeAnnotations = config.includeAnnotations;
+            if (value.includeAnnotations) {
+                Parameters.stringParameterCheck(value.includeAnnotations, "DynamicsWebApi.setConfig", "config.includeAnnotations");
+                this._internalConfig.includeAnnotations = value.includeAnnotations;
             }
 
-            if (config.timeout) {
-                Parameters.numberParameterCheck(config.timeout, "DynamicsWebApi.setConfig", "config.timeout");
-                this._internalConfig.timeout = config.timeout;
+            if (value.timeout) {
+                Parameters.numberParameterCheck(value.timeout, "DynamicsWebApi.setConfig", "config.timeout");
+                this._internalConfig.timeout = value.timeout;
             } else {
                 this._internalConfig.timeout = WebApiClient.defaultTimeout;
             }
 
-            if (config.maxPageSize) {
-                Parameters.numberParameterCheck(config.maxPageSize, "DynamicsWebApi.setConfig", "config.maxPageSize");
-                this._internalConfig.maxPageSize = config.maxPageSize;
+            if (value.maxPageSize) {
+                Parameters.numberParameterCheck(value.maxPageSize, "DynamicsWebApi.setConfig", "config.maxPageSize");
+                this._internalConfig.maxPageSize = value.maxPageSize;
             }
 
-            if (config.returnRepresentation) {
-                Parameters.boolParameterCheck(config.returnRepresentation, "DynamicsWebApi.setConfig", "config.returnRepresentation");
-                this._internalConfig.returnRepresentation = config.returnRepresentation;
+            if (value.returnRepresentation) {
+                Parameters.boolParameterCheck(value.returnRepresentation, "DynamicsWebApi.setConfig", "config.returnRepresentation");
+                this._internalConfig.returnRepresentation = value.returnRepresentation;
             }
 
-            if (config.useEntityNames) {
-                Parameters.boolParameterCheck(config.useEntityNames, 'DynamicsWebApi.setConfig', 'config.useEntityNames');
-                this._internalConfig.useEntityNames = config.useEntityNames;
+            if (value.useEntityNames) {
+                Parameters.boolParameterCheck(value.useEntityNames, 'DynamicsWebApi.setConfig', 'config.useEntityNames');
+                this._internalConfig.useEntityNames = value.useEntityNames;
             }
         }
 
@@ -1528,7 +1527,7 @@ export namespace DynamicsWebApi {
         private _makeDiscoveryRequest(request: any): Promise<any> {
             return new Promise((resolve, reject) => {
                 Request.makeDiscoveryRequest(request, this._internalConfig, resolve, reject);
-            });
+            });        
         }
 
         private _makeRequest(method: string, request: any, functionName: string, responseParams?: any): Promise<any> {

@@ -260,6 +260,7 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
                         if (!auth.success) {
                             config.onTokenRefresh(sendInternalRequest);
                         } else {
+                            config.credentials = auth.credentials || config.credentials;
                             sendInternalRequest(auth.response);
                         }
                     }).catch(error => {

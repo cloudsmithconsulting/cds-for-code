@@ -260,9 +260,9 @@ export abstract class Credential implements ICredential {
         if (this.isCdsOnlineUserCredential(value)) {
             cred = new CdsOnlineCredential(value.username, value.password, value.authority, value.tenant, value.clientId, value.resource, value.refreshToken, value.accessToken);
         } else if (this.isAzureAdClientCredential(value)) {
-            cred = new AzureAdClientCredential(value.clientId, value.clientSecret, value.authority, value.resource);
+            cred = new AzureAdClientCredential(value.clientId, value.clientSecret, value.authority, value.resource, value.refreshToken, value.accessToken);
         } else if (this.isAzureAdUserCredential(value)) {
-            cred = new AzureAdUserCredential(value.username, value.password, value.clientId, value.clientSecret, value.authority, value.resource);
+            cred = new AzureAdUserCredential(value.username, value.password, value.clientId, value.clientSecret, value.authority, value.resource, value.refreshToken, value.accessToken);
         } else if (this.isWindowsCredential(value)) {
             cred = new WindowsCredential(value.domain, value.username, value.password);
         } else if (this.isOauthCredential(value)) {
