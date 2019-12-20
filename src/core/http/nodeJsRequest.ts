@@ -5,6 +5,7 @@ import * as url from 'url';
 import * as Security from '../security/Types';
 import defaultResponseHandler from "./defaultResponseHandler.nodejs";
 import GlobalStateCredentialStore from '../security/GlobalStateCredentialStore';
+import logger from '../Logger';
 
 export type ResponseHandler = (request: any, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) => void;
 
@@ -23,7 +24,8 @@ export default function nodeJsRequest(options: any) {
     const timeout = options.timeout;
     const responseHandler: ResponseHandler = options.responseHandler || defaultResponseHandler.bind(this);
     const useWindowsAuth = options.credentials && Security.Credential.isWindowsCredential(options.credentials);
-
+    const authRetry: () => boolean = options.authRetry;
+    
     let headers: http.IncomingHttpHeaders = {};
 
     if (data) {
@@ -71,7 +73,7 @@ export default function nodeJsRequest(options: any) {
         };
     }
     
-    let executeRequest: (protocol: any, options: any, responseDelegate: ResponseHandler) => void;
+    let executeHttpRequest: (protocol: any, options: any, responseDelegate: ResponseHandler) => void;
 
     // NTLM works a little different from other request types, we must auth here so that we're doing so for each connection (vs. request authentication)
     if (useWindowsAuth) {
@@ -88,7 +90,7 @@ export default function nodeJsRequest(options: any) {
             internalOptions.body = data;
         }
 
-        executeRequest = (protocol:any, options:any, responseDelegate: ResponseHandler) => protocol[options.method.toLowerCase()](
+        executeHttpRequest = (protocol:any, options:any, responseDelegate: ResponseHandler) => protocol[options.method.toLowerCase()](
             options, 
             (error, response) => {
                 if (error) {
@@ -101,7 +103,7 @@ export default function nodeJsRequest(options: any) {
                 }
             });
     } else {
-        executeRequest = (protocol:any, options:any, responseDelegate: ResponseHandler) => protocol.request(
+        executeHttpRequest = (protocol:any, options:any, responseDelegate: ResponseHandler) => protocol.request(
             options, 
             (response) => {
                 let rawData = '';
@@ -111,7 +113,9 @@ export default function nodeJsRequest(options: any) {
                     rawData += chunk;
                 }); 
                 response.on('end', () => {
-                    if (responseDelegate) {
+                    if (response.statusCode === 401 && authRetry()) {
+                        logger.log("Auth token has expired, re-authenticating");
+                    } else if (responseDelegate) {
                         responseDelegate(parsedUrl.href, rawData, response, responseParams, successCallback, errorCallback);
                     }
                 });
@@ -120,14 +124,10 @@ export default function nodeJsRequest(options: any) {
             });
     }
 
-    let request: any;
-
-    try {
-        request = executeRequest(protocolInterface, internalOptions, responseHandler.bind(this)); 
-    } catch (error) {
-        errorCallback(error);
-        return;
-    }
+    let request: any = executeHttpRequest(
+        protocolInterface, 
+        internalOptions, 
+        responseHandler.bind(this));
 
     // NTLM library just performs fire and forget, invoking callback when complete, others get these events.
     if (request) {

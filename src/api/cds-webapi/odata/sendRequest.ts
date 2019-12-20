@@ -9,8 +9,11 @@ import odataResponseXhr from "./odataResponse.xhr";
 import { DynamicsWebApi } from "../DynamicsWebApi";
 import { Credential, OAuthCredential } from '../../../core/security/Types';
 import Quickly from '../../../core/Quickly';
+import { isatty } from 'tty';
 
 let _entityNames;
+
+const defaultAuthRetry = config => { const returnValue = typeof (<any>config.credentials).accessToken !== 'undefined'; delete (<any>config.credentials).accessToken; return returnValue; };
 
 /**
  * Searches for a collection name by provided entity name in a cached entity metadata.
@@ -127,8 +130,22 @@ let responseParseParams = [];
  * @param {boolean} [isBatch] - Indicates whether the request is a Batch request or not. Default: false
  * @param {boolean} [isAsync] - Indicates whether the request should be made synchronously or asynchronously.
  * @param {boolean} [isDiscovery] - Indicates whether the request should be a discovery request.
+ * @param {(config: DynamicsWebApi.Config) => boolean} [authRetry] - Indicates what function should be invoked if the request fails due to authentication errors.
  */
-export function sendRequest(method: string, path: string, config: DynamicsWebApi.Config, data: any, additionalHeaders: { [key: string]: string }, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void, isBatch: boolean, isAsync: boolean, isDiscovery?: boolean): DynamicsWebApi.Config {
+export function sendRequest(
+    method: string, 
+    path: string, 
+    config: DynamicsWebApi.Config,
+    data: any, 
+    additionalHeaders: { [key: string]: string }, 
+    responseParams: any, 
+    successCallback: (response:any) => void, 
+    errorCallback: (error:any) => void, 
+    isBatch: boolean, 
+    isAsync: boolean, 
+    isDiscovery?: boolean, 
+    authRetry?: (config: DynamicsWebApi.Config) => boolean): DynamicsWebApi.Config 
+    {
     additionalHeaders = additionalHeaders || {};
     responseParams = responseParams || {};
     isDiscovery = isDiscovery || path.match(/.*(\/|)Instances.*/) !== null;
@@ -228,19 +245,33 @@ export function sendRequest(method: string, path: string, config: DynamicsWebApi
                     token.toString());
         }
 
+        // Who fucking knows?  If you put this on line 263 typescript won't compile it.  Stupid lambdas.
+        const removeToken = () => {
+            const returnValue = authRetry(config);
+
+            if (returnValue) {
+                delete additionalHeaders["Authorization"];
+
+                sendRequest(method, path, config, data, additionalHeaders, responseParams, successCallback, errorCallback, isBatch, isAsync, isDiscovery);                
+            }
+
+            return returnValue;
+        };
+
         executeRequest({
             credentials: config.credentials,
-            method: method,
+            method,
             timeout: config.timeout || DynamicsWebApi.WebApiClient.defaultTimeout,
             connectionId: config.id,
             uri: (isDiscovery ? config.discoveryUrl : config.webApiUrl) + path,
             data: stringifiedData,
-            additionalHeaders: additionalHeaders,
-            responseParams: responseParseParams,
-            responseHandler: responseHandler,
-            successCallback: successCallback,
-            errorCallback: errorCallback,
-            isAsync: isAsync
+            additionalHeaders,
+            responseParams,
+            responseHandler,
+            successCallback,
+            errorCallback,
+            isAsync,
+            authRetry: removeToken
         });
     };
 
@@ -317,7 +348,19 @@ function _getEntityNames(entityName: string, config: DynamicsWebApi.Config, succ
             noCache: true
         }, 'retrieveMultiple', config);
 
-        sendRequest('GET', request.url, config, null, request.headers, null, resolve, reject, false, request.async);
+        sendRequest(
+            'GET', 
+            request.url, 
+            config, 
+            null, 
+            request.headers, 
+            null, 
+            resolve, 
+            reject, 
+            false, 
+            request.async, 
+            undefined, 
+            defaultAuthRetry);
     }
 }
 
@@ -362,7 +405,19 @@ export function makeDiscoveryRequest(request:any, config:DynamicsWebApi.Config, 
 
     const result = RequestConverter.convertRequest(request, 'discover', config);
 
-    sendRequest("GET", result.url, config, null, null, null, resolve, reject, request.isBatch, result.async);
+    sendRequest(
+        "GET", 
+        result.url, 
+        config, 
+        null, 
+        null, 
+        null, 
+        resolve, 
+        reject, 
+        request.isBatch, 
+        result.async, 
+        undefined, 
+        defaultAuthRetry);
 }
 
 export function makeRequest(method: string, request: any, functionName: string, config: any, responseParams?: any, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {
@@ -371,7 +426,19 @@ export function makeRequest(method: string, request: any, functionName: string, 
         
         const result = RequestConverter.convertRequest(request, functionName, config);
 
-        return sendRequest(method, result.url, config, request.data || request.entity, result.headers, responseParams, resolve, reject, request.isBatch, result.async);
+        return sendRequest(
+            method, 
+            result.url, 
+            config, 
+            request.data || request.entity, 
+            result.headers, 
+            responseParams, 
+            resolve, 
+            reject, 
+            request.isBatch,
+            result.async, 
+            undefined, 
+            defaultAuthRetry);
     };
 
     return _getCollectionName(request.collection, config, successCallback, reject);

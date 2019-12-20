@@ -155,7 +155,7 @@ export abstract class CredentialStore implements ICredentialStore {
             credential = <T>{ storeKey: key };
         }
 
-        const returnCredential = Utilities.$Object.clone(credential);
+        const returnCredential = Credential.from(Utilities.$Object.clone(credential));
 
         if (returnCredential) { 
             if (encrypted) {
@@ -171,7 +171,7 @@ export abstract class CredentialStore implements ICredentialStore {
             }
         }
 
-        return returnCredential;
+        return <T>returnCredential;
     }
 
     retreive<T extends ICredential>(key: string, credential?:T): T | null {
@@ -307,7 +307,7 @@ export abstract class Credential implements ICredential {
     }
 
     static requireToken(value:ICredential): boolean { 
-        return value.hasOwnProperty("accessToken") && value.hasOwnProperty("refreshToken");
+        return value.hasOwnProperty("refreshToken");
     }
 
     static retreive<T extends ICredential>(store:ICredentialStore, key: string): T | null {
