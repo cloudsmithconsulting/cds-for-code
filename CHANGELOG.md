@@ -2,6 +2,12 @@
 
 All notable changes to the "cds-for-code" extension will be documented in this file.
 
+## v0.8.5 (December 26, 2019)
+
+- Feature: Create UrlResolver for PowerApps modern maker UX ([#392](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/392/))
+- Bugfix: Online connection loses its access in 1 hr ([#445](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/445/))
+- Bugfix: Connecting: Account does not exist in CloudSmith tenant ([#441](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/441/))
+
 ## v0.8.4 (December 16, 2019)
 
 - Feature: Security - Edit credentials should never allow debugger to see passwords ([#430](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/430/))
