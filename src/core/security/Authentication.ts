@@ -6,13 +6,15 @@ import * as ErrorParser from '../ErrorParser';
 import { Utilities } from "../Utilities";
 import GlobalStateCredentialStore from "./GlobalStateCredentialStore";
 import Quickly from "../Quickly";
-import TokenCache, { TokenType } from "./TokenCache";
+import * as express from 'express';
+import { Server } from "http";
 
 export type AuthenticationResult = {
     success: boolean,
     response?: any,
     isMFA?: boolean,
-    error?: AuthenticationError
+    error?: AuthenticationError,
+    credentials?: Security.ICredential
 };
 
 export class AuthenticationError extends Error {
@@ -45,7 +47,6 @@ function decryptCredential<T extends Security.ICredential>(credential: T, storeK
 
     return store.decrypt<T>(storeKey, credential, Security.SecureOutput.String);
 }
-
 
 function encryptCredential<T extends Security.ICredential>(credential: T, storeKey: string, keepDecrypted?: string[], store?: Security.CredentialStore): string {
     store = store || GlobalStateCredentialStore.Instance;
@@ -126,7 +127,10 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                 if (exception.type === 'interaction_required') {
                     Quickly.inform("Your credentials use multi-factor authentication.  You will need to authenticate interactively.");
 
-                    decrypted.onInteractiveLogin({ success: false, error: exception });
+                    if (decrypted.onInteractiveLogin) {
+                        decrypted.onInteractiveLogin({ success: false, error: exception });
+                    }
+                    
                     authority = (<any>decrypted).authority || authority;
                     tenant = (<any>decrypted).tenant || tenant;
                     clientId = (<any>decrypted).clientId.toString() || clientId;
@@ -156,7 +160,8 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                         });
                     });
 
-                    const app = require('express')();
+                    const app: express.Application = express();
+                    let server: Server;
                     
                     app.get('/auth', (req, res) => {
                         res.cookie('authstate', generatedToken);
@@ -173,19 +178,19 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                         }
 
                         context.acquireTokenWithAuthorizationCode(req.query.code, redirectUri, resource, clientId, null, (err, response) => {
-                            app.removeAllListeners();
-                            app.close();
-
                             if (err) {
                                 const innerException = ErrorParser.parseAdalError(err);
 
                                 res.send(innerException.message);
                                 
+                                // shut down express stuff
+                                app.removeAllListeners();
+                                server.close();
+                                // reject our promise here
                                 reject(innerException);
-                                resolve({ success: false, error: innerException });
                             }
                             else {
-                                const result = { success: true, response };
+                                const result: AuthenticationResult = { success: true, response };
                                 
                                 if (credential.onAuthenticate) {
                                     credential.onAuthenticate(result);
@@ -196,31 +201,34 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
 
                                 credential.isMultiFactorAuthentication = true;
 
-                                TokenCache.Instance.addToken(TokenType.AccessToken, resource, (<adal.TokenResponse>result.response).accessToken);
-                                TokenCache.Instance.addToken(TokenType.RefreshToken, resource, (<adal.TokenResponse>result.response).refreshToken);
-                                
+                                result.credentials = credential;
+
                                 res.send(`<html><head><title>Authentication complete</title></head><body><script>window.self.close();</script></body></html>`);
                                 
                                 if (credential.storeKey) {
                                     GlobalStateCredentialStore.Instance.store(credential, credential.storeKey, [ "accessToken", "isMultiFactorAuthentication", "resource" ]);
                                 }
 
+                                // shut down express stuff
+                                app.removeAllListeners();
+                                server.close();
+
+                                // resolve our promise here
                                 resolve(result);
                             }
                         });
                     });
 
-                    app.listen(port, function () {
+                    server = app.listen(port, function () {
                         opn(`http://localhost:${port}/auth`);
                     });
                 }
                 else {
                     reject(exception);
-                    resolve({ success: false, error: exception });
                 }
             }
             else {
-                const result = { success: true, response };
+                const result: AuthenticationResult = { success: true, response };
 
                 if (credential.onAuthenticate) {
                     credential.onAuthenticate(result);
@@ -231,8 +239,7 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                 
                 credential.isMultiFactorAuthentication = false;
 
-                TokenCache.Instance.addToken(TokenType.AccessToken, resource, result.response.accessToken);
-                TokenCache.Instance.addToken(TokenType.RefreshToken, resource, result.response.refreshToken);
+                result.credentials = credential;
 
                 if (credential.storeKey) {
                     GlobalStateCredentialStore.Instance.store(credential, credential.storeKey, [ "accessToken", "isMultiFactorAuthentication", "resource" ]);
@@ -243,7 +250,6 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
         };
 
         let refreshToken = decrypted.refreshToken ? decrypted.refreshToken.toString() : undefined;
-        refreshToken = refreshToken || TokenCache.Instance.getToken(TokenType.RefreshToken, resource);
         
         if (refreshToken) {
             // If this errors, re-attempt this with username/password, as our refresh token has expired.

@@ -5,7 +5,6 @@ import ExtensionContext from '../../core/ExtensionContext';
 import GlobalStateCredentialStore from '../../core/security/GlobalStateCredentialStore';
 import { Credential } from '../../core/security/Types';
 import Dictionary from '../../core/types/Dictionary';
-import TokenCache, { TokenType } from '../../core/security/TokenCache';
 
 export default class GlobalState {
     private constructor() { }
@@ -33,13 +32,6 @@ export default class GlobalState {
             value.forEach((c, index) => {
                 if (c.credentials) {
                     const anyCreds = <any>c.credentials;
-
-                    if (c.type !== DynamicsWebApi.ConfigType.OnPremises) {
-                        if (!anyCreds.refreshToken) {
-                            anyCreds.refreshToken = TokenCache.Instance.getToken(TokenType.RefreshToken, 'https://disco.crm.dynamics.com/');
-                        }
-                    }
-
                     const key = GlobalStateCredentialStore.Instance.store(anyCreds, c.id, [ "accessToken", "isMultiFactorAuthentication", "resource" ]);
                     
                     delete c.credentials;

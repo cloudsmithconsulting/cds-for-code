@@ -90,11 +90,7 @@ export default class Utility {
         if (!configType || configType !== DynamicsWebApi.ConfigType.Online) {
             return prefix +  '/api/discovery/v' + version + '/';
         } else {
-            if (prefix && !prefix.endsWith(".dynamics.com")) {
-                return prefix +  '/api/discovery/v' + version + '/';
-            } else {
-                return "https://globaldisco.crm.dynamics.com/api/discovery/v2.0/";
-            }
+            return "https://globaldisco.crm.dynamics.com/api/discovery/v2.0/";
         }
     }
 

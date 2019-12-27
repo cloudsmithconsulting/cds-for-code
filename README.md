@@ -1,7 +1,7 @@
 # ![Cloudsmith Consulting LLC](https://cloudsmithstatics.azureedge.net/web/cloudsmith-notagline-450x103.png "Cloudsmith Consulting")<br> Welcome to the CloudSmith CDS For Code Extension
 This extension is designed to help developers with a simple development loop for Microsoft&trade; Common Data Service (CDS) using Visual Studio Code.  Many developers do not have access to a full Visual Studio license in order to use Microsoft&trade; CDS Development Toolkit.  This sample solution is designed to get you started.
 
-Release version: 0.8.4
+Release version: 0.8.5
 
 ---
 
@@ -57,6 +57,7 @@ This extension contributes the following settings:
 - `cs.dynamics.configuration.templates.templatesDirectory`: Filesystem path that stores template folders.
 - `cs.dynamics.configuration.templates.treeViewGroupPreference`: Preference for grouping template items in the Template Explorer.
 - `cs.dynamics.configuration.templates.usePlaceholders`: Look for and replace placeholders in template (e.g. #{author})
+- `cs.dynamics.configuration.web.usePowerAppsUi`: Use the PowerApps Online UI where possible.
 
 ---
 
