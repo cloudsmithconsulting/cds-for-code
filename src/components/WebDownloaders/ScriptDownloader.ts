@@ -13,12 +13,11 @@ import ExtensionContext from '../../core/ExtensionContext';
 import Quickly from '../../core/Quickly';
 import command from '../../core/Command';
 import Logger from '../../core/Logger';
+import { onExtensionActivate } from '../../core/ExtensionEvent';
 
-export default class ScriptDownloader implements IContributor {
-    contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-		//GlobalState.Instance(context).PowerShellScriptVersion = null;
-
-		// do this immediately
+export default class ScriptDownloader {
+	@onExtensionActivate("CloudSmith.cds-for-code")
+    activate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         ScriptDownloader.runScriptCheck();
     }
 
