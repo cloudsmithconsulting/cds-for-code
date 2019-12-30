@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 import { Utilities } from '../../core/Utilities';
 import Dictionary from '../../core/types/Dictionary';
 import * as FileSystem from '../../core/io/FileSystem';
-import * as DynamicsTreeView from '../../views/DynamicsTreeView';
+import * as DynamicsTreeView from '../../views/CdsExplorer';
 import { TS } from 'typescript-linq';
 import * as TemplateTreeView from '../../views/TemplatesTreeView';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';

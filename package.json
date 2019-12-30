@@ -6,7 +6,7 @@
 	"repository": {
 		"url": "https://cloudsmith-consulting@dev.azure.com/cloudsmith-consulting/CloudSmith/_git/cds-for-code"
 	},
-	"version": "0.8.5",
+	"version": "0.8.6",
 	"preview": true,
 	"engines": {
 		"vscode": "^1.38.0"
@@ -166,7 +166,7 @@
 		},
 		"commands": [
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.refreshEntry",
+				"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 				"title": "Refresh",
 				"icon": {
 					"light": "resources/icons/default/refresh.light.svg",
@@ -175,7 +175,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.addEntry",
+				"command": "cs.cds.controls.cdsExplorer.addEntry",
 				"title": "New",
 				"icon": {
 					"light": "resources/icons/default/add.light.svg",
@@ -184,7 +184,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.editEntry",
+				"command": "cs.cds.controls.cdsExplorer.editEntry",
 				"title": "Edit",
 				"icon": {
 					"light": "resources/icons/default/edit.light.svg",
@@ -193,7 +193,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.deleteEntry",
+				"command": "cs.cds.controls.cdsExplorer.deleteEntry",
 				"title": "Delete",
 				"icon": {
 					"light": "resources/icons/default/delete.light.svg",
@@ -202,52 +202,52 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.clickEntry",
+				"command": "cs.cds.controls.cdsExplorer.clickEntry",
 				"title": "Click",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.inspectEntry",
+				"command": "cs.cds.controls.cdsExplorer.inspectEntry",
 				"title": "Inspect",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.editConnection",
+				"command": "cs.cds.controls.cdsExplorer.editConnection",
 				"title": "Open",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.addEntryToSolution",
+				"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
 				"title": "Add to Solution",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.removeEntryFromSolution",
+				"command": "cs.cds.controls.cdsExplorer.removeEntryFromSolution",
 				"title": "Remove from Solution",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.moveSolution",
+				"command": "cs.cds.controls.cdsExplorer.moveSolution",
 				"title": "Change local workspace folder",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.openInApp",
+				"command": "cs.cds.controls.cdsExplorer.openInApp",
 				"title": "Open in App",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.openInBrowser",
+				"command": "cs.cds.controls.cdsExplorer.openInBrowser",
 				"title": "Open in Browser",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.openInEditor",
+				"command": "cs.cds.controls.cdsExplorer.openInEditor",
 				"title": "Open in Text Editor",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.dynamicsTreeView.unpackSolution",
+				"command": "cs.cds.controls.cdsExplorer.unpackSolution",
 				"title": "Export into workspace",
 				"category": "UserInterface"
 			},
@@ -622,59 +622,59 @@
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.addEntry",
+					"command": "cs.cds.controls.cdsExplorer.addEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.addEntryToSolution",
+					"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.clickEntry",
+					"command": "cs.cds.controls.cdsExplorer.clickEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.deleteEntry",
+					"command": "cs.cds.controls.cdsExplorer.deleteEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.editConnection",
+					"command": "cs.cds.controls.cdsExplorer.editConnection",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.editEntry",
+					"command": "cs.cds.controls.cdsExplorer.editEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.inspectEntry",
+					"command": "cs.cds.controls.cdsExplorer.inspectEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.moveSolution",
+					"command": "cs.cds.controls.cdsExplorer.moveSolution",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.openInApp",
+					"command": "cs.cds.controls.cdsExplorer.openInApp",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.openInBrowser",
+					"command": "cs.cds.controls.cdsExplorer.openInBrowser",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.openInEditor",
+					"command": "cs.cds.controls.cdsExplorer.openInEditor",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.refreshEntry",
+					"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.removeEntryFromSolution",
+					"command": "cs.cds.controls.cdsExplorer.removeEntryFromSolution",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.unpackSolution",
+					"command": "cs.cds.controls.cdsExplorer.unpackSolution",
 					"when": "false"
 				},
 				{
@@ -783,12 +783,12 @@
 			],
 			"view/title": [
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.refreshEntry",
+					"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 					"group": "navigation",
 					"when": "view == cs.cds.viewContainers.cdsExplorer"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.addEntry",
+					"command": "cs.cds.controls.cdsExplorer.addEntry",
 					"group": "navigation",
 					"when": "view == cs.cds.viewContainers.cdsExplorer"
 				},
@@ -805,62 +805,62 @@
 			],
 			"view/item/context": [
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.addEntry",
+					"command": "cs.cds.controls.cdsExplorer.addEntry",
 					"group": "inline",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.editEntry",
+					"command": "cs.cds.controls.cdsExplorer.editEntry",
 					"group": "inline",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.deleteEntry",
+					"command": "cs.cds.controls.cdsExplorer.deleteEntry",
 					"group": "inline",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.refreshEntry",
+					"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 					"group": "group@1",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.inspectEntry",
+					"command": "cs.cds.controls.cdsExplorer.inspectEntry",
 					"group": "group@2",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canInspectItem)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.openInApp",
+					"command": "cs.cds.controls.cdsExplorer.openInApp",
 					"group": "group@3",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInApp)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.openInBrowser",
+					"command": "cs.cds.controls.cdsExplorer.openInBrowser",
 					"group": "group@4",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInBrowser)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.openInEditor",
+					"command": "cs.cds.controls.cdsExplorer.openInEditor",
 					"group": "group@5",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.unpackSolution",
+					"command": "cs.cds.controls.cdsExplorer.unpackSolution",
 					"group": "deployment@1",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.moveSolution",
+					"command": "cs.cds.controls.cdsExplorer.moveSolution",
 					"group": "deployment@1",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canMoveSolution)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.addEntryToSolution",
+					"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
 					"group": "deployment@2",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canAddToSolution)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.dynamicsTreeView.removeEntryFromSolution",
+					"command": "cs.cds.controls.cdsExplorer.removeEntryFromSolution",
 					"group": "deployment@3",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
 				},

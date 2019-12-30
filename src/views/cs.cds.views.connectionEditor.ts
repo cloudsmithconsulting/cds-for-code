@@ -130,7 +130,7 @@ class CdsConnectionEditor extends View {
                         delete config.timeout;
 
                         // success, add it to connection window
-                        vscode.commands.executeCommand(cs.cds.controls.dynamicsTreeView.addConnection, config)
+                        vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.addConnection, config)
                             .then(() => {
                                 this.dispose();
                             });

@@ -81,7 +81,7 @@ export default class ScriptDownloader implements IContributor {
 
 					// see if file exists & if our current version is less than the new version.
 					if ((!FileSystem.exists(localFilePath))
-						|| (!currentVersion || parseFloat(currentVersion.toString()) !== version))
+						|| (!currentVersion || currentVersion !== version))
 					{
 						isDownloading = true;
 
@@ -115,7 +115,7 @@ export default class ScriptDownloader implements IContributor {
 					const localFilePath = path.join(ExtensionContext.Instance.globalStoragePath, path.basename(fileName));
 					// see if file exists & if our current version is less than the new version.
 					if ((!FileSystem.exists(localFilePath))
-						|| (!currentVersion || parseFloat(currentVersion.toString()) !== version))
+						|| (!currentVersion || currentVersion !== version))
 					{
 						isDownloading = true;
 

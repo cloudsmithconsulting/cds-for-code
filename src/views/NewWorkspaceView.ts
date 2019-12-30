@@ -84,7 +84,7 @@ class NewWorkspaceView extends View {
     get commands(): Dictionary<string, Function> {
         return new Dictionary<string, Function>([
             { key: 'updateWelcomeExperienceConfig', value: message => ExtensionConfiguration.setConfigurationValue(cs.cds.configuration.explorer.showWelcomeExperience, message.value) },
-            { key: 'openConnectionView', value: message => vscode.commands.executeCommand(cs.cds.controls.dynamicsTreeView.editConnection) }
+            { key: 'openConnectionView', value: message => vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection) }
          ]);
     }
 }

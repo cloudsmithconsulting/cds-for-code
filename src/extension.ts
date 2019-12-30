@@ -7,7 +7,7 @@ import ExtensionConfiguration from './core/ExtensionConfiguration';
 import ViewManager from './views/ViewManager';
 import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
 import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
-import DynamicsTreeView from './views/DynamicsTreeView';
+import DynamicsTreeView from './views/CdsExplorer';
 import JsonObjectViewManager from './views/JsonObjectView';
 import TemplateManager from './components/Templates/TemplateManager';
 import DynamicsTerminal from './views/DynamicsTerminal';

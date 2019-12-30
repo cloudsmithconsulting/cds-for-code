@@ -6,7 +6,7 @@ import removeSolutionComponent from "../../commands/cs.cds.deployment.removeSolu
 import packSolutionFromFolder from "../../commands/cs.cds.controls.explorer.packSolutionFromFolder";
 import packSolution from "../../commands/cs.cds.powerShell.packSolution";
 import unpackSolution from "../../commands/cs.cds.powerShell.unpackSolution";
-import unpackSolutionFromTreeView from "../../commands/cs.cds.controls.dynamicsTreeView.unpackSolution";
+import unpackSolutionFromTreeView from "../../commands/cs.cds.controls.cdsExplorer.unpackSolution";
 import unpackSolutionToFolder from "../../commands/cs.cds.controls.explorer.unpackSolutionToFolder";
 import registerPluginAssembly from "../../commands/cs.cds.deployment.registerPluginAssembly";
 import registerPluginFile from "../../commands/cs.cds.controls.explorer.registerPluginFile";
@@ -20,7 +20,7 @@ export default class SolutionManager implements IContributor {
             vscode.commands.registerCommand(cs.cds.deployment.removeSolutionComponent, removeSolutionComponent.bind(this)),
 			vscode.commands.registerCommand(cs.cds.controls.explorer.packSolutionFromFolder, packSolutionFromFolder.bind(this)),
 			vscode.commands.registerCommand(cs.cds.powerShell.packSolution, packSolution.bind(this)),
-			vscode.commands.registerCommand(cs.cds.controls.dynamicsTreeView.unpackSolution, unpackSolutionFromTreeView.bind(this)),
+			vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.unpackSolution, unpackSolutionFromTreeView.bind(this)),
 			vscode.commands.registerCommand(cs.cds.controls.explorer.unpackSolutionToFolder, unpackSolutionToFolder.bind(this)),
             vscode.commands.registerCommand(cs.cds.powerShell.unpackSolution, unpackSolution.bind(this)),
 			vscode.commands.registerCommand(cs.cds.controls.explorer.registerPluginFile, registerPluginFile.bind(this)),
