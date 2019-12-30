@@ -3,19 +3,19 @@ import * as cs from '../../cs';
 import * as FileSystem from '../../core/io/FileSystem';
 import IContributor from '../../core/CommandBuilder';
 import Xml from '../../core/io/Xml';
-import dotNetBuildFromExplorer from "../../commands/cs.dynamics.controls.explorer.dotNetBuild";
-import dotNetTestFromExplorer from "../../commands/cs.dynamics.controls.explorer.dotNetTest";
-import dotNetBuild from "../../commands/cs.dynamics.deployment.dotNetBuild";
-import dotNetTest  from "../../commands/cs.dynamics.deployment.dotNetTest";
+import dotNetBuildFromExplorer from "../../commands/cs.cds.controls.explorer.dotNetBuild";
+import dotNetTestFromExplorer from "../../commands/cs.cds.controls.explorer.dotNetTest";
+import dotNetBuild from "../../commands/cs.cds.deployment.dotNetBuild";
+import dotNetTest  from "../../commands/cs.cds.deployment.dotNetTest";
 
 export default class VisualStudioProjectCommands implements IContributor {
     contribute(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
         // now wire a command into the context
         context.subscriptions.push(
-			vscode.commands.registerCommand(cs.dynamics.controls.explorer.dotNetBuild, dotNetBuildFromExplorer.bind(VisualStudioProjectCommands)),
-			vscode.commands.registerCommand(cs.dynamics.controls.explorer.dotNetTest, dotNetTestFromExplorer.bind(VisualStudioProjectCommands)),
-            vscode.commands.registerCommand(cs.dynamics.deployment.dotNetBuild, dotNetBuild.bind(VisualStudioProjectCommands)),
-            vscode.commands.registerCommand(cs.dynamics.deployment.dotNetTest, dotNetTest.bind(VisualStudioProjectCommands)));
+			vscode.commands.registerCommand(cs.cds.controls.explorer.dotNetBuild, dotNetBuildFromExplorer.bind(VisualStudioProjectCommands)),
+			vscode.commands.registerCommand(cs.cds.controls.explorer.dotNetTest, dotNetTestFromExplorer.bind(VisualStudioProjectCommands)),
+            vscode.commands.registerCommand(cs.cds.deployment.dotNetBuild, dotNetBuild.bind(VisualStudioProjectCommands)),
+            vscode.commands.registerCommand(cs.cds.deployment.dotNetTest, dotNetTest.bind(VisualStudioProjectCommands)));
     }
 
     static projectFileTypes:string[] = [".csproj", ".vbproj"];

@@ -769,7 +769,7 @@ export default class DynamicsTerminal implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
 		let terminals:Dictionary<string, Terminal> = new Dictionary<string, Terminal>();
 
-		context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.extension.createTerminal, async (folder:string, name:string): Promise<Terminal> => {
+		context.subscriptions.push(vscode.commands.registerCommand(cs.cds.extension.createTerminal, async (folder:string, name:string): Promise<Terminal> => {
 			if (!folder || !fs.existsSync(folder)) {
 				folder = context.globalStoragePath;
 			}
@@ -794,10 +794,10 @@ export default class DynamicsTerminal implements IContributor {
 			return terminals[name];
 		}));
 
-		context.subscriptions.push(vscode.commands.registerCommand(cs.dynamics.extension.clearTerminal, async (terminal) => {
+		context.subscriptions.push(vscode.commands.registerCommand(cs.cds.extension.clearTerminal, async (terminal) => {
 			if (!terminal) {
 				if (terminals.length === 0) {
-					terminal = await vscode.commands.executeCommand(cs.dynamics.extension.createTerminal);
+					terminal = await vscode.commands.executeCommand(cs.cds.extension.createTerminal);
 				} else if (terminals.length === 1) {
 					terminal = terminals.values[0];
 				} else {
@@ -812,6 +812,6 @@ export default class DynamicsTerminal implements IContributor {
 	}
 
     static async showTerminal(folder: string, name?:string): Promise<Terminal> {
-		return vscode.commands.executeCommand(cs.dynamics.extension.createTerminal, folder, name);
+		return vscode.commands.executeCommand(cs.cds.extension.createTerminal, folder, name);
 	}
 }

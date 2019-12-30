@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as cs from '../../cs';
 import IContributor from '../../core/CommandBuilder';
 import ExtensionContext from '../../core/ExtensionContext';
-import downloadRequiredIcons from "../../commands/cs.dynamics.extension.downloadRequiredIcons";
+import downloadRequiredIcons from "../../commands/cs.cds.extension.downloadRequiredIcons";
 import { ExtensionIconThemes } from './Types';
 
 export default class IconLoader implements IContributor {
@@ -15,7 +15,7 @@ export default class IconLoader implements IContributor {
 
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.extension.downloadRequiredIcons, downloadRequiredIcons.bind(this))
+            vscode.commands.registerCommand(cs.cds.extension.downloadRequiredIcons, downloadRequiredIcons.bind(this))
         );
     }
 

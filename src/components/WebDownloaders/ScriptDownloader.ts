@@ -10,7 +10,7 @@ import GlobalState from '../Configuration/GlobalState';
 import TemplateManager from "../Templates/TemplateManager";
 import * as FileSystem from "../../core/io/FileSystem";
 import ExtensionContext from '../../core/ExtensionContext';
-import downloadRequiredScripts from "../../commands/cs.dynamics.extension.downloadRequiredScripts";
+import downloadRequiredScripts from "../../commands/cs.cds.extension.downloadRequiredScripts";
 import Quickly from '../../core/Quickly';
 
 export default class ScriptDownloader implements IContributor {
@@ -22,7 +22,7 @@ export default class ScriptDownloader implements IContributor {
 
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.extension.downloadRequiredScripts, downloadRequiredScripts.bind(ScriptDownloader))
+            vscode.commands.registerCommand(cs.cds.extension.downloadRequiredScripts, downloadRequiredScripts.bind(ScriptDownloader))
         );
     }
 
@@ -55,8 +55,8 @@ export default class ScriptDownloader implements IContributor {
 			"src/CloudSmith.Dynamics365.SampleScripts/runonce-script.ps1"
 		];
 
-		const remoteFolderPath:string = Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateSource));
-		const updateChannel:string = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateChannel);
+		const remoteFolderPath:string = Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateSource));
+		const updateChannel:string = ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateChannel);
 		let isDownloading = false;
 
 		const returnValue = this.checkVersion(remoteFolderPath, updateChannel)
@@ -138,7 +138,7 @@ export default class ScriptDownloader implements IContributor {
 									if (options.extractPath) { FileSystem.makeFolderSync(options.extractPath); }
 
 									if (options.isTemplate) {
-										await vscode.commands.executeCommand(cs.dynamics.templates.importTemplate, vscode.Uri.file(options.zipFile));
+										await vscode.commands.executeCommand(cs.cds.templates.importTemplate, vscode.Uri.file(options.zipFile));
 									} else {
 										await FileSystem.unzip(options.zipFile, options.extractPath);
 										vscode.window.showInformationMessage(`Items were extracted from ${options.zipFile} into ${options.extractPath}`);
@@ -215,7 +215,7 @@ export default class ScriptDownloader implements IContributor {
 	}
 
 	static async installCdsSdk(): Promise<TerminalCommand> {
-		const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
+		const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.cds.configuration.tools.sdkInstallPath);
 
 		if (!FileSystem.exists(sdkInstallPath) && FileSystem.exists(path.join(ExtensionContext.Instance.globalStoragePath, "/Scripts/Install-Sdk.ps1"))) {
 			FileSystem.makeFolderSync(sdkInstallPath);

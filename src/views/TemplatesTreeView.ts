@@ -8,15 +8,15 @@ import { Utilities } from '../core/Utilities';
 import TemplateManager from '../components/Templates/TemplateManager';
 import { TemplateItem, TemplateType } from "../components/Templates/Types";
 
-import refreshEntry from '../commands/cs.dynamics.controls.templateTreeView.refreshEntry';
-import addEntry from '../commands/cs.dynamics.controls.templateTreeView.addEntry';
-import editEntry from '../commands/cs.dynamics.controls.templateTreeView.editEntry';
-import deleteEntry from '../commands/cs.dynamics.controls.templateTreeView.deleteEntry';
-import clickEntry from '../commands/cs.dynamics.controls.templateTreeView.clickEntry';
-import createInWorkspace from '../commands/cs.dynamics.controls.templateTreeView.createInWorkspace';
-import openEntry from '../commands/cs.dynamics.controls.templateTreeView.openEntry';
-import exportEntry from '../commands/cs.dynamics.controls.templateTreeView.exportEntry';
-import importEntry from '../commands/cs.dynamics.controls.templateTreeView.importEntry';
+import refreshEntry from '../commands/cs.cds.controls.templateTreeView.refreshEntry';
+import addEntry from '../commands/cs.cds.controls.templateTreeView.addEntry';
+import editEntry from '../commands/cs.cds.controls.templateTreeView.editEntry';
+import deleteEntry from '../commands/cs.cds.controls.templateTreeView.deleteEntry';
+import clickEntry from '../commands/cs.cds.controls.templateTreeView.clickEntry';
+import createInWorkspace from '../commands/cs.cds.controls.templateTreeView.createInWorkspace';
+import openEntry from '../commands/cs.cds.controls.templateTreeView.openEntry';
+import exportEntry from '../commands/cs.cds.controls.templateTreeView.exportEntry';
+import importEntry from '../commands/cs.cds.controls.templateTreeView.importEntry';
 
 export default class TemplateTreeView implements IContributor {
     public static Instance:TemplateTreeViewProvider;
@@ -24,20 +24,20 @@ export default class TemplateTreeView implements IContributor {
     public contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         if (!TemplateTreeView.Instance) {
             TemplateTreeView.Instance = new TemplateTreeViewProvider(context);
-            vscode.window.registerTreeDataProvider(cs.dynamics.viewContainers.templateExplorer, TemplateTreeView.Instance);
+            vscode.window.registerTreeDataProvider(cs.cds.viewContainers.templateExplorer, TemplateTreeView.Instance);
         }
         
         // setup commands
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.refreshEntry, refreshEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.addEntry, addEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.editEntry, editEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.deleteEntry, deleteEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.clickEntry, clickEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.createInWorkspace, createInWorkspace.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.openEntry, openEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.importEntry, importEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.dynamics.controls.templateTreeView.exportEntry, exportEntry.bind(TemplateTreeView.Instance))
+            vscode.commands.registerCommand(cs.cds.controls.templateTreeView.refreshEntry, refreshEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.cds.controls.templateTreeView.addEntry, addEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.cds.controls.templateTreeView.editEntry, editEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.cds.controls.templateTreeView.deleteEntry, deleteEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.cds.controls.templateTreeView.clickEntry, clickEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.cds.controls.templateTreeView.createInWorkspace, createInWorkspace.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.cds.controls.templateTreeView.openEntry, openEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.cds.controls.templateTreeView.importEntry, importEntry.bind(TemplateTreeView.Instance)),
+            vscode.commands.registerCommand(cs.cds.controls.templateTreeView.exportEntry, exportEntry.bind(TemplateTreeView.Instance))
         );
     }
 }
@@ -61,7 +61,7 @@ export class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEnt
         if (element && element.itemType) {
             const commandPrefix:string = Utilities.String.noSlashes(((element.command && element.command.arguments) || '').toString());
             const catalog = await TemplateManager.getTemplateCatalog();
-            const grouping = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.templates.treeViewGroupPreference);
+            const grouping = ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.templates.treeViewGroupPreference);
 
             switch (element.itemType) {
                 case "Folder":
@@ -112,7 +112,7 @@ export class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEnt
     }
 
 	private getRootEntries(): TreeEntry[] {
-        ExtensionConfiguration.notify(cs.dynamics.configuration.templates._namespace, change => {
+        ExtensionConfiguration.notify(cs.cds.configuration.templates._namespace, change => {
             this.refresh();
         });
 
@@ -174,7 +174,7 @@ export class TreeEntry extends vscode.TreeItem {
             vscode.TreeItemCollapsibleState.Collapsed,
             undefined,
             {
-                command: cs.dynamics.controls.templateTreeView.clickEntry,
+                command: cs.cds.controls.templateTreeView.clickEntry,
                 title: name,
                 arguments: [`${commandPrefix}/${name}`]
             },
@@ -189,7 +189,7 @@ export class TreeEntry extends vscode.TreeItem {
             vscode.TreeItemCollapsibleState.None,
             item.description,
             {
-                command: cs.dynamics.controls.templateTreeView.clickEntry,
+                command: cs.cds.controls.templateTreeView.clickEntry,
                 title: item.description,
                 arguments: [`${commandPrefix}/${item.name}`]
             },

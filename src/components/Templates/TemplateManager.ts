@@ -14,17 +14,17 @@ import Quickly from '../../core/Quickly';
 import Dictionary from '../../core/types/Dictionary';
 import { Utilities } from '../../core/Utilities';
 
-import createFromItemTemplate from "../../commands/cs.dynamics.controls.explorer.createFromItemTemplate";
-import createFromProjectTemplate from "../../commands/cs.dynamics.controls.explorer.createFromProjectTemplate";
-import createTemplate from '../../commands/cs.dynamics.templates.createFromTemplate';
-import deleteTemplate from '../../commands/cs.dynamics.templates.deleteTemplate';
-import editTemplateCatalog from '../../commands/cs.dynamics.templates.editTemplateCatalog';
-import exportTemplate from '../../commands/cs.dynamics.templates.exportTemplate';
-import importTemplate from '../../commands/cs.dynamics.templates.importTemplate';
-import openTemplateFolder from '../../commands/cs.dynamics.templates.openTemplateFolder';
-import saveTemplate from '../../commands/cs.dynamics.templates.saveTemplate';
-import saveTemplateFile from "../../commands/cs.dynamics.controls.explorer.saveTemplateFile";
-import saveTemplateFolder from "../../commands/cs.dynamics.controls.explorer.saveTemplateFolder";
+import createFromItemTemplate from "../../commands/cs.cds.controls.explorer.createFromItemTemplate";
+import createFromProjectTemplate from "../../commands/cs.cds.controls.explorer.createFromProjectTemplate";
+import createTemplate from '../../commands/cs.cds.templates.createFromTemplate';
+import deleteTemplate from '../../commands/cs.cds.templates.deleteTemplate';
+import editTemplateCatalog from '../../commands/cs.cds.templates.editTemplateCatalog';
+import exportTemplate from '../../commands/cs.cds.templates.exportTemplate';
+import importTemplate from '../../commands/cs.cds.templates.importTemplate';
+import openTemplateFolder from '../../commands/cs.cds.templates.openTemplateFolder';
+import saveTemplate from '../../commands/cs.cds.templates.saveTemplate';
+import saveTemplateFile from "../../commands/cs.cds.controls.explorer.saveTemplateFile";
+import saveTemplateFolder from "../../commands/cs.cds.controls.explorer.saveTemplateFolder";
 import { TemplateCatalog } from './TemplateCatalog';
 import TemplateTreeView from '../../views/TemplatesTreeView';
 
@@ -47,17 +47,17 @@ export default class TemplateManager implements IContributor {
     contribute(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
         // now wire a command into the context
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.controls.explorer.createFromItemTemplate, createFromItemTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.controls.explorer.createFromProjectTemplate, createFromProjectTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.controls.explorer.saveTemplateFile, saveTemplateFile.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.controls.explorer.saveTemplateFolder, saveTemplateFolder.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.templates.createFromTemplate, createTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.templates.deleteTemplate, deleteTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.templates.editTemplateCatalog, editTemplateCatalog.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.templates.exportTemplate, exportTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.templates.importTemplate, importTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.templates.openTemplateFolder, openTemplateFolder.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.templates.saveTemplate, saveTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.cds.controls.explorer.createFromItemTemplate, createFromItemTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.cds.controls.explorer.createFromProjectTemplate, createFromProjectTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.cds.controls.explorer.saveTemplateFile, saveTemplateFile.bind(this)),
+            vscode.commands.registerCommand(cs.cds.controls.explorer.saveTemplateFolder, saveTemplateFolder.bind(this)),
+            vscode.commands.registerCommand(cs.cds.templates.createFromTemplate, createTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.cds.templates.deleteTemplate, deleteTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.cds.templates.editTemplateCatalog, editTemplateCatalog.bind(this)),
+            vscode.commands.registerCommand(cs.cds.templates.exportTemplate, exportTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.cds.templates.importTemplate, importTemplate.bind(this)),
+            vscode.commands.registerCommand(cs.cds.templates.openTemplateFolder, openTemplateFolder.bind(this)),
+            vscode.commands.registerCommand(cs.cds.templates.saveTemplate, saveTemplate.bind(this)),
         );
     }
 
@@ -66,9 +66,9 @@ export default class TemplateManager implements IContributor {
     }
 
     static async applyTemplate(template:TemplateItem, data:string | Buffer, placeholders?:Dictionary<string, string>, object?:any): Promise<string | Buffer> {
-        const usePlaceholders = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.usePlaceholders, false);
-        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
-        placeholders = placeholders || ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.dynamics.configuration.templates.placeholders, new Dictionary<string, string>());
+        const usePlaceholders = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.usePlaceholders, false);
+        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
+        placeholders = placeholders || ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.cds.configuration.templates.placeholders, new Dictionary<string, string>());
 
         const resolver = (data:string | Buffer, placeholderRegExp:RegExp) => {
             // use custom delimiter #{ }
@@ -116,9 +116,9 @@ export default class TemplateManager implements IContributor {
         }
 
         // update placeholder configuration
-        const usePlaceholders = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.usePlaceholders, false);
-        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
-        const placeholders = ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.dynamics.configuration.templates.placeholders, new Dictionary<string, string>());
+        const usePlaceholders = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.usePlaceholders, false);
+        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
+        const placeholders = ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.cds.configuration.templates.placeholders, new Dictionary<string, string>());
 
         let overwriteAll:boolean = false;
         let skipAll:boolean = false;
@@ -221,7 +221,7 @@ export default class TemplateManager implements IContributor {
         try {
             await FileSystem.recurse(templateDir, fsPath, copyInternal);
         } catch (error) {
-            if (error.name && error.name === cs.dynamics.errors.userCancelledAction) {
+            if (error.name && error.name === cs.cds.errors.userCancelledAction) {
                 // User initiated cancel of this template, remove the files that have been copied.
                 FileSystem.deleteFolder(fsPath);
 
@@ -483,7 +483,7 @@ export default class TemplateManager implements IContributor {
 
     static async getTemplates(folder: string, mergeWith?:TemplateItem[], exclusions?:string[]):Promise<TemplateItem[]> {
         const templates: TemplateItem[] = [];
-        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
+        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
 
         await this.getTemplateFolderItems(folder)
             .then(items => {
@@ -527,7 +527,7 @@ export default class TemplateManager implements IContributor {
      * @return the templates directory
      */
     static async getTemplatesFolder(systemTemplates:boolean = false): Promise<string> {
-        let dir:string = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.templates.templatesDirectory);
+        let dir:string = ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.templates.templatesDirectory);
 
         if (systemTemplates || !dir) {
             dir = path.normalize(TemplateManager.getDefaultTemplatesFolder(systemTemplates));
@@ -810,7 +810,7 @@ export default class TemplateManager implements IContributor {
                     
                     if (cancel) {
                         const error = new Error(`The user has requested to cancel template processing${template ? " for '" + template.name : "'"}`);
-                        error.name = cs.dynamics.errors.userCancelledAction;
+                        error.name = cs.cds.errors.userCancelledAction;
 
                         throw error;
                     }

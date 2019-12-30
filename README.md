@@ -46,18 +46,18 @@ Get started by adding a CDS connection and exporting a solution to your workspac
 
 This extension contributes the following settings:
 
-- `cs.dynamics.configuration.tools.sdkInstallPath`: The full path to the root of the CRM SDK installation on your computer.
-- `cs.dynamics.configuration.tools.updateSource`: The URL where supporting scripts are located.
-- `cs.dynamics.configuration.tools.updateChannel`: The update channel to use.
-- `cs.dynamics.configuration.iconThemes.selectedTheme`: The icon set to use in explorer views.
-- `cs.dynamics.configuration.explorer.showDefaultSolution`: Show the Default Solution in the Dynamics explorer pane.
-- `cs.dynamics.configuration.explorer.showWelcomeExperience`: Show the welcome experience for Dynamics when you open a new workspace.
-- `cs.dynamics.configuration.templates.placeholders`: List of built in placeholders, in key-value string pairs.
-- `cs.dynamics.configuration.templates.placeholderRegExp`: Regular expression for detecting placeholders (e.g. \"#{([\\s\\S]+?)}\").  The first capture group dictates the placeholder key.
-- `cs.dynamics.configuration.templates.templatesDirectory`: Filesystem path that stores template folders.
-- `cs.dynamics.configuration.templates.treeViewGroupPreference`: Preference for grouping template items in the Template Explorer.
-- `cs.dynamics.configuration.templates.usePlaceholders`: Look for and replace placeholders in template (e.g. #{author})
-- `cs.dynamics.configuration.web.usePowerAppsUi`: Use the PowerApps Online UI where possible.
+- `cs.cds.configuration.tools.sdkInstallPath`: The full path to the root of the CRM SDK installation on your computer.
+- `cs.cds.configuration.tools.updateSource`: The URL where supporting scripts are located.
+- `cs.cds.configuration.tools.updateChannel`: The update channel to use.
+- `cs.cds.configuration.iconThemes.selectedTheme`: The icon set to use in explorer views.
+- `cs.cds.configuration.explorer.showDefaultSolution`: Show the Default Solution in the Dynamics explorer pane.
+- `cs.cds.configuration.explorer.showWelcomeExperience`: Show the welcome experience for Dynamics when you open a new workspace.
+- `cs.cds.configuration.templates.placeholders`: List of built in placeholders, in key-value string pairs.
+- `cs.cds.configuration.templates.placeholderRegExp`: Regular expression for detecting placeholders (e.g. \"#{([\\s\\S]+?)}\").  The first capture group dictates the placeholder key.
+- `cs.cds.configuration.templates.templatesDirectory`: Filesystem path that stores template folders.
+- `cs.cds.configuration.templates.treeViewGroupPreference`: Preference for grouping template items in the Template Explorer.
+- `cs.cds.configuration.templates.usePlaceholders`: Look for and replace placeholders in template (e.g. #{author})
+- `cs.cds.configuration.web.usePowerAppsUi`: Use the PowerApps Online UI where possible.
 
 ---
 

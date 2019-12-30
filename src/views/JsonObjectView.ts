@@ -9,13 +9,13 @@ export default class JsonObjectViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
-            vscode.commands.registerCommand(cs.dynamics.controls.jsonInspector.inspect, async (item: any) => { // Match name of command to package.json command
+            vscode.commands.registerCommand(cs.cds.controls.jsonInspector.inspect, async (item: any) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 const view = View.show(JsonObjectView, {
                     icon: './resources/images/cloudsmith-logo-only-50px.png',
                     title: 'Object inspector',
-                    type: cs.dynamics.views.jsonInspectorView
+                    type: cs.cds.views.jsonInspectorView
                 });
 
                 // only do this if we are editing

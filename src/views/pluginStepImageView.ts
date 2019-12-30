@@ -13,13 +13,13 @@ export default class PluginStepImageViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, wsConfig?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
-            vscode.commands.registerCommand(cs.dynamics.controls.pluginStepImage.open, (sdkmessageprocessingstepid: string, pluginStepImage: any, config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
+            vscode.commands.registerCommand(cs.cds.controls.pluginStepImage.open, (sdkmessageprocessingstepid: string, pluginStepImage: any, config?: DynamicsWebApi.Config) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 const view = PluginStepImageView.show(PluginStepImageView, {
                     icon: './resources/images/cloudsmith-logo-only-50px.png',
                     title: 'Configure Plugin Step Image - Dynamics 365 CE',
-                    type: cs.dynamics.views.pluginStepImageView,
+                    type: cs.cds.views.pluginStepImageView,
                     alwaysNew: true
                 });
 

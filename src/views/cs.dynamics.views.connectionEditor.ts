@@ -15,7 +15,7 @@ export default async function openView(config?: DynamicsWebApi.Config): Promise<
     const view = View.show(CdsConnectionEditor, {
         icon: './resources/images/cloudsmith-logo-only-50px.png',
         title: (config && config.name) ? `Edit CDS Connection - ${config.name}` : 'New CDS Connection',
-        type: cs.dynamics.views.connectionEditor,
+        type: cs.cds.views.connectionEditor,
         preserveFocus: false,
         bridge: BridgeCommunicationMethod.Ipc,
         onReady: view => view.setInitialState(config)
@@ -130,7 +130,7 @@ class CdsConnectionEditor extends View {
                         delete config.timeout;
 
                         // success, add it to connection window
-                        vscode.commands.executeCommand(cs.dynamics.controls.dynamicsTreeView.addConnection, config)
+                        vscode.commands.executeCommand(cs.cds.controls.dynamicsTreeView.addConnection, config)
                             .then(() => {
                                 this.dispose();
                             });

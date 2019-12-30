@@ -37,8 +37,8 @@ export function activate(context: vscode.ExtensionContext) {
 	new ExtensionContext(context);
 	
 	// load and check extension configuration
-	const toolsConfig = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration.tools._namespace);
-	const templatesConfig = ExtensionConfiguration.getConfiguration(cs.dynamics.configuration.templates._namespace);
+	const toolsConfig = ExtensionConfiguration.getConfiguration(cs.cds.configuration.tools._namespace);
+	const templatesConfig = ExtensionConfiguration.getConfiguration(cs.cds.configuration.templates._namespace);
 
 	// Setup any scripts that require tools configuration, then templating.
 	[   // our views

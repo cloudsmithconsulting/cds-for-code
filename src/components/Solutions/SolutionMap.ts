@@ -34,7 +34,7 @@ export default class SolutionMap implements IContributor {
         }
 
         context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.deployment.removeSolutionMapping, async (item?: SolutionWorkspaceMapping): Promise<boolean> => {
+            vscode.commands.registerCommand(cs.cds.deployment.removeSolutionMapping, async (item?: SolutionWorkspaceMapping): Promise<boolean> => {
                 const map = await SolutionMap.loadFromWorkspace();
                 let returnValue = false;
 
@@ -59,7 +59,7 @@ export default class SolutionMap implements IContributor {
 
                 return returnValue;
             })
-            , vscode.commands.registerCommand(cs.dynamics.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> => {
+            , vscode.commands.registerCommand(cs.cds.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> => {
                 let solutionId;
                 let organizationId;
                 const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
@@ -209,7 +209,7 @@ export default class SolutionMap implements IContributor {
 
     async saveToWorkspace(context?: ExtensionContext): Promise<SolutionMap> {
         if (context) {
-            context.workspaceState.update(cs.dynamics.configuration.workspaceState.solutionMap, this);
+            context.workspaceState.update(cs.cds.configuration.workspaceState.solutionMap, this);
         } else {
             await SolutionMap.write(this);
         }
@@ -226,7 +226,7 @@ export default class SolutionMap implements IContributor {
 
     static async loadFromWorkspace(context?: ExtensionContext, forceWorkspaceOpen: boolean = true): Promise<SolutionMap> {
         if (context) {
-            const value = context.workspaceState.get<SolutionMap>(cs.dynamics.configuration.workspaceState.solutionMap);
+            const value = context.workspaceState.get<SolutionMap>(cs.cds.configuration.workspaceState.solutionMap);
 
             if (value) {
                 return new SolutionMap(value);
@@ -328,7 +328,7 @@ export default class SolutionMap implements IContributor {
                                 items.forEach(async m => {
                                     this.unmonitorMappedFolders(m);
     
-                                    const mappedItems = <SolutionWorkspaceMapping[]>await vscode.commands.executeCommand(cs.dynamics.deployment.updateSolutionMapping, m, undefined, change.targetUri.fsPath);
+                                    const mappedItems = <SolutionWorkspaceMapping[]>await vscode.commands.executeCommand(cs.cds.deployment.updateSolutionMapping, m, undefined, change.targetUri.fsPath);
 
                                     if (mappedItems && mappedItems.length > 0) {
                                         mappedItems.forEach(m => this.monitorMappedFolders(m));
@@ -342,7 +342,7 @@ export default class SolutionMap implements IContributor {
                                 items.forEach(async m => {
                                     this.unmonitorMappedFolders(m);
     
-                                    await vscode.commands.executeCommand(cs.dynamics.deployment.removeSolutionMapping, m);
+                                    await vscode.commands.executeCommand(cs.cds.deployment.removeSolutionMapping, m);
                                 });
                             }
                         }

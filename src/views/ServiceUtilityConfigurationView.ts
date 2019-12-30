@@ -9,13 +9,13 @@ export default class SvcUtilConfigViewManager implements IContributor {
 	contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         context.subscriptions.push(
 
-            vscode.commands.registerCommand(cs.dynamics.controls.svcUtilConfig.configure, async (item: any) => { // Match name of command to package.json command
+            vscode.commands.registerCommand(cs.cds.controls.svcUtilConfig.configure, async (item: any) => { // Match name of command to package.json command
                 // Run command code
                 //const viewFileUri = vscode.Uri.file(`${context.extensionPath}/resources/webViews/connectionView.html`);
                 const view = View.show(SvcUtilConfigView, {
                     icon: './resources/images/cloudsmith-logo-only-50px.png',
                     title: 'Configure entity code generation - Dynamics 365 CE',
-                    type: cs.dynamics.views.svcUtilConfigView
+                    type: cs.cds.views.svcUtilConfigView
                 });
 
                 // only do this if we are editing
