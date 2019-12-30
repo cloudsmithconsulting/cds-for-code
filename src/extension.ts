@@ -13,7 +13,6 @@ import TemplateManager from './components/Templates/TemplateManager';
 import DynamicsTerminal from './views/DynamicsTerminal';
 import IconLoader from './components/WebDownloaders/IconDownloader';
 import SolutionManager from './components/Solutions/SolutionManager';
-import PluginStepViewManager from './views/PluginStepView';
 import SvcUtilConfigViewManager from './views/ServiceUtilityConfigurationView';
 import SolutionMap from './components/Solutions/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
@@ -48,7 +47,6 @@ export function activate(context: vscode.ExtensionContext) {
 		new JsonObjectViewManager(),
 		new SvcUtilConfigViewManager(),
 		new DynamicsTerminal(),
-		new PluginStepViewManager(),
 		new PluginStepImageViewManager(),
 		new NewWorkspaceViewManager(),
 		

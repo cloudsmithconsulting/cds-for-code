@@ -69,7 +69,7 @@ export namespace dynamics {
         public static readonly connectionEditor:string = `${viewContainers._namespace}.connectionEditor`;
         public static readonly jsonInspectorView:string = `${viewContainers._namespace}.jsonInspectorView`;
         public static readonly newWorkspaceView:string = `${viewContainers._namespace}.newWorkspaceView`;
-        public static readonly pluginStepView:string = `${viewContainers._namespace}.pluginStepView`;
+        public static readonly pluginStepEditor:string = `${viewContainers._namespace}.pluginStepEditor`;
         public static readonly pluginStepImageView:string = `${viewContainers._namespace}.pluginStepImageView`;
         public static readonly svcUtilConfigView:string = `${viewContainers._namespace}.svcUtilConfigView`;
     }
