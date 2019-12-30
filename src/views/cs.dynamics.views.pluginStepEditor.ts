@@ -26,14 +26,14 @@ class PluginStepEditor extends View {
 
     construct(viewRenderer: ViewRenderer): string {
         // add script and css assets
-        viewRenderer.addScript('pluginStepView.js');
+        viewRenderer.addScript('plugin-step-editor.js');
         viewRenderer.addStyleSheet('webviewStyles.css');
 
         // add image assets
         viewRenderer.addImage('cloudsmith-logo-only-50px.png');
 
         // return rendered html
-        return viewRenderer.renderFile('plugin-step.html');
+        return viewRenderer.renderFile('plugin-step-editor.html');
     }
 
     get commands(): Dictionary<string, Function> {
