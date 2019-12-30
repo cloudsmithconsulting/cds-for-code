@@ -42,6 +42,39 @@ Get started by adding a CDS connection and exporting a solution to your workspac
 
 ---
 
+# Commands
+
+| Commands added | Description |
+| ----------- | ----------- |
+| cs.dynamics.deployment.addSolutionComponent | Add component to a CDS Solution |
+| cs.dynamics.deployment.compareWebResource | Compare a local web resource file to a version deployed on a CDS instance |
+| cs.dynamics.deployment.connectToCds | Create or Edit a connection to the Common Data Service |
+| cs.dynamics.deployment.createWebResource | Create a web resource in your workspace or on a CDS instance |
+| cs.dynamics.deployment.dotNetBuild | Build a .Net Core project in the current workspace |
+| cs.dynamics.deployment.dotNetTest | Build and Test a .Net Core project in the current workspace |
+| cs.dynamics.deployment.packWebResource | Deploy a Web Resource to CDS |
+| cs.dynamics.deployment.publishCustomizations | Publish solution changes on a CDS environment |
+| cs.dynamics.deployment.registerPluginAssembly | Register or update a plugin assembly |
+| cs.dynamics.deployment.removeSolutionComponent | Remove a component from a CDS Solution |
+| cs.dynamics.deployment.removeSolutionMapping | Remove remembered locations where CDS solutions are stored in this workspace |
+| cs.dynamics.deployment.unpackWebResource | Download a Web Resource from CDS |
+| cs.dynamics.deployment.updateSolutionMapping | Create or update where CDS solutions are stored in this workspace |
+| cs.dynamics.extension.clearTerminal | Clear the CDS for Code terminal |
+| cs.dynamics.extension.createTerminal | Open the CDS for Code terminal |
+| cs.dynamics.extension.downloadRequiredScripts | Download required PowerShell scripts from GitHub |
+| cs.dynamics.powerShell.unpackSolution | Download & unpack solution from a registered CDS environment |
+| cs.dynamics.powerShell.packSolution | Pack & deploy solution to a registerd CDS environment |
+| cs.dynamics.powerShell.generateEntities | Generate entity code from metadata on a registered CDS environment |
+| cs.dynamics.templates.createFromTemplate | Create new items or projects from a template |
+| cs.dynamics.templates.deleteTemplate | Delete a template from the catalog |
+| cs.dynamics.templates.editTemplateCatalog | Open template catalog in code editor |
+| cs.dynamics.templates.exportTemplate | Export template from the template catalog |
+| cs.dynamics.templates.importTemplate | Import template into the template catalog |
+| cs.dynamics.templates.openTemplateFolder | Open template folder in explorer |
+| cs.dynamics.templates.saveTemplate | Save workspace items as a template in the template catalog |
+
+---
+
 ## Configuration
 
 This extension contributes the following settings:
@@ -88,78 +121,7 @@ We are currently on the insider preview stage of CDS for Code. This build may co
 - Drop us a line in [CDS For Code Early Preview Teams Channel](https://teams.microsoft.com/l/channel/19%3aeb4e28a080cc4330b10effdef32b0ca0%40thread.skype/General?groupId=da1048fb-6db5-4fcf-8a87-27ceb8ac7b68&tenantId=b7d98656-670d-4ae0-b419-b03097edb814)
 - File a bug in [CloudSmith Azure DevOps Dashboard](http://cslink.co/cds-for-code-dashboard)
 
----
-
-| Commands added | Description |
-| ----------- | ----------- |
-| cs.dynamics.controls.dynamicsTreeView.refreshEntry | Title |
-| cs.dynamics.controls.dynamicsTreeView.addEntry | Text |
-| cs.dynamics.controls.dynamicsTreeView.editEntry | Text |
-| cs.dynamics.controls.dynamicsTreeView.deleteEntry | Text |
-| cs.dynamics.controls.dynamicsTreeView.clickEntry | Text |
-| cs.dynamics.controls.dynamicsTreeView.inspectEntry | Text |
-| cs.dynamics.controls.dynamicsTreeView.editConnection | Text |
-| cs.dynamics.controls.dynamicsTreeView.addEntryToSolution | Text |
-| cs.dynamics.controls.dynamicsTreeView.removeEntryFromSolution | Text |
-| cs.dynamics.controls.dynamicsTreeView.moveSolution | Text |
-| cs.dynamics.controls.dynamicsTreeView.openInApp | Text |
-| cs.dynamics.controls.dynamicsTreeView.openInBrowser | Text |
-| cs.dynamics.controls.dynamicsTreeView.openInEditor | Text |
-| cs.dynamics.controls.dynamicsTreeView.unpackSolution | Text |
-| cs.dynamics.controls.explorer.createWebResource | Text |
-| cs.dynamics.controls.explorer.createFromItemTemplate | Text |
-| cs.dynamics.controls.explorer.createFromProjectTemplate | Text |
-| cs.dynamics.controls.explorer.dotNetBuild | Text |
-| cs.dynamics.controls.explorer.dotNetTest | Text |
-| cs.dynamics.controls.explorer.generateEntityCodeToFolder | Text |
-| cs.dynamics.controls.explorer.generateEntityCodeToFile | Text |
-| cs.dynamics.controls.explorer.packSolutionFromFolder | Text |
-| cs.dynamics.controls.explorer.packWebResource | Text |
-| cs.dynamics.controls.explorer.registerPluginFile | Text |
-| cs.dynamics.controls.explorer.saveTemplateFile | Text |
-| cs.dynamics.controls.explorer.saveTemplateFolder | Text |
-| cs.dynamics.controls.explorer.unpackSolutionToFolder | Text |
-| cs.dynamics.controls.newWorkspace.hideLoadingMessage | Text |
-| cs.dynamics.controls.newWorkspace.open | Text |
-| cs.dynamics.controls.newWorkspace.showLoadingMessage | Text |
-| cs.dynamics.controls.svcUtilConfig.configure | Text |
-| cs.dynamics.controls.templateTreeView.refreshEntry | Text |
-| cs.dynamics.controls.templateTreeView.addEntry | Text |
-| cs.dynamics.controls.templateTreeView.editEntry | Text |
-| cs.dynamics.controls.templateTreeView.deleteEntry | Text |
-| cs.dynamics.controls.templateTreeView.clickEntry | Text |
-| cs.dynamics.controls.templateTreeView.createInWorkspace | Text |
-| cs.dynamics.controls.templateTreeView.openEntry | Text |
-| cs.dynamics.controls.templateTreeView.exportEntry | Text |
-| cs.dynamics.controls.templateTreeView.importEntry | Text |
-| cs.dynamics.deployment.addSolutionComponent | Text |
-| cs.dynamics.deployment.compareWebResource | Text |
-| cs.dynamics.deployment.connectToCds | Text |
-| cs.dynamics.deployment.createWebResource | Text |
-| cs.dynamics.deployment.dotNetBuild | Text |
-| cs.dynamics.deployment.dotNetTest | Text |
-| cs.dynamics.deployment.packWebResource | Text |
-| cs.dynamics.deployment.publishCustomizations | Text |
-| cs.dynamics.deployment.registerPluginAssembly | Text |
-| cs.dynamics.deployment.removeSolutionComponent | Text |
-| cs.dynamics.deployment.removeSolutionMapping | Text |
-| cs.dynamics.deployment.unpackWebResource | Text |
-| cs.dynamics.deployment.updateSolutionMapping | Text |
-| cs.dynamics.extension.clearTerminal | Text |
-| cs.dynamics.extension.createTerminal | Text |
-| cs.dynamics.extension.downloadRequiredScripts | Text |
-| cs.dynamics.powerShell.unpackSolution | Text |
-| cs.dynamics.powerShell.packSolution | Text |
-| cs.dynamics.powerShell.generateEntities | Text |
-| cs.dynamics.templates.createFromTemplate | Text |
-| cs.dynamics.templates.deleteTemplate | Text |
-| cs.dynamics.templates.editTemplateCatalog | Text |
-| cs.dynamics.templates.exportTemplate | Text |
-| cs.dynamics.templates.importTemplate | Text |
-| cs.dynamics.templates.openTemplateFolder | Text |
-| cs.dynamics.templates.saveTemplate | Text |
-
----
+--- 
 
 ## Community Recognition
 
