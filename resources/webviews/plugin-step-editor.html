@@ -1,189 +1,178 @@
-<img class="branding" src="#{images['cloudsmith-logo-only-50px.png']}" alt="CloudSmith Conulting" title="CloudSmith Conulting" />
-
-<h1 id="title">
-    #{viewTitle}
-</h1>
-
-<div class="field field--buttons">
-    <button data-action="save" class="button button--primary">
-        <span class="iconify" data-icon="fa:save"></span>
-        Save Step
-    </button>
-    <button data-action="cancel" class="button">
-        <span class="iconify" data-icon="fa:ban"></span>
-        Cancel
-    </button>
-</div>
-
-<blockquote class="panel_error" id="errorPanel" hidden>
-    <div class="panel__text">
-        <h4>Oops! Slight problem</h4>
-        <span id="errorMessage"></span>
+<nav class="nav-extended">
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo left">
+            &nbsp;<span id="title">#{viewTitle}</span>
+        </a>
+        <a href="#" data-target="extended-navigation" class="sidenav-trigger"><span class="iconify" data-icon="ion-menu"
+                data-width="32" data-height="24"></span></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a data-action="save" href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
+            <li><a data-action="cancel" href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
+        </ul>
     </div>
-</blockquote>
+</nav>
 
-<blockquote class="panel_info" id="loadingPanel">
-    <div class="panel__text">
-        <h4>Hang tight</h4>
-        We're loading some data behind the scenes here. This message will go away when the form is ready.
-    </div>
-</blockquote>
+<ul class="sidenav" id="extended-navigation">
+    <li><a data-action="save" href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
+    <li><a data-action="cancel" href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
+</ul>
 
-<div class="grid grid--left-panel-large">
-    <div>
-        <fieldset>
-            <legend>General Configuration</legend>
+<form class="row">
+    <blockquote class="panel_error" id="errorPanel" hidden>
+        <div class="panel__text">
+            <h4>Oops! Slight problem</h4>
+            <span id="errorMessage"></span>
+        </div>
+    </blockquote>
+    
+    <blockquote class="panel_info" id="loadingPanel">
+        <div class="panel__text">
+            <h4>Hang tight</h4>
+            We're loading some data behind the scenes here. This message will go away when the form is ready.
+        </div>
+    </blockquote>
+    
+    <div class="grid grid--left-panel-large">
+        <div>
+            <fieldset>
+                <legend>General Configuration</legend>
+    
+                <input type="hidden" id="Id" name="Id" value="" />
+                <input type="hidden" id="SecureConfigId" name="SecureConfigId" value="" />
 
-            <input type="hidden" id="Id" name="Id" value="" />
-            <input type="hidden" id="SecureConfigId" name="SecureConfigId" value="" />
-            <div class="field">
-                <label class="field__label" for="Message">
-                    Message
-                </label>
-                <div class="autocomplete">
-                    <input type="text" class="field__input field__input--wide" id="Message" name="Message" />
-                    <div class="autocomplete-items"></div>
+                <div class="col s12 input-field">
+                    <input id="Message" name="Message" type="text" />
+                    <label for="Message">Message</label>
                 </div>
-            </div>
-            <div class="field">
-                <label class="field__label" for="PrimaryEntity">
-                    Primary Entity
-                </label>
-                <div class="autocomplete">
-                    <input type="text" class="field__input field__input--wide" id="PrimaryEntity" name="PrimaryEntity" />
-                    <div class="autocomplete-items"></div>
+
+                <div class="col s12 input-field">
+                    <input id="PrimaryEntity" name="PrimaryEntity" type="text" />
+                    <label for="PrimaryEntity">Primary Entity</label>
                 </div>
-            </div>
-            <div class="field">
-                <label class="field__label" for="SecondEntity">
-                    Second Entity
-                </label>
-                <div class="autocomplete">
-                    <input type="text" class="field__input field__input--wide" id="SecondEntity" name="SecondEntity" />
-                    <div class="autocomplete-items"></div>
+
+                <div class="col s12 input-field">
+                    <input id="SecondEntity" name="SecondEntity" type="text" />
+                    <label for="SecondEntity">Second Entity</label>
                 </div>
-            </div>
-            <div class="field">
-                <label class="field__label" for="FilteringAttributes">
-                    Filtering Attributes
-                </label>
-                <input type="text" class="field__input field__input--wide" id="FilteringAttributes"
-                    name="FilteringAttributes" />
-            </div>
-            <div class="field">
-                <label class="field__label" for="EventHandler">
-                    Event Handler
-                </label>
-                <select id="EventHandler" name="EventHandler" class="field__input field__input--wide">
-                </select>
-            </div>
-            <div class="field">
-                <label class="field__label" for="StepName">
-                    Step Name
-                </label>
-                <input type="text" class="field__input field__input--wide" id="StepName" name="StepName" />
-            </div>
-            <div class="field">
-                <label class="field__label" for="UserContext">
-                    Run in User's Context
-                </label>
-                <select id="UserContext" name="UserContext" class="field__input field__input--wide">
-                </select>
-            </div>
-            <div class="field">
-                <label class="field__label" for="ExecutionOrder">
-                    Execution Order
-                </label>
-                <input type="number" class="field__input" id="ExecutionOrder" name="ExecutionOrder" value="1" />
-            </div>
-            <div class="field">
-                <label class="field__label" for="Description">
-                    Description
-                </label>
-                <input type="text" class="field__input field__input--wide" id="Description" name="Description" />
-            </div>
-        </fieldset>
+
+                <div class="col s12 input-field">
+                    <input id="FilteringAttributes" name="FilteringAttributes" type="text" />
+                    <label for="FilteringAttributes">Filtering Attributes</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <select id="EventHandler" name="EventHandler">
+                    </select>
+                    <label for="EventHandler">Event Handler</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <input id="StepName" name="StepName" type="text" />
+                    <label for="StepName">Step Name</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <select id="UserContext" name="UserContext">
+                    </select>
+                    <label for="UserContext">Run in User's Context</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <input id="ExecutionOrder" name="ExecutionOrder" type="number" value="1" />
+                    <label for="ExecutionOrder">Execution Order</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <input id="Description" name="Description" type="text" />
+                    <label for="Description">Description</label>
+                </div>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset>
+                <legend>Event Pipeline Stage of Execution</legend>
+
+                <div class="col s12 input-field">
+                    <p class="left" style="margin-right:8px">
+                        <label>
+                            <input type="radio" name="ExecutionPipeline" id="PostOperation" value="40" class="with-gap" checked />
+                            <span>Post-operation</span>
+                        </label>
+                    </p>
+                    <p class="left" style="margin-right:8px">
+                        <label>
+                            <input type="radio" name="ExecutionPipeline" id="PreOperation" value="20" class="with-gap" />
+                            <span>Pre-operation</span>
+                        </label>
+                    </p>
+                    <p class="left" style="margin-right:8px">
+                        <label>
+                            <input type="radio" name="ExecutionPipeline" id="PreValidation" value="10" class="with-gap" />
+                            <span>Pre-Validation</span>
+                        </label>
+                    </p>
+                </div>
+            </fieldset>
+    
+            <fieldset>
+                <legend>Execution Mode</legend>
+    
+                <div class="col s12 input-field">
+                    <p>
+                        <label>
+                            <input type="radio" name="ExecutionMode" id="Synchronous" value="0" class="with-gap" checked />
+                            <span>Synchronous</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input type="radio" name="ExecutionMode" id="Asynchronous" value="1" class="with-gap" />
+                            <span>Asynchronous</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input type="checkbox" name="AsyncAutoDelete" id="AsyncAutoDelete" value="true" class="filled-in" />
+                            <span>Delete AsyncOperation if StatusCode = Successful</span>
+                        </label>
+                    </p>
+                </div>
+            </fieldset>
+    
+            <fieldset>
+                <legend>Deployment</legend>
+    
+                <p>
+                    <label>
+                        <input type="checkbox" name="Server" id="Server" value="true" class="filled-in" checked />
+                        <span>Server</span>
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        <input type="checkbox" name="Offline" id="Offline" value="true" class="filled-in" />
+                        <span>Offline</span>
+                    </label>
+                </p>
+            </fieldset>
+    
+            <fieldset>
+                <legend>Other Configuration(s)</legend>
+    
+                <div class="field">
+                    <label class="field__label" for="UnsecureConfiguration">
+                        Unsecure Configuration
+                    </label>
+                    <textarea rows="8" cols="50" class="field__input field__input--wide" id="UnsecureConfiguration" name="UnsecureConfiguration"></textarea>
+                </div>
+    
+                <div class="field">
+                    <label class="field__label" for="SecureConfiguration">
+                        Secure Configuration
+                    </label>
+                    <textarea rows="8" cols="50" class="field__input field__input--wide" id="SecureConfiguration" name="UnsecureConfiguration"></textarea>
+                </div>
+            </fieldset>
+        </div>
     </div>
-    <div>
-        <fieldset>
-            <legend>Event Pipeline Stage of Execution</legend>
-
-            <div class="field field--checkbox">
-                <label class="field__label" for="PreValidation">
-                    Pre-validation
-                </label>
-                <input type="radio" class="field__input" id="PreValidation" name="ExecutionPipeline"
-                    value="10" />
-                <label class="field__label" for="PreOperation">
-                    Pre-operation
-                </label>
-                <input type="radio" class="field__input" id="PreOperation" name="ExecutionPipeline"
-                    value="20" />
-                <label class="field__label" for="PostOperation">
-                    Post-operation
-                </label>
-                <input type="radio" class="field__input" id="PostOperation" name="ExecutionPipeline"
-                    value="40" checked="checked" />
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>Execution Mode</legend>
-
-            <div class="field field--checkbox">
-                <label class="field__label" for="Asynchronous">
-                    Asynchronous
-                </label>
-                <input type="radio" class="field__input" id="Asynchronous" name="ExecutionMode" value="1" />
-                <label class="field__label" for="Synchronous">
-                    Synchronous
-                </label>
-                <input type="radio" class="field__input" id="Synchronous" name="ExecutionMode" value="0"
-                    checked="checked" />
-            </div>
-
-            <div class="field field--checkbox">
-                <label class="field__label" for="AsyncAutoDelete">
-                    Delete AsyncOperation if StatusCode = Successful
-                </label>
-                <input type="checkbox" class="field__input" id="AsyncAutoDelete" name="AsyncAutoDelete" value="true" />
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>Deployment</legend>
-
-            <div class="field field--checkbox">
-                <label class="field__label" for="Server">
-                    Server
-                </label>
-                <input type="checkbox" class="field__input" id="Server" name="Server" value="true" checked="checked" />
-            </div>
-
-            <div class="field field--checkbox">
-                <label class="field__label" for="Offline">
-                    Offline
-                </label>
-                <input type="checkbox" class="field__input" id="Offline" name="Offline" value="true" />
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>Other Configuration(s)</legend>
-
-            <div class="field">
-                <label class="field__label" for="UnsecureConfiguration">
-                    Unsecure Configuration
-                </label>
-                <textarea rows="4" cols="50" class="field__input field__input--wide" id="UnsecureConfiguration" name="UnsecureConfiguration"></textarea>
-            </div>
-
-            <div class="field">
-                <label class="field__label" for="SecureConfiguration">
-                    Secure Configuration
-                </label>
-                <textarea rows="4" cols="50" class="field__input field__input--wide" id="SecureConfiguration" name="UnsecureConfiguration"></textarea>
-            </div>
-        </fieldset>
-    </div>
-</div>
+</form>

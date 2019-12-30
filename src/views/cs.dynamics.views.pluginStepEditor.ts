@@ -26,7 +26,10 @@ class PluginStepEditor extends View {
 
     construct(viewRenderer: ViewRenderer): string {
         // add script and css assets
+        viewRenderer.addScript('materialize.js');
         viewRenderer.addScript('plugin-step-editor.js');
+
+        viewRenderer.addStyleSheet("materialize.vscode.css");
         viewRenderer.addStyleSheet('webviewStyles.css');
 
         // add image assets
