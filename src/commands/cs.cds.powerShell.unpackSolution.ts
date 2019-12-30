@@ -63,7 +63,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 
 	if (Utilities.$Object.isNullOrEmpty(logFile)) { 
 		if ((await Quickly.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
-			logFile = path.join(ExtensionContext.Instance.globalStoragePath, `/logs/unpack-${solution}-${Utilities.String.dateAsFilename()}`);
+			logFile = path.join(ExtensionContext.Instance.globalStoragePath, `/logs/unpack-${typeof solution === "string" ? solution : solution.uniquename}-${Utilities.String.dateAsFilename()}`);
 		}
 	}
 

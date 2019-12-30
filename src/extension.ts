@@ -35,7 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// We initialize this as it's a psuedo-singleton... no Internals here :)
 	// tslint:disable-next-line: no-unused-expression
 	new ExtensionContext(context);
-	
+
 	// load and check extension configuration
 	const toolsConfig = ExtensionConfiguration.getConfiguration(cs.cds.configuration.tools._namespace);
 	const templatesConfig = ExtensionConfiguration.getConfiguration(cs.cds.configuration.templates._namespace);

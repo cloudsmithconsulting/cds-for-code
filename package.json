@@ -994,6 +994,7 @@
 		"jquery": "^3.4.1",
 		"jsoneditor": "^7.4.0",
 		"lodash": "^4.17.15",
+		"moment": "^2.24.0",
 		"mustache": "^3.1.0",
 		"node-archiver": "^0.3.0",
 		"node-fetch": "^2.6.0",

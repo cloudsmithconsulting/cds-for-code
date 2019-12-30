@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export function parseUtcDate(date: string): Date {
     let regexMatch: RegExpExecArray | null | (string | number)[];
     
@@ -13,13 +15,7 @@ export function parseUtcDate(date: string): Date {
 }
 
 export function dateAsFilename(): string {
-    const now = new Date();
-    let dateString = now.toISOString();
-
-    dateString = dateString.substr(0, dateString.length - 5);
-    dateString = dateString.replace("T", "-").replace(":", "").replace(":", "");
-    
-    return dateString;
+    return moment().format("YYYY-MM-DD-hh-mm-ss");
 }
 
 export function withTrailingSlash(path: string | undefined): string {

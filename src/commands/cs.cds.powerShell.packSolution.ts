@@ -8,7 +8,6 @@ import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import { Utilities } from '../core/Utilities';
 import SolutionMap from '../components/Solutions/SolutionMap';
 import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
-import WorkspaceState from '../components/Configuration/WorkspaceState';
 import SolutionFile from '../components/SolutionXml/SolutionFile';
 import ExtensionContext from '../core/ExtensionContext';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
@@ -75,7 +74,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 
 	if (Utilities.$Object.isNullOrEmpty(logFile)) { 
 		if ((await Quickly.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
-			logFile = path.join(ExtensionContext.Instance.globalStoragePath, `/logs/deploy-${solution}-${Utilities.String.dateAsFilename()}`);
+			logFile = path.join(ExtensionContext.Instance.globalStoragePath, `/logs/deploy-${typeof solution === "string" ? solution : solution.uniquename}-${Utilities.String.dateAsFilename()}`);
 		}
 	}
 

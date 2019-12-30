@@ -3,6 +3,7 @@ import { Writable } from 'stream';
 import * as vscode from 'vscode';
 import * as cs from '../cs';
 import Dictionary from './types/Dictionary';
+import * as moment from 'moment';
 
 export type Logger = Console & { outputChannel?: vscode.OutputChannel };
 
@@ -68,13 +69,21 @@ export class ExtensionLogger {
         }
     }
 
+    private formatMessage(message?: string): string | undefined {
+        if (message) {
+            return `[${moment().format('hh:mm:ss')}]: ${message}`;
+        }
+
+        return undefined;
+    }   
+
     /**
      * A simple assertion test that verifies whether `value` is truthy.
      * If it is not, an `AssertionError` is thrown.
      * If provided, the error `message` is formatted using `util.format()` and used as the error message.
      */
     assert(value: any, message?: string, ...optionalParams: any[]): void {
-        this.logger.assert(value, message, ...optionalParams);
+        this.logger.assert(value, this.formatMessage(message), ...optionalParams);
     }
 
     /**
@@ -102,14 +111,14 @@ export class ExtensionLogger {
      * The `console.debug()` function is an alias for {@link console.log()}.
      */
     debug(message?: any, ...optionalParams: any[]): void {
-        this.logger.debug(message, ...optionalParams);
+        this.logger.debug(this.formatMessage(message), ...optionalParams);
     }
 
     /**
      * Prints to `stderr` with newline.
      */
     error(message?: any, ...optionalParams: any[]): void {
-        this.logger.error(message, ...optionalParams);
+        this.logger.error(this.formatMessage(message), ...optionalParams);
     }
 
     /**
@@ -131,14 +140,14 @@ export class ExtensionLogger {
      * The {@link console.info()} function is an alias for {@link console.log()}.
      */
     info(message?: any, ...optionalParams: any[]): void {
-        this.logger.info(message, ...optionalParams);
+        this.logger.info(this.formatMessage(message), ...optionalParams);
     }
 
     /**
      * Prints to `stdout` with newline.
      */
     log(message?: any, ...optionalParams: any[]): void {
-        this.logger.log(message, ...optionalParams);
+        this.logger.log(this.formatMessage(message), ...optionalParams);
     }
 
     /**
@@ -174,15 +183,17 @@ export class ExtensionLogger {
      * Prints to `stderr` the string 'Trace :', followed by the {@link util.format()} formatted message and stack trace to the current position in the code.
      */
     trace(message?: any, ...optionalParams: any[]): void {
-        this.logger.trace(message, ...optionalParams);
+        this.logger.trace(this.formatMessage(message), ...optionalParams);
     }
 
     /**
      * The {@link console.warn()} function is an alias for {@link console.error()}.
      */
     warn(message?: any, ...optionalParams: any[]): void {
-        this.logger.warn(message, ...optionalParams);
+        this.logger.warn(this.formatMessage(message), ...optionalParams);
     }
 }
 
-export default ExtensionLogger.Instance["default"];
+const logger: ExtensionLogger = ExtensionLogger.Instance["default"];
+
+export default logger;
