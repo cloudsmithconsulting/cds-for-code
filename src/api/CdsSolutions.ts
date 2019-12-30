@@ -142,7 +142,7 @@ export namespace CdsSolutions {
             return form ? this.DynamicsForms.get(form) : undefined;
         }
 
-        static getInteractiveDashboardLayout(layout?: InteractiveDashboardLayout) {
+        static getInteractiveDashboardLayout(layout?: InteractiveDashboardLayout): number {
             return layout ? this.InteractiveDashboardLayouts.get(layout) : undefined;
         }
 
