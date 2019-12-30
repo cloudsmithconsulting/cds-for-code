@@ -26,7 +26,7 @@ import saveTemplate from '../../commands/cs.cds.templates.saveTemplate';
 import saveTemplateFile from "../../commands/cs.cds.controls.explorer.saveTemplateFile";
 import saveTemplateFolder from "../../commands/cs.cds.controls.explorer.saveTemplateFolder";
 import { TemplateCatalog } from './TemplateCatalog';
-import TemplateTreeView from '../../views/TemplatesTreeView';
+import TemplateTreeView from '../../views/TemplateExplorer';
 
 /**
  * Main class to handle the logic of the Project Templates

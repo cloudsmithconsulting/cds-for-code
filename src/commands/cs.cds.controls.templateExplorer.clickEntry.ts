@@ -1,4 +1,4 @@
-import * as TemplateTreeView from "../views/TemplatesTreeView";
+import * as TemplateTreeView from "../views/TemplateExplorer";
 import * as vscode from 'vscode';
 
 /**

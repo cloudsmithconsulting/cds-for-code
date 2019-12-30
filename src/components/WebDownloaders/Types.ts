@@ -7,7 +7,7 @@ import Dictionary from '../../core/types/Dictionary';
 import * as FileSystem from '../../core/io/FileSystem';
 import * as DynamicsTreeView from '../../views/CdsExplorer';
 import { TS } from 'typescript-linq';
-import * as TemplateTreeView from '../../views/TemplatesTreeView';
+import * as TemplateTreeView from '../../views/TemplateExplorer';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 
 export type ExtensionIcon = DynamicsTreeView.EntryType | TemplateTreeView.EntryType | 'Add' | 'Edit' | 'Delete' | 'Refresh' | 'Save' | 'Cancel';

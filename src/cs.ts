@@ -208,17 +208,17 @@ export namespace cds {
         }
 
         // tslint:disable-next-line: class-name
-        export class templateTreeView {
-            static readonly _namespace:string = "cs.cds.controls.templateTreeView";
-            static readonly addEntry:string = `${templateTreeView._namespace}.addEntry`;
-            static readonly clickEntry:string = `${templateTreeView._namespace}.clickEntry`;
-            static readonly createInWorkspace:string = `${templateTreeView._namespace}.createInWorkspace`;
-            static readonly deleteEntry:string = `${templateTreeView._namespace}.deleteEntry`;
-            static readonly editEntry:string = `${templateTreeView._namespace}.editEntry`;
-            static readonly exportEntry:string = `${templateTreeView._namespace}.exportEntry`;
-            static readonly importEntry:string = `${templateTreeView._namespace}.importEntry`;
-            static readonly openEntry:string = `${templateTreeView._namespace}.openEntry`;
-            static readonly refreshEntry:string = `${templateTreeView._namespace}.refreshEntry`;
+        export class templateExplorer {
+            static readonly _namespace:string = "cs.cds.controls.templateExplorer";
+            static readonly addEntry:string = `${templateExplorer._namespace}.addEntry`;
+            static readonly clickEntry:string = `${templateExplorer._namespace}.clickEntry`;
+            static readonly createInWorkspace:string = `${templateExplorer._namespace}.createInWorkspace`;
+            static readonly deleteEntry:string = `${templateExplorer._namespace}.deleteEntry`;
+            static readonly editEntry:string = `${templateExplorer._namespace}.editEntry`;
+            static readonly exportEntry:string = `${templateExplorer._namespace}.exportEntry`;
+            static readonly importEntry:string = `${templateExplorer._namespace}.importEntry`;
+            static readonly openEntry:string = `${templateExplorer._namespace}.openEntry`;
+            static readonly refreshEntry:string = `${templateExplorer._namespace}.refreshEntry`;
         }
     }
 }

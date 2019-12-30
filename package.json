@@ -337,7 +337,7 @@
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.cds.controls.templateTreeView.refreshEntry",
+				"command": "cs.cds.controls.templateExplorer.refreshEntry",
 				"title": "Refresh",
 				"icon": {
 					"light": "resources/icons/default/refresh.light.svg",
@@ -346,7 +346,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.templateTreeView.addEntry",
+				"command": "cs.cds.controls.templateExplorer.addEntry",
 				"title": "New",
 				"icon": {
 					"light": "resources/icons/default/add.light.svg",
@@ -355,7 +355,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.templateTreeView.editEntry",
+				"command": "cs.cds.controls.templateExplorer.editEntry",
 				"title": "Edit",
 				"icon": {
 					"light": "resources/icons/default/edit.light.svg",
@@ -364,7 +364,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.templateTreeView.deleteEntry",
+				"command": "cs.cds.controls.templateExplorer.deleteEntry",
 				"title": "Delete",
 				"icon": {
 					"light": "resources/icons/default/delete.light.svg",
@@ -373,27 +373,27 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.templateTreeView.clickEntry",
+				"command": "cs.cds.controls.templateExplorer.clickEntry",
 				"title": "Click",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.templateTreeView.createInWorkspace",
+				"command": "cs.cds.controls.templateExplorer.createInWorkspace",
 				"title": "Create in Workspace",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.templateTreeView.openEntry",
+				"command": "cs.cds.controls.templateExplorer.openEntry",
 				"title": "Open in Explorer",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.templateTreeView.exportEntry",
+				"command": "cs.cds.controls.templateExplorer.exportEntry",
 				"title": "Export Template",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.templateTreeView.importEntry",
+				"command": "cs.cds.controls.templateExplorer.importEntry",
 				"title": "Import Template",
 				"category": "UserInterface"
 			},
@@ -678,39 +678,39 @@
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.addEntry",
+					"command": "cs.cds.controls.templateExplorer.addEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.clickEntry",
+					"command": "cs.cds.controls.templateExplorer.clickEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.createInWorkspace",
+					"command": "cs.cds.controls.templateExplorer.createInWorkspace",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.deleteEntry",
+					"command": "cs.cds.controls.templateExplorer.deleteEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.editEntry",
+					"command": "cs.cds.controls.templateExplorer.editEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.exportEntry",
+					"command": "cs.cds.controls.templateExplorer.exportEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.importEntry",
+					"command": "cs.cds.controls.templateExplorer.importEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.openEntry",
+					"command": "cs.cds.controls.templateExplorer.openEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.refreshEntry",
+					"command": "cs.cds.controls.templateExplorer.refreshEntry",
 					"when": "false"
 				}
 			],
@@ -793,12 +793,12 @@
 					"when": "view == cs.cds.viewContainers.cdsExplorer"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.refreshEntry",
+					"command": "cs.cds.controls.templateExplorer.refreshEntry",
 					"group": "navigation",
 					"when": "view == cs.cds.viewContainers.templateExplorer"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.editEntry",
+					"command": "cs.cds.controls.templateExplorer.editEntry",
 					"group": "navigation",
 					"when": "view == cs.cds.viewContainers.templateExplorer"
 				}
@@ -865,42 +865,42 @@
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.addEntry",
+					"command": "cs.cds.controls.templateExplorer.addEntry",
 					"group": "inline",
 					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.createInWorkspace",
+					"command": "cs.cds.controls.templateExplorer.createInWorkspace",
 					"group": "group@3",
 					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canCreateInWorkspace)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.editEntry",
+					"command": "cs.cds.controls.templateExplorer.editEntry",
 					"group": "inline",
 					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.deleteEntry",
+					"command": "cs.cds.controls.templateExplorer.deleteEntry",
 					"group": "inline",
 					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.openEntry",
+					"command": "cs.cds.controls.templateExplorer.openEntry",
 					"group": "group@2",
 					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canOpenItem)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.refreshEntry",
+					"command": "cs.cds.controls.templateExplorer.refreshEntry",
 					"group": "group@1",
 					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.exportEntry",
+					"command": "cs.cds.controls.templateExplorer.exportEntry",
 					"group": "group@4",
 					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canExportItem)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.templateTreeView.importEntry",
+					"command": "cs.cds.controls.templateExplorer.importEntry",
 					"group": "group@4",
 					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canImportItem)(.*)$/"
 				}

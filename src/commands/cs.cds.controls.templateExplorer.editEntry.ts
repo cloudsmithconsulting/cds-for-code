@@ -1,5 +1,5 @@
 import * as cs from "../cs";
-import * as TemplateTreeView from "../views/TemplatesTreeView";
+import * as TemplateTreeView from "../views/TemplateExplorer";
 import * as vscode from 'vscode';
 import { TemplateType } from "../components/Templates/Types";
 import TemplateManager from "../components/Templates/TemplateManager";

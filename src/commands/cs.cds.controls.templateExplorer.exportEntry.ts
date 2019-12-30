@@ -1,5 +1,5 @@
 import * as cs from "../cs";
-import * as TemplateTreeView from "../views/TemplatesTreeView";
+import * as TemplateTreeView from "../views/TemplateExplorer";
 import * as vscode from 'vscode';
 
 /**
@@ -10,7 +10,7 @@ import * as vscode from 'vscode';
  * @returns void
  */
 export default async function run(item?: TemplateTreeView.TreeEntry) {
-	return vscode.commands.executeCommand(cs.cds.templates.importTemplate, undefined).then(
-		() => vscode.commands.executeCommand(cs.cds.controls.templateTreeView.refreshEntry)
+	return vscode.commands.executeCommand(cs.cds.templates.exportTemplate, item && item.context ? item.context : undefined).then(
+		() => vscode.commands.executeCommand(cs.cds.controls.templateExplorer.refreshEntry, item)
 	);
 }

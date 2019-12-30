@@ -7,7 +7,7 @@ import ExtensionConfiguration from './core/ExtensionConfiguration';
 import ViewManager from './views/ViewManager';
 import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
 import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
-import DynamicsTreeView from './views/CdsExplorer';
+import CdsExplorer from './views/CdsExplorer';
 import JsonObjectViewManager from './views/JsonObjectView';
 import TemplateManager from './components/Templates/TemplateManager';
 import DynamicsTerminal from './views/DynamicsTerminal';
@@ -18,7 +18,7 @@ import SvcUtilConfigViewManager from './views/ServiceUtilityConfigurationView';
 import SolutionMap from './components/Solutions/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
 import VisualStudioProjectCommands from './components/DotNetCore/DotNetProjectManager';
-import TemplateTreeView from './views/TemplatesTreeView';
+import TemplateExplorer from './views/TemplateExplorer';
 import PluginStepImageViewManager from './views/PluginStepImageView';
 import WebResourceManager from './components/Solutions/WebResourceManager';
 import ExtensionContext from './core/ExtensionContext';
@@ -42,8 +42,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Setup any scripts that require tools configuration, then templating.
 	[   // our views
-		new DynamicsTreeView(),
-		new TemplateTreeView(),
+		new CdsExplorer(),
+		new TemplateExplorer(),
 		new ViewManager(),
 		new JsonObjectViewManager(),
 		new SvcUtilConfigViewManager(),
