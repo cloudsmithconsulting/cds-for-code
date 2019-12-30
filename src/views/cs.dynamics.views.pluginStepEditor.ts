@@ -86,6 +86,10 @@ class PluginStepEditor extends View {
                 callback(null, await api.retrievePluginStep(step.sdkmessageprocessingstepid));
             }
         }, (error: any, viewModel: any) => {
+            if (error) {
+                Quickly.error(error.message);
+                return;
+            }
             // set the initial state
             this.postMessage({ command: 'load', viewModel });
         });
