@@ -33,7 +33,7 @@ export namespace cds {
         static readonly createTerminal:string = `${extension._namespace}.createTerminal`;
         static readonly downloadRequiredIcons:string = `${extension._namespace}.downloadRequiredIcons`;
         static readonly downloadRequiredScripts:string = `${extension._namespace}.downloadRequiredScripts`;
-        static readonly productId:string = `cloudsmith.cds-for-code`;
+        static readonly productId:string = `CloudSmith.cds-for-code`;
         static readonly productName:string = `CloudSmith CDS for Code`;
         static readonly telemetryKey:string = `8e60943e-a073-4ccd-a199-45516b5d7cf3`;
     }

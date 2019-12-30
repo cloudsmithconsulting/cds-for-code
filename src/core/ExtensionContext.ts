@@ -47,19 +47,19 @@ export default class ExtensionContext {
         }
     }
 
-    activate(id?: string, config?: vscode.WorkspaceConfiguration) {
+    async activate(id?: string, config?: vscode.WorkspaceConfiguration) {
         if (!id) {
-            ExtensionContext._onActivate.values.forEach(v => v.forEach(a => a(ExtensionContext._instance, config)));
+            await ExtensionContext._onActivate.values.forEach(async v => await v.forEach(async a => await a(ExtensionContext._instance, config)));
         } else if (id && ExtensionContext._onActivate.containsKey(id)) {
-            ExtensionContext._onActivate[id].forEach(a => a(ExtensionContext._instance, config));
+            await ExtensionContext._onActivate[id].forEach(async a => await a(ExtensionContext._instance, config));
         }
     }
 
-    deactivate(id?: string, config?: vscode.WorkspaceConfiguration) { 
+    async deactivate(id?: string, config?: vscode.WorkspaceConfiguration) { 
         if (!id) {
-            ExtensionContext._onDeactivate.values.forEach(v => v.forEach(a => a(ExtensionContext._instance, config)));
+            await ExtensionContext._onDeactivate.values.forEach(async v => await v.forEach(async a => await a(ExtensionContext._instance, config)));
         } else if (id && ExtensionContext._onDeactivate.containsKey(id)) {
-            ExtensionContext._onDeactivate[id].forEach(a => a(ExtensionContext._instance, config));
+            await ExtensionContext._onDeactivate[id].forEach(async a => await a(ExtensionContext._instance, config));
         }
     }
 }

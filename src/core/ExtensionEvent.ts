@@ -20,12 +20,12 @@ export class DefaultExtensionEventInvocationOptions implements IExtensionEventIn
 }
 
 export class ExtensionEventWrapper<T> implements IExtensionEventWrapper<T> {
-    onActivate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+    onActivate() {
         this.options.logger.info(`Extension: ${this.id} (${this.description}) activated`);
         this.options.logger.group();
     }
     
-    onDeactivate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+    onDeactivate() {
         this.options.logger.groupEnd();
         this.options.logger.info(`Extension: ${this.id} (${this.description}) de-activated`);
     }
@@ -52,6 +52,10 @@ export function onExtensionActivate<T>(id: string, options?: IExtensionEventInvo
         descriptor.value = async function (...args: any[]) {
             let result;
 
+            if (wrapper) {
+                wrapper.onActivate();
+            }
+
             try {
                 result = await originalMethod.apply(target, args);
             } catch (error) {
@@ -72,6 +76,10 @@ export function onExtensionDeactivate<T>(id: string, options?: IExtensionEventIn
         //wrapping the original method
         descriptor.value = async function (...args: any[]) {
             let result;
+
+            if (wrapper) {
+                wrapper.onDeactivate();
+            }
 
             try {
                 result = await originalMethod.apply(target, args);

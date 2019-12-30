@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as cs from '../../cs';
 import fetch from 'node-fetch';
-import IContributor from '../../core/CommandBuilder';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
 import { Utilities } from '../../core/Utilities';
@@ -16,9 +15,9 @@ import Logger from '../../core/Logger';
 import { onExtensionActivate } from '../../core/ExtensionEvent';
 
 export default class ScriptDownloader {
-	@onExtensionActivate("CloudSmith.cds-for-code")
-    activate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-        ScriptDownloader.runScriptCheck();
+	@onExtensionActivate(cs.cds.extension.productId)
+    async activate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+        await ScriptDownloader.runScriptCheck();
     }
 
 	@command(cs.cds.extension.downloadRequiredScripts, "Download required PowerShell scripts and templates")

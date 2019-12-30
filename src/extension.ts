@@ -6,7 +6,7 @@ import * as cs from './cs';
 import ExtensionConfiguration from './core/ExtensionConfiguration';
 import ViewManager from './views/ViewManager';
 import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
-import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
+//import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
 import CdsExplorer from './views/CdsExplorer';
 import JsonObjectViewManager from './views/JsonObjectView';
 import TemplateManager from './components/Templates/TemplateManager';
@@ -29,12 +29,12 @@ import logger from './core/Logger';
 // *****************
 // More on activation events can be found here: https://code.visualstudio.com/api/references/activation-events#Start-up
 // *****************
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 	logger.info("CloudSmith CDS for Code extension initializing.");
 
 	// We initialize this as it's a psuedo-singleton... no Internals here :)
 	// tslint:disable-next-line: no-unused-expression
-	new ExtensionContext(context).activate();
+	new ExtensionContext(context).activate(cs.cds.extension.productId);
 
 	// load and check extension configuration
 	const toolsConfig = ExtensionConfiguration.getConfiguration(cs.cds.configuration.tools._namespace);
@@ -64,11 +64,10 @@ export function activate(context: vscode.ExtensionContext) {
 	[   // templating engine.
 		new TemplateManager(context)
 	].forEach(c => c.contribute(context, templatesConfig));
-
-	logger.info("CloudSmith CDS for Code extension loaded.");
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() { 
+	new ExtensionContext(ExtensionContext.Instance).deactivate(cs.cds.extension.productId);
 	logger.info("CloudSmith CDS for Code extension unloaded.");
 }
