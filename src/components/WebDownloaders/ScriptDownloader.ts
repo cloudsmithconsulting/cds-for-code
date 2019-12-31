@@ -12,10 +12,10 @@ import ExtensionContext from '../../core/ExtensionContext';
 import Quickly from '../../core/Quickly';
 import command from '../../core/Command';
 import Logger from '../../core/Logger';
-import { onExtensionActivate } from '../../core/ExtensionEvent';
+import { extensionActivate } from '../../core/ExtensionEvent';
 
 export default class ScriptDownloader {
-	@onExtensionActivate(cs.cds.extension.productId)
+	@extensionActivate(cs.cds.extension.productId)
     async activate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
         await ScriptDownloader.runScriptCheck();
     }

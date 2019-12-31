@@ -87,11 +87,11 @@ export class ExtensionIconTheme {
     }
     
 	//TODO: remove dependence on fetch.
-	downloadIcons(folder: string): string {
+	async downloadIcons(folder: string): Promise<string> {
 		const destination = path.join(folder, this.name.replace(`${cs.cds.configuration.iconThemes._namespace}.`, ''));
 	
 		if (this.icons) {
-			this.icons.forEach(icon => {
+			await this.icons.forEach(async icon => {
 				const localPath = path.join(destination, icon.mappedOutputFile);
 		
 				FileSystem.makeFolderSync(path.dirname(localPath));
@@ -100,12 +100,7 @@ export class ExtensionIconTheme {
 					return;
 				}
 		
-				return fetch(icon.url, {
-					method: 'get',
-					headers: {
-						'Accepts': icon.mimeType
-					}
-				})
+				return await fetch(icon.url, { method: 'get', headers: { 'Accepts': icon.mimeType } })
 					.then(res => res.text())
 					.then(body => {
 						FileSystem.writeFileSync(localPath, body);

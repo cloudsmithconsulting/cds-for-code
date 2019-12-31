@@ -44,7 +44,7 @@ export class ExtensionEventWrapper<T> implements IExtensionEventWrapper<T> {
     }
 }
 
-export function onExtensionActivate<T>(id: string, options?: IExtensionEventInvocationOptions, wrapper: ExtensionEventWrapper<T> = new ExtensionEventWrapper<T>(id, options)) {
+export function extensionActivate<T>(id: string, options?: IExtensionEventInvocationOptions, wrapper: ExtensionEventWrapper<T> = new ExtensionEventWrapper<T>(id, options)) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
 
@@ -65,11 +65,11 @@ export function onExtensionActivate<T>(id: string, options?: IExtensionEventInvo
             return result;
         };
 
-        ExtensionContext.registerOnActivateEvent(id, descriptor.value);
+        ExtensionContext.registerActivateFunction(id, descriptor.value);
     };
 }
 
-export function onExtensionDeactivate<T>(id: string, options?: IExtensionEventInvocationOptions, wrapper: ExtensionEventWrapper<T> = new ExtensionEventWrapper<T>(id, options)) {
+export function extensionDeactivate<T>(id: string, options?: IExtensionEventInvocationOptions, wrapper: ExtensionEventWrapper<T> = new ExtensionEventWrapper<T>(id, options)) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
 
@@ -90,6 +90,6 @@ export function onExtensionDeactivate<T>(id: string, options?: IExtensionEventIn
             return result;
         };
 
-        ExtensionContext.registerOnDeactivateEvent(id, descriptor.value);
+        ExtensionContext.registerDeactivateFunction(id, descriptor.value);
     };
 }

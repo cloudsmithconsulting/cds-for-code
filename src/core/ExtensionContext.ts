@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import Dictionary from './types/Dictionary';
 
 export default class ExtensionContext {
-    constructor(context:vscode.ExtensionContext) {
+    constructor(context:vscode.ExtensionContext, initializers?: any[]) {
         ExtensionContext._disposables.map(d => context.subscriptions.push(d));
         ExtensionContext._disposables = [];
         ExtensionContext._instance = context;
@@ -31,7 +31,7 @@ export default class ExtensionContext {
         this.subscribe(handle);
     }
 
-    static registerOnActivateEvent(id: string, event: any): void {
+    static registerActivateFunction(id: string, event: any): void {
         if (!this._onActivate.containsKey(id)) {
             this._onActivate.add(id, [ event ]);
         } else {
@@ -39,7 +39,7 @@ export default class ExtensionContext {
         }
     }
 
-    static registerOnDeactivateEvent(id: string, event: any): void {
+    static registerDeactivateFunction(id: string, event: any): void {
         if (!this._onDeactivate.containsKey(id)) {
             this._onDeactivate.add(id, [ event ]);
         } else {
