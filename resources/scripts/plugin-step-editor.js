@@ -147,6 +147,9 @@
     }
 
     $(function() {
+        // init collapsibles
+        $(".collapsible").collapsible();
+        
         // get the message value after change
         $("#Message").change(function() {
             // get the message from cache

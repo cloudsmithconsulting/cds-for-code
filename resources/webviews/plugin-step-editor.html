@@ -32,147 +32,169 @@
         </div>
     </blockquote>
     
-    <div class="grid grid--left-panel-large">
-        <div>
-            <fieldset>
-                <legend>General Configuration</legend>
-    
-                <input type="hidden" id="Id" name="Id" value="" />
-                <input type="hidden" id="SecureConfigId" name="SecureConfigId" value="" />
+    <input type="hidden" id="Id" name="Id" value="" />
+    <input type="hidden" id="SecureConfigId" name="SecureConfigId" value="" />
 
-                <div class="col s12 input-field">
-                    <input id="Message" name="Message" type="text" />
-                    <label for="Message">Message</label>
+    <div class="col s6">
+        <ul class="collapsible">
+            <li class="active">
+                <div class="collapsible-header">
+                    General Configuration
                 </div>
+                <div class="collapsible-body row">
+                    <div class="col s12 input-field">
+                        <input id="Message" name="Message" type="text" />
+                        <label for="Message">Message</label>
+                    </div>
+            
+                    <div class="col s12 input-field">
+                        <input id="PrimaryEntity" name="PrimaryEntity" type="text" />
+                        <label for="PrimaryEntity">Primary Entity</label>
+                    </div>
+            
+                    <div class="col s12 input-field">
+                        <input id="SecondEntity" name="SecondEntity" type="text" />
+                        <label for="SecondEntity">Second Entity</label>
+                    </div>
+            
+                    <div class="col s12 input-field">
+                        <input id="FilteringAttributes" name="FilteringAttributes" type="text" />
+                        <label for="FilteringAttributes">Filtering Attributes</label>
+                    </div>
+            
+                    <div class="col s12 input-field">
+                        <select id="EventHandler" name="EventHandler">
+                        </select>
+                        <label for="EventHandler">Event Handler</label>
+                    </div>
+            
+                    <div class="col s12 input-field">
+                        <input id="StepName" name="StepName" type="text" />
+                        <label for="StepName">Step Name</label>
+                    </div>
+            
+                    <div class="col s12 input-field">
+                        <select id="UserContext" name="UserContext">
+                        </select>
+                        <label for="UserContext">Run in User's Context</label>
+                    </div>
+            
+                    <div class="col s12 input-field">
+                        <input id="ExecutionOrder" name="ExecutionOrder" type="number" value="1" />
+                        <label for="ExecutionOrder">Execution Order</label>
+                    </div>
+            
+                    <div class="col s12 input-field">
+                        <input id="Description" name="Description" type="text" />
+                        <label for="Description">Description</label>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
 
-                <div class="col s12 input-field">
-                    <input id="PrimaryEntity" name="PrimaryEntity" type="text" />
-                    <label for="PrimaryEntity">Primary Entity</label>
+    <div class="col s6">
+        <ul class="collapsible">
+            <li class="active">
+                <div class="collapsible-header">
+                    Event Pipeline Stage of Execution
                 </div>
+                <div class="collapsible-body row">
+                    <div class="col s12 input-field">
+                        <p class="left" style="margin-right:8px">
+                            <label>
+                                <input type="radio" name="ExecutionPipeline" id="PostOperation" value="40" class="with-gap" checked />
+                                <span>Post-operation</span>
+                            </label>
+                        </p>
+                        <p class="left" style="margin-right:8px">
+                            <label>
+                                <input type="radio" name="ExecutionPipeline" id="PreOperation" value="20" class="with-gap" />
+                                <span>Pre-operation</span>
+                            </label>
+                        </p>
+                        <p class="left" style="margin-right:8px">
+                            <label>
+                                <input type="radio" name="ExecutionPipeline" id="PreValidation" value="10" class="with-gap" />
+                                <span>Pre-Validation</span>
+                            </label>
+                        </p>
+                    </div>
+                </div>
+            </li>
+        </ul>
 
-                <div class="col s12 input-field">
-                    <input id="SecondEntity" name="SecondEntity" type="text" />
-                    <label for="SecondEntity">Second Entity</label>
+        <ul class="collapsible">
+            <li class="active">
+                <div class="collapsible-header">
+                    Execution Mode
                 </div>
+                <div class="collapsible-body row">
+                    <div class="col s12 input-field">
+                        <p>
+                            <label>
+                                <input type="radio" name="ExecutionMode" id="Synchronous" value="0" class="with-gap" checked />
+                                <span>Synchronous</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input type="radio" name="ExecutionMode" id="Asynchronous" value="1" class="with-gap" />
+                                <span>Asynchronous</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input type="checkbox" name="AsyncAutoDelete" id="AsyncAutoDelete" value="true" class="filled-in" />
+                                <span>Delete AsyncOperation if StatusCode = Successful</span>
+                            </label>
+                        </p>
+                    </div>
+                </div>
+            </li>
+        </ul>
 
-                <div class="col s12 input-field">
-                    <input id="FilteringAttributes" name="FilteringAttributes" type="text" />
-                    <label for="FilteringAttributes">Filtering Attributes</label>
+        <ul class="collapsible">
+            <li class="active">
+                <div class="collapsible-header">
+                    Deployment
                 </div>
+                <div class="collapsible-body row">
+                    <div class="col s12 input-field">
+                        <p>
+                            <label>
+                                <input type="checkbox" name="Server" id="Server" value="true" class="filled-in" checked />
+                                <span>Server</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input type="checkbox" name="Offline" id="Offline" value="true" class="filled-in" />
+                                <span>Offline</span>
+                            </label>
+                        </p>
+                    </div>
+                </div>
+            </li>
+        </ul>
 
-                <div class="col s12 input-field">
-                    <select id="EventHandler" name="EventHandler">
-                    </select>
-                    <label for="EventHandler">Event Handler</label>
+        <ul class="collapsible">
+            <li class="active">
+                <div class="collapsible-header">
+                    Other Configuration(s)
                 </div>
-
-                <div class="col s12 input-field">
-                    <input id="StepName" name="StepName" type="text" />
-                    <label for="StepName">Step Name</label>
+                <div class="collapsible-body row">
+                    <div class="col s12 input-field">
+                        <textarea id="UnsecureConfiguration" name="UnsecureConfiguration" class="materialize-textarea"></textarea>
+                        <label for="UnsecureConfiguration">Unsecure Configuration</label>
+                    </div>
+                    
+                    <div class="col s12 input-field">
+                        <textarea id="SecureConfiguration" name="SecureConfiguration" class="materialize-textarea"></textarea>
+                        <label for="SecureConfiguration">Secure Configuration</label>
+                    </div>
                 </div>
-
-                <div class="col s12 input-field">
-                    <select id="UserContext" name="UserContext">
-                    </select>
-                    <label for="UserContext">Run in User's Context</label>
-                </div>
-
-                <div class="col s12 input-field">
-                    <input id="ExecutionOrder" name="ExecutionOrder" type="number" value="1" />
-                    <label for="ExecutionOrder">Execution Order</label>
-                </div>
-
-                <div class="col s12 input-field">
-                    <input id="Description" name="Description" type="text" />
-                    <label for="Description">Description</label>
-                </div>
-            </fieldset>
-        </div>
-        <div>
-            <fieldset>
-                <legend>Event Pipeline Stage of Execution</legend>
-
-                <div class="col s12 input-field">
-                    <p class="left" style="margin-right:8px">
-                        <label>
-                            <input type="radio" name="ExecutionPipeline" id="PostOperation" value="40" class="with-gap" checked />
-                            <span>Post-operation</span>
-                        </label>
-                    </p>
-                    <p class="left" style="margin-right:8px">
-                        <label>
-                            <input type="radio" name="ExecutionPipeline" id="PreOperation" value="20" class="with-gap" />
-                            <span>Pre-operation</span>
-                        </label>
-                    </p>
-                    <p class="left" style="margin-right:8px">
-                        <label>
-                            <input type="radio" name="ExecutionPipeline" id="PreValidation" value="10" class="with-gap" />
-                            <span>Pre-Validation</span>
-                        </label>
-                    </p>
-                </div>
-            </fieldset>
-    
-            <fieldset>
-                <legend>Execution Mode</legend>
-    
-                <div class="col s12 input-field">
-                    <p>
-                        <label>
-                            <input type="radio" name="ExecutionMode" id="Synchronous" value="0" class="with-gap" checked />
-                            <span>Synchronous</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input type="radio" name="ExecutionMode" id="Asynchronous" value="1" class="with-gap" />
-                            <span>Asynchronous</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input type="checkbox" name="AsyncAutoDelete" id="AsyncAutoDelete" value="true" class="filled-in" />
-                            <span>Delete AsyncOperation if StatusCode = Successful</span>
-                        </label>
-                    </p>
-                </div>
-            </fieldset>
-    
-            <fieldset>
-                <legend>Deployment</legend>
-    
-                <p>
-                    <label>
-                        <input type="checkbox" name="Server" id="Server" value="true" class="filled-in" checked />
-                        <span>Server</span>
-                    </label>
-                </p>
-                <p>
-                    <label>
-                        <input type="checkbox" name="Offline" id="Offline" value="true" class="filled-in" />
-                        <span>Offline</span>
-                    </label>
-                </p>
-            </fieldset>
-    
-            <fieldset>
-                <legend>Other Configuration(s)</legend>
-    
-                <div class="field">
-                    <label class="field__label" for="UnsecureConfiguration">
-                        Unsecure Configuration
-                    </label>
-                    <textarea rows="8" cols="50" class="field__input field__input--wide" id="UnsecureConfiguration" name="UnsecureConfiguration"></textarea>
-                </div>
-    
-                <div class="field">
-                    <label class="field__label" for="SecureConfiguration">
-                        Secure Configuration
-                    </label>
-                    <textarea rows="8" cols="50" class="field__input field__input--wide" id="SecureConfiguration" name="UnsecureConfiguration"></textarea>
-                </div>
-            </fieldset>
-        </div>
+            </li>
+        </ul>
     </div>
 </form>
