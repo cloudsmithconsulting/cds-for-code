@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import Dictionary from './types/Dictionary';
 
 export default class ExtensionContext {
-    constructor(context:vscode.ExtensionContext, initializers?: any[]) {
+    constructor(context:vscode.ExtensionContext) {
         ExtensionContext._disposables.map(d => context.subscriptions.push(d));
         ExtensionContext._disposables = [];
         ExtensionContext._instance = context;

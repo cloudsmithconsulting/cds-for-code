@@ -9,6 +9,7 @@ import * as DynamicsTreeView from '../../views/CdsExplorer';
 import { TS } from 'typescript-linq';
 import * as TemplateTreeView from '../../views/TemplateExplorer';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
+import logger from '../../core/Logger';
 
 export type ExtensionIcon = DynamicsTreeView.EntryType | TemplateTreeView.EntryType | 'Add' | 'Edit' | 'Delete' | 'Refresh' | 'Save' | 'Cancel';
 
@@ -100,10 +101,14 @@ export class ExtensionIconTheme {
 					return;
 				}
 		
+				logger.log(`Download icon: ${icon.url} started.`);
+
 				return await fetch(icon.url, { method: 'get', headers: { 'Accepts': icon.mimeType } })
 					.then(res => res.text())
 					.then(body => {
 						FileSystem.writeFileSync(localPath, body);
+
+						logger.log(`Download icon: ${icon.url} completed.`);
 		
 						return localPath;
 					});

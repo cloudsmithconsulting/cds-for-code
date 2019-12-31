@@ -20,16 +20,17 @@ import TemplateExplorer from './views/TemplateExplorer';
 import PluginStepImageViewManager from './views/PluginStepImageView';
 import WebResourceManager from './components/Solutions/WebResourceManager';
 import ExtensionContext from './core/ExtensionContext';
-import logger from './core/Logger';
 import IconLoader from './components/WebDownloaders/IconDownloader';
 import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
 
 let extensionContext: ExtensionContext;
 
 export async function activate(context: vscode.ExtensionContext) {
-	// We initialize this as it's a psuedo-singleton... no Internals here :)
+	// Force initialization of our decorators by building an array of their classes.
 	// tslint:disable-next-line: no-unused-expression
-	extensionContext = new ExtensionContext(context, [ IconLoader, ScriptDownloader ]);
+	[ IconLoader, ScriptDownloader ];
+
+	extensionContext = new ExtensionContext(context);
 
 	// load and check extension configuration
 	const toolsConfig = ExtensionConfiguration.getConfiguration(cs.cds.configuration.tools._namespace);

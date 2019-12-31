@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import Logger, { ExtensionLogger } from './Logger';
 import ExtensionContext from './ExtensionContext';
 
-export interface IExtensionEventWrapper<T> {
+export interface IExtensionEventWrapper {
     readonly id: string;
     readonly description: string;
     readonly options: IExtensionEventInvocationOptions;
@@ -19,18 +19,29 @@ export class DefaultExtensionEventInvocationOptions implements IExtensionEventIn
     logger: ExtensionLogger = Logger;
 }
 
-export class ExtensionEventWrapper<T> implements IExtensionEventWrapper<T> {
+export class ExtensionEventWrapper implements IExtensionEventWrapper {
     onActivate() {
-        this.options.logger.info(`Extension: ${this.id} (${this.description}) activated`);
-        this.options.logger.group();
+        if (!ExtensionEventWrapper._hasActivated) {
+            ExtensionEventWrapper._hasActivated = true;
+
+            this.options.logger.info(`Extension: ${this.id} (${this.description}) activated`);
+            this.options.logger.group();
+        }
     }
     
     onDeactivate() {
-        this.options.logger.groupEnd();
-        this.options.logger.info(`Extension: ${this.id} (${this.description}) de-activated`);
+        if (!ExtensionEventWrapper._hasDeactivated) {
+            ExtensionEventWrapper._hasDeactivated = true;
+
+            this.options.logger.groupEnd();
+            this.options.logger.info(`Extension: ${this.id} (${this.description}) de-activated`);
+        }
     }
 
     readonly description: string;
+
+    private static _hasActivated: boolean = false;
+    private static _hasDeactivated: boolean = false;
 
     constructor(
         public readonly id: string,
@@ -44,7 +55,7 @@ export class ExtensionEventWrapper<T> implements IExtensionEventWrapper<T> {
     }
 }
 
-export function extensionActivate<T>(id: string, options?: IExtensionEventInvocationOptions, wrapper: ExtensionEventWrapper<T> = new ExtensionEventWrapper<T>(id, options)) {
+export function extensionActivate(id: string, options?: IExtensionEventInvocationOptions, wrapper: ExtensionEventWrapper = new ExtensionEventWrapper(id, options)) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
 
@@ -69,7 +80,7 @@ export function extensionActivate<T>(id: string, options?: IExtensionEventInvoca
     };
 }
 
-export function extensionDeactivate<T>(id: string, options?: IExtensionEventInvocationOptions, wrapper: ExtensionEventWrapper<T> = new ExtensionEventWrapper<T>(id, options)) {
+export function extensionDeactivate(id: string, options?: IExtensionEventInvocationOptions, wrapper: ExtensionEventWrapper = new ExtensionEventWrapper(id, options)) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
 
