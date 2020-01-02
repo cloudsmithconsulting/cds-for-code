@@ -33,6 +33,7 @@ export interface ObjectUtility {
    isObject(source: any):boolean;
    asQuerystring(source:any): string;
    clone<T>(source: T, target?: any): T;
+   createInstance<T>(context: Object, name: string, ...args: any[]) : T;
 }
 
 export interface StringUtility {

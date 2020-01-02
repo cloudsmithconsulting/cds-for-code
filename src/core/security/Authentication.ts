@@ -137,10 +137,17 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                 
                     const port = 3999;
                     const redirectUri = `http://localhost:${port}/getAToken`;
+                    let extraQueryStringParams: string = "";
+
+                    if (decrypted.username.toString().indexOf("@") > -1) {
+                        extraQueryStringParams = "&domain_hint=" + decrypted.username.toString().split("@")[1];
+                    }
+
                     let mfaAuthUrl = `${Utilities.String.noTrailingSlash(authority)}${tenant ? '/' + Utilities.String.noTrailingSlash(tenant) : ""}`
                         + `/oauth2/authorize?response_type=code&client_id=${clientId}`
                         + `&redirect_uri=${redirectUri}`
-                        + `&state=<state>&resource=${resource}`;
+                        + `&state=<state>&resource=${resource}`
+                        + extraQueryStringParams;
 
                     if (clientSecret) {
                         mfaAuthUrl += `&client_secret=${clientSecret}`;
