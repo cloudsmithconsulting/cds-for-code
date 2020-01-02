@@ -339,7 +339,7 @@ textarea {
 /* Autocomplete */
 .autocomplete-content {
   li {
-    .highlight { color: #444; }
+    .highlight { color: vscode-color("input", "foreground"); }
 
     img {
       height: $dropdown-item-height - 10;
