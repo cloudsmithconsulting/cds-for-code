@@ -5,6 +5,7 @@ import Quickly from "../core/Quickly";
 import { TemplateItem, TemplateType } from "../components/Templates/Types";
 import * as FileSystem from "../core/io/FileSystem";
 import * as p from 'path';
+import logger from "../core/Logger";
 
 /**
  * Command creates a folder or item in your workspace and restores a template from the catalog to it.
@@ -23,7 +24,10 @@ export default async function run(destinationUri?: vscode.Uri, type?:TemplateTyp
     }
 
     type = type || await Quickly.pickEnum<TemplateType>(TemplateType, "What kind of template would you like to create?");
-    if (!type) { return; }
+    if (!type) {
+        logger.warn("Template not chosen, command cancelled");
+        return; 
+    }
 
     if (!destinationUri || !destinationUri.fsPath || !FileSystem.exists(destinationUri.fsPath)) {
         switch (type) {
@@ -51,6 +55,7 @@ export default async function run(destinationUri?: vscode.Uri, type?:TemplateTyp
 
     if (!path) {
         Quickly.error("You must select a workspace and folder before you can create a templated project or item", false, "Try Again", () => { vscode.commands.executeCommand(cs.cds.templates.createFromTemplate, destinationUri, type); }, "Cancel");
+        logger.warn("Path not chosen, command cancelled");
 
         return;
     }
@@ -62,6 +67,7 @@ export default async function run(destinationUri?: vscode.Uri, type?:TemplateTyp
     this.createFromFilesystem(path, type, template).then(
         (template) => {
             if (template) {
+                logger.info(`Template ${template.displayName} created in workspace: ${path}`);
                 Quickly.inform(`Created ${template.type === TemplateType.ProjectTemplate ? "project" : "item"} from template '${template.displayName}'`);
             }
         },

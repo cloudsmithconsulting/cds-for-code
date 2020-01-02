@@ -1,11 +1,8 @@
 import vscode = require("vscode");
-import ExtensionConfiguration from "../core/ExtensionConfiguration";
 import * as cs from "../cs";
 import Quickly from "../core/Quickly";
-import { TemplateItem, TemplateType } from "../components/Templates/Types";
-import * as FileSystem from "../core/io/FileSystem";
-import * as p from 'path';
 import TemplateManager from "../components/Templates/TemplateManager";
+import logger from "../core/Logger";
 
 /**
  * Command exports a template from your workspace into a .zip archive for re-import later.
@@ -19,7 +16,10 @@ import TemplateManager from "../components/Templates/TemplateManager";
 export default async function run(sourceUri:vscode.Uri): Promise<void> {
     if (!sourceUri) {
         const response = await Quickly.pickAnyFile(undefined, false, "Select template item", { "Zip Files": [ "*.zip" ]});
-        if (!response) { return; }
+        if (!response) { 
+            logger.warn("File not chosen, command cancelled");
+            return; 
+        }
 
         if (response instanceof Array && response.length > 0) {
             sourceUri = response[0];
@@ -30,6 +30,7 @@ export default async function run(sourceUri:vscode.Uri): Promise<void> {
 
     TemplateManager.importTemplate(sourceUri.fsPath)
         .then(template => {
+            logger.info(`Imported template ${template.name}`);
             Quickly.inform(`Imported template '${template.name}'`);
         }).catch(error => {
             Quickly.error(`Failed to import the template '${sourceUri.fsPath}': ${error}`, false, "Try Again", () => { vscode.commands.executeCommand(cs.cds.templates.importTemplate, sourceUri); }, "Cancel");

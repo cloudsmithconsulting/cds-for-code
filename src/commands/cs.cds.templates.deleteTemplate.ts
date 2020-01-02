@@ -2,6 +2,7 @@ import ExtensionConfiguration from "../core/ExtensionConfiguration";
 import * as cs from "../cs";
 import Quickly from "../core/Quickly";
 import { TemplateItem } from "../components/Templates/Types";
+import logger from "../core/Logger";
 
 /**
  * Main command to delete an existing template.
@@ -19,6 +20,7 @@ export default async function run(template: TemplateItem) {
 
     // no template chosen, simply exit
     if (!template || !template.location) {
+        logger.warn("Location of template not specified, command cancelled");
         return;
     } 
 
@@ -26,9 +28,10 @@ export default async function run(template: TemplateItem) {
     this.deleteFromFilesystem(template)
         .then(deleted => { 
             if (deleted) {
+                logger.info(`Template ${template.name} deleted`);
                 Quickly.inform(`Template '${template.name}' was removed from the library.`);
             } 
-        }, (reason) => { 
+        }, (reason) => {             
             Quickly.error(`Failed to delete the contents of '${template.location}': ${reason}`, false, "Try Again", () => { this.run(template); }, "Cancel");
         }
     );
