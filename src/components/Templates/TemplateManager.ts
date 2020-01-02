@@ -9,13 +9,10 @@ import * as _ from 'lodash';
 import { TemplatePlaceholder, TemplateItem, TemplateType, TemplateDirective } from './Types';
 
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
-import IContributor from '../../core/CommandBuilder';
 import Quickly from '../../core/Quickly';
 import Dictionary from '../../core/types/Dictionary';
 import { Utilities } from '../../core/Utilities';
 
-import createFromItemTemplate from "../../commands/cs.cds.controls.explorer.createFromItemTemplate";
-import createFromProjectTemplate from "../../commands/cs.cds.controls.explorer.createFromProjectTemplate";
 import createTemplate from '../../commands/cs.cds.templates.createFromTemplate';
 import deleteTemplate from '../../commands/cs.cds.templates.deleteTemplate';
 import editTemplateCatalog from '../../commands/cs.cds.templates.editTemplateCatalog';
@@ -23,49 +20,81 @@ import exportTemplate from '../../commands/cs.cds.templates.exportTemplate';
 import importTemplate from '../../commands/cs.cds.templates.importTemplate';
 import openTemplateFolder from '../../commands/cs.cds.templates.openTemplateFolder';
 import saveTemplate from '../../commands/cs.cds.templates.saveTemplate';
-import saveTemplateFile from "../../commands/cs.cds.controls.explorer.saveTemplateFile";
-import saveTemplateFolder from "../../commands/cs.cds.controls.explorer.saveTemplateFolder";
 import { TemplateCatalog } from './TemplateCatalog';
 import TemplateTreeView from '../../views/TemplateExplorer';
+import ExtensionContext from '../../core/ExtensionContext';
+import command from '../../core/Command';
 
 /**
  * Main class to handle the logic of the Project Templates
  * @export
  * @class TemplateManager
  */
-export default class TemplateManager implements IContributor {
-    /**
-     * local copy of workspace configuration to maintain consistency between calls
-     */
-    private static context: vscode.ExtensionContext;
-
+export default class TemplateManager {
     constructor(context: vscode.ExtensionContext) {
-        TemplateManager.context = context;
         TemplateManager.createTemplatesDirIfNotExists();
     }
 
-    contribute(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
-        // now wire a command into the context
-        context.subscriptions.push(
-            vscode.commands.registerCommand(cs.cds.controls.explorer.createFromItemTemplate, createFromItemTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.cds.controls.explorer.createFromProjectTemplate, createFromProjectTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.cds.controls.explorer.saveTemplateFile, saveTemplateFile.bind(this)),
-            vscode.commands.registerCommand(cs.cds.controls.explorer.saveTemplateFolder, saveTemplateFolder.bind(this)),
-            vscode.commands.registerCommand(cs.cds.templates.createFromTemplate, createTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.cds.templates.deleteTemplate, deleteTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.cds.templates.editTemplateCatalog, editTemplateCatalog.bind(this)),
-            vscode.commands.registerCommand(cs.cds.templates.exportTemplate, exportTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.cds.templates.importTemplate, importTemplate.bind(this)),
-            vscode.commands.registerCommand(cs.cds.templates.openTemplateFolder, openTemplateFolder.bind(this)),
-            vscode.commands.registerCommand(cs.cds.templates.saveTemplate, saveTemplate.bind(this)),
-        );
+    @command(cs.cds.controls.explorer.createFromItemTemplate, "Create from item template")
+    static async createItemTemplate(uri?: vscode.Uri) {
+        return await vscode.commands.executeCommand(cs.cds.templates.createFromTemplate, uri, TemplateType.ItemTemplate);
+    }
+
+    @command(cs.cds.controls.explorer.createFromProjectTemplate, "Create from project template")
+    static async createProjectTemplate(uri?: vscode.Uri) {
+        return await vscode.commands.executeCommand(cs.cds.templates.createFromTemplate, uri, TemplateType.ProjectTemplate);
+    }
+
+    @command(cs.cds.controls.explorer.saveTemplateFile, "Save item template to file")
+    static async saveItemTemplate(uri?: vscode.Uri) {
+        return await vscode.commands.executeCommand(cs.cds.templates.saveTemplate, uri, TemplateType.ItemTemplate);
+    }
+
+    @command(cs.cds.controls.explorer.saveTemplateFolder, "Save project template to file")
+    static async saveProjectTemplate(uri?: vscode.Uri) {
+        return await vscode.commands.executeCommand(cs.cds.templates.saveTemplate, uri, TemplateType.ProjectTemplate);
+    }
+
+    @command(cs.cds.templates.createFromTemplate, "Create from template")
+    async createTemplate(destinationUri?: vscode.Uri, type?:TemplateType, template?:TemplateItem): Promise<void> {
+        return await createTemplate.apply(this, [destinationUri, type, template]);
+    }
+
+    @command(cs.cds.templates.deleteTemplate, "Delete template")
+    async deleteTemplate(template: TemplateItem): Promise<void> {
+        return await deleteTemplate.apply(this, [template]);
+    }
+
+    @command(cs.cds.templates.editTemplateCatalog, "Edit template catalog")
+    async editTemplateCatalog(configFile?:vscode.Uri) {
+        return await editTemplateCatalog.apply(this, [configFile]);
+    }
+
+    @command(cs.cds.templates.exportTemplate, "Export template")
+    async exportTemplate(template: TemplateItem, destinationUri:vscode.Uri): Promise<void> {
+        return await exportTemplate.apply(this, [template, destinationUri]);
+    }
+
+    @command(cs.cds.templates.importTemplate, "Import template")
+    async importTemplate(sourceUri:vscode.Uri): Promise<void> {
+        return await importTemplate.apply(this, [sourceUri]);
+    }
+
+    @command(cs.cds.templates.openTemplateFolder, "Open template folder")
+    static async openTemplateFolder(template: TemplateItem): Promise<void> { 
+        return await openTemplateFolder.apply(this, [template]);
+    }
+
+    @command(cs.cds.templates.saveTemplate, "Save Template") 
+    async saveTemplate(templateUri: vscode.Uri, type:TemplateType) {
+        return await saveTemplate.apply(this, [templateUri, type]);
     }
 
     getTemplates(): Promise<TemplateItem[]> {
         return TemplateManager.getTemplateCatalog().then(c => c.items);
     }
 
-    static async applyTemplate(template:TemplateItem, data:string | Buffer, placeholders?:Dictionary<string, string>, object?:any): Promise<string | Buffer> {
+    static async applyTemplate(template: TemplateItem, data:string | Buffer, placeholders?: Dictionary<string, string>, object?: any): Promise<string | Buffer> {
         const usePlaceholders = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.usePlaceholders, false);
         const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
         placeholders = placeholders || ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.cds.configuration.templates.placeholders, new Dictionary<string, string>());
@@ -549,7 +578,7 @@ export default class TemplateManager implements IContributor {
     static getDefaultTemplatesFolder(systemTemplates:boolean = false): string {
         const templatesFolderName:string = systemTemplates ? "BuiltInTemplates" : "UserTemplates";
         
-        if (!TemplateManager.context) {
+        if (!ExtensionContext.Instance) {
             // no workspace, default to OS-specific hard-coded path
              switch (process.platform) {
                  case 'linux':
@@ -564,11 +593,11 @@ export default class TemplateManager implements IContributor {
         }
 
         // extract from workspace-specific storage path
-        let userDataDir = TemplateManager.context.storagePath;
+        let userDataDir = ExtensionContext.Instance.storagePath;
 
         if (!userDataDir) {
             // extract from log path
-            userDataDir = TemplateManager.context.logPath;
+            userDataDir = ExtensionContext.Instance.logPath;
             let gggparent = path.dirname(path.dirname(path.dirname(path.dirname(userDataDir))));
             userDataDir = path.join(gggparent, 'User', 'Templates', templatesFolderName);
         } else {

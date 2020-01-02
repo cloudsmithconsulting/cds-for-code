@@ -28,13 +28,12 @@ let extensionContext: ExtensionContext;
 export async function activate(context: vscode.ExtensionContext) {
 	// Force initialization of our decorators by building an array of their classes.
 	// tslint:disable-next-line: no-unused-expression
-	[ IconDownloader, ScriptDownloader, CodeGenerationManager, SolutionMap, WebResourceManager, SolutionManager, VisualStudioProjectCommands ];
+	[ IconDownloader, ScriptDownloader, CodeGenerationManager, SolutionMap, WebResourceManager, SolutionManager, VisualStudioProjectCommands, TemplateManager ];
 
 	extensionContext = new ExtensionContext(context);
 
 	// load and check extension configuration
 	const toolsConfig = ExtensionConfiguration.getConfiguration(cs.cds.configuration.tools._namespace);
-	const templatesConfig = ExtensionConfiguration.getConfiguration(cs.cds.configuration.templates._namespace);
 
 	// Setup any scripts that require tools configuration, then templating.
 	[   // our views
@@ -48,10 +47,6 @@ export async function activate(context: vscode.ExtensionContext) {
 		new PluginStepImageViewManager(),
 		new NewWorkspaceViewManager()
 	].forEach(c => c.contribute(context, toolsConfig));
-
-	[   // templating engine.
-		new TemplateManager(context)
-	].forEach(c => c.contribute(context, templatesConfig));
 
 	extensionContext.activate();
 

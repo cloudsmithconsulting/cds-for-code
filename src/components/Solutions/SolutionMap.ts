@@ -41,9 +41,9 @@ export default class SolutionMap {
         return removeSolutionMapping.apply(SolutionMap, [item]);
     }
 
-    @command(cs.cds.deployment.removeSolutionMapping, "Remove solution mapping from local workspace")
+    @command(cs.cds.deployment.updateSolutionMapping, "Update solution mapping for local workspace")
     static async updateSolutionMapping(item?: SolutionWorkspaceMapping, config?: DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> {
-        return removeSolutionMapping.apply(SolutionMap, [item]);
+        return updateSolutionMapping.apply(SolutionMap, [item]);
     }
 
     mappings:SolutionWorkspaceMapping[];
