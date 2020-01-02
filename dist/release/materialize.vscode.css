@@ -4774,18 +4774,18 @@ td, th {
 
 .collection {
   margin: 0.5rem 0 1rem 0;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--vscode-panel-border);
   border-radius: 2px;
   overflow: hidden;
   position: relative;
 }
 
 .collection .collection-item {
-  background-color: #fff;
+  background-color: var(--vscode-panel-background);
   line-height: 1.5rem;
   padding: 10px 20px;
   margin: 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--vscode-panel-border);
 }
 
 .collection .collection-item.avatar {
@@ -4851,8 +4851,8 @@ td, th {
 }
 
 .collection.with-header .collection-header {
-  background-color: #fff;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: var(--vscode-panel-background);
+  border-bottom: 1px solid var(--vscode-panel-border);
   padding: 10px 20px;
 }
 
@@ -8239,7 +8239,7 @@ textarea.materialize-textarea {
 
 /* Autocomplete */
 .autocomplete-content li .highlight {
-  color: #444;
+  color: var(--vscode-input-foreground);
 }
 
 .autocomplete-content li img {

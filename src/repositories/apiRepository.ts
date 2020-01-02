@@ -485,8 +485,7 @@ export default class ApiRepository {
             .then((result) => {
                 stepImage.sdkmessageprocessingstepimageid = result;
                 return stepImage;
-            })
-            .catch(err => console.error(err));
+            });
         }
     }
 
