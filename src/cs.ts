@@ -70,7 +70,7 @@ export namespace dynamics {
         public static readonly jsonInspectorView:string = `${viewContainers._namespace}.jsonInspectorView`;
         public static readonly newWorkspaceView:string = `${viewContainers._namespace}.newWorkspaceView`;
         public static readonly pluginStepEditor:string = `${viewContainers._namespace}.pluginStepEditor`;
-        public static readonly pluginStepImageView:string = `${viewContainers._namespace}.pluginStepImageView`;
+        public static readonly pluginStepImageEditor:string = `${viewContainers._namespace}.pluginStepImageEditor`;
         public static readonly svcUtilConfigView:string = `${viewContainers._namespace}.svcUtilConfigView`;
     }
 

@@ -147,8 +147,7 @@
     }
 
     $(function() {
-        // init collapsibles
-        $(".collapsible").collapsible();
+        M.AutoInit();
         
         // get the message value after change
         $("#Message").change(function() {

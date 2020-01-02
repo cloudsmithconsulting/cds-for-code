@@ -1,0 +1,71 @@
+<nav class="nav-extended">
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo left">
+            &nbsp;<span id="title">#{viewTitle}</span>
+        </a>
+        <a href="#" data-target="extended-navigation" class="sidenav-trigger"><span class="iconify" data-icon="ion-menu"
+                data-width="32" data-height="24"></span></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a data-action="save" href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
+            <li><a data-action="cancel" href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
+        </ul>
+    </div>
+</nav>
+
+<ul class="sidenav" id="extended-navigation">
+    <li><a data-action="save" href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
+    <li><a data-action="cancel" href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
+</ul>
+
+<form class="row">
+    <blockquote class="panel_error" id="errorPanel" hidden>
+        <div class="panel__text">
+            <h4>Oops! Slight problem</h4>
+            <span id="errorMessage"></span>
+        </div>
+    </blockquote>
+    
+    <input type="hidden" id="Id" name="Id" value="" />
+    <input type="hidden" id="SdkMessageProcessingStepId" name="SdkMessageProcessingStepId" value="" />
+
+    <div class="col s8">
+        <ul class="collection with-header">
+            <li class="collection-header">
+                <h6>
+                    General Configuration
+                </h6>
+            </li>
+            <li class="collection-item">
+                <div class="col s12 input-field">
+                    <p class="left" style="margin-right:18px">
+                        <label>
+                            <input type="checkbox" name="PreImage" id="PreImage" value="true" class="filled-in" checked />
+                            <span>Pre Image</span>
+                        </label>
+                    </p>
+                    <p class="left" style="margin-right:18px">
+                        <label>
+                            <input type="checkbox" name="PostImage" id="PostImage" value="true" class="filled-in" />
+                            <span>Post Image</span>
+                        </label>
+                    </p>
+                </div>
+
+                <div class="col s12 input-field">
+                    <input id="Name" name="Name" type="text" />
+                    <label for="Name">Name</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <input id="Alias" name="Alias" type="text" />
+                    <label for="Alias">Entity Alias</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <input id="Parameters" name="Parameters" type="text" />
+                    <label for="Parameters">Parameters</label>
+                </div>
+            </li>
+        </ul>
+    </div>
+</form>

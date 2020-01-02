@@ -232,7 +232,7 @@ export default class DynamicsTreeView implements IContributor {
                         vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, context, item.context._pluginassemblyid_value, item.config, undefined);
                         break;
                     case "PluginStep":
-                        vscode.commands.executeCommand(cs.dynamics.controls.pluginStepImage.open, item.context.sdkmessageprocessingstepid, null, item.config);
+                        vscode.commands.executeCommand(cs.dynamics.controls.pluginStepImage.open, context, item.context.sdkmessageprocessingstepid, null, item.config);
                         break;
                 }
             })   
@@ -293,7 +293,7 @@ export default class DynamicsTreeView implements IContributor {
                         vscode.commands.executeCommand(cs.dynamics.controls.pluginStep.open, context, item.context.eventhandler_plugintype._pluginassemblyid_value, item.config, item.context);
                         break;
                     case "PluginStepImage":
-                        vscode.commands.executeCommand(cs.dynamics.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, item.context, item.config);
+                        vscode.commands.executeCommand(cs.dynamics.controls.pluginStepImage.open, context, item.context._sdkmessageprocessingstepid_value, item.context, item.config);
                         break;
                 }
            }) 

@@ -18,7 +18,6 @@ import SolutionMap from './components/Solutions/SolutionMap';
 import NewWorkspaceViewManager from './views/NewWorkspaceView';
 import VisualStudioProjectCommands from './components/DotNetCore/DotNetProjectManager';
 import TemplateTreeView from './views/TemplatesTreeView';
-import PluginStepImageViewManager from './views/PluginStepImageView';
 import WebResourceManager from './components/Solutions/WebResourceManager';
 import ExtensionContext from './core/ExtensionContext';
 import logger from './core/Logger';
@@ -47,7 +46,6 @@ export function activate(context: vscode.ExtensionContext) {
 		new JsonObjectViewManager(),
 		new SvcUtilConfigViewManager(),
 		new DynamicsTerminal(),
-		new PluginStepImageViewManager(),
 		new NewWorkspaceViewManager(),
 		
 		// our commands
