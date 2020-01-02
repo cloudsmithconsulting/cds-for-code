@@ -10,6 +10,7 @@ import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 import * as Security from "../core/security/Types";
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
+import logger from '../core/Logger';
 
 /**
  * This command can be invoked by the Command Pallette or external sources and generates .Net code
@@ -28,10 +29,18 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
-	if (!config) { return; }
+	if (!config) { 
+		logger.warn("Configuration not chosen, command cancelled");
+		return; 
+	}
 
 	if (!folder && !outputFileName) {
 		const chosenItem:WorkspaceFileItem = await Quickly.pickWorkspaceAny(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the destination where generated code will go", undefined, true);
+
+		if (!chosenItem) {
+			logger.warn("Workspace file/folder not chosen, command cancelled");
+			return; 
+		}
 
 		if (chosenItem.itemType === vscode.FileType.Directory) {
 			folder = chosenItem.fsPath;
@@ -42,7 +51,10 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	}
 
 	folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder to use when generating code");
-	if (Utilities.$Object.isNullOrEmpty(folder)) { return; }
+	if (Utilities.$Object.isNullOrEmpty(folder)) { 
+		logger.warn("Workspace folder not chosen, command cancelled");
+		return; 
+	}
 
 	if (Utilities.$Object.isNullOrEmpty(outputFileName)) {
 		const choice = await Quickly.pickWorkspaceFile(vscode.Uri.file(folder), "Choose the filename to use when generating code", undefined, true, [ ".cs", ".vb" ]);
@@ -53,20 +65,24 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 		}
 	}
 
-	if (Utilities.$Object.isNullOrEmpty(outputFileName)) { return; }
+	if (Utilities.$Object.isNullOrEmpty(outputFileName)) { 
+		logger.warn("Workspace file not chosen, command cancelled");
+		return; 
+	}
 
 	namespace = namespace || await Quickly.ask("Enter the namespace for the generated code", undefined, path.basename(folder));
-	if (Utilities.$Object.isNullOrEmpty(namespace)) { return; }
 
+	logger.log("Checking to see if the CRM SDK is installed");
 	await ScriptDownloader.installCdsSdk();
 	
 	// build a powershell terminal
+	logger.log("Generating entity code");
 	return DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => {
 			return await terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
 				.text(`-ToolsPath ${coreToolsRoot} `)
 				.text(`-Url "${Utilities.String.withTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `)
-				.if(() => Security.Credential.isCredential(config.credentials), c => {
+				.if(() => Security.Credential.isCredential(config.credentials) && !(<any>config.credentials).isMultiFactorAuthentication, c => {
 					c.text(`-Username "`)
 					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
 					 .text(`" -Password "`)

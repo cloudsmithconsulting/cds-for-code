@@ -13,7 +13,7 @@ import Quickly, { QuickPickOption } from '../core/Quickly';
 import ExtensionContext from '../core/ExtensionContext';
 import logger from '../core/Logger';
 
-export default async function run(config?:DynamicsWebApi.Config, pluginAssembly?:any, file?:vscode.Uri, solution?:any): Promise<any> {
+export default async function run(config?: DynamicsWebApi.Config, pluginAssembly?: any, file?: vscode.Uri, solution?: any): Promise<any> {
     const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
     let defaultFolder = workspaceFolder ? workspaceFolder.uri : undefined;
 
@@ -31,7 +31,10 @@ export default async function run(config?:DynamicsWebApi.Config, pluginAssembly?
     fileTypes.push(".dll");
 
     file = file || await Quickly.pickWorkspaceFile(defaultFolder, "Choose a projet to build or assembly to upload", undefined, false, fileTypes).then(r => vscode.Uri.file(r));
-    if (!file) { return; }
+    if (!file) { 
+        logger.warn("Plugin assembly not chosen, command cancelled");
+        return; 
+    }
 
     if (DotNetProjectManager.fileIsProject(file)) {
         await vscode.commands.executeCommand(cs.cds.deployment.dotNetBuild, file, undefined, "!")
@@ -54,7 +57,10 @@ export default async function run(config?:DynamicsWebApi.Config, pluginAssembly?
     }
 
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
-    if (!config) { return; }
+    if (!config) { 
+        logger.warn("Organization not chosen, command cancelled");
+        return; 
+    }
 
     solution = solution || await Quickly.pickCdsSolution(config, "Choose a solution", true);
     pluginAssembly = pluginAssembly || await Quickly.pickCdsSolutionComponent(config, solution, CdsSolutions.SolutionComponent.PluginAssembly, "Choose a plugin assembly to update (or press esc for new)");
@@ -63,7 +69,7 @@ export default async function run(config?:DynamicsWebApi.Config, pluginAssembly?
 
     logger.log(`Plugin ${file}: Attempting registration of plugin on '${config.appUrl}'`);
 
-    return DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Tools\\CloudSmith.Dynamics365.AssemblyScanner\\"))
+    return await DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Tools\\CloudSmith.Dynamics365.AssemblyScanner\\"))
         .then(async terminal => { 
             logger.log(`Plugin ${file}:  Scanning for plugin types.`);
 

@@ -5,7 +5,6 @@ import * as cs from './cs';
 // config
 import ExtensionConfiguration from './core/ExtensionConfiguration';
 import ViewManager from './views/ViewManager';
-import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
 import CdsExplorer from './views/CdsExplorer';
 import JsonObjectViewManager from './views/JsonObjectView';
 import TemplateManager from './components/Templates/TemplateManager';
@@ -20,15 +19,16 @@ import TemplateExplorer from './views/TemplateExplorer';
 import PluginStepImageViewManager from './views/PluginStepImageView';
 import WebResourceManager from './components/Solutions/WebResourceManager';
 import ExtensionContext from './core/ExtensionContext';
-import IconLoader from './components/WebDownloaders/IconDownloader';
+import IconDownloader from './components/WebDownloaders/IconDownloader';
 import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
+import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
 
 let extensionContext: ExtensionContext;
 
 export async function activate(context: vscode.ExtensionContext) {
 	// Force initialization of our decorators by building an array of their classes.
 	// tslint:disable-next-line: no-unused-expression
-	[ IconLoader, ScriptDownloader ];
+	[ IconDownloader, ScriptDownloader, CodeGenerationManager, SolutionMap, WebResourceManager, SolutionManager, VisualStudioProjectCommands ];
 
 	extensionContext = new ExtensionContext(context);
 
@@ -46,14 +46,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		new DynamicsTerminal(),
 		new PluginStepViewManager(),
 		new PluginStepImageViewManager(),
-		new NewWorkspaceViewManager(),
-		
-		// our commands
-		new CodeGenerationManager(),
-		new SolutionMap(),
-		new WebResourceManager(),
-		new SolutionManager(),
-		new VisualStudioProjectCommands()
+		new NewWorkspaceViewManager()
 	].forEach(c => c.contribute(context, toolsConfig));
 
 	[   // templating engine.
@@ -61,6 +54,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	].forEach(c => c.contribute(context, templatesConfig));
 
 	extensionContext.activate();
+
+	return context.subscriptions;
 }
 
 // this method is called when your extension is deactivated

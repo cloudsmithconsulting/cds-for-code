@@ -4,6 +4,7 @@ import ApiRepository from '../repositories/apiRepository';
 import Quickly from '../core/Quickly';
 import { Utilities } from '../core/Utilities';
 import ExtensionContext from '../core/ExtensionContext';
+import logger from '../core/Logger';
 
 /**
  * This command can be invoked by the Command Palette or the Dynamics TreeView and adds a solution component to a solution.
@@ -11,9 +12,12 @@ import ExtensionContext from '../core/ExtensionContext';
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(config?: DynamicsWebApi.Config, components?:{type:CdsSolutions.SolutionComponent, id:string}[]) {
+export default async function run(config?: DynamicsWebApi.Config, components?: {type: CdsSolutions.SolutionComponent, id: string}[]) {
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
-    if (!config) { return; }
+    if (!config) { 
+        logger.warn("Organization not chosen, command cancelled");
+        return; 
+    }
 
     const api = new ApiRepository(config);
 

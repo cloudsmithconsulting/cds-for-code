@@ -6,6 +6,7 @@ import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
 import EnumParser from "../core/EnumParser";
 import ExtensionContext from "../core/ExtensionContext";
+import logger from "../core/Logger";
 
 /**
  * This command can be invoked by the Explorer file viewer and creates or updates a web resource in Dynamics
@@ -15,7 +16,10 @@ import ExtensionContext from "../core/ExtensionContext";
  */
 export default async function run(config?:DynamicsWebApi.Config, solution?:any, webResource?:any, fileUri?:vscode.Uri, inform:boolean = true) {
     fileUri = fileUri || vscode.Uri.file(await Quickly.pickWorkspaceFile(undefined, "Choose the web resource file to deploy", undefined, true, EnumParser.getNames(CdsSolutions.WebResourceFileType)));
-    if (!fileUri) { return; }
+    if (!fileUri) { 
+        logger.warn("File not chosen, command cancelled");
+        return; 
+    }
 
     // Trim off these files as we don't want to deploy them.
     if (fileUri.path.endsWith(".data.xml")) {
@@ -23,7 +27,10 @@ export default async function run(config?:DynamicsWebApi.Config, solution?:any, 
     }
     
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
-    if (!config) { return; }
+    if (!config) { 
+        logger.warn("Configuration not chosen, command cancelled");
+        return; 
+    }
 
     const map = this.getSolutionMapping(fileUri.fsPath, config.orgId);
     const api = new ApiRepository(config);
@@ -38,7 +45,10 @@ export default async function run(config?:DynamicsWebApi.Config, solution?:any, 
         const result:any = await vscode.commands.executeCommand(cs.cds.deployment.createWebResource, config, solution ? solution.solutionid : undefined, webResource, fileUri, undefined, false);
 
         webResource = result.webResource;
-        if (!webResource) { return; }
+        if (!webResource) {
+            logger.warn("Web Resource not chosen, command cancelled");
+            return; 
+        }
     }
 
     try {
@@ -50,6 +60,8 @@ export default async function run(config?:DynamicsWebApi.Config, solution?:any, 
 
         return { webResource: result || webResource, fsPath: fileUri.fsPath };
     } catch (error) {
+        logger.error(error.message);
+        
         await Quickly.error(`There was an error when saving the web resource.  The error returned was: ${error && error.message ? error.message : error.toString() }`, undefined, "Try Again", () => vscode.commands.executeCommand(cs.cds.deployment.packWebResource, config, solution, webResource, fileUri));
     }
 }

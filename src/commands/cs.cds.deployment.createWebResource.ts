@@ -10,6 +10,7 @@ import { Utilities } from "../core/Utilities";
 import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
 import ExtensionContext from "../core/ExtensionContext";
 import DiscoveryRepository from "../repositories/discoveryRepository";
+import logger from "../core/Logger";
 
 /**
  * This command can be invoked by the by either the file explorer view or the Dynamics TreeView
@@ -47,7 +48,10 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
     }
 
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
-    if (!config) { return; }
+	if (!config) { 
+		logger.warn("Configuration not chosen, command cancelled");
+		return; 
+	}
 
     let content: string;
 
@@ -85,6 +89,7 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
     }
 
     webResource.name = webResource.name || await Quickly.ask("What is the name (including path and extension) of your web resource?", defaultName, defaultName);
+    logger.info(`Web Resource Name: ${webResource.name}`);
 
     if (webResource.name && (<string>webResource.name).indexOf(".") > -1) {
         defaultType = defaultType || this.getWebResourceType(path.extname(webResource.name));
@@ -106,7 +111,10 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
 
     if (!fsPath) {
         fsPath = await Quickly.pickWorkspaceFolder(map && map.path ? vscode.Uri.file(map.path) : undefined, "Where would you like to save this web resource?");
-        if (!fsPath) { return; }
+        if (!fsPath) { 
+            logger.warn("Filesystem path not chosen, command cancelled");
+            return; 
+        }
 
         folder = path.extname(fsPath) !== "" ? path.dirname(fsPath) : fsPath;
     }
@@ -141,6 +149,8 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
 
     try {
         if (solution && map) {
+            logger.info(`Web Resource: ${webResource.name} is mapped to solution ${solution.uniquename}`);
+
             // We are pretty sure adding root nodes to customizations.xml is only required in 9.1+
             const version = config.webApiVersion.split(".");
             const minimumVersionToEditCustomizationFiles = 9.1;
@@ -152,6 +162,8 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
                 await Quickly.inform(`The web resource '${webResource.name}' was saved to the local workspace.`);
             }
         } else {
+            logger.info(`Web Resource: ${webResource.name} is not mapped to a solution.  Creating on server.`);
+
             webResource = await this.upsertWebResource(config, webResource, solution);
 
             if (inform) {
@@ -161,6 +173,8 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
 
         return { webResource, fsPath };
     } catch (error) {
+        logger.error(`Error saving web resource: ${error.message}`);
+        
         await Quickly.error(`There was an error when saving the web resource.  The error returned was: ${error.toString()}`, undefined, "Try Again", () => vscode.commands.executeCommand(cs.cds.deployment.createWebResource, config, undefined, fileUri));
     }
 }

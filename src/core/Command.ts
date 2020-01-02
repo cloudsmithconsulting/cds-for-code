@@ -39,7 +39,6 @@ export class DefaultCommandWrapper<T> extends CommandWrapper<T>{
         var argString = args.map(a => { try { return JSON.stringify(a); } catch (error) { return a.toString(); } }).join();
 
         this.options.logger.info(`Command: ${this.id} (${this.description}) invoked with: ${argString}`);
-        this.options.logger.group();
     }
 
     onCommandError(error: Error): void {
@@ -47,8 +46,7 @@ export class DefaultCommandWrapper<T> extends CommandWrapper<T>{
     }
 
     onCommandCompleted(result: T): T {
-        this.options.logger.groupEnd();
-        this.options.logger.info(`Command: ${this.id} completed with: ${JSON.stringify(result)}`);
+        this.options.logger.info(`Command: ${this.id} invocation complete`);
 
         return result;
     }
@@ -66,7 +64,6 @@ export default function command<T>(id: string, description: string, options?: IC
                 try { 
                     wrapper.onCommandInvoked(args);
                 } catch (error) {
-                    wrapper.options.logger.group();
                     wrapper.options.logger.error(`An error occurred while executing onCommandInvoked for ${id}.  The error received was: ${error.message}`);
                 }
             }
@@ -92,7 +89,6 @@ export default function command<T>(id: string, description: string, options?: IC
                     }
                 } catch (error) {
                     wrapper.options.logger.error(`An error occurred while executing onCommandCompleted for ${id}.  The error received was: ${error.message}`);
-                    wrapper.options.logger.groupEnd();
                 }
             }
 

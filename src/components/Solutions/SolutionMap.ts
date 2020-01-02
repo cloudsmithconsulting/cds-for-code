@@ -5,15 +5,16 @@ import * as path from 'path';
 import * as FileSystem from '../../core/io/FileSystem';
 import { TS } from "typescript-linq";
 import { ExtensionContext } from "vscode";
-import IContributor from "../../core/CommandBuilder";
-import { DynamicsWebApi } from "../../api/cds-webapi/DynamicsWebApi";
 import { CdsSolutions } from "../../api/CdsSolutions";
-import { Utilities } from "../../core/Utilities";
 import { WorkspaceFileSystemWatcher } from "../../core/io/FileManager";
 import SolutionWorkspaceMapping from "./SolutionWorkspaceMapping";
+import { extensionActivate } from "../../core/ExtensionEvent";
+import removeSolutionMapping from "../../commands/cs.cds.deployment.removeSolutionMapping";
+import updateSolutionMapping from "../../commands/cs.cds.deployment.updateSolutionMapping";
+import command from "../../core/Command";
+import { DynamicsWebApi } from "../../api/cds-webapi/DynamicsWebApi";
 
-
-export default class SolutionMap implements IContributor {
+export default class SolutionMap {
     constructor (map?:SolutionMap) {
         if (map && map.mappings) {
             this.mappings = map.mappings;
@@ -26,91 +27,23 @@ export default class SolutionMap implements IContributor {
         }
     }
 
-    contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
+	@extensionActivate(cs.cds.extension.productId)
+    activate(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
         // load default map as it will force filesystemwatchers to intialize.
         if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
             // Watch the files in the workspace for changes.
             vscode.workspace.workspaceFolders.forEach(f => WorkspaceFileSystemWatcher.Instance.openWorkspace(f));
         }
+    }
 
-        context.subscriptions.push(
-            vscode.commands.registerCommand(cs.cds.deployment.removeSolutionMapping, async (item?: SolutionWorkspaceMapping): Promise<boolean> => {
-                const map = await SolutionMap.loadFromWorkspace();
-                let returnValue = false;
+    @command(cs.cds.deployment.removeSolutionMapping, "Remove solution mapping from local workspace")
+    static async removeSolutionMapping(item?: SolutionWorkspaceMapping): Promise<boolean> {
+        return removeSolutionMapping.apply(SolutionMap, [item]);
+    }
 
-                if (!item) { 
-                    map.clear();
-                } else {
-                    if (item && item.path) {
-                        if (FileSystem.exists(item.path)) {
-                            returnValue = true;
-                            await FileSystem.deleteFolder(item.path);
-                        }
-                    }
-
-                    const itemIndex = map.mappings.indexOf(item);
-
-                    if (itemIndex > -1) {
-                        map.mappings.slice(itemIndex, 1);
-                    }
-                }
-                
-                map.saveToWorkspace();
-
-                return returnValue;
-            })
-            , vscode.commands.registerCommand(cs.cds.deployment.updateSolutionMapping, async (item?: SolutionWorkspaceMapping, config?:DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> => {
-                let solutionId;
-                let organizationId;
-                const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
-
-                if (item) { 
-                    organizationId = item.organizationId;
-                    solutionId = item.solutionId;
-                } 
-
-                if (!organizationId) {
-                    config = config || await Quickly.pickCdsOrganization(context, "Choose a Dynamics 365 Organization", true);
-                    if (!config) { return; }
-    
-                    organizationId = config.orgId;
-                }
-
-                if (!solutionId) {
-                    let solution = await Quickly.pickCdsSolution(config, "Choose a Solution to map to the local workspace", true);
-                    if (!solution) { return; }
-    
-                    solutionId = solution.solutionid;
-                }
-
-				folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a workplace folder containing solution items.");
-                if (Utilities.$Object.isNullOrEmpty(folder)) { return; }
-                
-                const map = await SolutionMap.loadFromWorkspace();
-                item = item || map.hasSolutionMap(solutionId, organizationId) ? map.getBySolutionId(solutionId, organizationId)[0] : null;
-                
-                if (item && item.path && item.path !== folder) {
-                    // If we're moving into a new folder that's not called the solution name, let's add it (assuming you didn't just rename it).
-                    if (!folder.endsWith(path.basename(item.path)) 
-                        && (item.path.indexOf("\\") === -1 || item.path.substring(0, item.path.lastIndexOf("\\")) !== folder.substring(0, folder.lastIndexOf("\\"))) 
-                        && (item.path.indexOf("/") === -1 || item.path.substring(0, item.path.lastIndexOf("/")) !== folder.substring(0, folder.lastIndexOf("/")))) {
-                        folder = path.join(folder, path.basename(item.path));
-                    }
-
-                    if (item.path !== folder) {
-                        if (FileSystem.exists(item.path)) {
-                            await FileSystem.copyFolder(item.path, folder)
-                                .then(() => FileSystem.deleteFolder(item.path));
-                        }
-                    }
-                }
-
-                map.map(organizationId, solutionId, folder);
-                map.saveToWorkspace(context);
-
-                return map.getByPath(folder, organizationId);
-            })
-        );
+    @command(cs.cds.deployment.removeSolutionMapping, "Remove solution mapping from local workspace")
+    static async updateSolutionMapping(item?: SolutionWorkspaceMapping, config?: DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> {
+        return removeSolutionMapping.apply(SolutionMap, [item]);
     }
 
     mappings:SolutionWorkspaceMapping[];

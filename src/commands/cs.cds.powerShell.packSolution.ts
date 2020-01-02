@@ -13,6 +13,7 @@ import ExtensionContext from '../core/ExtensionContext';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 import { Credential } from '../core/security/Types';
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
+import logger from '../core/Logger';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.
@@ -34,10 +35,16 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	}
 
 	folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder containing the solution to pack", true);
-	if (Utilities.$Object.isNullOrEmpty(folder)) { return; }
+	if (Utilities.$Object.isNullOrEmpty(folder)) { 
+		logger.warn("Folder not chosen, command cancelled");
+		return; 
+	}
 	
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
-	if (!config) { return; }
+	if (!config) {
+		logger.warn("Organization not chosen, command cancelled");
+		return; 
+	}
 
 	if (!solution) {
 		let solutionFolder = folder;
@@ -46,13 +53,17 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 		if (!fs.existsSync(solutionFile)) { 
 			solution = await Quickly.pickCdsSolution(config, "Choose a Dynamics 365 Solution to pack", true);
 
-			if (!solution) { return; }
+			if (!solution) {
+				logger.warn("Solution not chosen, command cancelled");
+				return; 
+			}
 		}
 
 		if (fs.existsSync(solutionFile)) {
 			const solutionFileXml:SolutionFile = await SolutionFile.from(solutionFile);
 			
 			if (!solutionFileXml.isValid) {
+				logger.error(`The solution file ${solutionFile} is not a valid Dynamics 365 solution manifest.`);
 				Quickly.error(`The solution file ${solutionFile} is not a valid Dynamics 365 solution manifest.`); 
 
 				return;
@@ -96,7 +107,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	
 	await ScriptDownloader.installCdsSdk();
 
-	return DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
+	return await DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => { 
 			return await terminal.run(new TerminalCommand(`.\\Deploy-XrmSolution.ps1 `)
 				.text(`-ServerUrl "${serverUrl}" `)

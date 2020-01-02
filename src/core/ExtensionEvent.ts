@@ -25,7 +25,6 @@ export class ExtensionEventWrapper implements IExtensionEventWrapper {
             ExtensionEventWrapper._hasActivated = true;
 
             this.options.logger.info(`Extension: ${this.id} (${this.description}) activated`);
-            this.options.logger.group();
         }
     }
     
@@ -33,7 +32,6 @@ export class ExtensionEventWrapper implements IExtensionEventWrapper {
         if (!ExtensionEventWrapper._hasDeactivated) {
             ExtensionEventWrapper._hasDeactivated = true;
 
-            this.options.logger.groupEnd();
             this.options.logger.info(`Extension: ${this.id} (${this.description}) de-activated`);
         }
     }

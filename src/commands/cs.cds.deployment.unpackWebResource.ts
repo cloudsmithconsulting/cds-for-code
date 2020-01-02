@@ -8,6 +8,7 @@ import ApiRepository from "../repositories/apiRepository";
 import { Utilities } from "../core/Utilities";
 import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
 import ExtensionContext from '../core/ExtensionContext';
+import logger from '../core/Logger';
 
 /**
  * This command can be invoked by the Dynamics Explorer tree view and creates or updates a web resource in the local workspace.
@@ -19,7 +20,11 @@ import ExtensionContext from '../core/ExtensionContext';
  */
 export default async function run(config?:DynamicsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
-    if (!config) { return; }
+    if (!config) { 
+        logger.warn("Configuration not chosen, command cancelled");
+
+        return; 
+    }
 
     let fsPath:string;
 
@@ -30,7 +35,10 @@ export default async function run(config?:DynamicsWebApi.Config, webResource?:an
     let map:SolutionWorkspaceMapping = this.getSolutionMapping(fsPath, config.orgId);
 
     webResource = webResource || await Quickly.pickCdsSolutionComponent(config, map ? map.solutionId : undefined, CdsSolutions.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
-    if (!webResource) { return; }
+    if (!webResource) {
+        logger.warn("Web Resource not chosen, command cancelled");
+        return; 
+    }
 
     // If we do have a map, enforce that we put files where we are supposed to, regardless of user preference.
     if (map && !fsPath) { 

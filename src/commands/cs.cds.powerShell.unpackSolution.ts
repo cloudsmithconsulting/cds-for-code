@@ -12,6 +12,7 @@ import ExtensionContext from '../core/ExtensionContext';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 import { Credential } from '../core/security/Types';
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
+import logger from '../core/Logger';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.
@@ -19,7 +20,7 @@ import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string, logFile?:string, mappingFile?:string, templateResourceCode?:string, includeResourceFiles?:boolean, allowDelete:boolean = true) {
+export default async function run(config?: DynamicsWebApi.Config, folder?: string, solution?: any, toolsPath?: string, logFile?: string, mappingFile?: string, templateResourceCode?: string, includeResourceFiles?: boolean, allowDelete: boolean = true) {
 	// setup configurations
 	const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.cds.configuration.tools.sdkInstallPath);
 	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
@@ -27,10 +28,16 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	const map:SolutionMap = await SolutionMap.loadFromWorkspace();
 
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
-	if (!config) { return; }
+	if (!config) { 
+		logger.warn("Organization not chosen, command cancelled");
+		return; 
+	}
 
 	solution = solution || await Quickly.pickCdsSolution(config, "Choose a Solution to unpack", true);
-	if (!solution) { return; }
+	if (!solution) { 
+		logger.warn("Solution not chosen, command cancelled");
+		return; 
+	}
 
 	if (map) {
 		const mapping = map.getBySolutionId(solution.solutionid, config.orgId);
@@ -47,8 +54,8 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true, true);
 	if (Utilities.$Object.isNullOrEmpty(folder)) {
 		vscode.window.showInformationMessage("You must select a workspace folder to unpack a solution.");
-
-			return; 
+		logger.warn("Workspace not chosen, command cancelled");
+		return; 
 	}
 
 	// If we're asked to unpack into a path with the solution name, use the parent, as this script will already do so.
@@ -59,7 +66,10 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	FileSystem.makeFolderSync(folder);
 	
 	toolsPath = toolsPath || coreToolsRoot;
-	if (Utilities.$Object.isNull(toolsPath)) { return; }
+	if (Utilities.$Object.isNull(toolsPath)) { 
+		logger.warn("Tools path not set, command cancelled");
+		return; 
+	}
 
 	if (Utilities.$Object.isNullOrEmpty(logFile)) { 
 		if ((await Quickly.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
@@ -85,7 +95,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 
 	await ScriptDownloader.installCdsSdk();
 
-	return DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
+	return await DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => { 
 			return await terminal.run(new TerminalCommand(`.\\Get-XrmSolution.ps1 `)
 				.text(`-ServerUrl "${serverUrl}" `)
