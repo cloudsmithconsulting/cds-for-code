@@ -12,7 +12,7 @@ export default async function openView(context: vscode.ExtensionContext, pluginA
     const view = View.show(PluginStepEditor, {
         icon: './resources/images/cloudsmith-logo-only-50px.png',
         title: 'Configure Plugin Step - Dynamics 365 CE',
-        type: cs.dynamics.views.pluginStepEditor,
+        type: cs.cds.views.pluginStepEditor,
         preserveFocus: false,
         bridge: BridgeCommunicationMethod.Ipc,
         onReady: view => view.setInitialState(context, pluginAssemblyId, config, step)
@@ -59,7 +59,7 @@ class PluginStepEditor extends View {
     }
    
     async setInitialState(context: vscode.ExtensionContext, pluginAssemblyId:string, config?: DynamicsWebApi.Config, step?: any) {
-        config = config || await Quickly.pickCdsOrganization(context, "Choose a Dynamics 365 Organization", true);
+        config = config || await Quickly.pickCdsOrganization(context, "Choose a CDS Organization", true);
         if (!config) { return; }
         this.config = config;
 

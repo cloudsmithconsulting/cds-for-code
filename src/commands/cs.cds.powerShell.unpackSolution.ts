@@ -27,7 +27,7 @@ export default async function run(config?: DynamicsWebApi.Config, folder?: strin
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 	const map:SolutionMap = await SolutionMap.loadFromWorkspace();
 
-	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
+	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
 		logger.warn("Organization not chosen, command cancelled");
 		return; 

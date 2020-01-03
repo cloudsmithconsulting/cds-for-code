@@ -26,7 +26,7 @@ export default async function run(item?: SolutionWorkspaceMapping, config?: Dyna
 	} 
 
 	if (!organizationId) {
-		config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
+		config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 		if (!config) { 
 			logger.warn("Configuration not chosen, command cancelled");
 			return; 

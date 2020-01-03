@@ -26,7 +26,7 @@ export default async function run(config?:DynamicsWebApi.Config, solution?:any, 
         fileUri = fileUri.with({ path: fileUri.path.substr(0, fileUri.path.length - 9)});
     }
     
-    config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
+    config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
     if (!config) { 
         logger.warn("Configuration not chosen, command cancelled");
         return; 
@@ -61,7 +61,7 @@ export default async function run(config?:DynamicsWebApi.Config, solution?:any, 
         return { webResource: result || webResource, fsPath: fileUri.fsPath };
     } catch (error) {
         logger.error(error.message);
-        
+
         await Quickly.error(`There was an error when saving the web resource.  The error returned was: ${error && error.message ? error.message : error.toString() }`, undefined, "Try Again", () => vscode.commands.executeCommand(cs.cds.deployment.packWebResource, config, solution, webResource, fileUri));
     }
 }

@@ -47,7 +47,7 @@ export default async function run(config?:DynamicsWebApi.Config, solutionId?:str
         config = connections.find(c => c.orgId === map.organizationId);
     }
 
-    config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
+    config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
 		logger.warn("Configuration not chosen, command cancelled");
 		return; 

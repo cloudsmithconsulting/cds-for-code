@@ -11,7 +11,7 @@ export default async function openView(context: vscode.ExtensionContext, sdkmess
     const view = View.show(PluginStepImageEditor, {
         icon: './resources/images/cloudsmith-logo-only-50px.png',
         title: 'Configure Plugin Step Image - Dynamics 365 CE',
-        type: cs.dynamics.views.pluginStepImageEditor,
+        type: cs.cds.views.pluginStepImageEditor,
         preserveFocus: false,
         bridge: BridgeCommunicationMethod.Ipc,
         onReady: view => view.setInitialState(context, sdkmessageprocessingstepid, pluginStepImage, config)
@@ -59,7 +59,7 @@ class PluginStepImageEditor extends View {
     }
    
     async setInitialState(context: vscode.ExtensionContext, sdkmessageprocessingstepid: string, viewModel: any, config: DynamicsWebApi.Config) {
-        config = config || await Quickly.pickCdsOrganization(context, "Choose a Dynamics 365 Organization", true);
+        config = config || await Quickly.pickCdsOrganization(context, "Choose a CDS Organization", true);
         if (!config) { return; }
         this.config = config;
         this.postMessage({ command: 'load', viewModel, sdkmessageprocessingstepid });

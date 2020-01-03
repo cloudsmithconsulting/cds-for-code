@@ -15,7 +15,7 @@ import logger from "../core/Logger";
  * @returns void
  */
 export default async function run(config?:DynamicsWebApi.Config, solution?:any, componentId?:string, componentType?:CdsSolutions.SolutionComponent, addRequiredComponents?:boolean, doNotIncludeSubcomponents?:boolean, componentSettings?:string): Promise<any> {
-	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a Dynamics 365 Organization", true);
+	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
 		logger.warn("Organization not chosen, command cancelled");
 		return; 
