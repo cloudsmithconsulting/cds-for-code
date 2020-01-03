@@ -1,4 +1,4 @@
-import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import { CdsSolutions } from '../api/CdsSolutions';
 import { Utilities } from '../core/Utilities';
 import ApiHelper from "./ApiHelper";
@@ -7,13 +7,13 @@ import * as path from 'path';
 import { TS } from "typescript-linq";
 
 export default class ApiRepository {
-    constructor (config: DynamicsWebApi.Config) {
-        this.webapi = new DynamicsWebApi.WebApiClient(config);
+    constructor (config: CdsWebApi.Config) {
+        this.webapi = new CdsWebApi.WebApiClient(config);
     }
 
-    private webapi: DynamicsWebApi.WebApiClient;
+    private webapi: CdsWebApi.WebApiClient;
 
-    get config(): DynamicsWebApi.Config {
+    get config(): CdsWebApi.Config {
         return this.webapi ? this.webapi.config : null;
     }
 
@@ -34,7 +34,7 @@ export default class ApiRepository {
     }
 
     retrieveSolutions() : Promise<any[]> {
-        const request:DynamicsWebApi.RetrieveMultipleRequest = {
+        const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "solutions",
             filter: "isvisible eq true",
             orderBy: ["uniquename"]
@@ -48,7 +48,7 @@ export default class ApiRepository {
 
     retrieveProcesses(entityName?:string, solutionId?:string) : Promise<any[]> {
         // documentation of the attributes for workflow: https://docs.microsoft.com/en-us/dynamics365/customer-engagement/web-api/workflow?view=dynamics-ce-odata-9        
-        const request:DynamicsWebApi.RetrieveMultipleRequest = {
+        const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "workflows",
             filter: `componentstate ne 2 and componentstate ne 3 and type eq 1`,
             orderBy: ["name"]
@@ -67,7 +67,7 @@ export default class ApiRepository {
     }
 
     async retrieveWebResourceFolders(solutionId?:string, folder?:string, customizableOnly:boolean = true) : Promise<string[]> {
-        const request:DynamicsWebApi.RetrieveMultipleRequest = {
+        const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "webresourceset",
             filter: "contains(name, '/')",
             select: ['webresourceid', "name", "iscustomizable"],
@@ -104,7 +104,7 @@ export default class ApiRepository {
 
     async retrieveWebResources(solutionId?:string, folder?:string, customizableOnly:boolean = true) : Promise<any[]> {
         const selectAll:boolean = folder && folder === "*";
-        const request:DynamicsWebApi.RetrieveMultipleRequest = {
+        const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "webresourceset",
             select: ['webresourceid', "name", "displayname", "webresourcetype", "solutionid", "iscustomizable"],
             filter: !selectAll ? "(not contains(name, '/'))" : "",
@@ -185,7 +185,7 @@ export default class ApiRepository {
     }
 
     retrievePluginAssemblies(solutionId?:string) : Promise<any[]> {
-        const request:DynamicsWebApi.RetrieveMultipleRequest = {
+        const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "pluginassemblies",
             orderBy: ["name"]
         };
@@ -198,7 +198,7 @@ export default class ApiRepository {
     }
 
     retrievePluginTypes(pluginAssemblyId:string) {
-        const request:DynamicsWebApi.RetrieveRequest = {
+        const request:CdsWebApi.RetrieveRequest = {
             collection: "pluginassemblies",
             id: pluginAssemblyId,
             select: ["name", "publickeytoken"]
@@ -248,7 +248,7 @@ export default class ApiRepository {
 
     // Lookup "Message" in plugin registration
     retrieveSdkMessages() {
-        const request:DynamicsWebApi.RetrieveMultipleRequest = {
+        const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessages",
             select: ["sdkmessageid", "name", "autotransact", "availability", "categoryname", "isactive", "isprivate", "isreadonly", "template", "workflowsdkstepenabled"],
         };
@@ -258,7 +258,7 @@ export default class ApiRepository {
     }
 
     retrieveSdkMessageFilters() {
-        const request: DynamicsWebApi.RetrieveMultipleRequest = {
+        const request: CdsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessagefilters",
             select: [ "sdkmessagefilterid", "_sdkmessageid_value", "primaryobjecttypecode", "secondaryobjecttypecode" ]
         };
@@ -268,7 +268,7 @@ export default class ApiRepository {
     }
 
     retrieveSdkMessageDetails(sdkMessageId:string) {
-        const request:DynamicsWebApi.RetrieveRequest = {
+        const request:CdsWebApi.RetrieveRequest = {
             collection: "sdkmessages",
             id: sdkMessageId
         };
@@ -277,7 +277,7 @@ export default class ApiRepository {
     }
 
     retrievePluginStep(sdkmessageprocessingstepid:string) {
-        const request:DynamicsWebApi.RetrieveRequest = {
+        const request:CdsWebApi.RetrieveRequest = {
             collection: "sdkmessageprocessingsteps",
             id: sdkmessageprocessingstepid,
             expand: [ 
@@ -293,7 +293,7 @@ export default class ApiRepository {
     }
     
     retrievePluginSteps(pluginTypeId:string) {
-        const request:DynamicsWebApi.RetrieveMultipleRequest = {
+        const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessageprocessingsteps",
             expand: [ { property: "sdkmessageid" } ],
             filter: `plugintypeid/plugintypeid eq ${pluginTypeId}`,
@@ -319,7 +319,7 @@ export default class ApiRepository {
     }
 
     retrievePluginStepImages(pluginStepId:string) {
-        const request:DynamicsWebApi.RetrieveRequest = {
+        const request:CdsWebApi.RetrieveRequest = {
             collection: "sdkmessageprocessingsteps",
             id: pluginStepId,
             select: [],
@@ -333,7 +333,7 @@ export default class ApiRepository {
     }
 
     retrieveSystemUsers() {
-        const request: DynamicsWebApi.RetrieveMultipleRequest = {
+        const request: CdsWebApi.RetrieveMultipleRequest = {
             collection: "systemusers",
             select: [ "systemuserid", "fullname", "isdisabled" ],
             filter: "fullname ne 'INTEGRATION'",
@@ -504,7 +504,7 @@ export default class ApiRepository {
     }
 
     getSolutionComponent(componentId:string, componentType:CdsSolutions.SolutionComponent): Promise<any> {
-        const solutionQuery:DynamicsWebApi.RetrieveMultipleRequest = {
+        const solutionQuery:CdsWebApi.RetrieveMultipleRequest = {
             collection: "solutioncomponents",
             filter: `componenttype eq ${CdsSolutions.CodeMappings.getSolutionComponentCode(componentType)} and objectid eq ${componentId}`
         };    

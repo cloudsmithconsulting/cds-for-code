@@ -1,6 +1,6 @@
 import * as cs from '../../cs';
 import * as vscode from 'vscode';
-import { DynamicsWebApi } from '../../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../../api/cds-webapi/CdsWebApi';
 import ExtensionContext from '../../core/ExtensionContext';
 import GlobalStateCredentialStore from '../../core/security/GlobalStateCredentialStore';
 import { Credential } from '../../core/security/Types';
@@ -9,8 +9,8 @@ import Dictionary from '../../core/types/Dictionary';
 export default class GlobalState {
     private constructor() { }
 
-    get DynamicsConnections(): DynamicsWebApi.Config[] {
-        const connections = ExtensionContext.Instance.globalState.get<DynamicsWebApi.Config[]>(cs.cds.configuration.globalState.dynamicsConnections);
+    get DynamicsConnections(): CdsWebApi.Config[] {
+        const connections = ExtensionContext.Instance.globalState.get<CdsWebApi.Config[]>(cs.cds.configuration.globalState.dynamicsConnections);
 
         if (connections && connections.length > 0) {
             connections.forEach(c => {
@@ -24,7 +24,7 @@ export default class GlobalState {
 
         return connections;
     }
-    set DynamicsConnections(value: DynamicsWebApi.Config[]) {
+    set DynamicsConnections(value: CdsWebApi.Config[]) {
         const keys = new Dictionary<number, string>();
         
         if (value && value.length > 0) {

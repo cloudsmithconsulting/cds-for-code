@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as FileSystem from "../core/io/FileSystem";
-import { DynamicsWebApi } from "../api/cds-webapi/DynamicsWebApi";
+import { CdsWebApi } from "../api/cds-webapi/CdsWebApi";
 import { CdsSolutions } from '../api/CdsSolutions';
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
@@ -13,12 +13,12 @@ import logger from '../core/Logger';
 /**
  * This command can be invoked by the Dynamics Explorer tree view and creates or updates a web resource in the local workspace.
  * @export run command function
- * @param {DynamicsWebApi.Config} [config] The configuration to use when retreiving a web resource
+ * @param {CdsWebApi.Config} [config] The configuration to use when retreiving a web resource
  * @param {string} [webResourceId] The web resource object as retrieved by WebApi.
  * @param {vscode.Uri} [fileUri] The Uri of the file to save the web resource as.
  * @returns void
  */
-export default async function run(config?:DynamicsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
+export default async function run(config?:CdsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
     if (!config) { 
         logger.warn("Configuration not chosen, command cancelled");

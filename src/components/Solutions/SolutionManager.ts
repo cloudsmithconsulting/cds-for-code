@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as cs from '../../cs';
-import { DynamicsWebApi } from '../../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../../api/cds-webapi/CdsWebApi';
 import { CdsSolutions } from '../../api/CdsSolutions';
 import addSolutionComponent from "../../commands/cs.cds.deployment.addSolutionComponent";
 import removeSolutionComponent from "../../commands/cs.cds.deployment.removeSolutionComponent";
@@ -12,12 +12,12 @@ import command from '../../core/Command';
 
 export default class SolutionManager {
     @command(cs.cds.deployment.addSolutionComponent, "Add component to solution")
-    static async addSolutionComponent(config?: DynamicsWebApi.Config, solution?: any, componentId?: string, componentType?: CdsSolutions.SolutionComponent, addRequiredComponents?: boolean, doNotIncludeSubcomponents?: boolean, componentSettings?: string): Promise<any> {
+    static async addSolutionComponent(config?: CdsWebApi.Config, solution?: any, componentId?: string, componentType?: CdsSolutions.SolutionComponent, addRequiredComponents?: boolean, doNotIncludeSubcomponents?: boolean, componentSettings?: string): Promise<any> {
         return await addSolutionComponent.apply(this, [config, solution, componentId, componentType, addRequiredComponents, doNotIncludeSubcomponents, componentSettings]);
     }
 
     @command(cs.cds.deployment.removeSolutionComponent, "Remove component from solution")
-    static async removeSolutionComponent(config?: DynamicsWebApi.Config, solution?: any, componentId?: string, componentType?: CdsSolutions.SolutionComponent): Promise<any> {
+    static async removeSolutionComponent(config?: CdsWebApi.Config, solution?: any, componentId?: string, componentType?: CdsSolutions.SolutionComponent): Promise<any> {
         return await removeSolutionComponent.apply(this, [config, solution, componentId, componentType]);
     }
 
@@ -27,7 +27,7 @@ export default class SolutionManager {
     }
 
     @command(cs.cds.powerShell.packSolution, "Pack and deploy solution")
-    static async packSolution(config?: DynamicsWebApi.Config, folder?: string, solution?: any, toolsPath?: string, logFile?: string, mappingFile?: string, includeResourceFiles?: boolean, solutionPath?: string, managed?: boolean) {
+    static async packSolution(config?: CdsWebApi.Config, folder?: string, solution?: any, toolsPath?: string, logFile?: string, mappingFile?: string, includeResourceFiles?: boolean, solutionPath?: string, managed?: boolean) {
         return await packSolution.apply(this, [config, folder, solution, toolsPath, logFile, mappingFile, includeResourceFiles, solutionPath, managed]);
     }
 
@@ -42,7 +42,7 @@ export default class SolutionManager {
     }
 
     @command(cs.cds.powerShell.unpackSolution, "Download and unpack solution")
-    static async unpackSolution(config?: DynamicsWebApi.Config, folder?: string, solution?: any, toolsPath?: string, logFile?: string, mappingFile?: string, templateResourceCode?: string, includeResourceFiles?: boolean, allowDelete: boolean = true) {
+    static async unpackSolution(config?: CdsWebApi.Config, folder?: string, solution?: any, toolsPath?: string, logFile?: string, mappingFile?: string, templateResourceCode?: string, includeResourceFiles?: boolean, allowDelete: boolean = true) {
         return await unpackSolution.apply(this, [config, folder, solution, toolsPath, logFile, mappingFile, templateResourceCode, includeResourceFiles, allowDelete]);
     }    
 
@@ -52,12 +52,12 @@ export default class SolutionManager {
     }
 
     @command(cs.cds.deployment.registerPluginAssembly, "Register plugin assembly")
-    static async registerPluginAssembly(config?: DynamicsWebApi.Config, pluginAssembly?: any, file?: vscode.Uri, solution?: any): Promise<any> {
+    static async registerPluginAssembly(config?: CdsWebApi.Config, pluginAssembly?: any, file?: vscode.Uri, solution?: any): Promise<any> {
         return await registerPluginAssembly.apply(this, [config, pluginAssembly, file, solution]);
     }
 
     @command(cs.cds.deployment.publishCustomizations, "Publish Customizations")
-    static async publishCustomizations(config?: DynamicsWebApi.Config, components?: {type: CdsSolutions.SolutionComponent, id: string}[]) {
+    static async publishCustomizations(config?: CdsWebApi.Config, components?: {type: CdsSolutions.SolutionComponent, id: string}[]) {
         return await publishCustomizations.apply(this, [config, components]);
     }
 }

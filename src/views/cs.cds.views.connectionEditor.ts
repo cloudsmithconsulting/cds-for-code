@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as cs from '../cs';
 import { View, BridgeCommunicationMethod } from '../core/webui/View';
 import { ViewRenderer } from "../core/webui/ViewRenderer";
-import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import CdsConnectionString from '../api/CdsConnectionString';
 import Quickly, { QuickPickOption } from '../core/Quickly';
@@ -11,7 +11,7 @@ import Dictionary from '../core/types/Dictionary';
 import { Credential, CdsOnlineCredential, SecureOutput } from "../core/security/Types";
 import { Octicon } from '../core/types/Octicon';
 
-export default async function openView(config?: DynamicsWebApi.Config): Promise<View> {
+export default async function openView(config?: CdsWebApi.Config): Promise<View> {
     const view = View.show(CdsConnectionEditor, {
         icon: './resources/images/cloudsmith-logo-only-50px.png',
         title: (config && config.name) ? `Edit CDS Connection - ${config.name}` : 'New CDS Connection',
@@ -49,7 +49,7 @@ class CdsConnectionEditor extends View {
         ]);
     }
 
-    private async editPassword(config: DynamicsWebApi.Config) {
+    private async editPassword(config: CdsWebApi.Config) {
         if (config.id) {
             const password1 = await Quickly.password(`Please enter the new password for '${config.name || config.appUrl}'`);
             const password2 = await Quickly.password(`Please re-enter (verify) the new password for '${config.name || config.appUrl}'`);
@@ -73,7 +73,7 @@ class CdsConnectionEditor extends View {
         }
     }
 
-    private async save(config: DynamicsWebApi.Config, discoverOnly: boolean = false): Promise<void> {
+    private async save(config: CdsWebApi.Config, discoverOnly: boolean = false): Promise<void> {
         // set a timeout if it doesn't exist
         config.timeout = config.timeout || (1000 * 5); // 5 seconds
 
@@ -97,7 +97,7 @@ class CdsConnectionEditor extends View {
             config.webApiUrl = apiUrl;
         }
 
-        if (config.type === DynamicsWebApi.ConfigType.Online && (!config.webApiUrl || config.webApiUrl === "")) {
+        if (config.type === CdsWebApi.ConfigType.Online && (!config.webApiUrl || config.webApiUrl === "")) {
             config.webApiUrl = CdsOnlineCredential.defaultResource;
         }
 
@@ -150,7 +150,7 @@ class CdsConnectionEditor extends View {
             });
     }
 
-    setInitialState(config?: DynamicsWebApi.Config): void {
+    setInitialState(config?: CdsWebApi.Config): void {
         if (config) {
             if (Credential.isSecureCredential(config.credentials) && config.id) {
                 config.credentials = GlobalStateCredentialStore.Instance.decrypt(config.id, config.credentials, SecureOutput.String, [ "password" ]);

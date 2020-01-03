@@ -2,7 +2,7 @@ import * as cs from "../cs";
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as FileSystem from "../core/io/FileSystem";
-import { DynamicsWebApi } from "../api/cds-webapi/DynamicsWebApi";
+import { CdsWebApi } from "../api/cds-webapi/CdsWebApi";
 import { CdsSolutions } from "../api/CdsSolutions";
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
@@ -19,7 +19,7 @@ import logger from "../core/Logger";
  * @param {vscode.Uri} [defaultUri] that invoked the command
  * @returns void
  */
-export default async function run(config?:DynamicsWebApi.Config, solutionId?:string, webResource?:any, fileUri?:vscode.Uri, defaultName:string = "", inform:boolean = true) {
+export default async function run(config?:CdsWebApi.Config, solutionId?:string, webResource?:any, fileUri?:vscode.Uri, defaultName:string = "", inform:boolean = true) {
     let fsPath:string;
     let map:SolutionWorkspaceMapping;
     let folder:string;

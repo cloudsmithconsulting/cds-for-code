@@ -3,7 +3,7 @@ import buildFunctionParameters from '../odata/buildFunctionParameters';
 import getFetchXmlPagingCookie from '../odata/getFetchXmlPagingCookie';
 import convertToReferenceObject, { ReferenceObject } from '../odata/convertToReferenceObject';
 import { Utilities } from "../../../core/Utilities";
-import { DynamicsWebApi } from '../DynamicsWebApi';
+import { CdsWebApi } from '../CdsWebApi';
 
 export default class Utility {
     /**
@@ -80,14 +80,14 @@ export default class Utility {
         return prefix + (!prefix.endsWith("/") ? "/" : "") + 'api/data/v' + version + '/';
     }
 
-    static initDiscoveryApiUrl(prefix: string = this.getClientUrl(), version: string = "8.2", configType?: DynamicsWebApi.ConfigType): string {
+    static initDiscoveryApiUrl(prefix: string = this.getClientUrl(), version: string = "8.2", configType?: CdsWebApi.ConfigType): string {
         if (version && version.startsWith("v")) {
             version = version.substring(1, version.length);
         }
 
         prefix = Utilities.String.noTrailingSlash(prefix);
 
-        if (!configType || configType !== DynamicsWebApi.ConfigType.Online) {
+        if (!configType || configType !== CdsWebApi.ConfigType.Online) {
             return prefix +  '/api/discovery/v' + version + '/';
         } else {
             return "https://globaldisco.crm.dynamics.com/api/discovery/v2.0/";

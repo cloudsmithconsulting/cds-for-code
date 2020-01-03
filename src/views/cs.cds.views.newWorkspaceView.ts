@@ -7,7 +7,7 @@ import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import Dictionary from '../core/types/Dictionary';
 import ExtensionContext from '../core/ExtensionContext';
-import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 
 const _initialized:boolean = false;
 
@@ -23,7 +23,7 @@ async function showWelcomeExperience() {
     }
 }
 
-export default async function openView(config?: DynamicsWebApi.Config): Promise<View> {
+export default async function openView(config?: CdsWebApi.Config): Promise<View> {
     const view = View.show(NewWorkspaceView, {
         icon: './resources/images/cloudsmith-logo-only-50px.png',
         title: 'Welcome to Dynamics 365 for Code',
