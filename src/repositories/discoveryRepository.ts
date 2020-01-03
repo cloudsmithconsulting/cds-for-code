@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as cs from '../cs';
 import { Utilities } from '../core/Utilities';
 import GlobalState from '../components/Configuration/GlobalState';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
@@ -19,7 +20,13 @@ export default class DiscoveryRepository {
         return this.webapi.discover(filter)
             .then(result => result.value)
             .catch(error => {
-                Quickly.error(`There were errors retreiving organizations from '${this.webapi.config.name ? this.webapi.config.name : "your connection"}': ${error.message}`);
+                Quickly.error(
+                    `There were errors retreiving organizations from '${this.webapi.config.name ? this.webapi.config.name : "your connection"}': ${error.message}`, 
+                    undefined,
+                    "Retry",
+                    () => this.retrieveOrganizations(filter),
+                    "Edit Connection",
+                    () => vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection, this.webapi.config));
             });
     }
 
