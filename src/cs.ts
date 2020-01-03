@@ -71,8 +71,8 @@ export namespace cds {
         static readonly connectionEditor:string = `${viewContainers._namespace}.connectionEditor`;
         static readonly jsonInspectorView:string = `${viewContainers._namespace}.jsonInspectorView`;
         static readonly newWorkspaceView:string = `${viewContainers._namespace}.newWorkspaceView`;
-        static readonly pluginStepView:string = `${viewContainers._namespace}.pluginStepView`;
-        static readonly pluginStepImageView:string = `${viewContainers._namespace}.pluginStepImageView`;
+        static readonly pluginStepEditor:string = `${viewContainers._namespace}.pluginStepEditor`;
+        static readonly pluginStepImageEditor:string = `${viewContainers._namespace}.pluginStepImageEditor`;
         static readonly svcUtilConfigView:string = `${viewContainers._namespace}.svcUtilConfigView`;
     }
 
@@ -171,15 +171,13 @@ export namespace cds {
         // tslint:disable-next-line: class-name
         export class jsonInspector {
             static readonly _namespace:string = "cs.cds.controls.jsonInspector";
-            static readonly inspect:string = `${jsonInspector._namespace}.inspect`;
+            static readonly open:string = `${jsonInspector._namespace}.open`;
         }
 
         // tslint:disable-next-line: class-name
         export class newWorkspace {
             static readonly _namespace:string = "cs.cds.controls.newWorkspace";
-            static readonly hideLoadingMessage:string = `${newWorkspace._namespace}.hideLoadingMessage`;
             static readonly open:string = `${newWorkspace._namespace}.open`;
-            static readonly showLoadingMessage:string = `${newWorkspace._namespace}.showLoadingMessage`;
         }
 
         // tslint:disable-next-line: class-name
@@ -204,7 +202,7 @@ export namespace cds {
         // tslint:disable-next-line: class-name
         export class svcUtilConfig {
             static readonly _namespace:string = "cs.cds.controls.svcUtilConfig";
-            static readonly configure:string = `${svcUtilConfig._namespace}.configure`;
+            static readonly open:string = `${svcUtilConfig._namespace}.open`;
         }
 
         // tslint:disable-next-line: class-name

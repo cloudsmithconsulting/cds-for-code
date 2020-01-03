@@ -7,18 +7,19 @@
 
     // Handle messages sent from the extension to the webview
     window.addEventListener("message", event => {
-        // wait for document ready
-        $(document).ready(function() { 
-            const message = event.data; // The json data that the extension sent
-            switch (message.command) {
-                case "load":
-                    setInitialState(message.viewModel, message.sdkmessageprocessingstepid);
-                    break;
-                case "error":
-                    CloudSmith.ErrorPanel.showError([`${message.message}`]);
-                    break;
-            }
-        });
+        const message = event.data; // The json data that the extension sent
+        
+        switch (message.command) {
+            case "load":
+                setInitialState(message.viewModel, message.sdkmessageprocessingstepid);
+                break;
+            case "error":
+                CloudSmith.ErrorPanel.showError([`${message.message}`]);
+                break;
+        }
+
+        // initialize framework
+        M.updateTextFields();
     });
 
     function setInitialState(viewModel, sdkmessageprocessingstepid) {
@@ -36,6 +37,8 @@
 
     // this part starts on document ready
     $(function () {
+        M.AutoInit();
+        
         function validateForm(pluginStepImage) {
             const messages = [];
     

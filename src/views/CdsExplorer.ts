@@ -58,7 +58,7 @@ export default class DynamicsTreeView implements IContributor {
                 }
             }) 
             , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.inspectEntry, (item: TreeEntry) => { // Match name of command to package.json command
-                vscode.commands.executeCommand(cs.cds.controls.jsonInspector.inspect, item.context);
+                vscode.commands.executeCommand(cs.cds.controls.jsonInspector.open, item.context);
             }) 
             , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.moveSolution, (item: TreeEntry) => { // Match name of command to package.json command
                 vscode.commands.executeCommand(cs.cds.deployment.updateSolutionMapping, item.solutionMapping, item.config)
@@ -229,10 +229,10 @@ export default class DynamicsTreeView implements IContributor {
                         break;
                     case "PluginType":
                         if (!item.context._pluginassemblyid_value) { return; }
-                        vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, item.context._pluginassemblyid_value);
+                        vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, context, item.context._pluginassemblyid_value, item.config, undefined);
                         break;
                     case "PluginStep":
-                        vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context.sdkmessageprocessingstepid, null, item.config);
+                        vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, context, item.context.sdkmessageprocessingstepid, null, item.config);
                         break;
                 }
             })   
@@ -290,10 +290,10 @@ export default class DynamicsTreeView implements IContributor {
                         break;
                     case "PluginStep":
                         if (!item.context.eventhandler_plugintype) { return; }
-                        vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, item.context.eventhandler_plugintype._pluginassemblyid_value, item.context);
+                        vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, context, item.context.eventhandler_plugintype._pluginassemblyid_value, item.config, item.context);
                         break;
                     case "PluginStepImage":
-                        vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, item.context, item.config);
+                        vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, context, item.context._sdkmessageprocessingstepid_value, item.context, item.config);
                         break;
                 }
            }) 

@@ -20,11 +20,7 @@ export default class CdsUrlResolver {
      * @memberof CdsUrlResolver
      */
     static parseFormType(formType:number): CdsSolutions.DynamicsForm {
-        // See: parseProcessType comments to see what happened here
-        //return formType ? CdsSolutions.CodeMappings.DynamicsForms[formType] : undefined;
-        return CdsSolutions.CodeMappings.DynamicsForms.keys[
-            CdsSolutions.CodeMappings.DynamicsForms._values.indexOf(formType)
-        ];
+        return CdsSolutions.CodeMappings.DynamicsForms.getKey(formType);
     }
 
     /**
@@ -36,23 +32,7 @@ export default class CdsUrlResolver {
      * @memberof CdsUrlResolver
      */
     static parseProcessType(processType:number): CdsSolutions.ProcessType {
-        /**
-         * Ok this is strange. The following code doesn't work because processType needs to be a key
-         * but what we're getting in here is the integer value.
-         * 
-         * return processType ? CdsSolutions.CodeMappings.ProcessTypes[processType] : undefined;
-         * 
-         * But wait! There's more!
-         * 
-         * The code you really want to see here would leverage Dictionary like so:
-         * return processType ? CdsSolutions.CodeMappings.ProcessTypes.getKey(processType) : undefined;
-         * 
-         * This should return the key based on the value within the dictionary.
-         * But sadly it doesn't work if the value = 0 Wawawaaaaaa :(
-         */
-        return CdsSolutions.CodeMappings.ProcessTypes.keys[
-            CdsSolutions.CodeMappings.ProcessTypes._values.indexOf(processType)
-        ];
+         return CdsSolutions.CodeMappings.ProcessTypes.getKey(processType);
     }
 
     /**
@@ -64,7 +44,7 @@ export default class CdsUrlResolver {
      * @memberof CdsUrlResolver
      */
     static parseSolutionComponent(solutionComponent:number): CdsSolutions.SolutionComponent {
-        return solutionComponent ? CdsSolutions.CodeMappings.SolutionComponents[solutionComponent] : undefined;
+        return CdsSolutions.CodeMappings.SolutionComponents.getKey(solutionComponent);
     }
 
     /**
