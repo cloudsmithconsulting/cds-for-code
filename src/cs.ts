@@ -1,222 +1,222 @@
 import * as vscode from "vscode";
 
-export namespace dynamics {
+export namespace cds {
     // tslint:disable-next-line: class-name
     export class deployment {
-        public static readonly _namespace:string = "cs.dynamics.deployment";
-        public static readonly addSolutionComponent:string = `${deployment._namespace}.addSolutionComponent`;
-        public static readonly compareWebResource:string = `${deployment._namespace}.compareWebResource`;
-        public static readonly connectToCds:string = `${deployment._namespace}.connectToCds`;
-        public static readonly createWebResource:string = `${deployment._namespace}.createWebResource`;
-        public static readonly dotNetBuild:string = `${deployment._namespace}.dotNetBuild`;
-        public static readonly dotNetTest:string = `${deployment._namespace}.dotNetTest`;
-        public static readonly packWebResource:string = `${deployment._namespace}.packWebResource`;
-        public static readonly publishCustomizations:string = `${deployment._namespace}.publishCustomizations`;
-        public static readonly registerPluginAssembly:string = `${deployment._namespace}.registerPluginAssembly`;
-        public static readonly removeSolutionComponent:string = `${deployment._namespace}.removeSolutionComponent`;
-        public static readonly removeSolutionMapping:string = `${deployment._namespace}.removeSolutionMapping`;
-        public static readonly unpackWebResource:string = `${deployment._namespace}.unpackWebResource`;
-        public static readonly updateSolutionMapping:string = `${deployment._namespace}.updateSolutionMapping`;
+        static readonly _namespace:string = "cs.cds.deployment";
+        static readonly addSolutionComponent:string = `${deployment._namespace}.addSolutionComponent`;
+        static readonly compareWebResource:string = `${deployment._namespace}.compareWebResource`;
+        static readonly connectToCds:string = `${deployment._namespace}.connectToCds`;
+        static readonly createWebResource:string = `${deployment._namespace}.createWebResource`;
+        static readonly dotNetBuild:string = `${deployment._namespace}.dotNetBuild`;
+        static readonly dotNetTest:string = `${deployment._namespace}.dotNetTest`;
+        static readonly packWebResource:string = `${deployment._namespace}.packWebResource`;
+        static readonly publishCustomizations:string = `${deployment._namespace}.publishCustomizations`;
+        static readonly registerPluginAssembly:string = `${deployment._namespace}.registerPluginAssembly`;
+        static readonly removeSolutionComponent:string = `${deployment._namespace}.removeSolutionComponent`;
+        static readonly removeSolutionMapping:string = `${deployment._namespace}.removeSolutionMapping`;
+        static readonly unpackWebResource:string = `${deployment._namespace}.unpackWebResource`;
+        static readonly updateSolutionMapping:string = `${deployment._namespace}.updateSolutionMapping`;
     }
 
     // tslint:disable-next-line: class-name
     export class errors {
-        public static readonly _namespace:string = "cs.dynamics.errors";
-        public static readonly userCancelledAction:string = `${errors._namespace}.userCancelledAction`;
-        public static readonly webApiResponseError:string = `${errors._namespace}.webApiResponseError`;
+        static readonly _namespace:string = "cs.cds.errors";
+        static readonly userCancelledAction:string = `${errors._namespace}.userCancelledAction`;
+        static readonly webApiResponseError:string = `${errors._namespace}.webApiResponseError`;
     } 
 
     // tslint:disable-next-line: class-name
     export class extension {
-        public static readonly _namespace:string = "cs.dynamics.extension";
-        public static readonly clearTerminal:string = `${extension._namespace}.clearTerminal`;
-        public static readonly createTerminal:string = `${extension._namespace}.createTerminal`;
-        public static readonly downloadRequiredIcons:string = `${extension._namespace}.downloadRequiredIcons`;
-        public static readonly downloadRequiredScripts:string = `${extension._namespace}.downloadRequiredScripts`;
-        public static readonly productName:string = `CloudSmith CDS for Code`;
+        static readonly _namespace:string = "cs.cds.extension";
+        static readonly clearTerminal:string = `${extension._namespace}.clearTerminal`;
+        static readonly createTerminal:string = `${extension._namespace}.createTerminal`;
+        static readonly downloadRequiredIcons:string = `${extension._namespace}.downloadRequiredIcons`;
+        static readonly downloadRequiredScripts:string = `${extension._namespace}.downloadRequiredScripts`;
+        static readonly productId:string = `CloudSmith.cds-for-code`;
+        static readonly productName:string = `CloudSmith CDS for Code`;
+        static readonly telemetryKey:string = `8e60943e-a073-4ccd-a199-45516b5d7cf3`;
     }
 
     // tslint:disable-next-line: class-name
     export class powerShell {
-        public static readonly _namespace:string = "cs.dynamics.powerShell";
-        public static readonly generateEntities:string = `${powerShell._namespace}.generateEntities`;
-        public static readonly packSolution:string = `${powerShell._namespace}.packSolution`;
-        public static readonly unpackSolution:string = `${powerShell._namespace}.unpackSolution`;
+        static readonly _namespace:string = "cs.cds.powerShell";
+        static readonly generateEntities:string = `${powerShell._namespace}.generateEntities`;
+        static readonly packSolution:string = `${powerShell._namespace}.packSolution`;
+        static readonly unpackSolution:string = `${powerShell._namespace}.unpackSolution`;
     }
 
     // tslint:disable-next-line: class-name
     export class templates {
-        public static readonly _namespace:string = "cs.dynamics.templates";
-        public static readonly createFromTemplate:string = `${templates._namespace}.createFromTemplate`;
-        public static readonly deleteTemplate:string = `${templates._namespace}.deleteTemplate`;
-        public static readonly editTemplateCatalog:string = `${templates._namespace}.editTemplateCatalog`;
-        public static readonly exportTemplate:string = `${templates._namespace}.exportTemplate`;
-        public static readonly importTemplate:string = `${templates._namespace}.importTemplate`;
-        public static readonly openTemplateFolder:string = `${templates._namespace}.openTemplateFolder`;
-        public static readonly saveTemplate:string = `${templates._namespace}.saveTemplate`;
+        static readonly _namespace:string = "cs.cds.templates";
+        static readonly createFromTemplate:string = `${templates._namespace}.createFromTemplate`;
+        static readonly deleteTemplate:string = `${templates._namespace}.deleteTemplate`;
+        static readonly editTemplateCatalog:string = `${templates._namespace}.editTemplateCatalog`;
+        static readonly exportTemplate:string = `${templates._namespace}.exportTemplate`;
+        static readonly importTemplate:string = `${templates._namespace}.importTemplate`;
+        static readonly openTemplateFolder:string = `${templates._namespace}.openTemplateFolder`;
+        static readonly saveTemplate:string = `${templates._namespace}.saveTemplate`;
     }
 
     // tslint:disable-next-line: class-name
     export class viewContainers {
-        public static readonly _namespace:string = "cs.dynamics.viewContainers";
-        public static readonly cdsExplorer:string = `${viewContainers._namespace}.cdsExplorer`;
-        public static readonly templateExplorer:string = `${viewContainers._namespace}.templateExplorer`;
+        static readonly _namespace:string = "cs.cds.viewContainers";
+        static readonly cdsExplorer:string = `${viewContainers._namespace}.cdsExplorer`;
+        static readonly templateExplorer:string = `${viewContainers._namespace}.templateExplorer`;
     }
 
     // tslint:disable-next-line: class-name
     export class views {
-        public static readonly _namespace:string = "cs.dynamics.views";
-        public static readonly connectionEditor:string = `${viewContainers._namespace}.connectionEditor`;
-        public static readonly jsonInspectorView:string = `${viewContainers._namespace}.jsonInspectorView`;
-        public static readonly newWorkspaceView:string = `${viewContainers._namespace}.newWorkspaceView`;
-        public static readonly pluginStepEditor:string = `${viewContainers._namespace}.pluginStepEditor`;
-        public static readonly pluginStepImageEditor:string = `${viewContainers._namespace}.pluginStepImageEditor`;
-        public static readonly svcUtilConfigView:string = `${viewContainers._namespace}.svcUtilConfigView`;
+        static readonly _namespace:string = "cs.cds.views";
+        static readonly connectionEditor:string = `${viewContainers._namespace}.connectionEditor`;
+        static readonly jsonInspectorView:string = `${viewContainers._namespace}.jsonInspectorView`;
+        static readonly newWorkspaceView:string = `${viewContainers._namespace}.newWorkspaceView`;
+        static readonly pluginStepEditor:string = `${viewContainers._namespace}.pluginStepEditor`;
+        static readonly pluginStepImageEditor:string = `${viewContainers._namespace}.pluginStepImageEditor`;
+        static readonly svcUtilConfigView:string = `${viewContainers._namespace}.svcUtilConfigView`;
     }
 
     export namespace configuration {
         // tslint:disable-next-line: class-name
         export class web {
-            public static readonly _namespace:string = "cs.dynamics.configuration.web";
-            public static readonly usePowerAppsUi:string = `${web._namespace}.usePowerAppsUi`;
+            static readonly _namespace:string = "cs.cds.configuration.web";
+            static readonly usePowerAppsUi:string = `${web._namespace}.usePowerAppsUi`;
         }
         
         // tslint:disable-next-line: class-name
         export class explorer {
-            public static readonly _namespace:string = "cs.dynamics.configuration.explorer";
-            public static readonly showDefaultSolution:string = `${explorer._namespace}.showDefaultSolution`;
-            public static readonly showWelcomeExperience:string = `${explorer._namespace}.showWelcomeExperience`;
+            static readonly _namespace:string = "cs.cds.configuration.explorer";
+            static readonly showDefaultSolution:string = `${explorer._namespace}.showDefaultSolution`;
+            static readonly showWelcomeExperience:string = `${explorer._namespace}.showWelcomeExperience`;
         }
 
         // tslint:disable-next-line: class-name
         export class globalState {
-            public static readonly _namespace:string = "cs.dynamics.configuration.globalState";
-            public static readonly dynamicsConnections:string = `${globalState._namespace}:dynamicsConnections`;
-            public static readonly powerShellScriptVersion:string = `${globalState._namespace}:powerShellScriptVersion`;
+            static readonly _namespace:string = "cs.cds.configuration.globalState";
+            static readonly dynamicsConnections:string = `${globalState._namespace}:dynamicsConnections`;
+            static readonly powerShellScriptVersion:string = `${globalState._namespace}:powerShellScriptVersion`;
         }
 
         // tslint:disable-next-line: class-name
         export class iconThemes {
-            public static readonly _namespace:string = "cs.dynamics.configuration.iconThemes";
-            public static readonly default:string = `${iconThemes._namespace}.default`;
-            public static readonly selectedTheme:string = `${iconThemes._namespace}.selectedTheme`;
+            static readonly _namespace:string = "cs.cds.configuration.iconThemes";
+            static readonly default:string = `${iconThemes._namespace}.default`;
+            static readonly selectedTheme:string = `${iconThemes._namespace}.selectedTheme`;
         }
 
         // tslint:disable-next-line: class-name
         export class templates {
-            public static readonly _namespace:string = "cs.dynamics.configuration.templates";
-            public static readonly placeholders:string = `${templates._namespace}.placeholders`;
-            public static readonly placeholderRegExp:string = `${templates._namespace}.placeholderRegExp`;
-            public static readonly templatesDirectory:string = `${templates._namespace}.templatesDirectory`;
-            public static readonly treeViewGroupPreference:string = `${templates._namespace}.treeViewGroupPreference`;
-            public static readonly usePlaceholders:string = `${templates._namespace}.usePlaceholders`;
+            static readonly _namespace:string = "cs.cds.configuration.templates";
+            static readonly placeholders:string = `${templates._namespace}.placeholders`;
+            static readonly placeholderRegExp:string = `${templates._namespace}.placeholderRegExp`;
+            static readonly templatesDirectory:string = `${templates._namespace}.templatesDirectory`;
+            static readonly treeViewGroupPreference:string = `${templates._namespace}.treeViewGroupPreference`;
+            static readonly usePlaceholders:string = `${templates._namespace}.usePlaceholders`;
         }
 
         // tslint:disable-next-line: class-name
         export class tools {
-            public static readonly _namespace:string = "cs.dynamics.configuration.tools";
-            public static readonly sdkInstallPath:string = `${tools._namespace}.sdkInstallPath`;
-            public static readonly updateSource:string = `${tools._namespace}.updateSource`;
-            public static readonly updateChannel:string = `${tools._namespace}.updateChannel`;
+            static readonly _namespace:string = "cs.cds.configuration.tools";
+            static readonly sdkInstallPath:string = `${tools._namespace}.sdkInstallPath`;
+            static readonly updateSource:string = `${tools._namespace}.updateSource`;
+            static readonly updateChannel:string = `${tools._namespace}.updateChannel`;
         }
 
         // tslint:disable-next-line: class-name
         export class workspaceState {
-            public static readonly _namespace:string = "cs.dynamics.configuration.workspaceState";
-            public static readonly solutionMap:string = `${workspaceState._namespace}:solutionMap`;
+            static readonly _namespace:string = "cs.cds.configuration.workspaceState";
+            static readonly solutionMap:string = `${workspaceState._namespace}:solutionMap`;
         }
     }
 
     export namespace controls {
         // tslint:disable-next-line: class-name
+        export class cdsExplorer {
+            static readonly _namespace:string = "cs.cds.controls.cdsExplorer";
+            static readonly addConnection:string = `${cdsExplorer._namespace}.addConnection`;
+            static readonly addEntry:string = `${cdsExplorer._namespace}.addEntry`;
+            static readonly addEntryToSolution:string = `${cdsExplorer._namespace}.addEntryToSolution`;
+            static readonly clickEntry:string = `${cdsExplorer._namespace}.clickEntry`;
+            static readonly deleteEntry:string = `${cdsExplorer._namespace}.deleteEntry`;
+            static readonly editConnection:string = `${cdsExplorer._namespace}.editConnection`;
+            static readonly editEntry:string = `${cdsExplorer._namespace}.editEntry`;
+            static readonly inspectEntry:string = `${cdsExplorer._namespace}.inspectEntry`;
+            static readonly moveSolution:string = `${cdsExplorer._namespace}.moveSolution`;
+            static readonly openInApp:string = `${cdsExplorer._namespace}.openInApp`;
+            static readonly openInBrowser:string = `${cdsExplorer._namespace}.openInBrowser`;
+            static readonly openInEditor:string = `${cdsExplorer._namespace}.openInEditor`;
+            static readonly refreshEntry:string = `${cdsExplorer._namespace}.refreshEntry`;
+            static readonly removeEntryFromSolution:string = `${cdsExplorer._namespace}.removeEntryFromSolution`;
+            static readonly unpackSolution:string = `${cdsExplorer._namespace}.unpackSolution`;
+        }
+
+        // tslint:disable-next-line: class-name
         export class explorer {
-            public static readonly _namespace:string = "cs.dynamics.controls.explorer";
-            public static readonly createFromItemTemplate:string = `${explorer._namespace}.createFromItemTemplate`;
-            public static readonly createFromProjectTemplate:string = `${explorer._namespace}.createFromProjectTemplate`;
-            public static readonly craeteWebResource:string = `${explorer._namespace}.createWebResource`;
-            public static readonly dotNetBuild:string = `${explorer._namespace}.dotNetBuild`;
-            public static readonly dotNetTest:string = `${explorer._namespace}.dotNetTest`;
-            public static readonly generateEntityCodeToFolder:string = `${explorer._namespace}.generateEntityCodeToFolder`;
-            public static readonly generateEntityCodeToFile:string = `${explorer._namespace}.generateEntityCodeToFile`;
-            public static readonly packSolutionFromFolder:string = `${explorer._namespace}.packSolutionFromFolder`;
-            public static readonly packWebResource:string = `${explorer._namespace}.packWebResource`;
-            public static readonly saveTemplateFile:string = `${explorer._namespace}.saveTemplateFile`;
-            public static readonly saveTemplateFolder:string = `${explorer._namespace}.saveTemplateFolder`;
-            public static readonly registerPluginFile:string = `${explorer._namespace}.registerPluginFile`;
-            public static readonly unpackSolutionToFolder:string = `${explorer._namespace}.unpackSolutionToFolder`;
+            static readonly _namespace:string = "cs.cds.controls.explorer";
+            static readonly createFromItemTemplate:string = `${explorer._namespace}.createFromItemTemplate`;
+            static readonly createFromProjectTemplate:string = `${explorer._namespace}.createFromProjectTemplate`;
+            static readonly craeteWebResource:string = `${explorer._namespace}.createWebResource`;
+            static readonly dotNetBuild:string = `${explorer._namespace}.dotNetBuild`;
+            static readonly dotNetTest:string = `${explorer._namespace}.dotNetTest`;
+            static readonly generateEntityCodeToFolder:string = `${explorer._namespace}.generateEntityCodeToFolder`;
+            static readonly generateEntityCodeToFile:string = `${explorer._namespace}.generateEntityCodeToFile`;
+            static readonly packSolutionFromFolder:string = `${explorer._namespace}.packSolutionFromFolder`;
+            static readonly packWebResource:string = `${explorer._namespace}.packWebResource`;
+            static readonly saveTemplateFile:string = `${explorer._namespace}.saveTemplateFile`;
+            static readonly saveTemplateFolder:string = `${explorer._namespace}.saveTemplateFolder`;
+            static readonly registerPluginFile:string = `${explorer._namespace}.registerPluginFile`;
+            static readonly unpackSolutionToFolder:string = `${explorer._namespace}.unpackSolutionToFolder`;
         }
 
         // tslint:disable-next-line: class-name
         export class jsonInspector {
-            public static readonly _namespace:string = "cs.dynamics.controls.jsonInspector";
-            public static readonly inspect:string = `${jsonInspector._namespace}.inspect`;
+            static readonly _namespace:string = "cs.cds.controls.jsonInspector";
+            static readonly open:string = `${jsonInspector._namespace}.open`;
         }
 
         // tslint:disable-next-line: class-name
         export class newWorkspace {
-            public static readonly _namespace:string = "cs.dynamics.controls.newWorkspace";
-            public static readonly hideLoadingMessage:string = `${newWorkspace._namespace}.hideLoadingMessage`;
-            public static readonly open:string = `${newWorkspace._namespace}.open`;
-            public static readonly showLoadingMessage:string = `${newWorkspace._namespace}.showLoadingMessage`;
+            static readonly _namespace:string = "cs.cds.controls.newWorkspace";
+            static readonly open:string = `${newWorkspace._namespace}.open`;
         }
 
         // tslint:disable-next-line: class-name
         export class pluginStep {
-            public static readonly _namespace:string = "cs.dynamics.controls.pluginStep";
-            public static readonly open:string = `${pluginStep._namespace}.open`;
+            static readonly _namespace:string = "cs.cds.controls.pluginStep";
+            static readonly open:string = `${pluginStep._namespace}.open`;
         }
 
         // tslint:disable-next-line: class-name
         export class pluginStepImage {
-            public static readonly _namespace:string = "cs.dynamics.controls.pluginStepImage";
-            public static readonly open:string = `${pluginStepImage._namespace}.open`;
+            static readonly _namespace:string = "cs.cds.controls.pluginStepImage";
+            static readonly open:string = `${pluginStepImage._namespace}.open`;
         }
 
         // tslint:disable-next-line: class-name
         export class quickPicker {
-            public static readonly _namespace:string = "cs.dynamics.controls.quickPicker";
-            public static readonly cancel:string = `search.action.focusActiveEditor`;
-            public static readonly quit:string = `workbench.action.quit`;
+            static readonly _namespace:string = "cs.cds.controls.quickPicker";
+            static readonly cancel:string = `search.action.focusActiveEditor`;
+            static readonly quit:string = `workbench.action.quit`;
         }
 
         // tslint:disable-next-line: class-name
         export class svcUtilConfig {
-            public static readonly _namespace:string = "cs.dynamics.controls.svcUtilConfig";
-            public static readonly configure:string = `${svcUtilConfig._namespace}.configure`;
+            static readonly _namespace:string = "cs.cds.controls.svcUtilConfig";
+            static readonly open:string = `${svcUtilConfig._namespace}.open`;
         }
 
         // tslint:disable-next-line: class-name
-        export class dynamicsTreeView {
-            public static readonly _namespace:string = "cs.dynamics.controls.dynamicsTreeView";
-            public static readonly addConnection:string = `${dynamicsTreeView._namespace}.addConnection`;
-            public static readonly addEntry:string = `${dynamicsTreeView._namespace}.addEntry`;
-            public static readonly addEntryToSolution:string = `${dynamicsTreeView._namespace}.addEntryToSolution`;
-            public static readonly clickEntry:string = `${dynamicsTreeView._namespace}.clickEntry`;
-            public static readonly deleteEntry:string = `${dynamicsTreeView._namespace}.deleteEntry`;
-            public static readonly editConnection:string = `${dynamicsTreeView._namespace}.editConnection`;
-            public static readonly editEntry:string = `${dynamicsTreeView._namespace}.editEntry`;
-            public static readonly inspectEntry:string = `${dynamicsTreeView._namespace}.inspectEntry`;
-            public static readonly moveSolution:string = `${dynamicsTreeView._namespace}.moveSolution`;
-            public static readonly openInApp:string = `${dynamicsTreeView._namespace}.openInApp`;
-            public static readonly openInBrowser:string = `${dynamicsTreeView._namespace}.openInBrowser`;
-            public static readonly openInEditor:string = `${dynamicsTreeView._namespace}.openInEditor`;
-            public static readonly refreshEntry:string = `${dynamicsTreeView._namespace}.refreshEntry`;
-            public static readonly removeEntryFromSolution:string = `${dynamicsTreeView._namespace}.removeEntryFromSolution`;
-            public static readonly unpackSolution:string = `${dynamicsTreeView._namespace}.unpackSolution`;
-        }
-
-        // tslint:disable-next-line: class-name
-        export class templateTreeView {
-            public static readonly _namespace:string = "cs.dynamics.controls.templateTreeView";
-            public static readonly addEntry:string = `${templateTreeView._namespace}.addEntry`;
-            public static readonly clickEntry:string = `${templateTreeView._namespace}.clickEntry`;
-            public static readonly createInWorkspace:string = `${templateTreeView._namespace}.createInWorkspace`;
-            public static readonly deleteEntry:string = `${templateTreeView._namespace}.deleteEntry`;
-            public static readonly editEntry:string = `${templateTreeView._namespace}.editEntry`;
-            public static readonly exportEntry:string = `${templateTreeView._namespace}.exportEntry`;
-            public static readonly importEntry:string = `${templateTreeView._namespace}.importEntry`;
-            public static readonly openEntry:string = `${templateTreeView._namespace}.openEntry`;
-            public static readonly refreshEntry:string = `${templateTreeView._namespace}.refreshEntry`;
+        export class templateExplorer {
+            static readonly _namespace:string = "cs.cds.controls.templateExplorer";
+            static readonly addEntry:string = `${templateExplorer._namespace}.addEntry`;
+            static readonly clickEntry:string = `${templateExplorer._namespace}.clickEntry`;
+            static readonly createInWorkspace:string = `${templateExplorer._namespace}.createInWorkspace`;
+            static readonly deleteEntry:string = `${templateExplorer._namespace}.deleteEntry`;
+            static readonly editEntry:string = `${templateExplorer._namespace}.editEntry`;
+            static readonly exportEntry:string = `${templateExplorer._namespace}.exportEntry`;
+            static readonly importEntry:string = `${templateExplorer._namespace}.importEntry`;
+            static readonly openEntry:string = `${templateExplorer._namespace}.openEntry`;
+            static readonly refreshEntry:string = `${templateExplorer._namespace}.refreshEntry`;
         }
     }
 }

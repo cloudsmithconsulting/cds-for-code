@@ -10,7 +10,7 @@ export default class GlobalState {
     private constructor() { }
 
     get DynamicsConnections(): DynamicsWebApi.Config[] {
-        const connections = ExtensionContext.Instance.globalState.get<DynamicsWebApi.Config[]>(cs.dynamics.configuration.globalState.dynamicsConnections);
+        const connections = ExtensionContext.Instance.globalState.get<DynamicsWebApi.Config[]>(cs.cds.configuration.globalState.dynamicsConnections);
 
         if (connections && connections.length > 0) {
             connections.forEach(c => {
@@ -41,7 +41,7 @@ export default class GlobalState {
             });
         }
 
-        ExtensionContext.Instance.globalState.update(cs.dynamics.configuration.globalState.dynamicsConnections, value);
+        ExtensionContext.Instance.globalState.update(cs.cds.configuration.globalState.dynamicsConnections, value);
 
         if (value && value.length > 0) {
             // Reload the creds (encrypted) for use in the session.
@@ -54,10 +54,10 @@ export default class GlobalState {
     }
 
     get PowerShellScriptVersion(): number {
-        return ExtensionContext.Instance.globalState.get<number>(cs.dynamics.configuration.globalState.powerShellScriptVersion);
+        return ExtensionContext.Instance.globalState.get<number>(cs.cds.configuration.globalState.powerShellScriptVersion);
     }
     set PowerShellScriptVersion(value: number) {
-        ExtensionContext.Instance.globalState.update(cs.dynamics.configuration.globalState.powerShellScriptVersion, value);
+        ExtensionContext.Instance.globalState.update(cs.cds.configuration.globalState.powerShellScriptVersion, value);
     }
     
     static get Instance(): GlobalState {

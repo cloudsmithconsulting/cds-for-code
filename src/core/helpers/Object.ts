@@ -34,3 +34,11 @@ export function clone<T extends Object>(source: T, target?: any): T {
 
     return <T>target;
 }
+
+export function createInstance<T>(context: Object, name: string, ...args: any[]) : T {
+    const instance = Object.create(context[name].prototype);
+    
+    instance.constructor.apply(instance, args);
+
+    return <T> instance;
+}

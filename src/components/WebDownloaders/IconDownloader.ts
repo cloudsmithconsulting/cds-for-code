@@ -1,28 +1,22 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as cs from '../../cs';
-import IContributor from '../../core/CommandBuilder';
 import ExtensionContext from '../../core/ExtensionContext';
-import downloadRequiredIcons from "../../commands/cs.dynamics.extension.downloadRequiredIcons";
 import { ExtensionIconThemes } from './Types';
+import command from '../../core/Command';
+import { extensionActivate } from '../../core/ExtensionEvent';
 
-export default class IconLoader implements IContributor {
-    contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-		//GlobalState.Instance(context).PowerShellScriptVersion = null;
-
-		// do this immediately
-        IconLoader.downloadIconTheme(context);
-
-        // now wire a command into the context
-        context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.extension.downloadRequiredIcons, downloadRequiredIcons.bind(this))
-        );
+export default class IconLoader {
+	@extensionActivate(cs.cds.extension.productId)
+    async activate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+        await IconLoader.downloadIconTheme(context);
     }
 
-    static downloadIconTheme(context?: vscode.ExtensionContext) {
+    @command(cs.cds.extension.downloadRequiredIcons, "Download required icons")
+    static async downloadIconTheme(context?: vscode.ExtensionContext) {
 		// get local storage folder
 		const folder = path.join((context || ExtensionContext.Instance).extensionPath, "/resources/icons/");
 		
-		return ExtensionIconThemes.default.downloadIcons(folder);
+		return await ExtensionIconThemes.default.downloadIcons(folder);
 	}
 }

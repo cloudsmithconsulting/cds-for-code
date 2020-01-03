@@ -264,7 +264,7 @@ export default class Quickly {
                         "You do not have any templates configured.  Add some by using the Template Explorer.", 
                         undefined, 
                         "Add a template from workspace",
-                        async () => vscode.commands.executeCommand(cs.dynamics.templates.saveTemplate, undefined, templateType),
+                        async () => vscode.commands.executeCommand(cs.cds.templates.saveTemplate, undefined, templateType),
                         "Open template folder", 
                         async () => FileSystem.openFolderInExplorer(await TemplateManager.getTemplatesFolder()));
 
@@ -586,8 +586,8 @@ export class QuickPickOption implements vscode.QuickPickItem {
         return null;
     }
 
-	static cancel = new QuickPickOption('Cancel', cs.dynamics.controls.quickPicker.cancel, 'ESC');
-	static quit = new QuickPickOption('Close Window', cs.dynamics.controls.quickPicker.quit);
+	static cancel = new QuickPickOption('Cancel', cs.cds.controls.quickPicker.cancel, 'ESC');
+	static quit = new QuickPickOption('Close Window', cs.cds.controls.quickPicker.quit);
 }
 
 export class WorkspaceFileItem { 

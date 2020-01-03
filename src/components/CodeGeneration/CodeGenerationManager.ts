@@ -1,16 +1,23 @@
+import * as path from 'path';
 import * as vscode from 'vscode';
 import * as cs from '../../cs';
-import IContributor from '../../core/CommandBuilder';
-import generateEntityCodeToFile from "../../commands/cs.dynamics.controls.explorer.generateEntityCodeToFile";
-import generateEntityCodeToFolder from "../../commands/cs.dynamics.controls.explorer.generateEntityCodeToFolder";
-import generateEntities from "../../commands/cs.dynamics.powerShell.generateEntities";
+import generateEntities from "../../commands/cs.cds.powerShell.generateEntities";
+import command from '../../core/Command';
+import { DynamicsWebApi } from '../../api/cds-webapi/DynamicsWebApi';
 
-export default class CodeGenerationManager implements IContributor {
-    contribute(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
-        // now wire a command into the context
-        context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.controls.explorer.generateEntityCodeToFile, generateEntityCodeToFile.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.controls.explorer.generateEntityCodeToFolder, generateEntityCodeToFolder.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.powerShell.generateEntities, generateEntities.bind(this)));
+export default class CodeGenerationManager {
+    @command(cs.cds.controls.explorer.generateEntityCodeToFile, "Generate entity code to a file")
+    static async generateEntityCodeToFile(file?:vscode.Uri) {
+        return await vscode.commands.executeCommand(cs.cds.powerShell.generateEntities, undefined, path.dirname(file.fsPath), path.basename(file.fsPath), undefined);
+    }
+
+    @command(cs.cds.controls.explorer.generateEntityCodeToFolder, "Generate entity code to a folder")
+    static async generateEntityCodeToFolder(folder?:vscode.Uri) {
+        return await vscode.commands.executeCommand(cs.cds.powerShell.generateEntities, undefined, folder.fsPath, undefined, undefined);
+    }
+
+    @command(cs.cds.powerShell.generateEntities, "Generate entity code using CrmSvcUtil")
+    static async generateEntities(config?: DynamicsWebApi.Config, folder?: string, outputFileName?: string, namespace?: string) {
+        generateEntities.apply(this, [config, folder, outputFileName, namespace]);
     }
 }

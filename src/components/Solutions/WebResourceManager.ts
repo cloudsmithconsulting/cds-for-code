@@ -12,29 +12,53 @@ import ApiRepository from '../../repositories/apiRepository';
 import EnumParser from '../../core/EnumParser';
 import Xml from '../../core/io/Xml';
 
-import createWebResourceExplorer from "../../commands/cs.dynamics.controls.explorer.createWebResource";
-import packWebResourceExplorer from "../../commands/cs.dynamics.controls.explorer.packWebResource";
-import createWebResource from "../../commands/cs.dynamics.deployment.createWebResource";
-import compareWebResource from "../../commands/cs.dynamics.deployment.compareWebResource";
-import packWebResource from "../../commands/cs.dynamics.deployment.packWebResource";
-import unpackWebResource from "../../commands/cs.dynamics.deployment.unpackWebResource";
+import createWebResource from "../../commands/cs.cds.deployment.createWebResource";
+import compareWebResource from "../../commands/cs.cds.deployment.compareWebResource";
+import packWebResource from "../../commands/cs.cds.deployment.packWebResource";
+import unpackWebResource from "../../commands/cs.cds.deployment.unpackWebResource";
 import SolutionFile from '../SolutionXml/SolutionFile';
 import Quickly from '../../core/Quickly';
-import ExtensionContext from '../../core/ExtensionContext';
 import { CdsSolutions } from '../../api/CdsSolutions';
 import CustomizationsFile from '../SolutionXml/CustomizationsFile';
+import command from '../../core/Command';
 
-export default class WebResourceManager implements IContributor {
-    contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
-        // now wire a command into the context
-        context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.controls.explorer.craeteWebResource, createWebResourceExplorer.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.controls.explorer.packWebResource, packWebResourceExplorer.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.deployment.createWebResource, createWebResource.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.deployment.compareWebResource, compareWebResource.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.deployment.packWebResource, packWebResource.bind(this)),
-            vscode.commands.registerCommand(cs.dynamics.deployment.unpackWebResource, unpackWebResource.bind(this))
-        );
+export default class WebResourceManager {
+    @command(cs.cds.controls.explorer.craeteWebResource, "Create web resource from existing file")
+    static async createWebResourceFromUri(uri?: vscode.Uri) {
+        const returnObject:any = (await vscode.commands.executeCommand(cs.cds.deployment.createWebResource, undefined, undefined, undefined, uri));
+
+        await Quickly.openFile(returnObject.fsPath);
+    
+        return returnObject;    
+    }
+
+    @command(cs.cds.controls.explorer.packWebResource, "Pack web resource from existing file")
+    static async packWebResourceFromUri(uri?: vscode.Uri) {
+        const returnObject:any = (await vscode.commands.executeCommand(cs.cds.deployment.packWebResource, undefined, undefined, undefined, uri));
+        
+        await Quickly.openFile(returnObject.fsPath);
+    
+        return returnObject;
+    }
+
+    @command(cs.cds.deployment.createWebResource, "Create web resource")
+    async createWebResource(config?:DynamicsWebApi.Config, solutionId?:string, webResource?:any, fileUri?:vscode.Uri, defaultName:string = "", inform:boolean = true) {
+        createWebResource.apply(this, [config, solutionId, webResource, fileUri, defaultName, inform]);
+    }
+
+    @command(cs.cds.deployment.compareWebResource, "Compare web resource")
+    async compareWebResource(defaultUri?: vscode.Uri) {
+        compareWebResource.apply(this, [defaultUri]);
+    }
+
+    @command(cs.cds.deployment.packWebResource, "Pack web resource")
+    async packWebResource(config?:DynamicsWebApi.Config, solution?:any, webResource?:any, fileUri?:vscode.Uri, inform:boolean = true) {
+        packWebResource.apply(this, [config, solution, webResource, fileUri, inform]);
+    }
+
+    @command(cs.cds.deployment.unpackWebResource, "Unpack web resource")
+    async unpackWebResource(config?:DynamicsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
+        unpackWebResource.apply(this, [config, webResource, fileUri, autoOpen]);
     }
 
     async getSolutionMapping(fsPath?:string, orgId?:string, solutionId?:string): Promise<SolutionWorkspaceMapping> {
@@ -103,7 +127,7 @@ export default class WebResourceManager implements IContributor {
                 return webResource;
             }).then(async () => {
                 if (await Quickly.pickBoolean("Would you like to publish the web resource?", "Yes", "No")) {
-                    await vscode.commands.executeCommand(cs.dynamics.deployment.publishCustomizations, config, [ { type: CdsSolutions.SolutionComponent.WebResource, id: webResource.webresourceid }]);
+                    await vscode.commands.executeCommand(cs.cds.deployment.publishCustomizations, config, [ { type: CdsSolutions.SolutionComponent.WebResource, id: webResource.webresourceid }]);
                 }
             }).then(() => {
                 return webResource;

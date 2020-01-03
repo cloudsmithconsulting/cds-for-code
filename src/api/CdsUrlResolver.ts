@@ -575,7 +575,7 @@ export default class CdsUrlResolver {
      * @static
      * @param {string} uriString
      * @returns {string}
-     * @memberof CdsUrlResolver
+     * @memberof CdsUrlResolvercds
      */
     private static addPowerAppsSource(uriString:string) : string {
         if (!uriString.endsWith('?')) {
@@ -595,7 +595,7 @@ export default class CdsUrlResolver {
      * @memberof CdsUrlResolver
      */
     private static hasPowerAppsExperience(config: DynamicsWebApi.Config) {
-        const usePowerAppsUi = ExtensionConfiguration.getConfigurationValue<boolean>(cs.dynamics.configuration.web.usePowerAppsUi);
+        const usePowerAppsUi = ExtensionConfiguration.getConfigurationValue<boolean>(cs.cds.configuration.web.usePowerAppsUi);
         return usePowerAppsUi && config.environmentId && config.environmentId !== '';
     }
 
