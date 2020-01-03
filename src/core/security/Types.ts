@@ -437,7 +437,8 @@ export class CdsOnlineCredential extends OAuthCredential {
 
     static readonly defaultClientId:string = "38496a28-9c28-4ff8-8dac-ef2fe85f6275";
     static readonly defaultAuthority:string = "https://login.microsoftonline.com";
-    static readonly defaultTenant:string = "b7d98656-670d-4ae0-b419-b03097edb814";
+    // Do not use the AD tenant for CloudSmith consulting here, use Common tenant instead so that we can auth against any AD tenant.
+    static readonly defaultTenant:string = "common";
     static readonly defaultResource:string = "https://disco.crm.dynamics.com/";
 
     constructor(
