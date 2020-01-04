@@ -1,17 +1,17 @@
-import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import { TS } from 'typescript-linq/TS';
 import ApiHelper from "./ApiHelper";
 import { CdsSolutions } from '../api/CdsSolutions';
 
 export default class MetadataRepository
 {
-    constructor (config:DynamicsWebApi.Config) {
-        this.webapi = new DynamicsWebApi.WebApiClient(config);
+    constructor (config:CdsWebApi.Config) {
+        this.webapi = new CdsWebApi.WebApiClient(config);
     }
 
-    private webapi: DynamicsWebApi.WebApiClient;
+    private webapi: CdsWebApi.WebApiClient;
 
-    get config(): DynamicsWebApi.Config {
+    get config(): CdsWebApi.Config {
         return this.webapi ? this.webapi.config : null;
     }
 
@@ -33,7 +33,7 @@ export default class MetadataRepository
     }
 
     retrieveForms(entityLogicalName:string, solutionId?:string) : Promise<any[]> {
-        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+        let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "systemforms",
             filter: `objecttypecode eq '${entityLogicalName}' and type ne 10 and formactivationstate eq 1`,  
             orderBy: ["name"]
@@ -45,7 +45,7 @@ export default class MetadataRepository
     }
 
     retrieveDashboards(entityLogicalName:string, solutionId?:string) : Promise<any[]> {
-        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+        let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "systemforms",
             filter: `objecttypecode eq '${entityLogicalName}' and type eq 10 and formactivationstate eq 1`,  
             orderBy: ["name"]
@@ -57,7 +57,7 @@ export default class MetadataRepository
     }
 
     retrieveViews(entityLogicalName:string, solutionId?:string) : Promise<any[]> {
-        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+        let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "savedqueries",
             filter: `returnedtypecode eq '${entityLogicalName}' and statecode eq 0`,
             orderBy: ["name"]
@@ -69,7 +69,7 @@ export default class MetadataRepository
     }
 
     retrieveCharts(entityLogicalName:string, solutionId?:string) : Promise<any[]> {
-        let request:DynamicsWebApi.RetrieveMultipleRequest = {
+        let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "savedqueryvisualizations",
             filter: `primaryentitytypecode eq '${entityLogicalName}'`,
             orderBy: ["name"]

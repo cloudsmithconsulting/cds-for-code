@@ -6,7 +6,7 @@
 	"repository": {
 		"url": "https://cloudsmith-consulting@dev.azure.com/cloudsmith-consulting/CloudSmith/_git/cds-for-code"
 	},
-	"version": "0.8.5",
+	"version": "0.8.6",
 	"preview": true,
 	"engines": {
 		"vscode": "^1.38.0"
@@ -29,48 +29,48 @@
 	],
 	"license": "MIT",
 	"activationEvents": [
-		"onView:cs.dynamics.viewContainers.cdsExplorer",
-		"onView:cs.dynamics.viewContainers.templateExplorer",
-		"onCommand:cs.dynamics.controls.explorer.createWebResource",
-		"onCommand:cs.dynamics.controls.explorer.createFromItemTemplate",
-		"onCommand:cs.dynamics.controls.explorer.createFromProjectTemplate",
-		"onCommand:cs.dynamics.controls.explorer.dotNetBuild",
-		"onCommand:cs.dynamics.controls.explorer.dotNetTest",
-		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFolder",
-		"onCommand:cs.dynamics.controls.explorer.generateEntityCodeToFile",
-		"onCommand:cs.dynamics.controls.explorer.packSolutionFromFolder",
-		"onCommand:cs.dynamics.controls.explorer.packWebResource",
-		"onCommand:cs.dynamics.controls.explorer.registerPluginFile",
-		"onCommand:cs.dynamics.controls.explorer.saveTemplateFile",
-		"onCommand:cs.dynamics.controls.explorer.saveTemplateFolder",
-		"onCommand:cs.dynamics.controls.explorer.unpackSolutionToFolder",
-		"onCommand:cs.dynamics.controls.svcUtilConfig.configure",
-		"onCommand:cs.dynamics.deployment.addSolutionComponent",
-		"onCommand:cs.dynamics.deployment.compareWebResource",
-		"onCommand:cs.dynamics.deployment.connectToCds",
-		"onCommand:cs.dynamics.deployment.createWebResource",
-		"onCommand:cs.dynamics.deployment.dotNetBuild",
-		"onCommand:cs.dynamics.deployment.dotNetTest",
-		"onCommand:cs.dynamics.deployment.packWebResource",
-		"onCommand:cs.dynamics.deployment.publishCustomizations",
-		"onCommand:cs.dynamics.deployment.registerPluginAssembly",
-		"onCommand:cs.dynamics.deployment.removeSolutionComponent",
-		"onCommand:cs.dynamics.deployment.removeSolutionMapping",
-		"onCommand:cs.dynamics.deployment.unpackWebResource",
-		"onCommand:cs.dynamics.deployment.updateSolutionMapping",
-		"onCommand:cs.dynamics.extension.clearTerminal",
-		"onCommand:cs.dynamics.extension.createTerminal",
-		"onCommand:cs.dynamics.extension.downloadRequiredScripts",
-		"onCommand:cs.dynamics.powerShell.generateEntities",
-		"onCommand:cs.dynamics.powerShell.packSolution",
-		"onCommand:cs.dynamics.powerShell.unpackSolution",
-		"onCommand:cs.dynamics.templates.createFromTemplate",
-		"onCommand:cs.dynamics.templates.deleteTemplate",
-		"onCommand:cs.dynamics.templates.editTemplateCatalog",
-		"onCommand:cs.dynamics.templates.exportTemplate",
-		"onCommand:cs.dynamics.templates.importTemplate",
-		"onCommand:cs.dynamics.templates.openTemplateFolder",
-		"onCommand:cs.dynamics.templates.saveTemplate"
+		"onView:cs.cds.viewContainers.cdsExplorer",
+		"onView:cs.cds.viewContainers.templateExplorer",
+		"onCommand:cs.cds.controls.explorer.createWebResource",
+		"onCommand:cs.cds.controls.explorer.createFromItemTemplate",
+		"onCommand:cs.cds.controls.explorer.createFromProjectTemplate",
+		"onCommand:cs.cds.controls.explorer.dotNetBuild",
+		"onCommand:cs.cds.controls.explorer.dotNetTest",
+		"onCommand:cs.cds.controls.explorer.generateEntityCodeToFolder",
+		"onCommand:cs.cds.controls.explorer.generateEntityCodeToFile",
+		"onCommand:cs.cds.controls.explorer.packSolutionFromFolder",
+		"onCommand:cs.cds.controls.explorer.packWebResource",
+		"onCommand:cs.cds.controls.explorer.registerPluginFile",
+		"onCommand:cs.cds.controls.explorer.saveTemplateFile",
+		"onCommand:cs.cds.controls.explorer.saveTemplateFolder",
+		"onCommand:cs.cds.controls.explorer.unpackSolutionToFolder",
+		"onCommand:cs.cds.controls.svcUtilConfig.open",
+		"onCommand:cs.cds.deployment.addSolutionComponent",
+		"onCommand:cs.cds.deployment.compareWebResource",
+		"onCommand:cs.cds.deployment.connectToCds",
+		"onCommand:cs.cds.deployment.createWebResource",
+		"onCommand:cs.cds.deployment.dotNetBuild",
+		"onCommand:cs.cds.deployment.dotNetTest",
+		"onCommand:cs.cds.deployment.packWebResource",
+		"onCommand:cs.cds.deployment.publishCustomizations",
+		"onCommand:cs.cds.deployment.registerPluginAssembly",
+		"onCommand:cs.cds.deployment.removeSolutionComponent",
+		"onCommand:cs.cds.deployment.removeSolutionMapping",
+		"onCommand:cs.cds.deployment.unpackWebResource",
+		"onCommand:cs.cds.deployment.updateSolutionMapping",
+		"onCommand:cs.cds.extension.clearTerminal",
+		"onCommand:cs.cds.extension.createTerminal",
+		"onCommand:cs.cds.extension.downloadRequiredScripts",
+		"onCommand:cs.cds.powerShell.generateEntities",
+		"onCommand:cs.cds.powerShell.packSolution",
+		"onCommand:cs.cds.powerShell.unpackSolution",
+		"onCommand:cs.cds.templates.createFromTemplate",
+		"onCommand:cs.cds.templates.deleteTemplate",
+		"onCommand:cs.cds.templates.editTemplateCatalog",
+		"onCommand:cs.cds.templates.exportTemplate",
+		"onCommand:cs.cds.templates.importTemplate",
+		"onCommand:cs.cds.templates.openTemplateFolder",
+		"onCommand:cs.cds.templates.saveTemplate"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -78,23 +78,23 @@
 			"type": "object",
 			"title": "CDS for Code",
 			"properties": {
-				"cs.dynamics.configuration.web.usePowerAppsUi": {
+				"cs.cds.configuration.web.usePowerAppsUi": {
 					"type": "boolean",
 					"default": "true",
 					"description": "Use the PowerApps Online UI where possible"
 				},
-				"cs.dynamics.configuration.tools.sdkInstallPath": {
+				"cs.cds.configuration.tools.sdkInstallPath": {
 					"type": "string",
 					"default": "C:\\Deploy\\Tools",
 					"description": "The full path to the root of the CRM SDK installation on your computer"
 				},
-				"cs.dynamics.configuration.tools.updateSource": {
+				"cs.cds.configuration.tools.updateSource": {
 					"type": "string",
 					"format": "uri",
 					"default": "https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/",
 					"description": "The URL where supporting scripts are located"
 				},
-				"cs.dynamics.configuration.tools.updateChannel": {
+				"cs.cds.configuration.tools.updateChannel": {
 					"type": "string",
 					"default": "production",
 					"enum": [
@@ -107,7 +107,7 @@
 					],
 					"description": "The update channel to use"
 				},
-				"cs.dynamics.configuration.iconThemes.selectedTheme": {
+				"cs.cds.configuration.iconThemes.selectedTheme": {
 					"type": "string",
 					"default": "default",
 					"enum": [
@@ -118,31 +118,31 @@
 					],
 					"description": "The icon set to use in explorer views"
 				},
-				"cs.dynamics.configuration.explorer.showDefaultSolution": {
+				"cs.cds.configuration.explorer.showDefaultSolution": {
 					"type": "boolean",
 					"default": "true",
 					"description": "Show the Default Solution in the Dynamics explorer pane"
 				},
-				"cs.dynamics.configuration.explorer.showWelcomeExperience": {
+				"cs.cds.configuration.explorer.showWelcomeExperience": {
 					"type": "boolean",
 					"default": "true",
 					"description": "Show the welcome experience for Dynamics when you open a new workspace"
 				},
-				"cs.dynamics.configuration.templates.placeholders": {
+				"cs.cds.configuration.templates.placeholders": {
 					"type": "object",
 					"default": {},
 					"description": "List of built in placeholders, in key-value string pairs."
 				},
-				"cs.dynamics.configuration.templates.placeholderRegExp": {
+				"cs.cds.configuration.templates.placeholderRegExp": {
 					"type": "string",
 					"default": "#{([\\s\\S]+?)}",
 					"description": "Regular expression for detecting placeholders (e.g. \"#{([\\s\\S]+?)}\").  The first capture group dictates the placeholder key."
 				},
-				"cs.dynamics.configuration.templates.templatesDirectory": {
+				"cs.cds.configuration.templates.templatesDirectory": {
 					"type": "string",
 					"description": "Filesystem path that stores template folders"
 				},
-				"cs.dynamics.configuration.templates.treeViewGroupPreference": {
+				"cs.cds.configuration.templates.treeViewGroupPreference": {
 					"type": "string",
 					"default": "Publisher",
 					"enum": [
@@ -157,7 +157,7 @@
 					],
 					"description": "Preference for grouping template items in the Template Explorer"
 				},
-				"cs.dynamics.configuration.templates.usePlaceholders": {
+				"cs.cds.configuration.templates.usePlaceholders": {
 					"type": "boolean",
 					"default": true,
 					"description": "Look for and replace placeholders in template (e.g. #{author})"
@@ -166,7 +166,7 @@
 		},
 		"commands": [
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
+				"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 				"title": "Refresh",
 				"icon": {
 					"light": "resources/icons/default/refresh.light.svg",
@@ -175,7 +175,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.addEntry",
+				"command": "cs.cds.controls.cdsExplorer.addEntry",
 				"title": "New",
 				"icon": {
 					"light": "resources/icons/default/add.light.svg",
@@ -184,7 +184,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.editEntry",
+				"command": "cs.cds.controls.cdsExplorer.editEntry",
 				"title": "Edit",
 				"icon": {
 					"light": "resources/icons/default/edit.light.svg",
@@ -193,7 +193,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.deleteEntry",
+				"command": "cs.cds.controls.cdsExplorer.deleteEntry",
 				"title": "Delete",
 				"icon": {
 					"light": "resources/icons/default/delete.light.svg",
@@ -202,142 +202,132 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.clickEntry",
+				"command": "cs.cds.controls.cdsExplorer.clickEntry",
 				"title": "Click",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.inspectEntry",
+				"command": "cs.cds.controls.cdsExplorer.inspectEntry",
 				"title": "Inspect",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.editConnection",
+				"command": "cs.cds.controls.cdsExplorer.editConnection",
 				"title": "Open",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.addEntryToSolution",
+				"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
 				"title": "Add to Solution",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.removeEntryFromSolution",
+				"command": "cs.cds.controls.cdsExplorer.removeEntryFromSolution",
 				"title": "Remove from Solution",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.moveSolution",
+				"command": "cs.cds.controls.cdsExplorer.moveSolution",
 				"title": "Change local workspace folder",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.openInApp",
+				"command": "cs.cds.controls.cdsExplorer.openInApp",
 				"title": "Open in App",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.openInBrowser",
+				"command": "cs.cds.controls.cdsExplorer.openInBrowser",
 				"title": "Open in Browser",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.openInEditor",
+				"command": "cs.cds.controls.cdsExplorer.openInEditor",
 				"title": "Open in Text Editor",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.dynamicsTreeView.unpackSolution",
+				"command": "cs.cds.controls.cdsExplorer.unpackSolution",
 				"title": "Export into workspace",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.createWebResource",
+				"command": "cs.cds.controls.explorer.createWebResource",
 				"title": "New Web Resource",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.createFromItemTemplate",
+				"command": "cs.cds.controls.explorer.createFromItemTemplate",
 				"title": "New Templated Item",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.createFromProjectTemplate",
+				"command": "cs.cds.controls.explorer.createFromProjectTemplate",
 				"title": "New Templated Project",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.dotNetBuild",
+				"command": "cs.cds.controls.explorer.dotNetBuild",
 				"title": "Build project",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.dotNetTest",
+				"command": "cs.cds.controls.explorer.dotNetTest",
 				"title": "Test project",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
+				"command": "cs.cds.controls.explorer.generateEntityCodeToFolder",
 				"title": "Generate CDS entity classes",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
+				"command": "cs.cds.controls.explorer.generateEntityCodeToFile",
 				"title": "Generate CDS entity classes",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
+				"command": "cs.cds.controls.explorer.packSolutionFromFolder",
 				"title": "Deploy solution to CDS",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.packWebResource",
+				"command": "cs.cds.controls.explorer.packWebResource",
 				"title": "Deploy web resource to CDS",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.registerPluginFile",
+				"command": "cs.cds.controls.explorer.registerPluginFile",
 				"title": "Deploy assembly to CDS",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.saveTemplateFile",
+				"command": "cs.cds.controls.explorer.saveTemplateFile",
 				"title": "Save as template",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.saveTemplateFolder",
+				"command": "cs.cds.controls.explorer.saveTemplateFolder",
 				"title": "Save as template",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
+				"command": "cs.cds.controls.explorer.unpackSolutionToFolder",
 				"title": "Download & unpack CDS solution here",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.newWorkspace.hideLoadingMessage",
-				"title": "Hide the loading message in the New Workspace screen",
-				"category": "UserInterface"
-			},
-			{
-				"command": "cs.dynamics.controls.newWorkspace.open",
+				"command": "cs.cds.controls.newWorkspace.open",
 				"title": "Get started in a new workspace",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.newWorkspace.showLoadingMessage",
-				"title": "Show the loading message in the New Workspace screen",
-				"category": "UserInterface"
-			},
-			{
-				"command": "cs.dynamics.controls.svcUtilConfig.configure",
+				"command": "cs.cds.controls.svcUtilConfig.open",
 				"title": "Configure entity code generation for use with CrmSvcUtil.exe",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
+				"command": "cs.cds.controls.templateExplorer.refreshEntry",
 				"title": "Refresh",
 				"icon": {
 					"light": "resources/icons/default/refresh.light.svg",
@@ -346,7 +336,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.templateTreeView.addEntry",
+				"command": "cs.cds.controls.templateExplorer.addEntry",
 				"title": "New",
 				"icon": {
 					"light": "resources/icons/default/add.light.svg",
@@ -355,7 +345,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.templateTreeView.editEntry",
+				"command": "cs.cds.controls.templateExplorer.editEntry",
 				"title": "Edit",
 				"icon": {
 					"light": "resources/icons/default/edit.light.svg",
@@ -364,7 +354,7 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.templateTreeView.deleteEntry",
+				"command": "cs.cds.controls.templateExplorer.deleteEntry",
 				"title": "Delete",
 				"icon": {
 					"light": "resources/icons/default/delete.light.svg",
@@ -373,157 +363,157 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.templateTreeView.clickEntry",
+				"command": "cs.cds.controls.templateExplorer.clickEntry",
 				"title": "Click",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.templateTreeView.createInWorkspace",
+				"command": "cs.cds.controls.templateExplorer.createInWorkspace",
 				"title": "Create in Workspace",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.templateTreeView.openEntry",
+				"command": "cs.cds.controls.templateExplorer.openEntry",
 				"title": "Open in Explorer",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.templateTreeView.exportEntry",
+				"command": "cs.cds.controls.templateExplorer.exportEntry",
 				"title": "Export Template",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.controls.templateTreeView.importEntry",
+				"command": "cs.cds.controls.templateExplorer.importEntry",
 				"title": "Import Template",
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.dynamics.deployment.addSolutionComponent",
+				"command": "cs.cds.deployment.addSolutionComponent",
 				"title": "Add component to a CDS Solution",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.deployment.compareWebResource",
+				"command": "cs.cds.deployment.compareWebResource",
 				"title": "Compare a local web resource file to a version deployed on a CDS instance",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.deployment.connectToCds",
+				"command": "cs.cds.deployment.connectToCds",
 				"title": "Create or Edit a connection to the Common Data Service",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.deployment.createWebResource",
+				"command": "cs.cds.deployment.createWebResource",
 				"title": "Create a web resource in your workspace or on a CDS instance",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.deployment.dotNetBuild",
+				"command": "cs.cds.deployment.dotNetBuild",
 				"title": "Build a .Net Core project in the current workspace",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.deployment.dotNetTest",
+				"command": "cs.cds.deployment.dotNetTest",
 				"title": "Build and Test a .Net Core project in the current workspace",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.deployment.packWebResource",
+				"command": "cs.cds.deployment.packWebResource",
 				"title": "Deploy a Web Resource to CDS",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.deployment.publishCustomizations",
+				"command": "cs.cds.deployment.publishCustomizations",
 				"title": "Publish solution changes on a CDS environment",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.deployment.registerPluginAssembly",
+				"command": "cs.cds.deployment.registerPluginAssembly",
 				"title": "Register or update a plugin assembly",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.deployment.removeSolutionComponent",
+				"command": "cs.cds.deployment.removeSolutionComponent",
 				"title": "Remove a component from a CDS Solution",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.deployment.removeSolutionMapping",
+				"command": "cs.cds.deployment.removeSolutionMapping",
 				"title": "Remove remembered locations where CDS solutions are stored in this workspace",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.deployment.unpackWebResource",
+				"command": "cs.cds.deployment.unpackWebResource",
 				"title": "Download a Web Resource from CDS",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.deployment.updateSolutionMapping",
+				"command": "cs.cds.deployment.updateSolutionMapping",
 				"title": "Create or update where CDS solutions are stored in this workspace",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.extension.clearTerminal",
+				"command": "cs.cds.extension.clearTerminal",
 				"title": "Clear the CDS for Code terminal",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.extension.createTerminal",
+				"command": "cs.cds.extension.createTerminal",
 				"title": "Open the CDS for Code terminal",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.extension.downloadRequiredScripts",
+				"command": "cs.cds.extension.downloadRequiredScripts",
 				"title": "Download required PowerShell scripts from GitHub",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.powerShell.unpackSolution",
+				"command": "cs.cds.powerShell.unpackSolution",
 				"title": "Download & unpack solution from a registered CDS environment",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.powerShell.packSolution",
+				"command": "cs.cds.powerShell.packSolution",
 				"title": "Pack & deploy solution to a registerd CDS environment",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.powerShell.generateEntities",
+				"command": "cs.cds.powerShell.generateEntities",
 				"title": "Generate entity code from metadata on a registered CDS environment",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.templates.createFromTemplate",
+				"command": "cs.cds.templates.createFromTemplate",
 				"title": "Create new items or projects from a template",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.templates.deleteTemplate",
+				"command": "cs.cds.templates.deleteTemplate",
 				"title": "Delete a template from the catalog",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.templates.editTemplateCatalog",
+				"command": "cs.cds.templates.editTemplateCatalog",
 				"title": "Open template catalog in code editor",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.templates.exportTemplate",
+				"command": "cs.cds.templates.exportTemplate",
 				"title": "Export template from the template catalog",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.templates.importTemplate",
+				"command": "cs.cds.templates.importTemplate",
 				"title": "Import template into the template catalog",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.templates.openTemplateFolder",
+				"command": "cs.cds.templates.openTemplateFolder",
 				"title": "Open template folder in explorer",
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.dynamics.templates.saveTemplate",
+				"command": "cs.cds.templates.saveTemplate",
 				"title": "Save workspace items as a template in the template catalog",
 				"category": "CDS for Code"
 			}
@@ -540,13 +530,13 @@
 		"views": {
 			"cdsExplorer": [
 				{
-					"id": "cs.dynamics.viewContainers.cdsExplorer",
+					"id": "cs.cds.viewContainers.cdsExplorer",
 					"name": "CDS Explorer"
 				}
 			],
 			"explorer": [
 				{
-					"id": "cs.dynamics.viewContainers.templateExplorer",
+					"id": "cs.cds.viewContainers.templateExplorer",
 					"name": "Template Explorer"
 				}
 			]
@@ -554,355 +544,347 @@
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "cs.dynamics.controls.explorer.createFromItemTemplate",
+					"command": "cs.cds.controls.explorer.createFromItemTemplate",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.createFromProjectTemplate",
+					"command": "cs.cds.controls.explorer.createFromProjectTemplate",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.createWebResource",
+					"command": "cs.cds.controls.explorer.createWebResource",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.dotNetBuild",
+					"command": "cs.cds.controls.explorer.dotNetBuild",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.dotNetTest",
+					"command": "cs.cds.controls.explorer.dotNetTest",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
+					"command": "cs.cds.controls.explorer.generateEntityCodeToFolder",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
+					"command": "cs.cds.controls.explorer.generateEntityCodeToFile",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
+					"command": "cs.cds.controls.explorer.packSolutionFromFolder",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.packWebResource",
+					"command": "cs.cds.controls.explorer.packWebResource",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.saveTemplateFile",
+					"command": "cs.cds.controls.explorer.saveTemplateFile",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.saveTemplateFolder",
+					"command": "cs.cds.controls.explorer.saveTemplateFolder",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.registerPluginFile",
+					"command": "cs.cds.controls.explorer.registerPluginFile",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
+					"command": "cs.cds.controls.explorer.unpackSolutionToFolder",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.newWorkspace.hideLoadingMessage",
+					"command": "cs.cds.controls.newWorkspace.open",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.newWorkspace.open",
+					"command": "cs.cds.controls.svcUtilConfig.open",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.newWorkspace.showLoadingMessage",
+					"command": "cs.cds.controls.cdsExplorer.addEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.svcUtilConfig.configure",
+					"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.addEntry",
+					"command": "cs.cds.controls.cdsExplorer.clickEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.addEntryToSolution",
+					"command": "cs.cds.controls.cdsExplorer.deleteEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.clickEntry",
+					"command": "cs.cds.controls.cdsExplorer.editConnection",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.deleteEntry",
+					"command": "cs.cds.controls.cdsExplorer.editEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.editConnection",
+					"command": "cs.cds.controls.cdsExplorer.inspectEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.editEntry",
+					"command": "cs.cds.controls.cdsExplorer.moveSolution",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.inspectEntry",
+					"command": "cs.cds.controls.cdsExplorer.openInApp",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.moveSolution",
+					"command": "cs.cds.controls.cdsExplorer.openInBrowser",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.openInApp",
+					"command": "cs.cds.controls.cdsExplorer.openInEditor",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.openInBrowser",
+					"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.openInEditor",
+					"command": "cs.cds.controls.cdsExplorer.removeEntryFromSolution",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
+					"command": "cs.cds.controls.cdsExplorer.unpackSolution",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.removeEntryFromSolution",
+					"command": "cs.cds.controls.templateExplorer.addEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.unpackSolution",
+					"command": "cs.cds.controls.templateExplorer.clickEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.addEntry",
+					"command": "cs.cds.controls.templateExplorer.createInWorkspace",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.clickEntry",
+					"command": "cs.cds.controls.templateExplorer.deleteEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.createInWorkspace",
+					"command": "cs.cds.controls.templateExplorer.editEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.deleteEntry",
+					"command": "cs.cds.controls.templateExplorer.exportEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.editEntry",
+					"command": "cs.cds.controls.templateExplorer.importEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.exportEntry",
+					"command": "cs.cds.controls.templateExplorer.openEntry",
 					"when": "false"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.importEntry",
-					"when": "false"
-				},
-				{
-					"command": "cs.dynamics.controls.templateTreeView.openEntry",
-					"when": "false"
-				},
-				{
-					"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
+					"command": "cs.cds.controls.templateExplorer.refreshEntry",
 					"when": "false"
 				}
 			],
 			"explorer/context": [
 				{
-					"command": "cs.dynamics.controls.explorer.dotNetBuild",
+					"command": "cs.cds.controls.explorer.dotNetBuild",
 					"when": "explorerResourceIsFolder == true || resourceExtname == .csproj || resourceExtname == .vbproj",
 					"group": "build@1"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.dotNetTest",
+					"command": "cs.cds.controls.explorer.dotNetTest",
 					"when": "explorerResourceIsFolder == true || resourceExtname == .csproj || resourceExtname == .vbproj",
 					"group": "build@2"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFile",
+					"command": "cs.cds.controls.explorer.generateEntityCodeToFile",
 					"when": "explorerResourceIsFolder != true && resourceLangId == csharp || resourceLangId == vb",
 					"group": "generateCode@1"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.generateEntityCodeToFolder",
+					"command": "cs.cds.controls.explorer.generateEntityCodeToFolder",
 					"when": "explorerResourceIsFolder",
 					"group": "generateCode@2"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.packSolutionFromFolder",
+					"command": "cs.cds.controls.explorer.packSolutionFromFolder",
 					"when": "explorerResourceIsFolder",
 					"group": "zzz_azuretools_deploy@3"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.packWebResource",
+					"command": "cs.cds.controls.explorer.packWebResource",
 					"when": "resourceExtname == .html || resourceExtname == .css || resourceExtname == .js || resourceExtName == .json || resourceExtname == .xml || resourceExtname == .png || resourceExtname == .jpg || resourceExtname == .gif || resourceExtname == .xap || resourceExtname == .xsl || resourceExtname == .ico || resourceExtname == .svg || resourceExtname == .resx",
 					"group": "zzz_azuretools_deploy@4"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.unpackSolutionToFolder",
+					"command": "cs.cds.controls.explorer.unpackSolutionToFolder",
 					"when": "explorerResourceIsFolder",
 					"group": "zzz_azuretools_deploy@5"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.registerPluginFile",
+					"command": "cs.cds.controls.explorer.registerPluginFile",
 					"when": "explorerResourceIsFolder != true && resourceExtname == .csproj || resourceExtname == .vbproj || resourceExtname == .dll",
 					"group": "zzz_azuretools_deploy@4"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.createFromItemTemplate",
+					"command": "cs.cds.controls.explorer.createFromItemTemplate",
 					"when": "explorerResourceIsFolder",
 					"group": "navigation@1"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.createFromProjectTemplate",
+					"command": "cs.cds.controls.explorer.createFromProjectTemplate",
 					"when": "explorerResourceIsFolder",
 					"group": "navigation@2"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.createWebResource",
+					"command": "cs.cds.controls.explorer.createWebResource",
 					"when": "explorerResourceIsFolder",
 					"group": "navigation@3"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.saveTemplateFile",
+					"command": "cs.cds.controls.explorer.saveTemplateFile",
 					"when": "explorerResourceIsFolder != true",
 					"group": "navigation@999"
 				},
 				{
-					"command": "cs.dynamics.controls.explorer.saveTemplateFolder",
+					"command": "cs.cds.controls.explorer.saveTemplateFolder",
 					"when": "explorerResourceIsFolder",
 					"group": "navigation@999"
 				}
 			],
 			"view/title": [
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
+					"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 					"group": "navigation",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer"
+					"when": "view == cs.cds.viewContainers.cdsExplorer"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.addEntry",
+					"command": "cs.cds.controls.cdsExplorer.addEntry",
 					"group": "navigation",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer"
+					"when": "view == cs.cds.viewContainers.cdsExplorer"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
+					"command": "cs.cds.controls.templateExplorer.refreshEntry",
 					"group": "navigation",
-					"when": "view == cs.dynamics.viewContainers.templateExplorer"
+					"when": "view == cs.cds.viewContainers.templateExplorer"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.editEntry",
+					"command": "cs.cds.controls.templateExplorer.editEntry",
 					"group": "navigation",
-					"when": "view == cs.dynamics.viewContainers.templateExplorer"
+					"when": "view == cs.cds.viewContainers.templateExplorer"
 				}
 			],
 			"view/item/context": [
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.addEntry",
+					"command": "cs.cds.controls.cdsExplorer.addEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.editEntry",
+					"command": "cs.cds.controls.cdsExplorer.editEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.deleteEntry",
+					"command": "cs.cds.controls.cdsExplorer.deleteEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.refreshEntry",
+					"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 					"group": "group@1",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.inspectEntry",
+					"command": "cs.cds.controls.cdsExplorer.inspectEntry",
 					"group": "group@2",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canInspectItem)(.*)$/"
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canInspectItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.openInApp",
+					"command": "cs.cds.controls.cdsExplorer.openInApp",
 					"group": "group@3",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInApp)(.*)$/"
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInApp)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.openInBrowser",
+					"command": "cs.cds.controls.cdsExplorer.openInBrowser",
 					"group": "group@4",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInBrowser)(.*)$/"
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInBrowser)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.openInEditor",
+					"command": "cs.cds.controls.cdsExplorer.openInEditor",
 					"group": "group@5",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.unpackSolution",
+					"command": "cs.cds.controls.cdsExplorer.unpackSolution",
 					"group": "deployment@1",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.moveSolution",
+					"command": "cs.cds.controls.cdsExplorer.moveSolution",
 					"group": "deployment@1",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canMoveSolution)(.*)$/"
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canMoveSolution)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.addEntryToSolution",
+					"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
 					"group": "deployment@2",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canAddToSolution)(.*)$/"
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canAddToSolution)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.dynamicsTreeView.removeEntryFromSolution",
+					"command": "cs.cds.controls.cdsExplorer.removeEntryFromSolution",
 					"group": "deployment@3",
-					"when": "view == cs.dynamics.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.addEntry",
+					"command": "cs.cds.controls.templateExplorer.addEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
+					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.createInWorkspace",
+					"command": "cs.cds.controls.templateExplorer.createInWorkspace",
 					"group": "group@3",
-					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canCreateInWorkspace)(.*)$/"
+					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canCreateInWorkspace)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.editEntry",
+					"command": "cs.cds.controls.templateExplorer.editEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
+					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canEditItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.deleteEntry",
+					"command": "cs.cds.controls.templateExplorer.deleteEntry",
 					"group": "inline",
-					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
+					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canDeleteItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.openEntry",
+					"command": "cs.cds.controls.templateExplorer.openEntry",
 					"group": "group@2",
-					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canOpenItem)(.*)$/"
+					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canOpenItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.refreshEntry",
+					"command": "cs.cds.controls.templateExplorer.refreshEntry",
 					"group": "group@1",
-					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
+					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canRefreshItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.exportEntry",
+					"command": "cs.cds.controls.templateExplorer.exportEntry",
 					"group": "group@4",
-					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canExportItem)(.*)$/"
+					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canExportItem)(.*)$/"
 				},
 				{
-					"command": "cs.dynamics.controls.templateTreeView.importEntry",
+					"command": "cs.cds.controls.templateExplorer.importEntry",
 					"group": "group@4",
-					"when": "view == cs.dynamics.viewContainers.templateExplorer && viewItem =~ /^(.*)(canImportItem)(.*)$/"
+					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canImportItem)(.*)$/"
 				}
 			]
 		}
@@ -994,6 +976,7 @@
 		"jquery": "^3.4.1",
 		"jsoneditor": "^7.4.0",
 		"lodash": "^4.17.15",
+		"moment": "^2.24.0",
 		"mustache": "^3.1.0",
 		"node-archiver": "^0.3.0",
 		"node-fetch": "^2.6.0",
@@ -1001,6 +984,7 @@
 		"node-stream-zip": "^1.8.2",
 		"opn": "^6.0.0",
 		"typescript-linq": "^1.0.6",
+		"vscode-extension-telemetry": "^0.1.2",
 		"ws": "^7.2.0",
 		"xml2js": "^0.4.22"
 	}

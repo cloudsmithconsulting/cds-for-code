@@ -5,10 +5,11 @@ import fetch from 'node-fetch';
 import { Utilities } from '../../core/Utilities';
 import Dictionary from '../../core/types/Dictionary';
 import * as FileSystem from '../../core/io/FileSystem';
-import * as DynamicsTreeView from '../../views/DynamicsTreeView';
+import * as DynamicsTreeView from '../../views/CdsExplorer';
 import { TS } from 'typescript-linq';
-import * as TemplateTreeView from '../../views/TemplatesTreeView';
+import * as TemplateTreeView from '../../views/TemplateExplorer';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
+import logger from '../../core/Logger';
 
 export type ExtensionIcon = DynamicsTreeView.EntryType | TemplateTreeView.EntryType | 'Add' | 'Edit' | 'Delete' | 'Refresh' | 'Save' | 'Cancel';
 
@@ -77,7 +78,7 @@ export class ExtensionIconTheme {
     resolve(folder: string, icon: ExtensionIcon): IconResolver {
 		folder = folder.replace("~/", "../../../../");
     
-        const destination = path.join(folder, this.name.replace(`${cs.dynamics.configuration.iconThemes._namespace}.`, ''));
+        const destination = path.join(folder, this.name.replace(`${cs.cds.configuration.iconThemes._namespace}.`, ''));
 		const icons = this.icons.where(i => i.extensionIcon === icon);
 		const lightIcon = icons.where(i => i.annotation === "light").first();
 		const darkIcon = icons.where(i => i.annotation === "dark").first();
@@ -87,11 +88,11 @@ export class ExtensionIconTheme {
     }
     
 	//TODO: remove dependence on fetch.
-	downloadIcons(folder: string): string {
-		const destination = path.join(folder, this.name.replace(`${cs.dynamics.configuration.iconThemes._namespace}.`, ''));
+	async downloadIcons(folder: string): Promise<string> {
+		const destination = path.join(folder, this.name.replace(`${cs.cds.configuration.iconThemes._namespace}.`, ''));
 	
 		if (this.icons) {
-			this.icons.forEach(icon => {
+			await this.icons.forEach(async icon => {
 				const localPath = path.join(destination, icon.mappedOutputFile);
 		
 				FileSystem.makeFolderSync(path.dirname(localPath));
@@ -100,15 +101,14 @@ export class ExtensionIconTheme {
 					return;
 				}
 		
-				return fetch(icon.url, {
-					method: 'get',
-					headers: {
-						'Accepts': icon.mimeType
-					}
-				})
+				logger.log(`Download icon: ${icon.url} started.`);
+
+				return await fetch(icon.url, { method: 'get', headers: { 'Accepts': icon.mimeType } })
 					.then(res => res.text())
 					.then(body => {
 						FileSystem.writeFileSync(localPath, body);
+
+						logger.log(`Download icon: ${icon.url} completed.`);
 		
 						return localPath;
 					});
@@ -143,16 +143,16 @@ export class ExtensionIconTheme {
 
 export class ExtensionIconThemes {
     static get default(): ExtensionIconTheme {
-		return new ExtensionIconTheme(cs.dynamics.configuration.iconThemes.default, defaultIcons, "black", "white");
+		return new ExtensionIconTheme(cs.cds.configuration.iconThemes.default, defaultIcons, "black", "white");
 	}
 
     private static _themes: ExtensionIconTheme[] = [ ExtensionIconThemes.default ];
 
     static get selected(): ExtensionIconTheme {
-		let configValue = ExtensionConfiguration.getConfigurationValueOrDefault(cs.dynamics.configuration.iconThemes.selectedTheme, cs.dynamics.configuration.iconThemes.default);
+		let configValue = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.iconThemes.selectedTheme, cs.cds.configuration.iconThemes.default);
 
-        if (!configValue.startsWith(cs.dynamics.configuration.iconThemes._namespace)) {
-			configValue = cs.dynamics.configuration.iconThemes._namespace + "." + configValue;
+        if (!configValue.startsWith(cs.cds.configuration.iconThemes._namespace)) {
+			configValue = cs.cds.configuration.iconThemes._namespace + "." + configValue;
 		}
 
         return this.get(configValue);

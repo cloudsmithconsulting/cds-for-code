@@ -1,4 +1,4 @@
-﻿import { DWA } from '../DWA';
+﻿import { CWA } from '../CWA';
 import Utility from '../utilities/Utility';
 import * as Parameters from '../../../core/helpers/Parameters';
 import dateReviver from './dateReviver';
@@ -28,13 +28,13 @@ function getFormattedKeyValue(keyName:string, value:any): any[] {
             case 'odata.deltaLink':
                 newKey = 'oDataDeltaLink';
                 break;
-            case DWA.Prefer.Annotations.FormattedValue:
+            case CWA.Prefer.Annotations.FormattedValue:
                 newKey = format[0] + '_Formatted';
                 break;
-            case DWA.Prefer.Annotations.AssociatedNavigationProperty:
+            case CWA.Prefer.Annotations.AssociatedNavigationProperty:
                 newKey = format[0] + '_NavigationProperty';
                 break;
-            case DWA.Prefer.Annotations.LookupLogicalName:
+            case CWA.Prefer.Annotations.LookupLogicalName:
                 newKey = format[0] + '_LogicalName';
                 break;
         }
@@ -102,8 +102,8 @@ function parseData(object:any, parseParams?:any): any {
     }
 
     if (parseParams) {
-        if (parseParams.hasOwnProperty('pageNumber') && object['@' + DWA.Prefer.Annotations.FetchXmlPagingCookie] !== null) {
-            object.PagingInfo = Utility.getFetchXmlPagingCookie(object['@' + DWA.Prefer.Annotations.FetchXmlPagingCookie], parseParams.pageNumber);
+        if (parseParams.hasOwnProperty('pageNumber') && object['@' + CWA.Prefer.Annotations.FetchXmlPagingCookie] !== null) {
+            object.PagingInfo = Utility.getFetchXmlPagingCookie(object['@' + CWA.Prefer.Annotations.FetchXmlPagingCookie], parseParams.pageNumber);
         }
     }
 

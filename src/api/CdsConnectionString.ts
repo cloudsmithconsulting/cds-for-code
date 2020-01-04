@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { DynamicsWebApi } from './cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from './cds-webapi/CdsWebApi';
 import { ICredential, WindowsCredential, OAuthCredential, AzureAdUserCredential, AzureAdClientCredential, CdsOnlineCredential } from '../core/security/Types';
 
 export default class CdsConnectionString {
@@ -9,7 +9,7 @@ export default class CdsConnectionString {
         }
     }
 
-    type: DynamicsWebApi.ConfigType;
+    type: CdsWebApi.ConfigType;
     uri: vscode.Uri;
     domain?: string;
     username?: string;
@@ -44,22 +44,22 @@ export default class CdsConnectionString {
                         case "ad":
                         case "activedirectory":
                         case "active directory":
-                            into.type = DynamicsWebApi.ConfigType.OnPremises;
+                            into.type = CdsWebApi.ConfigType.OnPremises;
                             break;
                         case "adfs":
                         case "ifd":
-                            into.type = DynamicsWebApi.ConfigType.IFD;
+                            into.type = CdsWebApi.ConfigType.IFD;
 
                             break;
                         case "oauth":
-                            into.type = DynamicsWebApi.ConfigType.AzureAdAuth;
+                            into.type = CdsWebApi.ConfigType.AzureAdAuth;
 
                             break;
                         case "office365":
                         case "office 365":
                         case "crmlive":
                         case "crm live":
-                            into.type = DynamicsWebApi.ConfigType.Online;
+                            into.type = CdsWebApi.ConfigType.Online;
 
                             break;
                         default:
@@ -132,16 +132,16 @@ export default class CdsConnectionString {
 
         if (this.type) {
             switch (this.type) {
-                case DynamicsWebApi.ConfigType.OnPremises:
+                case CdsWebApi.ConfigType.OnPremises:
                     returnString.push("AuthType=AD; ");
                     break;
-                case DynamicsWebApi.ConfigType.Online:
+                case CdsWebApi.ConfigType.Online:
                     returnString.push("AuthType=Office365; ");
                     break;
-                case DynamicsWebApi.ConfigType.AzureAdAuth:
+                case CdsWebApi.ConfigType.AzureAdAuth:
                     returnString.push("AuthType=OAuth; ");
                     break;
-                case DynamicsWebApi.ConfigType.IFD:
+                case CdsWebApi.ConfigType.IFD:
                     returnString.push("AuthType=IFD; ");
                     break;
             }
@@ -186,23 +186,23 @@ export default class CdsConnectionString {
         return returnString.join("");
     }
 
-    toConfig(): DynamicsWebApi.Config {
+    toConfig(): CdsWebApi.Config {
         let credentials: ICredential;
 
         // TODO: put in IFD creds
         switch (this.type) {
-            case DynamicsWebApi.ConfigType.OnPremises:
+            case CdsWebApi.ConfigType.OnPremises:
                 credentials = new WindowsCredential(this.domain, this.username, this.password);
                 break;
-            case DynamicsWebApi.ConfigType.Online:
+            case CdsWebApi.ConfigType.Online:
                 credentials = new OAuthCredential(this.username, this.password);
                 break;
-            case DynamicsWebApi.ConfigType.AzureAdAuth:
+            case CdsWebApi.ConfigType.AzureAdAuth:
                 credentials = new AzureAdClientCredential(this.username, this.password, CdsOnlineCredential.defaultAuthority, (this.redirectUri || this.uri).toString());
                 break;
         }
 
-        const config: DynamicsWebApi.Config = {
+        const config: CdsWebApi.Config = {
             id: null,
             name: null,
             type: this.type,

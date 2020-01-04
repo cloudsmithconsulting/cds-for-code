@@ -1,21 +1,31 @@
 import * as vscode from 'vscode';
 import * as cs from '../../cs';
 import * as FileSystem from '../../core/io/FileSystem';
-import IContributor from '../../core/CommandBuilder';
 import Xml from '../../core/io/Xml';
-import dotNetBuildFromExplorer from "../../commands/cs.dynamics.controls.explorer.dotNetBuild";
-import dotNetTestFromExplorer from "../../commands/cs.dynamics.controls.explorer.dotNetTest";
-import dotNetBuild from "../../commands/cs.dynamics.deployment.dotNetBuild";
-import dotNetTest  from "../../commands/cs.dynamics.deployment.dotNetTest";
+import dotNetBuild from "../../commands/cs.cds.deployment.dotNetBuild";
+import dotNetTest  from "../../commands/cs.cds.deployment.dotNetTest";
+import command from '../../core/Command';
+import logger from '../../core/Logger';
 
-export default class VisualStudioProjectCommands implements IContributor {
-    contribute(context: vscode.ExtensionContext, config: vscode.WorkspaceConfiguration) {
-        // now wire a command into the context
-        context.subscriptions.push(
-			vscode.commands.registerCommand(cs.dynamics.controls.explorer.dotNetBuild, dotNetBuildFromExplorer.bind(VisualStudioProjectCommands)),
-			vscode.commands.registerCommand(cs.dynamics.controls.explorer.dotNetTest, dotNetTestFromExplorer.bind(VisualStudioProjectCommands)),
-            vscode.commands.registerCommand(cs.dynamics.deployment.dotNetBuild, dotNetBuild.bind(VisualStudioProjectCommands)),
-            vscode.commands.registerCommand(cs.dynamics.deployment.dotNetTest, dotNetTest.bind(VisualStudioProjectCommands)));
+export default class VisualStudioProjectCommands {
+    @command(cs.cds.controls.explorer.dotNetBuild, "Run dotnet build from File Explorer")
+    static async dotNetBuildFromExplorer(file?: vscode.Uri) {
+        return await vscode.commands.executeCommand(cs.cds.deployment.dotNetBuild, file);
+    }
+
+    @command(cs.cds.deployment.dotNetBuild, "Run dotnet build")
+    static async dotNetBuild(file?: vscode.Uri, updateVersionBuild: boolean = true, logFile?: string): Promise<any> {
+        return await dotNetBuild.apply(this, [file, updateVersionBuild, logFile]);
+    }
+
+    @command(cs.cds.controls.explorer.dotNetTest, "Run dotnet test from File Explorer")
+    static async dotNetTestFromFileExplorer(file?: vscode.Uri) {
+        return await vscode.commands.executeCommand(cs.cds.deployment.dotNetTest, file);
+    }
+
+    @command(cs.cds.deployment.dotNetTest, "Run dotnet test")
+    static async dotNetTest(file?: vscode.Uri, logFile?: string): Promise<any> {
+        return await dotNetTest.apply(this, [file, logFile]);
     }
 
     static projectFileTypes:string[] = [".csproj", ".vbproj"];
@@ -30,7 +40,7 @@ export default class VisualStudioProjectCommands implements IContributor {
         return fileIsProject;
     }
 
-    static async updateVersionNumber(file: vscode.Uri, incrementBuild: (build: string) => string) {
+    static async updateVersionNumber(file: vscode.Uri, increment: (build: string) => string) {
         const projectFileXml = await Xml.parseFile(file.fsPath);
 
         if (projectFileXml
@@ -45,7 +55,7 @@ export default class VisualStudioProjectCommands implements IContributor {
             } else {
                 let value = propertyGroup.AssemblyVersion[0];
 
-                propertyGroup.AssemblyVersion = { _: incrementBuild(value) };
+                propertyGroup.AssemblyVersion = { _: increment(value) };
             }
 
             if (!propertyGroup.FileVersion) {
@@ -54,9 +64,10 @@ export default class VisualStudioProjectCommands implements IContributor {
             else {
                 let value = propertyGroup.FileVersion[0];
 
-                propertyGroup.FileVersion = { _: incrementBuild(value) };
+                propertyGroup.FileVersion = { _: increment(value) };
             }
 
+            logger.log(`Updating version number in ${file.fsPath}`);            
             FileSystem.writeFileSync(file.fsPath, await Xml.createXml(projectFileXml));
         }
     }

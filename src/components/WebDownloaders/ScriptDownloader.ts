@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as cs from '../../cs';
 import fetch from 'node-fetch';
-import IContributor from '../../core/CommandBuilder';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
 import { Utilities } from '../../core/Utilities';
@@ -10,23 +9,19 @@ import GlobalState from '../Configuration/GlobalState';
 import TemplateManager from "../Templates/TemplateManager";
 import * as FileSystem from "../../core/io/FileSystem";
 import ExtensionContext from '../../core/ExtensionContext';
-import downloadRequiredScripts from "../../commands/cs.dynamics.extension.downloadRequiredScripts";
 import Quickly from '../../core/Quickly';
+import command from '../../core/Command';
+import Logger from '../../core/Logger';
+import { extensionActivate } from '../../core/ExtensionEvent';
 
-export default class ScriptDownloader implements IContributor {
-    contribute(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-		//GlobalState.Instance(context).PowerShellScriptVersion = null;
-
-		// do this immediately
-        ScriptDownloader.runScriptCheck();
-
-        // now wire a command into the context
-        context.subscriptions.push(
-            vscode.commands.registerCommand(cs.dynamics.extension.downloadRequiredScripts, downloadRequiredScripts.bind(ScriptDownloader))
-        );
+export default class ScriptDownloader {
+	@extensionActivate(cs.cds.extension.productId)
+    async activate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
+        await ScriptDownloader.runScriptCheck();
     }
 
-    static runScriptCheck() {
+	@command(cs.cds.extension.downloadRequiredScripts, "Download required PowerShell scripts and templates")
+    static async runScriptCheck() {
 		// get local storage folder
 		const scriptsFolder = path.join(ExtensionContext.Instance.globalStoragePath, "/scripts/");
 		const appsFolder = path.join(ExtensionContext.Instance.globalStoragePath, "/tools/");
@@ -55,14 +50,14 @@ export default class ScriptDownloader implements IContributor {
 			"src/CloudSmith.Dynamics365.SampleScripts/runonce-script.ps1"
 		];
 
-		const remoteFolderPath:string = Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateSource));
-		const updateChannel:string = ExtensionConfiguration.getConfigurationValue(cs.dynamics.configuration.tools.updateChannel);
+		const remoteFolderPath:string = Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateSource));
+		const updateChannel:string = ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateChannel);
 		let isDownloading = false;
 
-		const returnValue = this.checkVersion(remoteFolderPath, updateChannel)
+		const returnValue = await this.checkVersion(remoteFolderPath, updateChannel)
 			.then(async version => {
 				if (version === -1) {
-					Quickly.error(`The Dynamics 365 extension could not check for updates in the ${updateChannel} channel.  Please check the configuration updateSource and updateChannel to ensure they are set correctly.`);
+					Quickly.error(`The CDS for Code extension could not check for updates in the ${updateChannel} channel.  Please check the configuration updateSource and updateChannel to ensure they are set correctly.`);
 
 					return;
 				}
@@ -81,8 +76,9 @@ export default class ScriptDownloader implements IContributor {
 
 					// see if file exists & if our current version is less than the new version.
 					if ((!FileSystem.exists(localFilePath))
-						|| (!currentVersion || parseFloat(currentVersion.toString()) !== version))
+						|| (!currentVersion || currentVersion !== version))
 					{
+						Logger.log(`Downloading ${fileName}, version ${version}`);
 						isDownloading = true;
 
 						// file doesn't exist, get it from remote location
@@ -100,6 +96,8 @@ export default class ScriptDownloader implements IContributor {
 							}).then(() => {
 								GlobalState.Instance.PowerShellScriptVersion = version;
 							});
+					} else {
+						Logger.log(`File ${fileName} is current: version ${currentVersion}`);
 					}
 				}
 
@@ -115,8 +113,9 @@ export default class ScriptDownloader implements IContributor {
 					const localFilePath = path.join(ExtensionContext.Instance.globalStoragePath, path.basename(fileName));
 					// see if file exists & if our current version is less than the new version.
 					if ((!FileSystem.exists(localFilePath))
-						|| (!currentVersion || parseFloat(currentVersion.toString()) !== version))
+						|| (!currentVersion || currentVersion !== version))
 					{
+						Logger.log(`Downloading ${fileName}, version ${version}`);
 						isDownloading = true;
 
 						// file doesn't exist, get it from remote location
@@ -138,8 +137,12 @@ export default class ScriptDownloader implements IContributor {
 									if (options.extractPath) { FileSystem.makeFolderSync(options.extractPath); }
 
 									if (options.isTemplate) {
-										await vscode.commands.executeCommand(cs.dynamics.templates.importTemplate, vscode.Uri.file(options.zipFile));
+										Logger.log(`Importing template: ${options.zipFile}`);
+
+										await vscode.commands.executeCommand(cs.cds.templates.importTemplate, vscode.Uri.file(options.zipFile));
 									} else {
+										Logger.log(`Unzipping downloaded file: ${options.zipFile}`);
+
 										await FileSystem.unzip(options.zipFile, options.extractPath);
 										vscode.window.showInformationMessage(`Items were extracted from ${options.zipFile} into ${options.extractPath}`);
 									}
@@ -148,6 +151,8 @@ export default class ScriptDownloader implements IContributor {
 							.then(() => {
 								GlobalState.Instance.PowerShellScriptVersion = version;
 							});
+					} else {
+						Logger.log(`File ${fileName} is current: version ${currentVersion}`);
 					}
 				}
 			});
@@ -156,7 +161,7 @@ export default class ScriptDownloader implements IContributor {
     }
 
 	//TODO: remove dependence on fetch.
-    private static downloadScript(remoteFilePath: string, localFilePath: string): Promise<string> {
+    private static async downloadScript(remoteFilePath: string, localFilePath: string): Promise<string> {
         return fetch(remoteFilePath, {
             method: 'get',
             headers: {
@@ -177,7 +182,7 @@ export default class ScriptDownloader implements IContributor {
 	}
 
 	//TODO: remove dependence on fetch.
-	static downloadZip(remoteFilePath: string, localFilePath: string): Promise<string> {
+	static async downloadZip(remoteFilePath: string, localFilePath: string): Promise<string> {
 		return fetch(remoteFilePath, {
 			method: 'get',
 			headers: {
@@ -198,7 +203,7 @@ export default class ScriptDownloader implements IContributor {
 	}
 	
 	//TODO: remove dependence on fetch.
-    static checkVersion(remoteFilePath: string, channel: string): Promise<number> {
+    static async checkVersion(remoteFilePath: string, channel: string): Promise<number> {
         return fetch(`${Utilities.String.withTrailingSlash(remoteFilePath)}${channel}.version`, {
             method: 'get',
             headers: {
@@ -215,11 +220,13 @@ export default class ScriptDownloader implements IContributor {
 	}
 
 	static async installCdsSdk(): Promise<TerminalCommand> {
-		const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.dynamics.configuration.tools.sdkInstallPath);
+		const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.cds.configuration.tools.sdkInstallPath);
 
 		if (!FileSystem.exists(sdkInstallPath) && FileSystem.exists(path.join(ExtensionContext.Instance.globalStoragePath, "/Scripts/Install-Sdk.ps1"))) {
 			FileSystem.makeFolderSync(sdkInstallPath);
 		
+			Logger.warn(`SDK not detected in ${sdkInstallPath}, downloading and extracting automatically.`);
+
 			return await DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "/Scripts/"))
 				.then(async terminal => {
 					return await terminal.run(new TerminalCommand(`.\\Install-Sdk.ps1 `)
