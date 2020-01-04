@@ -1,10 +1,10 @@
 # ![Cloudsmith Consulting LLC](https://cloudsmithstatics.azureedge.net/web/cloudsmith-notagline-450x103.png "Cloudsmith Consulting")<br> Welcome to the CloudSmith CDS For Code Extension
 This extension is designed to help developers with a simple development loop for Microsoft&trade; Common Data Service (CDS) using Visual Studio Code.  Many developers do not have access to a full Visual Studio license in order to use Microsoft&trade; CDS Development Toolkit.  This sample solution is designed to get you started.
 
-Release version: 0.8.5
+Release version: 0.8.6
 
 ---
-
+ 
 ## Features
 
 The VsCode addin handles these tasks in your development loop.
