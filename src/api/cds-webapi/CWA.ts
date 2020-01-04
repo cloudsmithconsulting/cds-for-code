@@ -1,4 +1,4 @@
-﻿export const DWA = {
+﻿export const CWA = {
     Types: {
         ResponseBase: () => {
             /// <field name='oDataContext' type='String'>The context URL (see [OData-Protocol]) for the payload.</field>  
@@ -6,14 +6,14 @@
         },
         Response: () => {
             /// <field name='value' type='Object'>Response value returned from the request.</field>  
-            DWA.Types.ResponseBase.call(this);
+            CWA.Types.ResponseBase.call(this);
 
             this.value = {};
         },
         ReferenceResponse: () => {
             /// <field name='id' type='String'>A String representing the GUID value of the record.</field>  
             /// <field name='collection' type='String'>The name of the Entity Collection that the record belongs to.</field>  
-            DWA.Types.ResponseBase.call(this);
+            CWA.Types.ResponseBase.call(this);
 
             this.id = "";
             this.collection = "";
@@ -22,7 +22,7 @@
             /// <field name='oDataNextLink' type='String'>The link to the next page.</field>  
             /// <field name='oDataCount' type='Number'>The count of the records.</field>  
             /// <field name='value' type='Array'>The array of the records returned from the request.</field>  
-            DWA.Types.ResponseBase.call(this);
+            CWA.Types.ResponseBase.call(this);
 
             this.oDataNextLink = "";
             this.oDataCount = 0;
@@ -31,7 +31,7 @@
         FetchXmlResponse: () => {
             /// <field name='value' type='Array'>The array of the records returned from the request.</field>  
             /// <field name='pagingInfo' type='Object'>Paging Information</field>  
-            DWA.Types.ResponseBase.call(this);
+            CWA.Types.ResponseBase.call(this);
 
             this.value = [];
             this.PagingInfo = {

@@ -55,7 +55,7 @@ function encryptCredential<T extends Security.ICredential>(credential: T, storeK
 }
 
 async function performCdsOnlineAuthenticate(connectionId: string, credential: Security.CdsOnlineCredential, resource?: string, options?: any): Promise<AuthenticationResult> {
-    const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
+    const decrypted = credential.isSecure || Security.SecureItem.isSecure(credential.password) ? decryptCredential(credential, connectionId) : credential;
     const authority = decrypted.authority || Security.CdsOnlineCredential.defaultAuthority;
     const tenant = decrypted.tenant || Security.CdsOnlineCredential.defaultTenant;
     const clientId = decrypted.clientId.toString() || Security.CdsOnlineCredential.defaultClientId;
@@ -71,7 +71,7 @@ async function performCdsOnlineAuthenticate(connectionId: string, credential: Se
 }
 
 async function performAzureAdClientAuthenticate(connectionId: string, credential: Security.AzureAdClientCredential, resource?: string, options?: any): Promise<AuthenticationResult> {
-    const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
+    const decrypted = credential.isSecure || Security.SecureItem.isSecure(credential.password) ? decryptCredential(credential, connectionId) : credential;
     const authority = decrypted.authority || Security.CdsOnlineCredential.defaultAuthority;
     const clientId = decrypted.clientId.toString();
     const clientSecret = decrypted.clientSecret.toString();    
@@ -85,7 +85,7 @@ async function performAzureAdClientAuthenticate(connectionId: string, credential
 }
 
 async function performAzureAdUserAuthenticate(connectionId: string, credential: Security.AzureAdUserCredential, resource?: string, options?: any): Promise<AuthenticationResult> {
-    const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
+    const decrypted = credential.isSecure || Security.SecureItem.isSecure(credential.password) ? decryptCredential(credential, connectionId) : credential;
     const authority = decrypted.authority || Security.CdsOnlineCredential.defaultAuthority;
     const clientId = decrypted.clientId.toString();
     const clientSecret = decrypted.clientSecret.toString();    
@@ -105,7 +105,7 @@ async function performWindowsAuthenticate(connectionId: string, credential: Secu
 }
 
 async function performOAuthAuthenticate(connectionId: string, credential: Security.OAuthCredential, resource?: string, options?: any): Promise<AuthenticationResult> {
-    const decrypted = credential.isSecure ? decryptCredential(credential, connectionId) : credential;
+    const decrypted = credential.isSecure || Security.SecureItem.isSecure(credential.refreshToken) ? decryptCredential(credential, connectionId) : credential;
     const authority = Security.CdsOnlineCredential.defaultAuthority;
     const clientId = Security.CdsOnlineCredential.defaultClientId;
     const tenant = Security.CdsOnlineCredential.defaultTenant;

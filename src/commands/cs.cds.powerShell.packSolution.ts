@@ -7,7 +7,7 @@ import Quickly from '../core/Quickly';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import { Utilities } from '../core/Utilities';
 import SolutionMap from '../components/Solutions/SolutionMap';
-import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import SolutionFile from '../components/SolutionXml/SolutionFile';
 import ExtensionContext from '../core/ExtensionContext';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
@@ -21,7 +21,7 @@ import logger from '../core/Logger';
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(config?:DynamicsWebApi.Config, folder?:string, solution?:any, toolsPath?:string, logFile?:string, mappingFile?:string, includeResourceFiles?:boolean, solutionPath?:string, managed?:boolean) {
+export default async function run(config?:CdsWebApi.Config, folder?:string, solution?:any, toolsPath?:string, logFile?:string, mappingFile?:string, includeResourceFiles?:boolean, solutionPath?:string, managed?:boolean) {
 	// setup configurations
 	const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.cds.configuration.tools.sdkInstallPath);
 	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
@@ -93,7 +93,7 @@ export default async function run(config?:DynamicsWebApi.Config, folder?:string,
 	let orgName;
 	let serverUrl;
 
-	if (config.type === DynamicsWebApi.ConfigType.OnPremises) {
+	if (config.type === CdsWebApi.ConfigType.OnPremises) {
 		orgName = splitUrl[splitUrl.length - 1];
 		serverUrl = config.webApiUrl.replace(orgName, "");
 	} else {

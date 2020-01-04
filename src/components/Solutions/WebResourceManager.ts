@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as cs from '../../cs';
 import * as FileSystem from "../../core/io/FileSystem";
 import * as path from 'path';
-import { DynamicsWebApi } from "../../api/cds-webapi/DynamicsWebApi";
+import { CdsWebApi } from "../../api/cds-webapi/CdsWebApi";
 import IContributor from '../../core/CommandBuilder';
 import { Utilities } from '../../core/Utilities';
 import SolutionMap from "./SolutionMap";
@@ -42,7 +42,7 @@ export default class WebResourceManager {
     }
 
     @command(cs.cds.deployment.createWebResource, "Create web resource")
-    async createWebResource(config?:DynamicsWebApi.Config, solutionId?:string, webResource?:any, fileUri?:vscode.Uri, defaultName:string = "", inform:boolean = true) {
+    async createWebResource(config?:CdsWebApi.Config, solutionId?:string, webResource?:any, fileUri?:vscode.Uri, defaultName:string = "", inform:boolean = true) {
         createWebResource.apply(this, [config, solutionId, webResource, fileUri, defaultName, inform]);
     }
 
@@ -52,12 +52,12 @@ export default class WebResourceManager {
     }
 
     @command(cs.cds.deployment.packWebResource, "Pack web resource")
-    async packWebResource(config?:DynamicsWebApi.Config, solution?:any, webResource?:any, fileUri?:vscode.Uri, inform:boolean = true) {
+    async packWebResource(config?:CdsWebApi.Config, solution?:any, webResource?:any, fileUri?:vscode.Uri, inform:boolean = true) {
         packWebResource.apply(this, [config, solution, webResource, fileUri, inform]);
     }
 
     @command(cs.cds.deployment.unpackWebResource, "Unpack web resource")
-    async unpackWebResource(config?:DynamicsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
+    async unpackWebResource(config?:CdsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
         unpackWebResource.apply(this, [config, webResource, fileUri, autoOpen]);
     }
 
@@ -112,7 +112,7 @@ export default class WebResourceManager {
         return undefined;
     }
 
-    async upsertWebResource(config:DynamicsWebApi.Config, webResource:any, solution?:any): Promise<any> {
+    async upsertWebResource(config:CdsWebApi.Config, webResource:any, solution?:any): Promise<any> {
         const api = new ApiRepository(config);
 
         return api.upsertWebResource(webResource)

@@ -6,7 +6,7 @@ import Quickly, { WorkspaceFileItem } from '../core/Quickly';
 import ExtensionContext from "../core/ExtensionContext";
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
 import { Utilities } from '../core/Utilities';
-import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 import * as Security from "../core/security/Types";
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
@@ -16,13 +16,13 @@ import logger from '../core/Logger';
  * This command can be invoked by the Command Pallette or external sources and generates .Net code
  * using CrmSvcUtil.exe (included with the Dynamics365 SDK)
  * @export run command function
- * @param {DynamicsWebApi.Config} [config] Optional web API connection to use when generating entities.
+ * @param {CdsWebApi.Config} [config] Optional web API connection to use when generating entities.
  * @param {string} [folder] Optional folder to store entitiy code in
  * @param {string} [outputFileName] Optional filename to use when generating entities
  * @param {string} [namespace] Optional namespace for generated output
  * @returns Promise with output from terminal command running CrmSvcUtil.exe
  */
-export default async function run(config?:DynamicsWebApi.Config, folder?:string, outputFileName?: string, namespace?: string) {
+export default async function run(config?:CdsWebApi.Config, folder?:string, outputFileName?: string, namespace?: string) {
 	// setup configurations
 	const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.cds.configuration.tools.sdkInstallPath);
 	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;

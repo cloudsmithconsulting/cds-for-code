@@ -13,7 +13,7 @@ if (!String.prototype.endsWith || !String.prototype.startsWith) {
     require("./polyfills/string-es6");
 }
 
-export namespace DynamicsWebApi {
+export namespace CdsWebApi {
     /**
      * Dynamics Web Api Request
      * @typedef {Object} UserRequest
@@ -283,7 +283,7 @@ export namespace DynamicsWebApi {
     }
 
     export class WebApiClient {
-        private _internalConfig: DynamicsWebApi.Config;
+        private _internalConfig: CdsWebApi.Config;
         private _isBatch: boolean;
 
         static defaultTimeout: number = 30 * 1000;
@@ -302,7 +302,7 @@ export namespace DynamicsWebApi {
         *    includeAnnotations: 'OData.Community.Display.V1.FormattedValue'
         *});
         */
-        constructor(config?: DynamicsWebApi.Config) {
+        constructor(config?: CdsWebApi.Config) {
             this._internalConfig = {
                 id: null,
                 webApiVersion: "8.0",
@@ -321,7 +321,7 @@ export namespace DynamicsWebApi {
             this.config = config || this._internalConfig;
         }
        
-        get config(): DynamicsWebApi.Config {
+        get config(): CdsWebApi.Config {
             return this._internalConfig;
         }
 
@@ -332,7 +332,7 @@ export namespace DynamicsWebApi {
          * @example
             dynamicsWebApi.setConfig({ webApiVersion: '9.0' });
          */
-        set config(value: DynamicsWebApi.Config) {
+        set config(value: CdsWebApi.Config) {
             if (value.webApiVersion) {
                 Parameters.stringParameterCheck(value.webApiVersion, "DynamicsWebApi.setConfig", "config.webApiVersion");
                 this._internalConfig.webApiVersion = value.webApiVersion;
@@ -439,7 +439,7 @@ export namespace DynamicsWebApi {
             *}.catch(function (error) {
             *});
          */
-        createRequest(request: DynamicsWebApi.CreateRequest): Promise<any> {
+        createRequest(request: CdsWebApi.CreateRequest): Promise<any> {
             Parameters.parameterCheck(request, 'DynamicsWebApi.create', 'request');
 
             return this._makeRequest('POST', request, 'create')
@@ -494,7 +494,7 @@ export namespace DynamicsWebApi {
          *
          * @param request - An object that represents all possible options for a current request.
          */
-        updateRequest(request: DynamicsWebApi.UpdateRequest): Promise<any> {
+        updateRequest(request: CdsWebApi.UpdateRequest): Promise<any> {
             Parameters.parameterCheck(request, "DynamicsWebApi.update", "request");
 
             if (request.ifmatch === null) {
@@ -601,7 +601,7 @@ export namespace DynamicsWebApi {
          *
          * @param request - An object that represents all possible options for a current request.
          */
-        deleteRequest(request: DynamicsWebApi.DeleteRequest): Promise<any> {
+        deleteRequest(request: CdsWebApi.DeleteRequest): Promise<any> {
             Parameters.parameterCheck(request, 'DynamicsWebApi.delete', 'request');
 
             //copy locally
@@ -650,7 +650,7 @@ export namespace DynamicsWebApi {
          *
          * @param request - An object that represents all possible options for a current request.
          */
-        retrieveRequest(request: DynamicsWebApi.RetrieveRequest): Promise<any> {
+        retrieveRequest(request: CdsWebApi.RetrieveRequest): Promise<any> {
             Parameters.parameterCheck(request, 'DynamicsWebApi.retrieve', 'request');
 
             //copy locally
@@ -667,7 +667,7 @@ export namespace DynamicsWebApi {
          * @param select - An Array representing the $select Query Option to control which attributes will be returned.
          * @param expand - A String or Array of Expand Objects representing the $expand Query Option value to control which related records need to be returned.
          */
-        retrieve(key: string, collection: string, select?: string[], expand?: DynamicsWebApi.Expand[]): Promise<any> {
+        retrieve(key: string, collection: string, select?: string[], expand?: CdsWebApi.Expand[]): Promise<any> {
             Parameters.stringParameterCheck(key, "DynamicsWebApi.retrieve", "key");
             key = Parameters.keyParameterCheck(key, "DynamicsWebApi.retrieve", "key");
             Parameters.stringParameterCheck(collection, "DynamicsWebApi.retrieve", "collection");
@@ -695,7 +695,7 @@ export namespace DynamicsWebApi {
          *
          * @param request - An object that represents all possible options for a current request.
          */
-        upsertRequest(request: DynamicsWebApi.UpsertRequest): Promise<any> {
+        upsertRequest(request: CdsWebApi.UpsertRequest): Promise<any> {
             Parameters.parameterCheck(request, "DynamicsWebApi.upsert", "request");
 
             //copy locally
@@ -841,7 +841,7 @@ export namespace DynamicsWebApi {
          * @param request - An object that represents all possible options for a current request.
          * @param oDataLink - Use this parameter to pass @odata.nextLink or @odata.deltaLink to return a necessary response. Pass null to retrieveMultipleOptions
          */
-        retrieveMultipleRequest(request: DynamicsWebApi.RetrieveMultipleRequest, oDataLink?: string): Promise<any> {
+        retrieveMultipleRequest(request: CdsWebApi.RetrieveMultipleRequest, oDataLink?: string): Promise<any> {
             return this._retrieveMultipleRequest(request, oDataLink);
         }
 
@@ -850,7 +850,7 @@ export namespace DynamicsWebApi {
          *
          * @param request - An object that represents all possible options for a current request.
          */
-        retrieveAllRequest(request: DynamicsWebApi.RetrieveMultipleRequest): Promise<any> {
+        retrieveAllRequest(request: CdsWebApi.RetrieveMultipleRequest): Promise<any> {
             return this._retrieveAllRequest(request);
         }
 
@@ -1092,7 +1092,7 @@ export namespace DynamicsWebApi {
          * @param select - Use the $select system query option to limit the properties returned.
          * @param expand - A String or Array of Expand Objects representing the $expand Query Option value to control which related records need to be returned.
          */
-        retrieveEntity(entityKey: string, select?: string[], expand?: DynamicsWebApi.Expand[]): Promise<any> {
+        retrieveEntity(entityKey: string, select?: string[], expand?: CdsWebApi.Expand[]): Promise<any> {
             Parameters.keyParameterCheck(entityKey, 'DynamicsWebApi.retrieveEntity', 'entityKey');
 
             const request = {
@@ -1180,7 +1180,7 @@ export namespace DynamicsWebApi {
          * @param filter - Use the $filter system query option to set criteria for which attribute definitions will be returned.
          * @param expand - A String or Array of Expand Objects representing the $expand Query Option value to control which related records need to be returned.
          */
-        retrieveAttributes(entityKey: string, attributeType?: string, select?: string[], filter?: string, expand?: DynamicsWebApi.Expand[]): Promise<any> {
+        retrieveAttributes(entityKey: string, attributeType?: string, select?: string[], filter?: string, expand?: CdsWebApi.Expand[]): Promise<any> {
             Parameters.keyParameterCheck(entityKey, 'DynamicsWebApi.retrieveAttributes', 'entityKey');
 
             if (attributeType) {
@@ -1209,7 +1209,7 @@ export namespace DynamicsWebApi {
          * @param select - Use the $select system query option to limit the properties returned.
          * @param expand - A String or Array of Expand Objects representing the $expand Query Option value to control which related records need to be returned.
          */
-        retrieveAttribute(entityKey: string, attributeKey: string, attributeType?: string, select?: string[], expand?: DynamicsWebApi.Expand[]): Promise<any> {
+        retrieveAttribute(entityKey: string, attributeKey: string, attributeType?: string, select?: string[], expand?: CdsWebApi.Expand[]): Promise<any> {
             Parameters.keyParameterCheck(entityKey, 'DynamicsWebApi.retrieveAttribute', 'entityKey');
             Parameters.keyParameterCheck(attributeKey, 'DynamicsWebApi.retrieveAttribute', 'attributeKey');
 
@@ -1437,7 +1437,7 @@ export namespace DynamicsWebApi {
          *
          * @param config - configuration object.
          */
-        static from(config?: DynamicsWebApi.Config): WebApiClient {
+        static from(config?: CdsWebApi.Config): WebApiClient {
             return new WebApiClient(config);
         }
 

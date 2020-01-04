@@ -2,12 +2,12 @@ import * as vscode from 'vscode';
 import { View, BridgeCommunicationMethod } from '../core/webui/View';
 import { ViewRenderer } from "../core/webui/ViewRenderer";
 import * as cs from '../cs';
-import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import ApiRepository from '../repositories/apiRepository';
 import Dictionary from '../core/types/Dictionary';
 import Quickly from '../core/Quickly';
 
-export default async function openView(context: vscode.ExtensionContext, sdkmessageprocessingstepid: string, pluginStepImage: any, config?: DynamicsWebApi.Config): Promise<View> {
+export default async function openView(context: vscode.ExtensionContext, sdkmessageprocessingstepid: string, pluginStepImage: any, config?: CdsWebApi.Config): Promise<View> {
     const view = View.show(PluginStepImageEditor, {
         icon: './resources/images/cloudsmith-logo-only-50px.png',
         title: 'Configure Plugin Step Image - Dynamics 365 CE',
@@ -21,7 +21,7 @@ export default async function openView(context: vscode.ExtensionContext, sdkmess
 }
 
 class PluginStepImageEditor extends View {
-    config: DynamicsWebApi.Config;
+    config: CdsWebApi.Config;
 
     construct(viewRenderer: ViewRenderer): string {
         // add script and css assets
@@ -58,7 +58,7 @@ class PluginStepImageEditor extends View {
             });
     }
    
-    async setInitialState(context: vscode.ExtensionContext, sdkmessageprocessingstepid: string, viewModel: any, config: DynamicsWebApi.Config) {
+    async setInitialState(context: vscode.ExtensionContext, sdkmessageprocessingstepid: string, viewModel: any, config: CdsWebApi.Config) {
         config = config || await Quickly.pickCdsOrganization(context, "Choose a CDS Organization", true);
         if (!config) { return; }
         this.config = config;

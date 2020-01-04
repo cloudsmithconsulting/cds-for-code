@@ -1,17 +1,18 @@
 import * as vscode from 'vscode';
+import * as cs from '../cs';
 import { Utilities } from '../core/Utilities';
 import GlobalState from '../components/Configuration/GlobalState';
-import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import Quickly from '../core/Quickly';
 
 export default class DiscoveryRepository {
-    constructor (config:DynamicsWebApi.Config) {
-        this.webapi = new DynamicsWebApi.WebApiClient(config);
+    constructor (config:CdsWebApi.Config) {
+        this.webapi = new CdsWebApi.WebApiClient(config);
     }
 
-    private webapi: DynamicsWebApi.WebApiClient;
+    private webapi: CdsWebApi.WebApiClient;
     
-    get config(): DynamicsWebApi.Config {
+    get config(): CdsWebApi.Config {
         return this.webapi ? this.webapi.config : null;
     }
 
@@ -19,18 +20,24 @@ export default class DiscoveryRepository {
         return this.webapi.discover(filter)
             .then(result => result.value)
             .catch(error => {
-                Quickly.error(`There were errors retreiving organizations from '${this.webapi.config.name ? this.webapi.config.name : "your connection"}': ${error.message}`);
+                Quickly.error(
+                    `There were errors retreiving organizations from '${this.webapi.config.name ? this.webapi.config.name : "your connection"}': ${error.message}`, 
+                    undefined,
+                    "Retry",
+                    () => this.retrieveOrganizations(filter),
+                    "Edit Connection",
+                    () => vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection, this.webapi.config));
             });
     }
 
-    static getConnections(context: vscode.ExtensionContext): DynamicsWebApi.Config[] {
-        const connections: DynamicsWebApi.Config[] | undefined = GlobalState.Instance.DynamicsConnections;
+    static getConnections(context: vscode.ExtensionContext): CdsWebApi.Config[] {
+        const connections: CdsWebApi.Config[] | undefined = GlobalState.Instance.DynamicsConnections;
 
         return connections;
     }
 
-    static async getOrgConnections(context: vscode.ExtensionContext):Promise<DynamicsWebApi.Config[]> {        
-        const returnObject:DynamicsWebApi.Config[] = [];
+    static async getOrgConnections(context: vscode.ExtensionContext):Promise<CdsWebApi.Config[]> {        
+        const returnObject:CdsWebApi.Config[] = [];
         const connections = this.getConnections(context);
 
         if (connections) {
@@ -49,16 +56,16 @@ export default class DiscoveryRepository {
         return returnObject;
     }
 
-    static saveConnections(context: vscode.ExtensionContext, connections:DynamicsWebApi.Config[]): DynamicsWebApi.Config[] {
+    static saveConnections(context: vscode.ExtensionContext, connections:CdsWebApi.Config[]): CdsWebApi.Config[] {
         GlobalState.Instance.DynamicsConnections = connections;
 
         return GlobalState.Instance.DynamicsConnections;
     }
 
-    static createOrganizationConnection(org: any, connection: DynamicsWebApi.Config): DynamicsWebApi.Config {
+    static createOrganizationConnection(org: any, connection: CdsWebApi.Config): CdsWebApi.Config {
         const versionSplit = org.Version.split('.');
         // Clone the current connection and override the endpoint and version.
-        const orgConnection = Utilities.$Object.clone<DynamicsWebApi.Config>(connection);
+        const orgConnection = Utilities.$Object.clone<CdsWebApi.Config>(connection);
 
         if ((<any>orgConnection).accessToken) {
             delete (<any>orgConnection).accessToken;

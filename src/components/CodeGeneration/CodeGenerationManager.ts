@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import * as cs from '../../cs';
 import generateEntities from "../../commands/cs.cds.powerShell.generateEntities";
 import command from '../../core/Command';
-import { DynamicsWebApi } from '../../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../../api/cds-webapi/CdsWebApi';
 
 export default class CodeGenerationManager {
     @command(cs.cds.controls.explorer.generateEntityCodeToFile, "Generate entity code to a file")
@@ -17,7 +17,7 @@ export default class CodeGenerationManager {
     }
 
     @command(cs.cds.powerShell.generateEntities, "Generate entity code using CrmSvcUtil")
-    static async generateEntities(config?: DynamicsWebApi.Config, folder?: string, outputFileName?: string, namespace?: string) {
+    static async generateEntities(config?: CdsWebApi.Config, folder?: string, outputFileName?: string, namespace?: string) {
         generateEntities.apply(this, [config, folder, outputFileName, namespace]);
     }
 }

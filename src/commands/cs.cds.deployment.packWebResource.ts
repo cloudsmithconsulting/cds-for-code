@@ -1,6 +1,6 @@
 import * as cs from "../cs";
 import * as vscode from 'vscode';
-import { DynamicsWebApi } from "../api/cds-webapi/DynamicsWebApi";
+import { CdsWebApi } from "../api/cds-webapi/CdsWebApi";
 import { CdsSolutions } from "../api/CdsSolutions";
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
@@ -14,7 +14,7 @@ import logger from "../core/Logger";
  * @param {vscode.Uri} [defaultUri] that invoked the command
  * @returns void
  */
-export default async function run(config?:DynamicsWebApi.Config, solution?:any, webResource?:any, fileUri?:vscode.Uri, inform:boolean = true) {
+export default async function run(config?:CdsWebApi.Config, solution?:any, webResource?:any, fileUri?:vscode.Uri, inform:boolean = true) {
     fileUri = fileUri || vscode.Uri.file(await Quickly.pickWorkspaceFile(undefined, "Choose the web resource file to deploy", undefined, true, EnumParser.getNames(CdsSolutions.WebResourceFileType)));
     if (!fileUri) { 
         logger.warn("File not chosen, command cancelled");

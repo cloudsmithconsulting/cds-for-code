@@ -12,7 +12,7 @@ import { extensionActivate } from "../../core/ExtensionEvent";
 import removeSolutionMapping from "../../commands/cs.cds.deployment.removeSolutionMapping";
 import updateSolutionMapping from "../../commands/cs.cds.deployment.updateSolutionMapping";
 import command from "../../core/Command";
-import { DynamicsWebApi } from "../../api/cds-webapi/DynamicsWebApi";
+import { CdsWebApi } from "../../api/cds-webapi/CdsWebApi";
 
 export default class SolutionMap {
     constructor (map?:SolutionMap) {
@@ -42,7 +42,7 @@ export default class SolutionMap {
     }
 
     @command(cs.cds.deployment.updateSolutionMapping, "Update solution mapping for local workspace")
-    static async updateSolutionMapping(item?: SolutionWorkspaceMapping, config?: DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> {
+    static async updateSolutionMapping(item?: SolutionWorkspaceMapping, config?: CdsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> {
         return updateSolutionMapping.apply(SolutionMap, [item]);
     }
 

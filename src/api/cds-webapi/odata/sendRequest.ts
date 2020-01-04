@@ -6,7 +6,7 @@ import xhrRequest from "../../../core/http/xhrRequest";
 import nodeJsRequest from "../../../core/http/nodeJsRequest";
 import odataResponseNodeJs from "./odataResponse.nodejs";
 import odataResponseXhr from "./odataResponse.xhr";
-import { DynamicsWebApi } from "../DynamicsWebApi";
+import { CdsWebApi } from "../CdsWebApi";
 import { Credential, OAuthCredential } from '../../../core/security/Types';
 import Quickly from '../../../core/Quickly';
 import { isatty } from 'tty';
@@ -130,12 +130,12 @@ let responseParseParams = [];
  * @param {boolean} [isBatch] - Indicates whether the request is a Batch request or not. Default: false
  * @param {boolean} [isAsync] - Indicates whether the request should be made synchronously or asynchronously.
  * @param {boolean} [isDiscovery] - Indicates whether the request should be a discovery request.
- * @param {(config: DynamicsWebApi.Config) => boolean} [authRetry] - Indicates what function should be invoked if the request fails due to authentication errors.
+ * @param {(config: CdsWebApi.Config) => boolean} [authRetry] - Indicates what function should be invoked if the request fails due to authentication errors.
  */
 export function sendRequest(
     method: string, 
     path: string, 
-    config: DynamicsWebApi.Config,
+    config: CdsWebApi.Config,
     data: any, 
     additionalHeaders: { [key: string]: string }, 
     responseParams: any, 
@@ -144,7 +144,7 @@ export function sendRequest(
     isBatch: boolean, 
     isAsync: boolean, 
     isDiscovery?: boolean, 
-    authRetry?: (config: DynamicsWebApi.Config) => boolean): DynamicsWebApi.Config 
+    authRetry?: (config: CdsWebApi.Config) => boolean): CdsWebApi.Config 
     {
     additionalHeaders = additionalHeaders || {};
     responseParams = responseParams || {};
@@ -261,7 +261,7 @@ export function sendRequest(
         executeRequest({
             credentials: config.credentials,
             method,
-            timeout: config.timeout || DynamicsWebApi.WebApiClient.defaultTimeout,
+            timeout: config.timeout || CdsWebApi.WebApiClient.defaultTimeout,
             connectionId: config.id,
             uri: (isDiscovery ? config.discoveryUrl : config.webApiUrl) + path,
             data: stringifiedData,
@@ -278,15 +278,15 @@ export function sendRequest(
     //call a token refresh callback only if it is set and there is no "Authorization" header set yet
     if (config.credentials && Credential.requireToken(config.credentials) && typeof config.onTokenRefresh !== 'undefined' && (!additionalHeaders || (additionalHeaders && !additionalHeaders['Authorization']))) {
         // Attempt authentication this way.
-        if (((config.id && config.credentials && config.credentials.isSecure) || config.credentials) && config.type !== DynamicsWebApi.ConfigType.OnPremises) {
+        if (((config.id && config.credentials && config.credentials.isSecure) || config.credentials) && config.type !== CdsWebApi.ConfigType.OnPremises) {
             if ((<OAuthCredential>config.credentials).accessToken) {
                 sendInternalRequest((<OAuthCredential>config.credentials).accessToken);
             } else {
                 Authentication(
                     config.id, 
                     config.credentials, 
-                    isDiscovery && config.type === DynamicsWebApi.ConfigType.Online ? `https://disco.${Utility.crmHostSuffix(config.webApiUrl)}/` : (<any>config.credentials).resource, 
-                    { timeout: config.timeout || DynamicsWebApi.WebApiClient.defaultTimeout })
+                    isDiscovery && config.type === CdsWebApi.ConfigType.Online ? `https://disco.${Utility.crmHostSuffix(config.webApiUrl)}/` : (<any>config.credentials).resource, 
+                    { timeout: config.timeout || CdsWebApi.WebApiClient.defaultTimeout })
                     .then(auth => {
                         if (!auth.success) {
                             config.onTokenRefresh(sendInternalRequest);
@@ -313,7 +313,7 @@ export function sendRequest(
     }
 }
 
-function _getEntityNames(entityName: string, config: DynamicsWebApi.Config, successCallback?:(value?:any) => any, errorCallback?:(reason?:any) => any) {
+function _getEntityNames(entityName: string, config: CdsWebApi.Config, successCallback?:(value?:any) => any, errorCallback?:(reason?:any) => any) {
     const xrmUtility = Utility.getXrmUtility();
 
     //try using Xrm.Utility.getEntityMetadata first (because D365 caches metadata)
@@ -372,7 +372,7 @@ function _isEntityNameException(entityName: string) {
     return exceptions.indexOf(entityName) > -1;
 }
 
-function _getCollectionName(entityName: string, config: DynamicsWebApi.Config, resolve?:(value?:any) => any, reject?:(reason?:any) => any) {
+function _getCollectionName(entityName: string, config: CdsWebApi.Config, resolve?:(value?:any) => any, reject?:(reason?:any) => any) {
     if (_isEntityNameException(entityName) || Utility.isNull(entityName)) {
         resolve(entityName);
         return;
@@ -400,7 +400,7 @@ function _getCollectionName(entityName: string, config: DynamicsWebApi.Config, r
     }
 }
 
-export function makeDiscoveryRequest(request:any, config:DynamicsWebApi.Config, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {
+export function makeDiscoveryRequest(request:any, config:CdsWebApi.Config, resolve?:(value?:any) => any, reject?:(reason?:any) => any): void {
     request.collection = request.collection || "Instances";
 
     const result = RequestConverter.convertRequest(request, 'discover', config);

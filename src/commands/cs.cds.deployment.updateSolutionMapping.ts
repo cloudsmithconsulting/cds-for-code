@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as FileSystem from '../core/io/FileSystem';
 import * as path from 'path';
-import { DynamicsWebApi } from "../api/cds-webapi/DynamicsWebApi";
+import { CdsWebApi } from "../api/cds-webapi/CdsWebApi";
 import { Utilities } from "../core/Utilities";
 import Quickly from "../core/Quickly";
 import SolutionWorkspaceMapping from '../components/Solutions/SolutionWorkspaceMapping';
@@ -15,7 +15,7 @@ import logger from "../core/Logger";
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(item?: SolutionWorkspaceMapping, config?: DynamicsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> {
+export default async function run(item?: SolutionWorkspaceMapping, config?: CdsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> {
 	let solutionId;
 	let organizationId;
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;

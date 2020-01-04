@@ -1,5 +1,5 @@
-﻿import { DynamicsWebApi } from '../DynamicsWebApi';
-import { DWA } from '../DWA';
+﻿import { CdsWebApi } from '../CdsWebApi';
+import { CWA } from '../CWA';
 import * as Parameters from '../../../core/helpers/Parameters';
 
 /**
@@ -9,7 +9,7 @@ import * as Parameters from '../../../core/helpers/Parameters';
  * @param {Object} config DynamicsWebApi config
  * @returns {string}
  */
-export default function buildPreferHeader(request:any, functionName:string, config:DynamicsWebApi.Config) {
+export default function buildPreferHeader(request:any, functionName:string, config:CdsWebApi.Config) {
     var returnRepresentation = request.returnRepresentation;
     var includeAnnotations = request.includeAnnotations;
     var maxPageSize = request.maxPageSize;
@@ -25,7 +25,7 @@ export default function buildPreferHeader(request:any, functionName:string, conf
         }
         for (var i in prefer) {
             var item = prefer[i].trim();
-            if (item === DWA.Prefer.ReturnRepresentation) {
+            if (item === CWA.Prefer.ReturnRepresentation) {
                 returnRepresentation = true;
             }
             else if (item.indexOf("odata.include-annotations=") > -1) {
@@ -52,7 +52,7 @@ export default function buildPreferHeader(request:any, functionName:string, conf
 
     if (returnRepresentation) {
         Parameters.boolParameterCheck(returnRepresentation, "DynamicsWebApi." + functionName, "request.returnRepresentation");
-        prefer.push(DWA.Prefer.ReturnRepresentation);
+        prefer.push(CWA.Prefer.ReturnRepresentation);
     }
 
     if (includeAnnotations) {

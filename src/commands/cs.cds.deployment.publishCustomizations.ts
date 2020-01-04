@@ -1,4 +1,4 @@
-import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import { CdsSolutions } from '../api/CdsSolutions';
 import ApiRepository from '../repositories/apiRepository';
 import Quickly from '../core/Quickly';
@@ -12,7 +12,7 @@ import logger from '../core/Logger';
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(config?: DynamicsWebApi.Config, components?: {type: CdsSolutions.SolutionComponent, id: string}[]) {
+export default async function run(config?: CdsWebApi.Config, components?: {type: CdsSolutions.SolutionComponent, id: string}[]) {
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
     if (!config) { 
         logger.warn("Organization not chosen, command cancelled");

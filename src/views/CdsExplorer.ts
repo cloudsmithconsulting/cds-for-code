@@ -8,7 +8,7 @@ import * as cs from '../cs';
 import IContributor from '../core/CommandBuilder';
 import CdsUrlResolver from '../api/CdsUrlResolver';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
-import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import { ExtensionIconThemes } from "../components/WebDownloaders/Types";
 import Quickly from '../core/Quickly';
 import SolutionMap from '../components/Solutions/SolutionMap';
@@ -16,18 +16,17 @@ import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceM
 import { CdsSolutions } from '../api/CdsSolutions';
 import logger from '../core/Logger';
 
-export default class DynamicsTreeView implements IContributor {
-    static Instance:DynamicsServerTreeProvider;
+export default class CdsExplorerView implements IContributor {
+    static Instance: CdsExplorerTreeProvider;
 
     async contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
-        const isNew = !DynamicsTreeView.Instance;        
-        const treeProvider = isNew ? new DynamicsServerTreeProvider(context) : DynamicsTreeView.Instance;
+        const isNew = !CdsExplorerView.Instance;        
+        const treeProvider = isNew ? new CdsExplorerTreeProvider(context) : CdsExplorerView.Instance;
 
         if (isNew) {
-            TreeEntryCache.Context = context;
             TreeEntryCache.Instance.SolutionMap = await SolutionMap.loadFromWorkspace(undefined, false);
     
-            DynamicsTreeView.Instance = treeProvider;
+            CdsExplorerView.Instance = treeProvider;
             vscode.window.registerTreeDataProvider(cs.cds.viewContainers.cdsExplorer, treeProvider);        
         }
         
@@ -36,7 +35,7 @@ export default class DynamicsTreeView implements IContributor {
             vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.refreshEntry, (item?: TreeEntry) => {
                 treeProvider.refresh(item);
             })
-            , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.addConnection, (config: DynamicsWebApi.Config) => {
+            , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.addConnection, (config: CdsWebApi.Config) => {
                 treeProvider.addConnection(config);
             })
             , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.clickEntry, (item?: TreeEntry) => { // Match name of command to package.json command
@@ -349,10 +348,10 @@ export default class DynamicsTreeView implements IContributor {
     }
 }
 
-class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
+class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 	private _onDidChangeTreeData: vscode.EventEmitter<TreeEntry | undefined> = new vscode.EventEmitter<TreeEntry | undefined>();
     readonly onDidChangeTreeData: vscode.Event<TreeEntry | undefined> = this._onDidChangeTreeData.event;
-    private _connections: DynamicsWebApi.Config[] = [];
+    private _connections: CdsWebApi.Config[] = [];
     private _context: vscode.ExtensionContext;
 
 	constructor(context: vscode.ExtensionContext) {
@@ -436,7 +435,7 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         return Promise.resolve(this.getConnectionEntries());
     }
 
-    addConnection(...options: DynamicsWebApi.Config[]): void {
+    addConnection(...options: CdsWebApi.Config[]): void {
         const connections = this._connections || [];
 
         if (options && options.length > 0) {
@@ -461,11 +460,11 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         this.refresh();
     }
 
-    getConnections():DynamicsWebApi.Config[] {
+    getConnections(): CdsWebApi.Config[] {
         return this._connections;
     }
 
-    removeConnection(connection: DynamicsWebApi.Config): void { 
+    removeConnection(connection: CdsWebApi.Config): void { 
         const removeIndex = this._connections.findIndex(c => c.webApiUrl === connection.webApiUrl);
         
         if (removeIndex >= 0) {
@@ -475,14 +474,14 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         }
     }
 
-    async removePluginStep(config: DynamicsWebApi.Config, step: any) {
+    async removePluginStep(config: CdsWebApi.Config, step: any) {
         if (step && step.sdkmessageprocessingstepid) {
             const api = new ApiRepository(config);
             await api.removePluginStep(step);
         }
     }
 
-    async removePluginStepImage (config: DynamicsWebApi.Config, stepImage: any) {
+    async removePluginStepImage (config: CdsWebApi.Config, stepImage: any) {
         if (stepImage && stepImage.sdkmessageprocessingstepimageid) {
             const api = new ApiRepository(config);
             await api.removePluginStepImage(stepImage);
@@ -534,9 +533,9 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         
         let filter;
 
-        if (connection.type === DynamicsWebApi.ConfigType.Online && connection.appUrl) {
+        if (connection.type === CdsWebApi.ConfigType.Online && connection.appUrl) {
             filter = `Url eq '${Utilities.String.noTrailingSlash(connection.appUrl)}'`;
-        } else if (connection.type === DynamicsWebApi.ConfigType.Online && connection.webApiUrl) {
+        } else if (connection.type === CdsWebApi.ConfigType.Online && connection.webApiUrl) {
             filter = `ApiUrl eq '${Utilities.String.noTrailingSlash(connection.webApiUrl)}'`;
         }
 
@@ -1261,7 +1260,6 @@ class DynamicsServerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
 class TreeEntryCache {
     private static _instance:TreeEntryCache;
-    private static _context:vscode.ExtensionContext;
 
     private _items:TreeEntry[] = [];
 
@@ -1281,10 +1279,6 @@ class TreeEntryCache {
         return this._instance;
     }
 
-    static set Context(value:vscode.ExtensionContext) {
-        TreeEntryCache._context = value;
-    }
-    
     AddEntry(entry:TreeEntry): void {
         this._items.push(entry);
     }
@@ -1328,7 +1322,7 @@ class TreeEntry extends vscode.TreeItem {
         public collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly subtext?: string,
         public readonly command?: vscode.Command,
-        public readonly config?: DynamicsWebApi.Config,
+        public readonly config?: CdsWebApi.Config,
         public readonly context?: any
 	) {
         super(label, collapsibleState);

@@ -1,4 +1,4 @@
-import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import { CdsSolutions } from '../api/CdsSolutions';
 import { TS } from 'typescript-linq/TS';
 
@@ -29,7 +29,7 @@ export default class ApiHelper {
         }
     }
 
-    static async getSolutionComponents(api: DynamicsWebApi.WebApiClient, solutionId?:string, componentType?:CdsSolutions.SolutionComponent | CdsSolutions.SolutionComponent[]): Promise<any[]> {
+    static async getSolutionComponents(api: CdsWebApi.WebApiClient, solutionId?:string, componentType?:CdsSolutions.SolutionComponent | CdsSolutions.SolutionComponent[]): Promise<any[]> {
         return this.getSolutionComponentsRaw(api, solutionId, componentType)
             .then(solution => {
                  if (solution && solution.solution_solutioncomponent && solution.solution_solutioncomponent.length > 0) {
@@ -40,7 +40,7 @@ export default class ApiHelper {
             });
     }
 
-    static async filterSolutionComponents(api: DynamicsWebApi.WebApiClient, response:any, solutionId?:string, componentType?:CdsSolutions.SolutionComponent | CdsSolutions.SolutionComponent[], keySelector?:(item:unknown) => any): Promise<TS.Linq.Enumerator<any>> {
+    static async filterSolutionComponents(api: CdsWebApi.WebApiClient, response:any, solutionId?:string, componentType?:CdsSolutions.SolutionComponent | CdsSolutions.SolutionComponent[], keySelector?:(item:unknown) => any): Promise<TS.Linq.Enumerator<any>> {
         if (solutionId && componentType && keySelector) {
             return this.getSolutionComponentsRaw(api, solutionId, componentType).then(solution => {
                 if (!solution || !solution.solution_solutioncomponent || solution.solution_solutioncomponent.length === 0) {
@@ -66,7 +66,7 @@ export default class ApiHelper {
         }          
     }    
 
-    private static async getSolutionComponentsRaw(api: DynamicsWebApi.WebApiClient, solutionId?:string, componentType?:CdsSolutions.SolutionComponent | CdsSolutions.SolutionComponent[]): Promise<any> {
+    private static async getSolutionComponentsRaw(api: CdsWebApi.WebApiClient, solutionId?:string, componentType?:CdsSolutions.SolutionComponent | CdsSolutions.SolutionComponent[]): Promise<any> {
         const getSolutionComponentFilter = () => {
             if (!(componentType instanceof Array)) {
                 return `componenttype eq ${CdsSolutions.CodeMappings.getSolutionComponentCode(<CdsSolutions.SolutionComponent>componentType)}`;
@@ -80,7 +80,7 @@ export default class ApiHelper {
             }
         };
 
-        let solutionQuery:DynamicsWebApi.RetrieveRequest = {
+        let solutionQuery:CdsWebApi.RetrieveRequest = {
             collection: "solutions",
             id: solutionId,
             select: [ "solutionid", "uniquename" ],

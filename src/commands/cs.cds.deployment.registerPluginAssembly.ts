@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
 import * as FileSystem from '../core/io/FileSystem';
-import { DynamicsWebApi } from '../api/cds-webapi/DynamicsWebApi';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import { CdsSolutions } from '../api/CdsSolutions';
 import ApiRepository from '../repositories/apiRepository';
 import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
@@ -13,7 +13,7 @@ import Quickly, { QuickPickOption } from '../core/Quickly';
 import ExtensionContext from '../core/ExtensionContext';
 import logger from '../core/Logger';
 
-export default async function run(config?: DynamicsWebApi.Config, pluginAssembly?: any, file?: vscode.Uri, solution?: any): Promise<any> {
+export default async function run(config?: CdsWebApi.Config, pluginAssembly?: any, file?: vscode.Uri, solution?: any): Promise<any> {
     const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
     let defaultFolder = workspaceFolder ? workspaceFolder.uri : undefined;
 
