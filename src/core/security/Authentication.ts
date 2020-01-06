@@ -3,11 +3,14 @@ import * as adal from "adal-node";
 import * as crypto from 'crypto';
 import * as opn from 'opn';
 import * as ErrorParser from '../ErrorParser';
+import * as cs from '../../cs';
 import { Utilities } from "../Utilities";
 import GlobalStateCredentialStore from "./GlobalStateCredentialStore";
 import Quickly from "../Quickly";
 import * as express from 'express';
 import { Server } from "http";
+import logger from "../Logger";
+import Telemetry from "../Telemetry";
 
 export type AuthenticationResult = {
     success: boolean,
@@ -125,6 +128,8 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                 const exception = ErrorParser.parseAdalError(error);
 
                 if (exception.type === 'interaction_required') {
+                    logger.log(`Auth: Multi-factor authentication (MFA) required, starting browser request`);
+
                     Quickly.inform("Your credentials use multi-factor authentication.  You will need to authenticate interactively.");
 
                     if (decrypted.onInteractiveLogin) {
@@ -184,6 +189,8 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                             res.send('error: state does not match');
                         }
 
+                        logger.log(`Auth: Multi-factor authentication (MFA) completed and authorization code received`);
+
                         context.acquireTokenWithAuthorizationCode(req.query.code, redirectUri, resource, clientId, null, (err, response) => {
                             if (err) {
                                 const innerException = ErrorParser.parseAdalError(err);
@@ -198,7 +205,9 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                             }
                             else {
                                 const result: AuthenticationResult = { success: true, response };
-                                
+
+                                logger.log(`Auth: Auth code converted to token successfully`);
+
                                 if (credential.onAuthenticate) {
                                     credential.onAuthenticate(result);
                                 } else {
@@ -231,11 +240,23 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                     });
                 }
                 else {
+                    Telemetry.Instance.error(exception);
+                    Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.loginFailure, { 
+                        authority, 
+                        tenant, 
+                        clientId, 
+                        resource, 
+                        username: decrypted.username.toString(), 
+                        errorMessage: exception.message, 
+                        errorType: exception.type, 
+                        errorStatus: exception.httpStatus.toString() });
                     reject(exception);
                 }
             }
             else {
                 const result: AuthenticationResult = { success: true, response };
+
+                logger.log(`Auth: Authentication successful`);
 
                 if (credential.onAuthenticate) {
                     credential.onAuthenticate(result);
@@ -259,9 +280,12 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
         let refreshToken = decrypted.refreshToken ? decrypted.refreshToken.toString() : undefined;
         
         if (refreshToken) {
+            logger.log(`Auth: Refresh token found, invoking call to acquire auth token`);
             // If this errors, re-attempt this with username/password, as our refresh token has expired.
             context.acquireTokenWithRefreshToken(refreshToken, clientId, resource, callback);
         } else {
+            logger.log(`Auth: No refresh token found, invoking authentication with username/password`);
+
             context.acquireTokenWithUsernamePassword(resource, decrypted.username.toString(), decrypted.password.toString(), clientId, callback);
         }
     });
