@@ -1,6 +1,8 @@
-import * as vscode from 'vscode';
+import * as cs from '../cs';
 import Logger, { ExtensionLogger } from './Logger';
 import ExtensionContext from './ExtensionContext';
+import Telemetry from './Telemetry';
+import { Utilities } from './Utilities';
 
 export interface ICommandWrapper<T> {
     readonly id: string;
@@ -27,8 +29,11 @@ export abstract class CommandWrapper<T> implements ICommandWrapper<T> {
         public readonly id: string, 
         public readonly description: string, 
         public readonly options: ICommandInvocationOptions = new DefaultCommandInvocationOptions())
-    { }
+    { 
+        this.invocationId = Utilities.Guid.newGuid();
+    }
 
+    readonly invocationId: string;
     abstract onCommandInvoked(...args: any[]): void; 
     abstract onCommandError(error: Error): void;
     abstract onCommandCompleted(result: T): T;
@@ -36,17 +41,25 @@ export abstract class CommandWrapper<T> implements ICommandWrapper<T> {
 
 export class DefaultCommandWrapper<T> extends CommandWrapper<T>{
     onCommandInvoked(...args: any[]): void {    
-        var argString = args.map(a => { try { return JSON.stringify(a); } catch (error) { return a.toString(); } }).join();
-
+        var argString = args.map(a => { try { return JSON.stringify(a); } catch (error) { return a.toString(); } }).join();        
         this.options.logger.info(`Command: ${this.id} (${this.description}) invoked with: ${argString}`);
+
+        var telemetryProps = { commandId: this.id, invocationId: this.invocationId, arguments: argString };
+        Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.commandInvoked, telemetryProps);
     }
 
     onCommandError(error: Error): void {
         this.options.logger.error(`Command: ${this.id} error occurred: ${error.message}`);
+
+        var telemetryProps = { commandId: this.id, invocationId: this.invocationId };
+        Telemetry.Instance.error(error, telemetryProps);
     }
 
     onCommandCompleted(result: T): T {
         this.options.logger.info(`Command: ${this.id} invocation complete`);
+
+        var telemetryProps = { commandId: this.id, invocationId: this.invocationId };
+        Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.commandCompleted, telemetryProps);
 
         return result;
     }
