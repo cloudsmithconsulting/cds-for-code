@@ -3,12 +3,14 @@ import * as adal from "adal-node";
 import * as crypto from 'crypto';
 import * as opn from 'opn';
 import * as ErrorParser from '../ErrorParser';
+import * as cs from '../../cs';
 import { Utilities } from "../Utilities";
 import GlobalStateCredentialStore from "./GlobalStateCredentialStore";
 import Quickly from "../Quickly";
 import * as express from 'express';
 import { Server } from "http";
 import logger from "../Logger";
+import Telemetry from "../Telemetry";
 
 export type AuthenticationResult = {
     success: boolean,
@@ -238,6 +240,16 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                     });
                 }
                 else {
+                    Telemetry.Instance.error(exception);
+                    Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.loginFailure, { 
+                        authority, 
+                        tenant, 
+                        clientId, 
+                        resource, 
+                        username: decrypted.username.toString(), 
+                        errorMessage: exception.message, 
+                        errorType: exception.type, 
+                        errorStatus: exception.httpStatus.toString() });
                     reject(exception);
                 }
             }

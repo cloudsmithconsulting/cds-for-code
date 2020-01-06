@@ -2,25 +2,33 @@ import * as vscode from 'vscode';
 import * as cs from '../cs';
 import TelemetryReporter from "vscode-extension-telemetry";
 import { extensionActivate, extensionDeactivate } from "./ExtensionEvent";
+import moment = require('moment');
 
 export function telemetry(event: string, properties?: { [key: string]: string; }, measurements?: { [key: string]: number; }) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
 
-        //properties = properties || {};
-        //measurements = measurements || {};
+        properties = properties || {};
+        measurements = measurements || {};
           
         descriptor.value = async function (...args: any[]) {
             let result;
 
+            let startTime = moment.now();
+            let endTime;
+
             try {
                 result = await originalMethod.apply(target, args);
+                endTime = moment.now();
             } catch (error) {
+                endTime = moment.now();
+                measurements["callDuration"] = endTime - startTime;
                 Telemetry.Instance.error(error, properties, measurements);
 
                 throw error;
             }
 
+            measurements["callDuration"] = endTime - startTime;
             Telemetry.Instance.sendTelemetry(event, properties, measurements);
 
             return result;

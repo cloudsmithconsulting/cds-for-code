@@ -3,6 +3,7 @@ import Logger, { ExtensionLogger } from './Logger';
 import ExtensionContext from './ExtensionContext';
 import Telemetry from './Telemetry';
 import { Utilities } from './Utilities';
+import moment = require('moment');
 
 export interface ICommandWrapper<T> {
     readonly id: string;
@@ -34,6 +35,9 @@ export abstract class CommandWrapper<T> implements ICommandWrapper<T> {
     }
 
     readonly invocationId: string;
+    startTime: number;
+    endTime: number;
+
     abstract onCommandInvoked(...args: any[]): void; 
     abstract onCommandError(error: Error): void;
     abstract onCommandCompleted(result: T): T;
@@ -46,20 +50,27 @@ export class DefaultCommandWrapper<T> extends CommandWrapper<T>{
 
         var telemetryProps = { commandId: this.id, invocationId: this.invocationId, arguments: argString };
         Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.commandInvoked, telemetryProps);
+        this.startTime = moment.now();
     }
 
     onCommandError(error: Error): void {
+        this.endTime = moment.now();
         this.options.logger.error(`Command: ${this.id} error occurred: ${error.message}`);
 
-        var telemetryProps = { commandId: this.id, invocationId: this.invocationId };
-        Telemetry.Instance.error(error, telemetryProps);
+        const telemetryProps = { commandId: this.id, invocationId: this.invocationId };
+        const telemetryMeasures = { callDuration: this.endTime - this.startTime };
+
+        Telemetry.Instance.error(error, telemetryProps, telemetryMeasures);
     }
 
     onCommandCompleted(result: T): T {
+        this.endTime = moment.now();
         this.options.logger.info(`Command: ${this.id} invocation complete`);
 
-        var telemetryProps = { commandId: this.id, invocationId: this.invocationId };
-        Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.commandCompleted, telemetryProps);
+        const telemetryProps = { commandId: this.id, invocationId: this.invocationId };
+        const telemetryMeasures = { callDuration: this.endTime - this.startTime };
+
+        Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.commandCompleted, telemetryProps, telemetryMeasures);
 
         return result;
     }

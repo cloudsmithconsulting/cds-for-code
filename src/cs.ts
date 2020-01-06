@@ -51,6 +51,7 @@ export namespace cds {
         static readonly _namespace: string = "cs.cds.telemetryEvents";
         static readonly commandInvoked: string = `${telemetryEvents._namespace}.commandInvoked`;
         static readonly commandCompleted: string = `${telemetryEvents._namespace}.commandCompleted`;
+        static readonly loginFailure: string = `${telemetryEvents._namespace}.loginFailure`;
         static readonly extensionActivated: string = `${telemetryEvents._namespace}.extensionActivated`;
         static readonly extensionDeactivated: string = `${telemetryEvents._namespace}.extensionDeactivated`;
     }
