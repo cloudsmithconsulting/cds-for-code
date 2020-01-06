@@ -59,7 +59,7 @@
     &.btn-flat { color: $button-flat-color; }
 
     &.btn:hover,
-    &.btn-large:hover { background-color: lighten($button-raised-background, 5%); }
+    &.btn-large:hover { background-color: $button-raised-background; }
     &.btn-floating:hover { background-color: $button-raised-background; }
 
     & > i,
