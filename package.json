@@ -897,7 +897,7 @@
 	},
 	"sass": "resources/framework/materialize.vscode.scss",
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
+		"vscode:prepublish": "grunt travis && npm run compile",
 		"vscode:package": "vsce package --baseContentUrl none --baseImagesUrl none",
 		"monitor": "grunt monitor",
 		"compile": "tsc -p ./",
@@ -963,7 +963,7 @@
 		"sass-lint": "^1.13.1",
 		"tslint": "^5.12.1",
 		"typescript": "^3.3.1",
-		"vsce": "^1.69.0",
+		"vsce": "^1.71.0",
 		"vscode-test": "^1.2.0"
 	},
 	"dependencies": {
