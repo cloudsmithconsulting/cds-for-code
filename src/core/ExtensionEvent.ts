@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
+import * as cs from '../cs';
 import Logger, { ExtensionLogger } from './Logger';
 import ExtensionContext from './ExtensionContext';
+import Telemetry from './Telemetry';
 
 export interface IExtensionEventWrapper {
     readonly id: string;
@@ -25,6 +27,7 @@ export class ExtensionEventWrapper implements IExtensionEventWrapper {
             ExtensionEventWrapper._hasActivated = true;
 
             this.options.logger.info(`Extension: ${this.id} (${this.description}) activated`);
+            Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.extensionActivated);
         }
     }
     
@@ -33,6 +36,7 @@ export class ExtensionEventWrapper implements IExtensionEventWrapper {
             ExtensionEventWrapper._hasDeactivated = true;
 
             this.options.logger.info(`Extension: ${this.id} (${this.description}) de-activated`);
+            Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.extensionDeactivated);
         }
     }
 

@@ -3,9 +3,11 @@ import * as https from 'https';
 import * as httpntlm from "httpntlm";
 import * as url from 'url';
 import * as Security from '../security/Types';
+import * as cs from '../../cs';
 import defaultResponseHandler from "./defaultResponseHandler.nodejs";
 import GlobalStateCredentialStore from '../security/GlobalStateCredentialStore';
 import logger from '../Logger';
+import Telemetry from '../Telemetry';
 
 export type ResponseHandler = (request: any, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) => void;
 
@@ -97,6 +99,15 @@ export default function nodeJsRequest(options: any) {
                     responseParams.length = 0;
                     errorCallback(error);
                 } else {
+                    if (response.statusCode === 401) {
+                        Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.loginFailure, { 
+                            resource: parsedUrl.href, 
+                            username: decrypted.username.toString(), 
+                            errorMessage: response.body, 
+                            errorType: 'authentication_failure', 
+                            errorStatus: '401' });
+                    }
+
                     if (responseDelegate) {
                         responseDelegate(parsedUrl.href, response.body, response, responseParams, successCallback, errorCallback);
                     }
