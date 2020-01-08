@@ -16,16 +16,16 @@ export function asQuerystring(source:any):string {
     return global.Object.keys(source).map(key => key + '=' + encodeURIComponent(source[key])).join('&');
 }
 
-export function clone<T extends Object>(source: T, target?: any): T {
+export function clone<T extends Object>(source: T, target?: any, excludeProperties?: string[]): T {
     if (!target) { 
         target = {};
     }
 
     for (let prop in source) {
-        if (source.hasOwnProperty(prop)) {
+        if (source.hasOwnProperty(prop) && (!excludeProperties || excludeProperties.indexOf(prop) === -1)) {
             // we deep clone here
             if (isObject(source[prop])) {
-                target[prop] = clone(source[prop]);
+                target[prop] = clone(source[prop], undefined, excludeProperties);
             } else {
                 target[prop] = source[prop];
             }

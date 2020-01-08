@@ -1,7 +1,6 @@
 import * as Security from "./Types";
 import * as adal from "adal-node";
 import * as crypto from 'crypto';
-import * as opn from 'opn';
 import * as ErrorParser from '../ErrorParser';
 import * as cs from '../../cs';
 import { Utilities } from "../Utilities";
@@ -236,7 +235,7 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                     });
 
                     server = app.listen(port, function () {
-                        opn(`http://localhost:${port}/auth`);
+                        Utilities.Browser.openWindow(`http://localhost:${port}/auth`);
                     });
                 }
                 else {

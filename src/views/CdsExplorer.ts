@@ -15,336 +15,244 @@ import SolutionMap from '../components/Solutions/SolutionMap';
 import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
 import { CdsSolutions } from '../api/CdsSolutions';
 import logger from '../core/Logger';
+import command from '../core/Command';
+import { extensionActivate } from '../core/ExtensionEvent';
+import Dictionary from '../core/types/Dictionary';
+import ExtensionContext from '../core/ExtensionContext';
 
-export default class CdsExplorerView implements IContributor {
-    static Instance: CdsExplorerTreeProvider;
+export default class CdsExplorerView {
+    private static treeProvider: CdsExplorerTreeProvider;
 
-    async contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
-        const isNew = !CdsExplorerView.Instance;        
-        const treeProvider = isNew ? new CdsExplorerTreeProvider(context) : CdsExplorerView.Instance;
+    @command(cs.cds.controls.cdsExplorer.refreshEntry, "Refresh")
+    static async refreshEntry(item?: TreeEntry) {
+        return await CdsExplorerView.treeProvider.refresh(item);
+    }
+
+    @command(cs.cds.controls.cdsExplorer.addConnection, "Add Connection")
+    static async addConnection(config?: CdsWebApi.Config) {
+        return await CdsExplorerView.treeProvider.addConnection(config);
+    }
+
+    @command(cs.cds.controls.cdsExplorer.clickEntry, "Click")
+    static async clickEntry(item?: TreeEntry) {
+        if (item.collapsibleState === vscode.TreeItemCollapsibleState.Collapsed) {
+            item.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
+            return await this.refreshEntry(item);
+        }            
+    }
+
+    private static async runCommand(definitions: Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>, item?: TreeEntry) {
+        if (definitions.containsKey(item.itemType)) {
+            return await definitions[item.itemType](item);
+        }
+    }
+
+    private static deleteCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
+        { key: "Connection", value: async (item) => CdsExplorerView.treeProvider.removeConnection(item.config) },
+        { key: "PluginStep", value: async (item) => CdsExplorerView.treeProvider.removePluginStep(item.config, item.context).then(() => CdsExplorerView.treeProvider.refresh(item.parent)) },
+        { key: "PluginStepImage", value: async (item) => CdsExplorerView.treeProvider.removePluginStepImage(item.config, item.context).then(() => CdsExplorerView.treeProvider.refresh(item.parent)) }
+    ]);
+
+    @command(cs.cds.controls.cdsExplorer.deleteEntry, "Delete")
+    static async deleteEntry(item?: TreeEntry) {
+        return this.runCommand(this.deleteCommands, item);
+    }
+
+    @command(cs.cds.controls.cdsExplorer.inspectEntry, "Inspect")
+    static async inspectEntry(item?: TreeEntry) {
+        return await vscode.commands.executeCommand(cs.cds.controls.jsonInspector.open, item.context);
+    }
+
+    @command(cs.cds.controls.cdsExplorer.moveSolution, "Move or re-map solution")
+    static async moveSolution(item?: TreeEntry) {
+        return await vscode.commands.executeCommand(cs.cds.deployment.updateSolutionMapping, item.solutionMapping, item.config)
+            .then(result => TreeEntryCache.Instance.ClearMap());
+    }
+
+    private static solutionComponentMappings = new Dictionary<EntryType, { componentId: (item?: TreeEntry) => Promise<void>, componentType: CdsSolutions.SolutionComponent }>([
+        { key: "Plugin", value: { componentId: (item) => item.context.pluginassemblyid, componentType: CdsSolutions.SolutionComponent.PluginAssembly }},
+        { key: "WebResource", value: { componentId: (item) => item.context.webresourceid, componentType: CdsSolutions.SolutionComponent.WebResource }},
+        { key: "Process", value: { componentId: (item) => item.context.workflowid, componentType: CdsSolutions.SolutionComponent.Workflow }},
+        { key: "Entity", value: { componentId: (item) => item.context.MetadataId, componentType: CdsSolutions.SolutionComponent.Entity }},
+        { key: "OptionSet", value: { componentId: (item) => item.context.MetadataId, componentType: CdsSolutions.SolutionComponent.OptionSet }}
+    ]);
+
+    @command(cs.cds.controls.cdsExplorer.addEntryToSolution, "Add to Solution")
+    static async addEntryToSolution(item?: TreeEntry) {
+        if (item.solutionId) {
+            await vscode.window.showInformationMessage(`The component ${item.label} is already a part of a solution.`);
+
+            return;
+        }
+
+        if (this.solutionComponentMappings.containsKey(item.itemType)) {
+            const componentId = this.solutionComponentMappings[item.itemType].componentId(item);
+            const componentType = this.solutionComponentMappings[item.itemType].componentType;
+
+            return await vscode.commands.executeCommand(cs.cds.deployment.addSolutionComponent, item.config, undefined, componentId, componentType)
+                .then(response => {
+                    const solutionPath = item.id.split("/").slice(0, 4);
+                    solutionPath.push("Solutions");
+                    solutionPath.push((<any>response).solutionid);
+
+                    CdsExplorerView.treeProvider.refreshSolution(solutionPath.join("/")); 
+                });
+        }
+    }
+
+    @command(cs.cds.controls.cdsExplorer.removeEntryFromSolution, "Remove from Solution")
+    static async removeEntryFromSolution(item?: TreeEntry) {
+        if (!item.solutionId) {
+            await vscode.window.showInformationMessage(`The component ${item.label} is not part of a solution.`);
+
+            return;
+        }
+
+        if (this.solutionComponentMappings.containsKey(item.itemType)) {
+            const componentId = this.solutionComponentMappings[item.itemType].componentId(item);
+            const componentType = this.solutionComponentMappings[item.itemType].componentType;
+
+            if (!Utilities.$Object.isNullOrEmpty(item.solutionIdPath)) {
+                const solutions = TreeEntryCache.Instance.Items.where(i => i.id === item.solutionIdPath).toArray();
+                
+                if (solutions && solutions.length > 0 && componentId && componentType) {
+                    return await vscode.commands.executeCommand(cs.cds.deployment.removeSolutionComponent, item.config, solutions[0].context, componentId, componentType)
+                        .then(response => CdsExplorerView.treeProvider.refreshSolution(item.solutionIdPath));
+                }
+            }
+        }
+    }
+
+    private static addCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
+        { key: "Solutions", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config)) },
+        { key: "Entities", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, undefined, item.solution)) },
+        { key: "Attributes", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageAttributeUri(item.config, item.context.MetadataId, undefined, item.solutionId)) },
+        { key: "OptionSets", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, undefined, item.solutionId)) },
+        { key: "Processes", value: async (item) => {
+            const processType = await Quickly.pickEnum<CdsSolutions.ProcessType>(CdsSolutions.ProcessType);
+
+            if (processType) {
+                Utilities.Browser.openWindow(CdsUrlResolver.getManageBusinessProcessUri(item.config, processType, item.parent && item.parent.context && item.parent.context.ObjectTypeCode ? item.parent.context.ObjectTypeCode : undefined, item.solutionId));
+            }            
+        }},
+        { key: "Keys", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityKeyUrl(item.config, item.context.MetadataId, undefined, item.solutionId)) },
+        { key: "Relationships", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityRelationshipUrl(item.config, item.context.MetadataId, undefined, item.solutionId)) },
+        { key: "Forms", value: async (item) => {
+            const formType = await Quickly.pickEnum<CdsSolutions.DynamicsForm>(CdsSolutions.DynamicsForm);
+
+            if (formType) {
+                Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityFormUri(item.config, item.context.ObjectTypeCode, formType, undefined, item.solutionId));
+            }
+        }},
+        { key: "Dashboards", value: async (item) => {
+            const layoutType = await Quickly.pickEnum<CdsSolutions.InteractiveDashboardLayout>(CdsSolutions.InteractiveDashboardLayout);
+
+            if (layoutType) {
+                Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityDashboardUri(item.config, item.context.ObjectTypeCode, layoutType, "1030", undefined, item.solutionId));
+            }
+        }},
+        { key: "Views", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityViewUri(item.config, item.context.MetadataId, item.context.ObjectTypeCode, undefined, item.solutionId)) },
+        { key: "Charts", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityChartUrl(item.config, item.context.ObjectTypeCode, undefined, item.solutionId)) },
+        { key: "WebResources", value: async (item) => {
+            const hasWorkspace = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0;
+        
+            if (hasWorkspace) {
+                await vscode.commands.executeCommand(cs.cds.deployment.createWebResource, item.config, item.solutionId, undefined, undefined, item.folder);
+            } else {
+                Utilities.Browser.openWindow(CdsUrlResolver.getManageWebResourceUri(item.config, undefined, item.solutionId));
+            }
+        }},
+        { key: "PluginType", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, item.context._pluginassemblyid_value, item.config, undefined) },
+        { key: "PluginStep", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, undefined, item.config) }
+    ]);
+
+    @command(cs.cds.controls.cdsExplorer.addEntry, "Add")
+    static async addEntry(item?: TreeEntry): Promise<void> {
+        if (!item) {
+            await vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection);
+        } else {
+            return this.runCommand(this.addCommands, item);
+        }
+    }
+
+    private static editCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
+        { key: "Connection", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection, item.config) },
+        { key: "Solution", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config, item.context)) },
+        { key: "Entity", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, item.context, item.solution)) },
+        { key: "Attribute", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId)) },
+        { key: "OptionSet", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, item.context.MetadataId, item.solutionId)) },
+        { key: "Process", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageBusinessProcessUri(item.config, CdsUrlResolver.parseProcessType(item.context.category), item.context.workflowid, item.context.solutionid || undefined)) },
+        { key: "Key", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityKeyUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId)) },
+        { key: "OneToManyRelationship", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityRelationshipUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId)) },
+        { key: "ManyToOneRelationship", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityRelationshipUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId)) },
+        { key: "ManyToManyRelationship", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityRelationshipUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId)) },
+        { key: "Form", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, CdsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId)) },
+        { key: "Dashboard", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityDashboardUri(item.config, undefined, undefined, "1032", item.context.formid, item.solutionId)) },
+        { key: "View", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.parent.context.ObjectTypeCode, item.context.savedqueryid, item.solutionId)) },
+        { key: "Chart", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityChartUrl(item.config, item.parent.context.ObjectTypeCode, item.context.savedqueryvisualizationid, item.solutionId)) },
+        { key: "WebResource", value: async (item) => {
+            const hasWorkspace = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0;
+        
+            if (hasWorkspace) {
+                await vscode.commands.executeCommand(cs.cds.deployment.unpackWebResource, item.config, item.context, undefined, true);
+            } else {
+                Utilities.Browser.openWindow(CdsUrlResolver.getManageWebResourceUri(item.config, item.context.webresourceid, item.solutionId));
+            }
+        }},
+        { key: "PluginStep", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, item.context.eventhandler_plugintype._pluginassemblyid_value, item.config, item.context) },
+        { key: "PluginStepImage", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, item.context, item.config) }
+    ]);
+
+    @command(cs.cds.controls.cdsExplorer.editEntry, "Edit")
+    static async editEntry(item?: TreeEntry): Promise<void> {
+        return this.runCommand(this.editCommands, item);
+    }
+
+    private static openInAppCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
+        { key: "Entity", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityUsingAppUrl(item.context.LogicalName)) },
+        { key: "Dashboard", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityDashboardUsingAppUrl(item.context.formid)) },
+        { key: "View", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityViewUsingAppUrl(item.parent.context.LogicalName, item.context.savedqueryid)) },
+    ]);
+
+    @command(cs.cds.controls.cdsExplorer.openInApp, "Open in App")
+    static async openInApp(item?: TreeEntry): Promise<void> {
+        return this.runCommand(this.openInAppCommands, item);
+    }
+
+    private static openInBrowserCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
+        { key: "Entity", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityFormUri(item.config, item.context.LogicalName)) },
+        { key: "Form", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityFormUri(item.config, item.parent.context.LogicalName, item.context.formid)) },
+        { key: "Dashboard", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityFormUri(item.config, item.parent.context.LogicalName, item.context.formid)) },
+        { key: "View", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityViewUri(item.config, item.parent.context.LogicalName, item.context.savedqueryid)) },
+    ]);
+
+    @command(cs.cds.controls.cdsExplorer.openInBrowser, "Open in Browser")
+    static async openInBrowser(item?: TreeEntry): Promise<void> {
+        return this.runCommand(this.openInBrowserCommands, item);
+    }
+
+    private static openInEditorCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
+        { key: "Form", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`Form loaded in editor`)) },
+        { key: "Dashboard", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`Dashboard loaded in editor`)) },
+        { key: "View", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.layoutxml }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`View loaded in editor`)) },
+        { key: "Chart", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.presentationdescription }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`Chart loaded in editor`)) }
+    ]);
+
+    @command(cs.cds.controls.cdsExplorer.openInEditor, "Open in Editor")
+    static async openInEditor(item?: TreeEntry): Promise<void> {
+        return this.runCommand(this.openInEditorCommands, item);
+    }
+
+    @extensionActivate(cs.cds.extension.productId)
+    async activate(context: vscode.ExtensionContext) {
+        const isNew = !CdsExplorerView.treeProvider;        
+        CdsExplorerView.treeProvider = isNew ? new CdsExplorerTreeProvider() : CdsExplorerView.treeProvider;
 
         if (isNew) {
             TreeEntryCache.Instance.SolutionMap = await SolutionMap.loadFromWorkspace(undefined, false);
     
-            CdsExplorerView.Instance = treeProvider;
-            vscode.window.registerTreeDataProvider(cs.cds.viewContainers.cdsExplorer, treeProvider);        
+            vscode.window.registerTreeDataProvider(cs.cds.viewContainers.cdsExplorer, CdsExplorerView.treeProvider);
         }
-        
-        // setup commands
-        context.subscriptions.push(
-            vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.refreshEntry, (item?: TreeEntry) => {
-                treeProvider.refresh(item);
-            })
-            , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.addConnection, (config: CdsWebApi.Config) => {
-                treeProvider.addConnection(config);
-            })
-            , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.clickEntry, (item?: TreeEntry) => { // Match name of command to package.json command
-                if (item.collapsibleState === vscode.TreeItemCollapsibleState.Collapsed) {
-                    item.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
-                }            
-            }) 
-            , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.deleteEntry, (item: TreeEntry) => { // Match name of command to package.json command
-                switch(item.itemType) {
-                    case "Connection":
-                        treeProvider.removeConnection(item.config);
-                        break;
-                    case "PluginStep":
-                        treeProvider.removePluginStep(item.config, item.context).then(() => treeProvider.refresh(item.parent));
-                        break;
-                    case "PluginStepImage":
-                        treeProvider.removePluginStepImage(item.config, item.context).then(() => treeProvider.refresh(item.parent));
-                        break;
-                }
-            }) 
-            , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.inspectEntry, (item: TreeEntry) => { // Match name of command to package.json command
-                vscode.commands.executeCommand(cs.cds.controls.jsonInspector.open, item.context);
-            }) 
-            , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.moveSolution, (item: TreeEntry) => { // Match name of command to package.json command
-                vscode.commands.executeCommand(cs.cds.deployment.updateSolutionMapping, item.solutionMapping, item.config)
-                    .then(result => TreeEntryCache.Instance.ClearMap());
-            }) 
-            , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.addEntryToSolution, (item: TreeEntry) => { // Match name of command to package.json command
-                if (item.solutionId) {
-                    vscode.window.showInformationMessage(`The component ${item.label} is already a part of a solution.`);
-
-                    return;
-                }
-
-                let componentId:string;
-                let componentType:CdsSolutions.SolutionComponent;
-
-                switch (item.itemType) {
-                    case "Plugin":
-                        componentType = CdsSolutions.SolutionComponent.PluginAssembly;
-                        componentId = item.context.pluginassemblyid;
-
-                        break;
-                    case "WebResource":
-                        componentType = CdsSolutions.SolutionComponent.WebResource;
-                        componentId = item.context.webresourceid;
-
-                        break;
-                    case "Process":
-                        componentType = CdsSolutions.SolutionComponent.Workflow;
-                        componentId = item.context.workflowid;
-
-                        break;
-                    case "Entity":
-                        componentType = CdsSolutions.SolutionComponent.Entity;
-                        componentId = item.context.MetadataId;
-
-                        break;
-                    case "OptionSet":
-                        componentType = CdsSolutions.SolutionComponent.OptionSet;
-                        componentId = item.context.MetadataId;
-
-                        break;
-                    }
-
-                    if (componentId && componentType) {
-                        return vscode.commands.executeCommand(cs.cds.deployment.addSolutionComponent, item.config, undefined, componentId, componentType)
-                            .then(response => {
-                                const solutionPath = item.id.split("/").slice(0, 4);
-                                solutionPath.push("Solutions");
-                                solutionPath.push((<any>response).solutionid);
-
-                                treeProvider.refreshSolution(solutionPath.join("/")); 
-                            });
-                    }
-
-            }) 
-            , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.removeEntryFromSolution, (item: TreeEntry) => { // Match name of command to package.json command
-                if (!item.solutionId) {
-                    vscode.window.showInformationMessage(`The component ${item.label} is not part of a solution.`);
-
-                    return;
-                }
-
-                let componentId:string;
-                let componentType:CdsSolutions.SolutionComponent;
-
-                switch (item.itemType) {
-                    case "Plugin":
-                        componentType = CdsSolutions.SolutionComponent.PluginAssembly;
-                        componentId = item.context.pluginassemblyid;
-
-                        break;
-                    case "WebResource":
-                        componentType = CdsSolutions.SolutionComponent.WebResource;
-                        componentId = item.context.webresourceid;
-
-                        break;
-                    case "Process":
-                        componentType = CdsSolutions.SolutionComponent.Workflow;
-                        componentId = item.context.workflowid;
-
-                        break;
-                    case "Entity":
-                        componentType = CdsSolutions.SolutionComponent.Entity;
-                        componentId = item.context.MetadataId;
-
-                        break;
-                    case "OptionSet":
-                        componentType = CdsSolutions.SolutionComponent.OptionSet;
-                        componentId = item.context.MetadataId;
-
-                        break;
-                }
-
-                if (!Utilities.$Object.isNullOrEmpty(item.solutionIdPath)) {
-                    const solutions = TreeEntryCache.Instance.Items.where(i => i.id === item.solutionIdPath).toArray();
-                    
-                    if (solutions && solutions.length > 0 && componentId && componentType) {
-                        return vscode.commands.executeCommand(cs.cds.deployment.removeSolutionComponent, item.config, solutions[0].context, componentId, componentType)
-                            .then(response => treeProvider.refreshSolution(item.solutionIdPath));
-                    }
-                 }
-            }) 
-            , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.addEntry, async (item: TreeEntry) => { // Match name of command to package.json command
-                if (!item) {
-                    vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection);
-
-                    return;
-                }
-
-                let retryFunction = () => vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.addEntry, item);
-                const hasWorkspace = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0;
-
-                switch (item.itemType) {
-                    case "Solutions":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config), retryFunction);
-                        break;
-                    case "Entities":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, undefined, item.solution), retryFunction);
-                        break;
-                    case "Attributes":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageAttributeUri(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
-                        break;       
-                    case "OptionSets":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, undefined, item.solutionId), retryFunction);
-                        break;
-                    case "Processes":                 
-                        let processType = await Quickly.pickEnum<CdsSolutions.ProcessType>(CdsSolutions.ProcessType);
-
-                        if (processType) {
-                            Utilities.Browser.openWindow(CdsUrlResolver.getManageBusinessProcessUri(item.config, processType, item.parent && item.parent.context && item.parent.context.ObjectTypeCode ? item.parent.context.ObjectTypeCode : undefined, item.solutionId), retryFunction);
-                        }
-                        
-                        break;
-                    case "Keys":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityKeyUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
-                        break;
-                    case "Relationships":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityRelationshipUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);
-                        break;
-                    case "Forms":   
-                        let formType = await Quickly.pickEnum<CdsSolutions.DynamicsForm>(CdsSolutions.DynamicsForm);
-
-                        if (formType) {
-                            Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityFormUri(item.config, item.context.ObjectTypeCode, formType, undefined, item.solutionId), retryFunction);
-                        }
-
-                        break;
-                    case "Dashboards":
-                        let layoutType = await Quickly.pickEnum<CdsSolutions.InteractiveDashboardLayout>(CdsSolutions.InteractiveDashboardLayout);
-
-                        if (layoutType) {
-                            Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityDashboardUri(item.config, item.context.ObjectTypeCode, layoutType, "1030", undefined, item.solutionId), retryFunction);
-                        }
-
-                        break;
-                    case "Views":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityViewUri(item.config, item.context.MetadataId, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
-                        break;
-                    case "Charts":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityChartUrl(item.config, item.context.ObjectTypeCode, undefined, item.solutionId), retryFunction);
-                        break;
-                    case "WebResources":
-                        if (hasWorkspace) {
-                            vscode.commands.executeCommand(cs.cds.deployment.createWebResource, item.config, item.solutionId, undefined, undefined, item.folder);
-                        } else {
-                            Utilities.Browser.openWindow(CdsUrlResolver.getManageWebResourceUri(item.config, undefined, item.solutionId), retryFunction);
-                        }
-                        break;
-                    case "PluginType":
-                        if (!item.context._pluginassemblyid_value) { return; }
-                        vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, context, item.context._pluginassemblyid_value, item.config, undefined);
-                        break;
-                    case "PluginStep":
-                        vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, context, item.context.sdkmessageprocessingstepid, null, item.config);
-                        break;
-                }
-            })   
-            , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.editEntry, async (item: TreeEntry) => { // Match name of command to package.json command
-                let retryFunction = () => vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editEntry, item);
-                const hasWorkspace = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0;
-
-                switch (item.itemType)
-                {
-                    case "Connection":
-                        vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection, item.config);
-                        break;
-                    case "Solution":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config, item.context), retryFunction);
-                        break;
-                    case "Entity":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, item.context, item.solution), retryFunction);
-                        break;
-                    case "Attribute":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
-                        break;
-                    case "OptionSet":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, item.context.MetadataId, item.solutionId), retryFunction);
-                        break;
-                    case "Process":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageBusinessProcessUri(item.config, CdsUrlResolver.parseProcessType(item.context.category), item.context.workflowid, item.context.solutionid || undefined), retryFunction);
-                        break;
-                    case "Key":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityKeyUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
-                        break;
-                    case "OneToManyRelationship":
-                    case "ManyToOneRelationship":
-                    case "ManyToManyRelationship":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityRelationshipUrl(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId), retryFunction);
-                        break;
-                    case "Form":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityFormUri(item.config, item.parent.context.ObjectTypeCode, CdsUrlResolver.parseFormType(item.context.type), item.context.formid, item.solutionId), retryFunction);
-                        break;
-                    case "Dashboard":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityDashboardUri(item.config, undefined, undefined, "1032", item.context.formid, item.solutionId), retryFunction);
-                        break;
-                    case "View":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityViewUri(item.config, item.parent.context.MetadataId, item.parent.context.ObjectTypeCode, item.context.savedqueryid, item.solutionId), retryFunction);
-                        break;     
-                    case "Chart":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityChartUrl(item.config, item.parent.context.ObjectTypeCode, item.context.savedqueryvisualizationid, item.solutionId), retryFunction);
-                        break;     
-                    case "WebResources":
-                        if (hasWorkspace) {
-                            vscode.commands.executeCommand(cs.cds.deployment.unpackWebResource, item.config, item.context, undefined, true);
-                        } else {
-                            Utilities.Browser.openWindow(CdsUrlResolver.getManageWebResourceUri(item.config, item.context.webresourceid, item.solutionId), retryFunction);
-                        }
-
-                        break;
-                    case "PluginStep":
-                        if (!item.context.eventhandler_plugintype) { return; }
-                        vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, context, item.context.eventhandler_plugintype._pluginassemblyid_value, item.config, item.context);
-                        break;
-                    case "PluginStepImage":
-                        vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, context, item.context._sdkmessageprocessingstepid_value, item.context, item.config);
-                        break;
-                }
-           }) 
-           , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.openInApp, async (item: TreeEntry) => {
-                let retryFunction = () => vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.openInApp, item);
-
-                switch (item.itemType) {
-                    case "Entity":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityUsingAppUrl(item.context.LogicalName), retryFunction);
-                        break;
-                    case "Dashboard":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityDashboardUsingAppUrl(item.context.formid), retryFunction);
-                        break;
-                    case "View":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityViewUsingAppUrl(item.parent.context.LogicalName, item.context.savedqueryid), retryFunction);
-                        break;
-                }
-           })
-           , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.openInBrowser, async (item: TreeEntry) => {
-                let retryFunction = () => vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.openInBrowser, item);
-
-                switch (item.itemType) {
-                    case "Entity":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityFormUri(item.config, item.context.LogicalName), retryFunction);
-                        break;
-                    case "Form":
-                    case "Dashboard":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityFormUri(item.config, item.parent.context.LogicalName, item.context.formid), retryFunction);
-                        break;
-                    case "View":
-                        Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityViewUri(item.config, item.parent.context.LogicalName, item.context.savedqueryid), retryFunction);
-                        break;
-                }
-           })
-           , vscode.commands.registerCommand(cs.cds.controls.cdsExplorer.openInEditor, async (item: TreeEntry) => {
-                switch (item.itemType) {
-                    case "Form":
-                    case "Dashboard":
-                        vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml })
-                            .then(d => vscode.window.showTextDocument(d));
-                        break;
-                    case "View":
-                        vscode.workspace.openTextDocument({ language:"xml", content:item.context.layoutxml })
-                            .then(d => vscode.window.showTextDocument(d));
-                        break;
-                    case "Chart":
-                        vscode.workspace.openTextDocument({ language:"xml", content:item.context.presentationdescription })
-                            .then(d => vscode.window.showTextDocument(d));
-                        break;
-                }
-           })
-        );
     }
 }
 
@@ -352,11 +260,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 	private _onDidChangeTreeData: vscode.EventEmitter<TreeEntry | undefined> = new vscode.EventEmitter<TreeEntry | undefined>();
     readonly onDidChangeTreeData: vscode.Event<TreeEntry | undefined> = this._onDidChangeTreeData.event;
     private _connections: CdsWebApi.Config[] = [];
-    private _context: vscode.ExtensionContext;
 
-	constructor(context: vscode.ExtensionContext) {
-        this._context = context;
-        this._connections = DiscoveryRepository.getConnections(context);
+	constructor() {
+        this._connections = DiscoveryRepository.getConnections(ExtensionContext.Instance);
 
         if (this._connections && this._connections.length > 0) {
             this.refresh();
@@ -454,7 +360,7 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         }
 
         // save to state and assign to our local connections variable.
-        this._connections = DiscoveryRepository.saveConnections(this._context, connections);
+        this._connections = DiscoveryRepository.saveConnections(ExtensionContext.Instance, connections);
 
         // refresh the treeview
         this.refresh();
@@ -469,7 +375,7 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         
         if (removeIndex >= 0) {
             this._connections.splice(removeIndex, 1);
-            DiscoveryRepository.saveConnections(this._context, this._connections);
+            DiscoveryRepository.saveConnections(ExtensionContext.Instance, this._connections);
             this.refresh();
         }
     }
