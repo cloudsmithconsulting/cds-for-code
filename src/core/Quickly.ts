@@ -599,3 +599,16 @@ export class WorkspaceFileItem {
     fsPath: string;
     itemType: vscode.FileType;
 }
+
+/*
+Idea for syntax to resolve multiple sets of variables in a process.
+export const quickly:any = { 
+    variables: [ 
+        { key: "organization", context: () => origin, ask: quickly => quickly.pick("blah") }
+    ],
+    steps: [ 
+        { description: "blah", action: (context) => context.variables["organization"].resolve() }
+    ]};
+
+quickly.run();
+*/
