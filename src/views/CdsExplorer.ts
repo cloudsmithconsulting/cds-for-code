@@ -1,11 +1,10 @@
 import * as vscode from 'vscode';
+import * as cs from '../cs';
 import { TS } from 'typescript-linq/TS';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import ApiRepository from '../repositories/apiRepository';
 import { Utilities } from '../core/Utilities';
 import MetadataRepository from '../repositories/metadataRepository';
-import * as cs from '../cs';
-import IContributor from '../core/CommandBuilder';
 import CdsUrlResolver from '../api/CdsUrlResolver';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
@@ -21,54 +20,6 @@ import Dictionary from '../core/types/Dictionary';
 import ExtensionContext from '../core/ExtensionContext';
 
 export default class CdsExplorerView {
-    private static treeProvider: CdsExplorerTreeProvider;
-
-    @command(cs.cds.controls.cdsExplorer.refreshEntry, "Refresh")
-    static async refreshEntry(item?: TreeEntry) {
-        return await CdsExplorerView.treeProvider.refresh(item);
-    }
-
-    @command(cs.cds.controls.cdsExplorer.addConnection, "Add Connection")
-    static async addConnection(config?: CdsWebApi.Config) {
-        return await CdsExplorerView.treeProvider.addConnection(config);
-    }
-
-    @command(cs.cds.controls.cdsExplorer.clickEntry, "Click")
-    static async clickEntry(item?: TreeEntry) {
-        if (item.collapsibleState === vscode.TreeItemCollapsibleState.Collapsed) {
-            item.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
-            return await this.refreshEntry(item);
-        }            
-    }
-
-    private static async runCommand(definitions: Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>, item?: TreeEntry) {
-        if (definitions.containsKey(item.itemType)) {
-            return await definitions[item.itemType](item);
-        }
-    }
-
-    private static deleteCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
-        { key: "Connection", value: async (item) => CdsExplorerView.treeProvider.removeConnection(item.config) },
-        { key: "PluginStep", value: async (item) => CdsExplorerView.treeProvider.removePluginStep(item.config, item.context).then(() => CdsExplorerView.treeProvider.refresh(item.parent)) },
-        { key: "PluginStepImage", value: async (item) => CdsExplorerView.treeProvider.removePluginStepImage(item.config, item.context).then(() => CdsExplorerView.treeProvider.refresh(item.parent)) }
-    ]);
-
-    @command(cs.cds.controls.cdsExplorer.deleteEntry, "Delete")
-    static async deleteEntry(item?: TreeEntry) {
-        return this.runCommand(this.deleteCommands, item);
-    }
-
-    @command(cs.cds.controls.cdsExplorer.inspectEntry, "Inspect")
-    static async inspectEntry(item?: TreeEntry) {
-        return await vscode.commands.executeCommand(cs.cds.controls.jsonInspector.open, item.context);
-    }
-
-    @command(cs.cds.controls.cdsExplorer.moveSolution, "Move or re-map solution")
-    static async moveSolution(item?: TreeEntry) {
-        return await vscode.commands.executeCommand(cs.cds.deployment.updateSolutionMapping, item.solutionMapping, item.config)
-            .then(result => TreeEntryCache.Instance.ClearMap());
-    }
-
     private static solutionComponentMappings = new Dictionary<EntryType, { componentId: (item?: TreeEntry) => Promise<void>, componentType: CdsSolutions.SolutionComponent }>([
         { key: "Plugin", value: { componentId: (item) => item.context.pluginassemblyid, componentType: CdsSolutions.SolutionComponent.PluginAssembly }},
         { key: "WebResource", value: { componentId: (item) => item.context.webresourceid, componentType: CdsSolutions.SolutionComponent.WebResource }},
@@ -77,52 +28,12 @@ export default class CdsExplorerView {
         { key: "OptionSet", value: { componentId: (item) => item.context.MetadataId, componentType: CdsSolutions.SolutionComponent.OptionSet }}
     ]);
 
-    @command(cs.cds.controls.cdsExplorer.addEntryToSolution, "Add to Solution")
-    static async addEntryToSolution(item?: TreeEntry) {
-        if (item.solutionId) {
-            await vscode.window.showInformationMessage(`The component ${item.label} is already a part of a solution.`);
-
-            return;
-        }
-
-        if (this.solutionComponentMappings.containsKey(item.itemType)) {
-            const componentId = this.solutionComponentMappings[item.itemType].componentId(item);
-            const componentType = this.solutionComponentMappings[item.itemType].componentType;
-
-            return await vscode.commands.executeCommand(cs.cds.deployment.addSolutionComponent, item.config, undefined, componentId, componentType)
-                .then(response => {
-                    const solutionPath = item.id.split("/").slice(0, 4);
-                    solutionPath.push("Solutions");
-                    solutionPath.push((<any>response).solutionid);
-
-                    CdsExplorerView.treeProvider.refreshSolution(solutionPath.join("/")); 
-                });
-        }
-    }
-
-    @command(cs.cds.controls.cdsExplorer.removeEntryFromSolution, "Remove from Solution")
-    static async removeEntryFromSolution(item?: TreeEntry) {
-        if (!item.solutionId) {
-            await vscode.window.showInformationMessage(`The component ${item.label} is not part of a solution.`);
-
-            return;
-        }
-
-        if (this.solutionComponentMappings.containsKey(item.itemType)) {
-            const componentId = this.solutionComponentMappings[item.itemType].componentId(item);
-            const componentType = this.solutionComponentMappings[item.itemType].componentType;
-
-            if (!Utilities.$Object.isNullOrEmpty(item.solutionIdPath)) {
-                const solutions = TreeEntryCache.Instance.Items.where(i => i.id === item.solutionIdPath).toArray();
-                
-                if (solutions && solutions.length > 0 && componentId && componentType) {
-                    return await vscode.commands.executeCommand(cs.cds.deployment.removeSolutionComponent, item.config, solutions[0].context, componentId, componentType)
-                        .then(response => CdsExplorerView.treeProvider.refreshSolution(item.solutionIdPath));
-                }
-            }
-        }
-    }
-
+    private static deleteCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
+        { key: "Connection", value: async (item) => CdsExplorerTreeProvider.Instance.removeConnection(item.config) },
+        { key: "PluginStep", value: async (item) => CdsExplorerTreeProvider.Instance.removePluginStep(item.config, item.context).then(() => CdsExplorerTreeProvider.Instance.refresh(item.parent)) },
+        { key: "PluginStepImage", value: async (item) => CdsExplorerTreeProvider.Instance.removePluginStepImage(item.config, item.context).then(() => CdsExplorerTreeProvider.Instance.refresh(item.parent)) }
+    ]);
+    
     private static addCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
         { key: "Solutions", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config)) },
         { key: "Entities", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, undefined, item.solution)) },
@@ -166,15 +77,6 @@ export default class CdsExplorerView {
         { key: "PluginStep", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, undefined, item.config) }
     ]);
 
-    @command(cs.cds.controls.cdsExplorer.addEntry, "Add")
-    static async addEntry(item?: TreeEntry): Promise<void> {
-        if (!item) {
-            await vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection);
-        } else {
-            return this.runCommand(this.addCommands, item);
-        }
-    }
-
     private static editCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
         { key: "Connection", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection, item.config) },
         { key: "Solution", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config, item.context)) },
@@ -203,21 +105,11 @@ export default class CdsExplorerView {
         { key: "PluginStepImage", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, item.context, item.config) }
     ]);
 
-    @command(cs.cds.controls.cdsExplorer.editEntry, "Edit")
-    static async editEntry(item?: TreeEntry): Promise<void> {
-        return this.runCommand(this.editCommands, item);
-    }
-
     private static openInAppCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
         { key: "Entity", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityUsingAppUrl(item.context.LogicalName)) },
         { key: "Dashboard", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityDashboardUsingAppUrl(item.context.formid)) },
         { key: "View", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityViewUsingAppUrl(item.parent.context.LogicalName, item.context.savedqueryid)) },
     ]);
-
-    @command(cs.cds.controls.cdsExplorer.openInApp, "Open in App")
-    static async openInApp(item?: TreeEntry): Promise<void> {
-        return this.runCommand(this.openInAppCommands, item);
-    }
 
     private static openInBrowserCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
         { key: "Entity", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityFormUri(item.config, item.context.LogicalName)) },
@@ -226,17 +118,122 @@ export default class CdsExplorerView {
         { key: "View", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityViewUri(item.config, item.parent.context.LogicalName, item.context.savedqueryid)) },
     ]);
 
-    @command(cs.cds.controls.cdsExplorer.openInBrowser, "Open in Browser")
-    static async openInBrowser(item?: TreeEntry): Promise<void> {
-        return this.runCommand(this.openInBrowserCommands, item);
-    }
-
     private static openInEditorCommands = new Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>([
         { key: "Form", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`Form loaded in editor`)) },
         { key: "Dashboard", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`Dashboard loaded in editor`)) },
         { key: "View", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.layoutxml }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`View loaded in editor`)) },
         { key: "Chart", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.presentationdescription }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`Chart loaded in editor`)) }
     ]);
+
+    private static async runCommand(definitions: Dictionary<EntryType, (item?: TreeEntry) => Promise<void>>, item?: TreeEntry) {
+        if (definitions.containsKey(item.itemType)) {
+            return await definitions[item.itemType](item);
+        }
+    }
+
+    @command(cs.cds.controls.cdsExplorer.refreshEntry, "Refresh")
+    static async refreshEntry(item?: TreeEntry) {
+        return await CdsExplorerTreeProvider.Instance.refresh(item);
+    }
+
+    @command(cs.cds.controls.cdsExplorer.addConnection, "Add Connection")
+    static async addConnection(config?: CdsWebApi.Config) {
+        return await CdsExplorerTreeProvider.Instance.addConnection(config);
+    }
+
+    @command(cs.cds.controls.cdsExplorer.clickEntry, "Click")
+    static async clickEntry(item?: TreeEntry) {
+        if (item.collapsibleState === vscode.TreeItemCollapsibleState.Collapsed) {
+            item.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
+            return await this.refreshEntry(item);
+        }            
+    }
+
+    @command(cs.cds.controls.cdsExplorer.deleteEntry, "Delete")
+    static async deleteEntry(item?: TreeEntry) {
+        return this.runCommand(this.deleteCommands, item);
+    }
+
+    @command(cs.cds.controls.cdsExplorer.inspectEntry, "Inspect")
+    static async inspectEntry(item?: TreeEntry) {
+        return await vscode.commands.executeCommand(cs.cds.controls.jsonInspector.open, item.context);
+    }
+
+    @command(cs.cds.controls.cdsExplorer.moveSolution, "Move or re-map solution")
+    static async moveSolution(item?: TreeEntry) {
+        return await vscode.commands.executeCommand(cs.cds.deployment.updateSolutionMapping, item.solutionMapping, item.config)
+            .then(result => TreeEntryCache.Instance.ClearMap());
+    }
+
+    @command(cs.cds.controls.cdsExplorer.addEntryToSolution, "Add to Solution")
+    static async addEntryToSolution(item?: TreeEntry) {
+        if (item.solutionId) {
+            await vscode.window.showInformationMessage(`The component ${item.label} is already a part of a solution.`);
+
+            return;
+        }
+
+        if (this.solutionComponentMappings.containsKey(item.itemType)) {
+            const componentId = this.solutionComponentMappings[item.itemType].componentId(item);
+            const componentType = this.solutionComponentMappings[item.itemType].componentType;
+
+            return await vscode.commands.executeCommand(cs.cds.deployment.addSolutionComponent, item.config, undefined, componentId, componentType)
+                .then(response => {
+                    const solutionPath = item.id.split("/").slice(0, 4);
+                    solutionPath.push("Solutions");
+                    solutionPath.push((<any>response).solutionid);
+
+                    CdsExplorerTreeProvider.Instance.refreshSolution(solutionPath.join("/")); 
+                });
+        }
+    }
+
+    @command(cs.cds.controls.cdsExplorer.removeEntryFromSolution, "Remove from Solution")
+    static async removeEntryFromSolution(item?: TreeEntry) {
+        if (!item.solutionId) {
+            await vscode.window.showInformationMessage(`The component ${item.label} is not part of a solution.`);
+
+            return;
+        }
+
+        if (this.solutionComponentMappings.containsKey(item.itemType)) {
+            const componentId = this.solutionComponentMappings[item.itemType].componentId(item);
+            const componentType = this.solutionComponentMappings[item.itemType].componentType;
+
+            if (!Utilities.$Object.isNullOrEmpty(item.solutionIdPath)) {
+                const solutions = TreeEntryCache.Instance.Items.where(i => i.id === item.solutionIdPath).toArray();
+                
+                if (solutions && solutions.length > 0 && componentId && componentType) {
+                    return await vscode.commands.executeCommand(cs.cds.deployment.removeSolutionComponent, item.config, solutions[0].context, componentId, componentType)
+                        .then(response => CdsExplorerTreeProvider.Instance.refreshSolution(item.solutionIdPath));
+                }
+            }
+        }
+    }
+
+    @command(cs.cds.controls.cdsExplorer.addEntry, "Add")
+    static async addEntry(item?: TreeEntry): Promise<void> {
+        if (!item) {
+            await vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection);
+        } else {
+            return this.runCommand(this.addCommands, item);
+        }
+    }
+
+    @command(cs.cds.controls.cdsExplorer.editEntry, "Edit")
+    static async editEntry(item?: TreeEntry): Promise<void> {
+        return this.runCommand(this.editCommands, item);
+    }
+
+    @command(cs.cds.controls.cdsExplorer.openInApp, "Open in App")
+    static async openInApp(item?: TreeEntry): Promise<void> {
+        return this.runCommand(this.openInAppCommands, item);
+    }
+
+    @command(cs.cds.controls.cdsExplorer.openInBrowser, "Open in Browser")
+    static async openInBrowser(item?: TreeEntry): Promise<void> {
+        return this.runCommand(this.openInBrowserCommands, item);
+    }
 
     @command(cs.cds.controls.cdsExplorer.openInEditor, "Open in Editor")
     static async openInEditor(item?: TreeEntry): Promise<void> {
@@ -245,14 +242,9 @@ export default class CdsExplorerView {
 
     @extensionActivate(cs.cds.extension.productId)
     async activate(context: vscode.ExtensionContext) {
-        const isNew = !CdsExplorerView.treeProvider;        
-        CdsExplorerView.treeProvider = isNew ? new CdsExplorerTreeProvider() : CdsExplorerView.treeProvider;
+        TreeEntryCache.Instance.SolutionMap = await SolutionMap.loadFromWorkspace(undefined, false);
 
-        if (isNew) {
-            TreeEntryCache.Instance.SolutionMap = await SolutionMap.loadFromWorkspace(undefined, false);
-    
-            vscode.window.registerTreeDataProvider(cs.cds.viewContainers.cdsExplorer, CdsExplorerView.treeProvider);
-        }
+        vscode.window.registerTreeDataProvider(cs.cds.viewContainers.cdsExplorer, CdsExplorerTreeProvider.Instance);
     }
 }
 
@@ -261,7 +253,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
     readonly onDidChangeTreeData: vscode.Event<TreeEntry | undefined> = this._onDidChangeTreeData.event;
     private _connections: CdsWebApi.Config[] = [];
 
-	constructor() {
+    private static instance: CdsExplorerTreeProvider;
+
+	private constructor() {
         this._connections = DiscoveryRepository.getConnections(ExtensionContext.Instance);
 
         if (this._connections && this._connections.length > 0) {
@@ -269,76 +263,103 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         }
     }
 
+    static get Instance(): CdsExplorerTreeProvider {
+        if (!this.instance) {
+            this.instance = new CdsExplorerTreeProvider();
+        }
+
+        return this.instance;
+    }
+
+    private getChildrenCommands = new Dictionary<EntryType, (element?: TreeEntry, commandPrefix?: string) => Promise<TreeEntry[]>>([
+        { key: "Connection", value: async (element?, commandPrefix?) => await this.getConnectionDetails(element, commandPrefix) },
+        { key: "Organization", value: async (element?, commandPrefix?) => await this.getSolutionLevelDetails(element, commandPrefix) },
+        { key: "Solutions", value: async (element?, commandPrefix?) => await this.getSolutionDetails(element, commandPrefix) },
+        { key: "Solution", value: async (element?, commandPrefix?) => await this.getSolutionLevelDetails(element, commandPrefix) },
+        { key: "Processes", value: async (element?, commandPrefix?) => await this.getProcessDetails(element, commandPrefix, element.context) },
+        { key: "Plugins", value: async (element?, commandPrefix?) => await this.getPluginDetails(element, commandPrefix, element.context) },
+        { key: "Entities", value: async (element?, commandPrefix?) => await this.getEntityDetails(element, commandPrefix, element.context) },
+        { key: "OptionSets", value: async (element?, commandPrefix?) => await this.getOptionSetDetails(element, commandPrefix, element.context) },
+        { key: "WebResources", value: async (element?, commandPrefix?) => {
+            const folders = await this.getWebResourcesFolderDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context));
+            const items = await this.getWebResourcesDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context));
+
+            if (items && folders) { items.forEach(i => folders.push(i)); }
+
+            return folders && folders.length > 0 ? folders : items;
+        }},
+        { key: "Folder", value: async (element?, commandPrefix?) => await this.getChildrenCommands[element.context.innerType](element, commandPrefix) },
+        { key: "Plugin", value: async (element?, commandPrefix?) => await this.getPluginTypeDetails(element, commandPrefix, element.context) },
+        { key: "PluginType", value: async (element?, commandPrefix?) => await this.getPluginStepDetails(element, commandPrefix, element.context) },
+        { key: "Entity", value: async (element?, commandPrefix?) => await this.createContainers(element, commandPrefix, element.itemType, [ "Keys", "Attributes", "Relationships", "Views", "Charts", "Forms", "Dashboards", "Processes"]) },
+        { key: "Keys", value: async (element?, commandPrefix?) => await this.getEntityKeyDetails(element, commandPrefix, element.context) },
+        { key: "Attributes", value: async (element?, commandPrefix?) => await this.getEntityAttributeDetails(element, commandPrefix, element.context) },
+        { key: "Views", value: async (element?, commandPrefix?) => await this.getEntityViewDetails(element, commandPrefix, element.solutionId, element.context) },
+        { key: "Charts", value: async (element?, commandPrefix?) => await this.getEntityChartDetails(element, commandPrefix, element.solutionId, element.context) },
+        { key: "Forms", value: async (element?, commandPrefix?) => await this.getEntityFormDetails(element, commandPrefix, element.solutionId, element.context) },
+        { key: "Dashboards", value: async (element?, commandPrefix?) => await this.getEntityDashboardDetails(element, commandPrefix, element.solutionId, element.context) },
+        { key: "Relationships", value: async (element?, commandPrefix?) => await this.getEntityRelationshipDetails(element, commandPrefix, element.context) },
+    ]);
+
+    private parsers = new Dictionary<EntryType, (item: any, element?: TreeEntry, commandPrefix?: string, ...rest: any[]) => TreeEntry>([
+        { key: "Connection", value: connection => {
+            const displayName = (connection.name) ? connection.name : connection.webApiUrl.replace("http://", "").replace("https://", "");
+    
+            return new TreeEntry(displayName, "Connection", vscode.TreeItemCollapsibleState.Collapsed, connection.webApiUrl, { command: cs.cds.controls.cdsExplorer.clickEntry, title: connection.webApiUrl, arguments: [connection.webApiUrl] }, connection );
+        }}, 
+        { key: "Organization", value: (org, element, commandPrefix) => new TreeEntry(org.FriendlyName, "Organization", vscode.TreeItemCollapsibleState.Collapsed, org.Version, { command: cs.cds.controls.cdsExplorer.clickEntry, title: org.FriendlyName, arguments: [`${commandPrefix || ''}/${org.Id}`] }, DiscoveryRepository.createOrganizationConnection(org, element.config), org) },
+        { key: "Solution", value: (solution, element, commandPrefix) => new TreeEntry(solution.friendlyname, "Solution", vscode.TreeItemCollapsibleState.Collapsed, `v${solution.version} (${solution.ismanaged ? "Managed" :  "Unmanaged"})`, { command: cs.cds.controls.cdsExplorer.clickEntry, title: solution.friendlyname, arguments: [`${commandPrefix || ''}/${solution.solutionid}`] }, element.config, solution) },
+        { key: "Plugin", value: (plugin, element, commandPrefix) => new TreeEntry(plugin.name, "Plugin", vscode.TreeItemCollapsibleState.Collapsed, `v${plugin.version} (${plugin.publickeytoken})`, { command: cs.cds.controls.cdsExplorer.clickEntry, title: plugin.friendlyname, arguments: [`${commandPrefix || ''}/${plugin.pluginassemblyid}`] }, element.config, plugin) },
+        { key: "PluginType", value: (pluginType, element, commandPrefix, plugin?: any) => new TreeEntry(pluginType.friendlyname, "PluginType", vscode.TreeItemCollapsibleState.Collapsed, pluginType.name.replace(plugin.name + ".", ''), { command: cs.cds.controls.cdsExplorer.clickEntry, title: pluginType.friendlyname, arguments: [`${commandPrefix || ''}/${pluginType.name}`] }, element.config, pluginType) },
+        { key: "PluginStep", value: (pluginStep, element, commandPrefix, pluginType?: any) => new TreeEntry(pluginStep.name.replace(pluginType.name + ": ", ''), "PluginStep", vscode.TreeItemCollapsibleState.Collapsed, pluginStep.description, { command: cs.cds.controls.cdsExplorer.clickEntry, title: pluginStep.name, arguments: [`${commandPrefix || ''}/${pluginStep.name}`] }, element.config, pluginStep) },
+        { key: "PluginStepImage", value: (pluginImage, element, commandPrefix, pluginStep?: any) => new TreeEntry(pluginImage.name, "PluginStepImage", vscode.TreeItemCollapsibleState.None, pluginImage.description, { command: cs.cds.controls.cdsExplorer.clickEntry, title: pluginImage.name, arguments: [`${commandPrefix || ''}/${pluginImage.name}`] }, element.config, pluginImage) },
+        { key: "WebResource", value: (webresource, element, commandPrefix) => new TreeEntry(webresource.name, "WebResource", vscode.TreeItemCollapsibleState.None, webresource.displayname, { command: cs.cds.controls.cdsExplorer.clickEntry, title: webresource.displayname, arguments: [`${commandPrefix || ''}/${webresource.webresourceid}`] }, element.config, webresource) }, 
+        { key: "Process", value: (process, element, commandPrefix) => new TreeEntry(process.name, "Process", vscode.TreeItemCollapsibleState.None, <string | undefined>CdsUrlResolver.parseProcessType(process.category), { command: cs.cds.controls.cdsExplorer.clickEntry, title: process.displayname, arguments: [`${commandPrefix || ''}/${process.workflowid}`] }, element.config, process) }, 
+        { key: "OptionSet", value: (optionSet, element, commandPrefix) => {
+            const displayName = optionSet.DisplayName && optionSet.DisplayName.LocalizedLabels && optionSet.DisplayName.LocalizedLabels.length > 0 ? optionSet.DisplayName.LocalizedLabels[0].Label : "";
+
+            return new TreeEntry(displayName, "OptionSet", vscode.TreeItemCollapsibleState.Collapsed, optionSet.Name, { command: cs.cds.controls.cdsExplorer.clickEntry, title: displayName, arguments: [`${commandPrefix || ''}/${optionSet.Name}`] }, element.config, optionSet);
+        }}, 
+        { key: "Entity", value: (entity, element, commandPrefix) => {
+            const displayName = entity.DisplayName && entity.DisplayName.LocalizedLabels && entity.DisplayName.LocalizedLabels.length > 0 ? entity.DisplayName.LocalizedLabels[0].Label : "";
+
+            return new TreeEntry(displayName, "Entity", vscode.TreeItemCollapsibleState.Collapsed, entity.LogicalName, { command: cs.cds.controls.cdsExplorer.clickEntry, title: displayName, arguments: [`${commandPrefix || ''}/${entity.LogicalName}`] }, element.config, entity);
+        }}, 
+        { key: "Attribute", value: (attribute, element, commandPrefix) => {
+            const displayName = attribute.DisplayName && attribute.DisplayName.LocalizedLabels && attribute.DisplayName.LocalizedLabels.length > 0 ? attribute.DisplayName.LocalizedLabels[0].Label : "";
+
+            return new TreeEntry(displayName, "Attribute", vscode.TreeItemCollapsibleState.None, attribute.LogicalName, { command: cs.cds.controls.cdsExplorer.clickEntry, title: displayName, arguments: [`${commandPrefix || ''}/${attribute.LogicalName}`] }, element.config, attribute);
+        }}, 
+        { key: "View", value: (query, element, commandPrefix) => new TreeEntry(query.name, "View", vscode.TreeItemCollapsibleState.None, query.description, { command: cs.cds.controls.cdsExplorer.clickEntry, title: query.name, arguments: [`${commandPrefix || ''}/${query.savedqueryid}`] }, element.config, query) }, 
+        { key: "Chart", value: (queryvisualization, element, commandPrefix) => new TreeEntry(queryvisualization.name, "Chart", vscode.TreeItemCollapsibleState.None, queryvisualization.description, { command: cs.cds.controls.cdsExplorer.clickEntry, title: queryvisualization.name, arguments: [`${commandPrefix || ''}/${queryvisualization.savedqueryvisualizationid}`] }, element.config, queryvisualization) }, 
+        { key: "Form", value: (form, element, commandPrefix) => new TreeEntry(form.name, "Form", vscode.TreeItemCollapsibleState.None, form.description, { command: cs.cds.controls.cdsExplorer.clickEntry, title: form.name, arguments: [`${commandPrefix || ''}/${form.formid}`] }, element.config, form) }, 
+        { key: "Dashboard", value: (dashboard, element, commandPrefix) => new TreeEntry(dashboard.name, "Dashboard", vscode.TreeItemCollapsibleState.None, dashboard.description, { command: cs.cds.controls.cdsExplorer.clickEntry, title: dashboard.name, arguments: [`${commandPrefix || ''}/${dashboard.formid}`] }, element.config, dashboard) }, 
+        { key: "Key", value: (key, element, commandPrefix) => {
+            const displayName = key.DisplayName && key.DisplayName.LocalizedLabels && key.DisplayName.LocalizedLabels.length > 0 ? key.DisplayName.LocalizedLabels[0].Label : "";
+
+            return new TreeEntry(displayName, "Key", vscode.TreeItemCollapsibleState.None, key.LogicalName, { command: cs.cds.controls.cdsExplorer.clickEntry, title: key.name, arguments: [`${commandPrefix || ''}/${key.savedqueryvisualizationid}`] }, element.config, key);
+        }}, 
+        { key: "OneToManyRelationship", value: (relationship, element, commandPrefix) => new TreeEntry(relationship.SchemaName, 'OneToManyRelationship', vscode.TreeItemCollapsibleState.None, relationship.RelationshipType, { command: cs.cds.controls.cdsExplorer.clickEntry, title: relationship.SchemaName, arguments: [`${commandPrefix || ''}/${relationship.SchemaName}`] }, element.config, relationship)}, 
+        { key: "ManyToOneRelationship", value: (relationship, element, commandPrefix) => new TreeEntry(relationship.SchemaName, 'ManyToOneRelationship', vscode.TreeItemCollapsibleState.None, relationship.RelationshipType, { command: cs.cds.controls.cdsExplorer.clickEntry, title: relationship.SchemaName, arguments: [`${commandPrefix || ''}/${relationship.SchemaName}`] }, element.config, relationship)}, 
+        { key: "ManyToManyRelationship", value: (relationship, element, commandPrefix) => new TreeEntry(relationship.SchemaName, 'ManyToManyRelationship', vscode.TreeItemCollapsibleState.None, relationship.RelationshipType, { command: cs.cds.controls.cdsExplorer.clickEntry, title: relationship.SchemaName, arguments: [`${commandPrefix || ''}/${relationship.SchemaName}`] }, element.config, relationship)}, 
+    ]);
+
+    private folderParsers = new Dictionary<EntryType, (item: any, element?: TreeEntry, commandPrefix?: string, ...rest: any[]) => TreeEntry>([
+        { key: "WebResource", value: (container, element, commandPrefix) => new TreeEntry(container, "Folder", vscode.TreeItemCollapsibleState.Collapsed, '', { command: cs.cds.controls.cdsExplorer.clickEntry, title: container, arguments: [`${commandPrefix || ''}/${container}`] }, element.config, { innerType: "WebResources", innerContext: (element.context && element.context.innerContext ? element.context.innerContext : element.context) }) }, 
+    ]);
+
     getTreeItem(element: TreeEntry): vscode.TreeItem {
 		return element;
 	}
 
 	async getChildren(element?: TreeEntry): Promise<TreeEntry[]> {
-        if (element) {
+        if (element && this.getChildrenCommands.containsKey(element.itemType)) {
             const commandPrefix:string = Utilities.String.noSlashes(((element.command && element.command.arguments) || '').toString());
 
-            switch (element.itemType) {
-                case "Connection":
-                    return this.getConnectionDetails(element, commandPrefix);
-                case "Organization":
-                    return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix, element.context));
-                case "Solutions":
-                    return this.getSolutionDetails(element, commandPrefix);
-                case "Solution":
-                    return Promise.resolve(this.getSolutionLevelDetails(element, commandPrefix, element.context));
-                case "Processes":
-                    return this.getProcessDetails(element, commandPrefix, element.context);
-                case "Plugins":
-                    return this.getPluginDetails(element, commandPrefix, element.context);
-                case "Entities":
-                    return this.getEntityDetails(element, commandPrefix, element.context);
-                case "OptionSets":
-                    return this.getOptionSetDetails(element, commandPrefix, element.context);
-                case "WebResources":
-                    var folders = await this.getWebResourcesFolderDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context));
-                    var items = await this.getWebResourcesDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context));
-
-                    if (items && folders) { items.forEach(i => folders.push(i)); }
-
-                    return folders && folders.length > 0 ? folders : items;
-                case "Folder":
-                    switch (element.context.innerType) {
-                        case "WebResources":
-                            var innerFolders = await this.getWebResourcesFolderDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context), element.folder);
-                            var innerItems = await this.getWebResourcesDetails(element, commandPrefix, (element.context && element.context.innerContext ? element.context.innerContext : element.context), element.folder);
-        
-                            if (innerItems && innerFolders) { innerItems.forEach(i => innerFolders.push(i)); }
-        
-                            return innerFolders && innerFolders.length > 0 ? innerFolders : innerItems;
-                    }
-                case "Plugin":
-                    return this.getPluginTypeDetails(element, commandPrefix, element.context);
-                case "PluginType":
-                    return this.getPluginStepDetails(element, commandPrefix, element.context);
-                case "PluginStep":
-                    return this.getPluginStepImageDetails(element, commandPrefix, element.context);
-                case "Entity":
-                    return Promise.resolve(this.getEntityLevelDetails(element, commandPrefix, element.context));
-                case "Keys":
-                    return this.getEntityKeyDetails(element, commandPrefix, element.context);
-                case "Attributes":
-                    return this.getEntityAttributeDetails(element, commandPrefix, element.context);
-                case "Views":
-                    return this.getEntityViewDetails(element, commandPrefix, element.solutionId, element.context);
-                case "Charts":
-                    return this.getEntityChartDetails(element, commandPrefix, element.solutionId, element.context);
-                case "Forms":
-                    return this.getEntityFormDetails(element, commandPrefix, element.solutionId, element.context);
-                case "Dashboards":
-                    return this.getEntityDashboardDetails(element, commandPrefix, element.solutionId, element.context);
-                case "Relationships":
-                    return this.getEntityRelationshipDetails(element, commandPrefix, element.context);
-            }
-
-            return; //return nothing if type falls through
+            return await this.getChildrenCommands[element.itemType](element, commandPrefix);
         }
 
-        return Promise.resolve(this.getConnectionEntries());
+        return await Promise.resolve(this.getConnectionEntries());
     }
 
     addConnection(...options: CdsWebApi.Config[]): void {
@@ -410,24 +431,7 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
         const result: TreeEntry[] = [];
         
         if (this._connections) {
-            this._connections.forEach(connection => {
-                const displayName = (connection.name)
-                    ? connection.name
-                    : connection.webApiUrl.replace("http://", "").replace("https://", "");
-    
-                result.push(new TreeEntry(
-                    displayName, 
-                    "Connection", 
-                    vscode.TreeItemCollapsibleState.Collapsed, 
-                    connection.webApiUrl, 
-                    {
-                        command: cs.cds.controls.cdsExplorer.clickEntry,
-                        title: connection.webApiUrl,
-                        arguments: [connection.webApiUrl]
-                    },
-                    connection                
-                ));
-            });
+            this._connections.forEach(connection => result.push(this.parsers["Connection"](connection)));
         }
 
         return result;
@@ -445,257 +449,35 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             filter = `ApiUrl eq '${Utilities.String.noTrailingSlash(connection.webApiUrl)}'`;
         }
 
-        const returnValue = this.createTreeEntries(api.retrieveOrganizations(filter), 
-            org =>  new TreeEntry(
-                org.FriendlyName, 
-                "Organization",
-                vscode.TreeItemCollapsibleState.Collapsed,
-                org.Version, 
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: org.FriendlyName,
-                    arguments: [`${commandPrefix || ''}/${org.Id}`]
-                },
-                DiscoveryRepository.createOrganizationConnection(org, connection),
-                org),
+        const returnValue = this.createEntries(
+            () => api.retrieveOrganizations(filter), 
+            org => this.parsers["Organization"](org, element, commandPrefix),
             `An error occurred while accessing organizations from ${connection.webApiUrl}`, 
             () => this.getConnectionDetails(element, commandPrefix));
 
         return returnValue;
     }
 
-    private getSolutionLevelDetails(element: TreeEntry, commandPrefix?:string, context?:any) : TreeEntry[] {
-        let returnObject = [];
+    private getSolutionLevelDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
         const showDefaultSolution = ExtensionConfiguration.getConfigurationValue<boolean>(cs.cds.configuration.explorer.showDefaultSolution);
-        
+        const returnValue: TreeEntry[] = [];
+
         if (element.itemType === "Solution" || showDefaultSolution) {
-            returnObject.push(new TreeEntry(
-                'Entities',
-                "Entities",
-                vscode.TreeItemCollapsibleState.Collapsed, 
-                null,
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: 'Entities',
-                    arguments: [`${commandPrefix || ''}/Entities`]
-                },
-                element.config,
-                element.itemType === "Solution" ? element.context : undefined
-            ));
-
-            returnObject.push(new TreeEntry(
-                'Option Sets',
-                "OptionSets",
-                vscode.TreeItemCollapsibleState.Collapsed, 
-                null,
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: 'OptionSets',
-                    arguments: [`${commandPrefix || ''}/OptionSets`]
-                },
-                element.config,
-                element.itemType === "Solution" ? element.context : undefined
-            ));
-
-            returnObject.push(new TreeEntry(
-                'Processes',
-                "Processes",
-                vscode.TreeItemCollapsibleState.Collapsed, 
-                null,
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: 'Processes',
-                    arguments: [`${commandPrefix || ''}/Processes`]
-                },
-                element.config,
-                element.itemType === "Solution" ? element.context : undefined
-            ));
-
-            returnObject.push(new TreeEntry(
-                'Web Resources',
-                "WebResources",
-                vscode.TreeItemCollapsibleState.Collapsed, 
-                null,
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: 'Web Resources',
-                    arguments: [`${commandPrefix || ''}/WebResources`]
-                },
-                element.config,
-                element.itemType === "Solution" ? element.context : undefined
-            ));
-
-            returnObject.push(new TreeEntry(
-                'Plugins',
-                "Plugins",
-                vscode.TreeItemCollapsibleState.Collapsed, 
-                null,
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: 'Plugins',
-                    arguments: [`${commandPrefix || ''}/Plugins`]
-                },
-                element.config,
-                element.itemType === "Solution" ? element.context : undefined
-            ));
+            this.createContainers(element, commandPrefix, element.itemType, [ "Entities", "OptionSets", "Processes", "WebResources", "Plugins" ]).forEach(e => returnValue.push(e));
+        } 
+        
+        if (element.itemType === "Organization") {
+            this.createContainers(element, commandPrefix, element.itemType, [ "Solutions" ]).forEach(e => returnValue.push(e));
         }
 
-        if (element.itemType !== "Solution")
-        {
-            returnObject.push(
-                new TreeEntry(
-                    'Solutions',
-                    "Solutions",
-                    vscode.TreeItemCollapsibleState.Collapsed, 
-                    null,
-                    {
-                        command: cs.cds.controls.cdsExplorer.clickEntry,
-                        title: 'Solutions',
-                        arguments: [`${commandPrefix || ''}/Solutions`]
-                    },
-                    element.config
-                ));
-        }
-
-        return returnObject;
-    }
-
-    private getEntityLevelDetails(element: TreeEntry, commandPrefix?:string, context?:any) : TreeEntry[] {
-        let returnObject = [];
-
-        returnObject.push(new TreeEntry(
-            'Keys',
-            "Keys",
-            vscode.TreeItemCollapsibleState.Collapsed, 
-            null,
-            {
-                command: cs.cds.controls.cdsExplorer.clickEntry,
-                title: 'Keys',
-                arguments: [`${commandPrefix || ''}/Keys`]
-            },
-            element.config,
-            element.itemType === "Entity" ? element.context : undefined
-        ));
-
-        returnObject.push(new TreeEntry(
-            'Attributes',
-            "Attributes",
-            vscode.TreeItemCollapsibleState.Collapsed, 
-            null,
-            {
-                command: cs.cds.controls.cdsExplorer.clickEntry,
-                title: 'Attributes',
-                arguments: [`${commandPrefix || ''}/Attributes`]
-            },
-            element.config,
-            element.itemType === "Entity" ? element.context : undefined
-        ));
-
-        returnObject.push(new TreeEntry(
-            'Relationships',
-            "Relationships",
-            vscode.TreeItemCollapsibleState.Collapsed, 
-            null,
-            {
-                command: cs.cds.controls.cdsExplorer.clickEntry,
-                title: 'Relationships',
-                arguments: [`${commandPrefix || ''}/Relationships`]
-            },
-            element.config,
-            element.itemType === "Entity" ? element.context : undefined
-        ));
-
-        returnObject.push(new TreeEntry(
-            'Views',
-            "Views",
-            vscode.TreeItemCollapsibleState.Collapsed, 
-            null,
-            {
-                command: cs.cds.controls.cdsExplorer.clickEntry,
-                title: 'Views',
-                arguments: [`${commandPrefix || ''}/Views`]
-            },
-            element.config,
-            element.itemType === "Entity" ? element.context : undefined
-        ));
-
-        returnObject.push(new TreeEntry(
-            'Charts',
-            "Charts",
-            vscode.TreeItemCollapsibleState.Collapsed, 
-            null,
-            {
-                command: cs.cds.controls.cdsExplorer.clickEntry,
-                title: 'Charts',
-                arguments: [`${commandPrefix || ''}/Charts`]
-            },
-            element.config,
-            element.itemType === "Entity" ? element.context : undefined
-        ));
-
-        returnObject.push(new TreeEntry(
-            'Forms',
-            "Forms",
-            vscode.TreeItemCollapsibleState.Collapsed, 
-            null,
-            {
-                command: cs.cds.controls.cdsExplorer.clickEntry,
-                title: 'Forms',
-                arguments: [`${commandPrefix || ''}/Forms`]
-            },
-            element.config,
-            element.itemType === "Entity" ? element.context : undefined
-        ));
-
-        returnObject.push(new TreeEntry(
-            'Dashboards',
-            "Dashboards",
-            vscode.TreeItemCollapsibleState.Collapsed, 
-            null,
-            {
-                command: cs.cds.controls.cdsExplorer.clickEntry,
-                title: 'Dashboards',
-                arguments: [`${commandPrefix || ''}/Dashboards`]
-            },
-            element.config,
-            element.itemType === "Entity" ? element.context : undefined
-        ));
-
-        returnObject.push(new TreeEntry(
-            'Processes',
-            "Processes",
-            vscode.TreeItemCollapsibleState.Collapsed, 
-            null,
-            {
-                command: cs.cds.controls.cdsExplorer.clickEntry,
-                title: 'Processes',
-                arguments: [`${commandPrefix || ''}/Processes`]
-            },
-            element.config,
-            element.itemType === "Entity" ? element.context : undefined
-        ));
-
-        return returnObject;
+        return returnValue;
     }
 
     private getSolutionDetails(element: TreeEntry, commandPrefix?:string): Promise<TreeEntry[]> {
         const api = new ApiRepository(element.config);
-        logger.log(`cdsTreeView: Getting Solutions from ${element.config.webApiUrl}`);
-
-        const returnValue = this.createTreeEntries(
-            api.retrieveSolutions(), 
-            solution => new TreeEntry(
-                solution.friendlyname, 
-                "Solution",
-                vscode.TreeItemCollapsibleState.Collapsed,
-                `v${solution.version} (${solution.ismanaged ? "Managed" :  "Unmanaged"})`, 
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: solution.friendlyname,
-                    arguments: [`${commandPrefix || ''}/${solution.solutionid}`]
-                },
-                element.config,
-                solution),
+        const returnValue = this.createEntries(
+            () => api.retrieveSolutions(), 
+            solution => this.parsers["Solution"](solution, element, commandPrefix),
             `An error occurred while retrieving solutions from ${element.config.webApiUrl}`, 
             () => this.getSolutionDetails(element, commandPrefix));
 
@@ -704,20 +486,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getPluginDetails(element: TreeEntry, commandPrefix?: string, solution?: any): Thenable<TreeEntry[]> {
 		const api = new ApiRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrievePluginAssemblies(solution ? solution.solutionid : undefined), 
-            plugin => new TreeEntry(
-                plugin.name, 
-                "Plugin",
-                vscode.TreeItemCollapsibleState.Collapsed,
-                `v${plugin.version} (${plugin.publickeytoken})`, 
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: plugin.friendlyname,
-                    arguments: [`${commandPrefix || ''}/${plugin.pluginassemblyid}`]
-                },
-                element.config,
-                plugin),
+        const returnValue = this.createEntries(
+            () => api.retrievePluginAssemblies(solution ? solution.solutionid : undefined), 
+            plugin => this.parsers["Plugin"](plugin, element, commandPrefix),
             `An error occurred while retrieving plug-in assemblies from ${element.config.webApiUrl}`,
             () => this.getPluginDetails(element, commandPrefix, solution));
 
@@ -726,20 +497,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getPluginTypeDetails(element: TreeEntry, commandPrefix?: string, plugin?: any): Thenable<TreeEntry[]> {
 		const api = new ApiRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrievePluginTypes(plugin.pluginassemblyid), 
-            pluginType => new TreeEntry(
-                pluginType.friendlyname, 
-                "PluginType",
-                vscode.TreeItemCollapsibleState.Collapsed,
-                pluginType.name.replace(plugin.name + ".", ''),
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: pluginType.friendlyname,
-                    arguments: [`${commandPrefix || ''}/${pluginType.name}`]
-                },
-                element.config,
-                pluginType),
+        const returnValue = this.createEntries(
+            () => api.retrievePluginTypes(plugin.pluginassemblyid), 
+            pluginType => this.parsers["PluginType"](pluginType, element, commandPrefix, plugin),
             `An error occurred while retrieving plug-in types from ${element.config.webApiUrl}`,
             () => this.getPluginTypeDetails(element, commandPrefix, plugin));
 
@@ -748,20 +508,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getPluginStepDetails(element: TreeEntry, commandPrefix?: string, pluginType?: any): Thenable<TreeEntry[]> {
 		const api = new ApiRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrievePluginSteps(pluginType.plugintypeid), 
-            pluginStep => new TreeEntry(
-                pluginStep.name.replace(pluginType.name + ": ", ''), 
-                "PluginStep",
-                vscode.TreeItemCollapsibleState.Collapsed,
-                pluginStep.description,
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: pluginStep.name,
-                    arguments: [`${commandPrefix || ''}/${pluginStep.name}`]
-                },
-                element.config,
-                pluginStep),
+        const returnValue = this.createEntries(
+            () => api.retrievePluginSteps(pluginType.plugintypeid), 
+            pluginStep => this.parsers["PluginStep"](pluginStep, element, commandPrefix, pluginType),
             `An error occurred while retrieving plug-in steps from ${element.config.webApiUrl}`,
             () => this.getPluginStepDetails(element, commandPrefix, pluginType));
 
@@ -770,20 +519,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getPluginStepImageDetails(element: TreeEntry, commandPrefix?: string, pluginStep?: any): Thenable<TreeEntry[]> {
 		const api = new ApiRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrievePluginStepImages(pluginStep.sdkmessageprocessingstepid), 
-            pluginImage => new TreeEntry(
-                pluginImage.name, 
-                "PluginStepImage",
-                vscode.TreeItemCollapsibleState.None,
-                pluginImage.description,
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: pluginImage.name,
-                    arguments: [`${commandPrefix || ''}/${pluginImage.name}`]
-                },
-                element.config,
-                pluginImage),
+        const returnValue = this.createEntries(
+            () => api.retrievePluginStepImages(pluginStep.sdkmessageprocessingstepid), 
+            pluginImage => this.parsers["PluginStepImage"](pluginImage, element, commandPrefix, pluginStep),
             `An error occurred while retrieving plug-in step images from ${element.config.webApiUrl}`,
             () => this.getPluginStepImageDetails(element, commandPrefix, pluginStep));
 
@@ -792,20 +530,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getWebResourcesFolderDetails(element: TreeEntry, commandPrefix?: string, solution?: any, folder?: string): Thenable<TreeEntry[]> {
         const api = new ApiRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrieveWebResourceFolders(solution ? solution.solutionid : undefined, folder),
-            container => new TreeEntry(
-                container, 
-                "Folder",
-                vscode.TreeItemCollapsibleState.Collapsed,
-                '', 
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: container,
-                    arguments: [`${commandPrefix || ''}/${container}`]
-                },
-                element.config,
-                { innerType: "WebResources", innerContext: (element.context && element.context.innerContext ? element.context.innerContext : element.context) }),
+        const returnValue = this.createEntries(
+            () => api.retrieveWebResourceFolders(solution ? solution.solutionid : undefined, folder),
+            container => this.folderParsers["WebResource"](container, element, commandPrefix),
             `An error occurred while retrieving web resources from ${element.config.webApiUrl}`, 
             () => this.getWebResourcesFolderDetails(element, commandPrefix, solution, folder));
 
@@ -814,27 +541,14 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getWebResourcesDetails(element: TreeEntry, commandPrefix?: string, solution?: any, folder?: string): Thenable<TreeEntry[]> {
         const api = new ApiRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrieveWebResources(solution ? solution.solutionid : undefined, folder), 
-            webresource => new TreeEntry(
-                webresource.name, 
-                "WebResource",
-                vscode.TreeItemCollapsibleState.None,
-                webresource.displayname, 
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: webresource.displayname,
-                    arguments: [`${commandPrefix || ''}/${webresource.webresourceid}`]
-                },
-                element.config,
-                webresource),
+        const returnValue = this.createEntries(
+            () => api.retrieveWebResources(solution ? solution.solutionid : undefined, folder), 
+            webresource => this.parsers["WebResource"](webresource, element, commandPrefix),
             `An error occurred while retrieving web resources from ${element.config.webApiUrl}`, 
             () => this.getWebResourcesDetails(element, commandPrefix, solution, folder))
             .then(results => { 
-                if (folder) {
-                    if (results && results.length > 0) {
-                        results.forEach(r => r.label = r.label.replace(Utilities.String.withTrailingSlash(r.folder), '')); 
-                    }
+                if (folder && results && results.length > 0) {
+                    results.forEach(r => r.label = r.label.replace(Utilities.String.withTrailingSlash(r.folder), '')); 
                 }
             
                 return results; 
@@ -845,20 +559,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getProcessDetails(element: TreeEntry, commandPrefix?: string, context?: any): Thenable<TreeEntry[]> {
 		const api = new ApiRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrieveProcesses(context && context.LogicalName ? context.LogicalName : undefined, element.solutionId), 
-            process => new TreeEntry(
-                process.name, 
-                "Process",
-                vscode.TreeItemCollapsibleState.None,
-                <string | undefined>CdsUrlResolver.parseProcessType(process.category), 
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: process.displayname,
-                    arguments: [`${commandPrefix || ''}/${process.workflowid}`]
-                },
-                element.config,
-                process),
+        const returnValue = this.createEntries(
+            () => api.retrieveProcesses(context && context.LogicalName ? context.LogicalName : undefined, element.solutionId), 
+            process => this.parsers["Process"](process, element, commandPrefix),
             `An error occurred while retrieving business processes from ${element.config.webApiUrl}`,
             () => this.getProcessDetails(element, commandPrefix, context));
 
@@ -867,24 +570,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getOptionSetDetails(element: TreeEntry, commandPrefix?: string, solution?: any): Thenable<TreeEntry[]> {
 		const api = new MetadataRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrieveOptionSets(solution ? solution.solutionid : undefined), 
-            optionSet => {
-                let displayName = optionSet.DisplayName && optionSet.DisplayName.LocalizedLabels && optionSet.DisplayName.LocalizedLabels.length > 0 ? optionSet.DisplayName.LocalizedLabels[0].Label : "";
-
-                return new TreeEntry(
-                    displayName,
-                    "OptionSet",
-                    vscode.TreeItemCollapsibleState.Collapsed,
-                    optionSet.Name, 
-                    {
-                        command: cs.cds.controls.cdsExplorer.clickEntry,
-                        title: displayName,
-                        arguments: [`${commandPrefix || ''}/${optionSet.Name}`]
-                    },
-                    element.config,
-                    optionSet);
-            },
+        const returnValue = this.createEntries(
+            () => api.retrieveOptionSets(solution ? solution.solutionid : undefined), 
+            optionSet => this.parsers["OptionSet"](optionSet, element, commandPrefix),
             `An error occurred while retrieving option sets from ${element.config.webApiUrl}`,
             () => this.getOptionSetDetails(element, commandPrefix, solution));
     
@@ -893,24 +581,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getEntityDetails(element: TreeEntry, commandPrefix?: string, solution?: any): Thenable<TreeEntry[]> {
 		const api = new MetadataRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrieveEntities(solution ? solution.solutionid : undefined), 
-            entity => {
-                let displayName = entity.DisplayName && entity.DisplayName.LocalizedLabels && entity.DisplayName.LocalizedLabels.length > 0 ? entity.DisplayName.LocalizedLabels[0].Label : "";
-
-                return new TreeEntry(
-                    displayName,
-                    "Entity",
-                    vscode.TreeItemCollapsibleState.Collapsed,
-                    entity.LogicalName, 
-                    {
-                        command: cs.cds.controls.cdsExplorer.clickEntry,
-                        title: displayName,
-                        arguments: [`${commandPrefix || ''}/${entity.LogicalName}`]
-                    },
-                    element.config,
-                    entity);
-            },
+        const returnValue = this.createEntries(
+            () => api.retrieveEntities(solution ? solution.solutionid : undefined), 
+            entity => this.parsers["Entity"](entity, element, commandPrefix),
             `An error occurred while retrieving entities from ${element.config.webApiUrl}`,
             () => this.getEntityDetails(element, commandPrefix, solution));
     
@@ -919,24 +592,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getEntityAttributeDetails(element: TreeEntry, commandPrefix?: string, entity?:any): Thenable<TreeEntry[]> {
         const api = new MetadataRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrieveAttributes(entity.MetadataId), 
-            attribute => {
-                let displayName = attribute.DisplayName && attribute.DisplayName.LocalizedLabels && attribute.DisplayName.LocalizedLabels.length > 0 ? attribute.DisplayName.LocalizedLabels[0].Label : "";
-
-                return new TreeEntry(
-                    displayName,
-                    "Attribute",
-                    vscode.TreeItemCollapsibleState.None,
-                    attribute.LogicalName, 
-                    {
-                        command: cs.cds.controls.cdsExplorer.clickEntry,
-                        title: displayName,
-                        arguments: [`${commandPrefix || ''}/${attribute.LogicalName}`]
-                    },
-                    element.config,
-                    attribute);
-            },
+        const returnValue = this.createEntries(
+            () => api.retrieveAttributes(entity.MetadataId), 
+            attribute => this.parsers["Attribute"](attribute, element, commandPrefix),
             `An error occurred while retrieving attributes from ${element.config.webApiUrl}`,
             () => this.getEntityAttributeDetails(element, commandPrefix, entity));
 
@@ -945,20 +603,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getEntityViewDetails(element: TreeEntry, commandPrefix?: string, solutionId?:string, entity?:any): Thenable<TreeEntry[]> {
         const api = new MetadataRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrieveViews(entity.LogicalName, solutionId), 
-            query => new TreeEntry(
-                query.name,
-                "View",
-                vscode.TreeItemCollapsibleState.None,
-                query.description, 
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: query.name,
-                    arguments: [`${commandPrefix || ''}/${query.savedqueryid}`]
-                },
-                element.config,
-                query),
+        const returnValue = this.createEntries(
+            () => api.retrieveViews(entity.LogicalName, solutionId), 
+            query => this.parsers["View"](query, element, commandPrefix),
             `An error occurred while retrieving views from ${element.config.webApiUrl}`,
             () => this.getEntityViewDetails(element, commandPrefix, entity));
             
@@ -967,20 +614,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getEntityChartDetails(element: TreeEntry, commandPrefix?: string, solutionId?:string, entity?:any): Thenable<TreeEntry[]> {
         const api = new MetadataRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrieveCharts(entity.LogicalName, solutionId), 
-            queryvisualization => new TreeEntry(
-                queryvisualization.name,
-                "Chart",
-                vscode.TreeItemCollapsibleState.None,
-                queryvisualization.description, 
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: queryvisualization.name,
-                    arguments: [`${commandPrefix || ''}/${queryvisualization.savedqueryvisualizationid}`]
-                },
-                element.config,
-                queryvisualization),
+        const returnValue = this.createEntries(
+            () => api.retrieveCharts(entity.LogicalName, solutionId), 
+            queryvisualization => this.parsers["Chart"](queryvisualization, element, commandPrefix),
             `An error occurred while retrieving charts from ${element.config.webApiUrl}`,
             () => this.getEntityChartDetails(element, commandPrefix, entity));
             
@@ -989,20 +625,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getEntityFormDetails(element: TreeEntry, commandPrefix?: string, solutionId?:string, entity?:any): Thenable<TreeEntry[]> {
         const api = new MetadataRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrieveForms(entity.LogicalName, solutionId), 
-            form => new TreeEntry(
-                form.name,
-                "Form",
-                vscode.TreeItemCollapsibleState.None,
-                form.description, 
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: form.name,
-                    arguments: [`${commandPrefix || ''}/${form.formid}`]
-                },
-                element.config,
-                form),
+        const returnValue = this.createEntries(
+            () => api.retrieveForms(entity.LogicalName, solutionId), 
+            form => this.parsers["Form"](form, element, commandPrefix),
             `An error occurred while retrieving forms from ${element.config.webApiUrl}`,
             () => this.getEntityFormDetails(element, commandPrefix, entity));
 
@@ -1011,20 +636,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getEntityDashboardDetails(element: TreeEntry, commandPrefix?: string, solutionId?:string, entity?:any): Thenable<TreeEntry[]> {
         const api = new MetadataRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrieveDashboards(entity.LogicalName, solutionId), 
-            dashboard => new TreeEntry(
-                dashboard.name,
-                "Dashboard",
-                vscode.TreeItemCollapsibleState.None,
-                dashboard.description, 
-                {
-                    command: cs.cds.controls.cdsExplorer.clickEntry,
-                    title: dashboard.name,
-                    arguments: [`${commandPrefix || ''}/${dashboard.formid}`]
-                },
-                element.config,
-                dashboard),
+        const returnValue = this.createEntries(
+            () => api.retrieveDashboards(entity.LogicalName, solutionId), 
+            dashboard => this.parsers["Dashboard"](dashboard, element, commandPrefix),
             `An error occurred while retrieving dashboards from ${element.config.webApiUrl}`,
             () => this.getEntityDashboardDetails(element, commandPrefix, entity));
 
@@ -1033,24 +647,9 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
 
     private getEntityKeyDetails(element: TreeEntry, commandPrefix?: string, entity?:any): Thenable<TreeEntry[]> {
         const api = new MetadataRepository(element.config);
-        const returnValue = this.createTreeEntries(
-            api.retrieveKeys(entity.MetadataId), 
-            key => {
-                let displayName = key.DisplayName && key.DisplayName.LocalizedLabels && key.DisplayName.LocalizedLabels.length > 0 ? key.DisplayName.LocalizedLabels[0].Label : "";
-
-                return new TreeEntry(
-                    displayName,
-                    "Key",
-                    vscode.TreeItemCollapsibleState.None,
-                    key.LogicalName, 
-                    {
-                        command: cs.cds.controls.cdsExplorer.clickEntry,
-                        title: key.name,
-                        arguments: [`${commandPrefix || ''}/${key.savedqueryvisualizationid}`]
-                    },
-                    element.config,
-                    key); 
-            },
+        const returnValue = this.createEntries(
+            () => api.retrieveKeys(entity.MetadataId), 
+            key => this.parsers["Key"](key, element, commandPrefix),
             `An error occurred while retrieving key definitions from ${element.config.webApiUrl}`,
             () => this.getEntityKeyDetails(element, commandPrefix, entity));
             
@@ -1065,54 +664,15 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
                 const result : TreeEntry[] = new Array();
 
                 if (returnValue && returnValue.oneToMany && returnValue.oneToMany.length > 0) {
-                    returnValue.oneToMany.forEach(r => {
-                        result.push(new TreeEntry(
-                            r.SchemaName,
-                            'OneToManyRelationship',
-                            vscode.TreeItemCollapsibleState.None,
-                            r.RelationshipType, 
-                            {
-                                command: cs.cds.controls.cdsExplorer.clickEntry,
-                                title: r.SchemaName,
-                                arguments: [`${commandPrefix || ''}/${r.SchemaName}`]
-                            },
-                            element.config,
-                            r));
-                    });
+                    returnValue.oneToMany.forEach(r => result.push(this.parsers["OneToManyRelationship"](r, element, commandPrefix)));
                 }
 
                 if (returnValue && returnValue.manyToOne && returnValue.manyToOne.length > 0) {
-                    returnValue.manyToOne.forEach(r => {
-                        result.push(new TreeEntry(
-                            r.SchemaName,
-                            'ManyToOneRelationship',
-                            vscode.TreeItemCollapsibleState.None,
-                            r.RelationshipType, 
-                            {
-                                command: cs.cds.controls.cdsExplorer.clickEntry,
-                                title: r.SchemaName,
-                                arguments: [`${commandPrefix || ''}/${r.SchemaName}`]
-                            },
-                            element.config,
-                            r));
-                    });
+                    returnValue.manyToOne.forEach(r => result.push(this.parsers["ManyToOneRelationship"](r, element, commandPrefix)));
                 }
 
-                if (returnValue && returnValue.manyToOne && returnValue.manyToOne.length > 0) {
-                    returnValue.manyToMany.forEach(r => {
-                        result.push(new TreeEntry(
-                            r.SchemaName,
-                            'ManyToManyRelationship',
-                            vscode.TreeItemCollapsibleState.None,
-                            r.RelationshipType, 
-                            {
-                                command: cs.cds.controls.cdsExplorer.clickEntry,
-                                title: r.SchemaName,
-                                arguments: [`${commandPrefix || ''}/${r.SchemaName}`]
-                            },
-                            element.config,
-                            r));
-                    });
+                if (returnValue && returnValue.manyToMany && returnValue.manyToMany.length > 0) {
+                    returnValue.manyToMany.forEach(r => result.push(this.parsers["ManyToManyRelationship"](r, element, commandPrefix)));
                 }
 
                 return new TS.Linq.Enumerator(result).orderBy(r => r.label).toArray();
@@ -1123,8 +683,26 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
             });
     }
 
-    private createTreeEntries(whenComplete: Promise<any[]>, parser: (item: any) => TreeEntry, errorMessage?:string, retryFunction?:any): Promise<TreeEntry[]> {
-        return whenComplete
+    private createContainers(element: TreeEntry, commandPrefix: string, parentType: EntryType, types: EntryType[]) : TreeEntry[] {
+        let returnObject = [];
+
+        types.forEach(type => {
+            returnObject.push(new TreeEntry(
+                type,
+                type,
+                vscode.TreeItemCollapsibleState.Collapsed,
+                null,
+                { command: cs.cds.controls.cdsExplorer.clickEntry, title: type, arguments: [`${commandPrefix || ''}/${type}`] },
+                element.config,
+                element.itemType === parentType ? element.context : undefined
+            ));
+        });
+
+        return returnObject;
+    }
+
+    private createEntries(retriever: () => Promise<any[]>, parser: (item: any) => TreeEntry, errorMessage?: string, retryFunction?: any): Promise<TreeEntry[]> {
+        return retriever()
             .then(items => {
                 logger.log(`createTreeEntries: items = ${items && items.length ? 'new Array(' + items.length + ')' : 'undefined' }`);
 
