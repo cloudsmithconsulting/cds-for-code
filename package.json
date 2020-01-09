@@ -49,6 +49,7 @@
 		"onCommand:cs.cds.deployment.compareWebResource",
 		"onCommand:cs.cds.deployment.connectToCds",
 		"onCommand:cs.cds.deployment.createWebResource",
+		"onCommand:cs.cds.deployment.createProcess",
 		"onCommand:cs.cds.deployment.dotNetBuild",
 		"onCommand:cs.cds.deployment.dotNetTest",
 		"onCommand:cs.cds.deployment.packWebResource",
@@ -405,6 +406,11 @@
 			{
 				"command": "cs.cds.deployment.createWebResource",
 				"title": "Create a web resource in your workspace or on a CDS instance",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.deployment.createProcess",
+				"title": "Create a process on a CDS instance",
 				"category": "CDS for Code"
 			},
 			{

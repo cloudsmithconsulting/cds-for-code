@@ -8,9 +8,15 @@ import packSolution from "../../commands/cs.cds.powerShell.packSolution";
 import unpackSolution from "../../commands/cs.cds.powerShell.unpackSolution";
 import registerPluginAssembly from "../../commands/cs.cds.deployment.registerPluginAssembly";
 import publishCustomizations from "../../commands/cs.cds.deployment.publishCustomizations";
+import createProcess from "../../commands/cs.cds.deployment.createProcess";
 import command from '../../core/Command';
 
 export default class SolutionManager {
+    @command(cs.cds.deployment.createProcess, "Add a process to a solution")
+    static async createProcess(config?: CdsWebApi.Config, solutionId?: string) {
+        return await createProcess.apply(this, [config, solutionId]);
+    }
+
     @command(cs.cds.deployment.addSolutionComponent, "Add component to solution")
     static async addSolutionComponent(config?: CdsWebApi.Config, solution?: any, componentId?: string, componentType?: CdsSolutions.SolutionComponent, addRequiredComponents?: boolean, doNotIncludeSubcomponents?: boolean, componentSettings?: string): Promise<any> {
         return await addSolutionComponent.apply(this, [config, solution, componentId, componentType, addRequiredComponents, doNotIncludeSubcomponents, componentSettings]);

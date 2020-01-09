@@ -167,6 +167,10 @@ export default class ApiRepository {
             });
     }
 
+    createProcess(workflow: any): Promise<any> {
+        return this.webapi.create(workflow, "workflows");
+    }
+
     async upsertWebResource(webResource:any): Promise<any> {
         let forceCreate:boolean = false;
 

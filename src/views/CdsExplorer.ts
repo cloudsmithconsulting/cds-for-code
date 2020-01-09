@@ -184,12 +184,10 @@ export default class CdsExplorerView implements IContributor {
                         Utilities.Browser.openWindow(CdsUrlResolver.getManageOptionSetUri(item.config, item.parent && item.parent.context ? item.parent.context.MetadataId : undefined, item.parent && item.parent.context ? item.parent.context.ObjectTypeCode : undefined, undefined, item.solutionId), retryFunction);
                         break;
                     case "Processes":                 
-                        let processType = await Quickly.pickEnum<CdsSolutions.ProcessType>(CdsSolutions.ProcessType);
-
-                        if (processType) {
-                            Utilities.Browser.openWindow(CdsUrlResolver.getManageBusinessProcessUri(item.config, processType, item.parent && item.parent.context && item.parent.context.ObjectTypeCode ? item.parent.context.ObjectTypeCode : undefined, item.solutionId), retryFunction);
+                        const process: any = await vscode.commands.executeCommand(cs.cds.deployment.createProcess, item.config, item.solutionId);
+                        if (process) {
+                            Utilities.Browser.openWindow(CdsUrlResolver.getManageBusinessProcessUri(item.config, process.processType, process.workflowid, process.solutionId || undefined), retryFunction);
                         }
-                        
                         break;
                     case "Keys":
                         Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityKeyUrl(item.config, item.context.MetadataId, undefined, item.solutionId), retryFunction);

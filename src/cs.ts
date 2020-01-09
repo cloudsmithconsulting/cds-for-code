@@ -8,6 +8,7 @@ export namespace cds {
         static readonly compareWebResource: string = `${deployment._namespace}.compareWebResource`;
         static readonly connectToCds: string = `${deployment._namespace}.connectToCds`;
         static readonly createWebResource: string = `${deployment._namespace}.createWebResource`;
+        static readonly createProcess: string = `${deployment._namespace}.createProcess`;
         static readonly dotNetBuild: string = `${deployment._namespace}.dotNetBuild`;
         static readonly dotNetTest: string = `${deployment._namespace}.dotNetTest`;
         static readonly packWebResource: string = `${deployment._namespace}.packWebResource`;
