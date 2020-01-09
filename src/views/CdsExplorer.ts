@@ -459,7 +459,7 @@ class CdsExplorerTreeProvider implements vscode.TreeDataProvider<TreeEntry> {
     }
 
     private getSolutionLevelDetails(element: TreeEntry, commandPrefix?:string) : TreeEntry[] {
-        const showDefaultSolution = ExtensionConfiguration.getConfigurationValue<boolean>(cs.cds.configuration.explorer.showDefaultSolution);
+        const showDefaultSolution = <boolean>ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.explorer.showDefaultSolution);
         const returnValue: TreeEntry[] = [];
 
         if (element.itemType === "Solution" || showDefaultSolution) {
