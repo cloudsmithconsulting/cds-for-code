@@ -4,6 +4,7 @@ import ExtensionContext from './ExtensionContext';
 import Telemetry from './Telemetry';
 import { Utilities } from './Utilities';
 import moment = require('moment');
+import * as Security from '../core/security/Types';
 
 export interface ICommandWrapper<T> {
     readonly id: string;
@@ -44,13 +45,11 @@ export abstract class CommandWrapper<T> implements ICommandWrapper<T> {
 }
 
 export class DefaultCommandWrapper<T> extends CommandWrapper<T>{
-    static sensitiveKeys: string[] = [ "credentials", "password", "refreshToken", "accessToken" ];
-    
     onCommandInvoked(...args: any[]): void {    
-        const argString = args.map(a => { try { return JSON.stringify(Utilities.$Object.clone(a, undefined, DefaultCommandWrapper.sensitiveKeys)); } catch (error) { return a.toString(); } }).join();        
+        const argString = args.map(a => { try { return JSON.stringify(Utilities.$Object.clone(a, undefined, Security.sensitiveKeys)); } catch (error) { return a.toString(); } }).join();        
         this.options.logger.info(`Command: ${this.id} (${this.description}) invoked with: ${argString}`);
 
-        const telemetryProps = { commandId: this.id, invocationId: this.invocationId, arguments: argString };
+        const telemetryProps = { command: this.id, invocation: this.invocationId, arguments: argString };
         Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.commandInvoked, telemetryProps);
         this.startTime = moment.now();
     }
@@ -59,7 +58,7 @@ export class DefaultCommandWrapper<T> extends CommandWrapper<T>{
         this.endTime = moment.now();
         this.options.logger.error(`Command: ${this.id} error occurred: ${error.message}`);
 
-        const telemetryProps = { commandId: this.id, invocationId: this.invocationId };
+        const telemetryProps = { command: this.id, invocation: this.invocationId };
         const telemetryMeasures = { callDuration: this.endTime - this.startTime };
 
         Telemetry.Instance.error(error, telemetryProps, telemetryMeasures);
@@ -69,7 +68,7 @@ export class DefaultCommandWrapper<T> extends CommandWrapper<T>{
         this.endTime = moment.now();
         this.options.logger.info(`Command: ${this.id} invocation complete`);
 
-        const telemetryProps = { commandId: this.id, invocationId: this.invocationId };
+        const telemetryProps = { command: this.id, invocation: this.invocationId };
         const telemetryMeasures = { callDuration: this.endTime - this.startTime };
 
         Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.commandCompleted, telemetryProps, telemetryMeasures);

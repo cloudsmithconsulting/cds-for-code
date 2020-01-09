@@ -20,6 +20,7 @@ import Dictionary from '../core/types/Dictionary';
 import ExtensionContext from '../core/ExtensionContext';
 import moment = require('moment');
 import { any } from 'async';
+import Telemetry, { telemetry } from '../core/Telemetry';
 
 /**
  * TreeView implementation that helps end-users navigate items in their Common Data Services (CDS) environments.
@@ -59,7 +60,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         return this.instance;
     }
 
-    private addCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
+    private static readonly addCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
         { key: "Solutions", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config)) },
         { key: "Entities", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, undefined, item.solution)) },
         { key: "Attributes", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageAttributeUri(item.config, item.context.MetadataId, undefined, item.solutionId)) },
@@ -102,13 +103,13 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         { key: "PluginStep", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, undefined, item.config) }
     ]);
 
-    private deleteCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
+    private static readonly deleteCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
         { key: "Connection", value: async (item) => CdsExplorer.Instance.removeConnection(item.config) },
         { key: "PluginStep", value: async (item) => CdsExplorer.Instance.removePluginStep(item.config, item.context).then(() => CdsExplorer.Instance.refresh(item.parent)) },
         { key: "PluginStepImage", value: async (item) => CdsExplorer.Instance.removePluginStepImage(item.config, item.context).then(() => CdsExplorer.Instance.refresh(item.parent)) }
     ]);
 
-    private editCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
+    private static readonly editCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
         { key: "Connection", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection, item.config) },
         { key: "Solution", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config, item.context)) },
         { key: "Entity", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, item.context, item.solution)) },
@@ -136,11 +137,11 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         { key: "PluginStepImage", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, item.context, item.config) }
     ]);
 
-    private folderParsers = new Dictionary<CdsExplorerEntryType, (item: any, element?: CdsTreeEntry, ...rest: any[]) => CdsTreeEntry>([
+    private static readonly folderParsers = new Dictionary<CdsExplorerEntryType, (item: any, element?: CdsTreeEntry, ...rest: any[]) => CdsTreeEntry>([
         { key: "WebResource", value: (container, element) => element.createChildItem("Folder", container, container, '', vscode.TreeItemCollapsibleState.Collapsed, { innerType: "WebResources", innerContext: (element.context && element.context.innerContext ? element.context.innerContext : element.context) }) }
     ]);
 
-    private getChildrenCommands = new Dictionary<CdsExplorerEntryType, (element?: CdsTreeEntry) => Promise<CdsTreeEntry[]>>([
+    private readonly getChildrenCommands = new Dictionary<CdsExplorerEntryType, (element?: CdsTreeEntry) => Promise<CdsTreeEntry[]>>([
         { key: "Connection", value: async (element?) => await this.getConnectionDetails(element) },
         { key: "Organization", value: async (element?) => await this.getSolutionLevelDetails(element) },
         { key: "Solutions", value: async (element?) => await this.getSolutionDetails(element) },
@@ -170,27 +171,27 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         { key: "Relationships", value: async (element?) => await this.getEntityRelationshipDetails(element, element.context) },
     ]);
 
-    private openInAppCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
+    private static readonly openInAppCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
         { key: "Entity", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityUsingAppUrl(item.context.LogicalName)) },
         { key: "Dashboard", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityDashboardUsingAppUrl(item.context.formid)) },
         { key: "View", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityViewUsingAppUrl(item.parent.context.LogicalName, item.context.savedqueryid)) },
     ]);
 
-    private openInBrowserCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
+    private static readonly openInBrowserCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
         { key: "Entity", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityFormUri(item.config, item.context.LogicalName)) },
         { key: "Form", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityFormUri(item.config, item.parent.context.LogicalName, item.context.formid)) },
         { key: "Dashboard", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityFormUri(item.config, item.parent.context.LogicalName, item.context.formid)) },
         { key: "View", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityViewUri(item.config, item.parent.context.LogicalName, item.context.savedqueryid)) },
     ]);
 
-    private openInEditorCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
+    private static readonly openInEditorCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
         { key: "Form", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`Form loaded in editor`)) },
         { key: "Dashboard", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`Dashboard loaded in editor`)) },
         { key: "View", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.layoutxml }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`View loaded in editor`)) },
         { key: "Chart", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.presentationdescription }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`Chart loaded in editor`)) }
     ]);
 
-    private parsers = new Dictionary<CdsExplorerEntryType, (item: any, element?: CdsTreeEntry, ...rest: any[]) => CdsTreeEntry>([
+    private static readonly parsers = new Dictionary<CdsExplorerEntryType, (item: any, element?: CdsTreeEntry, ...rest: any[]) => CdsTreeEntry>([
         { key: "Connection", value: connection => {
             const displayName = (connection.name) ? connection.name : connection.webApiUrl.replace("http://", "").replace("https://", "");
 
@@ -233,7 +234,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         { key: "ManyToManyRelationship", value: (relationship, element) => element.createChildItem('ManyToManyRelationship', relationship.SchemaName, relationship.SchemaName, relationship.RelationshipType, vscode.TreeItemCollapsibleState.None, relationship)}, 
     ]);
 
-    private solutionComponentMappings = new Dictionary<CdsExplorerEntryType, { componentId: (item?: CdsTreeEntry) => Promise<void>, componentType: CdsSolutions.SolutionComponent }>([
+    private static readonly solutionComponentMappings = new Dictionary<CdsExplorerEntryType, { componentId: (item?: CdsTreeEntry) => Promise<void>, componentType: CdsSolutions.SolutionComponent }>([
         { key: "Plugin", value: { componentId: (item) => item.context.pluginassemblyid, componentType: CdsSolutions.SolutionComponent.PluginAssembly }},
         { key: "WebResource", value: { componentId: (item) => item.context.webresourceid, componentType: CdsSolutions.SolutionComponent.WebResource }},
         { key: "Process", value: { componentId: (item) => item.context.workflowid, componentType: CdsSolutions.SolutionComponent.Workflow }},
@@ -270,7 +271,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         if (!item) {
             await vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection);
         } else {
-            return this.runCommand(this.addCommands, item);
+            return this.runCommand(CdsExplorer.addCommands, item);
         }
     }
 
@@ -308,9 +309,9 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
             return;
         }
 
-        if (this.solutionComponentMappings.containsKey(item.itemType)) {
-            const componentId = this.solutionComponentMappings[item.itemType].componentId(item);
-            const componentType = this.solutionComponentMappings[item.itemType].componentType;
+        if (CdsExplorer.solutionComponentMappings.containsKey(item.itemType)) {
+            const componentId = CdsExplorer.solutionComponentMappings[item.itemType].componentId(item);
+            const componentType = CdsExplorer.solutionComponentMappings[item.itemType].componentType;
 
             return await vscode.commands.executeCommand(cs.cds.deployment.addSolutionComponent, item.config, undefined, componentId, componentType)
                 .then(response => {
@@ -333,12 +334,12 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
     @command(cs.cds.controls.cdsExplorer.deleteEntry, "Delete")
     async delete(item?: CdsTreeEntry) {
-        return this.runCommand(this.deleteCommands, item);
+        return this.runCommand(CdsExplorer.deleteCommands, item);
     }
 
     @command(cs.cds.controls.cdsExplorer.editEntry, "Edit")
     async edit(item?: CdsTreeEntry): Promise<void> {
-        return this.runCommand(this.editCommands, item);
+        return this.runCommand(CdsExplorer.editCommands, item);
     }
 
     getTreeItem(element: CdsTreeEntry): vscode.TreeItem {
@@ -366,17 +367,17 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
     @command(cs.cds.controls.cdsExplorer.openInApp, "Open in App")
     async openInApp(item?: CdsTreeEntry): Promise<void> {
-        return this.runCommand(this.openInAppCommands, item);
+        return this.runCommand(CdsExplorer.openInAppCommands, item);
     }
 
     @command(cs.cds.controls.cdsExplorer.openInBrowser, "Open in Browser")
     async openInBrowser(item?: CdsTreeEntry): Promise<void> {
-        return this.runCommand(this.openInBrowserCommands, item);
+        return this.runCommand(CdsExplorer.openInBrowserCommands, item);
     }
 
     @command(cs.cds.controls.cdsExplorer.openInEditor, "Open in Editor")
     async openInEditor(item?: CdsTreeEntry): Promise<void> {
-        return this.runCommand(this.openInEditorCommands, item);
+        return this.runCommand(CdsExplorer.openInEditorCommands, item);
     }
 
     @command(cs.cds.controls.cdsExplorer.refreshEntry, "Refresh")
@@ -410,9 +411,9 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
             return;
         }
 
-        if (this.solutionComponentMappings.containsKey(item.itemType)) {
-            const componentId = this.solutionComponentMappings[item.itemType].componentId(item);
-            const componentType = this.solutionComponentMappings[item.itemType].componentType;
+        if (CdsExplorer.solutionComponentMappings.containsKey(item.itemType)) {
+            const componentId = CdsExplorer.solutionComponentMappings[item.itemType].componentId(item);
+            const componentType = CdsExplorer.solutionComponentMappings[item.itemType].componentType;
 
             if (!Utilities.$Object.isNullOrEmpty(item.solutionIdPath)) {
                 const solutions = TreeEntryCache.Instance.Items.where(i => i.id === item.solutionIdPath).toArray();
@@ -435,16 +436,17 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         return returnObject;
     }
 
+    private static readonly performance = { 
+        count: items => items && items.length ? items.length : 0, 
+        totalTime: timers => timers["endParseTime"] - timers["startTime"], 
+        parseTime: timers => timers["endParseTime"] - timers["startParseTime"], 
+        parsePercent: timers => Math.round(CdsExplorer.performance.parseTime(timers) / CdsExplorer.performance.totalTime(timers) * 1000) / 10,
+        retreiveTime: timers => timers["startParseTime"] - timers["startTime"],
+        retreivePercent: timers => Math.round(CdsExplorer.performance.retreiveTime(timers) / CdsExplorer.performance.totalTime(timers) * 1000) / 10 };
+
     private createEntries(element: CdsTreeEntry, onRetreive: () => Promise<any[]>, onParse: (item: any) => CdsTreeEntry, onErrorMessage?: (message: string) => string, onRetry?: Function): Promise<CdsTreeEntry[]> {
         const timers = new Dictionary<string, number>();
-        const perf = { 
-            count: items => items && items.length ? items.length : 0, 
-            totalTime: timers => timers["endParseTime"] - timers["startTime"], 
-            parseTime: timers => timers["endParseTime"] - timers["startParseTime"], 
-            parsePercent: timers => Math.round(perf.parseTime(timers) / perf.totalTime(timers) * 1000) / 10,
-            retreiveTime: timers => timers["startParseTime"] - timers["startTime"],
-            retreivePercent: timers => Math.round(perf.retreiveTime(timers) / perf.totalTime(timers) * 1000) / 10 };
-
+        const invocationId = Utilities.Guid.newGuid();
         timers["startTime"] = moment.now();
 
         return onRetreive()
@@ -454,7 +456,19 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                 let parsed: number = 0;
 
                 if (!items) {
-                    logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: No children found for ${element.label} (${perf.parseTime(timers)}ms)`);
+                    logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: No children found for ${element.label} (${CdsExplorer.performance.parseTime(timers)}ms)`);
+                    Telemetry.Instance.sendTelemetry(
+                        cs.cds.telemetryEvents.performanceCritical, {
+                            component: cs.cds.viewContainers.cdsExplorer, 
+                            invocation: invocationId, 
+                            item: element.id 
+                        }, {
+                            count: 0, 
+                            totalTime: CdsExplorer.performance.retreiveTime(timers),
+                            retreiveTime: CdsExplorer.performance.retreiveTime(timers),
+                            retreivePercent: 100
+                        });
+
                     return;
                 }
                 
@@ -469,6 +483,11 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
                         logger.error(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: ${message}`);
                         Quickly.error(`There was an error parsing one of the tree entries: ${message}`);
+                        Telemetry.Instance.error(error, {
+                            component: cs.cds.viewContainers.cdsExplorer, 
+                            invocation: invocationId, 
+                            item: element.id 
+                        });
                     }
 
                     if (treeItem) {
@@ -478,7 +497,20 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                 }
 
                 timers["endParseTime"] = moment.now();
-                logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: Retreived children nodes for '${element.label}' - parsed ${parsed}/${perf.count(items)} entries (total: ${perf.totalTime(timers)}ms, retreive: ${perf.retreiveTime(timers)}ms;${perf.retreivePercent(timers)}%, parse: ${perf.parseTime(timers)}ms;${perf.parsePercent(timers)}%)`);
+                logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: Retreived children nodes for '${element.label}' - parsed ${parsed}/${CdsExplorer.performance.count(items)} entries (total: ${CdsExplorer.performance.totalTime(timers)}ms, retreive: ${CdsExplorer.performance.retreiveTime(timers)}ms;${CdsExplorer.performance.retreivePercent(timers)}%, parse: ${CdsExplorer.performance.parseTime(timers)}ms;${CdsExplorer.performance.parsePercent(timers)}%)`);
+                Telemetry.Instance.sendTelemetry(
+                    cs.cds.telemetryEvents.performanceCritical, {
+                        component: cs.cds.viewContainers.cdsExplorer, 
+                        invocation: invocationId, 
+                        item: element.id 
+                    }, {
+                        count: CdsExplorer.performance.count(items), 
+                        totalTime: CdsExplorer.performance.totalTime(timers),
+                        parseTime: CdsExplorer.performance.parseTime(timers),
+                        parsePercent: CdsExplorer.performance.parsePercent(timers),
+                        retreiveTime: CdsExplorer.performance.retreiveTime(timers),
+                        retreivePercent: CdsExplorer.performance.retreivePercent(timers)
+                    });
 
                 return result;
             })
@@ -499,7 +531,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const result: CdsTreeEntry[] = [];
         
         if (this._connections) {
-            this._connections.forEach(connection => result.push(this.parsers["Connection"](connection)));
+            this._connections.forEach(connection => result.push(CdsExplorer.parsers["Connection"](connection)));
         }
 
         return result;
@@ -520,7 +552,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveOrganizations(filter), 
-            org => this.parsers["Organization"](org, element),
+            org => CdsExplorer.parsers["Organization"](org, element),
             error => `An error occurred while accessing organizations from ${connection.webApiUrl}: ${error}`, 
             () => this.getConnectionDetails(element));
 
@@ -547,7 +579,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveSolutions(), 
-            solution => this.parsers["Solution"](solution, element),
+            solution => CdsExplorer.parsers["Solution"](solution, element),
             error => `An error occurred while retrieving solutions from ${element.config.webApiUrl}: ${error}`, 
             () => this.getSolutionDetails(element));
 
@@ -559,7 +591,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrievePluginAssemblies(solution ? solution.solutionid : undefined), 
-            plugin => this.parsers["Plugin"](plugin, element),
+            plugin => CdsExplorer.parsers["Plugin"](plugin, element),
             error => `An error occurred while retrieving plug-in assemblies from ${element.config.webApiUrl}: ${error}`,
             () => this.getPluginDetails(element, solution));
 
@@ -571,7 +603,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrievePluginTypes(plugin.pluginassemblyid), 
-            pluginType => this.parsers["PluginType"](pluginType, element, plugin),
+            pluginType => CdsExplorer.parsers["PluginType"](pluginType, element, plugin),
             error => `An error occurred while retrieving plug-in types from ${element.config.webApiUrl}: ${error}`,
             () => this.getPluginTypeDetails(element, plugin));
 
@@ -583,7 +615,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrievePluginSteps(pluginType.plugintypeid), 
-            pluginStep => this.parsers["PluginStep"](pluginStep, element, pluginType),
+            pluginStep => CdsExplorer.parsers["PluginStep"](pluginStep, element, pluginType),
             error => `An error occurred while retrieving plug-in steps from ${element.config.webApiUrl}: ${error}`,
             () => this.getPluginStepDetails(element, pluginType));
 
@@ -595,7 +627,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrievePluginStepImages(pluginStep.sdkmessageprocessingstepid), 
-            pluginImage => this.parsers["PluginStepImage"](pluginImage, element, pluginStep),
+            pluginImage => CdsExplorer.parsers["PluginStepImage"](pluginImage, element, pluginStep),
             error => `An error occurred while retrieving plug-in step images from ${element.config.webApiUrl}: ${error}`,
             () => this.getPluginStepImageDetails(element, pluginStep));
 
@@ -607,7 +639,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveWebResourceFolders(solution ? solution.solutionid : undefined, folder),
-            container => this.folderParsers["WebResource"](container, element),
+            container => CdsExplorer.folderParsers["WebResource"](container, element),
             error => `An error occurred while retrieving web resources from ${element.config.webApiUrl}: ${error}`, 
             () => this.getWebResourcesFolderDetails(element, solution, folder));
 
@@ -619,7 +651,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveWebResources(solution ? solution.solutionid : undefined, folder), 
-            webresource => this.parsers["WebResource"](webresource, element),
+            webresource => CdsExplorer.parsers["WebResource"](webresource, element),
             error => `An error occurred while retrieving web resources from ${element.config.webApiUrl}: ${error}`, 
             () => this.getWebResourcesDetails(element, solution, folder))
             .then(results => { 
@@ -638,7 +670,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveProcesses(context && context.LogicalName ? context.LogicalName : undefined, element.solutionId), 
-            process => this.parsers["Process"](process, element),
+            process => CdsExplorer.parsers["Process"](process, element),
             error => `An error occurred while retrieving business processes from ${element.config.webApiUrl}: ${error}`,
             () => this.getProcessDetails(element, context));
 
@@ -650,7 +682,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveOptionSets(solution ? solution.solutionid : undefined), 
-            optionSet => this.parsers["OptionSet"](optionSet, element),
+            optionSet => CdsExplorer.parsers["OptionSet"](optionSet, element),
             error => `An error occurred while retrieving option sets from ${element.config.webApiUrl}: ${error}`,
             () => this.getOptionSetDetails(element, solution));
     
@@ -662,7 +694,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveEntities(solution ? solution.solutionid : undefined), 
-            entity => this.parsers["Entity"](entity, element),
+            entity => CdsExplorer.parsers["Entity"](entity, element),
             error => `An error occurred while retrieving entities from ${element.config.webApiUrl}: ${error}`,
             () => this.getEntityDetails(element, solution));
     
@@ -674,7 +706,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveAttributes(entity.MetadataId), 
-            attribute => this.parsers["Attribute"](attribute, element),
+            attribute => CdsExplorer.parsers["Attribute"](attribute, element),
             error => `An error occurred while retrieving attributes from ${element.config.webApiUrl}: ${error}`,
             () => this.getEntityAttributeDetails(element, entity));
 
@@ -686,7 +718,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveViews(entity.LogicalName, solutionId), 
-            query => this.parsers["View"](query, element),
+            query => CdsExplorer.parsers["View"](query, element),
             error => `An error occurred while retrieving views from ${element.config.webApiUrl}: ${error}`,
             () => this.getEntityViewDetails(element, entity));
             
@@ -698,7 +730,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveCharts(entity.LogicalName, solutionId), 
-            queryvisualization => this.parsers["Chart"](queryvisualization, element),
+            queryvisualization => CdsExplorer.parsers["Chart"](queryvisualization, element),
             error => `An error occurred while retrieving charts from ${element.config.webApiUrl}: ${error}`,
             () => this.getEntityChartDetails(element, entity));
             
@@ -710,7 +742,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveForms(entity.LogicalName, solutionId), 
-            form => this.parsers["Form"](form, element),
+            form => CdsExplorer.parsers["Form"](form, element),
             error => `An error occurred while retrieving forms from ${element.config.webApiUrl}: ${error}`,
             () => this.getEntityFormDetails(element, entity));
 
@@ -722,7 +754,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveDashboards(entity.LogicalName, solutionId), 
-            dashboard => this.parsers["Dashboard"](dashboard, element),
+            dashboard => CdsExplorer.parsers["Dashboard"](dashboard, element),
             error => `An error occurred while retrieving dashboards from ${element.config.webApiUrl}: ${error}`,
             () => this.getEntityDashboardDetails(element, entity));
 
@@ -734,7 +766,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const returnValue = this.createEntries(
             element,
             () => api.retrieveKeys(entity.MetadataId), 
-            key => this.parsers["Key"](key, element),
+            key => CdsExplorer.parsers["Key"](key, element),
             error => `An error occurred while retrieving key definitions from ${element.config.webApiUrl}: ${error}`,
             () => this.getEntityKeyDetails(element, entity));
             
@@ -749,15 +781,15 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                 const result : CdsTreeEntry[] = new Array();
 
                 if (returnValue && returnValue.oneToMany && returnValue.oneToMany.length > 0) {
-                    returnValue.oneToMany.forEach(r => result.push(this.parsers["OneToManyRelationship"](r, element)));
+                    returnValue.oneToMany.forEach(r => result.push(CdsExplorer.parsers["OneToManyRelationship"](r, element)));
                 }
 
                 if (returnValue && returnValue.manyToOne && returnValue.manyToOne.length > 0) {
-                    returnValue.manyToOne.forEach(r => result.push(this.parsers["ManyToOneRelationship"](r, element)));
+                    returnValue.manyToOne.forEach(r => result.push(CdsExplorer.parsers["ManyToOneRelationship"](r, element)));
                 }
 
                 if (returnValue && returnValue.manyToMany && returnValue.manyToMany.length > 0) {
-                    returnValue.manyToMany.forEach(r => result.push(this.parsers["ManyToManyRelationship"](r, element)));
+                    returnValue.manyToMany.forEach(r => result.push(CdsExplorer.parsers["ManyToManyRelationship"](r, element)));
                 }
 
                 return new TS.Linq.Enumerator(result).orderBy(r => r.label).toArray();

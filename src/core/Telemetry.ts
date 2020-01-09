@@ -3,6 +3,7 @@ import * as cs from '../cs';
 import TelemetryReporter from "vscode-extension-telemetry";
 import { extensionActivate, extensionDeactivate } from "./ExtensionEvent";
 import moment = require('moment');
+import { Utilities } from './Utilities';
 
 export function telemetry(event: string, properties?: { [key: string]: string; }, measurements?: { [key: string]: number; }) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -16,7 +17,9 @@ export function telemetry(event: string, properties?: { [key: string]: string; }
 
             let startTime = moment.now();
             let endTime;
-
+            const argString = args.map(a => { try { return JSON.stringify(Utilities.$Object.clone(a, undefined, )); } catch (error) { return a.toString(); } }).join();        
+            this.options.logger.info(`Command: ${this.id} (${this.description}) invoked with: ${argString}`);
+    
             try {
                 result = await originalMethod.apply(target, args);
                 endTime = moment.now();

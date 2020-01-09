@@ -48,9 +48,10 @@ export namespace cds {
 
     // tslint:disable-next-line: class-name
     export class telemetryEvents {
-        static readonly _namespace: string = "cs.cds.telemetryEvents";
+        static readonly _namespace: string = "cds-for-code";
         static readonly commandInvoked: string = `${telemetryEvents._namespace}.commandInvoked`;
         static readonly commandCompleted: string = `${telemetryEvents._namespace}.commandCompleted`;
+        static readonly performanceCritical: string = `${telemetryEvents._namespace}.performanceCritical`;
         static readonly loginFailure: string = `${telemetryEvents._namespace}.loginFailure`;
         static readonly extensionActivated: string = `${telemetryEvents._namespace}.extensionActivated`;
         static readonly extensionDeactivated: string = `${telemetryEvents._namespace}.extensionDeactivated`;

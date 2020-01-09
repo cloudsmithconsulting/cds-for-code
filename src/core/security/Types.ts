@@ -465,3 +465,5 @@ export class CdsOnlineCredential extends OAuthCredential {
         });
     }
 }
+
+export const sensitiveKeys: string[] = [ "credentials", "password", "refreshToken", "accessToken" ];
