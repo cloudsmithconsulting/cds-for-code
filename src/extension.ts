@@ -17,14 +17,14 @@ import IconDownloader from './components/WebDownloaders/IconDownloader';
 import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
 import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
 import Telemetry from './core/Telemetry';
-import CdsExplorerView from './views/CdsExplorer';
+import CdsExplorer from './views/cs.cds.viewContainers.cdsExplorer';
 
 let extensionContext: ExtensionContext;
 
 export async function activate(context: vscode.ExtensionContext) {
 	// Force initialization of our decorators by building an array of their classes.
 	// tslint:disable-next-line: no-unused-expression
-	[ IconDownloader, ScriptDownloader, CodeGenerationManager, SolutionMap, WebResourceManager, SolutionManager, VisualStudioProjectCommands, TemplateManager, ViewManager, Telemetry, CdsExplorerView ];
+	[ IconDownloader, ScriptDownloader, CodeGenerationManager, SolutionMap, WebResourceManager, SolutionManager, VisualStudioProjectCommands, TemplateManager, ViewManager, Telemetry, CdsExplorer ];
 
 	extensionContext = new ExtensionContext(context);
 
