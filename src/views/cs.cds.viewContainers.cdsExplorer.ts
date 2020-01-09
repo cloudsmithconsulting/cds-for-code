@@ -19,7 +19,6 @@ import { extensionActivate } from '../core/ExtensionEvent';
 import Dictionary from '../core/types/Dictionary';
 import ExtensionContext from '../core/ExtensionContext';
 import moment = require('moment');
-import { any } from 'async';
 import Telemetry, { telemetry } from '../core/Telemetry';
 
 /**
