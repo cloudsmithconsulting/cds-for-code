@@ -18,6 +18,8 @@ import command from '../core/Command';
 import { extensionActivate } from '../core/ExtensionEvent';
 import Dictionary from '../core/types/Dictionary';
 import ExtensionContext from '../core/ExtensionContext';
+import moment = require('moment');
+import { any } from 'async';
 
 /**
  * TreeView implementation that helps end-users navigate items in their Common Data Services (CDS) environments.
@@ -433,17 +435,29 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         return returnObject;
     }
 
-    private createEntries(onRetreive: () => Promise<any[]>, onParse: (item: any) => CdsTreeEntry, onErrorMessage?: (message: string) => string, onRetry?: Function): Promise<CdsTreeEntry[]> {
+    private createEntries(element: CdsTreeEntry, onRetreive: () => Promise<any[]>, onParse: (item: any) => CdsTreeEntry, onErrorMessage?: (message: string) => string, onRetry?: Function): Promise<CdsTreeEntry[]> {
+        const timers = new Dictionary<string, number>();
+        const perf = { 
+            count: items => items && items.length ? items.length : 0, 
+            totalTime: timers => timers["endParseTime"] - timers["startTime"], 
+            parseTime: timers => timers["endParseTime"] - timers["startParseTime"], 
+            parsePercent: timers => Math.round(perf.parseTime(timers) / perf.totalTime(timers) * 1000) / 10,
+            retreiveTime: timers => timers["startParseTime"] - timers["startTime"],
+            retreivePercent: timers => Math.round(perf.retreiveTime(timers) / perf.totalTime(timers) * 1000) / 10 };
+
+        timers["startTime"] = moment.now();
+
         return onRetreive()
             .then(items => {
-                logger.log(`createTreeEntries: items = ${items && items.length ? 'new Array(' + items.length + ')' : 'undefined' }`);
-
+                timers["startParseTime"] = moment.now();
                 const result : CdsTreeEntry[] = new Array();
+                let parsed: number = 0;
 
                 if (!items) {
+                    logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: No children found for ${element.label} (${perf.parseTime(timers)}ms)`);
                     return;
                 }
-
+                
                 for (let i = 0; i < items.length; i++) {
                     const item: any = items[i];
                     let treeItem;
@@ -451,21 +465,30 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                     try {
                         treeItem = onParse(item);
                     } catch (error) {
-                        Quickly.error(`There was an error parsing one of the tree entries: ${(error.message || error).toString()}`);
+                        const message = error.message || error.toString();
+
+                        logger.error(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: ${message}`);
+                        Quickly.error(`There was an error parsing one of the tree entries: ${message}`);
                     }
 
                     if (treeItem) {
+                        parsed++;
                         result.push(treeItem);
                     }
                 }
 
-                logger.log(`createTreeEntries: result = ${result && result.length ? 'new Array(' + result.length + ')' : 'undefined' }`);
+                timers["endParseTime"] = moment.now();
+                logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: Retreived children nodes for '${element.label}' - parsed ${parsed}/${perf.count(items)} entries (total: ${perf.totalTime(timers)}ms, retreive: ${perf.retreiveTime(timers)}ms;${perf.retreivePercent(timers)}%, parse: ${perf.parseTime(timers)}ms;${perf.parsePercent(timers)}%)`);
 
                 return result;
             })
             .catch(err => {
                 if (onErrorMessage && onRetry) {
-                    Quickly.askToRetry(onErrorMessage((err.message || err).toString()), onRetry);
+                    const message = onErrorMessage((err.message || err).toString());
+
+                    logger.error(`${cs.cds.viewContainers.cdsExplorer}.createEntries: ${message} {ui-retry}`);
+
+                    Quickly.askToRetry(message, onRetry);
                 }
 
                 return null;
@@ -495,6 +518,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         }
 
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveOrganizations(filter), 
             org => this.parsers["Organization"](org, element),
             error => `An error occurred while accessing organizations from ${connection.webApiUrl}: ${error}`, 
@@ -521,6 +545,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getSolutionDetails(element: CdsTreeEntry): Promise<CdsTreeEntry[]> {
         const api = new ApiRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveSolutions(), 
             solution => this.parsers["Solution"](solution, element),
             error => `An error occurred while retrieving solutions from ${element.config.webApiUrl}: ${error}`, 
@@ -532,6 +557,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getPluginDetails(element: CdsTreeEntry, solution?: any): Thenable<CdsTreeEntry[]> {
 		const api = new ApiRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrievePluginAssemblies(solution ? solution.solutionid : undefined), 
             plugin => this.parsers["Plugin"](plugin, element),
             error => `An error occurred while retrieving plug-in assemblies from ${element.config.webApiUrl}: ${error}`,
@@ -543,6 +569,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getPluginTypeDetails(element: CdsTreeEntry, plugin?: any): Thenable<CdsTreeEntry[]> {
 		const api = new ApiRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrievePluginTypes(plugin.pluginassemblyid), 
             pluginType => this.parsers["PluginType"](pluginType, element, plugin),
             error => `An error occurred while retrieving plug-in types from ${element.config.webApiUrl}: ${error}`,
@@ -554,6 +581,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getPluginStepDetails(element: CdsTreeEntry, pluginType?: any): Thenable<CdsTreeEntry[]> {
 		const api = new ApiRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrievePluginSteps(pluginType.plugintypeid), 
             pluginStep => this.parsers["PluginStep"](pluginStep, element, pluginType),
             error => `An error occurred while retrieving plug-in steps from ${element.config.webApiUrl}: ${error}`,
@@ -565,6 +593,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getPluginStepImageDetails(element: CdsTreeEntry, pluginStep?: any): Thenable<CdsTreeEntry[]> {
 		const api = new ApiRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrievePluginStepImages(pluginStep.sdkmessageprocessingstepid), 
             pluginImage => this.parsers["PluginStepImage"](pluginImage, element, pluginStep),
             error => `An error occurred while retrieving plug-in step images from ${element.config.webApiUrl}: ${error}`,
@@ -576,6 +605,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getWebResourcesFolderDetails(element: CdsTreeEntry, solution?: any, folder?: string): Thenable<CdsTreeEntry[]> {
         const api = new ApiRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveWebResourceFolders(solution ? solution.solutionid : undefined, folder),
             container => this.folderParsers["WebResource"](container, element),
             error => `An error occurred while retrieving web resources from ${element.config.webApiUrl}: ${error}`, 
@@ -587,6 +617,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getWebResourcesDetails(element: CdsTreeEntry, solution?: any, folder?: string): Thenable<CdsTreeEntry[]> {
         const api = new ApiRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveWebResources(solution ? solution.solutionid : undefined, folder), 
             webresource => this.parsers["WebResource"](webresource, element),
             error => `An error occurred while retrieving web resources from ${element.config.webApiUrl}: ${error}`, 
@@ -605,6 +636,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getProcessDetails(element: CdsTreeEntry, context?: any): Thenable<CdsTreeEntry[]> {
 		const api = new ApiRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveProcesses(context && context.LogicalName ? context.LogicalName : undefined, element.solutionId), 
             process => this.parsers["Process"](process, element),
             error => `An error occurred while retrieving business processes from ${element.config.webApiUrl}: ${error}`,
@@ -616,6 +648,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getOptionSetDetails(element: CdsTreeEntry, solution?: any): Thenable<CdsTreeEntry[]> {
 		const api = new MetadataRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveOptionSets(solution ? solution.solutionid : undefined), 
             optionSet => this.parsers["OptionSet"](optionSet, element),
             error => `An error occurred while retrieving option sets from ${element.config.webApiUrl}: ${error}`,
@@ -627,6 +660,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getEntityDetails(element: CdsTreeEntry, solution?: any): Thenable<CdsTreeEntry[]> {
 		const api = new MetadataRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveEntities(solution ? solution.solutionid : undefined), 
             entity => this.parsers["Entity"](entity, element),
             error => `An error occurred while retrieving entities from ${element.config.webApiUrl}: ${error}`,
@@ -638,6 +672,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getEntityAttributeDetails(element: CdsTreeEntry, entity?:any): Thenable<CdsTreeEntry[]> {
         const api = new MetadataRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveAttributes(entity.MetadataId), 
             attribute => this.parsers["Attribute"](attribute, element),
             error => `An error occurred while retrieving attributes from ${element.config.webApiUrl}: ${error}`,
@@ -649,6 +684,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getEntityViewDetails(element: CdsTreeEntry, solutionId?:string, entity?:any): Thenable<CdsTreeEntry[]> {
         const api = new MetadataRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveViews(entity.LogicalName, solutionId), 
             query => this.parsers["View"](query, element),
             error => `An error occurred while retrieving views from ${element.config.webApiUrl}: ${error}`,
@@ -660,6 +696,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getEntityChartDetails(element: CdsTreeEntry, solutionId?:string, entity?:any): Thenable<CdsTreeEntry[]> {
         const api = new MetadataRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveCharts(entity.LogicalName, solutionId), 
             queryvisualization => this.parsers["Chart"](queryvisualization, element),
             error => `An error occurred while retrieving charts from ${element.config.webApiUrl}: ${error}`,
@@ -671,6 +708,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getEntityFormDetails(element: CdsTreeEntry, solutionId?:string, entity?:any): Thenable<CdsTreeEntry[]> {
         const api = new MetadataRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveForms(entity.LogicalName, solutionId), 
             form => this.parsers["Form"](form, element),
             error => `An error occurred while retrieving forms from ${element.config.webApiUrl}: ${error}`,
@@ -682,6 +720,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getEntityDashboardDetails(element: CdsTreeEntry, solutionId?:string, entity?:any): Thenable<CdsTreeEntry[]> {
         const api = new MetadataRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveDashboards(entity.LogicalName, solutionId), 
             dashboard => this.parsers["Dashboard"](dashboard, element),
             error => `An error occurred while retrieving dashboards from ${element.config.webApiUrl}: ${error}`,
@@ -693,6 +732,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     private getEntityKeyDetails(element: CdsTreeEntry, entity?:any): Thenable<CdsTreeEntry[]> {
         const api = new MetadataRepository(element.config);
         const returnValue = this.createEntries(
+            element,
             () => api.retrieveKeys(entity.MetadataId), 
             key => this.parsers["Key"](key, element),
             error => `An error occurred while retrieving key definitions from ${element.config.webApiUrl}: ${error}`,
