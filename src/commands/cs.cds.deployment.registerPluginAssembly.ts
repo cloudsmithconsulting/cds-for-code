@@ -11,7 +11,7 @@ import DotNetProjectManager from '../components/DotNetCore/DotNetProjectManager'
 import { Octicon } from "../core/types/Octicon";
 import Quickly, { QuickPickOption } from '../core/Quickly';
 import ExtensionContext from '../core/ExtensionContext';
-import logger from '../core/Logger';
+import logger from '../core/framework/Logger';
 
 export default async function run(config?: CdsWebApi.Config, pluginAssembly?: any, file?: vscode.Uri, solution?: any): Promise<any> {
     const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;

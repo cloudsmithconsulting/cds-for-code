@@ -9,7 +9,7 @@ import * as DynamicsTreeView from '../../views/cs.cds.viewContainers.cdsExplorer
 import { TS } from 'typescript-linq';
 import * as TemplateTreeView from '../../views/TemplateExplorer';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
-import logger from '../../core/Logger';
+import logger from '../../core/framework/Logger';
 
 export type ExtensionIcon = DynamicsTreeView.CdsExplorerEntryType | TemplateTreeView.EntryType | 'Add' | 'Edit' | 'Delete' | 'Refresh' | 'Save' | 'Cancel';
 

@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import * as cs from '../cs';
+import * as cs from '../../cs';
 import TelemetryReporter from "vscode-extension-telemetry";
-import { extensionActivate, extensionDeactivate } from "./ExtensionEvent";
+import { extensionActivate, extensionDeactivate } from "../Extension";
 import moment = require('moment');
-import { Utilities } from './Utilities';
+import { Utilities } from '../Utilities';
 
 export function telemetry(event: string, properties?: { [key: string]: string; }, measurements?: { [key: string]: number; }) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {

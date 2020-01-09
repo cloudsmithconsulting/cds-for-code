@@ -5,7 +5,7 @@ import Xml from '../../core/io/Xml';
 import dotNetBuild from "../../commands/cs.cds.deployment.dotNetBuild";
 import dotNetTest  from "../../commands/cs.cds.deployment.dotNetTest";
 import command from '../../core/Command';
-import logger from '../../core/Logger';
+import logger from '../../core/framework/Logger';
 
 export default class VisualStudioProjectCommands {
     @command(cs.cds.controls.explorer.dotNetBuild, "Run dotnet build from File Explorer")

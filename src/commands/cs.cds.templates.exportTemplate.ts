@@ -6,7 +6,7 @@ import { TemplateItem, TemplateType } from "../components/Templates/Types";
 import * as FileSystem from "../core/io/FileSystem";
 import * as p from 'path';
 import TemplateManager from "../components/Templates/TemplateManager";
-import logger from "../core/Logger";
+import logger from "../core/framework/Logger";
 
 /**
  * Command exports a template from your workspace into a .zip archive for re-import later.

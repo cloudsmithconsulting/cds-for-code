@@ -1,25 +1,25 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
+import { Utilities } from '../core/Utilities';
 import { TS } from 'typescript-linq/TS';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
+import { CdsSolutions } from '../api/CdsSolutions';
+import { ExtensionIconThemes } from "../components/WebDownloaders/Types";
+import { extensionActivate } from '../core/Extension';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import ApiRepository from '../repositories/apiRepository';
-import { Utilities } from '../core/Utilities';
 import MetadataRepository from '../repositories/metadataRepository';
 import CdsUrlResolver from '../api/CdsUrlResolver';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
-import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
-import { ExtensionIconThemes } from "../components/WebDownloaders/Types";
 import Quickly from '../core/Quickly';
 import SolutionMap from '../components/Solutions/SolutionMap';
 import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
-import { CdsSolutions } from '../api/CdsSolutions';
-import logger from '../core/Logger';
+import logger from '../core/framework/Logger';
 import command from '../core/Command';
-import { extensionActivate } from '../core/ExtensionEvent';
 import Dictionary from '../core/types/Dictionary';
 import ExtensionContext from '../core/ExtensionContext';
 import moment = require('moment');
-import Telemetry, { telemetry } from '../core/Telemetry';
+import Telemetry, { telemetry } from '../core/framework/Telemetry';
 
 /**
  * TreeView implementation that helps end-users navigate items in their Common Data Services (CDS) environments.

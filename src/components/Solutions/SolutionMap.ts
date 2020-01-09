@@ -8,7 +8,7 @@ import { ExtensionContext } from "vscode";
 import { CdsSolutions } from "../../api/CdsSolutions";
 import { WorkspaceFileSystemWatcher } from "../../core/io/FileManager";
 import SolutionWorkspaceMapping from "./SolutionWorkspaceMapping";
-import { extensionActivate } from "../../core/ExtensionEvent";
+import { extensionActivate } from "../../core/Extension";
 import removeSolutionMapping from "../../commands/cs.cds.deployment.removeSolutionMapping";
 import updateSolutionMapping from "../../commands/cs.cds.deployment.updateSolutionMapping";
 import command from "../../core/Command";
@@ -304,4 +304,3 @@ export default class SolutionMap {
         return `SolutionMap:${pattern}`;
     }
 }
-

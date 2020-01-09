@@ -8,7 +8,7 @@ import ApiRepository from "../repositories/apiRepository";
 import { Utilities } from "../core/Utilities";
 import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
 import ExtensionContext from '../core/ExtensionContext';
-import logger from '../core/Logger';
+import logger from '../core/framework/Logger';
 
 /**
  * This command can be invoked by the Dynamics Explorer tree view and creates or updates a web resource in the local workspace.

@@ -1,0 +1,2 @@
+import moment = require('moment');
+

@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import * as FileSystem from '../../core/io/FileSystem';
-import * as EnvironmentVariables from '../../core/EnvironmentVariables';
+import * as EnvironmentVariables from '../../core/framework/EnvironmentVariables';
 import * as _ from 'lodash';
 import { TemplatePlaceholder, TemplateItem, TemplateType, TemplateDirective } from './Types';
 

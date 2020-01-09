@@ -16,7 +16,7 @@ import ExtensionContext from './core/ExtensionContext';
 import IconDownloader from './components/WebDownloaders/IconDownloader';
 import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
 import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
-import Telemetry from './core/Telemetry';
+import Telemetry from './core/framework/Telemetry';
 import CdsExplorer from './views/cs.cds.viewContainers.cdsExplorer';
 
 let extensionContext: ExtensionContext;

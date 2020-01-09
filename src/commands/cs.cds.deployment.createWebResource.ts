@@ -10,7 +10,7 @@ import { Utilities } from "../core/Utilities";
 import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
 import ExtensionContext from "../core/ExtensionContext";
 import DiscoveryRepository from "../repositories/discoveryRepository";
-import logger from "../core/Logger";
+import logger from "../core/framework/Logger";
 
 /**
  * This command can be invoked by the by either the file explorer view or the Dynamics TreeView

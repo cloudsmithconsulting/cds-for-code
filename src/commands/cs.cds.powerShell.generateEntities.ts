@@ -10,7 +10,7 @@ import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 import * as Security from "../core/security/Types";
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
-import logger from '../core/Logger';
+import logger from '../core/framework/Logger';
 
 /**
  * This command can be invoked by the Command Pallette or external sources and generates .Net code

@@ -1,15 +1,15 @@
 import * as Security from "./Types";
 import * as adal from "adal-node";
 import * as crypto from 'crypto';
-import * as ErrorParser from '../ErrorParser';
+import * as ErrorParser from '../framework/ErrorParser';
 import * as cs from '../../cs';
 import { Utilities } from "../Utilities";
 import GlobalStateCredentialStore from "./GlobalStateCredentialStore";
 import Quickly from "../Quickly";
 import * as express from 'express';
 import { Server } from "http";
-import logger from "../Logger";
-import Telemetry from "../Telemetry";
+import logger from "../framework/Logger";
+import Telemetry from "../framework/Telemetry";
 
 export type AuthenticationResult = {
     success: boolean,

@@ -13,7 +13,7 @@ import ExtensionContext from '../core/ExtensionContext';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
 import { Credential } from '../core/security/Types';
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
-import logger from '../core/Logger';
+import logger from '../core/framework/Logger';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.

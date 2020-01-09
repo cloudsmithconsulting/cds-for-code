@@ -2,7 +2,7 @@ import ExtensionConfiguration from "../core/ExtensionConfiguration";
 import * as cs from "../cs";
 import Quickly from "../core/Quickly";
 import { TemplateItem } from "../components/Templates/Types";
-import logger from "../core/Logger";
+import logger from "../core/framework/Logger";
 
 /**
  * Main command to delete an existing template.
