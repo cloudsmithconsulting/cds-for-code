@@ -381,6 +381,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
     @command(cs.cds.controls.cdsExplorer.refreshEntry, "Refresh")
     refresh(item?: CdsTreeEntry): void {
+        // do not check for .Instance here as it will create a circular reference.
         if (CdsExplorer.instance) {
             CdsExplorer.instance._onDidChangeTreeData.fire(item);
         }

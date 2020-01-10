@@ -7,6 +7,8 @@ import { Utilities } from '../core/Utilities';
 import { TS } from "typescript-linq";
 import ApiHelper from "./ApiHelper";
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
+import { CWA } from '../api/cds-webapi/CWA';
+import Dictionary from '../core/types/Dictionary';
 
 export default class ApiRepository {
     constructor (config: CdsWebApi.Config) {
@@ -184,16 +186,20 @@ export default class ApiRepository {
         }
 
         if (webResource && !forceCreate) {
-            return this.webapi.update(webResource.webresourceid, "webresourceset", webResource, "return=representation");
+            return this.webapi.update(webResource.webresourceid, "webresourceset", webResource, CWA.Prefer.ReturnRepresentation);
         } else {
-            return this.webapi.create(webResource, "webresourceset", "return=representation")
-                .catch(error => console.log(error));
+            return this.webapi.create(webResource, "webresourceset", CWA.Prefer.ReturnRepresentation);
         }
     }
 
-    retrievePluginAssemblies(solutionId?:string) : Promise<any[]> {
+    static readonly defaultSelections = new Dictionary<string, string[]>([
+        { key: "pluginassemblies", value: [ 'pluginassemblyid', 'name', 'version', 'publickeytoken', 'ishidden' ] } 
+    ]);
+
+    retrievePluginAssemblies(solutionId?:string, select: string[] = ApiRepository.defaultSelections["pluginassemblies"]) : Promise<any[]> {
         const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "pluginassemblies",
+            select: select,
             orderBy: ["name"]
         };
 
