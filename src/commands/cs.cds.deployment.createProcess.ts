@@ -2,7 +2,7 @@ import { CdsWebApi } from "../api/cds-webapi/CdsWebApi";
 import { CdsSolutions } from "../api/CdsSolutions";
 import ApiRepository from "../repositories/apiRepository";
 import Quickly from "../core/Quickly";
-import logger from "../core/Logger";
+import logger from "../core/framework/Logger";
 
 /**
  * Creates a process for a CDS solution
