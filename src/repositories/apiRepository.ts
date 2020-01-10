@@ -23,7 +23,7 @@ export default class ApiRepository {
 
     static readonly defaultSelections = new Dictionary<string, string[]>([
         { key: 'solutions', value: [ 'solutionid', 'uniquename', 'friendlyname', 'version', 'ismanaged', 'isvisible'  ] },
-        { key: 'workflows', value: [ 'workflowid', 'componentstate', 'type', 'solutionid', 'primaryentity', 'name', 'description' ] },
+        { key: 'workflows', value: [ 'workflowid', 'componentstate', 'category', 'type', 'solutionid', 'primaryentity', 'name', 'description' ] },
         { key: 'pluginassemblies', value: [ 'pluginassemblyid', 'name', 'version', 'publickeytoken', 'ishidden' ] },
         { key: 'webresources', value: [ 'webresourceid', 'name', 'displayname', 'webresourcetype', 'iscustomizable' ] },
         { key: 'pluginassemblies', value: [ 'name', 'publickeytoken' ] },
@@ -68,7 +68,7 @@ export default class ApiRepository {
             });
     }
 
-    retrieveProcesses(entityName?: string, solutionId?: string, select: string[] = ApiRepository.defaultSelections["workflows"]) : Promise<any[]> {
+    async retrieveProcesses(entityName?: string, solutionId?: string, select: string[] = ApiRepository.defaultSelections["workflows"]) : Promise<any[]> {
         // documentation of the attributes for workflow: https://docs.microsoft.com/en-us/dynamics365/customer-engagement/web-api/workflow?view=dynamics-ce-odata-9        
         const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "workflows",
@@ -77,12 +77,23 @@ export default class ApiRepository {
             orderBy: ["name"]
         };
 
-        if (solutionId) {
-            request.filter += ` and solutionid eq ${solutionId}`;
-        }
-
         if (entityName) { 
             request.filter += ` and primaryentity eq '${entityName}'`;
+        }
+
+        if (solutionId && Utilities.Guid.isGuid(solutionId)) { 
+            const components = (await ApiHelper.getSolutionComponents(this.webapi, solutionId, CdsSolutions.SolutionComponent.Workflow)).map(c => `'${c["objectid"]}'`).join(",");
+
+            if (!Utilities.$Object.isNullOrEmpty(components)) {
+                if (!Utilities.$Object.isNullOrEmpty(request.filter)) {
+                    request.filter += " and";
+                }
+
+                request.filter += ` Microsoft.Dynamics.CRM.In(PropertyName='workflowid',PropertyValues=[${components}])`;
+                request.filter = request.filter.trim();
+            } else {
+                return Promise.resolve([]);
+            }
         }
 
         return this.webapi.retrieveAllRequest(request)
