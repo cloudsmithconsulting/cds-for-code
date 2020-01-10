@@ -22,8 +22,16 @@ export default class ApiRepository {
     }
 
     static readonly defaultSelections = new Dictionary<string, string[]>([
-        { key: "pluginassemblies", value: [ 'pluginassemblyid', 'name', 'version', 'publickeytoken', 'ishidden' ] },
-        { key: "webresources", value: [ 'webresourceid', 'name', 'displayname', 'webresourcetype', 'iscustomizable' ] } 
+        { key: 'solutions', value: [ 'solutionid', 'uniquename', 'friendlyname', 'version', 'ismanaged', 'isvisible'  ] },
+        { key: 'workflows', value: [ 'workflowid', 'componentstate', 'type', 'solutionid', 'primaryentity', 'name', 'description' ] },
+        { key: 'pluginassemblies', value: [ 'pluginassemblyid', 'name', 'version', 'publickeytoken', 'ishidden' ] },
+        { key: 'webresources', value: [ 'webresourceid', 'name', 'displayname', 'webresourcetype', 'iscustomizable' ] },
+        { key: 'pluginassemblies', value: [ 'name', 'publickeytoken' ] },
+        { key: 'plugintypes', value: [ 'plugintypeid', 'name', 'friendlyname', 'assemblyname', 'typename', 'solutionid', '_pluginassemblyid_value' ] },
+        { key: 'sdkmessages', value: [ 'sdkmessageid', 'name', 'autotransact', 'availability', 'categoryname', 'isactive', 'isprivate', 'isreadonly', 'template', 'workflowsdkstepenabled' ] },
+        { key: 'sdkmessagefilters', value: [ 'sdkmessagefilterid', '_sdkmessageid_value', 'primaryobjecttypecode', 'secondaryobjecttypecode' ] },
+        { key: 'systemusers', value: [ 'systemuserid', 'fullname', 'isdisabled' ] },
+        { key: 'solutioncomponents', value: [ 'solutioncomponentid', 'componenttype', 'objectid' ] }
     ]);
 
     publishXml(xml:string) : Promise<any> {
@@ -42,7 +50,7 @@ export default class ApiRepository {
         return this.webapi.retrieveRequest({ collection: "solutions", id: solutionId });
     }
 
-    retrieveSolutions() : Promise<any[]> {
+    retrieveSolutions(select: string[] = ApiRepository.defaultSelections["solutions"]) : Promise<any[]> {
         const showDefaultSolution: boolean = ExtensionConfiguration.getConfigurationValue<boolean>(cs.cds.configuration.explorer.showDefaultSolution);
         const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "solutions",
@@ -60,10 +68,11 @@ export default class ApiRepository {
             });
     }
 
-    retrieveProcesses(entityName?:string, solutionId?:string) : Promise<any[]> {
+    retrieveProcesses(entityName?: string, solutionId?: string, select: string[] = ApiRepository.defaultSelections["workflows"]) : Promise<any[]> {
         // documentation of the attributes for workflow: https://docs.microsoft.com/en-us/dynamics365/customer-engagement/web-api/workflow?view=dynamics-ce-odata-9        
         const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "workflows",
+            select: select,
             filter: `componentstate ne 2 and componentstate ne 3 and type eq 1`,
             orderBy: ["name"]
         };
@@ -171,14 +180,7 @@ export default class ApiRepository {
     }
 
     retrieveWebResource(webResourceId:string): Promise<any> {
-        return this.webapi.retrieve(webResourceId, "webresourceset")
-            .catch(error => {
-                if (error && error.status === 404) {
-                    return undefined;
-                }
-
-                throw error;
-            });
+        return this.webapi.retrieve(webResourceId, "webresourceset");
     }
 
     async upsertWebResource(webResource:any): Promise<any> {
@@ -207,15 +209,15 @@ export default class ApiRepository {
         return this.webapi.retrieveAllRequest(request)
             .then(pluginResponse => ApiHelper.filterSolutionComponents(this.webapi, pluginResponse, solutionId, CdsSolutions.SolutionComponent.PluginAssembly, w => w["pluginassemblyid"]))
             .then(response => response ? response
-                .where(p => p["ishidden"].Value === false)
+                .where(p => !p["ishidden"] || p["ishidden"].Value === false)
                 .toArray() : []);
     }
 
-    retrievePluginTypes(pluginAssemblyId:string) {
+    retrievePluginTypes(pluginAssemblyId: string, select: string[] = ApiRepository.defaultSelections["pluginassemblies"]) {
         const request:CdsWebApi.RetrieveRequest = {
             collection: "pluginassemblies",
             id: pluginAssemblyId,
-            select: ["name", "publickeytoken"]
+            select: select
         };
 
         return this.webapi.retrieveRequest(request)
@@ -223,7 +225,7 @@ export default class ApiRepository {
                 return this.webapi.retrieveAllRequest({
                     collection: "plugintypes",
                     filter: `assemblyname eq '${response.name}'${response.publickeytoken ? " and publickeytoken eq '" + response.publickeytoken + "'" : ""}`,
-                    select: ["plugintypeid", "name", "friendlyname", "assemblyname", "typename", "solutionid", "_pluginassemblyid_value"]
+                    select: ApiRepository.defaultSelections["plugintypes"]
                 }).then(response => response.value);
             });
     }
@@ -261,20 +263,20 @@ export default class ApiRepository {
     }
 
     // Lookup "Message" in plugin registration
-    retrieveSdkMessages() {
+    retrieveSdkMessages(select: string[] = ApiRepository.defaultSelections["sdkmessages"]) {
         const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessages",
-            select: ["sdkmessageid", "name", "autotransact", "availability", "categoryname", "isactive", "isprivate", "isreadonly", "template", "workflowsdkstepenabled"],
+            select: select,
         };
 
         return this.webapi.retrieveAllRequest(request)
             .then(response => response.value ? new TS.Linq.Enumerator(response.value).orderBy(e => e["name"]).toArray() : []);
     }
 
-    retrieveSdkMessageFilters() {
+    retrieveSdkMessageFilters(select: string[] = ApiRepository.defaultSelections["sdkmessagefilters"]) {
         const request: CdsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessagefilters",
-            select: [ "sdkmessagefilterid", "_sdkmessageid_value", "primaryobjecttypecode", "secondaryobjecttypecode" ]
+            select: select
         };
 
         return this.webapi.retrieveAllRequest(request)
@@ -307,6 +309,7 @@ export default class ApiRepository {
     }
     
     retrievePluginSteps(pluginTypeId:string) {
+        //TODO: evaluate if the select property can be set on sdkmessageprocessingsteps to avoid select *
         const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "sdkmessageprocessingsteps",
             expand: [ { property: "sdkmessageid" } ],
@@ -333,6 +336,7 @@ export default class ApiRepository {
     }
 
     retrievePluginStepImages(pluginStepId:string) {
+        //TODO: evaluate if the expand property can get a filtered select list, this is doing a select * on sdkmessageprocessingstepimage
         const request:CdsWebApi.RetrieveRequest = {
             collection: "sdkmessageprocessingsteps",
             id: pluginStepId,
@@ -346,10 +350,10 @@ export default class ApiRepository {
             });
     }
 
-    retrieveSystemUsers() {
+    retrieveSystemUsers(select: string[] = ApiRepository.defaultSelections["systemusers"]) {
         const request: CdsWebApi.RetrieveMultipleRequest = {
             collection: "systemusers",
-            select: [ "systemuserid", "fullname", "isdisabled" ],
+            select: select,
             filter: "fullname ne 'INTEGRATION'",
             orderBy: [ "fullname" ]
         };
@@ -503,7 +507,7 @@ export default class ApiRepository {
         }
     }
 
-    addSolutionComponent(solution:any, componentId:string, componentType:CdsSolutions.SolutionComponent, addRequiredComponents:boolean = false, doNotIncludeSubcomponents:boolean = true, componentSettings?:string): Promise<any> {
+    addSolutionComponent(solution: any, componentId: string, componentType: CdsSolutions.SolutionComponent, addRequiredComponents: boolean = false, doNotIncludeSubcomponents: boolean = true, componentSettings?: string): Promise<any> {
         // This action allows you to call it on components that are already added, no need for a check.
         const parameters:any = { 
             ComponentId: componentId,
@@ -517,9 +521,10 @@ export default class ApiRepository {
         return this.webapi.executeUnboundAction("AddSolutionComponent", parameters);
     }
 
-    getSolutionComponent(componentId:string, componentType:CdsSolutions.SolutionComponent): Promise<any> {
+    getSolutionComponent(componentId: string, componentType: CdsSolutions.SolutionComponent, select: string[] = ApiRepository.defaultSelections["solutioncomponents"]): Promise<any> {
         const solutionQuery:CdsWebApi.RetrieveMultipleRequest = {
             collection: "solutioncomponents",
+            select: select,
             filter: `componenttype eq ${CdsSolutions.CodeMappings.getSolutionComponentCode(componentType)} and objectid eq ${componentId}`
         };    
 

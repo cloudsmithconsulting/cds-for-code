@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
+import * as CdsUtilities from '../api/CdsUtilities';
 import { Utilities } from '../core/Utilities';
 import { TS } from 'typescript-linq/TS';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
@@ -206,30 +207,14 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         { key: "PluginStepImage", value: (pluginImage, element) => element.createChildItem("PluginStepImage", pluginImage.name, pluginImage.name, pluginImage.description, vscode.TreeItemCollapsibleState.None, pluginImage) },
         { key: "WebResource", value: (webresource, element) => element.createChildItem("WebResource", webresource.webresourceid, webresource.name, webresource.displayname, vscode.TreeItemCollapsibleState.None, webresource) }, 
         { key: "Process", value: (process, element) => element.createChildItem("Process", process.workflowid, process.name, <string | undefined>CdsUrlResolver.parseProcessType(process.category), vscode.TreeItemCollapsibleState.None, process) }, 
-        { key: "OptionSet", value: (optionSet, element) => {
-            const displayName = optionSet.DisplayName && optionSet.DisplayName.LocalizedLabels && optionSet.DisplayName.LocalizedLabels.length > 0 ? optionSet.DisplayName.LocalizedLabels[0].Label : "";
-
-            return element.createChildItem("OptionSet", optionSet.Name, displayName, optionSet.Name, vscode.TreeItemCollapsibleState.Collapsed, optionSet);
-        }}, 
-        { key: "Entity", value: (entity, element) => {
-            const displayName = entity.DisplayName && entity.DisplayName.LocalizedLabels && entity.DisplayName.LocalizedLabels.length > 0 ? entity.DisplayName.LocalizedLabels[0].Label : "";
-
-            return element.createChildItem("Entity", entity.LogicalName, displayName, entity.LogicalName, vscode.TreeItemCollapsibleState.Collapsed, entity);
-        }}, 
-        { key: "Attribute", value: (attribute, element) => {
-            const displayName = attribute.DisplayName && attribute.DisplayName.LocalizedLabels && attribute.DisplayName.LocalizedLabels.length > 0 ? attribute.DisplayName.LocalizedLabels[0].Label : "";
-
-            return element.createChildItem("Attribute", attribute.LogicalName, displayName, attribute.LogicalName, vscode.TreeItemCollapsibleState.None, attribute);
-        }}, 
+        { key: "OptionSet", value: (optionSet, element) => element.createChildItem("OptionSet", optionSet.Name, CdsUtilities.getDisplayName(optionSet), optionSet.Name, vscode.TreeItemCollapsibleState.Collapsed, optionSet) }, 
+        { key: "Entity", value: (entity, element) => element.createChildItem("Entity", entity.LogicalName, CdsUtilities.getDisplayName(entity), entity.LogicalName, vscode.TreeItemCollapsibleState.Collapsed, entity) }, 
+        { key: "Attribute", value: (attribute, element) => element.createChildItem("Attribute", attribute.LogicalName, CdsUtilities.getDisplayName(attribute), attribute.LogicalName, vscode.TreeItemCollapsibleState.None, attribute) }, 
         { key: "View", value: (query, element) => element.createChildItem("View", query.savedqueryid, query.name, query.description, vscode.TreeItemCollapsibleState.None, query) }, 
         { key: "Chart", value: (queryvisualization, element) => element.createChildItem("Chart", queryvisualization.savedqueryvisualizationid, queryvisualization.name, queryvisualization.description, vscode.TreeItemCollapsibleState.None, queryvisualization) }, 
         { key: "Form", value: (form, element) => element.createChildItem("Form", form.formid, form.name, form.description, vscode.TreeItemCollapsibleState.None, form) }, 
         { key: "Dashboard", value: (dashboard, element) => element.createChildItem("Dashboard", dashboard.formid, dashboard.name, dashboard.description, vscode.TreeItemCollapsibleState.None, dashboard) }, 
-        { key: "Key", value: (key, element) => {
-            const displayName = key.DisplayName && key.DisplayName.LocalizedLabels && key.DisplayName.LocalizedLabels.length > 0 ? key.DisplayName.LocalizedLabels[0].Label : "";
-
-            return element.createChildItem("Key", key.savedqueryvisualizationid, displayName, key.LogicalName, vscode.TreeItemCollapsibleState.None, key);
-        }}, 
+        { key: "Key", value: (key, element) => element.createChildItem("Key", key.LogicalName, CdsUtilities.getDisplayName(key), key.LogicalName, vscode.TreeItemCollapsibleState.None, key) }, 
         { key: "OneToManyRelationship", value: (relationship, element) => element.createChildItem('OneToManyRelationship', relationship.SchemaName, relationship.SchemaName, relationship.RelationshipType, vscode.TreeItemCollapsibleState.None, relationship)}, 
         { key: "ManyToOneRelationship", value: (relationship, element) => element.createChildItem('ManyToOneRelationship', relationship.SchemaName, relationship.SchemaName, relationship.RelationshipType, vscode.TreeItemCollapsibleState.None, relationship)}, 
         { key: "ManyToManyRelationship", value: (relationship, element) => element.createChildItem('ManyToManyRelationship', relationship.SchemaName, relationship.SchemaName, relationship.RelationshipType, vscode.TreeItemCollapsibleState.None, relationship)}, 
@@ -454,7 +439,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         ])
     }, {
         //onStart: (logger, element: CdsTreeEntry) => logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: ${element.label} loading child entries`),
-        onEnd: (logger, context, element: CdsTreeEntry) => logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: ${element.label} loaded child entries: parsed ${context.measurements["count.parse"]}/${context.measurements["count.retrieve"]} entries (total: ${context.measurements["duration.invocation"]}ms, retreive: ${context.measurements["duration.retrieve"]}ms;${context.measurements["percent.retrieve"]}%, parse: ${context.measurements["duration.parse"]}ms;${context.measurements["percent.parse"]}%)`)
+        onEnd: (logger, context, element: CdsTreeEntry) => logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: Element '${element.label}' loaded child entries.  Parsed ${context.measurements["count.parse"]}/${context.measurements["count.retrieve"]} entries (total: ${context.measurements["duration.invocation"]}ms, retreive: ${context.measurements["duration.retrieve"]}ms;${context.measurements["percent.retrieve"]}%, parse: ${context.measurements["duration.parse"]}ms;${context.measurements["percent.parse"]}%)`)
     })
     private createEntries(element: CdsTreeEntry, onRetreive: () => Promise<any[]>, onParse: (item: any) => CdsTreeEntry, onErrorMessage?: (message: string) => string, onRetry?: Function): Promise<CdsTreeEntry[]> {
         const context = Telemetry.Instance.context(`${cs.cds.viewContainers.cdsExplorer}.createEntries`);
@@ -499,7 +484,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                 if (onErrorMessage && onRetry) {
                     const message = onErrorMessage((err.message || err).toString());
 
-                    logger.error(`${cs.cds.viewContainers.cdsExplorer}.createEntries: ${message} {ui-retry}`);
+                    logger.error(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: ${message} {ui-retry}`);
                     Quickly.askToRetry(message, onRetry);
                 }
 
@@ -753,28 +738,66 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         return returnValue;
     }
 
+    @telemetry({ 
+        key: `${cs.cds.viewContainers.cdsExplorer}.getEntityRelationshipDetails`,
+        event: cs.cds.telemetryEvents.performanceCritical,
+        measures: Dictionary.parse([
+            { key: 'count.retrieve', value: (key, context) => context.inputs[key] || 0 },
+            { key: 'count.parse', value: (key, context) => context.inputs[key] || 0 },
+            { key: 'duration.invocation', value: (key, context) => context.inputs["invocation.end"] - context.inputs["invocation.start"] },
+            { key: 'duration.parse', value: (key, context) => context.inputs["invocation.end"] - context.inputs["parse.start"] },
+            { key: 'percent.parse', value: (key, context) => Math.round((context.inputs["invocation.end"] - context.inputs["parse.start"]) / (context.inputs["invocation.end"] - context.inputs["invocation.start"]) * 1000) / 10 },
+            { key: 'duration.retrieve', value: (key, context) => context.inputs["parse.start"] - context.inputs["invocation.start"] },
+            { key: 'percent.retrieve', value: (key, context) => Math.round((context.inputs["parse.start"] - context.inputs["invocation.start"]) / (context.inputs["invocation.end"] - context.inputs["invocation.start"]) * 1000) / 10 },
+        ])
+    }, {
+        //onStart: (logger, element: CdsTreeEntry) => logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: ${element.label} loading child entries`),
+        onEnd: (logger, context, element: CdsTreeEntry) => logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.getEntityRelationshipDetails: Element '${element.label}' loaded child entries.  Parsed ${context.measurements["count.parse"]}/${context.measurements["count.retrieve"]} entries (total: ${context.measurements["duration.invocation"]}ms, retreive: ${context.measurements["duration.retrieve"]}ms;${context.measurements["percent.retrieve"]}%, parse: ${context.measurements["duration.parse"]}ms;${context.measurements["percent.parse"]}%)`)
+    })
     private getEntityRelationshipDetails(element: CdsTreeEntry, entity?: any): Thenable<CdsTreeEntry[]> {
+        const context = Telemetry.Instance.context(`${cs.cds.viewContainers.cdsExplorer}.getEntityRelationshipDetails`);
         const api = new MetadataRepository(element.config);
 
         return api.retrieveRelationships(entity.MetadataId)
-            .then(returnValue => {
+            .then(items => {
+                const count = (items && items.oneToMany ? items.oneToMany.length : 0)
+                    + (items && items.manyToOne ? items.manyToOne.length : 0)
+                    + (items && items.manyToMany ? items.manyToMany.length : 0);
+                let parsed: number = 0;
+
+                context.input("count.retrieve", count).mark("parse.start");
+
                 const result : CdsTreeEntry[] = new Array();
 
-                if (returnValue && returnValue.oneToMany && returnValue.oneToMany.length > 0) {
-                    returnValue.oneToMany.forEach(r => result.push(CdsExplorer.parsers["OneToManyRelationship"](r, element)));
+                if (items && items.oneToMany && items.oneToMany.length > 0) {
+                    items.oneToMany.forEach(r => {
+                        result.push(CdsExplorer.parsers["OneToManyRelationship"](r, element));
+                        parsed++;
+                    });
                 }
 
-                if (returnValue && returnValue.manyToOne && returnValue.manyToOne.length > 0) {
-                    returnValue.manyToOne.forEach(r => result.push(CdsExplorer.parsers["ManyToOneRelationship"](r, element)));
+                if (items && items.manyToOne && items.manyToOne.length > 0) {
+                    items.manyToOne.forEach(r => {
+                        result.push(CdsExplorer.parsers["ManyToOneRelationship"](r, element));
+                        parsed++;
+                    });
                 }
 
-                if (returnValue && returnValue.manyToMany && returnValue.manyToMany.length > 0) {
-                    returnValue.manyToMany.forEach(r => result.push(CdsExplorer.parsers["ManyToManyRelationship"](r, element)));
+                if (items && items.manyToMany && items.manyToMany.length > 0) {
+                    items.manyToMany.forEach(r => {
+                        result.push(CdsExplorer.parsers["ManyToManyRelationship"](r, element));
+                        parsed++;
+                    });
                 }
+
+                context.input("count.parse", parsed);
 
                 return new TS.Linq.Enumerator(result).orderBy(r => r.label).toArray();
             }).catch(error => {
-                Quickly.askToRetry(`An error occurred while retrieving relationships from ${element.config.webApiUrl}: ${(error.message || error).toString()}`, () => this.getEntityRelationshipDetails(element, entity));
+                const message = (error.message || error).toString();
+
+                logger.error(`View: ${cs.cds.viewContainers.cdsExplorer}.getEntityRelationshipDetails: ${message} {ui-retry}`);
+                Quickly.askToRetry(`An error occurred while retrieving relationships from ${element.config.webApiUrl}: ${message}`, () => this.getEntityRelationshipDetails(element, entity));
 
                 return null;
             });
@@ -895,19 +918,18 @@ class CdsTreeEntry extends vscode.TreeItem {
 
         if (id) {
             if (parentItem) {
-                this.id = `${Utilities.String.noTrailingSlash(parentItem.id)}/${id}`;
-            } else {
-                this.id = id;
-            }
+                id = `${Utilities.String.noTrailingSlash(parentItem.id)}/${id}`;
+            } 
 
             // We can't have duplicate ids in the treeview.
-            const count = TreeEntryCache.Instance.Items.count(t => t.id === this.id || t.id.startsWith(this.id + "_"));
+            const count = TreeEntryCache.Instance.Items.count(t => t.id === id || t.id.startsWith(id + "_"));
             
             if (count > 0) {
-                this.id = `${this.id.substr(0, this.id.length - (count.toString().length + 1))}_${count}`;
+                id += `_${count}`;
             }
 
             this.command = { command: cs.cds.controls.cdsExplorer.clickEntry, title: this.subtext || this.label, arguments: [ this ] };
+            this.id = id;
         }
 
         if (parentItem && parentItem.configId) {
@@ -969,7 +991,9 @@ class CdsTreeEntry extends vscode.TreeItem {
             if (split.length >= 4 && connection) {
                 const orgEntry = TreeEntryCache.Instance.Items.first(i => i.id === split.slice(0, 4).join("/"));
 
-                return DiscoveryRepository.createOrganizationConnection(orgEntry.context, connection);
+                if (orgEntry && orgEntry.context) {
+                    return DiscoveryRepository.createOrganizationConnection(orgEntry.context, connection);
+                }
             }
 
             return connection;
