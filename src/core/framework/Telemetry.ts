@@ -128,7 +128,7 @@ export class TelemetryContext {
 
         if (definition) {
             definition.properties = definition.properties || new Dictionary<string, (key: string, context: TelemetryContext) => string>();
-            definition.properties.set(key, () => value);
+            definition.properties.set(key, (k, c) => value);
             TelemetryContext.definitions.set(this.key, definition);
         }
 
