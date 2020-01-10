@@ -840,6 +840,12 @@ class TreeEntryCache {
     }
 }
 
+/**
+ * Represents an entry that is dispalbed in the CdsexplorerView
+ *
+ * @class CdsTreeEntry
+ * @extends {vscode.TreeItem}
+ */
 class CdsTreeEntry extends vscode.TreeItem {
     private static readonly canRefreshEntryTypes: CdsExplorerEntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries" ];
     private static readonly canAddEntryTypes: CdsExplorerEntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries", "PluginType", "PluginStep" ];
@@ -854,6 +860,17 @@ class CdsTreeEntry extends vscode.TreeItem {
     private static readonly canAddToSolutionEntryTypes: CdsExplorerEntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart", "Dashboard" ];
     private static readonly canRemoveFromSolutionEntryTypes: CdsExplorerEntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart", "Dashboard" ];
 
+    /**
+     * Creates an instance of CdsTreeEntry.
+     * @param {CdsTreeEntry} parentItem The parent item (if any) the contains the tree view entry.  Only is null on root entries.
+     * @param {CdsExplorerEntryType} itemType The item type
+     * @param {string} id The identifier of the item (can be segmented by "/")
+     * @param {string} label A descriptive label that shows next to the icon for the item
+     * @param {string} [subtext] Subtext (description text) that shows next to the label
+     * @param {vscode.TreeItemCollapsibleState} [collapsibleState=vscode.TreeItemCollapsibleState.None] The default state for the new item.
+     * @param {*} [context] A context item that can be retrieved and used later
+     * @memberof CdsTreeEntry
+     */
     constructor(
         parentItem: CdsTreeEntry,
         public readonly itemType: CdsExplorerEntryType,
