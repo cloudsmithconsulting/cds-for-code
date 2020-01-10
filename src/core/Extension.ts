@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import * as cs from '../cs';
-import Logger, { ExtensionLogger } from './Logger';
+import Logger, { ExtensionLogger } from './framework/Logger';
 import ExtensionContext from './ExtensionContext';
-import Telemetry from './Telemetry';
+import Telemetry from './framework/Telemetry';
 
 export interface IExtensionEventWrapper {
     readonly id: string;

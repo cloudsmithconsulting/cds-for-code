@@ -6,15 +6,16 @@ import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import ApiRepository from '../repositories/apiRepository';
 import Dictionary from '../core/types/Dictionary';
 import Quickly from '../core/Quickly';
+import ExtensionContext from '../core/ExtensionContext';
 
-export default async function openView(context: vscode.ExtensionContext, sdkmessageprocessingstepid: string, pluginStepImage: any, config?: CdsWebApi.Config): Promise<View> {
+export default async function openView(sdkmessageprocessingstepid: string, pluginStepImage: any, config?: CdsWebApi.Config): Promise<View> {
     const view = View.show(PluginStepImageEditor, {
         icon: './resources/images/cloudsmith-logo-only-50px.png',
         title: 'Configure Plugin Step Image - Dynamics 365 CE',
         type: cs.cds.views.pluginStepImageEditor,
         preserveFocus: false,
         bridge: BridgeCommunicationMethod.Ipc,
-        onReady: view => view.setInitialState(context, sdkmessageprocessingstepid, pluginStepImage, config)
+        onReady: view => view.setInitialState(sdkmessageprocessingstepid, pluginStepImage, config)
     });
 
     return view;
@@ -58,10 +59,10 @@ class PluginStepImageEditor extends View {
             });
     }
    
-    async setInitialState(context: vscode.ExtensionContext, sdkmessageprocessingstepid: string, viewModel: any, config: CdsWebApi.Config) {
-        config = config || await Quickly.pickCdsOrganization(context, "Choose a CDS Organization", true);
-        if (!config) { return; }
-        this.config = config;
+    async setInitialState(sdkmessageprocessingstepid: string, viewModel: any, config: CdsWebApi.Config) {
+        this.config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
+        if (!this.config) { return; }
+
         this.postMessage({ command: 'load', viewModel, sdkmessageprocessingstepid });
     }
 }

@@ -4,9 +4,9 @@ import { CdsWebApi } from "../api/cds-webapi/CdsWebApi";
 import { CdsSolutions } from "../api/CdsSolutions";
 import Quickly from "../core/Quickly";
 import ApiRepository from "../repositories/apiRepository";
-import EnumParser from "../core/EnumParser";
+import EnumParser from "../core/framework/EnumParser";
 import ExtensionContext from "../core/ExtensionContext";
-import logger from "../core/Logger";
+import logger from "../core/framework/Logger";
 
 /**
  * This command can be invoked by the Explorer file viewer and creates or updates a web resource in Dynamics

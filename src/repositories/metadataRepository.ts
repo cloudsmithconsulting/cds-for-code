@@ -2,9 +2,9 @@ import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import { TS } from 'typescript-linq/TS';
 import ApiHelper from "./ApiHelper";
 import { CdsSolutions } from '../api/CdsSolutions';
+import Dictionary from '../core/types/Dictionary';
 
-export default class MetadataRepository
-{
+export default class MetadataRepository {
     constructor (config:CdsWebApi.Config) {
         this.webapi = new CdsWebApi.WebApiClient(config);
     }
@@ -15,26 +15,36 @@ export default class MetadataRepository
         return this.webapi ? this.webapi.config : null;
     }
 
-    retrieveEntities(solutionId?:string) : Promise<any[]> {
-        return this.webapi.retrieveEntities(undefined, "IsIntersect eq false")
+    static readonly defaultSelections = new Dictionary<string, string[]>([
+        { key: 'EntityDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'IsIntersect', 'PrimaryIdAttribute', 'PrimaryNameAttribute' ] },
+        { key: 'AttributeDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'AttributeOf', 'AttributeType', 'AttributeTypeName' ] },
+        { key: 'OptionSetDefinitions', value: [ 'MetadataId', 'Name', 'DisplayName' ] },
+        { key: 'systemforms', value: [ 'formid', 'objecttypecode', 'type', 'formactivationstate', 'name', 'description' ] },
+        { key: 'savedqueries', value: [ 'savedqueryid', 'returnedtypecode', 'statecode', 'name', 'description' ] },
+        { key: 'savedqueryvisualizations', value: [ 'savedqueryvisualizationid', 'primaryentitytypecode', 'name', 'description' ] },
+    ]);
+
+    retrieveEntities(solutionId?: string, select: string[] = MetadataRepository.defaultSelections["EntityDefinitions"]) : Promise<any[]> {
+        return this.webapi.retrieveEntities(select, "IsIntersect eq false")
             .then(entitiesResponse => ApiHelper.filterSolutionComponents(this.webapi, entitiesResponse, solutionId, CdsSolutions.SolutionComponent.Entity, e => e["MetadataId"]))
             .then(response => response ? response.orderBy(e => e["LogicalName"]).toArray() : []);
     }
 
-    retrieveAttributes(entityKey:string) : Promise<any[]> {
-        return this.webapi.retrieveAttributes(entityKey, undefined, undefined, 'AttributeOf eq null')
+    retrieveAttributes(entityKey: string, select: string[] = MetadataRepository.defaultSelections["AttributeDefinitions"]) : Promise<any[]> {
+        return this.webapi.retrieveAttributes(entityKey, undefined, select, 'AttributeOf eq null')
             .then(response => new TS.Linq.Enumerator(response.value).orderBy(a => a["LogicalName"]).toArray());
     }
 
-    retrieveOptionSets(solutionId?:string): Promise<any[]> {
-        return this.webapi.retrieveGlobalOptionSets()
+    retrieveOptionSets(solutionId?: string, select: string[] = MetadataRepository.defaultSelections["OptionSetDefinitions"]): Promise<any[]> {
+        return this.webapi.retrieveGlobalOptionSets(undefined, select)
             .then(optionSetResponse => ApiHelper.filterSolutionComponents(this.webapi, optionSetResponse, solutionId, CdsSolutions.SolutionComponent.OptionSet, o => o["MetadataId"]))
             .then(response => response.orderBy(o => o["Name"]).toArray());
     }
 
-    retrieveForms(entityLogicalName:string, solutionId?:string) : Promise<any[]> {
+    retrieveForms(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["systemforms"]) : Promise<any[]> {
         let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "systemforms",
+            select: select,
             filter: `objecttypecode eq '${entityLogicalName}' and type ne 10 and formactivationstate eq 1`,  
             orderBy: ["name"]
         };
@@ -44,9 +54,10 @@ export default class MetadataRepository
             .then(response => response.toArray());
     }
 
-    retrieveDashboards(entityLogicalName:string, solutionId?:string) : Promise<any[]> {
+    retrieveDashboards(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["systemforms"]) : Promise<any[]> {
         let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "systemforms",
+            select: select,
             filter: `objecttypecode eq '${entityLogicalName}' and type eq 10 and formactivationstate eq 1`,  
             orderBy: ["name"]
         };
@@ -56,9 +67,10 @@ export default class MetadataRepository
             .then(response => response.toArray());
     }
 
-    retrieveViews(entityLogicalName:string, solutionId?:string) : Promise<any[]> {
+    retrieveViews(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["savedqueries"]) : Promise<any[]> {
         let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "savedqueries",
+            select: select,
             filter: `returnedtypecode eq '${entityLogicalName}' and statecode eq 0`,
             orderBy: ["name"]
         };
@@ -68,9 +80,10 @@ export default class MetadataRepository
             .then(response => response.toArray());
     }
 
-    retrieveCharts(entityLogicalName:string, solutionId?:string) : Promise<any[]> {
+    retrieveCharts(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["savedqueryvisualizations"]) : Promise<any[]> {
         let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "savedqueryvisualizations",
+            select: select,
             filter: `primaryentitytypecode eq '${entityLogicalName}'`,
             orderBy: ["name"]
         };

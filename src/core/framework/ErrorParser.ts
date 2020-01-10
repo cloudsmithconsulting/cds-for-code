@@ -1,4 +1,4 @@
-import { AuthenticationError } from "./security/Authentication";
+import { AuthenticationError } from "../security/Authentication";
 
 export function parseAdalError(error: Error): AuthenticationError {
     const parts = error.message.split("{");

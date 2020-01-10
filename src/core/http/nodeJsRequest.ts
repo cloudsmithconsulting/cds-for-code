@@ -6,8 +6,8 @@ import * as Security from '../security/Types';
 import * as cs from '../../cs';
 import defaultResponseHandler from "./defaultResponseHandler.nodejs";
 import GlobalStateCredentialStore from '../security/GlobalStateCredentialStore';
-import logger from '../Logger';
-import Telemetry from '../Telemetry';
+import logger from '../framework/Logger';
+import Telemetry from '../framework/Telemetry';
 
 export type ResponseHandler = (request: any, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) => void;
 
@@ -125,7 +125,7 @@ export default function nodeJsRequest(options: any) {
                 }); 
                 response.on('end', () => {
                     if (response.statusCode === 401 && authRetry()) {
-                        logger.log("Auth token has expired, re-authenticating");
+                        logger.log("Auth: HTTP 401 was received - authToken has expired, re-authenticating");
                     } else if (responseDelegate) {
                         responseDelegate(parsedUrl.href, rawData, response, responseParams, successCallback, errorCallback);
                     }

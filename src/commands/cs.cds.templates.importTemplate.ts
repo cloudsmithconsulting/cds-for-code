@@ -2,7 +2,7 @@ import vscode = require("vscode");
 import * as cs from "../cs";
 import Quickly from "../core/Quickly";
 import TemplateManager from "../components/Templates/TemplateManager";
-import logger from "../core/Logger";
+import logger from '../core/framework/Logger';
 
 /**
  * Command exports a template from your workspace into a .zip archive for re-import later.

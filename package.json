@@ -98,14 +98,14 @@
 					"type": "string",
 					"default": "production",
 					"enum": [
-						"production",
-						"beta"
+						"stable",
+						"preview"
 					],
 					"enumDescriptions": [
-						"Production updates only",
-						"Beta updates"
+						"Production updates (stable)",
+						"Preview updates (beta)"
 					],
-					"description": "The update channel to use"
+					"description": "The update channel to use when downloading new versions of this extension"
 				},
 				"cs.cds.configuration.iconThemes.selectedTheme": {
 					"type": "string",
@@ -116,17 +116,17 @@
 					"enumDescriptions": [
 						"Default Theme"
 					],
-					"description": "The icon set to use in explorer views"
+					"description": "The icon set to use in the CDS Explorer view"
 				},
 				"cs.cds.configuration.explorer.showDefaultSolution": {
 					"type": "boolean",
-					"default": "true",
-					"description": "Show the Default Solution in the Dynamics explorer pane"
+					"default": "false",
+					"description": "Show the Default Solution in the CDS Explorer view"
 				},
 				"cs.cds.configuration.explorer.showWelcomeExperience": {
 					"type": "boolean",
 					"default": "true",
-					"description": "Show the welcome experience for Dynamics when you open a new workspace"
+					"description": "Show the welcome experience for this extension"
 				},
 				"cs.cds.configuration.templates.placeholders": {
 					"type": "object",
@@ -140,7 +140,7 @@
 				},
 				"cs.cds.configuration.templates.templatesDirectory": {
 					"type": "string",
-					"description": "Filesystem path that stores template folders"
+					"description": "Filesystem path that stores templates"
 				},
 				"cs.cds.configuration.templates.treeViewGroupPreference": {
 					"type": "string",
@@ -155,7 +155,7 @@
 						"Group by Publisher",
 						"Group by Category"
 					],
-					"description": "Preference for grouping template items in the Template Explorer"
+					"description": "Preference for grouping templates in the Template Explorer"
 				},
 				"cs.cds.configuration.templates.usePlaceholders": {
 					"type": "boolean",

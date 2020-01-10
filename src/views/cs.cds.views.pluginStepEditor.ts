@@ -7,15 +7,16 @@ import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import Quickly from '../core/Quickly';
 import async = require('async');
 import Dictionary from '../core/types/Dictionary';
+import ExtensionContext from '../core/ExtensionContext';
 
-export default async function openView(context: vscode.ExtensionContext, pluginAssemblyId:string, config?: CdsWebApi.Config, step?: any): Promise<View> {
+export default async function openView(pluginAssemblyId:string, config?: CdsWebApi.Config, step?: any): Promise<View> {
     const view = View.show(PluginStepEditor, {
         icon: './resources/images/cloudsmith-logo-only-50px.png',
         title: 'Configure Plugin Step - Dynamics 365 CE',
         type: cs.cds.views.pluginStepEditor,
         preserveFocus: false,
         bridge: BridgeCommunicationMethod.Ipc,
-        onReady: view => view.setInitialState(context, pluginAssemblyId, config, step)
+        onReady: view => view.setInitialState(pluginAssemblyId, config, step)
     });
 
     return view;
@@ -58,10 +59,9 @@ class PluginStepEditor extends View {
             });
     }
    
-    async setInitialState(context: vscode.ExtensionContext, pluginAssemblyId:string, config?: CdsWebApi.Config, step?: any) {
-        config = config || await Quickly.pickCdsOrganization(context, "Choose a CDS Organization", true);
-        if (!config) { return; }
-        this.config = config;
+    async setInitialState(pluginAssemblyId:string, config?: CdsWebApi.Config, step?: any) {
+        this.config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
+        if (!this.config) { return; }
 
         const api = new ApiRepository(config);
 

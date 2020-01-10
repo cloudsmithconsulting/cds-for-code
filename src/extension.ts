@@ -5,7 +5,6 @@ import * as cs from './cs';
 // config
 import ExtensionConfiguration from './core/ExtensionConfiguration';
 import ViewManager from './views/ViewManager';
-import CdsExplorer from './views/CdsExplorer';
 import TemplateManager from './components/Templates/TemplateManager';
 import DynamicsTerminal from './views/DynamicsTerminal';
 import SolutionManager from './components/Solutions/SolutionManager';
@@ -17,14 +16,15 @@ import ExtensionContext from './core/ExtensionContext';
 import IconDownloader from './components/WebDownloaders/IconDownloader';
 import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
 import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
-import Telemetry from './core/Telemetry';
+import Telemetry from './core/framework/Telemetry';
+import CdsExplorer from './views/cs.cds.viewContainers.cdsExplorer';
 
 let extensionContext: ExtensionContext;
 
 export async function activate(context: vscode.ExtensionContext) {
 	// Force initialization of our decorators by building an array of their classes.
 	// tslint:disable-next-line: no-unused-expression
-	[ IconDownloader, ScriptDownloader, CodeGenerationManager, SolutionMap, WebResourceManager, SolutionManager, VisualStudioProjectCommands, TemplateManager, ViewManager, Telemetry ];
+	[ IconDownloader, ScriptDownloader, CodeGenerationManager, SolutionMap, WebResourceManager, SolutionManager, VisualStudioProjectCommands, TemplateManager, ViewManager, Telemetry, CdsExplorer ];
 
 	extensionContext = new ExtensionContext(context);
 
@@ -33,7 +33,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	// Setup any scripts that require tools configuration, then templating.
 	[   // our views
-		new CdsExplorer(),
 		new TemplateExplorer(),
 		new DynamicsTerminal(),
 	].forEach(c => c.contribute(context, toolsConfig));
