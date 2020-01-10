@@ -32,6 +32,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 	private _onDidChangeTreeData: vscode.EventEmitter<CdsTreeEntry | undefined> = new vscode.EventEmitter<CdsTreeEntry | undefined>();
     readonly onDidChangeTreeData: vscode.Event<CdsTreeEntry | undefined> = this._onDidChangeTreeData.event;
     private _connections: CdsWebApi.Config[] = [];
+    private _isRefreshing: boolean = false;
 
     private static instance: CdsExplorer;
 
@@ -381,7 +382,11 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
     @command(cs.cds.controls.cdsExplorer.refreshEntry, "Refresh")
     refresh(item?: CdsTreeEntry): void {
-        this._onDidChangeTreeData.fire(item);
+        if (!CdsExplorer.Instance._isRefreshing) {
+            CdsExplorer.Instance._isRefreshing = true;
+            CdsExplorer.Instance._onDidChangeTreeData.fire(item);
+            CdsExplorer.Instance._isRefreshing = false;
+        }
     }
 
     refreshSolution(solutionPath?: string): void {

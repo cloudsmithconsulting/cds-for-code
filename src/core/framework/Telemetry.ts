@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as cs from '../../cs';
+import * as Security from '../../core/security/Types';
 import Logger from '../framework/Logger';
 import TelemetryReporter from "vscode-extension-telemetry";
 import { extensionActivate, extensionDeactivate } from "../Extension";
@@ -221,7 +222,7 @@ export function telemetry(definition: TelemetryDefinition, options: ITelemetryIn
 
         descriptor.value = async function (...args: any[]) {
             let result;
-            const argString = args.map(a => { try { return JSON.stringify(Utilities.$Object.clone(a, undefined, )); } catch (error) { return a.toString(); } }).join();
+            const argString = args.map(a => { try { return JSON.stringify(Utilities.$Object.clone(a, undefined, Security.sensitiveKeys)); } catch (error) { return a.toString(); } }).join();
 
             if (context) { 
                 context

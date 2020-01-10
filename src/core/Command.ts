@@ -1,10 +1,10 @@
 import * as cs from '../cs';
+import * as Security from '../core/security/Types';
 import Logger, { ExtensionLogger } from './framework/Logger';
 import ExtensionContext from './ExtensionContext';
 import Telemetry from './framework/Telemetry';
 import { Utilities } from './Utilities';
 import moment = require('moment');
-import * as Security from '../core/security/Types';
 
 export interface ICommandWrapper<T> {
     readonly id: string;
@@ -16,7 +16,7 @@ export interface ICommandWrapper<T> {
 
 export interface ICommandInvocationOptions {
     thisArg?: any;
-    logger: ExtensionLogger;
+    logger?: ExtensionLogger;
 }
 
 export class DefaultCommandInvocationOptions implements ICommandInvocationOptions {
@@ -33,6 +33,7 @@ export abstract class CommandWrapper<T> implements ICommandWrapper<T> {
         public readonly options: ICommandInvocationOptions = new DefaultCommandInvocationOptions())
     { 
         this.invocationId = Utilities.Guid.newGuid();
+        options.logger = options.logger || Logger;
     }
 
     readonly invocationId: string;
@@ -46,7 +47,7 @@ export abstract class CommandWrapper<T> implements ICommandWrapper<T> {
 
 export class DefaultCommandWrapper<T> extends CommandWrapper<T>{
     onCommandInvoked(...args: any[]): void {    
-        const argString = args.map(a => { try { return JSON.stringify(Utilities.$Object.clone(a, undefined, Security.sensitiveKeys)); } catch (error) { return a.toString(); } }).join();        
+        const argString = args.map(a => { try { return JSON.stringify(Utilities.$Object.clone(a, undefined, Security.sensitiveKeys)); } catch (error) { return a.toString(); } }).join();
         this.options.logger.info(`Command: ${this.id} (${this.description}) invoked with: ${argString}`);
 
         const telemetryProps = { command: this.id, invocation: this.invocationId, arguments: argString };
