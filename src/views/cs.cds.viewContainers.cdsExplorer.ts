@@ -20,6 +20,7 @@ import Dictionary from '../core/types/Dictionary';
 import ExtensionContext from '../core/ExtensionContext';
 import moment = require('moment');
 import Telemetry, { telemetry, TelemetryContext, TelemetryInvocationOptions } from '../core/framework/Telemetry';
+import async = require('async');
 
 /**
  * TreeView implementation that helps end-users navigate items in their Common Data Services (CDS) environments.
@@ -150,9 +151,25 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         { key: "Entities", value: async (element?) => await this.getEntityDetails(element, element.context) },
         { key: "OptionSets", value: async (element?) => await this.getOptionSetDetails(element, element.context) },
         { key: "WebResources", value: async (element?) => {
-            const folders = await this.getWebResourcesFolderDetails(element, (element.context && element.context.innerContext ? element.context.innerContext : element.context));
-            const items = await this.getWebResourcesDetails(element, (element.context && element.context.innerContext ? element.context.innerContext : element.context));
+            let folders: any, items: any;
 
+            await async.parallel({
+                folders: async function(callback) {
+                    callback(null, await CdsExplorer.Instance.getWebResourcesFolderDetails(element, (element.context && element.context.innerContext ? element.context.innerContext : element.context)));
+                },
+                items: async function(callback) {
+                    callback(null, await CdsExplorer.Instance.getWebResourcesDetails(element, (element.context && element.context.innerContext ? element.context.innerContext : element.context)));
+                },
+            }, (error: any, results: any) => {
+                if (error) {
+                    Quickly.error(error.message);
+                    return;
+                }
+
+                items = results.items;
+                folders = results.folders;
+            });
+            
             if (items && folders) { items.forEach(i => folders.push(i)); }
 
             return folders && folders.length > 0 ? folders : items;

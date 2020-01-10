@@ -21,6 +21,11 @@ export default class ApiRepository {
         return this.webapi ? this.webapi.config : null;
     }
 
+    static readonly defaultSelections = new Dictionary<string, string[]>([
+        { key: "pluginassemblies", value: [ 'pluginassemblyid', 'name', 'version', 'publickeytoken', 'ishidden' ] },
+        { key: "webresources", value: [ 'webresourceid', 'name', 'displayname', 'webresourcetype', 'iscustomizable' ] } 
+    ]);
+
     publishXml(xml:string) : Promise<any> {
         return this.webapi.executeUnboundAction("PublishXml", { ParameterXml: xml });
     }
@@ -111,11 +116,11 @@ export default class ApiRepository {
                 .toArray());
         }
 
-    async retrieveWebResources(solutionId?:string, folder?:string, customizableOnly:boolean = true) : Promise<any[]> {
+    async retrieveWebResources(solutionId?: string, folder?: string, customizableOnly: boolean = true, select: string[] = ApiRepository.defaultSelections["webresources"]) : Promise<any[]> {
         const selectAll:boolean = folder && folder === "*";
         const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "webresourceset",
-            select: ['webresourceid', "name", "displayname", "webresourcetype", "solutionid", "iscustomizable"],
+            select: select,
             filter: !selectAll ? "(not contains(name, '/'))" : "",
             orderBy: ["name"]
         };
@@ -191,10 +196,6 @@ export default class ApiRepository {
             return this.webapi.create(webResource, "webresourceset", CWA.Prefer.ReturnRepresentation);
         }
     }
-
-    static readonly defaultSelections = new Dictionary<string, string[]>([
-        { key: "pluginassemblies", value: [ 'pluginassemblyid', 'name', 'version', 'publickeytoken', 'ishidden' ] } 
-    ]);
 
     retrievePluginAssemblies(solutionId?:string, select: string[] = ApiRepository.defaultSelections["pluginassemblies"]) : Promise<any[]> {
         const request:CdsWebApi.RetrieveMultipleRequest = {
