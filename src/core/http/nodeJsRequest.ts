@@ -125,7 +125,7 @@ export default function nodeJsRequest(options: any) {
                 }); 
                 response.on('end', () => {
                     if (response.statusCode === 401 && authRetry()) {
-                        logger.log("Auth token has expired, re-authenticating");
+                        logger.log("Auth: HTTP 401 was received - authToken has expired, re-authenticating");
                     } else if (responseDelegate) {
                         responseDelegate(parsedUrl.href, rawData, response, responseParams, successCallback, errorCallback);
                     }

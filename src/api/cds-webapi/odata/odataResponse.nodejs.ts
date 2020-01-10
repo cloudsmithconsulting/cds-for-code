@@ -2,6 +2,12 @@ import parseResponse from './parseResponse';
 import * as Parameters from '../../../core/helpers/Parameters';
 
 export default function oDataResponse(request: any, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) {
+    if (response.aborted) {
+        errorCallback(Parameters.handleHttpError(new Error(`The request to '${request.toString()}' timed out`), { uri: request.toString(), status: response.statusCode, statusMessage: response.statusMessage }));
+
+        return;
+    }
+
     switch (response.statusCode) {
         case 200: // Success with content returned in response body.
         case 201: // Success with content returned in response body.
