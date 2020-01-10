@@ -40,7 +40,8 @@ const defaultIcons:Dictionary<ExtensionIcon, string> = new Dictionary<ExtensionI
     { key: "ManyToOneRelationship", value: "emojione-monotone:left-arrow" },
     { key: "ManyToManyRelationship", value: "emojione-monotone:left-right-arrow" },
     { key: "Form", value: "dashicons-format-aside" },
-    { key: "OptionSet", value: "ion-options-outline" },
+	{ key: "OptionSet", value: "ion-options-outline" },
+	{ key: "Option", value: "simple-line-icons:options" },
     { key: "Process", value: "vaadin-file-process" },
     { key: "WebResource", value: "fa-file-code-o" },
     { key: "Plugin", value: "mdi-codepen" },
@@ -143,7 +144,7 @@ export class ExtensionIconTheme {
 
 export class ExtensionIconThemes {
     static get default(): ExtensionIconTheme {
-		return new ExtensionIconTheme(cs.cds.configuration.iconThemes.default, defaultIcons, "black", "white");
+		return new ExtensionIconTheme(cs.cds.configuration.iconThemes.default, defaultIcons, "#303030", "#C0C0C0");
 	}
 
     private static _themes: ExtensionIconTheme[] = [ ExtensionIconThemes.default ];
@@ -218,7 +219,7 @@ export class IconifyIcon {
     get color(): string { return this._color; }
 	set color(value: string) {
 		if (value) {
-			this._color = this.isColorCode(value) ? encodeURIComponent(value) : value;
+			this._color = value;
 		}
 	}
 
@@ -243,7 +244,6 @@ export class IconifyIcon {
 			case ScriptedIconFormat.json:
 				return 'application/json';
 		}
-		return null;
 	}
 
     private isColorCode(value: string): boolean {
@@ -259,11 +259,17 @@ export class IconifyIcon {
 
         if (this.height > 0) {
 			querystring["height"] = this.height;
+		} else {
+			querystring["height"] = "auto";
 		}
 
         if (this.width > 0) {
 			querystring["width"] = this.height;
 		}
+
+		querystring["box"] = "true";
+		querystring["inline"] = "false";
+		querystring["download"] = "true";
 
         return Utilities.$Object.asQuerystring(querystring);
 	}

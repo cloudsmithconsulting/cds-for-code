@@ -17,7 +17,7 @@ import { extensionActivate } from '../../core/Extension';
 export default class ScriptDownloader {
 	@extensionActivate(cs.cds.extension.productId)
     async activate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-        await ScriptDownloader.runScriptCheck();
+        setTimeout(async () => await ScriptDownloader.runScriptCheck(), 45 * 1000);
     }
 
 	@command(cs.cds.extension.downloadRequiredScripts, "Download required PowerShell scripts and templates")
