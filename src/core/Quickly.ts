@@ -340,7 +340,7 @@ export default class Quickly {
         return this.pickWorkspaceFsItem(defaultUri, placeHolder, ignoreFocusOut, true, true, true, canAddNewItem, allowedFileTypes);
     }
 
-    private static async pickWorkspaceFsItem(defaultUri?:vscode.Uri, placeHolder?:string, ignoreFocusOut:boolean = true, canPickFiles:boolean = true, canPickFolders:boolean = true, canPickLinks:boolean = true, canAddNewItem:boolean = false, allowedFileTypes?:string[]): Promise<WorkspaceFileItem> {
+    private static async pickWorkspaceFsItem(defaultUri?: vscode.Uri, placeHolder?: string, ignoreFocusOut: boolean = true, canPickFiles: boolean = true, canPickFolders: boolean = true, canPickLinks: boolean = true, canAddNewItem: boolean = false, allowedFileTypes?: string[]): Promise<WorkspaceFileItem> {
         defaultUri = defaultUri || await this.pickWorkspaceRoot(undefined, placeHolder, ignoreFocusOut);
         if (!defaultUri) { return; }
 
@@ -427,13 +427,13 @@ export default class Quickly {
             });
     }
 
-    static async pickAnyFolder(defaultUri?:vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<vscode.Uri | vscode.Uri[]> {
+    static async pickAnyFolder(defaultUri?: vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<vscode.Uri | vscode.Uri[]> {
         return vscode.window
             .showOpenDialog({canSelectFolders: true, canSelectFiles: false, canSelectMany, openLabel, defaultUri, filters })
             .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0] : pathUris : null);
     }
 
-    static async pickAnyFile(defaultUri?:vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<vscode.Uri | vscode.Uri[]> {
+    static async pickAnyFile(defaultUri?: vscode.Uri, canSelectMany: boolean = false, openLabel?: string, filters?: { [name: string]: string[] }) : Promise<vscode.Uri | vscode.Uri[]> {
         return vscode.window
             .showOpenDialog({canSelectFolders: false, canSelectFiles: true, canSelectMany, openLabel, defaultUri, filters })
             .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0] : pathUris : null);
@@ -455,7 +455,7 @@ export default class Quickly {
             .then(p => p.context as T);
     }
 
-    static async pickDictionaryEntry<TKey, TItem>(dictionary:Dictionary<TKey, TItem>, placeHolder?:string): Promise<TItem> {
+    static async pickDictionaryEntry<TKey, TItem>(dictionary: Dictionary<TKey, TItem>, placeHolder?: string): Promise<TItem> {
         if (dictionary && dictionary.keys.length > 0) {
             const options:QuickPickOption[] = [];
         
@@ -466,21 +466,21 @@ export default class Quickly {
         }
     }
 
-    static async pickCdsSolution(config:CdsWebApi.Config, placeHolder?:string, ignoreFocusOut:boolean = true) : Promise<any> {
+    static async pickCdsSolution(config: CdsWebApi.Config, placeHolder?: string, ignoreFocusOut: boolean = true) : Promise<any> {
         return new ApiRepository(config).retrieveSolutions()
             .then(solutions => new TS.Linq.Enumerator(solutions).select(solution => new QuickPickOption(`${Octicon.circuit_board} ${solution.friendlyname}`, undefined, undefined, solution)).toArray())
             .then(options => vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }))
             .then(chosen => chosen.context);
     }
 
-    static async pickCdsOrganization(context:vscode.ExtensionContext, placeHolder?:string, ignoreFocusOut: boolean = true) : Promise<CdsWebApi.Config> {
+    static async pickCdsOrganization(context: vscode.ExtensionContext, placeHolder?: string, ignoreFocusOut: boolean = true) : Promise<CdsWebApi.Config> {
         return DiscoveryRepository.getOrgConnections(context)
             .then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(`${Octicon.database} ${org.name}`, undefined, undefined, org)).toArray())
             .then(options => options && options.length === 1 ? options[0] : options.length > 0 ? vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }) : null)
             .then(chosen => chosen ? <CdsWebApi.Config>chosen.context: null);
     }
 
-    static async pickCdsSolutionComponentType(placeHolder?:string, choices?:CdsSolutions.SolutionComponent[]): Promise<CdsSolutions.SolutionComponent> {
+    static async pickCdsSolutionComponentType(placeHolder?: string, choices?: CdsSolutions.SolutionComponent[]): Promise<CdsSolutions.SolutionComponent> {
         if (choices && choices.length > 0) {
             const options:QuickPickOption[] = [];
         
@@ -531,13 +531,13 @@ export default class Quickly {
         return null;
     }
 
-    static async openFile(filename:string): Promise<void> {
+    static async openFile(filename: string): Promise<void> {
         if (FileSystem.exists(filename)) {
             vscode.workspace.openTextDocument(filename).then(d => vscode.window.showTextDocument(d));
         }
     }
 
-    static async openContent(content:string | Buffer, language:string): Promise<void> {
+    static async openContent(content: string | Buffer, language:string): Promise<void> {
         if (Buffer.isBuffer(content)) {
             content = content.toString();
         }
@@ -545,13 +545,13 @@ export default class Quickly {
         vscode.workspace.openTextDocument({ language, content}).then(d => vscode.window.showTextDocument(d));
     }
 
-    static async askToRetry(errorMessage:string, retryFunction:(...rest:any) => any, tryAgainMessage:string = "Try Again", closeMessage:string = "Close", ...rest:any): Promise<any> {
+    static async askToRetry(errorMessage: string, retryFunction: Function, tryAgainMessage: string = "Try Again", closeMessage: string = "Close", ...parameters: any): Promise<any> {
         return await vscode.window.showErrorMessage(errorMessage, tryAgainMessage, closeMessage)
             .then(async selectedItem => {
                 switch (selectedItem) {
                     case tryAgainMessage:
                         if (typeof retryFunction === "function") {
-                            return retryFunction(rest);
+                            return retryFunction(parameters);
                         }
 
                         break;
@@ -602,3 +602,16 @@ export class WorkspaceFileItem {
     fsPath: string;
     itemType: vscode.FileType;
 }
+
+/*
+Idea for syntax to resolve multiple sets of variables in a process.
+export const quickly:any = { 
+    variables: [ 
+        { key: "organization", context: () => origin, ask: quickly => quickly.pick("blah") }
+    ],
+    steps: [ 
+        { description: "blah", action: (context) => context.variables["organization"].resolve() }
+    ]};
+
+quickly.run();
+*/

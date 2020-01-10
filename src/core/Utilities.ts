@@ -7,7 +7,7 @@ import * as StringHelper from "./helpers/String";
 import { TextEncoder } from 'util';
 
 export interface BrowserUtility { 
-   openWindow(uri:vscode.Uri | string, retryFunction:(...rest:any) => any, tryAgainMessage?:string, closeMessage?:string, ...rest:any): void;
+   openWindow(uri:vscode.Uri | string): Promise<void>;
 }
 
 export interface EncodingUtility {
@@ -32,7 +32,7 @@ export interface ObjectUtility {
    isNull(source: any): boolean;
    isObject(source: any):boolean;
    asQuerystring(source:any): string;
-   clone<T>(source: T, target?: any): T;
+   clone<T>(source: T, target?: any, excludeProperties?: string[]): T;
    createInstance<T>(context: Object, name: string, ...args: any[]) : T;
 }
 

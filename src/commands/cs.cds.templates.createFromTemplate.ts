@@ -5,7 +5,7 @@ import Quickly from "../core/Quickly";
 import { TemplateItem, TemplateType } from "../components/Templates/Types";
 import * as FileSystem from "../core/io/FileSystem";
 import * as p from 'path';
-import logger from "../core/Logger";
+import logger from "../core/framework/Logger";
 
 /**
  * Command creates a folder or item in your workspace and restores a template from the catalog to it.

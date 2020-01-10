@@ -4,7 +4,7 @@ import * as cs from '../../cs';
 import ExtensionContext from '../../core/ExtensionContext';
 import { ExtensionIconThemes } from './Types';
 import command from '../../core/Command';
-import { extensionActivate } from '../../core/ExtensionEvent';
+import { extensionActivate } from '../../core/Extension';
 
 export default class IconLoader {
 	@extensionActivate(cs.cds.extension.productId)

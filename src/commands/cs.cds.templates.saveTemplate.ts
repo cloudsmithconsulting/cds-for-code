@@ -4,7 +4,7 @@ import * as cs from "../cs";
 import Quickly from "../core/Quickly";
 import { TemplateType } from "../components/Templates/Types";
 import * as FileSystem from "../core/io/FileSystem";
-import logger from "../core/Logger";
+import logger from "../core/framework/Logger";
 
 /**
  * This command saves a folder or item as a template.

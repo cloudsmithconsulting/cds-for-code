@@ -9,7 +9,7 @@ import SolutionMap from "./SolutionMap";
 import SolutionWorkspaceMapping from "./SolutionWorkspaceMapping";
 import TemplateManager from "../Templates/TemplateManager";
 import ApiRepository from '../../repositories/apiRepository';
-import EnumParser from '../../core/EnumParser';
+import EnumParser from '../../core/framework/EnumParser';
 import Xml from '../../core/io/Xml';
 
 import createWebResource from "../../commands/cs.cds.deployment.createWebResource";

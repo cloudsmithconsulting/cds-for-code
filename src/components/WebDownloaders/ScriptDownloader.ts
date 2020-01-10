@@ -11,8 +11,8 @@ import * as FileSystem from "../../core/io/FileSystem";
 import ExtensionContext from '../../core/ExtensionContext';
 import Quickly from '../../core/Quickly';
 import command from '../../core/Command';
-import Logger from '../../core/Logger';
-import { extensionActivate } from '../../core/ExtensionEvent';
+import Logger from '../../core/framework/Logger';
+import { extensionActivate } from '../../core/Extension';
 
 export default class ScriptDownloader {
 	@extensionActivate(cs.cds.extension.productId)

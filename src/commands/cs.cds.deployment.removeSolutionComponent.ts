@@ -5,7 +5,7 @@ import ApiRepository from '../repositories/apiRepository';
 import Quickly from '../core/Quickly';
 import { Utilities } from '../core/Utilities';
 import ExtensionContext from "../core/ExtensionContext";
-import logger from '../core/Logger';
+import logger from '../core/framework/Logger';
 
 /**
  * This command can be invoked by the Command Palette or the Dynamics TreeView and removes a solution component from a solution.

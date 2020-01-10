@@ -1,10 +1,12 @@
+import * as vscode from 'vscode';
+import * as path from 'path';
+import * as cs from '../cs';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import { CdsSolutions } from '../api/CdsSolutions';
 import { Utilities } from '../core/Utilities';
-import ApiHelper from "./ApiHelper";
-import * as vscode from 'vscode';
-import * as path from 'path';
 import { TS } from "typescript-linq";
+import ApiHelper from "./ApiHelper";
+import ExtensionConfiguration from '../core/ExtensionConfiguration';
 
 export default class ApiRepository {
     constructor (config: CdsWebApi.Config) {
@@ -34,16 +36,21 @@ export default class ApiRepository {
     }
 
     retrieveSolutions() : Promise<any[]> {
+        const showDefaultSolution: boolean = ExtensionConfiguration.getConfigurationValue<boolean>(cs.cds.configuration.explorer.showDefaultSolution);
         const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "solutions",
             filter: "isvisible eq true",
             orderBy: ["uniquename"]
         };
 
+        if (!showDefaultSolution) {
+            request.filter += " and uniquename ne 'Default'";
+        }
+
         return this.webapi.retrieveAllRequest(request)
             .then(response => {
                 return response.value;
-            }).catch(error => console.log(error));
+            });
     }
 
     retrieveProcesses(entityName?:string, solutionId?:string) : Promise<any[]> {

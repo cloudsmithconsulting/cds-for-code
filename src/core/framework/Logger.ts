@@ -1,8 +1,8 @@
 import { Console } from 'console';
 import { Writable } from 'stream';
 import * as vscode from 'vscode';
-import * as cs from '../cs';
-import Dictionary from './types/Dictionary';
+import * as cs from '../../cs';
+import Dictionary from '../types/Dictionary';
 import * as moment from 'moment';
 
 export type Logger = Console & { outputChannel?: vscode.OutputChannel };

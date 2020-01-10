@@ -6,8 +6,8 @@ import * as Security from '../security/Types';
 import * as cs from '../../cs';
 import defaultResponseHandler from "./defaultResponseHandler.nodejs";
 import GlobalStateCredentialStore from '../security/GlobalStateCredentialStore';
-import logger from '../Logger';
-import Telemetry from '../Telemetry';
+import logger from '../framework/Logger';
+import Telemetry from '../framework/Telemetry';
 
 export type ResponseHandler = (request: any, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) => void;
 

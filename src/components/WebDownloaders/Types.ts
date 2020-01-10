@@ -5,13 +5,13 @@ import fetch from 'node-fetch';
 import { Utilities } from '../../core/Utilities';
 import Dictionary from '../../core/types/Dictionary';
 import * as FileSystem from '../../core/io/FileSystem';
-import * as DynamicsTreeView from '../../views/CdsExplorer';
+import * as DynamicsTreeView from '../../views/cs.cds.viewContainers.cdsExplorer';
 import { TS } from 'typescript-linq';
 import * as TemplateTreeView from '../../views/TemplateExplorer';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
-import logger from '../../core/Logger';
+import logger from '../../core/framework/Logger';
 
-export type ExtensionIcon = DynamicsTreeView.EntryType | TemplateTreeView.EntryType | 'Add' | 'Edit' | 'Delete' | 'Refresh' | 'Save' | 'Cancel';
+export type ExtensionIcon = DynamicsTreeView.CdsExplorerEntryType | TemplateTreeView.EntryType | 'Add' | 'Edit' | 'Delete' | 'Refresh' | 'Save' | 'Cancel';
 
 const defaultIcons:Dictionary<ExtensionIcon, string> = new Dictionary<ExtensionIcon, string>([
     { key: "Connection", value: 'uil-cloud-data-connection' },
