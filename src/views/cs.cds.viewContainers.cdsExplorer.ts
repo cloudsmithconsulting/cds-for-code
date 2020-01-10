@@ -19,7 +19,7 @@ import command from '../core/Command';
 import Dictionary from '../core/types/Dictionary';
 import ExtensionContext from '../core/ExtensionContext';
 import moment = require('moment');
-import Telemetry, { telemetry } from '../core/framework/Telemetry';
+import Telemetry, { telemetry, TelemetryContext, TelemetryInvocationOptions } from '../core/framework/Telemetry';
 
 /**
  * TreeView implementation that helps end-users navigate items in their Common Data Services (CDS) environments.
@@ -435,38 +435,34 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         return returnObject;
     }
 
-    private static readonly performance = { 
-        count: items => items && items.length ? items.length : 0, 
-        totalTime: timers => timers["endParseTime"] - timers["startTime"], 
-        parseTime: timers => timers["endParseTime"] - timers["startParseTime"], 
-        parsePercent: timers => Math.round(CdsExplorer.performance.parseTime(timers) / CdsExplorer.performance.totalTime(timers) * 1000) / 10,
-        retreiveTime: timers => timers["startParseTime"] - timers["startTime"],
-        retreivePercent: timers => Math.round(CdsExplorer.performance.retreiveTime(timers) / CdsExplorer.performance.totalTime(timers) * 1000) / 10 };
-
+    @telemetry({ 
+        key: `${cs.cds.viewContainers.cdsExplorer}.createEntries`,
+        event: cs.cds.telemetryEvents.performanceCritical,
+        measures: Dictionary.parse([
+            { key: 'count.retrieve', value: (key, context) => context.inputs[key] || 0 },
+            { key: 'count.parse', value: (key, context) => context.inputs[key] || 0 },
+            { key: 'duration.invocation', value: (key, context) => context.inputs["invocation.end"] - context.inputs["invocation.start"] },
+            { key: 'duration.parse', value: (key, context) => context.inputs["invocation.end"] - context.inputs["parse.start"] },
+            { key: 'percent.parse', value: (key, context) => Math.round((context.inputs["invocation.end"] - context.inputs["parse.start"]) / (context.inputs["invocation.end"] - context.inputs["invocation.start"]) * 1000) / 10 },
+            { key: 'duration.retrieve', value: (key, context) => context.inputs["parse.start"] - context.inputs["invocation.start"] },
+            { key: 'percent.retrieve', value: (key, context) => Math.round((context.inputs["parse.start"] - context.inputs["invocation.start"]) / (context.inputs["invocation.end"] - context.inputs["invocation.start"]) * 1000) / 10 },
+        ])
+    }, {
+        //onStart: (logger, element: CdsTreeEntry) => logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: ${element.label} loading child entries`),
+        onEnd: (logger, context, element: CdsTreeEntry) => logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: ${element.label} loaded child entries: parsed ${context.measurements["count.parse"]}/${context.measurements["count.retrieve"]} entries (total: ${context.measurements["duration.invocation"]}ms, retreive: ${context.measurements["duration.retrieve"]}ms;${context.measurements["percent.retrieve"]}%, parse: ${context.measurements["duration.parse"]}ms;${context.measurements["percent.parse"]}%)`)
+    })
     private createEntries(element: CdsTreeEntry, onRetreive: () => Promise<any[]>, onParse: (item: any) => CdsTreeEntry, onErrorMessage?: (message: string) => string, onRetry?: Function): Promise<CdsTreeEntry[]> {
-        const timers = new Dictionary<string, number>();
-        const invocationId = Utilities.Guid.newGuid();
-        timers["startTime"] = moment.now();
+        const context = Telemetry.Instance.context(`${cs.cds.viewContainers.cdsExplorer}.createEntries`);
 
         return onRetreive()
             .then(items => {
-                timers["startParseTime"] = moment.now();
+                context.input("count.retrieve", items && items.length ? items.length : 0).mark("parse.start");
+
                 const result : CdsTreeEntry[] = new Array();
                 let parsed: number = 0;
 
                 if (!items) {
-                    logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: No children found for ${element.label} (${CdsExplorer.performance.parseTime(timers)}ms)`);
-                    Telemetry.Instance.sendTelemetry(
-                        cs.cds.telemetryEvents.performanceCritical, {
-                            component: cs.cds.viewContainers.cdsExplorer, 
-                            invocation: invocationId, 
-                            item: element.id 
-                        }, {
-                            count: 0, 
-                            totalTime: CdsExplorer.performance.retreiveTime(timers),
-                            retreiveTime: CdsExplorer.performance.retreiveTime(timers),
-                            retreivePercent: 100
-                        });
+                    logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: No children found for ${element.label}`);
 
                     return;
                 }
@@ -480,13 +476,8 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                     } catch (error) {
                         const message = error.message || error.toString();
 
-                        logger.error(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: ${message}`);
-                        Quickly.error(`There was an error parsing one of the tree entries: ${message}`);
-                        Telemetry.Instance.error(error, {
-                            component: cs.cds.viewContainers.cdsExplorer, 
-                            invocation: invocationId, 
-                            item: element.id 
-                        });
+                        logger.error(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: Error parsing ${element.itemType} - ${message}`);
+                        Quickly.error(`There was an error parsing one of the ${element.itemType} items: ${message}`);
                     }
 
                     if (treeItem) {
@@ -495,21 +486,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                     }
                 }
 
-                timers["endParseTime"] = moment.now();
-                logger.log(`View: ${cs.cds.viewContainers.cdsExplorer}.createEntries: Retreived children nodes for '${element.label}' - parsed ${parsed}/${CdsExplorer.performance.count(items)} entries (total: ${CdsExplorer.performance.totalTime(timers)}ms, retreive: ${CdsExplorer.performance.retreiveTime(timers)}ms;${CdsExplorer.performance.retreivePercent(timers)}%, parse: ${CdsExplorer.performance.parseTime(timers)}ms;${CdsExplorer.performance.parsePercent(timers)}%)`);
-                Telemetry.Instance.sendTelemetry(
-                    cs.cds.telemetryEvents.performanceCritical, {
-                        component: cs.cds.viewContainers.cdsExplorer, 
-                        invocation: invocationId, 
-                        item: element.id 
-                    }, {
-                        count: CdsExplorer.performance.count(items), 
-                        totalTime: CdsExplorer.performance.totalTime(timers),
-                        parseTime: CdsExplorer.performance.parseTime(timers),
-                        parsePercent: CdsExplorer.performance.parsePercent(timers),
-                        retreiveTime: CdsExplorer.performance.retreiveTime(timers),
-                        retreivePercent: CdsExplorer.performance.retreivePercent(timers)
-                    });
+                context.input("count.parse", parsed);
 
                 return result;
             })
@@ -518,7 +495,6 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                     const message = onErrorMessage((err.message || err).toString());
 
                     logger.error(`${cs.cds.viewContainers.cdsExplorer}.createEntries: ${message} {ui-retry}`);
-
                     Quickly.askToRetry(message, onRetry);
                 }
 

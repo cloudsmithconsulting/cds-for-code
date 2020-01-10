@@ -14,6 +14,10 @@ export default class Dictionary<TKey, T> implements IDictionary<TKey, T> {
     private _keys: TKey[] = [];
     private _values: T[] = [];
 
+    static parse<TKey, T>(init?: { key: TKey, value: T }[]): Dictionary<TKey, T> {
+        return new Dictionary<TKey, T>(init);
+    }
+    
     constructor(init?: { key: TKey; value: T; }[]) {
         if (init) {
             for (var x = 0; x < init.length; x++) {
@@ -71,12 +75,34 @@ export default class Dictionary<TKey, T> implements IDictionary<TKey, T> {
         return this._values;
     }
 
-    containsKey(key: TKey) {
+    containsKey(key: TKey): boolean {
         if (typeof (<any>this)[key] === "undefined") {
             return false;
           }
   
           return true;
+    }
+
+    forEach(apply: (key: TKey, value: T) => void) {
+        this._keys.forEach(k => apply(k, (<any>this)[k]));
+    }
+
+    map(apply: (key: TKey, value: T) => any): { [key: string]: any } {
+        let returnObject: { [key: string]: any } = {};
+
+        this._keys.forEach(k => {
+            returnObject[k.toString()] = apply(k, (<any>this)[k]);
+        });
+
+        return returnObject;
+    }
+
+    set(key: TKey, value: T): void {
+        if (this.containsKey(key)) {
+            (<any>this)[key] = value;
+        } else {
+            this.add(key, value);
+        }
     }
 
     toLookup(): IDictionary<TKey, T> {
