@@ -52,11 +52,11 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
      * @memberof CdsExplorerView
      */
     static get Instance(): CdsExplorer {
-        if (!this.instance) {
-            this.instance = new CdsExplorer();
+        if (!CdsExplorer.instance) {
+            CdsExplorer.instance = new CdsExplorer();
         }
 
-        return this.instance;
+        return CdsExplorer.instance;
     }
 
     private static readonly addCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
@@ -263,7 +263,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
     @command(cs.cds.controls.cdsExplorer.addConnection, "Add Connection")
     addConnection(...options: CdsWebApi.Config[]): void {
-        const connections = this._connections || [];
+        const connections = CdsExplorer.Instance.connections || [];
 
         if (options && options.length > 0) {
             options.forEach(o => {
@@ -281,7 +281,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         }
 
         // save to state and assign to our local connections variable.
-        this._connections = DiscoveryRepository.saveConnections(ExtensionContext.Instance, connections);
+        CdsExplorer.Instance._connections = DiscoveryRepository.saveConnections(ExtensionContext.Instance, connections);
 
         // refresh the treeview
         this.refresh();
