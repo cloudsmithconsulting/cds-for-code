@@ -52,7 +52,6 @@ export default class ScriptDownloader {
 
 		const remoteFolderPath:string = Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateSource));
 		const updateChannel:string = ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateChannel);
-		let isDownloading = false;
 
 		const returnValue = await this.checkVersion(remoteFolderPath, updateChannel)
 			.then(async version => {
@@ -78,26 +77,23 @@ export default class ScriptDownloader {
 					if ((!FileSystem.exists(localFilePath))
 						|| (!currentVersion || currentVersion !== version))
 					{
-						Logger.log(`Downloading ${fileName}, version ${version}`);
-						isDownloading = true;
+						Logger.log(`Command: [${cs.cds.extension.downloadRequiredScripts}] Downloading ${fileName}, version ${version}`);
 
 						// file doesn't exist, get it from remote location
 						await ScriptDownloader.downloadScript(remoteFilePath, localFilePath)
-							.then(localPath => {
-								vscode.window.showInformationMessage(
-									`${fileName} PowerShell script downloaded`
-								);
+							.then(async localPath => {
+								await Quickly.inform(`${fileName} PowerShell script downloaded`);
 
 								return localPath;
-							}).then(localPath => {
+							}).then(async localPath => {
 								if (localPath.endsWith("Install-Sdk.ps1")) {
-									ScriptDownloader.installCdsSdk();
+									await ScriptDownloader.installCdsSdk();
 								}
-							}).then(() => {
+							}).then(async () => {
 								GlobalState.Instance.PowerShellScriptVersion = version;
 							});
 					} else {
-						Logger.log(`File ${fileName} is current: version ${currentVersion}`);
+						Logger.log(`Command: [${cs.cds.extension.downloadRequiredScripts}] File ${fileName} is current: version ${currentVersion}`);
 					}
 				}
 
@@ -115,8 +111,7 @@ export default class ScriptDownloader {
 					if ((!FileSystem.exists(localFilePath))
 						|| (!currentVersion || currentVersion !== version))
 					{
-						Logger.log(`Downloading ${fileName}, version ${version}`);
-						isDownloading = true;
+						Logger.log(`Command: [${cs.cds.extension.downloadRequiredScripts}] Downloading ${fileName}, version ${version}`);
 
 						// file doesn't exist, get it from remote location
 						await ScriptDownloader.downloadZip(remoteFilePath, localFilePath)
@@ -137,14 +132,14 @@ export default class ScriptDownloader {
 									if (options.extractPath) { FileSystem.makeFolderSync(options.extractPath); }
 
 									if (options.isTemplate) {
-										Logger.log(`Importing template: ${options.zipFile}`);
+										Logger.log(`Command: [${cs.cds.extension.downloadRequiredScripts}] Importing template: ${options.zipFile}`);
 
 										await vscode.commands.executeCommand(cs.cds.templates.importTemplate, vscode.Uri.file(options.zipFile));
 									} else {
-										Logger.log(`Unzipping downloaded file: ${options.zipFile}`);
+										Logger.log(`Command: [${cs.cds.extension.downloadRequiredScripts}] Unzipping downloaded file: ${options.zipFile}`);
 
 										await FileSystem.unzip(options.zipFile, options.extractPath);
-										vscode.window.showInformationMessage(`Items were extracted from ${options.zipFile} into ${options.extractPath}`);
+										await Quickly.inform(`Items were extracted from ${options.zipFile} into ${options.extractPath}`);
 									}
 								}
 							})
@@ -152,7 +147,7 @@ export default class ScriptDownloader {
 								GlobalState.Instance.PowerShellScriptVersion = version;
 							});
 					} else {
-						Logger.log(`File ${fileName} is current: version ${currentVersion}`);
+						Logger.log(`Command: [${cs.cds.extension.downloadRequiredScripts}] File ${fileName} is current: version ${currentVersion}`);
 					}
 				}
 			});
@@ -225,7 +220,7 @@ export default class ScriptDownloader {
 		if (!FileSystem.exists(sdkInstallPath) && FileSystem.exists(path.join(ExtensionContext.Instance.globalStoragePath, "/Scripts/Install-Sdk.ps1"))) {
 			FileSystem.makeFolderSync(sdkInstallPath);
 		
-			Logger.warn(`SDK not detected in ${sdkInstallPath}, downloading and extracting automatically.`);
+			Logger.warn(`Extension: SDK not detected in ${sdkInstallPath}, downloading and extracting automatically.`);
 
 			return await DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "/Scripts/"))
 				.then(async terminal => {
