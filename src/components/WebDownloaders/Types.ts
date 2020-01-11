@@ -11,7 +11,7 @@ import * as TemplateTreeView from '../../views/cs.cds.viewContainers.templateExp
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import logger from '../../core/framework/Logger';
 
-export type ExtensionIcon = DynamicsTreeView.CdsExplorerEntryType | TemplateTreeView.EntryType | 'Add' | 'Edit' | 'Delete' | 'Refresh' | 'Save' | 'Cancel';
+export type ExtensionIcon = DynamicsTreeView.CdsExplorerEntryType | TemplateTreeView.TemplateExplorerEntryType | 'Add' | 'Edit' | 'Delete' | 'Refresh' | 'Save' | 'Cancel';
 
 const defaultIcons:Dictionary<ExtensionIcon, string> = new Dictionary<ExtensionIcon, string>([
     { key: "Connection", value: 'uil-cloud-data-connection' },

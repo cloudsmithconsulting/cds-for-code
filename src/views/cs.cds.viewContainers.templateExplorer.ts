@@ -14,9 +14,9 @@ import TemplateManager from '../components/Templates/TemplateManager';
 import { TemplateItem, TemplateType } from "../components/Templates/Types";
 import Dictionary from '../core/types/Dictionary';
 
-export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEntry> {
-	private _onDidChangeTreeData: vscode.EventEmitter<TreeEntry | undefined> = new vscode.EventEmitter<TreeEntry | undefined>();
-    readonly onDidChangeTreeData: vscode.Event<TreeEntry | undefined> = this._onDidChangeTreeData.event;
+export default class TemplateExplorer implements vscode.TreeDataProvider<TemplateExplorerEntry> {
+	private _onDidChangeTreeData: vscode.EventEmitter<TemplateExplorerEntry | undefined> = new vscode.EventEmitter<TemplateExplorerEntry | undefined>();
+    readonly onDidChangeTreeData: vscode.Event<TemplateExplorerEntry | undefined> = this._onDidChangeTreeData.event;
 
     private static instance: TemplateExplorer;
 
@@ -32,7 +32,7 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
         return TemplateExplorer.instance;
     }
 
-    private static readonly parsers = new Dictionary<EntryType, (item: any, element?: TreeEntry, ...rest: any[]) => TreeEntry>([
+    private static readonly parsers = new Dictionary<TemplateExplorerEntryType, (item: any, element?: TemplateExplorerEntry, ...rest: any[]) => TemplateExplorerEntry>([
         { key: "Folder", value: (folder, element) => element.createChildItem("Folder", folder, folder, folder, vscode.TreeItemCollapsibleState.Collapsed, folder) },
         { key: "ProjectTemplate", value: (item, element) => element.createChildItem("ProjectTemplate", item.name, item.displayName, item.description, vscode.TreeItemCollapsibleState.None, item) },
         { key: "ItemTemplate", value: (item, element) => element.createChildItem("ItemTemplate", item.name, item.displayName, item.description, vscode.TreeItemCollapsibleState.None, item) }
@@ -48,13 +48,13 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
     }
 
     @command(cs.cds.controls.templateExplorer.addEntry, "Add")
-    async add(item?: TreeEntry): Promise<void> {
+    async add(item?: TemplateExplorerEntry): Promise<void> {
         return await vscode.commands.executeCommand(cs.cds.templates.saveTemplate, undefined, item ? item.context : undefined)
             .then(() => this.refresh(item));
     }
 
     @command(cs.cds.controls.templateExplorer.clickEntry, "Click")
-    async click(item?: TreeEntry) {
+    async click(item?: TemplateExplorerEntry) {
         if (item.collapsibleState === vscode.TreeItemCollapsibleState.Collapsed) {
             await this.refresh(item);
             item.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
@@ -62,18 +62,18 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
     }
 
     @command(cs.cds.controls.templateExplorer.createInWorkspace, "Create in Workspace")
-    async createFromTemplate(item?: TreeEntry) {
+    async createFromTemplate(item?: TemplateExplorerEntry) {
         return await vscode.commands.executeCommand(cs.cds.templates.createFromTemplate, undefined, undefined, item.context);
     }
 
     @command(cs.cds.controls.templateExplorer.deleteEntry, "Delete")
-    async delete(item?: TreeEntry) {
+    async delete(item?: TemplateExplorerEntry) {
         return await vscode.commands.executeCommand(cs.cds.templates.deleteTemplate, item.context)
             .then(() => this.refresh(item.parent));
     }
 
     @command(cs.cds.controls.templateExplorer.editEntry, "Edit")
-    async edit(item?: TreeEntry): Promise<void> {
+    async edit(item?: TemplateExplorerEntry): Promise<void> {
     	if (!item) {
             await vscode.commands.executeCommand(cs.cds.templates.editTemplateCatalog);
         } else if (item.context) {
@@ -106,17 +106,17 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
     }
 
     @command(cs.cds.controls.templateExplorer.exportEntry, "Export")
-    async export(item?: TreeEntry): Promise<void> {
+    async export(item?: TemplateExplorerEntry): Promise<void> {
         return await vscode.commands.executeCommand(cs.cds.templates.exportTemplate, item && item.context ? item.context : undefined)
             .then(() => this.refresh(item));
     }
 
-    getTreeItem(element: TreeEntry): vscode.TreeItem {
+    getTreeItem(element: TemplateExplorerEntry): vscode.TreeItem {
 		return element;
 	}
 
-	async getChildren(element?: TreeEntry): Promise<TreeEntry[]> {
-        let returnValue:TreeEntry[];
+	async getChildren(element?: TemplateExplorerEntry): Promise<TemplateExplorerEntry[]> {
+        let returnValue:TemplateExplorerEntry[];
 
         if (element && element.itemType) {
             const commandPrefix:string = Utilities.String.noSlashes(element.id);
@@ -131,8 +131,8 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
                     if (commandPrefix === "/ProjectTemplates" || commandPrefix === "/ItemTemplates") {
                         switch (grouping) {
                             case "Publisher":
-                                const items = catalog.queryPublishersByType(templateTypeFilter);
-                                 returnValue = items.map(i => TemplateExplorer.parsers["Folder"](i, element));
+                                returnValue = catalog.queryPublishersByType(templateTypeFilter)
+                                    .map(i => TemplateExplorer.parsers["Folder"](i, element));
                                 break;
                             case "Category":
                                 returnValue = catalog.queryCategoriesByType(templateTypeFilter)
@@ -168,27 +168,27 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
     }
 
     @command(cs.cds.controls.templateExplorer.importEntry, "Import")
-    async import(item?: TreeEntry): Promise<void> {
+    async import(item?: TemplateExplorerEntry): Promise<void> {
         return await vscode.commands.executeCommand(cs.cds.templates.importTemplate, undefined)
             .then(() => this.refresh());
     }
 
     @command(cs.cds.controls.templateExplorer.openEntry, "Open")
-    async open(item?: TreeEntry): Promise<void> {
+    async open(item?: TemplateExplorerEntry): Promise<void> {
         await TemplateManager.openTemplateFolderInExplorer(item.context);
     }
 
     @command(cs.cds.controls.templateExplorer.refreshEntry, "Refresh")
-    refresh(item?:TreeEntry): void {
+    refresh(item?:TemplateExplorerEntry): void {
         if (TemplateExplorer.instance) {
             TemplateExplorer.instance._onDidChangeTreeData.fire(item);
         }
     }
 
-	private getRootEntries(): TreeEntry[] {
+	private getRootEntries(): TemplateExplorerEntry[] {
         return [
-            new TreeEntry(undefined, "Folder", "/ProjectTemplates", "Project Templates", undefined, vscode.TreeItemCollapsibleState.Collapsed, TemplateType.ProjectTemplate),
-            new TreeEntry(undefined, "Folder", "/ItemTemplates", "Item Templates", undefined, vscode.TreeItemCollapsibleState.Collapsed, TemplateType.ItemTemplate),
+            new TemplateExplorerEntry(undefined, "Folder", "/ProjectTemplates", "Project Templates", undefined, vscode.TreeItemCollapsibleState.Collapsed, TemplateType.ProjectTemplate),
+            new TemplateExplorerEntry(undefined, "Folder", "/ItemTemplates", "Item Templates", undefined, vscode.TreeItemCollapsibleState.Collapsed, TemplateType.ItemTemplate),
         ];
     }
 }
@@ -196,7 +196,7 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
 export class TreeEntryCache {
     private static _instance:TreeEntryCache;
 
-    private _items:TreeEntry[] = [];
+    private _items:TemplateExplorerEntry[] = [];
 
     private constructor() { 
     }
@@ -210,7 +210,7 @@ export class TreeEntryCache {
     }
 
    
-    AddEntry(entry:TreeEntry): void {
+    AddEntry(entry:TemplateExplorerEntry): void {
         this._items.push(entry);
     }
 
@@ -218,28 +218,28 @@ export class TreeEntryCache {
         this._items = [];
     }
 
-    get Items(): TS.Linq.Enumerator<TreeEntry> {
+    get Items(): TS.Linq.Enumerator<TemplateExplorerEntry> {
         return new TS.Linq.Enumerator(this._items);
     }
 
-    Under(path:string): TS.Linq.Enumerator<TreeEntry> {
+    Under(path:string): TS.Linq.Enumerator<TemplateExplorerEntry> {
         return this.Items.where(item => item.id.startsWith(path));
     }
 }
 
-export class TreeEntry extends vscode.TreeItem {
-    private static readonly canRefreshEntryTypes:EntryType[] = [ "Folder" ];
-    private static readonly canAddEntryTypes:EntryType[] = [ "Folder" ];
-    private static readonly canImportEntryTypes:EntryType[] = [ "Folder" ];
-    private static readonly canEditEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
-    private static readonly canDeleteEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
-    private static readonly canOpenEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
-    private static readonly canCreateInWorkspaceTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
-    private static readonly canExportEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+export class TemplateExplorerEntry extends vscode.TreeItem {
+    private static readonly canRefreshEntryTypes:TemplateExplorerEntryType[] = [ "Folder" ];
+    private static readonly canAddEntryTypes:TemplateExplorerEntryType[] = [ "Folder" ];
+    private static readonly canImportEntryTypes:TemplateExplorerEntryType[] = [ "Folder" ];
+    private static readonly canEditEntryTypes:TemplateExplorerEntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+    private static readonly canDeleteEntryTypes:TemplateExplorerEntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+    private static readonly canOpenEntryTypes:TemplateExplorerEntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+    private static readonly canCreateInWorkspaceTypes:TemplateExplorerEntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+    private static readonly canExportEntryTypes:TemplateExplorerEntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
 
     constructor(
-        parentItem: TreeEntry,
-        public readonly itemType: EntryType,
+        parentItem: TemplateExplorerEntry,
+        public readonly itemType: TemplateExplorerEntryType,
         readonly id: string,
         public label: string,
         public readonly subtext?: string,
@@ -283,7 +283,7 @@ export class TreeEntry extends vscode.TreeItem {
 		return this.subtext || this.itemType.toString(); 
     }
 
-    get parent(): TreeEntry {
+    get parent(): TemplateExplorerEntry {
         if (this.id) {
             const split = this.id.split("/");            
             split.pop();
@@ -301,14 +301,14 @@ export class TreeEntry extends vscode.TreeItem {
     get capabilities(): string[] {
         const returnValue = [];
         
-        this.addCapability(returnValue, "canRefreshItem", TreeEntry.canRefreshEntryTypes);
-        this.addCapability(returnValue, "canAddItem", TreeEntry.canAddEntryTypes);
-        this.addCapability(returnValue, "canEditItem", TreeEntry.canEditEntryTypes);
-        this.addCapability(returnValue, "canDeleteItem", TreeEntry.canDeleteEntryTypes);
-        this.addCapability(returnValue, "canOpenItem", TreeEntry.canOpenEntryTypes);
-        this.addCapability(returnValue, "canCreateInWorkspace", TreeEntry.canCreateInWorkspaceTypes);
-        this.addCapability(returnValue, "canImportItem", TreeEntry.canImportEntryTypes);
-        this.addCapability(returnValue, "canExportItem", TreeEntry.canExportEntryTypes);
+        this.addCapability(returnValue, "canRefreshItem", TemplateExplorerEntry.canRefreshEntryTypes);
+        this.addCapability(returnValue, "canAddItem", TemplateExplorerEntry.canAddEntryTypes);
+        this.addCapability(returnValue, "canEditItem", TemplateExplorerEntry.canEditEntryTypes);
+        this.addCapability(returnValue, "canDeleteItem", TemplateExplorerEntry.canDeleteEntryTypes);
+        this.addCapability(returnValue, "canOpenItem", TemplateExplorerEntry.canOpenEntryTypes);
+        this.addCapability(returnValue, "canCreateInWorkspace", TemplateExplorerEntry.canCreateInWorkspaceTypes);
+        this.addCapability(returnValue, "canImportItem", TemplateExplorerEntry.canImportEntryTypes);
+        this.addCapability(returnValue, "canExportItem", TemplateExplorerEntry.canExportEntryTypes);
 
         return returnValue;
     }
@@ -316,27 +316,27 @@ export class TreeEntry extends vscode.TreeItem {
     /**
      * Creates a child item underneath the current tree entry with the specified properties.
      *
-     * @param {EntryType} itemType The type of node to create
+     * @param {TemplateExplorerEntryType} itemType The type of node to create
      * @param {string} id The sub-identifier of the node, the parent identifier will automatically be prefixed.
      * @param {string} label The label to display on the new tree item.
      * @param {string} [subtext] The subtext (description) to display on the new tree item.
      * @param {vscode.TreeItemCollapsibleState} [collapsibleState=vscode.TreeItemCollapsibleState.None] The current collapsible state of the child item, defaults to none.
      * @param {*} [context] A context object (if any) to associate with the new tree item.
-     * @returns {TreeEntry}
+     * @returns {TemplateExplorerEntry}
      * @memberof TreeEntry
      */
-    createChildItem(itemType: EntryType, id: string, label: string, subtext?: string, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None, context?: any): TreeEntry {
-        return new TreeEntry(this, itemType, id, label, subtext, collapsibleState, context);
+    createChildItem(itemType: TemplateExplorerEntryType, id: string, label: string, subtext?: string, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None, context?: any): TemplateExplorerEntry {
+        return new TemplateExplorerEntry(this, itemType, id, label, subtext, collapsibleState, context);
     }
 
-    private addCapability(returnList:string[], capabilityName:string, constrain:EntryType[], additionalCheck?:() => boolean): void {
+    private addCapability(returnList:string[], capabilityName:string, constrain:TemplateExplorerEntryType[], additionalCheck?:() => boolean): void {
         if (constrain.indexOf(this.itemType) !== -1 && (!additionalCheck || additionalCheck())) {
             returnList.push(capabilityName);
         }
     }
 }
 
-export type EntryType = 
+export type TemplateExplorerEntryType = 
     "ProjectTemplate" | 
     "ItemTemplate" |
     "Folder";
