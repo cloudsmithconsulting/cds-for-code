@@ -173,8 +173,10 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
     }
 
     @command(cs.cds.controls.templateExplorer.refreshEntry, "Refresh")
-    async refresh(item?:TreeEntry): Promise<void> {
-        this._onDidChangeTreeData.fire(item);
+    refresh(item?:TreeEntry): void {
+        if (TemplateExplorer.instance) {
+            TemplateExplorer.instance._onDidChangeTreeData.fire(item);
+        }
     }
 
 	private getRootEntries(): TreeEntry[] {
