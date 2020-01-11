@@ -7,7 +7,7 @@ import Dictionary from '../../core/types/Dictionary';
 import * as FileSystem from '../../core/io/FileSystem';
 import * as DynamicsTreeView from '../../views/cs.cds.viewContainers.cdsExplorer';
 import { TS } from 'typescript-linq';
-import * as TemplateTreeView from '../../views/TemplateExplorer';
+import * as TemplateTreeView from '../../views/cs.cds.viewContainers.templateExplorer';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import logger from '../../core/framework/Logger';
 

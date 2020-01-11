@@ -252,7 +252,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     async activate(context: vscode.ExtensionContext) {
         TreeEntryCache.Instance.SolutionMap = await SolutionMap.loadFromWorkspace(undefined, false);
 
-        vscode.window.registerTreeDataProvider(cs.cds.viewContainers.cdsExplorer, CdsExplorer.Instance);
+        ExtensionContext.subscribe(vscode.window.registerTreeDataProvider(cs.cds.viewContainers.cdsExplorer, CdsExplorer.Instance));
     }
 
     @command(cs.cds.controls.cdsExplorer.addEntry, "Add")
@@ -316,8 +316,8 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     @command(cs.cds.controls.cdsExplorer.clickEntry, "Click")
     async click(item?: CdsTreeEntry) {
         if (item.collapsibleState === vscode.TreeItemCollapsibleState.Collapsed) {
+            await this.refresh(item);
             item.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
-            return await this.refresh(item);
         }            
     }
 

@@ -1,61 +1,115 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import * as cs from '../cs';
 import { TS } from 'typescript-linq/TS';
-import IContributor from '../core/CommandBuilder';
-import { ExtensionIconThemes } from "../components/WebDownloaders/Types";
-import ExtensionConfiguration from '../core/ExtensionConfiguration';
+
+import command from '../core/Command';
+import Quickly from '../core/Quickly';
 import { Utilities } from '../core/Utilities';
+import { extensionActivate } from '../core/Extension';
+import ExtensionConfiguration from '../core/ExtensionConfiguration';
+import ExtensionContext from '../core/ExtensionContext';
+import { ExtensionIconThemes } from "../components/WebDownloaders/Types";
 import TemplateManager from '../components/Templates/TemplateManager';
 import { TemplateItem, TemplateType } from "../components/Templates/Types";
 
-import refreshEntry from '../commands/cs.cds.controls.templateExplorer.refreshEntry';
-import addEntry from '../commands/cs.cds.controls.templateExplorer.addEntry';
-import editEntry from '../commands/cs.cds.controls.templateExplorer.editEntry';
-import deleteEntry from '../commands/cs.cds.controls.templateExplorer.deleteEntry';
-import clickEntry from '../commands/cs.cds.controls.templateExplorer.clickEntry';
-import createInWorkspace from '../commands/cs.cds.controls.templateExplorer.createInWorkspace';
-import openEntry from '../commands/cs.cds.controls.templateExplorer.openEntry';
-import exportEntry from '../commands/cs.cds.controls.templateExplorer.exportEntry';
-import importEntry from '../commands/cs.cds.controls.templateExplorer.importEntry';
 
-export default class TemplateTreeView implements IContributor {
-    public static Instance:TemplateTreeViewProvider;
-
-    public contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration) {
-        if (!TemplateTreeView.Instance) {
-            TemplateTreeView.Instance = new TemplateTreeViewProvider(context);
-            vscode.window.registerTreeDataProvider(cs.cds.viewContainers.templateExplorer, TemplateTreeView.Instance);
-        }
-        
-        // setup commands
-        context.subscriptions.push(
-            vscode.commands.registerCommand(cs.cds.controls.templateExplorer.refreshEntry, refreshEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.cds.controls.templateExplorer.addEntry, addEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.cds.controls.templateExplorer.editEntry, editEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.cds.controls.templateExplorer.deleteEntry, deleteEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.cds.controls.templateExplorer.clickEntry, clickEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.cds.controls.templateExplorer.createInWorkspace, createInWorkspace.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.cds.controls.templateExplorer.openEntry, openEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.cds.controls.templateExplorer.importEntry, importEntry.bind(TemplateTreeView.Instance)),
-            vscode.commands.registerCommand(cs.cds.controls.templateExplorer.exportEntry, exportEntry.bind(TemplateTreeView.Instance))
-        );
-    }
-}
-
-export class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEntry> {
+export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEntry> {
 	private _onDidChangeTreeData: vscode.EventEmitter<TreeEntry | undefined> = new vscode.EventEmitter<TreeEntry | undefined>();
     readonly onDidChangeTreeData: vscode.Event<TreeEntry | undefined> = this._onDidChangeTreeData.event;
-    private _context: vscode.ExtensionContext;
 
-	constructor(context: vscode.ExtensionContext) {
-        this._context = context;
+    private static instance: TemplateExplorer;
+
+	private constructor() {
+        setTimeout(() => vscode.commands.executeCommand(cs.cds.controls.templateExplorer.refreshEntry), 50);
     }
 
-    public getTreeItem(element: TreeEntry): vscode.TreeItem {
+    static get Instance(): TemplateExplorer {
+        if (!TemplateExplorer.instance) {
+            TemplateExplorer.instance = new TemplateExplorer();
+        }
+
+        return TemplateExplorer.instance;
+    }
+
+    @extensionActivate(cs.cds.extension.productId)
+    async activate(context: vscode.ExtensionContext) {
+        ExtensionConfiguration.notify(cs.cds.configuration.templates._namespace, change => {
+            this.refresh();
+        });
+
+        ExtensionContext.subscribe(vscode.window.registerTreeDataProvider(cs.cds.viewContainers.templateExplorer, TemplateExplorer.Instance));
+    }
+
+    @command(cs.cds.controls.templateExplorer.addEntry, "Add")
+    async add(item?: TreeEntry): Promise<void> {
+        return await vscode.commands.executeCommand(cs.cds.templates.saveTemplate, undefined, item ? item.context : undefined)
+            .then(() => this.refresh(item));
+    }
+
+    @command(cs.cds.controls.templateExplorer.clickEntry, "Click")
+    async click(item?: TreeEntry) {
+        if (item.collapsibleState === vscode.TreeItemCollapsibleState.Collapsed) {
+            await this.refresh(item);
+            item.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
+        }            
+    }
+
+    @command(cs.cds.controls.templateExplorer.createInWorkspace, "Create in Workspace")
+    async createFromTemplate(item?: TreeEntry) {
+        return await vscode.commands.executeCommand(cs.cds.templates.createFromTemplate, undefined, undefined, item.context);
+    }
+
+    @command(cs.cds.controls.templateExplorer.deleteEntry, "Delete")
+    async delete(item?: TreeEntry) {
+        return await vscode.commands.executeCommand(cs.cds.templates.deleteTemplate, item.context)
+            .then(() => this.refresh(item.parent));
+    }
+
+    @command(cs.cds.controls.templateExplorer.editEntry, "Edit")
+    async edit(item?: TreeEntry): Promise<void> {
+    	if (!item) {
+            await vscode.commands.executeCommand(cs.cds.templates.editTemplateCatalog);
+        } else if (item.context) {
+            let file;
+            let folder = await TemplateManager.getTemplatesFolder();
+    
+            if (item.context.type === TemplateType.ItemTemplate) {
+                if (path.isAbsolute(item.context.location)) {
+                    file = item.context.location;
+                    folder = path.dirname(file);
+                } else {
+                    file = path.join(folder, item.context.location);
+                }
+    
+                await Quickly.openFile(file);
+            } else {
+                if (path.isAbsolute(item.context.location)) {
+                    folder = item.context.location;
+                } else {
+                    folder = path.join(folder, item.context.location);
+                }
+    
+                const existingFolder = vscode.workspace.workspaceFolders.find(f => f.uri.fsPath === folder);
+    
+                if (!existingFolder && await Quickly.pickBoolean("Would you like to open this project template in a new workspace folder?", "Yes", "No")) {
+                    vscode.workspace.updateWorkspaceFolders(0, 0, { uri: vscode.Uri.file(folder), name: item.context.name });
+                }
+            }
+        }
+    }
+
+    @command(cs.cds.controls.templateExplorer.exportEntry, "Export")
+    async export(item?: TreeEntry): Promise<void> {
+        return await vscode.commands.executeCommand(cs.cds.templates.exportTemplate, item && item.context ? item.context : undefined)
+            .then(() => this.refresh(item));
+    }
+
+    getTreeItem(element: TreeEntry): vscode.TreeItem {
 		return element;
 	}
 
-	public async getChildren(element?: TreeEntry): Promise<TreeEntry[]> {
+	async getChildren(element?: TreeEntry): Promise<TreeEntry[]> {
         let returnValue:TreeEntry[];
 
         if (element && element.itemType) {
@@ -107,15 +161,23 @@ export class TemplateTreeViewProvider implements vscode.TreeDataProvider<TreeEnt
         return Promise.resolve(this.getRootEntries());
     }
 
-    public refresh(item?:TreeEntry): void {
+    @command(cs.cds.controls.templateExplorer.importEntry, "Import")
+    async import(item?: TreeEntry): Promise<void> {
+        return await vscode.commands.executeCommand(cs.cds.templates.importTemplate, undefined)
+            .then(() => this.refresh());
+    }
+
+    @command(cs.cds.controls.templateExplorer.openEntry, "Open")
+    async open(item?: TreeEntry): Promise<void> {
+        await TemplateManager.openTemplateFolderInExplorer(item.context);
+    }
+
+    @command(cs.cds.controls.templateExplorer.refreshEntry, "Refresh")
+    async refresh(item?:TreeEntry): Promise<void> {
         this._onDidChangeTreeData.fire(item);
     }
 
 	private getRootEntries(): TreeEntry[] {
-        ExtensionConfiguration.notify(cs.cds.configuration.templates._namespace, change => {
-            this.refresh();
-        });
-
         return [
             TreeEntry.parseFolder("ProjectTemplates", "Project Templates", "", TemplateType.ProjectTemplate), 
             TreeEntry.parseFolder("ItemTemplates", "Item Templates", "", TemplateType.ItemTemplate)
