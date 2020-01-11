@@ -12,7 +12,7 @@ import ExtensionContext from '../core/ExtensionContext';
 import { ExtensionIconThemes } from "../components/WebDownloaders/Types";
 import TemplateManager from '../components/Templates/TemplateManager';
 import { TemplateItem, TemplateType } from "../components/Templates/Types";
-
+import Dictionary from '../core/types/Dictionary';
 
 export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEntry> {
 	private _onDidChangeTreeData: vscode.EventEmitter<TreeEntry | undefined> = new vscode.EventEmitter<TreeEntry | undefined>();
@@ -31,6 +31,12 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
 
         return TemplateExplorer.instance;
     }
+
+    private static readonly parsers = new Dictionary<EntryType, (item: any, element?: TreeEntry, ...rest: any[]) => TreeEntry>([
+        { key: "Folder", value: (folder, element) => element.createChildItem("Folder", folder, folder, folder, vscode.TreeItemCollapsibleState.Collapsed, folder) },
+        { key: "ProjectTemplate", value: (item, element) => element.createChildItem("ProjectTemplate", item.name, item.displayName, item.description, vscode.TreeItemCollapsibleState.None, item) },
+        { key: "ItemTemplate", value: (item, element) => element.createChildItem("ItemTemplate", item.name, item.displayName, item.description, vscode.TreeItemCollapsibleState.None, item) }
+    ]);
 
     @extensionActivate(cs.cds.extension.productId)
     async activate(context: vscode.ExtensionContext) {
@@ -113,7 +119,7 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
         let returnValue:TreeEntry[];
 
         if (element && element.itemType) {
-            const commandPrefix:string = Utilities.String.noSlashes(((element.command && element.command.arguments) || '').toString());
+            const commandPrefix:string = Utilities.String.noSlashes(element.id);
             const catalog = await TemplateManager.getTemplateCatalog();
             const grouping = ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.templates.treeViewGroupPreference);
 
@@ -125,16 +131,16 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
                     if (commandPrefix === "/ProjectTemplates" || commandPrefix === "/ItemTemplates") {
                         switch (grouping) {
                             case "Publisher":
-                                 returnValue = catalog.queryPublishersByType(templateTypeFilter)
-                                    .map(i => TreeEntry.parseFolder(i, undefined, commandPrefix, templateTypeFilter));
+                                const items = catalog.queryPublishersByType(templateTypeFilter);
+                                 returnValue = items.map(i => TemplateExplorer.parsers["Folder"](i, element));
                                 break;
                             case "Category":
                                 returnValue = catalog.queryCategoriesByType(templateTypeFilter)
-                                    .map(i => TreeEntry.parseFolder(i, undefined, commandPrefix, templateTypeFilter));
+                                    .map(i => TemplateExplorer.parsers["Folder"](i, element));
                                 break;
                             default:
                                 returnValue = catalog.queryByType(templateTypeFilter)
-                                    .map(i => TreeEntry.parseTemplate(i, commandPrefix));
+                                    .map(i => TemplateExplorer.parsers[i.type === TemplateType.ProjectTemplate ? "ProjectTemplate" : "ItemTemplate"](i, element));
                                 break;
                         }
                     } else if (commandPrefix.startsWith("/ProjectTemplates") || commandPrefix.startsWith("/ItemTemplates")) {
@@ -142,11 +148,11 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
                             switch (grouping) {
                                 case "Publisher":
                                     returnValue = catalog.queryByPublisher(templateTypeFilter, templateGroupFilter)
-                                        .map(i => TreeEntry.parseTemplate(i, commandPrefix));
+                                        .map(i => TemplateExplorer.parsers[i.type === TemplateType.ProjectTemplate ? "ProjectTemplate" : "ItemTemplate"](i, element));
                                     break;
                                 case "Category":
                                     returnValue = catalog.queryByCategory(templateTypeFilter, templateGroupFilter)
-                                        .map(i => TreeEntry.parseTemplate(i, commandPrefix));
+                                        .map(i => TemplateExplorer.parsers[i.type === TemplateType.ProjectTemplate ? "ProjectTemplate" : "ItemTemplate"](i, element));
                                     break;
                             }
                         }
@@ -181,8 +187,8 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<TreeEnt
 
 	private getRootEntries(): TreeEntry[] {
         return [
-            TreeEntry.parseFolder("ProjectTemplates", "Project Templates", "", TemplateType.ProjectTemplate), 
-            TreeEntry.parseFolder("ItemTemplates", "Item Templates", "", TemplateType.ItemTemplate)
+            new TreeEntry(undefined, "Folder", "/ProjectTemplates", "Project Templates", undefined, vscode.TreeItemCollapsibleState.Collapsed, TemplateType.ProjectTemplate),
+            new TreeEntry(undefined, "Folder", "/ItemTemplates", "Item Templates", undefined, vscode.TreeItemCollapsibleState.Collapsed, TemplateType.ItemTemplate),
         ];
     }
 }
@@ -231,42 +237,13 @@ export class TreeEntry extends vscode.TreeItem {
     private static readonly canCreateInWorkspaceTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
     private static readonly canExportEntryTypes:EntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
 
-    static parseFolder(name: string, displayName: string | undefined, commandPrefix: string, context?:any): TreeEntry {
-        return new TreeEntry(
-            displayName ? displayName : name, 
-            "Folder",
-            vscode.TreeItemCollapsibleState.Collapsed,
-            undefined,
-            {
-                command: cs.cds.controls.templateExplorer.clickEntry,
-                title: name,
-                arguments: [`${commandPrefix}/${name}`]
-            },
-            context
-        );
-    }
-
-    static parseTemplate(item: TemplateItem, commandPrefix: string): TreeEntry {
-        return new TreeEntry(
-            item.displayName, 
-            item.type === TemplateType.ProjectTemplate ? "ProjectTemplate" : item.type === TemplateType.ItemTemplate ? "ItemTemplate" : undefined,
-            vscode.TreeItemCollapsibleState.None,
-            item.description,
-            {
-                command: cs.cds.controls.templateExplorer.clickEntry,
-                title: item.description,
-                arguments: [`${commandPrefix}/${item.name}`]
-            },
-            item
-        );
-    }
-
     constructor(
-        public label: string,
+        parentItem: TreeEntry,
         public readonly itemType: EntryType,
-        public collapsibleState: vscode.TreeItemCollapsibleState,
+        readonly id: string,
+        public label: string,
         public readonly subtext?: string,
-        public readonly command?: vscode.Command,
+        public collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None,
         public readonly context?: any
 	) {
         super(label, collapsibleState);
@@ -277,15 +254,20 @@ export class TreeEntry extends vscode.TreeItem {
             this.iconPath = resolver.iconPath;
         }
 
-        if (command && command.arguments && command.arguments.length > 0) {
-            this.id = command.arguments[0].toString();
+        if (id) {
+            if (parentItem) {
+                id = `${Utilities.String.noTrailingSlash(parentItem.id)}/${id}`;
+            } 
 
             // We can't have duplicate ids in the treeview.
-            const count = TreeEntryCache.Instance.Items.count(t => t.id === this.id || t.id.startsWith(this.id + "_"));
+            const count = TreeEntryCache.Instance.Items.count(t => t.id === id || t.id && t.id.startsWith(id + "_"));
             
             if (count > 0) {
-                this.id += `_${count}`;
+                id += `_${count}`;
             }
+
+            this.command = { command: cs.cds.controls.templateExplorer.clickEntry, title: this.subtext || this.label, arguments: [ this ] };
+            this.id = id;
         }
 
         this.contextValue = this.capabilities.join(",");
@@ -329,6 +311,22 @@ export class TreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canExportItem", TreeEntry.canExportEntryTypes);
 
         return returnValue;
+    }
+
+    /**
+     * Creates a child item underneath the current tree entry with the specified properties.
+     *
+     * @param {EntryType} itemType The type of node to create
+     * @param {string} id The sub-identifier of the node, the parent identifier will automatically be prefixed.
+     * @param {string} label The label to display on the new tree item.
+     * @param {string} [subtext] The subtext (description) to display on the new tree item.
+     * @param {vscode.TreeItemCollapsibleState} [collapsibleState=vscode.TreeItemCollapsibleState.None] The current collapsible state of the child item, defaults to none.
+     * @param {*} [context] A context object (if any) to associate with the new tree item.
+     * @returns {TreeEntry}
+     * @memberof TreeEntry
+     */
+    createChildItem(itemType: EntryType, id: string, label: string, subtext?: string, collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None, context?: any): TreeEntry {
+        return new TreeEntry(this, itemType, id, label, subtext, collapsibleState, context);
     }
 
     private addCapability(returnList:string[], capabilityName:string, constrain:EntryType[], additionalCheck?:() => boolean): void {
