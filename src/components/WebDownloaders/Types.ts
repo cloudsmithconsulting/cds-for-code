@@ -102,16 +102,18 @@ export class ExtensionIconTheme {
 					return;
 				}
 		
-				logger.log(`Download icon: ${icon.url} started.`);
-
 				return await fetch(icon.url, { method: 'get', headers: { 'Accepts': icon.mimeType } })
 					.then(res => res.text())
 					.then(body => {
 						FileSystem.writeFileSync(localPath, body);
 
-						logger.log(`Download icon: ${icon.url} completed.`);
+						logger.log(`Command: [${cs.cds.extension.downloadRequiredIcons}] Download icon: ${icon.url} completed.`);
 		
 						return localPath;
+					}).catch(error => {
+						const message = (error.message || error).toString();
+
+						logger.error(`Command: [${cs.cds.extension.downloadRequiredIcons}] Download icon ${icon.url} failed: ${message}`);
 					});
 			});
 		}
@@ -144,7 +146,9 @@ export class ExtensionIconTheme {
 
 export class ExtensionIconThemes {
     static get default(): ExtensionIconTheme {
-		return new ExtensionIconTheme(cs.cds.configuration.iconThemes.default, defaultIcons, "#303030", "#C0C0C0");
+		const colorConfig = vscode.extensions.getExtension(cs.cds.extension.productId).packageJSON.contributes.colors.find(c => c.id === cs.cds.theme.colors.icons);
+
+		return new ExtensionIconTheme(cs.cds.configuration.iconThemes.default, defaultIcons, colorConfig.defaults.light, colorConfig.defaults.dark);
 	}
 
     private static _themes: ExtensionIconTheme[] = [ ExtensionIconThemes.default ];

@@ -6,7 +6,7 @@
 	"repository": {
 		"url": "https://cloudsmith-consulting@dev.azure.com/cloudsmith-consulting/CloudSmith/_git/cds-for-code"
 	},
-	"version": "0.8.6",
+	"version": "0.8.7",
 	"preview": true,
 	"engines": {
 		"vscode": "^1.38.0"
@@ -18,8 +18,8 @@
 	],
 	"keywords": [
 		"CDS",
-		"PowerApps",
 		"Common Data Service",
+		"PowerApps",
 		"Power Platform",
 		"Dynamics",
 		"Dynamics 365",
@@ -74,6 +74,15 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"colors": [{
+			"id": "cs.cds.theme.colors.icons",
+			"description": "Color for icons that are downloaded from iconify.design",
+			"defaults": {
+				"dark": "#C0C0C0",
+				"light": "#404040",
+				"highContrast": "#FFFFFF"
+			}
+		}],
 		"configuration": {
 			"type": "object",
 			"title": "CDS for Code",
@@ -81,12 +90,12 @@
 				"cs.cds.configuration.web.usePowerAppsUi": {
 					"type": "boolean",
 					"default": "true",
-					"description": "Use the PowerApps Online UI where possible"
+					"description": "Use the PowerApps Maker UX where possible"
 				},
 				"cs.cds.configuration.tools.sdkInstallPath": {
 					"type": "string",
 					"default": "C:\\Deploy\\Tools",
-					"description": "The full path to the root of the CRM SDK installation on your computer"
+					"description": "The full path to the root of the Dynamics 365/CDS SDK installation on your computer"
 				},
 				"cs.cds.configuration.tools.updateSource": {
 					"type": "string",
@@ -164,8 +173,7 @@
 				}
 			}
 		},
-		"commands": [
-			{
+		"commands": [{
 				"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 				"title": "Refresh",
 				"icon": {
@@ -519,31 +527,24 @@
 			}
 		],
 		"viewsContainers": {
-			"activitybar": [
-				{
-					"id": "cdsExplorer",
-					"title": "CDS for Code",
-					"icon": "resources/images/dynamics.png"
-				}
-			]
+			"activitybar": [{
+				"id": "cdsExplorer",
+				"title": "CDS for Code",
+				"icon": "resources/images/dynamics.png"
+			}]
 		},
 		"views": {
-			"cdsExplorer": [
-				{
-					"id": "cs.cds.viewContainers.cdsExplorer",
-					"name": "CDS Explorer"
-				}
-			],
-			"explorer": [
-				{
-					"id": "cs.cds.viewContainers.templateExplorer",
-					"name": "Template Explorer"
-				}
-			]
+			"cdsExplorer": [{
+				"id": "cs.cds.viewContainers.cdsExplorer",
+				"name": "CDS Explorer"
+			}],
+			"explorer": [{
+				"id": "cs.cds.viewContainers.templateExplorer",
+				"name": "Template Explorer"
+			}]
 		},
 		"menus": {
-			"commandPalette": [
-				{
+			"commandPalette": [{
 					"command": "cs.cds.controls.explorer.createFromItemTemplate",
 					"when": "false"
 				},
@@ -696,8 +697,7 @@
 					"when": "false"
 				}
 			],
-			"explorer/context": [
-				{
+			"explorer/context": [{
 					"command": "cs.cds.controls.explorer.dotNetBuild",
 					"when": "explorerResourceIsFolder == true || resourceExtname == .csproj || resourceExtname == .vbproj",
 					"group": "build@1"
@@ -763,8 +763,7 @@
 					"group": "navigation@999"
 				}
 			],
-			"view/title": [
-				{
+			"view/title": [{
 					"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 					"group": "navigation",
 					"when": "view == cs.cds.viewContainers.cdsExplorer"
@@ -785,8 +784,7 @@
 					"when": "view == cs.cds.viewContainers.templateExplorer"
 				}
 			],
-			"view/item/context": [
-				{
+			"view/item/context": [{
 					"command": "cs.cds.controls.cdsExplorer.addEntry",
 					"group": "inline",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
