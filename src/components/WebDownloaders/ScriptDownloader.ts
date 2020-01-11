@@ -77,7 +77,7 @@ export default class ScriptDownloader {
 					if ((!FileSystem.exists(localFilePath))
 						|| (!currentVersion || currentVersion !== version))
 					{
-						Logger.log(`Command: [${cs.cds.extension.downloadRequiredScripts}] Downloading ${fileName}, version ${version}`);
+						Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} Downloading ${fileName}, version ${version}`);
 
 						// file doesn't exist, get it from remote location
 						await ScriptDownloader.downloadScript(remoteFilePath, localFilePath)
@@ -93,7 +93,7 @@ export default class ScriptDownloader {
 								GlobalState.Instance.PowerShellScriptVersion = version;
 							});
 					} else {
-						Logger.log(`Command: [${cs.cds.extension.downloadRequiredScripts}] File ${fileName} is current: version ${currentVersion}`);
+						Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} File ${fileName} is current: version ${currentVersion}`);
 					}
 				}
 
@@ -132,11 +132,11 @@ export default class ScriptDownloader {
 									if (options.extractPath) { FileSystem.makeFolderSync(options.extractPath); }
 
 									if (options.isTemplate) {
-										Logger.log(`Command: [${cs.cds.extension.downloadRequiredScripts}] Importing template: ${options.zipFile}`);
+										Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} Importing template: ${options.zipFile}`);
 
 										await vscode.commands.executeCommand(cs.cds.templates.importTemplate, vscode.Uri.file(options.zipFile));
 									} else {
-										Logger.log(`Command: [${cs.cds.extension.downloadRequiredScripts}] Unzipping downloaded file: ${options.zipFile}`);
+										Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} Unzipping downloaded file: ${options.zipFile}`);
 
 										await FileSystem.unzip(options.zipFile, options.extractPath);
 										await Quickly.inform(`Items were extracted from ${options.zipFile} into ${options.extractPath}`);
@@ -147,7 +147,7 @@ export default class ScriptDownloader {
 								GlobalState.Instance.PowerShellScriptVersion = version;
 							});
 					} else {
-						Logger.log(`Command: [${cs.cds.extension.downloadRequiredScripts}] File ${fileName} is current: version ${currentVersion}`);
+						Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} File ${fileName} is current: version ${currentVersion}`);
 					}
 				}
 			});

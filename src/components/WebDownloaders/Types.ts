@@ -107,13 +107,13 @@ export class ExtensionIconTheme {
 					.then(body => {
 						FileSystem.writeFileSync(localPath, body);
 
-						logger.log(`Command: [${cs.cds.extension.downloadRequiredIcons}] Download icon: ${icon.url} completed.`);
+						logger.log(`Command: ${cs.cds.extension.downloadRequiredIcons} Download icon: ${icon.url} completed.`);
 		
 						return localPath;
 					}).catch(error => {
 						const message = (error.message || error).toString();
 
-						logger.error(`Command: [${cs.cds.extension.downloadRequiredIcons}] Download icon ${icon.url} failed: ${message}`);
+						logger.error(`Command: ${cs.cds.extension.downloadRequiredIcons} Download icon ${icon.url} failed: ${message}`);
 					});
 			});
 		}
