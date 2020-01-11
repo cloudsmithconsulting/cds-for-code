@@ -21,7 +21,7 @@ import importTemplate from '../../commands/cs.cds.templates.importTemplate';
 import openTemplateFolder from '../../commands/cs.cds.templates.openTemplateFolder';
 import saveTemplate from '../../commands/cs.cds.templates.saveTemplate';
 import { TemplateCatalog } from './TemplateCatalog';
-import TemplateTreeView from '../../views/TemplateExplorer';
+import TemplateTreeView from '../../views/cs.cds.viewContainers.templateExplorer';
 import ExtensionContext from '../../core/ExtensionContext';
 import command from '../../core/Command';
 

@@ -530,7 +530,7 @@ export default class Quickly {
 
     static async openFile(filename: string): Promise<void> {
         if (FileSystem.exists(filename)) {
-            vscode.workspace.openTextDocument(filename).then(d => vscode.window.showTextDocument(d));
+            await vscode.workspace.openTextDocument(filename).then(d => vscode.window.showTextDocument(d));
         }
     }
 
@@ -539,7 +539,7 @@ export default class Quickly {
             content = content.toString();
         }
 
-        vscode.workspace.openTextDocument({ language, content}).then(d => vscode.window.showTextDocument(d));
+        await vscode.workspace.openTextDocument({ language, content}).then(d => vscode.window.showTextDocument(d));
     }
 
     static async askToRetry(errorMessage: string, retryFunction: Function, tryAgainMessage: string = "Try Again", closeMessage: string = "Close", ...parameters: any): Promise<any> {

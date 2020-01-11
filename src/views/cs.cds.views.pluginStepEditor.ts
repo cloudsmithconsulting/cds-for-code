@@ -1,7 +1,6 @@
-import * as vscode from 'vscode';
+import * as cs from '../cs';
 import { View, BridgeCommunicationMethod } from '../core/webui/View';
 import { ViewRenderer } from "../core/webui/ViewRenderer";
-import * as cs from '../cs';
 import ApiRepository from '../repositories/apiRepository';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import Quickly from '../core/Quickly';
