@@ -20,6 +20,7 @@ import command from '../core/Command';
 import Dictionary from '../core/types/Dictionary';
 import ExtensionContext from '../core/ExtensionContext';
 import Telemetry, { telemetry } from '../core/framework/Telemetry';
+import async = require('async');
 
 /**
  * TreeView implementation that helps end-users navigate items in their Common Data Services (CDS) environments.
@@ -459,8 +460,8 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                     return;
                 }
                 
-                for (let i = 0; i < items.length; i++) {
-                    const item: any = items[i];
+                // Run these in paralell per #534 (Improve parse performance in TreeView for large batches)
+                async.each(items, async item => {
                     let treeItem;
 
                     try {
@@ -476,7 +477,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                         parsed++;
                         result.push(treeItem);
                     }
-                }
+                });
 
                 context.input("count.parse", parsed);
 
@@ -791,26 +792,39 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
                 const result : CdsTreeEntry[] = new Array();
 
-                if (items && items.oneToMany && items.oneToMany.length > 0) {
-                    items.oneToMany.forEach(r => {
-                        result.push(CdsExplorer.parsers["OneToManyRelationship"](r, element));
-                        parsed++;
-                    });
-                }
+                async.race([
+                    async () => {
+                        if (items && items.oneToMany && items.oneToMany.length > 0) {
+                            items.oneToMany.forEach(r => {
+                                result.push(CdsExplorer.parsers["OneToManyRelationship"](r, element));
+                                parsed++;
+                            });
+                        }
+                    },
+                    async () => {
+                        if (items && items.manyToOne && items.manyToOne.length > 0) {
+                            items.manyToOne.forEach(r => {
+                                result.push(CdsExplorer.parsers["ManyToOneRelationship"](r, element));
+                                parsed++;
+                            });
+                        }
+                    },
+                    async () => {
+                        if (items && items.manyToMany && items.manyToMany.length > 0) {
+                            items.manyToMany.forEach(r => {
+                                result.push(CdsExplorer.parsers["ManyToManyRelationship"](r, element));
+                                parsed++;
+                            });
+                        }
+                    }
+                ], (err, result) => {
+                    if (err) {
+                        const message = (err.message || err).toString();
 
-                if (items && items.manyToOne && items.manyToOne.length > 0) {
-                    items.manyToOne.forEach(r => {
-                        result.push(CdsExplorer.parsers["ManyToOneRelationship"](r, element));
-                        parsed++;
-                    });
-                }
-
-                if (items && items.manyToMany && items.manyToMany.length > 0) {
-                    items.manyToMany.forEach(r => {
-                        result.push(CdsExplorer.parsers["ManyToManyRelationship"](r, element));
-                        parsed++;
-                    });
-                }
+                        logger.error(`View: ${cs.cds.viewContainers.cdsExplorer}.getEntityRelationshipDetails: ${message} {ui-retry}`);
+                        Quickly.askToRetry(`An error occurred while retrieving relationships from ${element.config.webApiUrl}: ${message}`, () => this.getEntityRelationshipDetails(element, entity));
+                    }
+                });
 
                 context.input("count.parse", parsed);
 
