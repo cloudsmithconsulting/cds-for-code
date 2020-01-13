@@ -2,6 +2,26 @@
 
 All notable changes to the "cds-for-code" extension will be documented in this file.
 
+## v0.8.7 (January 13, 2020)
+- Feature: Icons now match color from VS code theme more accurately ([#336](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/336/))
+- Feature: Telemetry and performance stats are optimizsed and evaluated for treeview loads ([#522](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/522/))
+- Feature: TreeView entries only query CDS API for minimum required attributes ([#524](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/524/))
+- Feature: Performance telemetry and throttle limits are kept for CDS API calls ([#525](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/525/))
+- Feature: "Show Default Solution" is disabled by default and no longer shows "Default Solution" in solutions menu when eneabled ([#526](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/526/))
+- Feature: Aborted requests now report back to the end user ([#527](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/527/))
+- Feature: Performance of TreeView node parsing has improved dramatically ([#534](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/534/))
+- Bugfix: Unable to save a new process when selecting workflow/action ([#372](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/372/))
+- Bugfix: CDS Explorer: Calls are sometimes long or don't return ([#398](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/398/))
+- Bugfix: CDS Explorer: Errors returned when clicking "+" next to Processes inside a Solution ([#444](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/444/))
+- Bugfix: CDS Explorer: Cannot add a new connection under certain conditions ([#514](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/514/))
+- Bugfix: CDS Explorer: Error when you click the Refresh button under certain conditions ([#515](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/515/))
+- Bugfix: CDS Explorer: Plugins do not load correctly ([#519](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/519/))
+- Bugfix: CDS Explorer: Web Resources load slowly and do not always recurse correctly ([#528](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/528/))
+- Bugfix: CDS Explorer: Processes do not expand under a solution ([#535](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/535/))
+- Bugfix: CDS Explorer: Plugin steps do not expand in the explorer view ([#536](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/536/))
+- Bugfix: Localized labels are obtained in ordinal fashion instead of user preference ([#532](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/532/))
+- Refactor: Treeviews are now single classes with single responsibility leveraging new command model ([#332](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/332))
+
 ## v0.8.6 (January 6, 2020)
 
 - Feature: CloudSmith CDS for Code Output window added ([#258](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/258/), [#259](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/259/), [#379](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/378/))
