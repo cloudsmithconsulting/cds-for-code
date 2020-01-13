@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import Quickly, { WorkspaceFileItem } from '../core/Quickly';
 import ExtensionContext from "../core/ExtensionContext";
-import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
+import TerminalManager, { TerminalCommand } from '../components/Terminal/SecureTerminal';
 import { Utilities } from '../core/Utilities';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
@@ -77,7 +77,7 @@ export default async function run(config?:CdsWebApi.Config, folder?:string, outp
 	
 	// build a powershell terminal
 	logger.log("Generating entity code");
-	return DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
+	return TerminalManager.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => {
 			return await terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
 				.text(`-ToolsPath ${coreToolsRoot} `)

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as FileSystem from '../core/io/FileSystem';
 import Quickly from '../core/Quickly';
-import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
+import TerminalManager, { TerminalCommand } from '../components/Terminal/SecureTerminal';
 import * as path from 'path';
 import ExtensionContext from '../core/ExtensionContext';
 import { Utilities } from '../core/Utilities';
@@ -56,7 +56,7 @@ export default async function run(file?:vscode.Uri, updateVersionBuild:boolean =
 
 	if (logFile && logFile === "!") { logFile = undefined; }
 
-	return DynamicsTerminal.showTerminal(path.parse(file.fsPath).dir)
+	return TerminalManager.showTerminal(path.parse(file.fsPath).dir)
 		.then(async terminal => { 
 			return await terminal.run(new TerminalCommand(`dotnet build "${file.fsPath}"`))
 				.then(tc => {

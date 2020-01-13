@@ -1,16 +1,18 @@
 import * as vscode from 'vscode';
-import IContributor from '../core/CommandBuilder';
-import * as cs from '../cs';
+import IContributor from '../../core/CommandBuilder';
+import * as cs from '../../cs';
 import * as fs from 'fs';
 import * as eol from 'eol';
 import * as child_process from 'child_process';
-import { Utilities } from '../core/Utilities';
-import Quickly, { QuickPickOption } from '../core/Quickly';
+import { Utilities } from '../../core/Utilities';
+import Quickly, { QuickPickOption } from '../../core/Quickly';
 import { TS } from 'typescript-linq';
 import { TextEncoder, TextDecoder } from 'util';
-import Dictionary from '../core/types/Dictionary';
-import { ICredentialStore, Credential, SecureOutput } from '../core/security/Types';
-import PromiseInfo from "../core/types/PromiseInfo";
+import Dictionary from '../../core/types/Dictionary';
+import { ICredentialStore, Credential, SecureOutput } from '../../core/security/Types';
+import PromiseInfo from "../../core/types/PromiseInfo";
+import ExtensionContext from '../../core/ExtensionContext';
+import command from '../../core/Command';
 
 export class TerminalCommand {
 	private _command:string;
@@ -765,53 +767,49 @@ export class Terminal implements vscode.Terminal {
 	}
 }
 
-export default class DynamicsTerminal implements IContributor {
-	contribute(context: vscode.ExtensionContext, config?: vscode.WorkspaceConfiguration): void {
-		let terminals:Dictionary<string, Terminal> = new Dictionary<string, Terminal>();
+export default class TerminalManager {
+	private static terminals: Dictionary<string, Terminal> = new Dictionary<string, Terminal>();
 
-		context.subscriptions.push(vscode.commands.registerCommand(cs.cds.extension.createTerminal, async (folder:string, name:string): Promise<Terminal> => {
-			if (!folder || !fs.existsSync(folder)) {
-				folder = context.globalStoragePath;
-			}
+	@command(cs.cds.extension.createTerminal, "Create Terminal")
+	static async showTerminal(folder: string, name?: string): Promise<Terminal> {
+		if (!folder || !fs.existsSync(folder)) {
+			folder = ExtensionContext.Instance.globalStoragePath;
+		}
 
-			name = name || Terminal.defaultTerminalName;
+		name = name || Terminal.defaultTerminalName;
 
-			if (!terminals.containsKey(name)) {
-				const terminal = new Terminal({name, shellPath: "powershell.exe", cwd: folder });
-	
-				terminal.onDidClose(() => {
-					terminal.dispose();
-				});
+		if (!TerminalManager.terminals.containsKey(name)) {
+			const terminal = new Terminal({name, shellPath: "powershell.exe", cwd: folder });
 
-				terminal.show(false);
-				terminals.add(name, terminal);
-			} else {
-				terminals[name].show(false);
+			terminal.onDidClose(() => {
+				terminal.dispose();
+			});
 
-				await terminals[name].setPath(folder);
-			}
+			terminal.show(false);
+			TerminalManager.terminals.add(name, terminal);
+		} else {
+			TerminalManager.terminals[name].show(false);
 
-			return terminals[name];
-		}));
+			await TerminalManager.terminals[name].setPath(folder);
+		}
 
-		context.subscriptions.push(vscode.commands.registerCommand(cs.cds.extension.clearTerminal, async (terminal) => {
-			if (!terminal) {
-				if (terminals.length === 0) {
-					terminal = await vscode.commands.executeCommand(cs.cds.extension.createTerminal);
-				} else if (terminals.length === 1) {
-					terminal = terminals.values[0];
-				} else {
-					terminal = await Quickly.pickDictionaryEntry(terminals, "Choose a terminal to clear");
-				}
-			}
-
-			if (terminal) {
-				terminal.clear();
-			}
-		}));
+		return TerminalManager.terminals[name];
 	}
 
-    static async showTerminal(folder: string, name?:string): Promise<Terminal> {
-		return vscode.commands.executeCommand(cs.cds.extension.createTerminal, folder, name);
+	@command(cs.cds.extension.clearTerminal, "Clear Terminal")
+	static async clearTerminal(terminal: Terminal) {
+		if (!terminal) {
+			if (TerminalManager.terminals.length === 0) {
+				terminal = await vscode.commands.executeCommand(cs.cds.extension.createTerminal);
+			} else if (TerminalManager.terminals.length === 1) {
+				terminal = TerminalManager.terminals.values[0];
+			} else {
+				terminal = await Quickly.pickDictionaryEntry(TerminalManager.terminals, "Choose a terminal to clear");
+			}
+		}
+
+		if (terminal) {
+			terminal.clear();
+		}
 	}
 }

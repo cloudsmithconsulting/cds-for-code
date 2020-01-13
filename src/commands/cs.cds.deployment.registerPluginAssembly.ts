@@ -4,7 +4,7 @@ import * as FileSystem from '../core/io/FileSystem';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import { CdsSolutions } from '../api/CdsSolutions';
 import ApiRepository from '../repositories/apiRepository';
-import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
+import TerminalManager, { TerminalCommand } from '../components/Terminal/SecureTerminal';
 import * as path from 'path';
 import { TS } from 'typescript-linq';
 import DotNetProjectManager from '../components/DotNetCore/DotNetProjectManager';
@@ -69,7 +69,7 @@ export default async function run(config?: CdsWebApi.Config, pluginAssembly?: an
 
     logger.log(`Plugin ${file}: Attempting registration of plugin on '${config.appUrl}'`);
 
-    return await DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Tools\\CloudSmith.Dynamics365.AssemblyScanner\\"))
+    return await TerminalManager.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Tools\\CloudSmith.Dynamics365.AssemblyScanner\\"))
         .then(async terminal => { 
             logger.log(`Plugin ${file}:  Scanning for plugin types.`);
 

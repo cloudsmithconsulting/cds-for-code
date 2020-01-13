@@ -4,7 +4,7 @@ import * as FileSystem from '../core/io/FileSystem';
 import * as path from 'path';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import Quickly from '../core/Quickly';
-import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
+import TerminalManager, { TerminalCommand } from '../components/Terminal/SecureTerminal';
 import { Utilities } from '../core/Utilities';
 import SolutionMap from '../components/Solutions/SolutionMap';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
@@ -95,7 +95,7 @@ export default async function run(config?: CdsWebApi.Config, folder?: string, so
 
 	await ScriptDownloader.installCdsSdk();
 
-	return await DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
+	return await TerminalManager.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => { 
 			return await terminal.run(new TerminalCommand(`.\\Get-XrmSolution.ps1 `)
 				.text(`-ServerUrl "${serverUrl}" `)
