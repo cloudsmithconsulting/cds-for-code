@@ -18,16 +18,33 @@ CloudSmith would like to recognize and thank the contributors and underlying pro
 - Brandon Kelly
 - Ira Mellor
 - Gregory Moncayo
-- Nick Doelman
-- George Doubinski
-- Daniel Charpentier
-- Jim Novak
-- Randy Hayward
-- Darent
+- Jonas Rapp
+- Nikita Polyakov
+- Jason Lattimer
+- Max Maraj
 - Stephanie Adelson
-- Colin Vermander
-- Robert Buckles
+- Aleix Ruiz
 - John Landgrave
+- Robert Buckles
+- Daniel Charpentier
+- John Cirujales
+- Rick Wilson
+- Dave Milton
+- Matthias Schleweis
+- Jim Clifton
+- Eduardo Rivas
+- Sean McNellis
+- Matthew Noel
+- Randy Hayward
+- Daniel Cox
+- Nick Doelman
+- Jose Gonzalez
+- Jim Novak
+- Marius Agur Lind
+- Alexey Shytikov
+- Daren Turner
+- George Doubinski
+- Colin Vermander
 
 ---
 
