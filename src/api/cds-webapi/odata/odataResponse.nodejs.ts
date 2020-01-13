@@ -32,10 +32,13 @@ export default function oDataResponse(request: any, data: any, response: any, re
                     break;
                 }
 
-                internalError = errorParsed.hasOwnProperty('error') && errorParsed.error
-                    ? errorParsed.error
-                    : { message: errorParsed.Message };
-
+                if (errorParsed) {
+                    internalError = errorParsed.hasOwnProperty('error') && errorParsed.error
+                        ? errorParsed.error
+                        : { message: errorParsed.Message };
+                } else {
+                    internalError = { message: `HTTP ${response.statusCode} returned with response body: '${data}'`, statusCode: response.statusCode };
+                }
             } catch (e) {
                 if (data.length > 0) {
                     internalError = { message: data };
