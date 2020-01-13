@@ -4,27 +4,30 @@ import * as vscode from 'vscode';
 import * as cs from './cs';
 // config
 import ExtensionConfiguration from './core/ExtensionConfiguration';
-import ViewManager from './views/ViewManager';
+import ExtensionContext from './core/ExtensionContext';
+import Telemetry from './core/framework/Telemetry';
 import TemplateManager from './components/Templates/TemplateManager';
-import DynamicsTerminal from './views/DynamicsTerminal';
 import SolutionManager from './components/Solutions/SolutionManager';
 import SolutionMap from './components/Solutions/SolutionMap';
 import VisualStudioProjectCommands from './components/DotNetCore/DotNetProjectManager';
-import TemplateExplorer from './views/TemplateExplorer';
 import WebResourceManager from './components/Solutions/WebResourceManager';
-import ExtensionContext from './core/ExtensionContext';
 import IconDownloader from './components/WebDownloaders/IconDownloader';
 import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
 import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
-import Telemetry from './core/framework/Telemetry';
+import DynamicsTerminal from './views/DynamicsTerminal';
+import ViewManager from './views/ViewManager';
 import CdsExplorer from './views/cs.cds.viewContainers.cdsExplorer';
+import TemplateExplorer from './views/cs.cds.viewContainers.templateExplorer';
 
 let extensionContext: ExtensionContext;
 
 export async function activate(context: vscode.ExtensionContext) {
-	// Force initialization of our decorators by building an array of their classes.
+	// Force initialization of our decorators by building an array of their types, which.
 	// tslint:disable-next-line: no-unused-expression
-	[ IconDownloader, ScriptDownloader, CodeGenerationManager, SolutionMap, WebResourceManager, SolutionManager, VisualStudioProjectCommands, TemplateManager, ViewManager, Telemetry, CdsExplorer ];
+	[
+		IconDownloader, ScriptDownloader, CodeGenerationManager, SolutionMap, WebResourceManager, SolutionManager, 
+		VisualStudioProjectCommands, TemplateManager, ViewManager, Telemetry, CdsExplorer, TemplateExplorer 
+	];
 
 	extensionContext = new ExtensionContext(context);
 
@@ -33,7 +36,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	// Setup any scripts that require tools configuration, then templating.
 	[   // our views
-		new TemplateExplorer(),
 		new DynamicsTerminal(),
 	].forEach(c => c.contribute(context, toolsConfig));
 	

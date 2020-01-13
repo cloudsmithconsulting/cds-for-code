@@ -18,7 +18,6 @@ export default class MetadataRepository {
     static readonly defaultSelections = new Dictionary<string, string[]>([
         { key: 'EntityDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'IsIntersect', 'PrimaryIdAttribute', 'PrimaryNameAttribute' ] },
         { key: 'AttributeDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'AttributeOf', 'AttributeType', 'AttributeTypeName' ] },
-        { key: 'OptionSetDefinitions', value: [ 'MetadataId', 'Name', 'DisplayName' ] },
         { key: 'systemforms', value: [ 'formid', 'objecttypecode', 'type', 'formactivationstate', 'name', 'description' ] },
         { key: 'savedqueries', value: [ 'savedqueryid', 'returnedtypecode', 'statecode', 'name', 'description' ] },
         { key: 'savedqueryvisualizations', value: [ 'savedqueryvisualizationid', 'primaryentitytypecode', 'name', 'description' ] },
@@ -35,7 +34,7 @@ export default class MetadataRepository {
             .then(response => new TS.Linq.Enumerator(response.value).orderBy(a => a["LogicalName"]).toArray());
     }
 
-    retrieveOptionSets(solutionId?: string, select: string[] = MetadataRepository.defaultSelections["OptionSetDefinitions"]): Promise<any[]> {
+    retrieveOptionSets(solutionId?: string, select?: string[]): Promise<any[]> {
         return this.webapi.retrieveGlobalOptionSets(undefined, select)
             .then(optionSetResponse => ApiHelper.filterSolutionComponents(this.webapi, optionSetResponse, solutionId, CdsSolutions.SolutionComponent.OptionSet, o => o["MetadataId"]))
             .then(response => response.orderBy(o => o["Name"]).toArray());

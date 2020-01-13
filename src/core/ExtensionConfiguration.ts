@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import ExtensionContext from './ExtensionContext';
 
 export default class ExtensionConfiguration {
     private static _configurations: { [key: string]: vscode.WorkspaceConfiguration } = {};

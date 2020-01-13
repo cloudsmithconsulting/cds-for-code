@@ -7,11 +7,11 @@ import Dictionary from '../../core/types/Dictionary';
 import * as FileSystem from '../../core/io/FileSystem';
 import * as DynamicsTreeView from '../../views/cs.cds.viewContainers.cdsExplorer';
 import { TS } from 'typescript-linq';
-import * as TemplateTreeView from '../../views/TemplateExplorer';
+import * as TemplateTreeView from '../../views/cs.cds.viewContainers.templateExplorer';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import logger from '../../core/framework/Logger';
 
-export type ExtensionIcon = DynamicsTreeView.CdsExplorerEntryType | TemplateTreeView.EntryType | 'Add' | 'Edit' | 'Delete' | 'Refresh' | 'Save' | 'Cancel';
+export type ExtensionIcon = DynamicsTreeView.CdsExplorerEntryType | TemplateTreeView.TemplateExplorerEntryType | 'Add' | 'Edit' | 'Delete' | 'Refresh' | 'Save' | 'Cancel';
 
 const defaultIcons:Dictionary<ExtensionIcon, string> = new Dictionary<ExtensionIcon, string>([
     { key: "Connection", value: 'uil-cloud-data-connection' },
@@ -40,7 +40,8 @@ const defaultIcons:Dictionary<ExtensionIcon, string> = new Dictionary<ExtensionI
     { key: "ManyToOneRelationship", value: "emojione-monotone:left-arrow" },
     { key: "ManyToManyRelationship", value: "emojione-monotone:left-right-arrow" },
     { key: "Form", value: "dashicons-format-aside" },
-    { key: "OptionSet", value: "ion-options-outline" },
+	{ key: "OptionSet", value: "ion-options-outline" },
+	{ key: "Option", value: "simple-line-icons:options" },
     { key: "Process", value: "vaadin-file-process" },
     { key: "WebResource", value: "fa-file-code-o" },
     { key: "Plugin", value: "mdi-codepen" },
@@ -101,16 +102,18 @@ export class ExtensionIconTheme {
 					return;
 				}
 		
-				logger.log(`Download icon: ${icon.url} started.`);
-
 				return await fetch(icon.url, { method: 'get', headers: { 'Accepts': icon.mimeType } })
 					.then(res => res.text())
 					.then(body => {
 						FileSystem.writeFileSync(localPath, body);
 
-						logger.log(`Download icon: ${icon.url} completed.`);
+						logger.log(`Command: ${cs.cds.extension.downloadRequiredIcons} Download icon: ${icon.url} completed.`);
 		
 						return localPath;
+					}).catch(error => {
+						const message = (error.message || error).toString();
+
+						logger.error(`Command: ${cs.cds.extension.downloadRequiredIcons} Download icon ${icon.url} failed: ${message}`);
 					});
 			});
 		}
@@ -143,7 +146,9 @@ export class ExtensionIconTheme {
 
 export class ExtensionIconThemes {
     static get default(): ExtensionIconTheme {
-		return new ExtensionIconTheme(cs.cds.configuration.iconThemes.default, defaultIcons, "black", "white");
+		const colorConfig = vscode.extensions.getExtension(cs.cds.extension.productId).packageJSON.contributes.colors.find(c => c.id === cs.cds.theme.colors.icons);
+
+		return new ExtensionIconTheme(cs.cds.configuration.iconThemes.default, defaultIcons, colorConfig.defaults.light, colorConfig.defaults.dark);
 	}
 
     private static _themes: ExtensionIconTheme[] = [ ExtensionIconThemes.default ];
@@ -218,7 +223,7 @@ export class IconifyIcon {
     get color(): string { return this._color; }
 	set color(value: string) {
 		if (value) {
-			this._color = this.isColorCode(value) ? encodeURIComponent(value) : value;
+			this._color = value;
 		}
 	}
 
@@ -243,7 +248,6 @@ export class IconifyIcon {
 			case ScriptedIconFormat.json:
 				return 'application/json';
 		}
-		return null;
 	}
 
     private isColorCode(value: string): boolean {
@@ -259,11 +263,17 @@ export class IconifyIcon {
 
         if (this.height > 0) {
 			querystring["height"] = this.height;
+		} else {
+			querystring["height"] = "auto";
 		}
 
         if (this.width > 0) {
 			querystring["width"] = this.height;
 		}
+
+		querystring["box"] = "true";
+		querystring["inline"] = "false";
+		querystring["download"] = "true";
 
         return Utilities.$Object.asQuerystring(querystring);
 	}

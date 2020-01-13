@@ -231,4 +231,13 @@ export namespace cds {
             static readonly refreshEntry: string = `${templateExplorer._namespace}.refreshEntry`;
         }
     }
+
+    export namespace theme {
+
+         // tslint:disable-next-line: class-name
+         export class colors {
+            static readonly _namespace: string = "cs.cds.theme.colors";
+            static readonly icons: string = `${colors._namespace}.icons`;
+         }
+    }
 }
