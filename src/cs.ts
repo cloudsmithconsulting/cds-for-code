@@ -54,6 +54,8 @@ export namespace cds {
         static readonly commandCompleted: string = `${telemetryEvents._namespace}.commandCompleted`;
         static readonly extensionActivated: string = `${telemetryEvents._namespace}.activated`;
         static readonly extensionDeactivated: string = `${telemetryEvents._namespace}.deactivated`;
+        static readonly httpRequest: string = `${telemetryEvents._namespace}.httpRequest`;
+        static readonly httpError: string = `${telemetryEvents._namespace}.httpError`;
         static readonly loginFailure: string = `${telemetryEvents._namespace}.loginFailure`;
         static readonly performanceCritical: string = `${telemetryEvents._namespace}.performanceCritical`;
     }

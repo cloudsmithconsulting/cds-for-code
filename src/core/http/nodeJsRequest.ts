@@ -8,6 +8,8 @@ import defaultResponseHandler from "./defaultResponseHandler.nodejs";
 import GlobalStateCredentialStore from '../security/GlobalStateCredentialStore';
 import logger from '../framework/Logger';
 import Telemetry from '../framework/Telemetry';
+import { Utilities } from '../Utilities';
+import moment = require('moment');
 
 export type ResponseHandler = (request: any, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) => void;
 
@@ -45,8 +47,7 @@ export default function nodeJsRequest(options: any) {
     const parsedUrl = url.parse(uri);
     const protocol = parsedUrl.protocol.replace(':', '');
     let protocolInterface = useWindowsAuth ? httpntlm : protocol === 'http' ? http : https;
-
-    let internalOptions:any = {
+    let internalOptions: any = {
         hostname: parsedUrl.hostname,
         port: parsedUrl.port,
         path: parsedUrl.path,
@@ -95,17 +96,51 @@ export default function nodeJsRequest(options: any) {
         executeHttpRequest = (protocol:any, options:any, responseDelegate: ResponseHandler) => protocol[options.method.toLowerCase()](
             options, 
             (error, response) => {
+                requestEndTime = moment.now();
+
                 if (error) {
                     responseParams.length = 0;
+
+                    logger.error(`HTTP error: ${internalOptions.method} ${internalOptions.url} (out: ${data ? data.length : 0}b, in: ${requestEndTime - requestStartTime}ms, error: ${(error.message || error).toString()})`);
+                    Telemetry.Instance.error(error, {
+                        requestId,
+                        method: internalOptions.method,
+                        host: internalOptions.hostname,
+                        port: internalOptions.port,
+                        url: internalOptions.url,
+                        username: internalOptions.username,
+                        statusCode: response.statusCode
+                    }, {
+                        executionTime: requestEndTime - requestStartTime,
+                        requestBytes: data.length,
+                        responseBytes: response.body.length
+                    });
+
                     errorCallback(error);
                 } else {
                     if (response.statusCode === 401) {
                         Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.loginFailure, { 
                             resource: parsedUrl.href, 
-                            username: decrypted.username.toString(), 
+                            username: internalOptions.username,
                             errorMessage: response.body, 
                             errorType: 'authentication_failure', 
                             errorStatus: '401' });
+                    } else {
+                        logger.log(`HTTP ${response.statusCode} received: ${internalOptions.method} ${internalOptions.url} (out: ${data ? data.length : 0}b, in: ${response && response.body ? response.body.length : 0}b, time: ${requestEndTime - requestStartTime}ms)`);
+
+                        Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.httpRequest, {
+                            requestId,
+                            method: internalOptions.method,
+                            host: internalOptions.hostname,
+                            port: internalOptions.port,
+                            url: internalOptions.url,
+                            username: internalOptions.username,
+                            statusCode: response.statusCode
+                        }, {
+                            executionTime: requestEndTime - requestStartTime,
+                            requestBytes: data ? data.length : 0,
+                            responseBytes: response && response.body ? response.body.length : 0
+                        });
                     }
 
                     if (responseDelegate) {
@@ -124,9 +159,27 @@ export default function nodeJsRequest(options: any) {
                     rawData += chunk;
                 }); 
                 response.on('end', () => {
+                    requestEndTime = moment.now();
+
                     if (response.statusCode === 401 && authRetry()) {
-                        logger.log("Auth: HTTP 401 was received - authToken has expired, re-authenticating");
+                        logger.log("Auth: HTTP 401 received");
                     } else if (responseDelegate) {
+                        logger.log(`HTTP ${response.statusCode} received: ${internalOptions.method.toUpperCase()} ${parsedUrl.href} (out: ${data ? data.length : 0}b, in: ${rawData ? rawData.length : 0}b, time: ${requestEndTime - requestStartTime}ms)`);
+
+                        Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.httpRequest, {
+                            requestId,
+                            method: internalOptions.method,
+                            host: internalOptions.hostname,
+                            port: internalOptions.port,
+                            url: parsedUrl.href,
+                            username: headers["authorization"],
+                            statusCode: response.statusCode
+                        }, {
+                            executionTime: requestEndTime - requestStartTime,
+                            requestBytes: data ? data.length : 0,
+                            responseBytes: rawData ? rawData.length : 0
+                        });
+
                         responseDelegate(parsedUrl.href, rawData, response, responseParams, successCallback, errorCallback);
                     }
                 });
@@ -134,6 +187,10 @@ export default function nodeJsRequest(options: any) {
                 responseParams.length = 0;
             });
     }
+
+    const requestId = Utilities.Guid.newGuid();
+    const requestStartTime = moment.now();
+    let requestEndTime;
 
     let request: any = executeHttpRequest(
         protocolInterface, 
@@ -148,6 +205,21 @@ export default function nodeJsRequest(options: any) {
 
         request.on('error', (error) => {
             responseParams.length = 0;
+            requestEndTime = moment.now();
+
+            logger.error(`HTTP error: ${internalOptions.method} ${parsedUrl.href} (request: ${data ? data.length : 0}b, time: ${requestEndTime - requestStartTime}ms, error: ${(error.message || error).toString()})`);
+            Telemetry.Instance.error(error, {
+                requestId,
+                method: internalOptions.method,
+                host: internalOptions.hostname,
+                port: internalOptions.port,
+                url: internalOptions.url,
+                username: internalOptions.username
+            }, {
+                executionTime: requestEndTime - requestStartTime,
+                requestBytes: data.length
+            });
+
             errorCallback(error);
         });
     
