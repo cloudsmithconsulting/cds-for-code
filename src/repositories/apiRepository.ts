@@ -100,6 +100,38 @@ export default class ApiRepository {
             .then(response => response.value);
     }
 
+    async retrieveProcessTemplates(processType: CdsSolutions.ProcessType, entityName: string, solutionId?: string, select: string[] = ApiRepository.defaultSelections["workflows"]) : Promise<any[]> {
+        // documentation of the attributes for workflow: https://docs.microsoft.com/en-us/dynamics365/customer-engagement/web-api/workflow?view=dynamics-ce-odata-9        
+        const request:CdsWebApi.RetrieveMultipleRequest = {
+            collection: "workflows",
+            select: select,
+            filter: `componentstate eq 0 and type eq 3 and category eq ${CdsSolutions.CodeMappings.getProcessTypeCode(processType)}`,
+            orderBy: ["name"]
+        };
+
+        if (entityName) {
+            request.filter += `and primaryentity eq '${entityName}'`;
+        }
+
+        if (solutionId && Utilities.Guid.isGuid(solutionId)) { 
+            const components = (await ApiHelper.getSolutionComponents(this.webapi, solutionId, CdsSolutions.SolutionComponent.Workflow)).map(c => `'${c["objectid"]}'`).join(",");
+
+            if (!Utilities.$Object.isNullOrEmpty(components)) {
+                if (!Utilities.$Object.isNullOrEmpty(request.filter)) {
+                    request.filter += " and";
+                }
+
+                request.filter += ` Microsoft.Dynamics.CRM.In(PropertyName='workflowid',PropertyValues=[${components}])`;
+                request.filter = request.filter.trim();
+            } else {
+                return Promise.resolve([]);
+            }
+        }
+
+        return this.webapi.retrieveAllRequest(request)
+            .then(response => response.value);
+    }
+
     async retrieveWebResourceFolders(solutionId?:string, folder?:string, customizableOnly:boolean = true) : Promise<string[]> {
         const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "webresourceset",
@@ -196,6 +228,13 @@ export default class ApiRepository {
 
     createProcess(workflow: any): Promise<any> {
         return this.webapi.create(workflow, "workflows");
+    }
+
+    createProcessFromTemplate(processTemplateId:string, name: string) {
+        const request = {
+            WorkflowName: name
+        };
+        return this.webapi.executeBoundAction(processTemplateId, "workflows", "Microsoft.Dynamics.CRM.CreateWorkflowFromTemplate", request);
     }
 
     async upsertWebResource(webResource:any): Promise<any> {

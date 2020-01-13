@@ -1,8 +1,7 @@
 import { CdsWebApi } from "../api/cds-webapi/CdsWebApi";
 import { CdsSolutions } from "../api/CdsSolutions";
 import ApiRepository from "../repositories/apiRepository";
-import Quickly from "../core/Quickly";
-import logger from "../core/framework/Logger";
+import Quickly, { QuickPickOption } from "../core/Quickly";
 
 /**
  * Creates a process for a CDS solution
@@ -57,6 +56,51 @@ export default async function run(config?: CdsWebApi.Config, solutionid?: string
 
     const api = new ApiRepository(config);
 
+    // everything except process flow supports templates
+    if (processType !== CdsSolutions.ProcessType.BusinessProcessFlow) {
+        const processTemplates = await api.retrieveProcessTemplates(processType, primaryentity, solutionid);
+
+        if (processTemplates && processTemplates.length > 0) {
+            const templateOptions = processTemplates.map(i => new QuickPickOption(i.name, undefined, undefined, i));
+            const fromTemplate = await Quickly.pickBoolean("Start from existing template? (no will create a blank process)", "Yes", "No");
+        
+            if (fromTemplate) {
+                const templateSelection = await Quickly.pick("Which template?", ...templateOptions);
+        
+                if (!templateSelection) { return; } // user cancelled
+                const newProcess = await api.createProcessFromTemplate(templateSelection.context.workflowid, name)
+                    .then(async response => {
+                        if (solutionid) {
+                            const solution = await api.retrieveSolution(solutionid);
+                            
+                            await api.addSolutionComponent(solution, response.workflowid, CdsSolutions.SolutionComponent.Workflow, undefined, false)
+                                .catch(err => {
+                                    //logger.error(`Error adding workflow to solution: ${JSON.stringify(err)}`);
+                                    Quickly.error(err.message);
+                                });
+                        }
+
+                        return response;
+                    })
+                    .catch(err => {
+                        //logger.error(`Error creating workflow: ${JSON.stringify(err)}`);
+                        Quickly.error(err.message);
+                    });
+        
+                if (newProcess) {
+                    return {
+                        processType,
+                        workflowid: newProcess.workflowid,
+                        solutionid
+                    };
+                }
+
+                // if we get here, something broke
+                return undefined;
+            }
+        }
+    }
+
     // here's the docs on creating a workflow entity type
     // // https://docs.microsoft.com/en-us/dynamics365/customer-engagement/web-api/workflow?view=dynamics-ce-odata-9
     const workflow = {
@@ -75,12 +119,14 @@ export default async function run(config?: CdsWebApi.Config, solutionid?: string
         .then(async newid => {
             if (solutionid) {
                 const solution = await api.retrieveSolution(solutionid);
+                
                 await api.addSolutionComponent(solution, newid, CdsSolutions.SolutionComponent.Workflow, undefined, false)
                     .catch(err => {
                         //logger.error(`Error adding workflow to solution: ${JSON.stringify(err)}`);
                         Quickly.error(err.message);
                     });
             }
+            
             return newid;
         })
         .catch(err => {
