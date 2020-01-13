@@ -6871,13 +6871,13 @@ small {
 
 .btn:focus, .btn-large:focus, .btn-small:focus,
 .btn-floating:focus {
-  background-color: #1a8bbb;
+  background-color: var(--vscode-button-background);
 }
 
 .btn, .btn-large, .btn-small {
   text-decoration: none;
-  color: var(--vscode-button-background);
-  background-color: #27A9E1;
+  color: var(--vscode-button-foreground);
+  background-color: var(--vscode-button-background);
   text-align: center;
   letter-spacing: .5px;
   transition: background-color .2s ease-out;
@@ -6885,7 +6885,7 @@ small {
 }
 
 .btn:hover, .btn-large:hover, .btn-small:hover {
-  background-color: #3db2e4;
+  background-color: var(--vscode-button-background);
 }
 
 .btn-floating {
@@ -9073,7 +9073,7 @@ input[type=range]::-ms-thumb {
 }
 
 .sidenav li > a.btn, .sidenav li > a.btn-large, .sidenav li > a.btn-small, .sidenav li > a.btn-large, .sidenav li > a.btn-floating {
-  color: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
 }
 
 .sidenav li > a.btn-flat {
@@ -9081,11 +9081,11 @@ input[type=range]::-ms-thumb {
 }
 
 .sidenav li > a.btn:hover, .sidenav li > a.btn-large:hover, .sidenav li > a.btn-small:hover, .sidenav li > a.btn-large:hover {
-  background-color: #3db2e4;
+  background-color: var(--vscode-button-background);
 }
 
 .sidenav li > a.btn-floating:hover {
-  background-color: #27A9E1;
+  background-color: var(--vscode-button-background);
 }
 
 .sidenav li > a > i,

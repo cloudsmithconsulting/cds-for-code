@@ -68,9 +68,9 @@ $button-disabled-background: #DFDFDF !default;
 $button-disabled-color: #9F9F9F !default;
 
 // Raised buttons
-$button-raised-background: $secondary-color !default;
-$button-raised-background-hover: lighten($button-raised-background, 5%) !default;
-$button-raised-color: vscode-color("button", "background") !default;
+$button-raised-background: vscode-color("button", "background") !default;
+$button-raised-background-hover: vscode-color("button", "background") !default;
+$button-raised-color: vscode-color("button", "foreground") !default;
 
 // Large buttons
 $button-large-font-size: 15px !default;

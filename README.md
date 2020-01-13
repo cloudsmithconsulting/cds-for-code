@@ -5,6 +5,19 @@ Release version: 0.8.6
 
 ---
 
+# Table of Contents
+
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Getting started](#getting-started)
+- [Commands](#commands)
+- [Configuration](#configuration)
+- [Settings](#settings)
+- [Known issues](#known-issues)
+- [Feedback](#feedback)
+
+---
+ 
 ## Features
 
 The VsCode addin handles these tasks in your development loop.
@@ -39,6 +52,39 @@ The remaining dependancies will be downloaded on the first activation of the CDS
 Get started by adding a CDS connection and exporting a solution to your workspace.
 
 ![gif](https://cloudsmithstatics.azureedge.net/web/vscode/Instructions-gif.gif)
+
+---
+
+# Commands
+
+| Commands added | Description |
+| ----------- | ----------- |
+| cs.dynamics.deployment.addSolutionComponent | Add component to a CDS Solution |
+| cs.dynamics.deployment.compareWebResource | Compare a local web resource file to a version deployed on a CDS instance |
+| cs.dynamics.deployment.connectToCds | Create or Edit a connection to the Common Data Service |
+| cs.dynamics.deployment.createWebResource | Create a web resource in your workspace or on a CDS instance |
+| cs.dynamics.deployment.dotNetBuild | Build a .Net Core project in the current workspace |
+| cs.dynamics.deployment.dotNetTest | Build and Test a .Net Core project in the current workspace |
+| cs.dynamics.deployment.packWebResource | Deploy a Web Resource to CDS |
+| cs.dynamics.deployment.publishCustomizations | Publish solution changes on a CDS environment |
+| cs.dynamics.deployment.registerPluginAssembly | Register or update a plugin assembly |
+| cs.dynamics.deployment.removeSolutionComponent | Remove a component from a CDS Solution |
+| cs.dynamics.deployment.removeSolutionMapping | Remove remembered locations where CDS solutions are stored in this workspace |
+| cs.dynamics.deployment.unpackWebResource | Download a Web Resource from CDS |
+| cs.dynamics.deployment.updateSolutionMapping | Create or update where CDS solutions are stored in this workspace |
+| cs.dynamics.extension.clearTerminal | Clear the CDS for Code terminal |
+| cs.dynamics.extension.createTerminal | Open the CDS for Code terminal |
+| cs.dynamics.extension.downloadRequiredScripts | Download required PowerShell scripts from GitHub |
+| cs.dynamics.powerShell.unpackSolution | Download & unpack solution from a registered CDS environment |
+| cs.dynamics.powerShell.packSolution | Pack & deploy solution to a registerd CDS environment |
+| cs.dynamics.powerShell.generateEntities | Generate entity code from metadata on a registered CDS environment |
+| cs.dynamics.templates.createFromTemplate | Create new items or projects from a template |
+| cs.dynamics.templates.deleteTemplate | Delete a template from the catalog |
+| cs.dynamics.templates.editTemplateCatalog | Open template catalog in code editor |
+| cs.dynamics.templates.exportTemplate | Export template from the template catalog |
+| cs.dynamics.templates.importTemplate | Import template into the template catalog |
+| cs.dynamics.templates.openTemplateFolder | Open template folder in explorer |
+| cs.dynamics.templates.saveTemplate | Save workspace items as a template in the template catalog |
 
 ---
 
@@ -87,14 +133,3 @@ We are currently on the insider preview stage of CDS for Code. This build may co
 
 - Drop us a line in [CDS For Code Early Preview Teams Channel](https://teams.microsoft.com/l/channel/19%3aeb4e28a080cc4330b10effdef32b0ca0%40thread.skype/General?groupId=da1048fb-6db5-4fcf-8a87-27ceb8ac7b68&tenantId=b7d98656-670d-4ae0-b419-b03097edb814)
 - File a bug in [CloudSmith Azure DevOps Dashboard](http://cslink.co/cds-for-code-dashboard)
-
----
-
-## Community Recognition
-
-CloudSmith would like to recognize and thank the contributors and underlying projects that represent underlying features of this extension.
-
-|Project|Author|License|
-|--|--|--|
-|[DynamicsWebApi](https://github.com/AleksandrRogov/DynamicsWebApi)|[Aleksandr Rogov](https://github.com/AleksandrRogov)|MIT|
-|[VSCode Project Templates](https://github.com/cantonios/vscode-project-templates)|[C. Antonio Sánchez](https://github.com/cantonios)|MIT|
