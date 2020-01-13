@@ -279,7 +279,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                     // add it to the list
                     connections.push(o); 
                 } else {
-                    const updateIndex = this._connections.findIndex(c => c.id === o.id);
+                    const updateIndex = CdsExplorer.Instance._connections.findIndex(c => c.id === o.id);
                     connections[updateIndex] = o;
                 }
             });
