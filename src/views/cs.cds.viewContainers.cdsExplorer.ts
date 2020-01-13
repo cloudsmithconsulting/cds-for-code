@@ -166,6 +166,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         { key: "Folder", value: async (element?) => await this.getChildrenCommands[element.context.innerType](element) },
         { key: "Plugin", value: async (element?) => await this.getPluginTypeDetails(element, element.context) },
         { key: "PluginType", value: async (element?) => await this.getPluginStepDetails(element, element.context) },
+        { key: "PluginStep", value: async (element?) => await this.getPluginStepImageDetails(element, element.context) },
         { key: "Entity", value: async (element?) => await this.createContainers(element, element.itemType, [ "Keys", "Attributes", "Relationships", "Views", "Charts", "Forms", "Dashboards", "Processes"]) },
         { key: "Keys", value: async (element?) => await this.getEntityKeyDetails(element, element.context) },
         { key: "Attributes", value: async (element?) => await this.getEntityAttributeDetails(element, element.context) },

@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as cs from '../../cs';
 import fetch from 'node-fetch';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
-import DynamicsTerminal, { TerminalCommand } from '../../views/DynamicsTerminal';
+import TerminalManager, { TerminalCommand } from '../Terminal/SecureTerminal';
 import { Utilities } from '../../core/Utilities';
 import GlobalState from '../Configuration/GlobalState';
 import TemplateManager from "../Templates/TemplateManager";
@@ -222,7 +222,7 @@ export default class ScriptDownloader {
 		
 			Logger.warn(`Extension: SDK not detected in ${sdkInstallPath}, downloading and extracting automatically.`);
 
-			return await DynamicsTerminal.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "/Scripts/"))
+			return await TerminalManager.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "/Scripts/"))
 				.then(async terminal => {
 					return await terminal.run(new TerminalCommand(`.\\Install-Sdk.ps1 `)
 						.text(`-Path "${sdkInstallPath}" `));

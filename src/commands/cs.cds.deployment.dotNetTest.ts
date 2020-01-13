@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as FileSystem from '../core/io/FileSystem';
 import * as path from 'path';
 import Quickly from '../core/Quickly';
-import DynamicsTerminal, { TerminalCommand } from '../views/DynamicsTerminal';
+import TerminalManager, { TerminalCommand } from '../components/Terminal/SecureTerminal';
 import ExtensionContext from '../core/ExtensionContext';
 import { Utilities } from '../core/Utilities';
 
@@ -34,7 +34,7 @@ export default async function run(file?:vscode.Uri, logFile?:string): Promise<an
 			logFile = path.join(ExtensionContext.Instance.globalStoragePath, `/logs/test-${path.basename(file.path)}-${Utilities.String.dateAsFilename()}`);		}
 	}
 
-	return DynamicsTerminal.showTerminal(path.parse(file.fsPath).dir)
+	return TerminalManager.showTerminal(path.parse(file.fsPath).dir)
 		.then(async terminal => { 
 			return await terminal.run(new TerminalCommand(`dotnet test "${file.fsPath}"`))
 				.then(tc => {

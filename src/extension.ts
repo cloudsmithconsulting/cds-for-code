@@ -2,8 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as cs from './cs';
-// config
-import ExtensionConfiguration from './core/ExtensionConfiguration';
+
 import ExtensionContext from './core/ExtensionContext';
 import Telemetry from './core/framework/Telemetry';
 import TemplateManager from './components/Templates/TemplateManager';
@@ -14,7 +13,7 @@ import WebResourceManager from './components/Solutions/WebResourceManager';
 import IconDownloader from './components/WebDownloaders/IconDownloader';
 import ScriptDownloader from './components/WebDownloaders/ScriptDownloader';
 import CodeGenerationManager from './components/CodeGeneration/CodeGenerationManager';
-import DynamicsTerminal from './views/DynamicsTerminal';
+import TerminalManager from './components/Terminal/SecureTerminal';
 import ViewManager from './views/ViewManager';
 import CdsExplorer from './views/cs.cds.viewContainers.cdsExplorer';
 import TemplateExplorer from './views/cs.cds.viewContainers.templateExplorer';
@@ -26,20 +25,12 @@ export async function activate(context: vscode.ExtensionContext) {
 	// tslint:disable-next-line: no-unused-expression
 	[
 		IconDownloader, ScriptDownloader, CodeGenerationManager, SolutionMap, WebResourceManager, SolutionManager, 
-		VisualStudioProjectCommands, TemplateManager, ViewManager, Telemetry, CdsExplorer, TemplateExplorer 
+		VisualStudioProjectCommands, TemplateManager, ViewManager, Telemetry, CdsExplorer, TemplateExplorer,
+		TerminalManager
 	];
 
 	extensionContext = new ExtensionContext(context);
-
-	// load and check extension configuration
-	const toolsConfig = ExtensionConfiguration.getConfiguration(cs.cds.configuration.tools._namespace);
-
-	// Setup any scripts that require tools configuration, then templating.
-	[   // our views
-		new DynamicsTerminal(),
-	].forEach(c => c.contribute(context, toolsConfig));
-	
-	extensionContext.activate(cs.cds.extension.productId, toolsConfig);
+	extensionContext.activate(cs.cds.extension.productId);
 
 	return context.subscriptions;
 }
