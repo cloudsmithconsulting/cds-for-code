@@ -439,12 +439,15 @@ export default class Quickly {
             .then(pathUris => (pathUris && pathUris.length > 0) ? pathUris.length === 1 ? pathUris[0] : pathUris : null);
     }
 
-    static async pickEnum<T>(enumObject: any, placeHolder?: string): Promise<T> {
+    static async pickEnum<T>(enumObject:any, placeHolder?:string, excludeOptions?:any[]): Promise<T> {
         let enumOptions:QuickPickOption[] = [];
 
         for (let value in enumObject) {
             if (typeof enumObject[value] === 'number' || typeof enumObject[value] === 'string') {
-                enumOptions.push(new QuickPickOption(typeof enumObject[value] === 'string' ? enumObject[value].toString() : value, undefined, undefined, enumObject[value]));
+                const label = typeof enumObject[value] === 'string' ? enumObject[value].toString() : value;
+                if (excludeOptions && excludeOptions.indexOf(label) === -1) {
+                    enumOptions.push(new QuickPickOption(label, undefined, undefined, enumObject[value]));
+                }
             }
         }
 
@@ -488,7 +491,7 @@ export default class Quickly {
         }
     }
 
-    static async pickCdsSolutionComponent(config: CdsWebApi.Config, solution: any, componentType: CdsSolutions.SolutionComponent, placeHolder?: string): Promise<{ componentId: string, component: any }> {
+    static async pickCdsSolutionComponent(config:CdsWebApi.Config, solution:any, componentType:CdsSolutions.SolutionComponent, filterExpression?:string, placeHolder?:string): Promise<{ componentId:string, component:any }> {
         const options:QuickPickOption[] = [];
         const metadataApi = new MetadataRepository(config);
         const api = new ApiRepository(config);

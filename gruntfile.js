@@ -429,7 +429,6 @@ module.exports = function (grunt) {
         'babel:release',
         'uglify:release',
         'usebanner:release',
-        'compress:main',
         'replace:version',
         'replace:readme',
         'clean:temp'
