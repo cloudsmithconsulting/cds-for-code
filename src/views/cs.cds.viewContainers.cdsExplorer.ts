@@ -57,7 +57,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     }
 
     private static readonly addCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
-        { key: "Applications", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageAppUri(item.config, undefined, item.solution)) },
+        { key: "Applications", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageAppUri(item.config, undefined, item.solution || item.parent.context.ActiveSolution)) },
         { key: "Solutions", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config)) },
         { key: "Entities", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, undefined, item.solution)) },
         { key: "Attributes", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageAttributeUri(item.config, item.context.MetadataId, undefined, item.solutionId)) },
@@ -109,6 +109,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
     private static readonly editCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
         { key: "Connection", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.editConnection, item.config) },
+        { key: "Application", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageAppUri(item.config, item.context, item.solution || item.parent.context.ActiveSolution)) },
         { key: "Solution", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config, item.context)) },
         { key: "Entity", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, item.context, item.solution)) },
         { key: "Attribute", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageAttributeUri(item.config, item.parent.context.MetadataId, item.context.MetadataId, item.solutionId)) },
@@ -182,6 +183,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     ]);
 
     private static readonly openInBrowserCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
+        { key: "Application", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenAppUsingBrowserUri(item.config, item.context)) },
         { key: "Entity", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityFormUri(item.config, item.context.LogicalName)) },
         { key: "Form", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityFormUri(item.config, item.parent.context.LogicalName, item.context.formid)) },
         { key: "Dashboard", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getOpenEntityFormUri(item.config, item.parent.context.LogicalName, item.context.formid)) },
@@ -532,9 +534,10 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         return returnValue;
     }
 
-    private getSolutionLevelDetails(element: CdsTreeEntry) : CdsTreeEntry[] {
+    private async getSolutionLevelDetails(element: CdsTreeEntry) : Promise<CdsTreeEntry[]> {
         const showDefaultSolution = <boolean>ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.explorer.showDefaultSolution);
         const returnValue: CdsTreeEntry[] = [];
+        const api = new ApiRepository(element.config);
 
         if (element.itemType === "Solution" || showDefaultSolution) {
             this.createContainers(element, element.itemType, [ "Entities", "OptionSets", "Processes", "WebResources", "Plugins" ]).forEach(e => returnValue.push(e));
@@ -544,7 +547,15 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
             this.createContainers(element, element.itemType, [ "Solutions"]).forEach(e => returnValue.push(e));
         }
 
-        returnValue.push(this.createContainers(element, element.itemType, [ "Applications" ])[0]);
+        const applications = this.createContainers(element, element.itemType, [ "Applications" ]);
+
+        if (applications.length > 0) {
+            if (element.itemType === "Organization") {
+                applications[0].context.ActiveSolution = await api.retrieveBuiltInSolution("Active");
+            }
+
+            returnValue.push(applications[0]);
+        }
 
         return returnValue;
     }
@@ -938,7 +949,7 @@ class CdsTreeEntry extends vscode.TreeItem {
     private static readonly canUnpackSolutionEntryTypes: CdsExplorerEntryType[] = [ "Solution" ];
     private static readonly canMoveSolutionEntryTypes: CdsExplorerEntryType[] = [ "Solution" ];
     private static readonly canOpenInAppEntryTypes: CdsExplorerEntryType[] = [ "View", "Entity", "Dashboard" ];
-    private static readonly canOpenInBrowserEntryTypes: CdsExplorerEntryType[] = [ "Form", "View", "Entity", "Dashboard" ];
+    private static readonly canOpenInBrowserEntryTypes: CdsExplorerEntryType[] = [ "Application", "Form", "View", "Entity", "Dashboard" ];
     private static readonly canOpenInEditorEntryTypes: CdsExplorerEntryType[] = [ "Form", "View", "Chart", "Dashboard" ];
     private static readonly canAddToSolutionEntryTypes: CdsExplorerEntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart", "Dashboard" ];
     private static readonly canRemoveFromSolutionEntryTypes: CdsExplorerEntryType[] = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart", "Dashboard" ];
@@ -958,10 +969,10 @@ class CdsTreeEntry extends vscode.TreeItem {
         parentItem: CdsTreeEntry,
         public readonly itemType: CdsExplorerEntryType,
         readonly id: string,
-        public label: string,
+        label: string,
         public readonly subtext?: string,
-        public collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None,
-        public readonly context?: any
+        collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None,
+        public context?: any
 	) {
         super(label, collapsibleState);
         

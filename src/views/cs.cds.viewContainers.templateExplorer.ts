@@ -239,10 +239,10 @@ export class TemplateExplorerEntry extends vscode.TreeItem {
         parentItem: TemplateExplorerEntry,
         public readonly itemType: TemplateExplorerEntryType,
         readonly id: string,
-        public label: string,
+        label: string,
         public readonly subtext?: string,
-        public collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None,
-        public readonly context?: any
+        collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None,
+        public context?: any
 	) {
         super(label, collapsibleState);
         

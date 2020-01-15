@@ -22,7 +22,7 @@ export default class ApiRepository {
     }
 
     static readonly defaultSelections = new Dictionary<string, string[]>([
-        { key: 'appmodules', value: [ 'appmoduleid', 'uniquename', 'name', 'appmoduleversion', 'ismanaged', 'url', 'webresourceid', 'welcomepageid' ] },
+        { key: 'appmodules', value: [ 'appmoduleid', 'uniquename', 'name', 'appmoduleversion', 'ismanaged', 'solutionid', 'url', 'webresourceid', 'welcomepageid' ] },
         { key: 'solutions', value: [ 'solutionid', 'uniquename', 'friendlyname', 'version', 'ismanaged', 'isvisible' ] },
         { key: 'workflows', value: [ 'workflowid', 'componentstate', 'category', 'type', 'solutionid', 'primaryentity', 'name', 'description' ] },
         { key: 'pluginassemblies', value: [ 'pluginassemblyid', 'name', 'version', 'publickeytoken', 'ishidden' ] },
@@ -49,6 +49,18 @@ export default class ApiRepository {
 
     retrieveSolution(solutionId:string) : Promise<any[]> {
         return this.webapi.retrieveRequest({ collection: "solutions", id: solutionId });
+    }
+
+    async retrieveBuiltInSolution(builtInType: "System" | "Active" | "Default", select: string[] = ApiRepository.defaultSelections["solutions"]): Promise<any> {
+        const request:CdsWebApi.RetrieveMultipleRequest = {
+            collection: "solutions",
+            filter: `uniquename eq '${builtInType}'`,
+            select: select,
+            orderBy: ["uniquename"]
+        };
+
+        return this.webapi.retrieveAllRequest(request)
+            .then(response => response.value && response.value.length > 0 ? response.value[0] : null);
     }
 
     async retrieveApplications(solutionId?: string, select: string[] = ApiRepository.defaultSelections["appmodules"]) : Promise<any[]> {
