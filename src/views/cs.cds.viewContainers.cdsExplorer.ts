@@ -61,6 +61,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     }
 
     private static readonly addCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
+        { key: "Applications", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageAppUri(item.config, undefined, item.solution)) },
         { key: "Solutions", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageSolutionUri(item.config)) },
         { key: "Entities", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageEntityUri(item.config, undefined, item.solution)) },
         { key: "Attributes", value: async (item) => Utilities.Browser.openWindow(CdsUrlResolver.getManageAttributeUri(item.config, item.context.MetadataId, undefined, item.solutionId)) },
@@ -935,7 +936,7 @@ class TreeEntryCache {
 class CdsTreeEntry extends vscode.TreeItem {
     private static readonly canRefreshEntryTypes: CdsExplorerEntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries" ];
     private static readonly canAddEntryTypes: CdsExplorerEntryType[] = [ "Applications", "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries", "PluginType", "PluginStep" ];
-    private static readonly canEditEntryTypes: CdsExplorerEntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep", "PluginStepImage" ];
+    private static readonly canEditEntryTypes: CdsExplorerEntryType[] = [ "Connection", "Application", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep", "PluginStepImage" ];
     private static readonly canDeleteEntryTypes: CdsExplorerEntryType[] = [ "Connection", "PluginStep", "PluginStepImage" ];
     private static readonly canInspectEntryTypes: CdsExplorerEntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
     private static readonly canUnpackSolutionEntryTypes: CdsExplorerEntryType[] = [ "Solution" ];

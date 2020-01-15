@@ -48,6 +48,32 @@ export default class CdsUrlResolver {
     }
 
     /**
+     * Gets the URI to manage a Model App
+     *
+     * @static
+     * @param {CdsWebApi.Config} config
+     * @param {*} [app]
+     * @param {*} [solution]
+     * @returns {string}
+     * @memberof CdsUrlResolver
+     */
+    static getManageAppUri(config: CdsWebApi.Config, app?: any, solution?: any): string {
+        let uriString:string = `${Utilities.String.withTrailingSlash(config.appUrl)}designer/app`;
+        
+        if (solution && solution.solutionid) {
+            uriString += `/${CdsUrlResolver.crmGuid(solution.solutionid)}`;
+        }
+
+        if (app) {
+            uriString += `#/AppDesignerCanvas/${CdsUrlResolver.crmGuid(app.appmoduleid)}`;
+        } else {
+            uriString += '#/CreateNewApp';
+        }
+
+        return uriString;
+    }
+
+    /**
      * Gets the URI to manage the solution
      *
      * @static
