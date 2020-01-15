@@ -94,6 +94,7 @@ export namespace CdsSolutions {
         CustomControlDefaultConfig = "Custom Control Default Config",
         FieldSecurityProfile = "Field Security Profile",
         FieldPermission = "Field Permission",
+        ModelApp = "Model-driven App",
         PluginType = "Plugin Type",
         PluginAssembly = "Plugin Assembly",
         SdkMessageProcessingStep = "SDK Message Processing Step",
@@ -250,6 +251,7 @@ export namespace CdsSolutions {
             { value: 68, key: SolutionComponent.CustomControlDefaultConfig }, 
             { value: 70, key: SolutionComponent.FieldSecurityProfile }, 
             { value: 71, key: SolutionComponent.FieldPermission }, 
+            { value: 80, key: SolutionComponent.ModelApp },             // Undocumented 
             { value: 90, key: SolutionComponent.PluginType }, 
             { value: 91, key: SolutionComponent.PluginAssembly }, 
             { value: 92, key: SolutionComponent.SdkMessageProcessingStep }, 
