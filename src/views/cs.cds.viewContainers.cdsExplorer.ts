@@ -38,10 +38,6 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
 	private constructor() {
         this._connections = DiscoveryRepository.getConnections(ExtensionContext.Instance);
-
-        if (this._connections && this._connections.length > 0) {
-            setTimeout(() => vscode.commands.executeCommand(cs.cds.controls.cdsExplorer.refreshEntry), 50);
-        }
     }
 
     /**

@@ -11,7 +11,7 @@ import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import ExtensionContext from '../core/ExtensionContext';
 import { ExtensionIconThemes } from "../components/WebDownloaders/Types";
 import TemplateManager from '../components/Templates/TemplateManager';
-import { TemplateItem, TemplateType } from "../components/Templates/Types";
+import { TemplateType } from "../components/Templates/Types";
 import Dictionary from '../core/types/Dictionary';
 
 export default class TemplateExplorer implements vscode.TreeDataProvider<TemplateExplorerEntry> {
@@ -20,9 +20,7 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<Templat
 
     private static instance: TemplateExplorer;
 
-	private constructor() {
-        setTimeout(() => vscode.commands.executeCommand(cs.cds.controls.templateExplorer.refreshEntry), 50);
-    }
+	private constructor() { }
 
     static get Instance(): TemplateExplorer {
         if (!TemplateExplorer.instance) {
