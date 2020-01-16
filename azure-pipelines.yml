@@ -45,4 +45,4 @@ steps:
 
 - task: gitmirror@0
   inputs:
-    GitRepoUrl: 'https://$(PAT)@github.com/cloudsmithconsulting/cds-for-code.git'
+    GitRepoUrl: 'https://8f35bc2410f3a67f3b3576293ee0766994e237f3@github.com/cloudsmithconsulting/cds-for-code.git'
