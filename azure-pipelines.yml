@@ -43,8 +43,6 @@ steps:
     ArtifactName: 'extension'
     publishLocation: 'Container'
 
-- task: gitsync@2
+- task: gitmirror@0
   inputs:
-    targetType: 'github'
-    githubEndpointId: 'github.com_CloudSmithBrandon'
-    repositoryName: 'cloudsmithconsulting.cds-for-code'
+    GitRepoUrl: 'https://$(PAT)@github.com/cloudsmithconsulting/cds-for-code.git'
