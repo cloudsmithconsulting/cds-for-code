@@ -9,7 +9,11 @@ $GithubRepoUri = $GithubRepoUri.Substring(8)
 
 # push all branches to vsts project
 git remote add github "https://$GithubPAT@$GithubRepoUri"
-git branch -r | findstr /v "\->" | ForEach-Object { $br = $_.TrimStart().Substring("origin/".Length); git push -u github $br }
+git branch -r | findstr /v "\->" | ForEach-Object { 
+    $br = $_.TrimStart().Substring("origin/".Length)
+    Write-Host 'Pushing $br to GitHub'
+    & git push -u github $br 
+}
 
 # don't forget the tags
 git push github --tags
