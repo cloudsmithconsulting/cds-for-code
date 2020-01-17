@@ -10,6 +10,11 @@ pool:
   vmImage: 'windows-2019'
 
 steps:
+- script: |
+    echo %GITHUB_PAT%
+  env:
+    GITHUB_PAT: $(GithubPAT)
+
 - task: PowerShell@2
   displayName: 'Promote repo to GitHub'
   inputs:
