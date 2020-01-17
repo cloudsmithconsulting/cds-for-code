@@ -6,17 +6,17 @@ module.exports = function (grunt) {
         mkdir: {
             all: {
                 options: {
-                    create: ['out/temp', 'out/temp/browser', 'dist/web', 'dist/release' ]
+                    create: ['out/temp', 'out/temp/browser', 'dist/web', 'dist/release', 'dist/templates' ]
                 },
             },
             dev: {
                 options: {
-                    create: ['out/temp', 'out/temp/browser', 'dist/web' ]
+                    create: ['out/temp', 'out/temp/browser', 'dist/web', 'dist/templates' ]
                 },
             },
             release: {
                 options: {
-                    create: ['out/temp', 'out/temp/browser', 'dist/release' ]
+                    create: ['out/temp', 'out/temp/browser', 'dist/release', 'dist/templates' ]
                 },
             }
         },
@@ -54,7 +54,7 @@ module.exports = function (grunt) {
                     sourcemap: false
                 },
                 files: {
-                    'dist/release/materialize.vscode.css': 'resources/framework/scss/materialize.vscode.scss'
+                    'dist/web/materialize.vscode.css': 'resources/framework/scss/materialize.vscode.scss'
                 }
             }
         },
@@ -120,6 +120,7 @@ module.exports = function (grunt) {
             }
         },
 
+        // Transpile ES2015+ to older versions of ES using Babel
         babel: {
             options: {
                 sourceMap: false,
@@ -147,7 +148,7 @@ module.exports = function (grunt) {
             }
         },
 
-        //  Concat
+        //  Concat one or more files together
         concat: {
             options: {
                 separator: ';'
@@ -254,6 +255,45 @@ module.exports = function (grunt) {
             }
         },
 
+        // Zip up templates for release packaging.
+        zip: {
+            'SystemTemplates': {
+                cwd: 'resources/templates/BuiltInTemplates/',
+                src: [ 'resources/templates/BuiltInTemplates/**'], 
+                dest: 'dist/templates/SystemTemplates.zip'
+            },
+            'CloudSmith.Dynamics365.SamplePlugin.v8.0': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v8.0',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v8.0/**'], 
+                dest: 'dist/templates/CloudSmith.Dynamics365.SamplePlugin.v8.0.zip'
+            },
+            'CloudSmith.Dynamics365.SamplePlugin.v8.1': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v8.1',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v8.1/**'], 
+                dest: 'dist/templates/CloudSmith.Dynamics365.SamplePlugin.v8.1.zip'
+            },
+            'CloudSmith.Dynamics365.SamplePlugin.v8.2': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v8.2',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v8.2/**'], 
+                dest: 'dist/templates/CloudSmith.Dynamics365.SamplePlugin.v8.2.zip'
+            },
+            'CloudSmith.Dynamics365.SamplePlugin.v9.0': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v9.0',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v9.0/**'], 
+                dest: 'dist/templates/CloudSmith.Dynamics365.SamplePlugin.v9.0.zip'
+            }
+        },
+
+        // Copy
+        copy: {
+            powershell: {
+                expand: true,
+                cwd: 'resources/powershell',
+                src: '**',
+                dest: 'dist/scripts'
+            }
+        },
+
         //  Clean
         clean: {
             temp: {
@@ -356,6 +396,16 @@ module.exports = function (grunt) {
                     success: true,
                     duration: 1
                 }
+            },
+
+            templates_compile: {
+                options: {
+                    enabled: true,
+                    message: 'Templates zipped',
+                    title: 'CDS for Code',
+                    success: true,
+                    duration: 1
+                }
             }
         },
 
@@ -409,6 +459,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-mkdir');
@@ -418,6 +469,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-ts');
+    grunt.loadNpmTasks('grunt-zip');
 
     // define the tasks
     grunt.registerTask('release', [
@@ -431,6 +483,8 @@ module.exports = function (grunt) {
         'usebanner:release',
         'replace:version',
         'replace:readme',
+        'templates_compile',
+        'copy:powershell',
         'clean:temp'
     ]);
 
@@ -438,7 +492,7 @@ module.exports = function (grunt) {
         config.babel.dev.options.inputSourceMap = grunt.file.readJSON('out/temp/materialize_concat.js.map');
     });
 
-    grunt.registerTask('js_compile', ['concat:dev', 'configureBabel', 'babel:dev', 'uglify:dev', 'clean:temp_js', 'notify:js_compile']);
+    grunt.registerTask('js_compile', [ 'concat:dev', 'configureBabel', 'babel:dev', 'uglify:dev', 'clean:temp_js', 'notify:js_compile' ]);
     grunt.registerTask('sass_compile', [
         'sass:dev',
         'sass:release',
@@ -446,8 +500,9 @@ module.exports = function (grunt) {
         'postcss:dev',
         'notify:sass_compile'
     ]);
-    grunt.registerTask('ts_compile_browser', ['mkdir:dev', 'ts:browser', 'browserify:dev', 'clean:temp_ts', 'notify:ts_compile_browser']);
+    grunt.registerTask('ts_compile_browser', [ 'mkdir:dev', 'ts:browser', 'browserify:dev', 'clean:temp_ts', 'notify:ts_compile_browser' ]);
+    grunt.registerTask('templates_compile', [ 'zip:SystemTemplates', 'zip:CloudSmith.Dynamics365.SamplePlugin.v8.0', 'zip:CloudSmith.Dynamics365.SamplePlugin.v8.1', 'zip:CloudSmith.Dynamics365.SamplePlugin.v8.2', 'zip:CloudSmith.Dynamics365.SamplePlugin.v9.0', 'notify:templates_compile' ])
 
-    grunt.registerTask('monitor', ['concurrent:monitor']);
-    grunt.registerTask('travis', ['ts_compile_browser', 'js_compile', 'sass_compile']);
+    grunt.registerTask('monitor', [ 'concurrent:monitor' ]);
+    grunt.registerTask('travis', [ 'ts_compile_browser', 'js_compile', 'sass_compile' ]);
 };

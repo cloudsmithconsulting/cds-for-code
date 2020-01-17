@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- master
+- user/brandon
 
 pool:
   vmImage: 'windows-2019'
@@ -51,11 +51,11 @@ steps:
 
 - script: |
     npm install
-  displayName: 'Install node packages (dependencies)'
+  displayName: 'npm install'
 
 - script: |
     npm run vscode:package
-  displayName: 'Create extension package'
+  displayName: 'npm run vscode:package'
 
 - task: CopyFiles@2
   inputs:
@@ -70,11 +70,9 @@ steps:
       package.json
       README.md
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
-  displayName: 'Copy to staging directory'
 
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'extension'
     publishLocation: 'Container'
-  displayName: 'Publish to Azure blob storage'

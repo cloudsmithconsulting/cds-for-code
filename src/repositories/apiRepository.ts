@@ -22,7 +22,8 @@ export default class ApiRepository {
     }
 
     static readonly defaultSelections = new Dictionary<string, string[]>([
-        { key: 'solutions', value: [ 'solutionid', 'uniquename', 'friendlyname', 'version', 'ismanaged', 'isvisible'  ] },
+        { key: 'appmodules', value: [ 'appmoduleid', 'uniquename', 'name', 'appmoduleversion', 'ismanaged', 'solutionid', 'url', 'webresourceid', 'welcomepageid' ] },
+        { key: 'solutions', value: [ 'solutionid', 'uniquename', 'friendlyname', 'version', 'ismanaged', 'isvisible' ] },
         { key: 'workflows', value: [ 'workflowid', 'componentstate', 'category', 'type', 'solutionid', 'primaryentity', 'name', 'description' ] },
         { key: 'pluginassemblies', value: [ 'pluginassemblyid', 'name', 'version', 'publickeytoken', 'ishidden' ] },
         { key: 'webresources', value: [ 'webresourceid', 'name', 'displayname', 'webresourcetype', 'iscustomizable' ] },
@@ -50,11 +51,51 @@ export default class ApiRepository {
         return this.webapi.retrieveRequest({ collection: "solutions", id: solutionId });
     }
 
+    async retrieveBuiltInSolution(builtInType: "System" | "Active" | "Default", select: string[] = ApiRepository.defaultSelections["solutions"]): Promise<any> {
+        const request:CdsWebApi.RetrieveMultipleRequest = {
+            collection: "solutions",
+            filter: `uniquename eq '${builtInType}'`,
+            select: select,
+            orderBy: ["uniquename"]
+        };
+
+        return this.webapi.retrieveAllRequest(request)
+            .then(response => response.value && response.value.length > 0 ? response.value[0] : null);
+    }
+
+    async retrieveApplications(solutionId?: string, select: string[] = ApiRepository.defaultSelections["appmodules"]) : Promise<any[]> {
+        const request:CdsWebApi.RetrieveMultipleRequest = {
+            collection: "appmodules",
+            select: select,
+            filter: '',
+            orderBy: ["name"]
+        };
+
+        if (solutionId && Utilities.Guid.isGuid(solutionId)) { 
+            const components = (await ApiHelper.getSolutionComponents(this.webapi, solutionId, CdsSolutions.SolutionComponent.ModelApp)).map(c => `'${c["objectid"]}'`).join(",");
+
+            if (!Utilities.$Object.isNullOrEmpty(components)) {
+                if (!Utilities.$Object.isNullOrEmpty(request.filter)) {
+                    request.filter += " and";
+                }
+
+                request.filter += ` Microsoft.Dynamics.CRM.In(PropertyName='appmoduleid',PropertyValues=[${components}])`;
+                request.filter = request.filter.trim();
+            } else {
+                return Promise.resolve([]);
+            }
+        }
+
+        return this.webapi.retrieveAllRequest(request)
+            .then(response => response.value);
+    }
+
     retrieveSolutions(select: string[] = ApiRepository.defaultSelections["solutions"]) : Promise<any[]> {
         const showDefaultSolution: boolean = ExtensionConfiguration.getConfigurationValue<boolean>(cs.cds.configuration.explorer.showDefaultSolution);
         const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "solutions",
             filter: "isvisible eq true",
+            select: select,
             orderBy: ["uniquename"]
         };
 
@@ -63,9 +104,7 @@ export default class ApiRepository {
         }
 
         return this.webapi.retrieveAllRequest(request)
-            .then(response => {
-                return response.value;
-            });
+            .then(response => response.value);
     }
 
     async retrieveProcesses(entityName?: string, solutionId?: string, select: string[] = ApiRepository.defaultSelections["workflows"]) : Promise<any[]> {
@@ -253,7 +292,7 @@ export default class ApiRepository {
         }
     }
 
-    retrievePluginAssemblies(solutionId?:string, select: string[] = ApiRepository.defaultSelections["pluginassemblies"]) : Promise<any[]> {
+    retrievePluginAssemblies(solutionId?: string, select: string[] = ApiRepository.defaultSelections["pluginassemblies"]) : Promise<any[]> {
         const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "pluginassemblies",
             select: select,

@@ -2,6 +2,7 @@
 This extension is designed to help developers with a simple development loop for Microsoft&trade; Common Data Service (CDS) using Visual Studio Code.  Many developers do not have access to a full Visual Studio license in order to use Microsoft&trade; CDS Development Toolkit.  This sample solution is designed to get you started.
 
 Release version: 0.8.7
+[![Board Status](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/dcd00a1d-957f-4b19-bcdc-f2951aed4c88/_apis/work/boardbadge/dca6f347-6bc4-4c07-831c-bda22d8068c3)](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/_boards/board/t/dcd00a1d-957f-4b19-bcdc-f2951aed4c88/Microsoft.RequirementCategory/)
 
 ---
 
