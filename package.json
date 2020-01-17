@@ -2,14 +2,14 @@
 	"name": "cds-for-code",
 	"displayName": "CDS for Code",
 	"publisher": "CloudSmith",
-	"description": "Code extension providing development capabilities for Microsoft&trade; Common Data Service written by CloudSmith Consulting LLC",
+	"description": "VS Code extension providing development capabilities for Microsoft&trade; Common Data Service written by CloudSmith Consulting LLC",
 	"repository": {
-		"url": "https://cloudsmith-consulting@dev.azure.com/cloudsmith-consulting/CloudSmith/_git/cds-for-code"
+		"url": "https://github.com/cloudsmithconsulting/cds-for-code.git"
 	},
 	"version": "0.8.8",
 	"preview": true,
 	"engines": {
-		"vscode": "^1.38.0"
+		"vscode": "^1.41.0"
 	},
 	"icon": "resources/images/cloudsmith-logo-only-200px.png",
 	"categories": [
@@ -23,6 +23,7 @@
 		"Power Platform",
 		"Dynamics",
 		"Dynamics 365",
+		"Dynamics 365 CE",		
 		"Dynamics 365 Customer Engagement",
 		"XRM",
 		"CRM"
