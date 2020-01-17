@@ -54,7 +54,7 @@ module.exports = function (grunt) {
                     sourcemap: false
                 },
                 files: {
-                    'dist/release/materialize.vscode.css': 'resources/framework/scss/materialize.vscode.scss'
+                    'dist/web/materialize.vscode.css': 'resources/framework/scss/materialize.vscode.scss'
                 }
             }
         },
