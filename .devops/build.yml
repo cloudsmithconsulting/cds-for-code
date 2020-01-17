@@ -33,7 +33,6 @@ steps:
           $br = $_.TrimStart().Substring("origin/".Length)
           Write-Host "Pushing $br to GitHub"
           
-          git pull origin $br --rebase
           git push -u github $br 
       }   
 
