@@ -46,7 +46,7 @@ steps:
       
       # clean up
       git remote remove github
-    failOnStderr: true
+    failOnStderr: false
     workingDirectory: '$(Build.SourcesDirectory)'
 
 - task: CopyFiles@2
