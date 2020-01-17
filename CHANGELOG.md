@@ -2,6 +2,8 @@
 
 All notable changes to the "cds-for-code" extension will be documented in this file.
 
+## v0.8.8 (Current Dev)
+
 ## v0.8.7 (January 13, 2020)
 - Feature: Icons now match color from VS code theme more accurately ([#336](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/336/))
 - Feature: Telemetry and performance stats are optimizsed and evaluated for treeview loads ([#522](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/522/))
