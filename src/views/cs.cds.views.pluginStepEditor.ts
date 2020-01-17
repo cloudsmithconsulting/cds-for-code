@@ -62,7 +62,7 @@ class PluginStepEditor extends View {
         this.config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
         if (!this.config) { return; }
 
-        const api = new ApiRepository(config);
+        const api = new ApiRepository(this.config);
 
         async.parallel({
             // entityTypeCodes: async function(callback) {

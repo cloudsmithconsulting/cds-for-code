@@ -26,6 +26,13 @@
         </div>
     </blockquote>
 
+    <blockquote class="panel_info" id="loadingPanel">
+        <div class="panel__text">
+            <h4>Hang tight</h4>
+            We're loading some data behind the scenes here. This message will go away when the form is ready.
+        </div>
+    </blockquote>
+
     <div class="col s12">
         <ul class="tabs tabs-fixed-width" id="mainTabs">
             <li class="tab"><a class="active" href="#tab1">White/Black List</a></li>
@@ -34,225 +41,240 @@
         </ul>
     </div>
     <div id="tab1">
-        <ul class="collection with-header">
-            <li class="collection-header">
-                <h6>
-                    Add White/Black List Rules
-                </h6>
-            </li>
-            <li class="collection-item">
-                <div class="col s12 input-field">
-                    <select id="ListType" name="ListType">
-                        <option>White</option>
-                        <option>Black</option>
-                    </select>
-                    <label for="ListType">Which type of list?</label>
-                </div>
-
-                <div class="col s12 input-field">
-                    <select id="FilterType" name="FilterType">
-                        <option>Entity</option>
-                        <option>Attribute</option>
-                        <option>OptionSet</option>
-                        <option>Solution</option>
-                        <option>RegularExpression</option>
-                    </select>
-                    <label for="FilterType">Which filter type?</label>
-                </div>
-
-                <div class="col s12 input-field" data-filter-type="Entity">
-                    <select id="EntityList" name="EntityList" multiple>
-                        <option>Account</option>
-                        <option>Contact</option>
-                        <option>Lead</option>
-                    </select>
-                    <label for="EntityList">Which entities?</label>
-                </div>
-
-                <div class="col s12 input-field" data-filter-type="Attribute,OptionSet" hidden>
-                    <select id="EntitySelect" name="EntitySelect">
-                        <option value="" selected>- All -</option>
-                        <option>Account</option>
-                        <option>Contact</option>
-                        <option>Lead</option>
-                    </select>
-                    <label for="EntitySelect">Which entity?</label>
-                </div>
-
-                <div class="col s12 input-field" data-filter-type="Attribute" hidden>
-                    <select id="AttributeList" name="AttributeList" multiple>
-                        <option>name</option>
-                        <option>description</option>
-                        <option>statecode</option>
-                    </select>
-                    <label for="AttributeList">Which attributes?</label>
-                </div>
-
-                <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
-                    <select id="OptionSetList" name="OptionSetList" multiple>
-                        <option>addresstype</option>
-                    </select>
-                    <label for="OptionSetList">Which option sets?</label>
-                </div>
-
-                <div class="col s12 input-field" data-filter-type="Solution" hidden>
-                    <select id="SolutionList" name="SolutionList" multiple>
-                        <option>Default Solution</option>
-                        <option>My Custom Solution</option>
-                    </select>
-                    <label for="SolutionList">Which solutions?</label>
-                </div>
-
-                <div class="col s12 input-field" data-filter-type="RegularExpression" hidden>
-                    <input id="Expression" name="Expression" type="text" value=".*" />
-                    <label for="Expression">Regular Expression</label>
-                </div>
-
-                <div class="col s12 input-field" data-filter-type="RegularExpression" hidden>
-                    <p class="left" style="margin-right:8px">
-                        <label>
-                            <input type="checkbox" name="IgnoreCase" id="IgnoreCase" value="true" class="filled-in" />
-                            <span>Ignore Case</span>
-                        </label>
-                    </p>
-                </div>
-            </li>
-        </ul>
+        <div class="col s12">
+            <ul class="collection with-header">
+                <li class="collection-header">
+                    <h6>
+                        White/Black List Configuration
+                    </h6>
+                </li>
+                <li class="collection-item">
+                    <div class="col s12 input-field">
+                        <select id="ListType" name="ListType">
+                            <option>White</option>
+                            <option>Black</option>
+                        </select>
+                        <label for="ListType">Which type of list?</label>
+                    </div>
+    
+                    <div class="col s12 input-field">
+                        <select id="FilterType" name="FilterType">
+                            <option>Entity</option>
+                            <option>Attribute</option>
+                            <option>OptionSet</option>
+                            <option>Solution</option>
+                        </select>
+                        <label for="FilterType">Which filter type?</label>
+                    </div>
+    
+                    <div class="col s12 input-field" data-filter-type="Entity">
+                        <p>Which entities?</p>
+                        <select id="EntityList" name="EntityList" class="browser-default" style="height:150px;" multiple>
+                            <!-- <option>Account</option>
+                            <option>Contact</option>
+                            <option>Lead</option> -->
+                        </select>
+                    </div>
+    
+                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                        <p>Filter by entity</p>
+                        <select id="EntitySelect" name="EntitySelect" class="browser-default">
+                            <!-- <option value="" selected>- All -</option>
+                            <option>Account</option>
+                            <option>Contact</option>
+                            <option>Lead</option> -->
+                        </select>
+                    </div>
+    
+                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                        <p>Which attributes?</p>
+                        <select id="AttributeList" name="AttributeList" class="browser-default" style="height:150px;" multiple>
+                            <!-- <option>name</option>
+                            <option>description</option>
+                            <option>statecode</option> -->
+                        </select>
+                    </div>
+    
+                    <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
+                        <p>Which option sets?</p>
+                        <select id="OptionSetList" name="OptionSetList" class="browser-default" style="height:150px;" multiple>
+                            <!-- <option>addresstype</option> -->
+                        </select>
+                    </div>
+    
+                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                        <p class="left" style="margin-right:8px">
+                            <label>
+                                <input type="checkbox" name="ApplyToAll" id="ApplyToAll" value="true" class="filled-in" />
+                                <span>Apply to all entities</span>
+                            </label>
+                        </p>
+                    </div>
+    
+                    <div class="col s12 input-field" data-filter-type="Solution" hidden>
+                        <p>Which solutions?</p>
+                        <select id="SolutionList" name="SolutionList" class="browser-default" style="height:150px;" multiple>
+                            <!-- <option>Default Solution</option>
+                            <option>My Custom Solution</option> -->
+                        </select>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
+
     <div id="tab2">
-        <ul class="collection with-header">
-            <li class="collection-header">
-                <h6>
-                    Publisher Rules
-                </h6>
-            </li>
-            <li class="collection-item">
-                <div class="col s12 input-field">
-                    <input id="MapsTo" name="MapsTo" type="text" placeholder="new_" />
-                    <label for="MapsTo">Remove Publisher Prefix</label>
-                </div>
-            </li>
-        </ul>
+        <div class="col s6">
+            <ul class="collection with-header">
+                <li class="collection-header">
+                    <h6>
+                        Mapping Rules
+                    </h6>
+                </li>
+                <li class="collection-item">
+                    <div class="col s12 input-field">
+                        <select id="FilterType2" name="FilterType2">
+                            <option>Entity</option>
+                            <option>Attribute</option>
+                        </select>
+                        <label for="FilterType2">Which rule type?</label>
+                    </div>
 
-        <ul class="collection with-header">
-            <li class="collection-header">
-                <h6>
-                    Mapping Rules
-                </h6>
-            </li>
-            <li class="collection-item">
-                <div class="col s12 input-field">
-                    <select id="FilterType2" name="FilterType2">
-                        <option>Entity</option>
-                        <option>Attribute</option>
-                    </select>
-                    <label for="FilterType2">Which rule type?</label>
-                </div>
-
-                <div class="col s12 input-field" data-filter-type="Entity">
-                    <select id="EntitySelect2" name="EntitySelect">
-                        <option>Account</option>
-                        <option>Contact</option>
-                        <option>Lead</option>
-                    </select>
-                    <label for="EntitySelect2">Which entity?</label>
-                </div>
-
-                <div class="col s12 input-field" data-filter-type="Attribute" hidden>
-                    <select id="AttributeList2" name="AttributeList">
-                        <option>name</option>
-                        <option>description</option>
-                        <option>statecode</option>
-                    </select>
-                    <label for="AttributeList2">Which attributes?</label>
-                </div>
-
-                <div class="col s12 input-field">
-                    <input id="MapsTo" name="MapsTo" type="text" />
-                    <label for="MapsTo">Will be renamed to</label>
-                </div>
-            </li>
-        </ul>
+                    <div class="col s12 input-field" data-filter-type="Entity">
+                        <p>Which entity?</p>
+                        <select id="EntityList2" name="EntityList2" class="browser-default">
+                            <!-- <option>Account</option>
+                            <option>Contact</option>
+                            <option>Lead</option> -->
+                        </select>
+                    </div>
+    
+                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                        <p>Filter by entity</p>
+                        <select id="EntitySelect2" name="EntitySelect2" class="browser-default">
+                            <!-- <option>Account</option>
+                            <option>Contact</option>
+                            <option>Lead</option> -->
+                        </select>
+                    </div>
+    
+                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                        <p>Which attribute?</p>
+                        <select id="AttributeSelect" name="AttributeSelect" class="browser-default">
+                            <!-- <option>name</option>
+                            <option>description</option>
+                            <option>statecode</option> -->
+                        </select>
+                    </div>
+    
+                    <div class="col s12 input-field">
+                        <input id="MapsTo" name="MapsTo" type="text" />
+                        <label for="MapsTo">Will be renamed to</label>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="col s6">
+            <ul class="collection with-header">
+                <li class="collection-header">
+                    <h6>
+                        Publisher Rules
+                    </h6>
+                </li>
+                <li class="collection-item">
+                    <div class="col s12 input-field">
+                        <input id="MapsTo" name="MapsTo" type="text" placeholder="new_" />
+                        <label for="MapsTo">Remove Publisher Prefix</label>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
+
     <div id="tab3">
-        <ul class="collection with-header">
-            <li class="collection-header">
-                <h6>
-                    General Options
-                </h6>
-            </li>
-            <li class="collection-item">
-                <div class="col s12 input-field">
-                    <input id="OutputPath" name="OutputPath" type="text" placeholder=".\Output" />
-                    <label for="MapsTo">Code file output path</label>
-                </div>
+        <div class="col s6">
+            <ul class="collection with-header">
+                <li class="collection-header">
+                    <h6>
+                        General Options
+                    </h6>
+                </li>
+                <li class="collection-item">
+                    <div class="col s12 input-field">
+                        <input id="OutputPath" name="OutputPath" type="text" placeholder=".\Output" />
+                        <label for="MapsTo">Code file output path</label>
+                    </div>
+    
+                    <div class="col s12 input-field">
+                        <select id="OutputLanguage" name="OutputLanguage">
+                            <option value="CSharp">C#</option>
+                            <option value="VisualBasic">Visual Basic</option>
+                        </select>
+                        <label for="OutputLanguage">Which language?</label>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="col s6">
+            <ul class="collection with-header">
+                <li class="collection-header">
+                    <h6>
+                        Behavior Rules
+                    </h6>
+                </li>
+                <li class="collection-item">
+                    <div class="col s12 input-field">
+                        <input type="text" id="Namespaces" name="Namespaces" placeholder="System,System.Linq,System.ComponentModel" />
+                        <label for="Namespaces">Default namespace imports</label>
+                    </div>
+    
+                    <div class="col s12 input-field">
+                        <p class="left" style="margin-right:8px">
+                            <label>
+                                <input type="checkbox" name="TranslateOptionSetsAsEnums" id="TranslateOptionSetsAsEnums" value="true" class="filled-in" />
+                                <span>Translate OptionSets as enums</span>
+                            </label>
+                        </p>
+                    </div>
+                </li>
+            </ul>
+        </div>
 
-                <div class="col s12 input-field">
-                    <select id="OutputLanguage" name="OutputLanguage">
-                        <option value="CSharp">C#</option>
-                        <option value="VisualBasic">Visual Basic</option>
-                    </select>
-                    <label for="OutputLanguage">Which language?</label>
-                </div>
-            </li>
-        </ul>
-
-        <ul class="collection with-header">
-            <li class="collection-header">
-                <h6>
-                    Behavior Rules
-                </h6>
-            </li>
-            <li class="collection-item">
-                <div class="col s12 input-field">
-                    <input type="text" id="Namespaces" name="Namespaces" placeholder="System,System.Linq,System.ComponentModel" />
-                    <label for="Namespaces">Default namespace imports</label>
-                </div>
-
-                <div class="col s12 input-field">
-                    <p class="left" style="margin-right:8px">
-                        <label>
-                            <input type="checkbox" name="TranslateOptionSetsAsEnums" id="TranslateOptionSetsAsEnums" value="true" class="filled-in" />
-                            <span>Translate OptionSets as enums</span>
-                        </label>
-                    </p>
-                </div>
-            </li>
-        </ul>
-
-        <ul class="collection with-header">
-            <li class="collection-header">
-                <h6>
-                    File(s) Rules
-                </h6>
-            </li>
-            <li class="collection-item">
-                <div class="col s12 input-field">
-                    <input type="text" id="FileNameFormat" name="FileNameFormat" placeholder="{0}.{1}.{2}.cs" />
-                    <label for="FileNameFormat">File name format string</label>
-                </div>
-
-                <div class="col s12 input-field">
-                    <select id="FileType" name="FileType">
-                        <option>Entities</option>
-                        <option>OptionSets</option>
-                        <option>Attributes</option>
-                        <option>Requests</option>
-                        <option>Responses</option>
-                    </select>
-                    <label for="FileType">Which file type?</label>
-                </div>
-
-                <div class="col s12 input-field">
-                    <select id="GenereationStrategy" name="GenereationStrategy">
-                        <option>OneFilePerItem</option>
-                        <option>OneFilePerType</option>
-                        <option>SingleFile</option>
-                    </select>
-                    <label for="GenereationStrategy">Which generation strategy?</label>
-                </div>
-            </li>
-        </ul>
+        <div class="col s12">
+            <ul class="collection with-header">
+                <li class="collection-header">
+                    <h6>
+                        File(s) Rules
+                    </h6>
+                </li>
+                <li class="collection-item">
+                    <div class="col s12 input-field">
+                        <input type="text" id="FileNameFormat" name="FileNameFormat" placeholder="{0}.{1}.{2}.cs" />
+                        <label for="FileNameFormat">File name format string</label>
+                    </div>
+    
+                    <div class="col s12 input-field">
+                        <select id="FileType" name="FileType">
+                            <option>Entities</option>
+                            <option>OptionSets</option>
+                            <option>Attributes</option>
+                            <option>Requests</option>
+                            <option>Responses</option>
+                        </select>
+                        <label for="FileType">Which file type?</label>
+                    </div>
+    
+                    <div class="col s12 input-field">
+                        <select id="GenereationStrategy" name="GenereationStrategy">
+                            <option>OneFilePerItem</option>
+                            <option>OneFilePerType</option>
+                            <option>SingleFile</option>
+                        </select>
+                        <label for="GenereationStrategy">Which generation strategy?</label>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
 </form>
 

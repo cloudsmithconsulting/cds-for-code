@@ -2,7 +2,10 @@
    ========================================================================== */
 
 select { display: none; }
-select.browser-default { display: block; }
+select.browser-default { 
+  display: block; 
+  color: $input-foreground
+}
 
 select {
   background-color: $select-background;

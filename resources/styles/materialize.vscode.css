@@ -8822,6 +8822,7 @@ select {
 
 select.browser-default {
   display: block;
+  color: var(--vscode-input-foreground);
 }
 
 select {
