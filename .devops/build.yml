@@ -10,21 +10,8 @@ pool:
   vmImage: 'windows-2019'
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
-
-- script: |
-    npm install
-  displayName: 'npm install'
-
-- script: |
-    npm run vscode:package
-  displayName: 'npm run vscode:package'
-
 - task: PowerShell@2
-  displayName: 'Clone repo to GitHub'
+  displayName: 'Promote repo to GitHub'
   inputs:
     targetType: 'inline'
     script: |
@@ -38,20 +25,37 @@ steps:
       $GithubRepoUri = $GithubRepoUri.Substring(8)
       
       # push all branches to vsts project
+      Write-Host "Using GitHub connection at: https://$GithubPAT@$GithubRepoUri"
+
       git remote add github "https://$GithubPAT@$GithubRepoUri"
-      git branch -r | findstr /v "\->" | ForEach-Object {
+      
+      git branch -r | findstr /v "\->" | ForEach-Object { 
           $br = $_.TrimStart().Substring("origin/".Length)
           Write-Host "Pushing $br to GitHub"
-          git push -u github $br
-      }
-      
-      # don't forget the tags
+          
+          git push -u github $br 
+      }   
+
       git push github --tags
       
       # clean up
       git remote remove github
-    failOnStderr: true
+    failOnStderr: false
+    errorActionPreference: 'silentlyContinue'
     workingDirectory: '$(Build.SourcesDirectory)'
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install
+  displayName: 'npm install'
+
+- script: |
+    npm run vscode:package
+  displayName: 'npm run vscode:package'
 
 - task: CopyFiles@2
   inputs:
