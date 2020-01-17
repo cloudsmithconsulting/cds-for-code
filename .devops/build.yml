@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- user/brandon
+- master
 
 pool:
   vmImage: 'windows-2019'
