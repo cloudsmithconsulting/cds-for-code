@@ -13,9 +13,9 @@ steps:
 - task: PowerShell@2
   displayName: 'Promote repo to GitHub'
   inputs:
-    targetType: 'inline'    
+    targetType: 'inline'
     script: |
-      $GithubPAT = "$(GithubPAT)"
+      $GithubPAT = $env:GITHUB_PAT
       $GithubRepoUri = "https://github.com/cloudsmithconsulting/cds-for-code.git"
       
       # track all local branches
@@ -43,6 +43,8 @@ steps:
       git remote remove github
     failOnStderr: false
     workingDirectory: '$(Build.SourcesDirectory)'
+  env:
+    GITHUB_PAT: $(GithubPAT)
 
 - task: NodeTool@0
   inputs:
