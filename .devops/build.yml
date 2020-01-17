@@ -15,8 +15,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $GithubPAT = "$(GithubPAT)"
-      $GithubPAT = $GithubPAT.Substring(0)
+      $GithubPAT = $env:GITHUBPAT
       $GithubRepoUri = "https://github.com/cloudsmithconsulting/cds-for-code.git"
       
       # track all local branches
