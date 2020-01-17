@@ -15,7 +15,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $GithubPAT = "$env:GITHUBPAT"
+      $GithubPAT = "$(GithubPAT)"
       $GithubRepoUri = "https://github.com/cloudsmithconsulting/cds-for-code.git"
       
       # track all local branches
@@ -43,8 +43,6 @@ steps:
       git remote remove github
     failOnStderr: false
     workingDirectory: '$(Build.SourcesDirectory)'
-  env:
-    GITHUBPAT: $(GithubPAT)
 
 - task: NodeTool@0
   inputs:
