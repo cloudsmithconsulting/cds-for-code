@@ -15,3 +15,4 @@ vsc-extension-quickstart.md
 **/omnisharp.json
 **/*.map
 **/*.ts
+dist/**
