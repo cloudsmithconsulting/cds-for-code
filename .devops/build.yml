@@ -10,17 +10,13 @@ pool:
   vmImage: 'windows-2019'
 
 steps:
-- script: |
-    echo %GITHUB_PAT%
-  env:
-    GITHUB_PAT: $(GithubPAT)
-
 - task: PowerShell@2
   displayName: 'Promote repo to GitHub'
   inputs:
     targetType: 'inline'
     script: |
-      $GithubPAT = $env:GITHUB_PAT
+      $GithubPAT = $(GithubPAT)
+      $GithubPAT = $GithubPAT.Substring(0)
       $GithubRepoUri = "https://github.com/cloudsmithconsulting/cds-for-code.git"
       
       # track all local branches
@@ -48,8 +44,6 @@ steps:
       git remote remove github
     failOnStderr: false
     workingDirectory: '$(Build.SourcesDirectory)'
-  env:
-    GITHUB_PAT: $(GithubPAT)
 
 - task: NodeTool@0
   inputs:
