@@ -607,10 +607,6 @@
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.svcUtilConfig.open",
-					"when": "false"
-				},
-				{
 					"command": "cs.cds.controls.cdsExplorer.addEntry",
 					"when": "false"
 				},
