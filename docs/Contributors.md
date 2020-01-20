@@ -1,6 +1,6 @@
-# ![Cloudsmith Consulting LLC](https://cloudsmithstatics.azureedge.net/web/cloudsmith-notagline-450x103.png "Cloudsmith Consulting")<br> CloudSmith Contributors <br>
+![Cloudsmith Consulting LLC](https://cloudsmithstatics.azureedge.net/web/cloudsmith-notagline-450x103.png "Cloudsmith Consulting")
 
----
+# Our Contributors
 
 ## Community Recognition
 
@@ -11,9 +11,9 @@ CloudSmith would like to recognize and thank the contributors and underlying pro
 |[DynamicsWebApi](https://github.com/AleksandrRogov/DynamicsWebApi)|[Aleksandr Rogov](https://github.com/AleksandrRogov)|MIT|
 |[VSCode Project Templates](https://github.com/cantonios/vscode-project-templates)|[C. Antonio Sánchez](https://github.com/cantonios)|MIT|
 
---- 
+---
 
-## Early Program participants
+## CDS For Code Preview Program participants
 
 - Brandon Kelly
 - Ira Mellor
@@ -50,12 +50,11 @@ CloudSmith would like to recognize and thank the contributors and underlying pro
 
 ## Package Dependencies
 
-
-
 ---
 
 ## Framework components
 
+- TypeScript
 - Babel
 - Grunt
 - Lint
@@ -68,5 +67,3 @@ CloudSmith would like to recognize and thank the contributors and underlying pro
 ---
 
 ## GitHub contributions
-
----
