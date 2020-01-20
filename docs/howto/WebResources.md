@@ -1,6 +1,15 @@
 # How to: Create, Edit, Rename and Delete Web Resources
 
-Web resources are an essential part of customizing CDS within a solution. You can read more about this [topic in the CDS documentation here](https://docs.microsoft.com/en-us/powerapps/maker/model-driven-apps/create-edit-web-resources).
+Web resources are an essential part of customizing CDS. You can read more about this [topic in the CDS documentation here](https://docs.microsoft.com/en-us/powerapps/maker/model-driven-apps/create-edit-web-resources).
+
+## Table of Contents
+
+- [View Web Resources](#View-Web-Resources)
+- [Create a Web Resource](#Create-a-Web-Resource)
+- [Edit a Web Resource](#Edit-a-Web-Resource)
+- [Pack and Unpack](#Pack-and-Unpack)
+- [Inspect](#Inspect)
+- [Unsupported Scenarios](#Unsupported-Scenarios)
 
 ## View Web Resources
 
@@ -36,7 +45,7 @@ To create a new web resource from CDS Explorer:
 1. Expand the Organization
 1. Expand the Solutions folder
 1. Expand the target solution
-1. Mouse over the Web Resources folder and click the "+" icon
+1. Mouse over the Web Resources folder and click the plus icon
 
 You will be directed to the page for [creating a web resource directly in your CDS solution](https://docs.microsoft.com/en-us/powerapps/maker/model-driven-apps/create-edit-web-resources#create-or-edit-web-resources).
 
@@ -147,7 +156,7 @@ To add a web resource to a solution in CDS Explorer:
 1. Click Add to solution
 1. Select the target solution
 
-### Remove Existing Web Resource to Solution
+### Remove Existing Web Resource from Solution
 
 To remove a web resource from a solution in CDS Explorer:
 
