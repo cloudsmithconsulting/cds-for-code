@@ -23,7 +23,7 @@
 		"Power Platform",
 		"Dynamics",
 		"Dynamics 365",
-		"Dynamics 365 CE",		
+		"Dynamics 365 CE",
 		"Dynamics 365 Customer Engagement",
 		"XRM",
 		"CRM"
@@ -335,11 +335,6 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.svcUtilConfig.open",
-				"title": "Configure entity code generation for use with CrmSvcUtil.exe",
-				"category": "CDS for Code"
-			},
-			{
 				"command": "cs.cds.controls.templateExplorer.refreshEntry",
 				"title": "Refresh",
 				"icon": {
@@ -496,6 +491,11 @@
 				"category": "CDS for Code"
 			},
 			{
+				"command": "cs.cds.controls.svcUtilConfig.open",
+				"title": "Configure entity code generation for use with CrmSvcUtil.exe",
+				"category": "CDS for Code"
+			},
+			{
 				"command": "cs.cds.powerShell.generateEntities",
 				"title": "Generate entity code from metadata on a registered CDS environment",
 				"category": "CDS for Code"
@@ -615,10 +615,6 @@
 				},
 				{
 					"command": "cs.cds.controls.newWorkspace.open",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.svcUtilConfig.open",
 					"when": "false"
 				},
 				{
