@@ -335,11 +335,6 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.controls.svcUtilConfig.open",
-				"title": "Configure entity code generation for use with CrmSvcUtil.exe",
-				"category": "CDS for Code"
-			},
-			{
 				"command": "cs.cds.controls.templateExplorer.refreshEntry",
 				"title": "Refresh",
 				"icon": {
@@ -493,6 +488,11 @@
 			{
 				"command": "cs.cds.powerShell.packSolution",
 				"title": "Pack & deploy solution to a registerd CDS environment",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.controls.svcUtilConfig.open",
+				"title": "Configure entity code generation for use with CrmSvcUtil.exe",
 				"category": "CDS for Code"
 			},
 			{
