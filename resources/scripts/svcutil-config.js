@@ -24,16 +24,16 @@
 
         // initialize framework
         M.updateTextFields();
-        // bind select controls
-        $("select").formSelect();
     });
 
     function bindSelect($select, selectionArray, noSelectionOption) {
         // remove prior options if they exist
         $("option", $select).remove();
+
         if (noSelectionOption) {
             $select.append(`<option value="">${noSelectionOption}</option>`);
         }
+
         // add selections back
         for (let i = 0; i < selectionArray.length; i++) {
             const item = selectionArray[i];
@@ -47,6 +47,8 @@
             $select.recalculateDimensions();
             $select.onOpenStart = null;
         };
+
+        $select.formSelect();
     }
 
     function setInitialState(viewModel) {
@@ -61,12 +63,29 @@
             solutionMap: _.map(viewModel.solutions, i => { return { value: i.uniquename, text: i.uniquename } })
         }
 
-        bindSelect($("#EntityList"), window.dataCache.entityMap);
-        bindSelect($("#EntityList2"), window.dataCache.entityMap);
-        bindSelect($("#EntitySelect"), window.dataCache.entityMapWithId, "- Select -");
-        bindSelect($("#EntitySelect2"), window.dataCache.entityMapWithId, "- Select -");
-        bindSelect($("#OptionSetList"), window.dataCache.optionsetMap);
-        bindSelect($("#SolutionList"), window.dataCache.solutionMap);
+        $("[data-source='Entities']").each(function (index, element) {
+            if (element.multiple) {
+                bindSelect($(element), window.dataCache.entityMap);
+            } else {
+                bindSelect($(element), window.dataCache.entityMapWithId, "- Select Entity -");
+            }
+        });
+
+        $("[data-source='OptionSets']").each(function (index, element) {
+            if (element.multiple) {
+                bindSelect($(element), window.dataCache.optionsetMap);
+            } else {
+                bindSelect($(element), window.dataCache.optionsetMap, "- Select Option Set -");
+            }
+        });
+
+        $("[data-source='Solutions']").each(function (index, element) {
+            if (element.multiple) {
+                bindSelect($(element), window.dataCache.solutionMap);
+            } else {
+                bindSelect($(element), window.dataCache.solutionMap, "- Select Solution -");
+            }
+        });
 
         // hide initialize info box
         $("#loadingPanel").hide();
@@ -118,27 +137,53 @@
             });
         });
 
+        $("[ux-show-target]").each((index, t) => {
+            $(t).on('change', function () {
+                var target = $(this).attr("ux-show-target");
+                var element = $(target);
+
+                element.prop('hidden', !this.checked);
+
+                if (element.prop("nodeName") === "SELECT") {
+                    element.formSelect();
+                }
+            });
+        });
+
+        $("[ux-hide-target]").each((index, t) => {
+            $(t).on('change', function () {
+                var target = $(this).attr("ux-hide-target");
+                var element = $(target);
+
+                element.prop('hidden', this.checked);
+
+                if (element.prop("nodeName") === "SELECT") {
+                    element.formSelect();
+                }
+            });
+        });
+
         // change visible fields based on filter type
-        $("#FilterType").change(function() {
-            $("[data-filter-type]", "#tab1").hide();
-            $(`[data-filter-type*=${this.value}]`, "#tab1").show();
+        $("#whitelist-filterType").change(function() {
+            $("[data-filter-type]", "#whitelist").hide();
+            $(`[data-filter-type*=${this.value}]`, "#whitelist").show();
         });
 
-        $("#FilterType2").change(function() {
-            $("[data-filter-type]", "#tab2").hide();
-            $(`[data-filter-type*=${this.value}]`, "#tab2").show();
+        $("#blacklist-filterType").change(function() {
+            $("[data-filter-type]", "#blacklist").hide();
+            $(`[data-filter-type*=${this.value}]`, "#blacklist").show();
         });
 
-        $("#EntitySelect").change(function() {
+        $("SELECT[name='whitelist-attribute-entity']").change(function() {
             if (!this.value) {
-                $("option", "#AttributeList").remove();
+                $("option", "[data-source='Attributes']").remove();
                 return;
             }
             
             vscode.postMessage({
-                command: `retrieveListFor${$("#FilterType").val()}`,
+                command: `retrieveListFor${$("#whitelist-filterType").val()}`,
                 entityKey: this.value,
-                targetElem: "#AttributeList"
+                targetElem: "[data-source='Attributes']"
             });
         });
 
