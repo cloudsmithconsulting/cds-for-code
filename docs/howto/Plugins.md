@@ -18,7 +18,7 @@
 
 ### Create a new plugin from scratch using Visual Studio
 
-There is documentation [here about creating and registering plugins in Visual Studio](https://docs.microsoft.com/en-us/powerapps/developer/common-data-service/tutorial-write-plug-in) for use in CDS.
+There is documentation [here about creating and registering plugins in Visual Studio](https://docs.microsoft.com/en-us/powerapps/developer/common-data-service/write-plug-in) for use in CDS.
 
 Coming soon: instructions using the .NET Core CLI
 
