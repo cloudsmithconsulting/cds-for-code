@@ -3,8 +3,9 @@
         <a href="#" class="brand-logo left">
             &nbsp;<span id="title">#{viewTitle}</span>
         </a>
-        <a href="#" data-target="extended-navigation" class="sidenav-trigger"><span class="iconify" data-icon="ion-menu"
-                data-width="32" data-height="24"></span></a>
+        <a href="#" data-target="extended-navigation" class="sidenav-trigger">
+            <span class="iconify" data-icon="ion-menu" data-width="32" data-height="24"></span>
+        </a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a data-action="save" href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
             <li><a data-action="cancel" href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
@@ -26,110 +27,104 @@
         </div>
     </blockquote>
 
-    <blockquote class="panel_info" id="loadingPanel">
-        <div class="panel__text">
-            <h4>Hang tight</h4>
-            We're loading some data behind the scenes here. This message will go away when the form is ready.
-        </div>
-    </blockquote>
+    <div class="progress" id="loadingPanel">
+        <div class="indeterminate"></div>
+    </div>
 
     <div class="col s12">
         <ul class="tabs tabs-fixed-width" id="mainTabs">
-            <li class="tab"><a class="active" href="#tab1">White/Black List</a></li>
-            <li class="tab"><a href="#tab2">Naming</a></li>
-            <li class="tab"><a href="#tab3">Code Generation</a></li>
+            <li class="tab"><a class="active" href="#whitelist">Whitelist</a></li>
+            <li class="tab"><a href="#blacklist">Blacklist</a></li>
+            <li class="tab"><a href="#naming">Naming</a></li>
+            <li class="tab"><a href="#code-generation">Code Generation</a></li>
         </ul>
     </div>
-    <div id="tab1">
-        <div class="col s12">
-            <ul class="collection with-header">
-                <li class="collection-header">
-                    <h6>
-                        White/Black List Configuration
-                    </h6>
-                </li>
-                <li class="collection-item">
-                    <div class="col s12 input-field">
-                        <select id="ListType" name="ListType">
-                            <option>White</option>
-                            <option>Black</option>
-                        </select>
-                        <label for="ListType">Which type of list?</label>
-                    </div>
-    
-                    <div class="col s12 input-field">
-                        <select id="FilterType" name="FilterType">
-                            <option>Entity</option>
-                            <option>Attribute</option>
-                            <option>OptionSet</option>
-                            <option>Solution</option>
-                        </select>
-                        <label for="FilterType">Which filter type?</label>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Entity">
-                        <p>Which entities?</p>
-                        <select id="EntityList" name="EntityList" class="browser-default" style="height:150px;" multiple>
-                            <!-- <option>Account</option>
-                            <option>Contact</option>
-                            <option>Lead</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
-                        <p>Filter by entity</p>
-                        <select id="EntitySelect" name="EntitySelect" class="browser-default">
-                            <!-- <option value="" selected>- All -</option>
-                            <option>Account</option>
-                            <option>Contact</option>
-                            <option>Lead</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
-                        <p>Which attributes?</p>
-                        <select id="AttributeList" name="AttributeList" class="browser-default" style="height:150px;" multiple>
-                            <!-- <option>name</option>
-                            <option>description</option>
-                            <option>statecode</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
-                        <p>Which option sets?</p>
-                        <select id="OptionSetList" name="OptionSetList" class="browser-default" style="height:150px;" multiple>
-                            <!-- <option>addresstype</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
-                        <p class="left" style="margin-right:8px">
-                            <label>
-                                <input type="checkbox" name="ApplyToAll" id="ApplyToAll" value="true" class="filled-in" />
-                                <span>Apply to all entities</span>
-                            </label>
-                        </p>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Solution" hidden>
-                        <p>Which solutions?</p>
-                        <select id="SolutionList" name="SolutionList" class="browser-default" style="height:150px;" multiple>
-                            <!-- <option>Default Solution</option>
-                            <option>My Custom Solution</option> -->
-                        </select>
-                    </div>
-                </li>
-            </ul>
+    <div id="whitelist" class="row">
+        <div style="line-height: 50px; vertical-align: middle;">
+            <a href="#" title="Add Items" class="btn-flat" data-action="whitelist-add">Add Items to Whitelist</a>
+        </div>
+        <div id="whitelist-addpanel" class="col s8" hidden>
+            <div class="col s12 input-field">
+                <select id="FilterType" name="FilterType">
+                    <option>Entity</option>
+                    <option>Attribute</option>
+                    <option>OptionSet</option>
+                    <option>Solution</option>
+                </select>
+                <label for="FilterType">Which filter type?</label>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Entity">
+                <label>
+                    <input type="radio" name="whitelist-addmode" id="whitelist-addmode-entity" value="entity" class="with-gap" ux-enable-target="#EntityList" ux-disable-target="#EntityRegularExpression" checked />
+                    <span>Whitelist specific entities</span>
+                </label>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Entity">
+                <select id="EntityList" name="EntityList" height="120" multiple></select>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Entity">
+                <label>
+                    <input type="radio" name="whitelist-addmode" id="whitelist-addmode-entity-regex" value="regex" class="with-gap" ux-enable-target="#EntityRegularExpression" ux-disable-target="#EntityList" />
+                    <span>Whitelist entities by Regular Expression</span>
+                </label>
+            </div>
+            <div class="col s12 input-field" data-filter-type="Entity">
+                <input type="text" id="EntityRegularExpression" name="EntityRegularExpression" disabled />
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                <p>Which attributes?</p>
+                <select id="AttributeList" name="AttributeList" class="browser-default" style="height:150px;" multiple>
+                    <!-- <option>name</option>
+                    <option>description</option>
+                    <option>statecode</option> -->
+                </select>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
+                <p>Which option sets?</p>
+                <select id="OptionSetList" name="OptionSetList" class="browser-default" style="height:150px;" multiple>
+                    <!-- <option>addresstype</option> -->
+                </select>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                <p class="left" style="margin-right:8px">
+                    <label>
+                        <input type="checkbox" name="ApplyToAll" id="ApplyToAll" value="true" class="filled-in" />
+                        <span>Apply to all entities</span>
+                    </label>
+                </p>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Solution" hidden>
+                <p>Which solutions?</p>
+                <select id="SolutionList" name="SolutionList" class="browser-default" style="height:150px;" multiple>
+                    <!-- <option>Default Solution</option>
+                    <option>My Custom Solution</option> -->
+                </select>
+            </div>
+
+            <div>
+                <a class="btn-flat" href="#" title="Save" data-action="whitelist-save"><span class="iconify" data-icon="fa:save"></span>&nbsp;Add Whitelist Rule</a>
+                <a class="btn-flat" href="#" title="Cancel" data-action="whitelist-cancel"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a>
+            </div>
+        </div>
+        <div class="col s4">
+            <div>
+                There are no items in the whitelist
+            </div>
         </div>
     </div>
 
-    <div id="tab2">
+    <div id="naming" class="row">
         <div class="col s6">
             <ul class="collection with-header">
                 <li class="collection-header">
-                    <h6>
                         Mapping Rules
-                    </h6>
                 </li>
                 <li class="collection-item">
                     <div class="col s12 input-field">
@@ -191,7 +186,7 @@
         </div>
     </div>
 
-    <div id="tab3">
+    <div id="code-generation">
         <div class="col s6">
             <ul class="collection with-header">
                 <li class="collection-header">

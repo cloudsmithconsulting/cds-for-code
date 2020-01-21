@@ -474,7 +474,7 @@ export default class Quickly {
     }
 
     static async pickCdsOrganization(context: vscode.ExtensionContext, placeHolder?: string, ignoreFocusOut: boolean = true) : Promise<CdsWebApi.Config> {
-        return DiscoveryRepository.getOrgConnections(context)
+        return DiscoveryRepository.getOrgConnections(context, true)
             .then(orgs => new TS.Linq.Enumerator(orgs).select(org => new QuickPickOption(`${Octicon.database} ${org.name}`, undefined, undefined, org)).toArray())
             .then(options => options && options.length === 1 ? options[0] : options.length > 0 ? vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }) : null)
             .then(chosen => chosen ? <CdsWebApi.Config>chosen.context: null);

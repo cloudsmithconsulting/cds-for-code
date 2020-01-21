@@ -42,6 +42,11 @@
             // append this to the select list
             $select.append($option);   
         }
+
+        $select.onOpenStart = function() {
+            $select.recalculateDimensions();
+            $select.onOpenStart = null;
+        };
     }
 
     function setInitialState(viewModel) {
@@ -82,6 +87,36 @@
     // this part starts on document ready
     $(function () {
         M.AutoInit();
+
+        $('[data-action=whitelist-add').click(function() {
+            $("#whitelist-addpanel").show();
+        });
+
+        $("[ux-enable-target]").each((index, t) => {
+            $(t).on('change', function () {
+                var target = $(this).attr("ux-enable-target");
+                var element = $(target);
+
+                element.prop('disabled', !this.checked);
+
+                if (element.prop("nodeName") === "SELECT") {
+                    element.formSelect();
+                }
+            });
+        });
+
+        $("[ux-disable-target]").each((index, t) => {
+            $(t).on('change', function () {
+                var target = $(this).attr("ux-disable-target");
+                var element = $(target);
+
+                element.prop('disabled', this.checked);
+
+                if (element.prop("nodeName") === "SELECT") {
+                    element.formSelect();
+                }
+            });
+        });
 
         // change visible fields based on filter type
         $("#FilterType").change(function() {
