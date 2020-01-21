@@ -47,7 +47,9 @@ export default class DiscoveryRepository {
 
                 if (orgs) {
                     for (var j = 0; j < orgs.length; j++) {
-                        if (!exactMatchesOnly || orgs[j].ApiUrl === connections[i].webApiUrl) {
+                        if (!exactMatchesOnly 
+                            || connections[i].type !== CdsWebApi.ConfigType.Online 
+                            || (connections[i].type === CdsWebApi.ConfigType.Online && orgs[j].ApiUrl === connections[i].webApiUrl)) {
                             returnObject.push(this.createOrganizationConnection(orgs[j], connections[i]));
                         }
                     }
