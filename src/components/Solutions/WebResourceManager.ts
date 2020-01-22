@@ -43,7 +43,7 @@ export default class WebResourceManager {
 
     @command(cs.cds.deployment.createWebResource, "Create web resource")
     async createWebResource(config?:CdsWebApi.Config, solutionId?:string, webResource?:any, fileUri?:vscode.Uri, defaultName:string = "", inform:boolean = true) {
-        createWebResource.apply(this, [config, solutionId, webResource, fileUri, defaultName, inform]);
+       return await createWebResource.apply(this, [config, solutionId, webResource, fileUri, defaultName, inform]);
     }
 
     @command(cs.cds.deployment.compareWebResource, "Compare web resource")
@@ -83,7 +83,8 @@ export default class WebResourceManager {
         
         const webResourceType = EnumParser.getValues<CdsSolutions.WebResourceFileType>(CdsSolutions.WebResourceFileType).find(e => e.toString() === extension);
 
-        return webResourceType ? CdsSolutions.CodeMappings.getWebResourceTypeCode(webResourceType) : undefined;
+        const result = webResourceType ? CdsSolutions.CodeMappings.getWebResourceTypeCode(<CdsSolutions.WebResourceFileType>webResourceType) : undefined;
+        return result;
     }
 
     async getWebResourceDetails(fsPath:string | undefined): Promise<any> {
@@ -95,17 +96,19 @@ export default class WebResourceManager {
             const xmlObject = await Xml.parseFile(dataFile);
 
             if (xmlObject && xmlObject.WebResource) {
-                return {
+                const result = {
                     webresourceid: xmlObject.WebResource.WebResourceId && xmlObject.WebResource.WebResourceId.length > 0 ? Utilities.Guid.trimGuid(xmlObject.WebResource.WebResourceId[0]) : undefined,
                     name: xmlObject.WebResource.Name && xmlObject.WebResource.Name.length > 0 ? xmlObject.WebResource.Name[0] : undefined,
                     displayname: xmlObject.WebResource.DisplayName && xmlObject.WebResource.DisplayName.length > 0 ? xmlObject.WebResource.DisplayName[0] : undefined,
                     description: xmlObject.WebResource.Description && xmlObject.WebResource.Description.length > 0 ? xmlObject.WebResource.Description[0] : undefined,
                     languagecode: xmlObject.WebResource.LanguageCode && xmlObject.WebResource.LanguageCode.length > 0 ? xmlObject.WebResource.LanguageCode[0] : undefined,
-                    webresourcetype: xmlObject.WebResource.WebResourceType && xmlObject.WebResource.WebResourceType.length > 0 && Number.isInteger(xmlObject.WebResource.WebResourceType[0]) ? parseInt(xmlObject.WebResource.WebResourceType[0]) : undefined,
+                    webresourcetype: xmlObject.WebResource.WebResourceType && xmlObject.WebResource.WebResourceType.length > 0 && !isNaN(parseInt(xmlObject.WebResource.WebResourceType[0])) ? parseInt(xmlObject.WebResource.WebResourceType[0]) : undefined,
                     introducedversion: xmlObject.WebResource.IntroducedVersion && xmlObject.WebResource.IntroducedVersion.length > 0 ? xmlObject.WebResource.IntroducedVersion[0] : undefined,
                     isenabledformobileclient: xmlObject.WebResource.IsEnabledForMobileClient && xmlObject.WebResource.IsEnabledForMobileClient.length > 0 ? xmlObject.WebResource.IsEnabledForMobileClient[0] === "1" : undefined,
                     isavailableformobileoffline: xmlObject.WebResource.IsAvailableForMobileOffline && xmlObject.WebResource.IsAvailableForMobileOffline.length > 0 ? xmlObject.WebResource.IsAvailableForMobileOffline[0] === "1" : undefined
                 };
+
+                return result;
             }
         }
 

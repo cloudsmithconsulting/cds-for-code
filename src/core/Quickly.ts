@@ -470,7 +470,7 @@ export default class Quickly {
         return new ApiRepository(config).retrieveSolutions()
             .then(solutions => new TS.Linq.Enumerator(solutions).select(solution => new QuickPickOption(`${Octicon.circuit_board} ${solution.friendlyname}`, undefined, undefined, solution)).toArray())
             .then(options => vscode.window.showQuickPick(options, { placeHolder, ignoreFocusOut, canPickMany: false }))
-            .then(chosen => chosen.context);
+            .then(chosen => chosen ? chosen.context : null);
     }
 
     static async pickCdsOrganization(context: vscode.ExtensionContext, placeHolder?: string, ignoreFocusOut: boolean = true) : Promise<CdsWebApi.Config> {

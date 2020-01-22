@@ -196,11 +196,11 @@ export default class SolutionMap {
         return returnPath;
     }    
     
-    static async read(filename: string = ".dynamics/solutionMap.json", forceWorkspaceOpen: boolean = true): Promise<SolutionMap> {
+    static async read(filename: string = ".cds/solutionMap.json", forceWorkspaceOpen: boolean = true): Promise<SolutionMap> {
         let workspacePath = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
 
         if (forceWorkspaceOpen) {
-            workspacePath = workspacePath || await Quickly.pickWorkspaceRoot(undefined, "Choose a location that houses your .dynamics folder.", true).then(uri => uri ? uri.fsPath : null);
+            workspacePath = workspacePath || await Quickly.pickWorkspaceRoot(undefined, "Choose a location that houses your .cds folder.", true).then(uri => uri ? uri.fsPath : null);
         }
 
         if (!workspacePath) { return; }
@@ -224,8 +224,8 @@ export default class SolutionMap {
         return new SolutionMap();
     }
 
-    static async write(map:SolutionMap, filename:string = ".dynamics/solutionMap.json"): Promise<SolutionMap> {
-        const workspacePath = await Quickly.pickWorkspaceRoot(undefined, "Choose a location where your .dynamics folder will go.", true).then(uri => uri ? uri.fsPath : null);
+    static async write(map:SolutionMap, filename:string = ".cds/solutionMap.json"): Promise<SolutionMap> {
+        const workspacePath = await Quickly.pickWorkspaceRoot(undefined, "Choose a location where your .cds folder will go.", true).then(uri => uri ? uri.fsPath : null);
         if (!workspacePath) { return; }
 
         const folder  = path.join(workspacePath, path.dirname(filename));

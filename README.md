@@ -12,15 +12,22 @@ Release version: 0.8.8
 
 ## Table of Contents
 
-- [Prerequisites](#Prerequisites)
-- [Getting started](#Getting-started)
-- [Features](#Features)
-- [Commands](#Commands)
-- [Settings](#Settings)
-- [Known issues](#Known-issues)
-- [Change Log](#Change-Log)
-- [Contributors](#Contributors)
-- [Feedback](#Feedback)
+- [Welcome to the CloudSmith CDS For Code Extension](#welcome-to-the-cloudsmith-cds-for-code-extension)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Getting started](#getting-started)
+    - [Adding a connection](#adding-a-connection)
+  - [Features](#features)
+  - [Commands](#commands)
+    - [Commands and Descriptions](#commands-and-descriptions)
+    - [These commands can be executed directly through the VSCode command palette](#these-commands-can-be-executed-directly-through-the-vscode-command-palette)
+  - [Settings](#settings)
+    - [Settings and Descriptions](#settings-and-descriptions)
+    - [These settings are editable inside the VSCode Settings Editor](#these-settings-are-editable-inside-the-vscode-settings-editor)
+  - [Known Issues](#known-issues)
+  - [Change Log](#change-log)
+  - [Contributors](#contributors)
+  - [Feedback](#feedback)
 
 ---
 
