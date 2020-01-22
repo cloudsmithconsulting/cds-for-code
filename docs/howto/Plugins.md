@@ -2,11 +2,27 @@
 
 ## Table of Contents
 
-- [Prerequisites](#Prerequisites)
-- [Developing Plugins](#Developing-plugins)
-- [Registering Plugins](#Registering-plugins)
-- [Managing Plugin Steps](#Managing-plugin-steps)
-- [Plugin Step Images](#Plugin-step-images)
+- [How to: Develop plugins with CDS for Code](#how-to-develop-plugins-with-cds-for-code)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Developing plugins](#developing-plugins)
+    - [Create a new plugin from scratch using Visual Studio](#create-a-new-plugin-from-scratch-using-visual-studio)
+    - [Create a new plugin from .NET Core CLI](#create-a-new-plugin-from-net-core-cli)
+    - [Create a new plugin from a template](#create-a-new-plugin-from-a-template)
+      - [Within VSCode File Explorer](#within-vscode-file-explorer)
+      - [Within CDS for Code Template Explorer](#within-cds-for-code-template-explorer)
+    - [Use an existing plugin project from Visual Studio](#use-an-existing-plugin-project-from-visual-studio)
+  - [Registering plugins](#registering-plugins)
+    - [Deploy from File Explorer](#deploy-from-file-explorer)
+    - [Update/deploy from CDS Explorer](#updatedeploy-from-cds-explorer)
+  - [Managing plugin steps](#managing-plugin-steps)
+    - [Create plugin steps from CDS Explorer](#create-plugin-steps-from-cds-explorer)
+    - [Plugin step UI](#plugin-step-ui)
+    - [Modify or remove plugin steps](#modify-or-remove-plugin-steps)
+  - [Plugin step images](#plugin-step-images)
+    - [Create plugin step images from CDS Explorer](#create-plugin-step-images-from-cds-explorer)
+    - [Modify or remove plugin step images](#modify-or-remove-plugin-step-images)
+  - [What's not included](#whats-not-included)
 
 ## Prerequisites
 

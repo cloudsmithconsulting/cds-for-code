@@ -2,10 +2,12 @@
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [From the Command Palette](#from-the-command-palette)
-- [From File Explorer](#from-file-explorer)
-- [From CDS Explorer](#from-cds-explorer)
+- [How to: Use CrmSvcUtil to generate entities using CDS for Code](#how-to-use-crmsvcutil-to-generate-entities-using-cds-for-code)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [From the Command Palette](#from-the-command-palette)
+  - [From File Explorer](#from-file-explorer)
+  - [From CDS Explorer](#from-cds-explorer)
 
 ## Overview
 

@@ -4,12 +4,24 @@ Web resources are an essential part of customizing CDS. You can read more about 
 
 ## Table of Contents
 
-- [View Web Resources](#View-Web-Resources)
-- [Create a Web Resource](#Create-a-Web-Resource)
-- [Edit a Web Resource](#Edit-a-Web-Resource)
-- [Pack and Unpack](#Pack-and-Unpack)
-- [Inspect](#Inspect)
-- [Unsupported Scenarios](#Unsupported-Scenarios)
+- [How to: Create, Edit, Rename and Delete Web Resources](#how-to-create-edit-rename-and-delete-web-resources)
+  - [Table of Contents](#table-of-contents)
+  - [View Web Resources](#view-web-resources)
+    - [CDS Explorer and Folder View](#cds-explorer-and-folder-view)
+  - [Create a Web Resource](#create-a-web-resource)
+    - [Create From CDS Explorer](#create-from-cds-explorer)
+    - [Create From File Explorer](#create-from-file-explorer)
+  - [Edit a Web Resource](#edit-a-web-resource)
+    - [Edit From CDS Explorer](#edit-from-cds-explorer)
+    - [Edit From File Explorer](#edit-from-file-explorer)
+  - [Pack and Unpack](#pack-and-unpack)
+    - [Unpacking Web Resources](#unpacking-web-resources)
+    - [Packing Web Resources](#packing-web-resources)
+  - [Add to Solution / Remove from Solution for Existing Web Resources](#add-to-solution--remove-from-solution-for-existing-web-resources)
+    - [Add Existing Web Resource to Solution](#add-existing-web-resource-to-solution)
+    - [Remove Existing Web Resource from Solution](#remove-existing-web-resource-from-solution)
+  - [Inspect](#inspect)
+  - [Unsupported Scenarios](#unsupported-scenarios)
 
 ## View Web Resources
 
