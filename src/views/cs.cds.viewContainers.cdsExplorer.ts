@@ -98,7 +98,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
             }
         }},
         { key: "PluginType", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, item.context._pluginassemblyid_value, item.config, undefined) },
-        { key: "PluginStep", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, undefined, item.config) }
+        { key: "PluginStep", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context.sdkmessageprocessingstepid, undefined, item.config) }
     ]);
 
     private static readonly deleteCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([

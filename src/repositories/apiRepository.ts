@@ -27,7 +27,7 @@ export default class ApiRepository {
         { key: 'workflows', value: [ 'workflowid', 'componentstate', 'category', 'type', 'solutionid', 'primaryentity', 'name', 'description' ] },
         { key: 'pluginassemblies', value: [ 'pluginassemblyid', 'name', 'version', 'publickeytoken', 'ishidden' ] },
         { key: 'webresources', value: [ 'webresourceid', 'name', 'displayname', 'webresourcetype', 'iscustomizable' ] },
-        { key: 'pluginassemblies', value: [ 'name', 'publickeytoken' ] },
+        { key: 'pluginassemblies', value: [ 'name', 'version', 'publickeytoken' ] },
         { key: 'plugintypes', value: [ 'plugintypeid', 'name', 'friendlyname', 'assemblyname', 'typename', 'solutionid', '_pluginassemblyid_value' ] },
         { key: 'sdkmessages', value: [ 'sdkmessageid', 'name', 'autotransact', 'availability', 'categoryname', 'isactive', 'isprivate', 'isreadonly', 'template', 'workflowsdkstepenabled' ] },
         { key: 'sdkmessagefilters', value: [ 'sdkmessagefilterid', '_sdkmessageid_value', 'primaryobjecttypecode', 'secondaryobjecttypecode' ] },
