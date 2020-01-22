@@ -178,6 +178,10 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<Templat
 
     @command(cs.cds.controls.templateExplorer.refreshEntry, "Refresh")
     refresh(item?:TemplateExplorerEntry): void {
+        if (TreeEntryCache.Instance) {
+            TreeEntryCache.Instance.remove(item ? item.id : undefined);
+        }
+
         if (TemplateExplorer.instance) {
             TemplateExplorer.instance._onDidChangeTreeData.fire(item);
         }
@@ -208,20 +212,30 @@ export class TreeEntryCache {
     }
 
    
-    AddEntry(entry:TemplateExplorerEntry): void {
+    add(entry:TemplateExplorerEntry): void {
         this._items.push(entry);
     }
 
-    Clear(): void {
+    clear(): void {
         this._items = [];
     }
 
-    get Items(): TS.Linq.Enumerator<TemplateExplorerEntry> {
+    get items(): TS.Linq.Enumerator<TemplateExplorerEntry> {
         return new TS.Linq.Enumerator(this._items);
     }
 
-    Under(path:string): TS.Linq.Enumerator<TemplateExplorerEntry> {
-        return this.Items.where(item => item.id.startsWith(path));
+    remove(path?: string) {
+        if (!path || path === "") {
+            this.clear();
+        } else {
+            this.under(path).forEach(i => {
+                this._items.slice(this._items.indexOf(i), 1);
+            });
+        }
+    }
+
+    under(path:string): TS.Linq.Enumerator<TemplateExplorerEntry> {
+        return this.items.where(item => item.id.startsWith(path));
     }
 }
 
@@ -258,7 +272,7 @@ export class TemplateExplorerEntry extends vscode.TreeItem {
             } 
 
             // We can't have duplicate ids in the treeview.
-            const count = TreeEntryCache.Instance.Items.count(t => t.id === id || t.id && t.id.startsWith(id + "_"));
+            const count = TreeEntryCache.Instance.items.count(t => t.id === id || t.id && t.id.startsWith(id + "_"));
             
             if (count > 0) {
                 id += `_${count}`;
@@ -270,7 +284,7 @@ export class TemplateExplorerEntry extends vscode.TreeItem {
 
         this.contextValue = this.capabilities.join(",");
 
-        TreeEntryCache.Instance.AddEntry(this);
+        TreeEntryCache.Instance.add(this);
     }
 
 	get tooltip(): string {
@@ -289,7 +303,7 @@ export class TemplateExplorerEntry extends vscode.TreeItem {
             if (split.length > 0) {
                 const parentId = split.join("/");
 
-                return TreeEntryCache.Instance.Items.first(i => i.id === parentId);
+                return TreeEntryCache.Instance.items.first(i => i.id === parentId);
             }
         }
 
