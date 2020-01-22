@@ -32,7 +32,7 @@ export default async function run(config?:CdsWebApi.Config, solution?:any, webRe
         return; 
     }
 
-    const map = this.getSolutionMapping(fileUri.fsPath, config.orgId);
+    const map = await this.getSolutionMapping(fileUri.fsPath, config.orgId);
     const api = new ApiRepository(config);
 
     if (map && map.solutionId && !solution) {
@@ -42,7 +42,7 @@ export default async function run(config?:CdsWebApi.Config, solution?:any, webRe
     solution = solution || await Quickly.pickCdsSolution(config, "Would you like to deply this web resource into a solution?");
 
     if (!webResource) {
-        const result:any = await vscode.commands.executeCommand(cs.cds.deployment.createWebResource, config, solution ? solution.solutionid : undefined, webResource, fileUri, undefined, false);
+        const result:any = await this.createWebResource(config, solution ? solution.solutionid : undefined, webResource, fileUri, undefined, false);
 
         webResource = result.webResource;
         if (!webResource) {

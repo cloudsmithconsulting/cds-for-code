@@ -69,11 +69,11 @@ export default async function run(config?:CdsWebApi.Config, solutionId?:string, 
         webResource.content = content;
     } 
     
-    let defaultType:number = fsPath && path.extname(fsPath) !== "" ? CdsSolutions.CodeMappings.getWebResourceTypeCode(this.getWebResourceType(path.extname(fsPath))) : undefined;
+    let defaultType:number = fsPath && path.extname(fsPath) !== "" ? this.getWebResourceType(path.extname(fsPath)) : undefined;
 
     if (folder && defaultName === "") {
         defaultName = map ? folder.replace(map.getPath(CdsSolutions.SolutionComponent.WebResource), "").replace(map.path, "") : workspaceRoot ? folder.replace(workspaceRoot, "") : "";
-        defaultName = defaultName.replace(/\\/, "/");
+        defaultName = defaultName.replace(/\\/g, "/");
 
         if (!defaultName.endsWith("/")) {
             defaultName += "/";
