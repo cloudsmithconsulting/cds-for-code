@@ -86,6 +86,66 @@
              CloudSmith.System.closeWindow(); 
         });
 
+        $("[ux-enable-target]").each((index, t) => {
+            $(t).on('change', function () {
+                var target = $(this).attr("ux-enable-target");
+
+                $(target).prop('disabled', !this.checked);
+                $(target).each(function (index, el) {
+                    var element = $(el);
+
+                    if (element.prop("nodeName") === "SELECT") {
+                        element.formSelect();
+                    }
+                });
+            });
+        });
+
+        $("[ux-disable-target]").each((index, t) => {
+            $(t).on('change', function () {
+                var target = $(this).attr("ux-disable-target");
+                
+                $(target).prop('disabled', this.checked);
+                $(target).each(function (index, el) {
+                    var element = $(el);
+
+                    if (element.prop("nodeName") === "SELECT") {
+                        element.formSelect();
+                    }
+                });
+            });
+        });
+
+        $("[ux-show-target]").each((index, t) => {
+            $(t).on('change', function () {
+                var target = $(this).attr("ux-show-target");
+
+                $(target).prop('hidden', !this.checked);
+                $(target).each(function (index, el) {
+                    var element = $(el);
+
+                    if (element.prop("nodeName") === "SELECT") {
+                        element.formSelect();
+                    }
+                });
+            });
+        });
+
+        $("[ux-hide-target]").each((index, t) => {
+            $(t).on('change', function () {
+                var target = $(this).attr("ux-hide-target");
+
+                $(target).prop('hidden', this.checked);
+                $(target).each(function (index, el) {
+                    var element = $(el);
+
+                    if (element.prop("nodeName") === "SELECT") {
+                        element.formSelect();
+                    }
+                });
+            });
+        });
+        
         CloudSmith.System.ready();
     });
 }());

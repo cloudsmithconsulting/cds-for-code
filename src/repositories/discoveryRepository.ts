@@ -36,7 +36,7 @@ export default class DiscoveryRepository {
         return connections;
     }
 
-    static async getOrgConnections(context: vscode.ExtensionContext):Promise<CdsWebApi.Config[]> {        
+    static async getOrgConnections(context: vscode.ExtensionContext, exactMatchesOnly: boolean = false): Promise<CdsWebApi.Config[]> {        
         const returnObject:CdsWebApi.Config[] = [];
         const connections = this.getConnections(context);
 
@@ -47,7 +47,11 @@ export default class DiscoveryRepository {
 
                 if (orgs) {
                     for (var j = 0; j < orgs.length; j++) {
-                        returnObject.push(this.createOrganizationConnection(orgs[j], connections[i]));
+                        if (!exactMatchesOnly 
+                            || connections[i].type !== CdsWebApi.ConfigType.Online 
+                            || (connections[i].type === CdsWebApi.ConfigType.Online && orgs[j].ApiUrl === connections[i].webApiUrl)) {
+                            returnObject.push(this.createOrganizationConnection(orgs[j], connections[i]));
+                        }
                     }
                 }
             }

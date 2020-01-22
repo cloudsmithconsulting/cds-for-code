@@ -3,8 +3,9 @@
         <a href="#" class="brand-logo left">
             &nbsp;<span id="title">#{viewTitle}</span>
         </a>
-        <a href="#" data-target="extended-navigation" class="sidenav-trigger"><span class="iconify" data-icon="ion-menu"
-                data-width="32" data-height="24"></span></a>
+        <a href="#" data-target="extended-navigation" class="sidenav-trigger">
+            <span class="iconify" data-icon="ion-menu" data-width="32" data-height="24"></span>
+        </a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a data-action="save" href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
             <li><a data-action="cancel" href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
@@ -17,7 +18,8 @@
     <li><a data-action="cancel" href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
 </ul>
 
-<br>
+<br />
+
 <form class="row">
     <blockquote class="panel_error" id="errorPanel" hidden>
         <div class="panel__text">
@@ -26,269 +28,619 @@
         </div>
     </blockquote>
 
-    <blockquote class="panel_info" id="loadingPanel">
-        <div class="panel__text">
-            <h4>Hang tight</h4>
-            We're loading some data behind the scenes here. This message will go away when the form is ready.
-        </div>
-    </blockquote>
+    <div class="progress" id="loadingPanel">
+        <div class="indeterminate"></div>
+    </div>
 
     <div class="col s12">
         <ul class="tabs tabs-fixed-width" id="mainTabs">
-            <li class="tab"><a class="active" href="#tab1">White/Black List</a></li>
-            <li class="tab"><a href="#tab2">Naming</a></li>
-            <li class="tab"><a href="#tab3">Code Generation</a></li>
+            <li class="tab"><a class="active" href="#whitelist">Whitelist</a></li>
+            <li class="tab"><a href="#blacklist">Blacklist</a></li>
+            <li class="tab"><a href="#naming">Naming</a></li>
+            <li class="tab"><a href="#code-generation">Code Generation</a></li>
         </ul>
     </div>
-    <div id="tab1">
-        <div class="col s12">
-            <ul class="collection with-header">
-                <li class="collection-header">
-                    <h6>
-                        White/Black List Configuration
-                    </h6>
-                </li>
-                <li class="collection-item">
-                    <div class="col s12 input-field">
-                        <select id="ListType" name="ListType">
-                            <option>White</option>
-                            <option>Black</option>
-                        </select>
-                        <label for="ListType">Which type of list?</label>
-                    </div>
+    <div id="whitelist" class="row">
+        <div style="line-height: 50px; vertical-align: middle;">
+            <a href="#" title="Add Items" class="btn-flat" data-action="whitelist-add"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add Items to Whitelist</a>
+        </div>
+
+        <div id="whitelist-nullpanel" class="col s8">            
+        </div>
+
+        <div id="whitelist-addpanel" class="col s8" hidden>
+            <div class="col s12 input-field">
+                <select id="whitelist-filterType" name="whitelist-filterType">
+                    <option>Entity</option>
+                    <option>Attribute</option>
+                    <option>OptionSet</option>
+                    <option>Solution</option>
+                </select>
+                <label for="whitelist-filterType">Which items do you want to add to the whitelist?</label>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Entity">
+                <label>
+                    <input type="radio" name="whitelist-entity-addmode" value="entity" class="with-gap" ux-enable-target="[ux-group='EntityWhitelistSelection']" ux-disable-target="[ux-group='EntityWhitelistRegEx']" checked />
+                    <span>Whitelist specific entities</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Entity">
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <select id="whitelist-entity-selections" name="whitelist-entity-selections" data-source="Entities" ux-group="EntityWhitelistSelection" multiple></select>
+                    <label for="whitelist-entity-selections">Which entities?</label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Entity">
+                <label>
+                    <input type="radio" name="whitelist-entity-addmode" value="regex" class="with-gap" ux-enable-target="[ux-group='EntityWhitelistRegEx']" ux-disable-target="[ux-group='EntityWhitelistSelection']" />
+                    <span>Whitelist entities by Regular Expression</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Entity">
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <input type="text" id="whitelist-entity-regex" name="whitelist-entity-regex" ux-group="EntityWhitelistRegEx" disabled />
+                    <label for="whitelist-entity-regex">Regular expression matching entity name</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="whitelist-entity-regex-ignorecase" ux-group="EntityWhitelistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                <label>
+                    <input type="radio" name="whitelist-attribute-addmode" value="attribute" class="with-gap" ux-enable-target="[ux-group='AttributeWhitelistSelection']" ux-disable-target="[ux-group='AttributeWhitelistRegEx']" checked />
+                    <span>Whitelist specific attributes</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Attribute" hidden>
+                <div style="margin-top: 40px;" class="col s5 input-field">
+                    <select id="whitelist-attribute-entity" name="whitelist-attribute-entity" data-source="Entities" ux-group="AttributeWhitelistSelection"></select>
+                    <label for="whitelist-attribute-entity">Which entity?</label>
+                </div>
     
-                    <div class="col s12 input-field">
-                        <select id="FilterType" name="FilterType">
-                            <option>Entity</option>
-                            <option>Attribute</option>
-                            <option>OptionSet</option>
-                            <option>Solution</option>
-                        </select>
-                        <label for="FilterType">Which filter type?</label>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Entity">
-                        <p>Which entities?</p>
-                        <select id="EntityList" name="EntityList" class="browser-default" style="height:150px;" multiple>
-                            <!-- <option>Account</option>
-                            <option>Contact</option>
-                            <option>Lead</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
-                        <p>Filter by entity</p>
-                        <select id="EntitySelect" name="EntitySelect" class="browser-default">
-                            <!-- <option value="" selected>- All -</option>
-                            <option>Account</option>
-                            <option>Contact</option>
-                            <option>Lead</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
-                        <p>Which attributes?</p>
-                        <select id="AttributeList" name="AttributeList" class="browser-default" style="height:150px;" multiple>
-                            <!-- <option>name</option>
-                            <option>description</option>
-                            <option>statecode</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
-                        <p>Which option sets?</p>
-                        <select id="OptionSetList" name="OptionSetList" class="browser-default" style="height:150px;" multiple>
-                            <!-- <option>addresstype</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
-                        <p class="left" style="margin-right:8px">
-                            <label>
-                                <input type="checkbox" name="ApplyToAll" id="ApplyToAll" value="true" class="filled-in" />
-                                <span>Apply to all entities</span>
-                            </label>
-                        </p>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Solution" hidden>
-                        <p>Which solutions?</p>
-                        <select id="SolutionList" name="SolutionList" class="browser-default" style="height:150px;" multiple>
-                            <!-- <option>Default Solution</option>
-                            <option>My Custom Solution</option> -->
-                        </select>
+                <div style="margin-top: 40px;" class="col s7 input-field">
+                    <select id="whitelist-attribute-selections" name="whitelist-attribute-selections" data-source="Attributes" ux-group="AttributeWhitelistSelection" multiple></select>
+                    <label for="whitelist-attribute-selections">Which attributes?</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" id="whitelist-attribute-allentities" name="whitelist-attribute-allentities" ux-group="AttributeWhitelistSelection" value="true" class="filled-in" />
+                        <span>Apply to all entities</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                <label>
+                    <input type="radio" name="whitelist-attribute-addmode" value="regex" class="with-gap" ux-enable-target="[ux-group='AttributeWhitelistRegEx']" ux-disable-target="[ux-group='AttributeWhitelistSelection']" />
+                    <span>Whitelist attributes by Regular Expression</span>
+                </label>
+            </div>
+            
+            <div class="row" style="margin-left: 40px;" data-filter-type="Attribute" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <input type="text" id="whitelist-attribute-regex" name="whitelist-attribute-regex" ux-group="AttributeWhitelistRegEx" disabled />
+                    <label for="whitelist-attribute-regex">Regular expression matching attribute name</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="whitelist-attribute-regex-ignorecase" ux-group="AttributeWhitelistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
+                <label>
+                    <input type="radio" name="whitelist-optionSet-addmode" value="optionSet" class="with-gap" ux-enable-target="[ux-group='OptionSetWhitelistSelection']" ux-disable-target="[ux-group='OptionSetWhitelistRegEx']" checked />
+                    <span>Whitelist specific option sets</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="OptionSet" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <select id="whitelist-optionSet-selections" name="whitelist-optionSet-selections" data-source="OptionSets" ux-group="OptionSetWhitelistSelection" multiple></select>
+                    <label for="whitelist-optionSet-selections">Which Option Sets?</label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
+                <label>
+                    <input type="radio" name="whitelist-optionSet-addmode" value="regex" class="with-gap" ux-enable-target="[ux-group='OptionSetWhitelistRegEx']" ux-disable-target="[ux-group='OptionSetWhitelistSelection']" />
+                    <span>Whitelist option sets by Regular Expression</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="OptionSet" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <input type="text" id="whitelist-optionSet-regex" name="whitelist-optionSet-regex" ux-group="OptionSetWhitelistRegEx" disabled />
+                    <label for="whitelist-optionSet-regex">Regular expression matching option set name</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="whitelist-optionSet-regex-ignorecase" ux-group="OptionSetWhitelistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Solution" hidden>
+                <label>
+                    <input type="radio" name="whitelist-solution-addmode" value="solution" class="with-gap" ux-enable-target="[ux-group='SolutionWhitelistSelection']" ux-disable-target="[ux-group='SolutionWhitelistRegEx']" checked />
+                    <span>Whitelist items belonging to specific solutions</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Solution" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <select id="whitelist-solution-selections" name="whitelist-solution-selections" data-source="Solutions" ux-group="SolutionWhitelistSelection" multiple></select>
+                    <label for="whitelist-solution-selections">Which Solutions?</label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Solution" hidden>
+                <label>
+                    <input type="radio" name="whitelist-solution-addmode" value="regex" class="with-gap" ux-enable-target="[ux-group='SolutionWhitelistRegEx']" ux-disable-target="[ux-group='SolutionWhitelistSelection']" />
+                    <span>Whitelist items bleonging to solutions by Regular Expression</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Solution" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <input type="text" id="whitelist-solution-regex" name="whitelist-solution-regex" ux-group="SolutionWhitelistRegEx" disabled />
+                    <label for="whitelist-solution-regex">Regular expression matching solution name</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="whitelist-solution-regex-ignorecase" ux-group="SolutionWhitelistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="right">
+                <a class="btn-flat" href="#" title="Save" data-action="whitelist-save"><span class="iconify" data-icon="fa:save"></span>&nbsp;Add Whitelist Rule</a>
+                <a class="btn-flat" href="#" title="Cancel" data-action="whitelist-cancel"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a>
+            </div>
+        </div>
+        <div class="col s4">
+            <ul class="collection with-header" id="whitelist-rules">
+                <li class="collection-header"><h6>Whitelist</h6></li>
+                <li class="collection-item center" ux-template="default">
+                    <div>
+                        There are no items in the whitelist
                     </div>
                 </li>
             </ul>
         </div>
     </div>
 
-    <div id="tab2">
-        <div class="col s6">
-            <ul class="collection with-header">
-                <li class="collection-header">
-                    <h6>
-                        Mapping Rules
-                    </h6>
-                </li>
-                <li class="collection-item">
-                    <div class="col s12 input-field">
-                        <select id="FilterType2" name="FilterType2">
-                            <option>Entity</option>
-                            <option>Attribute</option>
-                        </select>
-                        <label for="FilterType2">Which rule type?</label>
-                    </div>
-
-                    <div class="col s12 input-field" data-filter-type="Entity">
-                        <p>Which entity?</p>
-                        <select id="EntityList2" name="EntityList2" class="browser-default">
-                            <!-- <option>Account</option>
-                            <option>Contact</option>
-                            <option>Lead</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
-                        <p>Filter by entity</p>
-                        <select id="EntitySelect2" name="EntitySelect2" class="browser-default">
-                            <!-- <option>Account</option>
-                            <option>Contact</option>
-                            <option>Lead</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
-                        <p>Which attribute?</p>
-                        <select id="AttributeSelect" name="AttributeSelect" class="browser-default">
-                            <!-- <option>name</option>
-                            <option>description</option>
-                            <option>statecode</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field">
-                        <input id="MapsTo" name="MapsTo" type="text" />
-                        <label for="MapsTo">Will be renamed to</label>
-                    </div>
-                </li>
-            </ul>
+    <div id="blacklist" class="row">
+        <div style="line-height: 50px; vertical-align: middle;">
+            <a href="#" title="Add Items" class="btn-flat" data-action="blacklist-add"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add Items to Blacklist</a>
         </div>
-        <div class="col s6">
-            <ul class="collection with-header">
-                <li class="collection-header">
-                    <h6>
-                        Publisher Rules
-                    </h6>
-                </li>
-                <li class="collection-item">
-                    <div class="col s12 input-field">
-                        <input id="MapsTo" name="MapsTo" type="text" placeholder="new_" />
-                        <label for="MapsTo">Remove Publisher Prefix</label>
+
+        <div id="blacklist-nullpanel" class="col s8">            
+        </div>
+
+        <div id="blacklist-addpanel" class="col s8" hidden>
+            <div class="col s12 input-field">
+                <select id="blacklist-filterType" name="blacklist-filterType">
+                    <option>Entity</option>
+                    <option>Attribute</option>
+                    <option>OptionSet</option>
+                    <option>Solution</option>
+                </select>
+                <label for="blacklist-filterType">Which items do you want to add to the blacklist?</label>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Entity">
+                <label>
+                    <input type="radio" name="blacklist-entity-addmode" value="entity" class="with-gap" ux-enable-target="[ux-group='EntityBlacklistSelection']" ux-disable-target="[ux-group='EntityBlacklistRegEx']" checked />
+                    <span>Blacklist specific entities</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Entity">
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <select id="blacklist-entity-selections" name="blacklist-entity-selections" data-source="Entities" ux-group="EntityBlacklistSelection" multiple></select>
+                    <label for="blacklist-entity-selections">Which entities?</label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Entity">
+                <label>
+                    <input type="radio" name="blacklist-entity-addmode" value="regex" class="with-gap" ux-enable-target="[ux-group='EntityBlacklistRegEx']" ux-disable-target="[ux-group='EntityBlacklistSelection']" />
+                    <span>Blacklist entities by Regular Expression</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Entity">
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <input type="text" id="blacklist-entity-regex" name="blacklist-entity-regex" ux-group="EntityBlacklistRegEx" disabled />
+                    <label for="blacklist-entity-regex">Regular expression matching entity name</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="blacklist-entity-regex-ignorecase" ux-group="EntityBlacklistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                <label>
+                    <input type="radio" name="blacklist-attribute-addmode" value="attribute" class="with-gap" ux-enable-target="[ux-group='AttributeBlacklistSelection']" ux-disable-target="[ux-group='AttributeBlacklistRegEx']" checked />
+                    <span>Blacklist specific attributes</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Attribute" hidden>
+                <div style="margin-top: 40px;" class="col s5 input-field">
+                    <select id="blacklist-attribute-entity" name="blacklist-attribute-entity" data-source="Entities" ux-group="AttributeBlacklistSelection"></select>
+                    <label for="blacklist-attribute-entity">Which entity?</label>
+                </div>
+    
+                <div style="margin-top: 40px;" class="col s7 input-field">
+                    <select id="blacklist-attribute-selections" name="blacklist-attribute-selections" data-source="Attributes" ux-group="AttributeBlacklistSelection" multiple></select>
+                    <label for="blacklist-attribute-selections">Which attributes?</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" id="blacklist-attribute-allentities" name="blacklist-attribute-allentities" ux-group="AttributeBlacklistSelection" value="true" class="filled-in" />
+                        <span>Apply to all entities</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                <label>
+                    <input type="radio" name="blacklist-attribute-addmode" value="regex" class="with-gap" ux-enable-target="[ux-group='AttributeBlacklistRegEx']" ux-disable-target="[ux-group='AttributeBlacklistSelection']" />
+                    <span>Blacklist attributes by Regular Expression</span>
+                </label>
+            </div>
+            
+            <div class="row" style="margin-left: 40px;" data-filter-type="Attribute" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <input type="text" id="blacklist-attribute-regex" name="blacklist-attribute-regex" ux-group="AttributeBlacklistRegEx" disabled />
+                    <label for="blacklist-attribute-regex">Regular expression matching attribute name</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="blacklist-attribute-regex-ignorecase" ux-group="AttributeBlacklistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
+                <label>
+                    <input type="radio" name="blacklist-optionSet-addmode" value="optionSet" class="with-gap" ux-enable-target="[ux-group='OptionSetBlacklistSelection']" ux-disable-target="[ux-group='OptionSetBlacklistRegEx']" checked />
+                    <span>Blacklist specific option sets</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="OptionSet" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <select id="blacklist-optionSet-selections" name="blacklist-optionSet-selections" data-source="OptionSets" ux-group="OptionSetBlacklistSelection" multiple></select>
+                    <label for="blacklist-optionSet-selections">Which Option Sets?</label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
+                <label>
+                    <input type="radio" name="blacklist-optionSet-addmode" value="regex" class="with-gap" ux-enable-target="[ux-group='OptionSetBlacklistRegEx']" ux-disable-target="[ux-group='OptionSetBlacklistSelection']" />
+                    <span>Blacklist option sets by Regular Expression</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="OptionSet" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <input type="text" id="blacklist-optionSet-regex" name="blacklist-optionSet-regex" ux-group="OptionSetBlacklistRegEx" disabled />
+                    <label for="blacklist-optionSet-regex">Regular expression matching option set name</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="blacklist-optionSet-regex-ignorecase" ux-group="OptionSetBlacklistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Solution" hidden>
+                <label>
+                    <input type="radio" name="blacklist-solution-addmode" value="solution" class="with-gap" ux-enable-target="[ux-group='SolutionBlacklistSelection']" ux-disable-target="[ux-group='SolutionBlacklistRegEx']" checked />
+                    <span>Blacklist items belonging to specific solutions</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Solution" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <select id="blacklist-solution-selections" name="blacklist-solution-selections" data-source="Solutions" ux-group="SolutionBlacklistSelection" multiple></select>
+                    <label for="blacklist-solution-selections">Which Solutions?</label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Solution" hidden>
+                <label>
+                    <input type="radio" name="blacklist-solution-addmode" value="regex" class="with-gap" ux-enable-target="[ux-group='SolutionBlacklistRegEx']" ux-disable-target="[ux-group='SolutionBlacklistSelection']" />
+                    <span>Blacklist items bleonging to solutions by Regular Expression</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Solution" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <input type="text" id="blacklist-solution-regex" name="blacklist-solution-regex" ux-group="SolutionBlacklistRegEx" disabled />
+                    <label for="blacklist-solution-regex">Regular expression matching solution name</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="blacklist-solution-regex-ignorecase" ux-group="SolutionBlacklistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="right">
+                <a class="btn-flat" href="#" title="Save" data-action="blacklist-save"><span class="iconify" data-icon="fa:save"></span>&nbsp;Add Blacklist Rule</a>
+                <a class="btn-flat" href="#" title="Cancel" data-action="blacklist-cancel"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a>
+            </div>
+        </div>
+        <div class="col s4">
+            <ul class="collection with-header" id="blacklist-rules">
+                <li class="collection-header"><h6>Blacklist</h6></li>
+                <li class="collection-item center" ux-template="default">
+                    <div>
+                        There are no items in the blacklist
                     </div>
                 </li>
             </ul>
         </div>
     </div>
 
-    <div id="tab3">
-        <div class="col s6">
-            <ul class="collection with-header">
-                <li class="collection-header">
-                    <h6>
-                        General Options
-                    </h6>
-                </li>
-                <li class="collection-item">
-                    <div class="col s12 input-field">
-                        <input id="OutputPath" name="OutputPath" type="text" placeholder=".\Output" />
-                        <label for="MapsTo">Code file output path</label>
-                    </div>
-    
-                    <div class="col s12 input-field">
-                        <select id="OutputLanguage" name="OutputLanguage">
-                            <option value="CSharp">C#</option>
-                            <option value="VisualBasic">Visual Basic</option>
-                        </select>
-                        <label for="OutputLanguage">Which language?</label>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="col s6">
-            <ul class="collection with-header">
-                <li class="collection-header">
-                    <h6>
-                        Behavior Rules
-                    </h6>
-                </li>
-                <li class="collection-item">
-                    <div class="col s12 input-field">
-                        <input type="text" id="Namespaces" name="Namespaces" placeholder="System,System.Linq,System.ComponentModel" />
-                        <label for="Namespaces">Default namespace imports</label>
-                    </div>
-    
-                    <div class="col s12 input-field">
-                        <p class="left" style="margin-right:8px">
-                            <label>
-                                <input type="checkbox" name="TranslateOptionSetsAsEnums" id="TranslateOptionSetsAsEnums" value="true" class="filled-in" />
-                                <span>Translate OptionSets as enums</span>
-                            </label>
-                        </p>
-                    </div>
-                </li>
-            </ul>
+    <div id="naming" class="row">
+        <div style="line-height: 50px; vertical-align: middle;">
+            <a href="#" title="Add Mapping Rule" class="btn-flat" data-action="naming-add-mapping"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add Mapping Rule</a>
+            <a href="#" title="Add Publisher Rule" class="btn-flat" data-action="naming-add-publisher"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add Publisher Rule</a>
         </div>
 
-        <div class="col s12">
-            <ul class="collection with-header">
-                <li class="collection-header">
-                    <h6>
-                        File(s) Rules
-                    </h6>
-                </li>
-                <li class="collection-item">
-                    <div class="col s12 input-field">
-                        <input type="text" id="FileNameFormat" name="FileNameFormat" placeholder="{0}.{1}.{2}.cs" />
-                        <label for="FileNameFormat">File name format string</label>
-                    </div>
+        <div id="naming-nullpanel" class="col s8">            
+        </div>
+
+        <div id="naming-mapping-addpanel" class="col s8" hidden>
+            <div class="col s12 input-field">
+                <select id="naming-mapping-filterType" name="naming-mapping-filterType">
+                    <option>Entity</option>
+                    <option>Attribute</option>
+                </select>
+                <label for="naming-mapping-filterType">Which items do you want to add to the naming rule?</label>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Entity">
+                <select id="naming-mapping-entity-selection" name="naming-mapping-entity-selection" data-source="Entities"></select>
+                <label for="naming-mapping-entity-selection">Which entity?</label>
+            </div>
+
+            <div class="row" data-filter-type="Attribute" hidden>
+                <div class="col s5 input-field">
+                    <select id="naming-mapping-attribute-entity" name="naming-mapping-attribute-entity" data-source="Entities"></select>
+                    <label for="naming-mapping-attribute-entity">Which entity?</label>
+                </div>
     
-                    <div class="col s12 input-field">
-                        <select id="FileType" name="FileType">
-                            <option>Entities</option>
-                            <option>OptionSets</option>
-                            <option>Attributes</option>
-                            <option>Requests</option>
-                            <option>Responses</option>
-                        </select>
-                        <label for="FileType">Which file type?</label>
-                    </div>
-    
-                    <div class="col s12 input-field">
-                        <select id="GenereationStrategy" name="GenereationStrategy">
-                            <option>OneFilePerItem</option>
-                            <option>OneFilePerType</option>
-                            <option>SingleFile</option>
-                        </select>
-                        <label for="GenereationStrategy">Which generation strategy?</label>
+                <div class="col s7 input-field">
+                    <select id="naming-mapping-attribute-selection" name="naming-mapping-attribute-selection" data-source="Attributes"></select>
+                    <label for="naming-mapping-attribute-selection">Which attribute?</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" id="naming-mapping-attribute-allentities" name="naming-mapping-attribute-allentities" value="true" class="filled-in" />
+                        <span>Apply to all entities</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field">
+                <input type="text" id="naming-mapping-newname" name="naming-mapping-newname" />
+                <label for="naming-mapping-newname">New name</label>
+            </div>
+
+            <div class="right">
+                <a class="btn-flat" href="#" title="Save" data-action="naming-mapping-save"><span class="iconify" data-icon="fa:save"></span>&nbsp;Add Naming Rule</a>
+                <a class="btn-flat" href="#" title="Cancel" data-action="naming-mapping-cancel"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a>
+            </div>
+        </div>
+        <div id="naming-publisher-addpanel" class="col s8" hidden>
+            <div class="row">
+                <div class="col s6 input-field">
+                    <input type="text" id="naming-publisher-oldname" name="naming-publisher-oldname" placeholder="new_" />
+                    <label for="naming-publisher-oldname">Existing publisher prefix</label>
+                </div>
+                <div class="col s6 input-field">
+                    <input type="text" id="naming-publisher-newname" name="naming-publisher-newname" />
+                    <label for="naming-publisher-newname">New prefix</label>
+                </div>
+            </div>
+
+            <div class="right">
+                <a class="btn-flat" href="#" title="Save" data-action="naming-publisher-save"><span class="iconify" data-icon="fa:save"></span>&nbsp;Add Publisher Rule</a>
+                <a class="btn-flat" href="#" title="Cancel" data-action="naming-publisher-cancel"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a>
+            </div>
+        </div>
+        <div class="col s4">
+            <ul class="collection with-header" id="naming-rules">
+                <li class="collection-header"><h6>Naming Rules</h6></li>
+                <li class="collection-item center" ux-template="default">
+                    <div>
+                        There are no naming rules configured
                     </div>
                 </li>
             </ul>
+        </div>
+    </div>
+
+    <div id="code-generation">
+        <div class="col s6">
+            <h6>
+                General Options
+            </h6>
+            <div class="col s12 input-field">
+                <input type="text" id="code-generation-outputPath" name="code-generation-outputPath" placeholder=".\Output" />
+                <label for="code-generation-outputPath">Code file output path</label>
+            </div>
+
+            <div class="col s12 input-field">
+                <select id="code-generation-outputLanguage" name="code-generation-outputLanguage">
+                    <option value="CSharp">C#</option>
+                    <option value="VisualBasic">Visual Basic</option>
+                </select>
+                <label for="code-generation-outputLanguage">Which language?</label>
+            </div>
+        </div>
+        <div class="col s6">
+            <h6>
+                Behavior Rules
+            </h6>
+            <div class="col s12 input-field">
+                <input type="text" id="code-generation-defaultImports" name="code-generation-defaultImports" placeholder="System,System.Linq,System.ComponentModel" />
+                <label for="code-generation-defaultImports">Default namespace imports</label>
+            </div>
+
+            <div class="col s12 input-field">
+                <p class="left" style="margin-right:8px">
+                    <label>
+                        <input type="checkbox" name="code-generation-translateOptionSets" id="code-generation-translateOptionSets" value="true" class="filled-in" />
+                        <span>Translate OptionSets as enums</span>
+                    </label>
+                </p>
+            </div>
+        </div>
+
+        <div id="code-generation-fileNaming" class="row">
+            <h6>
+                File Naming
+            </h6>
+
+            <div style="line-height: 50px; vertical-align: middle;">
+                <a href="#" title="Add File Naming Rule" class="btn-flat" data-action="code-generation-fileNaming-add"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add File Naming Rule</a>
+            </div>
+    
+            <div id="code-generation-fileNaming-nullpanel" class="col s8">            
+            </div>
+    
+            <div id="code-generation-fileNaming-addpanel" class="col s8" hidden>
+                <div class="col s12 input-field">
+                    <select id="code-generation-fileNaming-fileStrategy" name="code-generation-fileNaming-fileStrategy">
+                        <option>OneFilePerItem</option>
+                        <option>OneFilePerType</option>
+                        <option>SingleFile</option>
+                    </select>
+                    <label for="code-generation-fileNaming-fileStrategy">Which generation strategy?</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <select id="code-generation-fileNaming-fileType" name="code-generation-fileNaming-fileType">
+                        <option>Entities</option>
+                        <option>OptionSets</option>
+                        <option>Attributes</option>
+                        <option>Requests</option>
+                        <option>Responses</option>
+                    </select>
+                    <label for="code-generation-fileNaming-fileType">Which file type?</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <input type="text" id="code-generation-fileNaming-filenameFormat" name="code-generation-fileNaming-filenameFormat" placeholder="{0}.{1}.{2}.cs" />
+                    <label for="code-generation-fileNaming-filenameFormat">File name format string</label>
+                </div>
+
+                <div class="right">
+                    <a class="btn-flat" href="#" title="Save" data-action="code-generation-fileNaming-save"><span class="iconify" data-icon="fa:save"></span>&nbsp;Add File Naming Rule</a>
+                    <a class="btn-flat" href="#" title="Cancel" data-action="code-generation-fileNaming-cancel"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a>
+                </div>
+            </div>
+            <div class="col s4">
+                <ul class="collection with-header" id="code-generation-fileNaming-rules">
+                    <li class="collection-header"><h6>File Naming Rules</h6></li>
+                    <li class="collection-item center" ux-template="default">
+                        <div>
+                            There are no file naming rules configured
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </form>
 
-<script id="listRowTemplate" type="x-tmpl-mustache">
-    {{#rulesToAdd}}
-    <tr class="crmsvcutil-row">
-        <td>
-            <button class="button button--danger" onclick="removeRule(this)">
+<script id="filter-rule-template" type="x-tmpl-mustache">
+    {{#items}}
+    <li class="collection-item row">
+        <div class="col s10 left">
+            {{scope}}
+        </div>
+        <div class="col s2 right">
+            <button class="button button--danger" onclick="removeRule('filter', '{{id}}')">
                 <span class="iconify" data-icon="fa:trash"></span>
             </button>
-        </td>
-        <td>{{objectType}}</td>
-        <td>{{ruleTypeDisplay}}</td>
-        <td>{{appliesToDisplay}}</td>
-    </tr>
-    {{/rulesToAdd}}
+        </div>
+        <div class="col s12">
+            {{ruleType}}: {{value}}
+        </div>
+    </li>
+    {{/items}}
+</script>
+
+<script id="naming-rule-template" type="x-tmpl-mustache">
+    {{#items}}
+    <li class="collection-item row">
+        <div class="col s10 left">
+            {{scope}}
+        </div>
+        <div class="col s2 right">
+            <button class="button button--danger" onclick="removeRule('naming', '{{id}}')">
+                <span class="iconify" data-icon="fa:trash"></span>
+            </button>
+        </div>
+        <div class="col s12">
+            {{oldValue}} =&gt; {{newValue}}
+        </div>
+    </li>
+    {{/items}}
+</script>
+
+<script id="code-generation-fileNaming-rule-template" type="x-tmpl-mustache">
+    {{#items}}
+    <li class="collection-item row">
+        <div class="col s10 left">
+            {{strategy}}
+        </div>
+        <div class="col s2 right">
+            <button class="button button--danger" onclick="removeRule('fileNaming', '{{id}}')">
+                <span class="iconify" data-icon="fa:trash"></span>
+            </button>
+        </div>
+        <div class="col s12">
+            {{fileType}} format: {{format}}
+        </div>
+    </li>
+    {{/items}}
 </script>

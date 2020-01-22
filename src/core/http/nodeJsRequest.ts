@@ -101,7 +101,7 @@ export default function nodeJsRequest(options: any) {
                 if (error) {
                     responseParams.length = 0;
 
-                    logger.error(`HTTP error: ${internalOptions.method} ${internalOptions.url} (out: ${data ? data.length : 0}b, in: ${requestEndTime - requestStartTime}ms, error: ${(error.message || error).toString()})`);
+                    logger.error(`HTTP error: ${internalOptions.method.toUpperCase()} ${internalOptions.url} (out: ${data ? data.length : 0}b, time: ${requestEndTime - requestStartTime}ms, error: ${(error.message || error).toString()})`);
                     Telemetry.Instance.error(error, {
                         requestId,
                         method: internalOptions.method,
@@ -109,11 +109,11 @@ export default function nodeJsRequest(options: any) {
                         port: internalOptions.port,
                         url: internalOptions.url,
                         username: internalOptions.username,
-                        statusCode: response.statusCode
+                        statusCode: "-1"
                     }, {
                         executionTime: requestEndTime - requestStartTime,
                         requestBytes: data.length,
-                        responseBytes: response.body.length
+                        responseBytes: 0
                     });
 
                     errorCallback(error);

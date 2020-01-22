@@ -4,7 +4,8 @@
 
 This extension is designed to help developers with a simple development loop for Microsoft&trade; Common Data Service (CDS) using Visual Studio Code.  Many developers do not have access to a full Visual Studio license in order to use Microsoft&trade; CDS Development Toolkit.  This extension is designed to get you started.
 
-Release version: 0.8.7
+Release version: 0.8.8
+
 [![Board Status](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/dcd00a1d-957f-4b19-bcdc-f2951aed4c88/_apis/work/boardbadge/dca6f347-6bc4-4c07-831c-bda22d8068c3)](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/_boards/board/t/dcd00a1d-957f-4b19-bcdc-f2951aed4c88/Microsoft.RequirementCategory/)
 
 ---
@@ -45,7 +46,7 @@ This extension allows you to connect to CDS/Dynamics instances in the following 
 - Dynamics On-Premise (8.0+)
 - Azure AD integrated into a Dynamice On-Premise installation
 
-![gif](docs/images/create-new-cds-connection.gif)
+![gif](https://raw.githubusercontent.com/cloudsmithconsulting/cds-for-code/master/docs/images/create-new-cds-connection.gif)
 
 ---
 
@@ -112,7 +113,7 @@ For a more comprehensive walkthrough of features you can check out our How To ar
 
 ### These commands can be executed directly through the VSCode command palette
 
-![gif](docs/images/cds-for-code-command-palette.gif)
+![gif](https://raw.githubusercontent.com/cloudsmithconsulting/cds-for-code/master/docs/images/cds-for-code-command-palette.gif)
 
 ---
 
@@ -137,7 +138,7 @@ For a more comprehensive walkthrough of features you can check out our How To ar
 
 ### These settings are editable inside the VSCode Settings Editor
 
-![gif](docs/images/cds-for-code-settings-editor.gif)
+![gif](https://raw.githubusercontent.com/cloudsmithconsulting/cds-for-code/master/docs/images/cds-for-code-settings-editor.gif)
 
 ---
 

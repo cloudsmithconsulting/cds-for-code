@@ -9,6 +9,8 @@ import svcUtilConfigView from "./cs.cds.views.svcUtilConfigView";
 import command from '../core/Command';
 import { View } from '../core/webui/View';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
+import Quickly from '../core/Quickly';
+import ExtensionContext from '../core/ExtensionContext';
 
 export default class ViewManager {
     @command(cs.cds.deployment.connectToCds, "Open CDS connection view")
@@ -42,7 +44,7 @@ export default class ViewManager {
     }
 
     @command(cs.cds.controls.svcUtilConfig.open, "Open SvcUtil configuration view")
-    async openSvcUtilConfiguration(item?: any): Promise<View> {
-        return await svcUtilConfigView.apply(this, [item]);
+    async openSvcUtilConfiguration(config?: CdsWebApi.Config): Promise<View> {
+        return await svcUtilConfigView.apply(this, [config]);
     }
 }
