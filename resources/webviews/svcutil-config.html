@@ -409,65 +409,76 @@
     </div>
 
     <div id="naming" class="row">
-        <div class="col s6">
-            <ul class="collection with-header">
-                <li class="collection-header">
-                    Mapping Rules
-                </li>
-                <li class="collection-item">
-                    <div class="col s12 input-field">
-                        <select id="FilterType2" name="FilterType2">
-                            <option>Entity</option>
-                            <option>Attribute</option>
-                        </select>
-                        <label for="FilterType2">Which rule type?</label>
-                    </div>
-
-                    <div class="col s12 input-field" data-filter-type="Entity">
-                        <p>Which entity?</p>
-                        <select id="EntityList2" name="EntityList2" class="browser-default">
-                            <!-- <option>Account</option>
-                            <option>Contact</option>
-                            <option>Lead</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
-                        <p>Filter by entity</p>
-                        <select id="EntitySelect2" name="EntitySelect2" class="browser-default">
-                            <!-- <option>Account</option>
-                            <option>Contact</option>
-                            <option>Lead</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field" data-filter-type="Attribute" hidden>
-                        <p>Which attribute?</p>
-                        <select id="AttributeSelect" name="AttributeSelect" class="browser-default">
-                            <!-- <option>name</option>
-                            <option>description</option>
-                            <option>statecode</option> -->
-                        </select>
-                    </div>
-    
-                    <div class="col s12 input-field">
-                        <input id="MapsTo" name="MapsTo" type="text" />
-                        <label for="MapsTo">Will be renamed to</label>
-                    </div>
-                </li>
-            </ul>
+        <div style="line-height: 50px; vertical-align: middle;">
+            <a href="#" title="Add Mapping Rule" class="btn-flat" data-action="naming-add-mapping"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add Mapping Rule</a>
+            <a href="#" title="Add Publisher Rule" class="btn-flat" data-action="naming-add-publisher"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add Publisher Rule</a>
         </div>
-        <div class="col s6">
-            <ul class="collection with-header">
-                <li class="collection-header">
-                    <h6>
-                        Publisher Rules
-                    </h6>
-                </li>
-                <li class="collection-item">
-                    <div class="col s12 input-field">
-                        <input id="MapsTo" name="MapsTo" type="text" placeholder="new_" />
-                        <label for="MapsTo">Remove Publisher Prefix</label>
+        <div id="naming-mapping-addpanel" class="col s8" hidden>
+            <div class="col s12 input-field">
+                <select id="naming-mapping-filterType" name="naming-mapping-filterType">
+                    <option>Entity</option>
+                    <option>Attribute</option>
+                </select>
+                <label for="naming-mapping-filterType">Which items do you want to add to the naming rule?</label>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Entity">
+                <select id="naming-mapping-entity-selection" name="naming-mapping-entity-selection" data-source="Entities"></select>
+                <label for="naming-mapping-entity-selection">Which entity?</label>
+            </div>
+
+            <div class="row" data-filter-type="Attribute" hidden>
+                <div class="col s5 input-field">
+                    <select id="naming-mapping-attribute-entity" name="naming-mapping-attribute-entity" data-source="Entities"></select>
+                    <label for="naming-mapping-attribute-entity">Which entity?</label>
+                </div>
+    
+                <div class="col s7 input-field">
+                    <select id="naming-mapping-attribute-selection" name="naming-mapping-attribute-selection" data-source="Attributes"></select>
+                    <label for="naming-mapping-attribute-selection">Which attribute?</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" id="naming-mapping-attribute-allentities" name="naming-mapping-attribute-allentities" value="true" class="filled-in" />
+                        <span>Apply to all entities</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field">
+                <input type="text" id="naming-mapping-newname" name="naming-mapping-newname" />
+                <label for="naming-mapping-newname">New name</label>
+            </div>
+
+            <div class="right">
+                <a class="btn-flat" href="#" title="Save" data-action="naming-mapping-save"><span class="iconify" data-icon="fa:save"></span>&nbsp;Add Naming Rule</a>
+                <a class="btn-flat" href="#" title="Cancel" data-action="naming-mapping-cancel"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a>
+            </div>
+        </div>
+        <div id="naming-publisher-addpanel" class="col s8" hidden>
+            <div class="row">
+                <div class="col s6 input-field">
+                    <input type="text" id="naming-publisher-oldname" name="naming-publisher-oldname" placeholder="new_" />
+                    <label for="naming-publisher-oldname">Existing publisher prefix</label>
+                </div>
+                <div class="col s6 input-field">
+                    <input type="text" id="naming-publisher-newname" name="naming-publisher-newname" />
+                    <label for="naming-publisher-newname">New prefix</label>
+                </div>
+            </div>
+
+            <div class="right">
+                <a class="btn-flat" href="#" title="Save" data-action="naming-publisher-save"><span class="iconify" data-icon="fa:save"></span>&nbsp;Add Publisher Rule</a>
+                <a class="btn-flat" href="#" title="Cancel" data-action="naming-publisher-cancel"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a>
+            </div>
+        </div>
+        <div class="col s4">
+            <ul class="collection with-header" id="naming-rules">
+                <li class="collection-header"><h6>Naming Rules</h6></li>
+                <li class="collection-item center" ux-template="default">
+                    <div>
+                        There are no naming rules configured
                     </div>
                 </li>
             </ul>
@@ -476,92 +487,74 @@
 
     <div id="code-generation">
         <div class="col s6">
-            <ul class="collection with-header">
-                <li class="collection-header">
-                    <h6>
-                        General Options
-                    </h6>
-                </li>
-                <li class="collection-item">
-                    <div class="col s12 input-field">
-                        <input id="OutputPath" name="OutputPath" type="text" placeholder=".\Output" />
-                        <label for="MapsTo">Code file output path</label>
-                    </div>
-    
-                    <div class="col s12 input-field">
-                        <select id="OutputLanguage" name="OutputLanguage">
-                            <option value="CSharp">C#</option>
-                            <option value="VisualBasic">Visual Basic</option>
-                        </select>
-                        <label for="OutputLanguage">Which language?</label>
-                    </div>
-                </li>
-            </ul>
+            <h6>
+                General Options
+            </h6>
+            <div class="col s12 input-field">
+                <input type="text" id="code-generation-outputPath" name="code-generation-outputPath" placeholder=".\Output" />
+                <label for="code-generation-outputPath">Code file output path</label>
+            </div>
+
+            <div class="col s12 input-field">
+                <select id="code-generation-outputLanguage" name="code-generation-outputLanguage">
+                    <option value="CSharp">C#</option>
+                    <option value="VisualBasic">Visual Basic</option>
+                </select>
+                <label for="code-generation-outputLanguage">Which language?</label>
+            </div>
         </div>
         <div class="col s6">
-            <ul class="collection with-header">
-                <li class="collection-header">
-                    <h6>
-                        Behavior Rules
-                    </h6>
-                </li>
-                <li class="collection-item">
-                    <div class="col s12 input-field">
-                        <input type="text" id="Namespaces" name="Namespaces" placeholder="System,System.Linq,System.ComponentModel" />
-                        <label for="Namespaces">Default namespace imports</label>
-                    </div>
-    
-                    <div class="col s12 input-field">
-                        <p class="left" style="margin-right:8px">
-                            <label>
-                                <input type="checkbox" name="TranslateOptionSetsAsEnums" id="TranslateOptionSetsAsEnums" value="true" class="filled-in" />
-                                <span>Translate OptionSets as enums</span>
-                            </label>
-                        </p>
-                    </div>
-                </li>
-            </ul>
+            <h6>
+                Behavior Rules
+            </h6>
+            <div class="col s12 input-field">
+                <input type="text" id="code-generation-defaultImports" name="code-generation-defaultImports" placeholder="System,System.Linq,System.ComponentModel" />
+                <label for="code-generation-defaultImports">Default namespace imports</label>
+            </div>
+
+            <div class="col s12 input-field">
+                <p class="left" style="margin-right:8px">
+                    <label>
+                        <input type="checkbox" name="code-generation-translateOptionSets" id="code-generation-translateOptionSets" value="true" class="filled-in" />
+                        <span>Translate OptionSets as enums</span>
+                    </label>
+                </p>
+            </div>
         </div>
 
         <div class="col s12">
-            <ul class="collection with-header">
-                <li class="collection-header">
-                    <h6>
-                        File(s) Rules
-                    </h6>
-                </li>
-                <li class="collection-item">
-                    <div class="col s12 input-field">
-                        <input type="text" id="FileNameFormat" name="FileNameFormat" placeholder="{0}.{1}.{2}.cs" />
-                        <label for="FileNameFormat">File name format string</label>
-                    </div>
-    
-                    <div class="col s12 input-field">
-                        <select id="FileType" name="FileType">
-                            <option>Entities</option>
-                            <option>OptionSets</option>
-                            <option>Attributes</option>
-                            <option>Requests</option>
-                            <option>Responses</option>
-                        </select>
-                        <label for="FileType">Which file type?</label>
-                    </div>
-    
-                    <div class="col s12 input-field">
-                        <select id="GenereationStrategy" name="GenereationStrategy">
-                            <option>OneFilePerItem</option>
-                            <option>OneFilePerType</option>
-                            <option>SingleFile</option>
-                        </select>
-                        <label for="GenereationStrategy">Which generation strategy?</label>
-                    </div>
-                </li>
-            </ul>
+            <h6>
+                File Splitting
+            </h6>
+            <div class="col s12 input-field">
+                <input type="text" id="code-generation-filenameFormat" name="code-generation-filenameFormat" placeholder="{0}.{1}.{2}.cs" />
+                <label for="code-generation-filenameFormat">File name format string</label>
+            </div>
+
+            <div class="col s12 input-field">
+                <select id="code-generation-fileType" name="code-generation-fileType">
+                    <option>Entities</option>
+                    <option>OptionSets</option>
+                    <option>Attributes</option>
+                    <option>Requests</option>
+                    <option>Responses</option>
+                </select>
+                <label for="code-generation-fileType">Which file type?</label>
+            </div>
+
+            <div class="col s12 input-field">
+                <select id="code-generation-fileStrategy" name="code-generation-fileStrategy">
+                    <option>OneFilePerItem</option>
+                    <option>OneFilePerType</option>
+                    <option>SingleFile</option>
+                </select>
+                <label for="code-generation-fileStrategy">Which generation strategy?</label>
+            </div>
         </div>
     </div>
 </form>
 
-<script id="listRowTemplate" type="x-tmpl-mustache">
+<script id="filter-rule-template" type="x-tmpl-mustache">
     {{#items}}
     <li class="collection-item row">
         <div class="col s10 left">
@@ -574,6 +567,24 @@
         </div>
         <div class="col s12">
             {{ruleType}}: {{value}}
+        </div>
+    </li>
+    {{/items}}
+</script>
+
+<script id="naming-rule-template" type="x-tmpl-mustache">
+    {{#items}}
+    <li class="collection-item row">
+        <div class="col s10 left">
+            {{scope}}
+        </div>
+        <div class="col s2 right">
+            <button class="button button--danger" onclick="removeRule(this)">
+                <span class="iconify" data-icon="fa:trash"></span>
+            </button>
+        </div>
+        <div class="col s12">
+            {{oldValue}} =&gt; {{newValue}}
         </div>
     </li>
     {{/items}}

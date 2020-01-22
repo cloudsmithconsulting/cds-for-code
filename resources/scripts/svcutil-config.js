@@ -60,7 +60,10 @@
             entityMap: _.map(viewModel.entities, i => { return { value: i.LogicalName, text: i.LogicalName } }),
             entityMapWithId: _.map(viewModel.entities, i => { return { value: i.MetadataId, text: i.LogicalName } }),
             optionsetMap: _.map(viewModel.optionsets, i => { return { value: i.Name, text: i.Name } }),
-            solutionMap: _.map(viewModel.solutions, i => { return { value: i.uniquename, text: i.uniquename } })
+            solutionMap: _.map(viewModel.solutions, i => { return { value: i.uniquename, text: i.uniquename } }),
+            filterRules: [],
+            namingRules: [],
+            codeGeneration: {}
         }
 
         $("[data-source='Entities']").each(function (index, element) {
@@ -103,29 +106,46 @@
         $button.parent("td").parent("tr").remove();
     }
 
-    function addToList(form, listType, template) {
+    function getForm(formSelector, filter) {
+        let form = {};
+        $(formSelector)
+            .serializeArray()
+            .filter(filter)
+            .forEach(i => {
+                if (form.hasOwnProperty(i.name)) {
+                    if (!(form[i.name] instanceof Array)) {
+                        const currentItem = form[i.name];
+                        form[i.name] = [ currentItem, i.value ];
+                    } else {
+                        form[i.name].push(i.value);
+                    }
+                } else {
+                    form[i.name] = i.value;
+                }
+            });
+
+        return form;
+    }
+
+    function addToFilterRules(form, listType, template) {
         let items = [];
         const itemType = form[`${listType}-filterType`] === 'OptionSet' ? 'optionSet' : form[`${listType}-filterType`].toLowerCase();
 
         if (form[`${listType}-${itemType}-addmode`] === itemType) {
+            const options = itemType !== 'attribute' ? {} : { entity: form[`${listType}-${itemType}-allentities`] === 'true' ? '*' : form[`${listType}-${itemType}-entity`] };
+
             if (form[`${listType}-${itemType}-selections`] instanceof Array) {
                 form[`${listType}-${itemType}-selections`].forEach((value, index) => {
-                    if (itemType !== 'attribute') {
-                        items.push({ listType, scope: itemType, value, ruleType: 'exact-match'});
-                    } else {
-                        items.push({ listType, scope: itemType, value, ruleType: 'exact-match', options: { entity: form[`${listType}-${itemType}-allentities`] === 'true' ? '*' : form[`${listType}-${itemType}-entity`] } });
-                    }
+                    items.push({ listType, scope: itemType, value, ruleType: 'exact-match', options });
                 });
             } else {
-                if (itemType !== 'attribute') {
-                    items.push({ listType, scope: itemType, value: form[`${listType}-${itemType}-selections`], ruleType: 'exact-match'});
-                } else {
-                    items.push({ listType, scope: itemType, value: form[`${listType}-${itemType}-selections`], ruleType: 'exact-match', options: { entity: form[`${listType}-${itemType}-allentities`] === 'true' ? '*' : form[`${listType}-${itemType}-entity`] } });
-                }
+                items.push({ listType, scope: itemType, value: form[`${listType}-${itemType}-selections`], ruleType: 'exact-match', options });
             }
         } else {
             items.push({ listType, scope: itemType, value: form[`${listType}-${itemType}-regex`], ruleType: 'regex', options: { ignoreCase: form[`${listType}-${itemType}-regex-ignorecase`] === 'true' } });
         }
+
+        items.forEach(i => window.dataCache.filterRules.push(i));
 
         if (items && items.length > 0) {
             $(`#${listType}-rules > [ux-template='default']`).hide();
@@ -136,15 +156,52 @@
         }
     }
 
+    function addToNamingRules(form, listType, template) {
+        const itemType = listType === "naming-mapping" ? form[`${listType}-filterType`].toLowerCase() : "publisher";
+        let oldValue;
+        let newValue;
+
+        if (itemType === "attribute") {
+            oldValue = (form["naming-mapping-attribute-allentities"] === "true" ? "*." : form["naming-mapping-attribute-entity"] + ".") 
+                + form["naming-mapping-attribute-selection"];
+            newValue = form["naming-mapping-newname"];
+        } else if (itemType === "entity") {
+            oldValue = form["naming-mapping-entity-selection"];
+            newValue = form["naming-mapping-newname"];
+        } else if (itemType === "publisher") {
+            oldValue = form["naming-publisher-oldname"];
+            newValue = form["naming-publisher-newname"];
+        }
+
+        const items = [{ 
+            ruleType: listType === "naming-mapping" ? "Mapping" : "Publisher",
+            scope: itemType,
+            oldValue,
+            newValue
+        }];
+
+        items.forEach(i => window.dataCache.namingRules.push(i));
+
+        if (items && items.length > 0) {
+            $(`#naming-rules > [ux-template='default']`).hide();
+
+            const rendered = Mustache.render(template, { items });
+
+            $(`#naming-rules`).append(rendered);
+        }
+    }
+
     // this part starts on document ready
     $(function () {
         M.AutoInit();
 
         // cache html for mustache template
-        const listRowTemplate = $("#listRowTemplate").html();
+        const filterRuleTemplate = $("#filter-rule-template").html();
+        const namingRuleTemplate = $("#naming-rule-template").html();
 
         // cache template in mustache
-        Mustache.parse(listRowTemplate);
+        Mustache.parse(filterRuleTemplate);
+        Mustache.parse(namingRuleTemplate);
 
         $('[data-action=whitelist-add').click(function() {
             $("#whitelist-addpanel").show();
@@ -152,6 +209,16 @@
 
         $('[data-action=blacklist-add').click(function() {
             $("#blacklist-addpanel").show();
+        });
+
+        $('[data-action=naming-add-mapping').click(function() {
+            $("#naming-publisher-addpanel").hide();
+            $("#naming-mapping-addpanel").show();
+        });
+
+        $('[data-action=naming-add-publisher').click(function() {
+            $("#naming-mapping-addpanel").hide();
+            $("#naming-publisher-addpanel").show();
         });
 
         // change visible fields based on filter type
@@ -163,6 +230,11 @@
         $("#blacklist-filterType").change(function() {
             $("[data-filter-type]", "#blacklist").hide();
             $(`[data-filter-type*=${this.value}]`, "#blacklist").show();
+        });
+
+        $("#naming-mapping-filterType").change(function() {
+            $("[data-filter-type]", "#naming-mapping-addpanel").hide();
+            $(`[data-filter-type*=${this.value}]`, "#naming-mapping-addpanel").show();
         });
 
         $("SELECT[name='whitelist-attribute-entity']").change(function() {
@@ -191,25 +263,41 @@
             });
         });
 
-        $("[data-action='whitelist-save']").click(function () {
-            let form = {};
-            $("FORM")
-                .serializeArray()
-                .filter(m => m.name.startsWith("whitelist"))
-                .forEach(i => {
-                    if (form.hasOwnProperty(i.name)) {
-                        if (!(form[i.name] instanceof Array)) {
-                            const currentItem = form[i.name];
-                            form[i.name] = [ currentItem, i.value ];
-                        } else {
-                            form[i.name].push(i.value);
-                        }
-                    } else {
-                        form[i.name] = i.value;
-                    }
-                });
+        $("SELECT[name='naming-mapping-attribute-entity']").change(function() {
+            if (!this.value) {
+                $("option", "[data-source='Attributes']").remove();
+                return;
+            }
+            
+            vscode.postMessage({
+                command: `retrieveListFor${$("#naming-mapping-filterType").val()}`,
+                entityKey: this.value,
+                targetElem: "[data-source='Attributes']"
+            });
+        });
 
-            return addToList(form, 'whitelist', listRowTemplate);
+        $("[data-action='whitelist-save']").click(function () {
+            var form = getForm("FORM", i => i.name.startsWith("whitelist"));
+
+            return addToFilterRules(form, 'whitelist', filterRuleTemplate);
+        });
+
+        $("[data-action='blacklist-save']").click(function () {
+            var form = getForm("FORM", i => i.name.startsWith("blacklist"));
+            
+            return addToFilterRules(form, 'blacklist', filterRuleTemplate);
+        });
+
+        $("[data-action='naming-mapping-save']").click(function () {
+            var form = getForm("FORM", i => i.name.startsWith("naming-"));
+            
+            return addToNamingRules(form, 'naming-mapping', namingRuleTemplate);
+        });
+
+        $("[data-action='naming-publisher-save']").click(function () {
+            var form = getForm("FORM", i => i.name.startsWith("naming-"));
+            
+            return addToNamingRules(form, 'naming-publisher', namingRuleTemplate);
         });
 
         // wire up click handler for the submit button
