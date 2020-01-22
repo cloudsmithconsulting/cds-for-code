@@ -111,56 +111,8 @@
             $("#whitelist-addpanel").show();
         });
 
-        $("[ux-enable-target]").each((index, t) => {
-            $(t).on('change', function () {
-                var target = $(this).attr("ux-enable-target");
-                var element = $(target);
-
-                element.prop('disabled', !this.checked);
-
-                if (element.prop("nodeName") === "SELECT") {
-                    element.formSelect();
-                }
-            });
-        });
-
-        $("[ux-disable-target]").each((index, t) => {
-            $(t).on('change', function () {
-                var target = $(this).attr("ux-disable-target");
-                var element = $(target);
-
-                element.prop('disabled', this.checked);
-
-                if (element.prop("nodeName") === "SELECT") {
-                    element.formSelect();
-                }
-            });
-        });
-
-        $("[ux-show-target]").each((index, t) => {
-            $(t).on('change', function () {
-                var target = $(this).attr("ux-show-target");
-                var element = $(target);
-
-                element.prop('hidden', !this.checked);
-
-                if (element.prop("nodeName") === "SELECT") {
-                    element.formSelect();
-                }
-            });
-        });
-
-        $("[ux-hide-target]").each((index, t) => {
-            $(t).on('change', function () {
-                var target = $(this).attr("ux-hide-target");
-                var element = $(target);
-
-                element.prop('hidden', this.checked);
-
-                if (element.prop("nodeName") === "SELECT") {
-                    element.formSelect();
-                }
-            });
+        $('[data-action=blacklist-add').click(function() {
+            $("#blacklist-addpanel").show();
         });
 
         // change visible fields based on filter type
@@ -187,16 +139,16 @@
             });
         });
 
-        $("#EntitySelect2").change(function() {
+        $("SELECT[name='blacklist-attribute-entity']").change(function() {
             if (!this.value) {
-                $("option", "#AttributeSelect").remove();
+                $("option", "[data-source='Attributes']").remove();
                 return;
             }
             
             vscode.postMessage({
-                command: `retrieveListFor${$("#FilterType2").val()}`,
+                command: `retrieveListFor${$("#blacklist-filterType").val()}`,
                 entityKey: this.value,
-                targetElem: "#AttributeSelect"
+                targetElem: "[data-source='Attributes']"
             });
         });
     
@@ -205,10 +157,20 @@
         // cache template in mustache
         Mustache.parse(listRowTemplate);
 
-        // add any rules to the table
-        // const rendered = Mustache.render(listRowTemplate, {rulesToAdd});
-        // $(`#${listType}Table>tbody`).append(rendered);
-    
+        $("[data-action='whitelist-save']").click(function () {
+            let form = {};
+            $("FORM")
+                .serializeArray()
+                .filter(m => m.name.startsWith("whitelist"))
+                .forEach(i => form[i.name] = i.value);
+
+            const rendered = Mustache.render(listRowTemplate, form);
+
+            $(`#${listType} Table>tbody`).append(rendered);
+
+            event.preventDefault();
+        });
+
         // wire up click handler for the submit button
         $("[data-action='save']").click(function() {
     

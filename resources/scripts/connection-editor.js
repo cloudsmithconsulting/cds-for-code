@@ -338,19 +338,6 @@
     $(function () {
         M.AutoInit();
 
-        $("[ux-enable-target]").each((index, t) => {
-            $(t).on('change', function () {
-                var target = $(this).attr("ux-enable-target");
-                var element = $(target);
-
-                element.prop('disabled', !this.checked);
-
-                if (element.prop("nodeName") === "SELECT") {
-                    element.formSelect();
-                }
-            });
-        });
-
         // Send this back to our extension for parsing.
         $("[data-action='parse-connectionstring']").click(function () {
             vscode.postMessage({

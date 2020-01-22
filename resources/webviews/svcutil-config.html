@@ -18,7 +18,8 @@
     <li><a data-action="cancel" href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
 </ul>
 
-<br>
+<br />
+
 <form class="row">
     <blockquote class="panel_error" id="errorPanel" hidden>
         <div class="panel__text">
@@ -189,6 +190,162 @@
                 <li class="collection-item center">
                     <div>
                         There are no items in the whitelist
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="blacklist" class="row">
+        <div style="line-height: 50px; vertical-align: middle;">
+            <a href="#" title="Add Items" class="btn-flat" data-action="blacklist-add"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add Items to Blacklist</a>
+        </div>
+        <div id="blacklist-addpanel" class="col s8" hidden>
+            <div class="col s12 input-field">
+                <select id="blacklist-filterType" name="blacklist-filterType">
+                    <option>Entity</option>
+                    <option>Attribute</option>
+                    <option>OptionSet</option>
+                    <option>Solution</option>
+                </select>
+                <label for="blacklist-filterType">Which items do you want to add to the blacklist?</label>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Entity">
+                <label>
+                    <input type="radio" name="blacklist-entity-addmode" value="entity" class="with-gap" ux-enable-target="[ux-group='EntityBlacklistSelection']" ux-disable-target="[ux-group='EntityBlacklistRegEx']" checked />
+                    <span>Blacklist specific entities</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Entity">
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <select id="blacklist-entity-selections" name="blacklist-entity-selections" data-source="Entities" ux-group="EntityBlacklistSelection" multiple></select>
+                    <label for="blacklist-entity-selections">Which entities?</label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Entity">
+                <label>
+                    <input type="radio" name="blacklist-entity-addmode" value="regex" class="with-gap" ux-enable-target="[ux-group='EntityBlacklistRegEx']" ux-disable-target="[ux-group='EntityBlacklistSelection']" />
+                    <span>Blacklist entities by Regular Expression</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Entity">
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <input type="text" id="blacklist-entity-regex" name="blacklist-entity-regex" ux-group="EntityBlacklistRegEx" disabled />
+                    <label for="blacklist-entity-regex">Regular expression matching entity name</label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                <label>
+                    <input type="radio" name="blacklist-attribute-addmode" value="attribute" class="with-gap" ux-enable-target="[ux-group='AttributeBlacklistSelection']" ux-disable-target="[ux-group='AttributeBlacklistRegEx']" checked />
+                    <span>Blacklist specific attributes</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Attribute" hidden>
+                <div style="margin-top: 40px;" class="col s5 input-field">
+                    <select id="blacklist-attribute-entity" name="blacklist-attribute-entity" data-source="Entities" ux-group="AttributeBlacklistSelection"></select>
+                    <label for="blacklist-attribute-entity">Which entity?</label>
+                </div>
+    
+                <div style="margin-top: 40px;" class="col s7 input-field">
+                    <select id="blacklist-attribute-selections" name="blacklist-attribute-selections" data-source="Attributes" ux-group="AttributeBlacklistSelection" multiple></select>
+                    <label for="blacklist-attribute-selections">Which attributes?</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" id="blacklist-attribute-allentities" name="blacklist-attribute-allentities" ux-group="AttributeBlacklistSelection" value="true" class="filled-in" />
+                        <span>Apply to all entities</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Attribute" hidden>
+                <label>
+                    <input type="radio" name="blacklist-attribute-addmode" value="regex" class="with-gap" ux-enable-target="[ux-group='AttributeBlacklistRegEx']" ux-disable-target="[ux-group='AttributeBlacklistSelection']" />
+                    <span>Blacklist attributes by Regular Expression</span>
+                </label>
+            </div>
+            
+            <div class="row" style="margin-left: 40px;" data-filter-type="Attribute" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <input type="text" id="blacklist-attribute-regex" name="blacklist-attribute-regex" ux-group="AttributeBlacklistRegEx" disabled />
+                    <label for="blacklist-attribute-regex">Regular expression matching attribute name</label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
+                <label>
+                    <input type="radio" name="blacklist-optionSet-addmode" value="optionSet" class="with-gap" ux-enable-target="[ux-group='OptionSetBlacklistSelection']" ux-disable-target="[ux-group='OptionSetBlacklistRegEx']" checked />
+                    <span>Blacklist specific option sets</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="OptionSet" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <select id="blacklist-optionSet-selections" name="blacklist-optionSet-selections" data-source="OptionSets" ux-group="OptionSetBlacklistSelection" multiple></select>
+                    <label for="blacklist-optionSet-selections">Which Option Sets?</label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
+                <label>
+                    <input type="radio" name="blacklist-optionSet-addmode" value="regex" class="with-gap" ux-enable-target="[ux-group='OptionSetBlacklistRegEx']" ux-disable-target="[ux-group='OptionSetBlacklistSelection']" />
+                    <span>Blacklist option sets by Regular Expression</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="OptionSet" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <input type="text" id="blacklist-optionSet-regex" name="blacklist-optionSet-regex" ux-group="OptionSetBlacklistRegEx" disabled />
+                    <label for="blacklist-optionSet-regex">Regular expression matching option set name</label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Solution" hidden>
+                <label>
+                    <input type="radio" name="blacklist-solution-addmode" value="solution" class="with-gap" ux-enable-target="[ux-group='SolutionBlacklistSelection']" ux-disable-target="[ux-group='SolutionBlacklistRegEx']" checked />
+                    <span>Blacklist items belonging to specific solutions</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Solution" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <select id="blacklist-solution-selections" name="blacklist-solution-selections" data-source="Solutions" ux-group="SolutionBlacklistSelection" multiple></select>
+                    <label for="blacklist-solution-selections">Which Solutions?</label>
+                </div>
+            </div>
+
+            <div class="col s12 input-field" data-filter-type="Solution" hidden>
+                <label>
+                    <input type="radio" name="blacklist-solution-addmode" value="regex" class="with-gap" ux-enable-target="[ux-group='SolutionBlacklistRegEx']" ux-disable-target="[ux-group='SolutionBlacklistSelection']" />
+                    <span>Blacklist items bleonging to solutions by Regular Expression</span>
+                </label>
+            </div>
+
+            <div class="row" style="margin-left: 40px;" data-filter-type="Solution" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <input type="text" id="blacklist-solution-regex" name="blacklist-solution-regex" ux-group="SolutionBlacklistRegEx" disabled />
+                    <label for="blacklist-solution-regex">Regular expression matching solution name</label>
+                </div>
+            </div>
+
+            <div class="right">
+                <a class="btn-flat" href="#" title="Save" data-action="blacklist-save"><span class="iconify" data-icon="fa:save"></span>&nbsp;Add Blacklist Rule</a>
+                <a class="btn-flat" href="#" title="Cancel" data-action="blacklist-cancel"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a>
+            </div>
+        </div>
+        <div class="col s4">
+            <ul class="collection with-header">
+                <li class="collection-header"><h6>Blacklist</h6></li>
+                <li class="collection-item center">
+                    <div>
+                        There are no items in the blacklist
                     </div>
                 </li>
             </ul>
