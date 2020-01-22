@@ -58,36 +58,23 @@
             optionsets: viewModel.optionsets,
             solutions: viewModel.solutions,
             entityMap: _.map(viewModel.entities, i => { return { value: i.LogicalName, text: i.LogicalName } }),
-            entityMapWithId: _.map(viewModel.entities, i => { return { value: i.MetadataId, text: i.LogicalName } }),
             optionsetMap: _.map(viewModel.optionsets, i => { return { value: i.Name, text: i.Name } }),
             solutionMap: _.map(viewModel.solutions, i => { return { value: i.uniquename, text: i.uniquename } }),
             filterRules: [],
             namingRules: [],
-            codeGeneration: {}
+            codeGeneration: { namingRules: [] }
         }
 
         $("[data-source='Entities']").each(function (index, element) {
-            if (element.multiple) {
-                bindSelect($(element), window.dataCache.entityMap);
-            } else {
-                bindSelect($(element), window.dataCache.entityMapWithId, "- Select Entity -");
-            }
+            bindSelect($(element), window.dataCache.entityMap, !element.multiple ? "- Select Entity -" : undefined);
         });
 
         $("[data-source='OptionSets']").each(function (index, element) {
-            if (element.multiple) {
-                bindSelect($(element), window.dataCache.optionsetMap);
-            } else {
-                bindSelect($(element), window.dataCache.optionsetMap, "- Select Option Set -");
-            }
+            bindSelect($(element), window.dataCache.optionsetMap, !element.multiple ? "- Select Option Set -" : undefined);
         });
 
         $("[data-source='Solutions']").each(function (index, element) {
-            if (element.multiple) {
-                bindSelect($(element), window.dataCache.solutionMap);
-            } else {
-                bindSelect($(element), window.dataCache.solutionMap, "- Select Solution -");
-            }
+            bindSelect($(element), window.dataCache.solutionMap, !element.multiple ? "- Select Solution -" : undefined);
         });
 
         // hide initialize info box
@@ -101,9 +88,39 @@
         bindSelect($(targetElem), window.dataCache.attributesMap);
     }
 
-    const removeRule = window.removeRule = function(button) {
-        const $button = $(button);
-        $button.parent("td").parent("tr").remove();
+    const removeRule = window.removeRule = function(list, id) {
+        let template, items, container;
+
+        switch (list) {
+            case "filter":
+                _.remove(window.dataCache.filterRules, r => r.id === id);
+
+                template = $("#filter-rule-template").html();
+                container = id.split(".")[0];
+                items = window.dataCache.filterRules.filter(r => r.listType === id.split(".")[0]);
+
+                break;
+            case "naming":
+                _.remove(window.dataCache.namingRules, r => r.id === id);
+
+                template = $("#naming-rule-template").html();
+                container = list;
+                items = window.dataCache.namingRules;
+
+                break;
+            case "fileNaming":
+                _.remove(window.dataCache.codeGeneration.namingRules, r => r.id === id);
+
+                template = $("#code-generation-fileNaming-rule-template").html();
+                container = "code-generation-fileNaming";
+                items = window.dataCache.codeGeneration.namingRules;
+
+                break;
+        }
+
+        Mustache.parse(template);
+
+        renderTemplate(template, items, container);
     }
 
     function getForm(formSelector, filter) {
@@ -133,27 +150,30 @@
 
         if (form[`${listType}-${itemType}-addmode`] === itemType) {
             const options = itemType !== 'attribute' ? {} : { entity: form[`${listType}-${itemType}-allentities`] === 'true' ? '*' : form[`${listType}-${itemType}-entity`] };
+            const idPrefix = `${listType}.${itemType}.exact-match.${options.entity ? options.entity + "." : ''}`;
 
             if (form[`${listType}-${itemType}-selections`] instanceof Array) {
                 form[`${listType}-${itemType}-selections`].forEach((value, index) => {
-                    items.push({ listType, scope: itemType, value, ruleType: 'exact-match', options });
+                    items.push({ id: idPrefix + value, listType, scope: itemType, value, ruleType: 'exact-match', options });
                 });
             } else {
-                items.push({ listType, scope: itemType, value: form[`${listType}-${itemType}-selections`], ruleType: 'exact-match', options });
+                items.push({ id: idPrefix + form[`${listType}-${itemType}-selections`], listType, scope: itemType, value: form[`${listType}-${itemType}-selections`], ruleType: 'exact-match', options });
             }
         } else {
-            items.push({ listType, scope: itemType, value: form[`${listType}-${itemType}-regex`], ruleType: 'regex', options: { ignoreCase: form[`${listType}-${itemType}-regex-ignorecase`] === 'true' } });
+            items.push({ id: `${listType}.${itemType}.regex`, listType, scope: itemType, value: form[`${listType}-${itemType}-regex`], ruleType: 'regex', options: { ignoreCase: form[`${listType}-${itemType}-regex-ignorecase`] === 'true' } });
         }
 
-        items.forEach(i => window.dataCache.filterRules.push(i));
+        items.forEach(i => {
+            const index = window.dataCache.filterRules.findIndex(r => r.id === i.id);
 
-        if (items && items.length > 0) {
-            $(`#${listType}-rules > [ux-template='default']`).hide();
+            if (index === -1) {
+                window.dataCache.filterRules.push(i);
+            } else {
+                window.dataCache.filterRules[index] = i;
+            }
+        });
 
-            const rendered = Mustache.render(template, { items });
-
-            $(`#${listType}-rules`).append(rendered);
-        }
+        renderTemplate(template, window.dataCache.filterRules.filter(i => i.listType === listType), listType);
     }
 
     function addToNamingRules(form, listType, template) {
@@ -174,21 +194,58 @@
         }
 
         const items = [{ 
+            id: `${itemType}.${oldValue}`,
             ruleType: listType === "naming-mapping" ? "Mapping" : "Publisher",
             scope: itemType,
             oldValue,
             newValue
         }];
 
-        items.forEach(i => window.dataCache.namingRules.push(i));
+        items.forEach(i => {
+            const index = window.dataCache.namingRules.findIndex(r => r.id === i.id);
 
-        if (items && items.length > 0) {
-            $(`#naming-rules > [ux-template='default']`).hide();
+            if (index === -1) {
+                window.dataCache.namingRules.push(i);
+            } else {
+                window.dataCache.namingRules[index] = i;
+            }
+        }); 
 
-            const rendered = Mustache.render(template, { items });
+        renderTemplate(template, window.dataCache.namingRules, "naming");
+    }
 
-            $(`#naming-rules`).append(rendered);
+    function addToCodeGenFileNamingRules(form, listType, template) {
+        const items = [{ 
+            strategy: form[`${listType}-fileStrategy`],
+            fileType: form[`${listType}-fileType`],
+            format: form[`${listType}-filenameFormat`],
+            id: `${this.strategy}.${this.fileType}`
+        }];
+
+        items.forEach(i => {
+            const index = window.dataCache.codeGeneration.namingRules.findIndex(r => r.id === i.id);
+
+            if (index === -1) {
+                window.dataCache.codeGeneration.namingRules.push(i);
+            } else {
+                window.dataCache.codeGeneration.namingRules[index] = i;
+            }
+        });
+
+        renderTemplate(template, window.dataCache.codeGeneration.namingRules, listType);
+    }
+
+    function renderTemplate(template, items, container) {
+        const rendered = Mustache.render(template, { items });
+
+        if (items.length > 0) {
+            $(`#${container}-rules > [ux-template='default']`).hide();
+        } else {
+            $(`#${container}-rules > [ux-template='default']`).show();
         }
+
+        $(`#${container}-rules > li:gt(1)`).remove();
+        $(`#${container}-rules`).append(rendered);
     }
 
     // this part starts on document ready
@@ -198,27 +255,38 @@
         // cache html for mustache template
         const filterRuleTemplate = $("#filter-rule-template").html();
         const namingRuleTemplate = $("#naming-rule-template").html();
+        const codeGenerationNamingRuleTemplate = $("#code-generation-fileNaming-rule-template").html();
 
         // cache template in mustache
         Mustache.parse(filterRuleTemplate);
         Mustache.parse(namingRuleTemplate);
+        Mustache.parse(codeGenerationNamingRuleTemplate);
 
         $('[data-action=whitelist-add').click(function() {
+            $("#whitelist-nullpanel").hide();
             $("#whitelist-addpanel").show();
         });
 
         $('[data-action=blacklist-add').click(function() {
+            $("#blacklist-nullpanel").hide();
             $("#blacklist-addpanel").show();
         });
 
         $('[data-action=naming-add-mapping').click(function() {
+            $("#naming-nullpanel").hide();
             $("#naming-publisher-addpanel").hide();
             $("#naming-mapping-addpanel").show();
         });
 
         $('[data-action=naming-add-publisher').click(function() {
+            $("#naming-nullpanel").hide();
             $("#naming-mapping-addpanel").hide();
             $("#naming-publisher-addpanel").show();
+        });
+
+        $('[data-action=code-generation-fileNaming-add').click(function() {
+            $("#code-generation-fileNaming-nullpanel").hide();
+            $("#code-generation-fileNaming-addpanel").show();
         });
 
         // change visible fields based on filter type
@@ -282,10 +350,20 @@
             return addToFilterRules(form, 'whitelist', filterRuleTemplate);
         });
 
+        $("[data-action='whitelist-cancel']").click(function () {
+            $("#whitelist-addpanel").hide();
+            $("#whitelist-nullpanel").show();
+        });
+
         $("[data-action='blacklist-save']").click(function () {
             var form = getForm("FORM", i => i.name.startsWith("blacklist"));
             
             return addToFilterRules(form, 'blacklist', filterRuleTemplate);
+        });
+
+        $("[data-action='blacklist-cancel']").click(function () {
+            $("#blacklist-addpanel").hide();
+            $("#blacklist-nullpanel").show();
         });
 
         $("[data-action='naming-mapping-save']").click(function () {
@@ -294,10 +372,31 @@
             return addToNamingRules(form, 'naming-mapping', namingRuleTemplate);
         });
 
+        $("[data-action='naming-mapping-cancel']").click(function () {
+            $("#naming-mapping-addpanel").hide();
+            $("#naming-nullpanel").show();
+        });
+
         $("[data-action='naming-publisher-save']").click(function () {
             var form = getForm("FORM", i => i.name.startsWith("naming-"));
             
             return addToNamingRules(form, 'naming-publisher', namingRuleTemplate);
+        });
+
+        $("[data-action='naming-publisher-cancel']").click(function () {
+            $("#naming-publisher-addpanel").hide();
+            $("#naming-nullpanel").show();
+        });
+
+        $("[data-action='code-generation-fileNaming-save']").click(function () {
+            var form = getForm("FORM", i => i.name.startsWith("code-generation-fileNaming"));
+            
+            return addToCodeGenFileNamingRules(form, 'code-generation-fileNaming', codeGenerationNamingRuleTemplate);
+        });
+
+        $("[data-action='code-generation-fileNaming-cancel']").click(function () {
+            $("#code-generation-fileNaming-addpanel").hide();
+            $("#code-generation-fileNaming-nullpanel").show();
         });
 
         // wire up click handler for the submit button

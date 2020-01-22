@@ -44,6 +44,10 @@
         <div style="line-height: 50px; vertical-align: middle;">
             <a href="#" title="Add Items" class="btn-flat" data-action="whitelist-add"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add Items to Whitelist</a>
         </div>
+
+        <div id="whitelist-nullpanel" class="col s8">            
+        </div>
+
         <div id="whitelist-addpanel" class="col s8" hidden>
             <div class="col s12 input-field">
                 <select id="whitelist-filterType" name="whitelist-filterType">
@@ -228,6 +232,10 @@
         <div style="line-height: 50px; vertical-align: middle;">
             <a href="#" title="Add Items" class="btn-flat" data-action="blacklist-add"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add Items to Blacklist</a>
         </div>
+
+        <div id="blacklist-nullpanel" class="col s8">            
+        </div>
+
         <div id="blacklist-addpanel" class="col s8" hidden>
             <div class="col s12 input-field">
                 <select id="blacklist-filterType" name="blacklist-filterType">
@@ -413,6 +421,10 @@
             <a href="#" title="Add Mapping Rule" class="btn-flat" data-action="naming-add-mapping"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add Mapping Rule</a>
             <a href="#" title="Add Publisher Rule" class="btn-flat" data-action="naming-add-publisher"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add Publisher Rule</a>
         </div>
+
+        <div id="naming-nullpanel" class="col s8">            
+        </div>
+
         <div id="naming-mapping-addpanel" class="col s8" hidden>
             <div class="col s12 input-field">
                 <select id="naming-mapping-filterType" name="naming-mapping-filterType">
@@ -522,33 +534,58 @@
             </div>
         </div>
 
-        <div class="col s12">
+        <div id="code-generation-fileNaming" class="row">
             <h6>
-                File Splitting
+                File Naming
             </h6>
-            <div class="col s12 input-field">
-                <input type="text" id="code-generation-filenameFormat" name="code-generation-filenameFormat" placeholder="{0}.{1}.{2}.cs" />
-                <label for="code-generation-filenameFormat">File name format string</label>
-            </div>
 
-            <div class="col s12 input-field">
-                <select id="code-generation-fileType" name="code-generation-fileType">
-                    <option>Entities</option>
-                    <option>OptionSets</option>
-                    <option>Attributes</option>
-                    <option>Requests</option>
-                    <option>Responses</option>
-                </select>
-                <label for="code-generation-fileType">Which file type?</label>
+            <div style="line-height: 50px; vertical-align: middle;">
+                <a href="#" title="Add File Naming Rule" class="btn-flat" data-action="code-generation-fileNaming-add"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add File Naming Rule</a>
             </div>
+    
+            <div id="code-generation-fileNaming-nullpanel" class="col s8">            
+            </div>
+    
+            <div id="code-generation-fileNaming-addpanel" class="col s8" hidden>
+                <div class="col s12 input-field">
+                    <select id="code-generation-fileNaming-fileStrategy" name="code-generation-fileNaming-fileStrategy">
+                        <option>OneFilePerItem</option>
+                        <option>OneFilePerType</option>
+                        <option>SingleFile</option>
+                    </select>
+                    <label for="code-generation-fileNaming-fileStrategy">Which generation strategy?</label>
+                </div>
 
-            <div class="col s12 input-field">
-                <select id="code-generation-fileStrategy" name="code-generation-fileStrategy">
-                    <option>OneFilePerItem</option>
-                    <option>OneFilePerType</option>
-                    <option>SingleFile</option>
-                </select>
-                <label for="code-generation-fileStrategy">Which generation strategy?</label>
+                <div class="col s12 input-field">
+                    <select id="code-generation-fileNaming-fileType" name="code-generation-fileNaming-fileType">
+                        <option>Entities</option>
+                        <option>OptionSets</option>
+                        <option>Attributes</option>
+                        <option>Requests</option>
+                        <option>Responses</option>
+                    </select>
+                    <label for="code-generation-fileNaming-fileType">Which file type?</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <input type="text" id="code-generation-fileNaming-filenameFormat" name="code-generation-fileNaming-filenameFormat" placeholder="{0}.{1}.{2}.cs" />
+                    <label for="code-generation-fileNaming-filenameFormat">File name format string</label>
+                </div>
+
+                <div class="right">
+                    <a class="btn-flat" href="#" title="Save" data-action="code-generation-fileNaming-save"><span class="iconify" data-icon="fa:save"></span>&nbsp;Add File Naming Rule</a>
+                    <a class="btn-flat" href="#" title="Cancel" data-action="code-generation-fileNaming-cancel"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a>
+                </div>
+            </div>
+            <div class="col s4">
+                <ul class="collection with-header" id="code-generation-fileNaming-rules">
+                    <li class="collection-header"><h6>File Naming Rules</h6></li>
+                    <li class="collection-item center" ux-template="default">
+                        <div>
+                            There are no file naming rules configured
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -561,7 +598,7 @@
             {{scope}}
         </div>
         <div class="col s2 right">
-            <button class="button button--danger" onclick="removeRule(this)">
+            <button class="button button--danger" onclick="removeRule('filter', '{{id}}')">
                 <span class="iconify" data-icon="fa:trash"></span>
             </button>
         </div>
@@ -579,12 +616,30 @@
             {{scope}}
         </div>
         <div class="col s2 right">
-            <button class="button button--danger" onclick="removeRule(this)">
+            <button class="button button--danger" onclick="removeRule('naming', '{{id}}')">
                 <span class="iconify" data-icon="fa:trash"></span>
             </button>
         </div>
         <div class="col s12">
             {{oldValue}} =&gt; {{newValue}}
+        </div>
+    </li>
+    {{/items}}
+</script>
+
+<script id="code-generation-fileNaming-rule-template" type="x-tmpl-mustache">
+    {{#items}}
+    <li class="collection-item row">
+        <div class="col s10 left">
+            {{strategy}}
+        </div>
+        <div class="col s2 right">
+            <button class="button button--danger" onclick="removeRule('fileNaming', '{{id}}')">
+                <span class="iconify" data-icon="fa:trash"></span>
+            </button>
+        </div>
+        <div class="col s12">
+            {{fileType}} format: {{format}}
         </div>
     </li>
     {{/items}}
