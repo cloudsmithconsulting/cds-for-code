@@ -103,9 +103,48 @@
         $button.parent("td").parent("tr").remove();
     }
 
+    function addToList(form, listType, template) {
+        let items = [];
+        const itemType = form[`${listType}-filterType`] === 'OptionSet' ? 'optionSet' : form[`${listType}-filterType`].toLowerCase();
+
+        if (form[`${listType}-${itemType}-addmode`] === itemType) {
+            if (form[`${listType}-${itemType}-selections`] instanceof Array) {
+                form[`${listType}-${itemType}-selections`].forEach((value, index) => {
+                    if (itemType !== 'attribute') {
+                        items.push({ listType, scope: itemType, value, ruleType: 'exact-match'});
+                    } else {
+                        items.push({ listType, scope: itemType, value, ruleType: 'exact-match', options: { entity: form[`${listType}-${itemType}-allentities`] === 'true' ? '*' : form[`${listType}-${itemType}-entity`] } });
+                    }
+                });
+            } else {
+                if (itemType !== 'attribute') {
+                    items.push({ listType, scope: itemType, value: form[`${listType}-${itemType}-selections`], ruleType: 'exact-match'});
+                } else {
+                    items.push({ listType, scope: itemType, value: form[`${listType}-${itemType}-selections`], ruleType: 'exact-match', options: { entity: form[`${listType}-${itemType}-allentities`] === 'true' ? '*' : form[`${listType}-${itemType}-entity`] } });
+                }
+            }
+        } else {
+            items.push({ listType, scope: itemType, value: form[`${listType}-${itemType}-regex`], ruleType: 'regex', options: { ignoreCase: form[`${listType}-${itemType}-regex-ignorecase`] === 'true' } });
+        }
+
+        if (items && items.length > 0) {
+            $(`#${listType}-rules > [ux-template='default']`).hide();
+
+            const rendered = Mustache.render(template, { items });
+
+            $(`#${listType}-rules`).append(rendered);
+        }
+    }
+
     // this part starts on document ready
     $(function () {
         M.AutoInit();
+
+        // cache html for mustache template
+        const listRowTemplate = $("#listRowTemplate").html();
+
+        // cache template in mustache
+        Mustache.parse(listRowTemplate);
 
         $('[data-action=whitelist-add').click(function() {
             $("#whitelist-addpanel").show();
@@ -151,24 +190,26 @@
                 targetElem: "[data-source='Attributes']"
             });
         });
-    
-        // cache html for mustache template
-        const listRowTemplate = $("#listRowTemplate").html();
-        // cache template in mustache
-        Mustache.parse(listRowTemplate);
 
         $("[data-action='whitelist-save']").click(function () {
             let form = {};
             $("FORM")
                 .serializeArray()
                 .filter(m => m.name.startsWith("whitelist"))
-                .forEach(i => form[i.name] = i.value);
+                .forEach(i => {
+                    if (form.hasOwnProperty(i.name)) {
+                        if (!(form[i.name] instanceof Array)) {
+                            const currentItem = form[i.name];
+                            form[i.name] = [ currentItem, i.value ];
+                        } else {
+                            form[i.name].push(i.value);
+                        }
+                    } else {
+                        form[i.name] = i.value;
+                    }
+                });
 
-            const rendered = Mustache.render(listRowTemplate, form);
-
-            $(`#${listType} Table>tbody`).append(rendered);
-
-            event.preventDefault();
+            return addToList(form, 'whitelist', listRowTemplate);
         });
 
         // wire up click handler for the submit button

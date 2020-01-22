@@ -81,6 +81,13 @@
                     <input type="text" id="whitelist-entity-regex" name="whitelist-entity-regex" ux-group="EntityWhitelistRegEx" disabled />
                     <label for="whitelist-entity-regex">Regular expression matching entity name</label>
                 </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="whitelist-entity-regex-ignorecase" ux-group="EntityWhitelistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
             </div>
 
             <div class="col s12 input-field" data-filter-type="Attribute" hidden>
@@ -121,6 +128,13 @@
                     <input type="text" id="whitelist-attribute-regex" name="whitelist-attribute-regex" ux-group="AttributeWhitelistRegEx" disabled />
                     <label for="whitelist-attribute-regex">Regular expression matching attribute name</label>
                 </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="whitelist-attribute-regex-ignorecase" ux-group="AttributeWhitelistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
             </div>
 
             <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
@@ -148,6 +162,13 @@
                 <div style="margin-top: 40px;" class="col s12 input-field">
                     <input type="text" id="whitelist-optionSet-regex" name="whitelist-optionSet-regex" ux-group="OptionSetWhitelistRegEx" disabled />
                     <label for="whitelist-optionSet-regex">Regular expression matching option set name</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="whitelist-optionSet-regex-ignorecase" ux-group="OptionSetWhitelistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
                 </div>
             </div>
 
@@ -177,6 +198,13 @@
                     <input type="text" id="whitelist-solution-regex" name="whitelist-solution-regex" ux-group="SolutionWhitelistRegEx" disabled />
                     <label for="whitelist-solution-regex">Regular expression matching solution name</label>
                 </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="whitelist-solution-regex-ignorecase" ux-group="SolutionWhitelistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
             </div>
 
             <div class="right">
@@ -185,9 +213,9 @@
             </div>
         </div>
         <div class="col s4">
-            <ul class="collection with-header">
+            <ul class="collection with-header" id="whitelist-rules">
                 <li class="collection-header"><h6>Whitelist</h6></li>
-                <li class="collection-item center">
+                <li class="collection-item center" ux-template="default">
                     <div>
                         There are no items in the whitelist
                     </div>
@@ -237,6 +265,13 @@
                     <input type="text" id="blacklist-entity-regex" name="blacklist-entity-regex" ux-group="EntityBlacklistRegEx" disabled />
                     <label for="blacklist-entity-regex">Regular expression matching entity name</label>
                 </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="blacklist-entity-regex-ignorecase" ux-group="EntityBlacklistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
             </div>
 
             <div class="col s12 input-field" data-filter-type="Attribute" hidden>
@@ -277,6 +312,13 @@
                     <input type="text" id="blacklist-attribute-regex" name="blacklist-attribute-regex" ux-group="AttributeBlacklistRegEx" disabled />
                     <label for="blacklist-attribute-regex">Regular expression matching attribute name</label>
                 </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="blacklist-attribute-regex-ignorecase" ux-group="AttributeBlacklistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
             </div>
 
             <div class="col s12 input-field" data-filter-type="OptionSet" hidden>
@@ -304,6 +346,13 @@
                 <div style="margin-top: 40px;" class="col s12 input-field">
                     <input type="text" id="blacklist-optionSet-regex" name="blacklist-optionSet-regex" ux-group="OptionSetBlacklistRegEx" disabled />
                     <label for="blacklist-optionSet-regex">Regular expression matching option set name</label>
+                </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="blacklist-optionSet-regex-ignorecase" ux-group="OptionSetBlacklistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
                 </div>
             </div>
 
@@ -333,6 +382,13 @@
                     <input type="text" id="blacklist-solution-regex" name="blacklist-solution-regex" ux-group="SolutionBlacklistRegEx" disabled />
                     <label for="blacklist-solution-regex">Regular expression matching solution name</label>
                 </div>
+
+                <div class="col s12 input-field">
+                    <label class="active">
+                        <input type="checkbox" name="blacklist-solution-regex-ignorecase" ux-group="SolutionBlacklistRegEx" value="true" class="filled-in" disabled />
+                        <span>Ignore Case</span>
+                    </label>
+                </div>
             </div>
 
             <div class="right">
@@ -341,9 +397,9 @@
             </div>
         </div>
         <div class="col s4">
-            <ul class="collection with-header">
+            <ul class="collection with-header" id="blacklist-rules">
                 <li class="collection-header"><h6>Blacklist</h6></li>
-                <li class="collection-item center">
+                <li class="collection-item center" ux-template="default">
                     <div>
                         There are no items in the blacklist
                     </div>
@@ -506,16 +562,19 @@
 </form>
 
 <script id="listRowTemplate" type="x-tmpl-mustache">
-    {{#rulesToAdd}}
-    <tr class="crmsvcutil-row">
-        <td>
+    {{#items}}
+    <li class="collection-item row">
+        <div class="col s10 left">
+            {{scope}}
+        </div>
+        <div class="col s2 right">
             <button class="button button--danger" onclick="removeRule(this)">
                 <span class="iconify" data-icon="fa:trash"></span>
             </button>
-        </td>
-        <td>{{objectType}}</td>
-        <td>{{ruleTypeDisplay}}</td>
-        <td>{{appliesToDisplay}}</td>
-    </tr>
-    {{/rulesToAdd}}
+        </div>
+        <div class="col s12">
+            {{ruleType}}: {{value}}
+        </div>
+    </li>
+    {{/items}}
 </script>
