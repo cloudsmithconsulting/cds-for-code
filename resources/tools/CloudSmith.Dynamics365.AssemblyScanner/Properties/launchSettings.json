@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AssemblyScanner": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Dev\\Trash\\SamplePlugin\\bin\\Debug\\net452\\SamplePlugin.dll\""
+    }
+  }
+}

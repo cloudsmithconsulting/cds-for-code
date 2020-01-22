@@ -3,3 +3,9 @@ node_modules
 .vscode-test/
 *.vsix
 dist/**
+**/*.dll
+**/*.obj
+**/bin/**
+**/obj/**
+**/*.csproj.user
+**/*.vbproj.user

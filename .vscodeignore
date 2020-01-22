@@ -7,7 +7,9 @@ gruntfile.js
 dist/**
 out/test/**
 resources/framework/**
+resources/powershell/**
 resources/templates/**
+resources/tools/**
 src/**
 **/tsconfig*.json
 **/tslint.json

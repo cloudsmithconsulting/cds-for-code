@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6907A8B4-6F8A-424A-9572-7CA0D5F35CDD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CloudSmith.Dynamics365.CrmSvcUtil</RootNamespace>
+    <AssemblyName>CloudSmith.Dynamics365.CrmSvcUtil</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CrmSvcUtil, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\coretools\CrmSvcUtil.exe</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.18\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.19.8.16603, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.Platform, Version=3.19.8.16603, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Rest.ClientRuntime, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.1.0.13\lib\net462\Microsoft.Rest.ClientRuntime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.18\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk.Deployment, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.Deployment.9.0.2.9\lib\net462\Microsoft.Xrm.Sdk.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.Workflow.9.0.2.9\lib\net462\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Tooling.Connector, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CrmSdk.XrmTooling.CoreAssembly.9.1.0.13\lib\net462\Microsoft.Xrm.Tooling.Connector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Services" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Workflow.Activities" />
+    <Reference Include="System.Workflow.ComponentModel" />
+    <Reference Include="System.Workflow.Runtime" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cache\RelationshipCacheItem.cs" />
+    <Compile Include="Cache\AttributeCacheItem.cs" />
+    <Compile Include="Cache\DynamicsIndividualCache.cs" />
+    <Compile Include="Cache\DynamicsMetadataCache.cs" />
+    <Compile Include="Cache\EntityCacheItem.cs" />
+    <Compile Include="Cache\IHaveCacheKey.cs" />
+    <Compile Include="Cache\IParseCacheKey.cs" />
+    <Compile Include="Cache\IParseMetadata.cs" />
+    <Compile Include="Cache\OptionCacheItem.cs" />
+    <Compile Include="Cache\SdkMessagePairCacheItem.cs" />
+    <Compile Include="Cache\TypedMemoryCache.cs" />
+    <Compile Include="Cache\MemoryCacheSettings.cs" />
+    <Compile Include="Cache\ObjectCacheExtensions.cs" />
+    <Compile Include="Cache\OptionSetCacheItem.cs" />
+    <Compile Include="Cache\SdkMessageCacheItem.cs" />
+    <Compile Include="CompositeCustomizationService.cs" />
+    <Compile Include="Configuration\Generation\CodeGenerationConfigurationExtensions.cs" />
+    <Compile Include="Configuration\Generation\CodeGenerationBehaviorElement.cs" />
+    <Compile Include="Configuration\Generation\CodeGenerationFileStrategy.cs" />
+    <Compile Include="Configuration\Generation\CodeGenerationFileType.cs" />
+    <Compile Include="Configuration\Generation\CodeGenerationLanguage.cs" />
+    <Compile Include="Generation\BaseCustomizationService.cs" />
+    <Compile Include="Configuration\CaseInsensitiveEnumConfigConverter.cs" />
+    <Compile Include="Configuration\Filter\FilterMember.cs" />
+    <Compile Include="Configuration\Filter\RegExFilterElement.cs" />
+    <Compile Include="Configuration\Filter\RequiresEntityRegExFilterElement.cs" />
+    <Compile Include="Configuration\MultipleConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\MapConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\Filter\OptionSetListElement.cs" />
+    <Compile Include="Configuration\Filter\CustomizationFilterElement.cs" />
+    <Compile Include="Configuration\Filter\AttributeListElement.cs" />
+    <Compile Include="Configuration\Filter\EntityListElement.cs" />
+    <Compile Include="Configuration\Filter\FilterListElement.cs" />
+    <Compile Include="Configuration\Filter\SolutionFilterElement.cs" />
+    <Compile Include="Configuration\Filter\FilterListElementCollection.cs" />
+    <Compile Include="Configuration\Filter\FilterContainerElement.cs" />
+    <Compile Include="Configuration\Filter\IFilter.cs" />
+    <Compile Include="Configuration\Generation\CodeGenerationFileOptionsElement.cs" />
+    <Compile Include="Configuration\Generation\CodeGenerationElement.cs" />
+    <Compile Include="Configuration\Generation\CodeGenerationElementCollection.cs" />
+    <Compile Include="Configuration\Naming\Map.cs" />
+    <Compile Include="Configuration\Naming\MappingCollection.cs" />
+    <Compile Include="Configuration\Naming\MapType.cs" />
+    <Compile Include="Configuration\Naming\NamingElement.cs" />
+    <Compile Include="Configuration\Naming\PublisherElement.cs" />
+    <Compile Include="Configuration\Naming\PublisherElementCollection.cs" />
+    <Compile Include="Configuration\ServiceExtensionsConfigurationSection.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="CompositeNamingService.cs" />
+    <Compile Include="CompositeFilterService.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Configuration\Filter\FilterListStrategy.cs" />
+    <Compile Include="Filter\BaseFilterService.cs" />
+    <Compile Include="Filter\ExactMatchFilterService.cs" />
+    <Compile Include="Filter\FilterListFilterService.cs" />
+    <Compile Include="Filter\RegExFilterService.cs" />
+    <Compile Include="Generation\BaseGenerationService.cs" />
+    <Compile Include="Generation\CodeGenerationExtensions.cs" />
+    <Compile Include="Generation\CodeGenerationFile.cs" />
+    <Compile Include="Generation\CodeVisitor.cs" />
+    <Compile Include="Generation\MultipleFileGenerator.cs" />
+    <Compile Include="Generation\MultipleFileGeneratorOptions.cs" />
+    <Compile Include="Generation\AttributeConstantsCustomizationService.cs" />
+    <Compile Include="Generation\ImportResolverCustomizationService.cs" />
+    <Compile Include="Generation\OptionSetEnumCustomizationService.cs" />
+    <Compile Include="Generation\FileSplitCustomizationService.cs" />
+    <Compile Include="Naming\BaseNamingService.cs" />
+    <Compile Include="Naming\Mapping\ConfigurationMapper.cs" />
+    <Compile Include="Naming\Mapping\IMapper.cs" />
+    <Compile Include="Naming\MapNameService.cs" />
+    <Compile Include="Naming\PublisherNameService.cs" />
+    <Compile Include="OrganizationServiceFactory.cs" />
+    <Compile Include="Arguments.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Filter\SolutionFilterService.cs" />
+    <Compile Include="Filter\CustomEntitiesFilterService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="bin\coretools\CrmSvcUtil.exe.config" />
+    <None Include="bin\coretools\LicenseTerms.docx" />
+    <None Include="bin\coretools\SolutionPackager.exe.config" />
+    <Content Include="CrmSvcUtil.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="packages.config" />
+    <None Include="ReadMe.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\coretools\CrmSvcUtil.exe" />
+    <Content Include="bin\coretools\CrmSvcUtil.xml" />
+    <Content Include="bin\coretools\Microsoft.Crm.Sdk.Proxy.dll" />
+    <Content Include="bin\coretools\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" />
+    <Content Include="bin\coretools\Microsoft.Rest.ClientRuntime.dll" />
+    <Content Include="bin\coretools\Microsoft.Xrm.Sdk.Deployment.dll" />
+    <Content Include="bin\coretools\Microsoft.Xrm.Sdk.dll" />
+    <Content Include="bin\coretools\Microsoft.Xrm.Tooling.Connector.dll" />
+    <Content Include="bin\coretools\Microsoft.Xrm.Tooling.CrmConnectControl.dll" />
+    <Content Include="bin\coretools\Microsoft.Xrm.Tooling.Ui.Styles.dll" />
+    <Content Include="bin\coretools\Newtonsoft.Json.dll" />
+    <Content Include="bin\coretools\Other Redistributable.txt" />
+    <Content Include="bin\coretools\SolutionPackager.exe" />
+    <Content Include="bin\coretools\SolutionPackagerLib.dll" />
+    <Content Include="bin\coretools\System.ValueTuple.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
