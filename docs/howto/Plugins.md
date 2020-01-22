@@ -2,11 +2,27 @@
 
 ## Table of Contents
 
-- [Prerequisites](#Prerequisites)
-- [Developing Plugins](#Developing-plugins)
-- [Registering Plugins](#Registering-plugins)
-- [Managing Plugin Steps](#Managing-plugin-steps)
-- [Plugin Step Images](#Plugin-step-images)
+- [How to: Develop plugins with CDS for Code](#how-to-develop-plugins-with-cds-for-code)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Developing plugins](#developing-plugins)
+    - [Create a new plugin from scratch using Visual Studio](#create-a-new-plugin-from-scratch-using-visual-studio)
+    - [Create a new plugin from .NET Core CLI](#create-a-new-plugin-from-net-core-cli)
+    - [Create a new plugin from a template](#create-a-new-plugin-from-a-template)
+      - [Within VSCode File Explorer](#within-vscode-file-explorer)
+      - [Within CDS for Code Template Explorer](#within-cds-for-code-template-explorer)
+    - [Use an existing plugin project from Visual Studio](#use-an-existing-plugin-project-from-visual-studio)
+  - [Registering plugins](#registering-plugins)
+    - [Deploy from File Explorer](#deploy-from-file-explorer)
+    - [Update/deploy from CDS Explorer](#updatedeploy-from-cds-explorer)
+  - [Managing plugin steps](#managing-plugin-steps)
+    - [Create plugin steps from CDS Explorer](#create-plugin-steps-from-cds-explorer)
+    - [Plugin step UI](#plugin-step-ui)
+    - [Modify or remove plugin steps](#modify-or-remove-plugin-steps)
+  - [Plugin step images](#plugin-step-images)
+    - [Create plugin step images from CDS Explorer](#create-plugin-step-images-from-cds-explorer)
+    - [Modify or remove plugin step images](#modify-or-remove-plugin-step-images)
+  - [What's not included](#whats-not-included)
 
 ## Prerequisites
 
@@ -18,11 +34,71 @@
 
 ### Create a new plugin from scratch using Visual Studio
 
-There is documentation [here about creating and registering plugins in Visual Studio](https://docs.microsoft.com/en-us/powerapps/developer/common-data-service/tutorial-write-plug-in) for use in CDS.
+There is documentation [here about creating and registering plugins in Visual Studio](https://docs.microsoft.com/en-us/powerapps/developer/common-data-service/write-plug-in) for use in CDS.
 
-Coming soon: instructions using the .NET Core CLI
+### Create a new plugin from .NET Core CLI
+
+In a new PowerShell or CMD window:
+
+``` PowerShell
+# Create the new project
+dotnet new classlib -n MyPluginSample [Enter]
+# Enter project directory
+cd MyPluginSample [Enter]
+# Create a new solution file
+dotnet new sln [Enter]
+# Add the project to the solution
+dotnet sln add MyPluginSample.csproj [Enter]
+```
+
+We now have to sign the assembly. This can be done using the [Sn.exe Strong Name Tool](https://docs.microsoft.com/en-us/dotnet/framework/tools/sn-exe-strong-name-tool).
+
+In the Visual Studio Developer command prompt:
+
+``` PowerShell
+sn -k MyPluginSample.snk
+```
+
+Next locate the MyPluginSample.csproj file and replace it's contents with the following XML
+
+``` XML
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net452</TargetFramework>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="8.2.0.2"/>
+  </ItemGroup>
+</Project>
+```
+
+Next locate the Class1.cs and rename it to FollowupPlugin.cs.
+Then replace it's file contents with the following code:
+
+``` CSharp
+using System;
+using Microsoft.Xrm.Sdk;
+
+namespace MyPluginSample
+{
+    public class FollowupPlugin : IPlugin
+    {
+        public void Execute(IServiceProvider serviceProvider)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
+```
+
+Now your project is created and assembly is signed. To see the rest of the code you can finish the rest of [the tutorial found here](https://docs.microsoft.com/en-us/powerapps/developer/common-data-service/tutorial-write-plug-in).
 
 ### Create a new plugin from a template
+
+> Note: A major advantage to building plugins using templates is that the CloudSmith Plugin Template comes with built in helpers that can make developeing plugins faster with less code.
 
 #### Within VSCode File Explorer
 
