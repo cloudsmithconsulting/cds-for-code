@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/sendRequest"](_api_cds_webapi_odata_sendrequest_.md)
+---
+id: "_api_cds_webapi_odata_sendrequest_"
+title: "api/cds-webapi/odata/sendRequest"
+sidebar_label: "api/cds-webapi/odata/sendRequest"
+---
 
-# External module: "api/cds-webapi/odata/sendRequest"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/sendRequest"](_api_cds_webapi_odata_sendrequest_.md)
 
 ## Index
 

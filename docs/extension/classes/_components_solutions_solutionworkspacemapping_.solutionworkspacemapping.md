@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Solutions/SolutionWorkspaceMapping"](../modules/_components_solutions_solutionworkspacemapping_.md) › [SolutionWorkspaceMapping](_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md)
+---
+id: "_components_solutions_solutionworkspacemapping_.solutionworkspacemapping"
+title: "SolutionWorkspaceMapping"
+sidebar_label: "SolutionWorkspaceMapping"
+---
 
-# Class: SolutionWorkspaceMapping
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Solutions/SolutionWorkspaceMapping"](../modules/_components_solutions_solutionworkspacemapping_.md) › [SolutionWorkspaceMapping](_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md)
 
 ## Hierarchy
 

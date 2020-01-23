@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.templates.importTemplate"](_commands_cs_cds_templates_importtemplate_.md)
+---
+id: "_commands_cs_cds_templates_importtemplate_"
+title: "commands/cs.cds.templates.importTemplate"
+sidebar_label: "commands/cs.cds.templates.importTemplate"
+---
 
-# External module: "commands/cs.cds.templates.importTemplate"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.templates.importTemplate"](_commands_cs_cds_templates_importtemplate_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/WebDownloaders/Types"](../modules/_components_webdownloaders_types_.md) › [IconifyIcon](_components_webdownloaders_types_.iconifyicon.md)
+---
+id: "_components_webdownloaders_types_.iconifyicon"
+title: "IconifyIcon"
+sidebar_label: "IconifyIcon"
+---
 
-# Class: IconifyIcon
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/WebDownloaders/Types"](../modules/_components_webdownloaders_types_.md) › [IconifyIcon](_components_webdownloaders_types_.iconifyicon.md)
 
 ## Hierarchy
 

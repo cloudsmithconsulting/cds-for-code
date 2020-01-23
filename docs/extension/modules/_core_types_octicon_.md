@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/types/Octicon"](_core_types_octicon_.md)
+---
+id: "_core_types_octicon_"
+title: "core/types/Octicon"
+sidebar_label: "core/types/Octicon"
+---
 
-# External module: "core/types/Octicon"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/types/Octicon"](_core_types_octicon_.md)
 
 ## Index
 

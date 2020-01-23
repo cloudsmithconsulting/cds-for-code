@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.views.connectionEditor"](_views_cs_cds_views_connectioneditor_.md)
+---
+id: "_views_cs_cds_views_connectioneditor_"
+title: "views/cs.cds.views.connectionEditor"
+sidebar_label: "views/cs.cds.views.connectionEditor"
+---
 
-# External module: "views/cs.cds.views.connectionEditor"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.views.connectionEditor"](_views_cs_cds_views_connectioneditor_.md)
 
 ## Index
 

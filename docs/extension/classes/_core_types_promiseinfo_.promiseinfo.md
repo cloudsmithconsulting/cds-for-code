@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/types/PromiseInfo"](../modules/_core_types_promiseinfo_.md) › [PromiseInfo](_core_types_promiseinfo_.promiseinfo.md)
+---
+id: "_core_types_promiseinfo_.promiseinfo"
+title: "PromiseInfo"
+sidebar_label: "PromiseInfo"
+---
 
-# Class: PromiseInfo <**T**>
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/types/PromiseInfo"](../modules/_core_types_promiseinfo_.md) › [PromiseInfo](_core_types_promiseinfo_.promiseinfo.md)
 
 ## Type parameters
 

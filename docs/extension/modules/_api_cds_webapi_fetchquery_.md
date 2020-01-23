@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/FetchQuery"](_api_cds_webapi_fetchquery_.md)
+---
+id: "_api_cds_webapi_fetchquery_"
+title: "api/cds-webapi/FetchQuery"
+sidebar_label: "api/cds-webapi/FetchQuery"
+---
 
-# External module: "api/cds-webapi/FetchQuery"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/FetchQuery"](_api_cds_webapi_fetchquery_.md)
 
 ## Index
 

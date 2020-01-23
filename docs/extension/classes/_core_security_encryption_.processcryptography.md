@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Encryption"](../modules/_core_security_encryption_.md) › [ProcessCryptography](_core_security_encryption_.processcryptography.md)
+---
+id: "_core_security_encryption_.processcryptography"
+title: "ProcessCryptography"
+sidebar_label: "ProcessCryptography"
+---
 
-# Class: ProcessCryptography
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Encryption"](../modules/_core_security_encryption_.md) › [ProcessCryptography](_core_security_encryption_.processcryptography.md)
 
 Represents a cryptography API that can secure items inside a given process.  The
 encrypted values cannot be decrypted outside the current application/process.

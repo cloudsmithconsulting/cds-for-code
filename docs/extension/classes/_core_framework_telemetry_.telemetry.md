@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/framework/Telemetry"](../modules/_core_framework_telemetry_.md) › [Telemetry](_core_framework_telemetry_.telemetry.md)
+---
+id: "_core_framework_telemetry_.telemetry"
+title: "Telemetry"
+sidebar_label: "Telemetry"
+---
 
-# Class: Telemetry
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/framework/Telemetry"](../modules/_core_framework_telemetry_.md) › [Telemetry](_core_framework_telemetry_.telemetry.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Terminal/SecureTerminal"](../modules/_components_terminal_secureterminal_.md) › [TerminalManager](_components_terminal_secureterminal_.terminalmanager.md)
+---
+id: "_components_terminal_secureterminal_.terminalmanager"
+title: "TerminalManager"
+sidebar_label: "TerminalManager"
+---
 
-# Class: TerminalManager
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Terminal/SecureTerminal"](../modules/_components_terminal_secureterminal_.md) › [TerminalManager](_components_terminal_secureterminal_.terminalmanager.md)
 
 ## Hierarchy
 

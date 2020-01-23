@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Templates/TemplateCatalog"](_components_templates_templatecatalog_.md)
+---
+id: "_components_templates_templatecatalog_"
+title: "components/Templates/TemplateCatalog"
+sidebar_label: "components/Templates/TemplateCatalog"
+---
 
-# External module: "components/Templates/TemplateCatalog"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Templates/TemplateCatalog"](_components_templates_templatecatalog_.md)
 
 ## Index
 

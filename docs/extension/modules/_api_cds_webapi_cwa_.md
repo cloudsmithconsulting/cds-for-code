@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/CWA"](_api_cds_webapi_cwa_.md)
+---
+id: "_api_cds_webapi_cwa_"
+title: "api/cds-webapi/CWA"
+sidebar_label: "api/cds-webapi/CWA"
+---
 
-# External module: "api/cds-webapi/CWA"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/CWA"](_api_cds_webapi_cwa_.md)
 
 ## Index
 

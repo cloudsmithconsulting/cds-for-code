@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/types/Dictionary"](_core_types_dictionary_.md)
+---
+id: "_core_types_dictionary_"
+title: "core/types/Dictionary"
+sidebar_label: "core/types/Dictionary"
+---
 
-# External module: "core/types/Dictionary"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/types/Dictionary"](_core_types_dictionary_.md)
 
 ## Index
 

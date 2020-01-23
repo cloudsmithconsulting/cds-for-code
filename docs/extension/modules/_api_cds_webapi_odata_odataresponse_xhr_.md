@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/odataResponse.xhr"](_api_cds_webapi_odata_odataresponse_xhr_.md)
+---
+id: "_api_cds_webapi_odata_odataresponse_xhr_"
+title: "api/cds-webapi/odata/odataResponse.xhr"
+sidebar_label: "api/cds-webapi/odata/odataResponse.xhr"
+---
 
-# External module: "api/cds-webapi/odata/odataResponse.xhr"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/odataResponse.xhr"](_api_cds_webapi_odata_odataresponse_xhr_.md)
 
 ## Index
 

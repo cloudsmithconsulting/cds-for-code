@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.views.connectionEditor"](../modules/_views_cs_cds_views_connectioneditor_.md) › [CdsConnectionEditor](_views_cs_cds_views_connectioneditor_.cdsconnectioneditor.md)
+---
+id: "_views_cs_cds_views_connectioneditor_.cdsconnectioneditor"
+title: "CdsConnectionEditor"
+sidebar_label: "CdsConnectionEditor"
+---
 
-# Class: CdsConnectionEditor
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.views.connectionEditor"](../modules/_views_cs_cds_views_connectioneditor_.md) › [CdsConnectionEditor](_views_cs_cds_views_connectioneditor_.cdsconnectioneditor.md)
 
 ## Hierarchy
 

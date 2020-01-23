@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["test/TestRunner"](_test_testrunner_.md)
+---
+id: "_test_testrunner_"
+title: "test/TestRunner"
+sidebar_label: "test/TestRunner"
+---
 
-# External module: "test/TestRunner"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["test/TestRunner"](_test_testrunner_.md)
 
 ## Index
 

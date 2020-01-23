@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/DotNetCore/DotNetProjectManager"](../modules/_components_dotnetcore_dotnetprojectmanager_.md) › [VisualStudioProjectCommands](_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md)
+---
+id: "_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands"
+title: "VisualStudioProjectCommands"
+sidebar_label: "VisualStudioProjectCommands"
+---
 
-# Class: VisualStudioProjectCommands
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/DotNetCore/DotNetProjectManager"](../modules/_components_dotnetcore_dotnetprojectmanager_.md) › [VisualStudioProjectCommands](_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md)
 
 ## Hierarchy
 

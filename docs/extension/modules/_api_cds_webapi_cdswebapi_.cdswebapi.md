@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](_api_cds_webapi_cdswebapi_.cdswebapi.md)
+---
+id: "_api_cds_webapi_cdswebapi_.cdswebapi"
+title: "CdsWebApi"
+sidebar_label: "CdsWebApi"
+---
 
-# Module: CdsWebApi
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](_api_cds_webapi_cdswebapi_.cdswebapi.md)
 
 ## Index
 

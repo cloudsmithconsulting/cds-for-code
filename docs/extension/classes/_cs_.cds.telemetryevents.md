@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [telemetryEvents](_cs_.cds.telemetryevents.md)
+---
+id: "_cs_.cds.telemetryevents"
+title: "telemetryEvents"
+sidebar_label: "telemetryEvents"
+---
 
-# Class: telemetryEvents
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [telemetryEvents](_cs_.cds.telemetryevents.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.updateSolutionMapping"](_commands_cs_cds_deployment_updatesolutionmapping_.md)
+---
+id: "_commands_cs_cds_deployment_updatesolutionmapping_"
+title: "commands/cs.cds.deployment.updateSolutionMapping"
+sidebar_label: "commands/cs.cds.deployment.updateSolutionMapping"
+---
 
-# External module: "commands/cs.cds.deployment.updateSolutionMapping"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.updateSolutionMapping"](_commands_cs_cds_deployment_updatesolutionmapping_.md)
 
 ## Index
 

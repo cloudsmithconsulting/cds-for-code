@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Quickly"](../modules/_core_quickly_.md) › [QuickPickOption](_core_quickly_.quickpickoption.md)
+---
+id: "_core_quickly_.quickpickoption"
+title: "QuickPickOption"
+sidebar_label: "QuickPickOption"
+---
 
-# Class: QuickPickOption
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Quickly"](../modules/_core_quickly_.md) › [QuickPickOption](_core_quickly_.quickpickoption.md)
 
 ## Hierarchy
 

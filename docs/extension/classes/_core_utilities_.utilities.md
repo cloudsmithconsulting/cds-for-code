@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Utilities"](../modules/_core_utilities_.md) › [Utilities](_core_utilities_.utilities.md)
+---
+id: "_core_utilities_.utilities"
+title: "Utilities"
+sidebar_label: "Utilities"
+---
 
-# Class: Utilities
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Utilities"](../modules/_core_utilities_.md) › [Utilities](_core_utilities_.utilities.md)
 
 ## Hierarchy
 

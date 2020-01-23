@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/framework/EnvironmentVariables"](_core_framework_environmentvariables_.md)
+---
+id: "_core_framework_environmentvariables_"
+title: "core/framework/EnvironmentVariables"
+sidebar_label: "core/framework/EnvironmentVariables"
+---
 
-# External module: "core/framework/EnvironmentVariables"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/framework/EnvironmentVariables"](_core_framework_environmentvariables_.md)
 
 ## Index
 

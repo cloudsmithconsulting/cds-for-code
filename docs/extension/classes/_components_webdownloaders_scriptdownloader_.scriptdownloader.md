@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/WebDownloaders/ScriptDownloader"](../modules/_components_webdownloaders_scriptdownloader_.md) › [ScriptDownloader](_components_webdownloaders_scriptdownloader_.scriptdownloader.md)
+---
+id: "_components_webdownloaders_scriptdownloader_.scriptdownloader"
+title: "ScriptDownloader"
+sidebar_label: "ScriptDownloader"
+---
 
-# Class: ScriptDownloader
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/WebDownloaders/ScriptDownloader"](../modules/_components_webdownloaders_scriptdownloader_.md) › [ScriptDownloader](_components_webdownloaders_scriptdownloader_.scriptdownloader.md)
 
 ## Hierarchy
 

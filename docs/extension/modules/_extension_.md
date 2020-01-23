@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["extension"](_extension_.md)
+---
+id: "_extension_"
+title: "extension"
+sidebar_label: "extension"
+---
 
-# External module: "extension"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["extension"](_extension_.md)
 
 ## Index
 

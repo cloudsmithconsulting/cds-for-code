@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.registerPluginAssembly"](_commands_cs_cds_deployment_registerpluginassembly_.md)
+---
+id: "_commands_cs_cds_deployment_registerpluginassembly_"
+title: "commands/cs.cds.deployment.registerPluginAssembly"
+sidebar_label: "commands/cs.cds.deployment.registerPluginAssembly"
+---
 
-# External module: "commands/cs.cds.deployment.registerPluginAssembly"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.registerPluginAssembly"](_commands_cs_cds_deployment_registerpluginassembly_.md)
 
 ## Index
 

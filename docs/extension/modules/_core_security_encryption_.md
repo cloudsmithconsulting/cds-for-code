@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Encryption"](_core_security_encryption_.md)
+---
+id: "_core_security_encryption_"
+title: "core/security/Encryption"
+sidebar_label: "core/security/Encryption"
+---
 
-# External module: "core/security/Encryption"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Encryption"](_core_security_encryption_.md)
 
 ## Index
 

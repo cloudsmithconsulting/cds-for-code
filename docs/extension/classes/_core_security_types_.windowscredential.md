@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [WindowsCredential](_core_security_types_.windowscredential.md)
+---
+id: "_core_security_types_.windowscredential"
+title: "WindowsCredential"
+sidebar_label: "WindowsCredential"
+---
 
-# Class: WindowsCredential
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [WindowsCredential](_core_security_types_.windowscredential.md)
 
 ## Hierarchy
 

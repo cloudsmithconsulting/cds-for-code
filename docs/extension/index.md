@@ -1,6 +1,10 @@
-[cds-for-code](README.md) › [Globals](globals.md)
+---
+id: "index"
+title: "cds-for-code"
+sidebar_label: "README"
+---
 
-# cds-for-code
+[cds-for-code](index.md) › [Globals](globals.md)
 
 ![Cloudsmith Consulting LLC](https://cloudsmithstatics.azureedge.net/web/cloudsmith-notagline-450x103.png "Cloudsmith Consulting")
 

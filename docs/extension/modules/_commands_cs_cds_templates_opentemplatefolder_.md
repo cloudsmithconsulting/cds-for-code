@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.templates.openTemplateFolder"](_commands_cs_cds_templates_opentemplatefolder_.md)
+---
+id: "_commands_cs_cds_templates_opentemplatefolder_"
+title: "commands/cs.cds.templates.openTemplateFolder"
+sidebar_label: "commands/cs.cds.templates.openTemplateFolder"
+---
 
-# External module: "commands/cs.cds.templates.openTemplateFolder"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.templates.openTemplateFolder"](_commands_cs_cds_templates_opentemplatefolder_.md)
 
 ## Index
 

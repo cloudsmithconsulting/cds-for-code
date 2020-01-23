@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/WebDownloaders/IconDownloader"](../modules/_components_webdownloaders_icondownloader_.md) › [IconLoader](_components_webdownloaders_icondownloader_.iconloader.md)
+---
+id: "_components_webdownloaders_icondownloader_.iconloader"
+title: "IconLoader"
+sidebar_label: "IconLoader"
+---
 
-# Class: IconLoader
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/WebDownloaders/IconDownloader"](../modules/_components_webdownloaders_icondownloader_.md) › [IconLoader](_components_webdownloaders_icondownloader_.iconloader.md)
 
 ## Hierarchy
 

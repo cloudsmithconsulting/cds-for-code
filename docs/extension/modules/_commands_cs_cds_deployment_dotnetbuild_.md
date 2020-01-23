@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.dotNetBuild"](_commands_cs_cds_deployment_dotnetbuild_.md)
+---
+id: "_commands_cs_cds_deployment_dotnetbuild_"
+title: "commands/cs.cds.deployment.dotNetBuild"
+sidebar_label: "commands/cs.cds.deployment.dotNetBuild"
+---
 
-# External module: "commands/cs.cds.deployment.dotNetBuild"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.dotNetBuild"](_commands_cs_cds_deployment_dotnetbuild_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.powerShell.generateEntities"](_commands_cs_cds_powershell_generateentities_.md)
+---
+id: "_commands_cs_cds_powershell_generateentities_"
+title: "commands/cs.cds.powerShell.generateEntities"
+sidebar_label: "commands/cs.cds.powerShell.generateEntities"
+---
 
-# External module: "commands/cs.cds.powerShell.generateEntities"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.powerShell.generateEntities"](_commands_cs_cds_powershell_generateentities_.md)
 
 ## Index
 

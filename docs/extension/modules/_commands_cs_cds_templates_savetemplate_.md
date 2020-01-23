@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.templates.saveTemplate"](_commands_cs_cds_templates_savetemplate_.md)
+---
+id: "_commands_cs_cds_templates_savetemplate_"
+title: "commands/cs.cds.templates.saveTemplate"
+sidebar_label: "commands/cs.cds.templates.saveTemplate"
+---
 
-# External module: "commands/cs.cds.templates.saveTemplate"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.templates.saveTemplate"](_commands_cs_cds_templates_savetemplate_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [ICredentialStore](_core_security_types_.icredentialstore.md)
+---
+id: "_core_security_types_.icredentialstore"
+title: "ICredentialStore"
+sidebar_label: "ICredentialStore"
+---
 
-# Interface: ICredentialStore
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [ICredentialStore](_core_security_types_.icredentialstore.md)
 
 ## Hierarchy
 

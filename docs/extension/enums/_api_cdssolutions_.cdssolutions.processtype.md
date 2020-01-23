@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/CdsSolutions"](../modules/_api_cdssolutions_.md) › [CdsSolutions](../modules/_api_cdssolutions_.cdssolutions.md) › [ProcessType](_api_cdssolutions_.cdssolutions.processtype.md)
+---
+id: "_api_cdssolutions_.cdssolutions.processtype"
+title: "ProcessType"
+sidebar_label: "ProcessType"
+---
 
-# Enumeration: ProcessType
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/CdsSolutions"](../modules/_api_cdssolutions_.md) › [CdsSolutions](../modules/_api_cdssolutions_.cdssolutions.md) › [ProcessType](_api_cdssolutions_.cdssolutions.processtype.md)
 
 ## Index
 

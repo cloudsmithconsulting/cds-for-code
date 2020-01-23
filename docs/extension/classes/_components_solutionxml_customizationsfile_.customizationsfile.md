@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/SolutionXml/CustomizationsFile"](../modules/_components_solutionxml_customizationsfile_.md) › [CustomizationsFile](_components_solutionxml_customizationsfile_.customizationsfile.md)
+---
+id: "_components_solutionxml_customizationsfile_.customizationsfile"
+title: "CustomizationsFile"
+sidebar_label: "CustomizationsFile"
+---
 
-# Class: CustomizationsFile
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/SolutionXml/CustomizationsFile"](../modules/_components_solutionxml_customizationsfile_.md) › [CustomizationsFile](_components_solutionxml_customizationsfile_.customizationsfile.md)
 
 ## Hierarchy
 

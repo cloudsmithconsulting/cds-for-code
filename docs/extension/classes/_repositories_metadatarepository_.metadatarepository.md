@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["repositories/metadataRepository"](../modules/_repositories_metadatarepository_.md) › [MetadataRepository](_repositories_metadatarepository_.metadatarepository.md)
+---
+id: "_repositories_metadatarepository_.metadatarepository"
+title: "MetadataRepository"
+sidebar_label: "MetadataRepository"
+---
 
-# Class: MetadataRepository
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["repositories/metadataRepository"](../modules/_repositories_metadatarepository_.md) › [MetadataRepository](_repositories_metadatarepository_.metadatarepository.md)
 
 ## Hierarchy
 

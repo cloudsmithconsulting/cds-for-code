@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Authentication"](../modules/_core_security_authentication_.md) › [AuthenticationError](_core_security_authentication_.authenticationerror.md)
+---
+id: "_core_security_authentication_.authenticationerror"
+title: "AuthenticationError"
+sidebar_label: "AuthenticationError"
+---
 
-# Class: AuthenticationError
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Authentication"](../modules/_core_security_authentication_.md) › [AuthenticationError](_core_security_authentication_.authenticationerror.md)
 
 ## Hierarchy
 

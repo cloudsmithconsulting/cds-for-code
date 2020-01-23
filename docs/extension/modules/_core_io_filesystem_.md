@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/io/FileSystem"](_core_io_filesystem_.md)
+---
+id: "_core_io_filesystem_"
+title: "core/io/FileSystem"
+sidebar_label: "core/io/FileSystem"
+---
 
-# External module: "core/io/FileSystem"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/io/FileSystem"](_core_io_filesystem_.md)
 
 ## Index
 

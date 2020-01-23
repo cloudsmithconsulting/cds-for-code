@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Command"](_core_command_.md)
+---
+id: "_core_command_"
+title: "core/Command"
+sidebar_label: "core/Command"
+---
 
-# External module: "core/Command"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Command"](_core_command_.md)
 
 ## Index
 

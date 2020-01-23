@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/webui/WebviewBridge"](../modules/_core_webui_webviewbridge_.md) › [IWebviewBridge](_core_webui_webviewbridge_.iwebviewbridge.md)
+---
+id: "_core_webui_webviewbridge_.iwebviewbridge"
+title: "IWebviewBridge"
+sidebar_label: "IWebviewBridge"
+---
 
-# Interface: IWebviewBridge
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/webui/WebviewBridge"](../modules/_core_webui_webviewbridge_.md) › [IWebviewBridge](_core_webui_webviewbridge_.iwebviewbridge.md)
 
 ## Hierarchy
 

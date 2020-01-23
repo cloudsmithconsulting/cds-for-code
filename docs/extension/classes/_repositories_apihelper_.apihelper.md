@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["repositories/ApiHelper"](../modules/_repositories_apihelper_.md) › [ApiHelper](_repositories_apihelper_.apihelper.md)
+---
+id: "_repositories_apihelper_.apihelper"
+title: "ApiHelper"
+sidebar_label: "ApiHelper"
+---
 
-# Class: ApiHelper
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["repositories/ApiHelper"](../modules/_repositories_apihelper_.md) › [ApiHelper](_repositories_apihelper_.apihelper.md)
 
 ## Hierarchy
 

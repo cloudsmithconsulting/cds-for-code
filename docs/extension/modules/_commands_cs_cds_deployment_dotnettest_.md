@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.dotNetTest"](_commands_cs_cds_deployment_dotnettest_.md)
+---
+id: "_commands_cs_cds_deployment_dotnettest_"
+title: "commands/cs.cds.deployment.dotNetTest"
+sidebar_label: "commands/cs.cds.deployment.dotNetTest"
+---
 
-# External module: "commands/cs.cds.deployment.dotNetTest"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.dotNetTest"](_commands_cs_cds_deployment_dotnettest_.md)
 
 ## Index
 

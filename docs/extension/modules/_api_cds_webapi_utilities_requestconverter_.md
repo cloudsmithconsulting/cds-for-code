@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/utilities/RequestConverter"](_api_cds_webapi_utilities_requestconverter_.md)
+---
+id: "_api_cds_webapi_utilities_requestconverter_"
+title: "api/cds-webapi/utilities/RequestConverter"
+sidebar_label: "api/cds-webapi/utilities/RequestConverter"
+---
 
-# External module: "api/cds-webapi/utilities/RequestConverter"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/utilities/RequestConverter"](_api_cds_webapi_utilities_requestconverter_.md)
 
 ## Index
 

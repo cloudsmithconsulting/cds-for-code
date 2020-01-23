@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Encryption"](../modules/_core_security_encryption_.md) › [LocalCryptography](_core_security_encryption_.localcryptography.md)
+---
+id: "_core_security_encryption_.localcryptography"
+title: "LocalCryptography"
+sidebar_label: "LocalCryptography"
+---
 
-# Class: LocalCryptography
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Encryption"](../modules/_core_security_encryption_.md) › [LocalCryptography](_core_security_encryption_.localcryptography.md)
 
 ## Hierarchy
 

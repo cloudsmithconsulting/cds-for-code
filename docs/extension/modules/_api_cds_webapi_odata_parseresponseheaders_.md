@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/parseResponseHeaders"](_api_cds_webapi_odata_parseresponseheaders_.md)
+---
+id: "_api_cds_webapi_odata_parseresponseheaders_"
+title: "api/cds-webapi/odata/parseResponseHeaders"
+sidebar_label: "api/cds-webapi/odata/parseResponseHeaders"
+---
 
-# External module: "api/cds-webapi/odata/parseResponseHeaders"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/parseResponseHeaders"](_api_cds_webapi_odata_parseresponseheaders_.md)
 
 ## Index
 

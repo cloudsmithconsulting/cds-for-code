@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/FetchQuery"](../modules/_api_cds_webapi_fetchquery_.md) › [FetchQueryJoin](_api_cds_webapi_fetchquery_.fetchqueryjoin.md)
+---
+id: "_api_cds_webapi_fetchquery_.fetchqueryjoin"
+title: "FetchQueryJoin"
+sidebar_label: "FetchQueryJoin"
+---
 
-# Interface: FetchQueryJoin
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/FetchQuery"](../modules/_api_cds_webapi_fetchquery_.md) › [FetchQueryJoin](_api_cds_webapi_fetchquery_.fetchqueryjoin.md)
 
 ## Hierarchy
 

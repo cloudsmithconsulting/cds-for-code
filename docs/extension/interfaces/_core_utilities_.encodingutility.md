@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Utilities"](../modules/_core_utilities_.md) › [EncodingUtility](_core_utilities_.encodingutility.md)
+---
+id: "_core_utilities_.encodingutility"
+title: "EncodingUtility"
+sidebar_label: "EncodingUtility"
+---
 
-# Interface: EncodingUtility
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Utilities"](../modules/_core_utilities_.md) › [EncodingUtility](_core_utilities_.encodingutility.md)
 
 ## Hierarchy
 

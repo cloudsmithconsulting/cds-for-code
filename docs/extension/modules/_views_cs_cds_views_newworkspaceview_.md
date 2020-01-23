@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.views.newWorkspaceView"](_views_cs_cds_views_newworkspaceview_.md)
+---
+id: "_views_cs_cds_views_newworkspaceview_"
+title: "views/cs.cds.views.newWorkspaceView"
+sidebar_label: "views/cs.cds.views.newWorkspaceView"
+---
 
-# External module: "views/cs.cds.views.newWorkspaceView"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.views.newWorkspaceView"](_views_cs_cds_views_newworkspaceview_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.views.jsonInspectorView"](../modules/_views_cs_cds_views_jsoninspectorview_.md) › [JsonObjectView](_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md)
+---
+id: "_views_cs_cds_views_jsoninspectorview_.jsonobjectview"
+title: "JsonObjectView"
+sidebar_label: "JsonObjectView"
+---
 
-# Class: JsonObjectView
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.views.jsonInspectorView"](../modules/_views_cs_cds_views_jsoninspectorview_.md) › [JsonObjectView](_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md)
 
 ## Hierarchy
 

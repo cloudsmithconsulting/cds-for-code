@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [DeleteRequest](_api_cds_webapi_cdswebapi_.cdswebapi.deleterequest.md)
+---
+id: "_api_cds_webapi_cdswebapi_.cdswebapi.deleterequest"
+title: "DeleteRequest"
+sidebar_label: "DeleteRequest"
+---
 
-# Interface: DeleteRequest
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [DeleteRequest](_api_cds_webapi_cdswebapi_.cdswebapi.deleterequest.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Configuration/WorkspaceState"](_components_configuration_workspacestate_.md)
+---
+id: "_components_configuration_workspacestate_"
+title: "components/Configuration/WorkspaceState"
+sidebar_label: "components/Configuration/WorkspaceState"
+---
 
-# External module: "components/Configuration/WorkspaceState"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Configuration/WorkspaceState"](_components_configuration_workspacestate_.md)
 
 ## Index
 

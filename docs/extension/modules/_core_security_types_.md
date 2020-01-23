@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Types"](_core_security_types_.md)
+---
+id: "_core_security_types_"
+title: "core/security/Types"
+sidebar_label: "core/security/Types"
+---
 
-# External module: "core/security/Types"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Types"](_core_security_types_.md)
 
 ## Index
 

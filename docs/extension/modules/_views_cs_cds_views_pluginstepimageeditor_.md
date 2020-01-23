@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.views.pluginStepImageEditor"](_views_cs_cds_views_pluginstepimageeditor_.md)
+---
+id: "_views_cs_cds_views_pluginstepimageeditor_"
+title: "views/cs.cds.views.pluginStepImageEditor"
+sidebar_label: "views/cs.cds.views.pluginStepImageEditor"
+---
 
-# External module: "views/cs.cds.views.pluginStepImageEditor"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.views.pluginStepImageEditor"](_views_cs_cds_views_pluginstepimageeditor_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/io/FileManager"](../modules/_core_io_filemanager_.md) › [FileWatcherChange](_core_io_filemanager_.filewatcherchange.md)
+---
+id: "_core_io_filemanager_.filewatcherchange"
+title: "FileWatcherChange"
+sidebar_label: "FileWatcherChange"
+---
 
-# Class: FileWatcherChange
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/io/FileManager"](../modules/_core_io_filemanager_.md) › [FileWatcherChange](_core_io_filemanager_.filewatcherchange.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [controls](../modules/_cs_.cds.controls.md) › [explorer](_cs_.cds.controls.explorer.md)
+---
+id: "_cs_.cds.controls.explorer"
+title: "explorer"
+sidebar_label: "explorer"
+---
 
-# Class: explorer
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [controls](../modules/_cs_.cds.controls.md) › [explorer](_cs_.cds.controls.explorer.md)
 
 ## Hierarchy
 

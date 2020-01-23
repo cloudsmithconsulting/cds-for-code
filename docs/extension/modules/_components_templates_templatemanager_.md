@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Templates/TemplateManager"](_components_templates_templatemanager_.md)
+---
+id: "_components_templates_templatemanager_"
+title: "components/Templates/TemplateManager"
+sidebar_label: "components/Templates/TemplateManager"
+---
 
-# External module: "components/Templates/TemplateManager"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Templates/TemplateManager"](_components_templates_templatemanager_.md)
 
 ## Index
 

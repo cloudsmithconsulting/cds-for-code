@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Quickly"](../modules/_core_quickly_.md) › [WorkspaceFileItem](_core_quickly_.workspacefileitem.md)
+---
+id: "_core_quickly_.workspacefileitem"
+title: "WorkspaceFileItem"
+sidebar_label: "WorkspaceFileItem"
+---
 
-# Class: WorkspaceFileItem
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Quickly"](../modules/_core_quickly_.md) › [WorkspaceFileItem](_core_quickly_.workspacefileitem.md)
 
 ## Hierarchy
 

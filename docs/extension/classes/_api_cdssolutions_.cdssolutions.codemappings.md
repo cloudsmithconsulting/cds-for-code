@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/CdsSolutions"](../modules/_api_cdssolutions_.md) › [CdsSolutions](../modules/_api_cdssolutions_.cdssolutions.md) › [CodeMappings](_api_cdssolutions_.cdssolutions.codemappings.md)
+---
+id: "_api_cdssolutions_.cdssolutions.codemappings"
+title: "CodeMappings"
+sidebar_label: "CodeMappings"
+---
 
-# Class: CodeMappings
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/CdsSolutions"](../modules/_api_cdssolutions_.md) › [CdsSolutions](../modules/_api_cdssolutions_.cdssolutions.md) › [CodeMappings](_api_cdssolutions_.cdssolutions.codemappings.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [SecureOutput](_core_security_types_.secureoutput.md)
+---
+id: "_core_security_types_.secureoutput"
+title: "SecureOutput"
+sidebar_label: "SecureOutput"
+---
 
-# Enumeration: SecureOutput
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [SecureOutput](_core_security_types_.secureoutput.md)
 
 Represents the type of output to use when decrypting a secure value.
 

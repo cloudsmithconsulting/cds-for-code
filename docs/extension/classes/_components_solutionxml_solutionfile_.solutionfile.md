@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/SolutionXml/SolutionFile"](../modules/_components_solutionxml_solutionfile_.md) › [SolutionFile](_components_solutionxml_solutionfile_.solutionfile.md)
+---
+id: "_components_solutionxml_solutionfile_.solutionfile"
+title: "SolutionFile"
+sidebar_label: "SolutionFile"
+---
 
-# Class: SolutionFile
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/SolutionXml/SolutionFile"](../modules/_components_solutionxml_solutionfile_.md) › [SolutionFile](_components_solutionxml_solutionfile_.solutionfile.md)
 
 ## Hierarchy
 

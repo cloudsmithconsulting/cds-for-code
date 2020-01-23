@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/webui/View"](../modules/_core_webui_view_.md) › [BridgeCommunicationMethod](_core_webui_view_.bridgecommunicationmethod.md)
+---
+id: "_core_webui_view_.bridgecommunicationmethod"
+title: "BridgeCommunicationMethod"
+sidebar_label: "BridgeCommunicationMethod"
+---
 
-# Enumeration: BridgeCommunicationMethod
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/webui/View"](../modules/_core_webui_view_.md) › [BridgeCommunicationMethod](_core_webui_view_.bridgecommunicationmethod.md)
 
 ## Index
 

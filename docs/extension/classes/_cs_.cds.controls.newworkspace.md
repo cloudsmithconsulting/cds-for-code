@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [controls](../modules/_cs_.cds.controls.md) › [newWorkspace](_cs_.cds.controls.newworkspace.md)
+---
+id: "_cs_.cds.controls.newworkspace"
+title: "newWorkspace"
+sidebar_label: "newWorkspace"
+---
 
-# Class: newWorkspace
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [controls](../modules/_cs_.cds.controls.md) › [newWorkspace](_cs_.cds.controls.newworkspace.md)
 
 ## Hierarchy
 

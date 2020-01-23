@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/CdsSolutions"](../modules/_api_cdssolutions_.md) › [CdsSolutions](../modules/_api_cdssolutions_.cdssolutions.md) › [DynamicsForm](_api_cdssolutions_.cdssolutions.dynamicsform.md)
+---
+id: "_api_cdssolutions_.cdssolutions.dynamicsform"
+title: "DynamicsForm"
+sidebar_label: "DynamicsForm"
+---
 
-# Enumeration: DynamicsForm
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/CdsSolutions"](../modules/_api_cdssolutions_.md) › [CdsSolutions](../modules/_api_cdssolutions_.cdssolutions.md) › [DynamicsForm](_api_cdssolutions_.cdssolutions.dynamicsform.md)
 
 ## Index
 

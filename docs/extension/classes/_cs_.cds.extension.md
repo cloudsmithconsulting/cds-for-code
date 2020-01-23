@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [extension](_cs_.cds.extension.md)
+---
+id: "_cs_.cds.extension"
+title: "extension"
+sidebar_label: "extension"
+---
 
-# Class: extension
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [extension](_cs_.cds.extension.md)
 
 ## Hierarchy
 

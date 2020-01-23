@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Command"](../modules/_core_command_.md) › [DefaultCommandWrapper](_core_command_.defaultcommandwrapper.md)
+---
+id: "_core_command_.defaultcommandwrapper"
+title: "DefaultCommandWrapper"
+sidebar_label: "DefaultCommandWrapper"
+---
 
-# Class: DefaultCommandWrapper <**T**>
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Command"](../modules/_core_command_.md) › [DefaultCommandWrapper](_core_command_.defaultcommandwrapper.md)
 
 ## Type parameters
 

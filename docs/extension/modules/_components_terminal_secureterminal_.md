@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Terminal/SecureTerminal"](_components_terminal_secureterminal_.md)
+---
+id: "_components_terminal_secureterminal_"
+title: "components/Terminal/SecureTerminal"
+sidebar_label: "components/Terminal/SecureTerminal"
+---
 
-# External module: "components/Terminal/SecureTerminal"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Terminal/SecureTerminal"](_components_terminal_secureterminal_.md)
 
 ## Index
 

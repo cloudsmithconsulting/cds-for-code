@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.publishCustomizations"](_commands_cs_cds_deployment_publishcustomizations_.md)
+---
+id: "_commands_cs_cds_deployment_publishcustomizations_"
+title: "commands/cs.cds.deployment.publishCustomizations"
+sidebar_label: "commands/cs.cds.deployment.publishCustomizations"
+---
 
-# External module: "commands/cs.cds.deployment.publishCustomizations"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.publishCustomizations"](_commands_cs_cds_deployment_publishcustomizations_.md)
 
 ## Index
 

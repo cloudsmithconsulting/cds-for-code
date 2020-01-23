@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/CdsSolutions"](../modules/_api_cdssolutions_.md) › [CdsSolutions](../modules/_api_cdssolutions_.cdssolutions.md) › [SolutionComponent](_api_cdssolutions_.cdssolutions.solutioncomponent.md)
+---
+id: "_api_cdssolutions_.cdssolutions.solutioncomponent"
+title: "SolutionComponent"
+sidebar_label: "SolutionComponent"
+---
 
-# Enumeration: SolutionComponent
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/CdsSolutions"](../modules/_api_cdssolutions_.md) › [CdsSolutions](../modules/_api_cdssolutions_.cdssolutions.md) › [SolutionComponent](_api_cdssolutions_.cdssolutions.solutioncomponent.md)
 
 ## Index
 

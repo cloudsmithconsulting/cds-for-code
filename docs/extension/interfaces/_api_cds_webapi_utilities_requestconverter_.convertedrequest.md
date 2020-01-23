@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/utilities/RequestConverter"](../modules/_api_cds_webapi_utilities_requestconverter_.md) › [ConvertedRequest](_api_cds_webapi_utilities_requestconverter_.convertedrequest.md)
+---
+id: "_api_cds_webapi_utilities_requestconverter_.convertedrequest"
+title: "ConvertedRequest"
+sidebar_label: "ConvertedRequest"
+---
 
-# Interface: ConvertedRequest
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/utilities/RequestConverter"](../modules/_api_cds_webapi_utilities_requestconverter_.md) › [ConvertedRequest](_api_cds_webapi_utilities_requestconverter_.convertedrequest.md)
 
 **`typedef`** {Object} ConvertedRequest
 

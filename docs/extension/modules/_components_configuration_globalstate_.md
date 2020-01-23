@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Configuration/GlobalState"](_components_configuration_globalstate_.md)
+---
+id: "_components_configuration_globalstate_"
+title: "components/Configuration/GlobalState"
+sidebar_label: "components/Configuration/GlobalState"
+---
 
-# External module: "components/Configuration/GlobalState"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Configuration/GlobalState"](_components_configuration_globalstate_.md)
 
 ## Index
 

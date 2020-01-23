@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/GlobalStateCredentialStore"](../modules/_core_security_globalstatecredentialstore_.md) › [GlobalStateCredentialStore](_core_security_globalstatecredentialstore_.globalstatecredentialstore.md)
+---
+id: "_core_security_globalstatecredentialstore_.globalstatecredentialstore"
+title: "GlobalStateCredentialStore"
+sidebar_label: "GlobalStateCredentialStore"
+---
 
-# Class: GlobalStateCredentialStore
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/GlobalStateCredentialStore"](../modules/_core_security_globalstatecredentialstore_.md) › [GlobalStateCredentialStore](_core_security_globalstatecredentialstore_.globalstatecredentialstore.md)
 
 ## Hierarchy
 

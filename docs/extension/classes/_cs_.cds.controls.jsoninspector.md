@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [controls](../modules/_cs_.cds.controls.md) › [jsonInspector](_cs_.cds.controls.jsoninspector.md)
+---
+id: "_cs_.cds.controls.jsoninspector"
+title: "jsonInspector"
+sidebar_label: "jsonInspector"
+---
 
-# Class: jsonInspector
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [controls](../modules/_cs_.cds.controls.md) › [jsonInspector](_cs_.cds.controls.jsoninspector.md)
 
 ## Hierarchy
 

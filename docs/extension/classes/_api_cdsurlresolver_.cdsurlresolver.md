@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/CdsUrlResolver"](../modules/_api_cdsurlresolver_.md) › [CdsUrlResolver](_api_cdsurlresolver_.cdsurlresolver.md)
+---
+id: "_api_cdsurlresolver_.cdsurlresolver"
+title: "CdsUrlResolver"
+sidebar_label: "CdsUrlResolver"
+---
 
-# Class: CdsUrlResolver
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/CdsUrlResolver"](../modules/_api_cdsurlresolver_.md) › [CdsUrlResolver](_api_cdsurlresolver_.cdsurlresolver.md)
 
 A class for resolving URLs to CDS
 

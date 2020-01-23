@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/odataResponse.nodejs"](_api_cds_webapi_odata_odataresponse_nodejs_.md)
+---
+id: "_api_cds_webapi_odata_odataresponse_nodejs_"
+title: "api/cds-webapi/odata/odataResponse.nodejs"
+sidebar_label: "api/cds-webapi/odata/odataResponse.nodejs"
+---
 
-# External module: "api/cds-webapi/odata/odataResponse.nodejs"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/odataResponse.nodejs"](_api_cds_webapi_odata_odataresponse_nodejs_.md)
 
 ## Index
 

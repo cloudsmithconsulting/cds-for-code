@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [configuration](../modules/_cs_.cds.configuration.md) › [templates](_cs_.cds.configuration.templates.md)
+---
+id: "_cs_.cds.configuration.templates"
+title: "templates"
+sidebar_label: "templates"
+---
 
-# Class: templates
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [configuration](../modules/_cs_.cds.configuration.md) › [templates](_cs_.cds.configuration.templates.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [Expand](_api_cds_webapi_cdswebapi_.cdswebapi.expand.md)
+---
+id: "_api_cds_webapi_cdswebapi_.cdswebapi.expand"
+title: "Expand"
+sidebar_label: "Expand"
+---
 
-# Interface: Expand
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [Expand](_api_cds_webapi_cdswebapi_.cdswebapi.expand.md)
 
 ## Hierarchy
 

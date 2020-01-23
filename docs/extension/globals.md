@@ -1,6 +1,10 @@
-[cds-for-code](README.md) › [Globals](globals.md)
+---
+id: "globals"
+title: "cds-for-code"
+sidebar_label: "Globals"
+---
 
-# cds-for-code
+[cds-for-code](index.md) › [Globals](globals.md)
 
 ## Index
 

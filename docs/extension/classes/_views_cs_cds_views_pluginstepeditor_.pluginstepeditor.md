@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.views.pluginStepEditor"](../modules/_views_cs_cds_views_pluginstepeditor_.md) › [PluginStepEditor](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md)
+---
+id: "_views_cs_cds_views_pluginstepeditor_.pluginstepeditor"
+title: "PluginStepEditor"
+sidebar_label: "PluginStepEditor"
+---
 
-# Class: PluginStepEditor
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.views.pluginStepEditor"](../modules/_views_cs_cds_views_pluginstepeditor_.md) › [PluginStepEditor](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md)
 
 ## Hierarchy
 

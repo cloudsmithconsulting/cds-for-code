@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Utilities"](_core_utilities_.md)
+---
+id: "_core_utilities_"
+title: "core/Utilities"
+sidebar_label: "core/Utilities"
+---
 
-# External module: "core/Utilities"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Utilities"](_core_utilities_.md)
 
 ## Index
 

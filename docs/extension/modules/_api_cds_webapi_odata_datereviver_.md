@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/dateReviver"](_api_cds_webapi_odata_datereviver_.md)
+---
+id: "_api_cds_webapi_odata_datereviver_"
+title: "api/cds-webapi/odata/dateReviver"
+sidebar_label: "api/cds-webapi/odata/dateReviver"
+---
 
-# External module: "api/cds-webapi/odata/dateReviver"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/dateReviver"](_api_cds_webapi_odata_datereviver_.md)
 
 ## Index
 

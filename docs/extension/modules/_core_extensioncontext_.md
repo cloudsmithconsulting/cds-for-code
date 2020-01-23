@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/ExtensionContext"](_core_extensioncontext_.md)
+---
+id: "_core_extensioncontext_"
+title: "core/ExtensionContext"
+sidebar_label: "core/ExtensionContext"
+---
 
-# External module: "core/ExtensionContext"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/ExtensionContext"](_core_extensioncontext_.md)
 
 ## Index
 

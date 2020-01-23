@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Encryption"](../modules/_core_security_encryption_.md) › [Encryption](_core_security_encryption_.encryption.md)
+---
+id: "_core_security_encryption_.encryption"
+title: "Encryption"
+sidebar_label: "Encryption"
+---
 
-# Class: Encryption
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Encryption"](../modules/_core_security_encryption_.md) › [Encryption](_core_security_encryption_.encryption.md)
 
 ## Hierarchy
 

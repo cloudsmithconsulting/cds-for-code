@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Utilities"](../modules/_core_utilities_.md) › [ObjectUtility](_core_utilities_.objectutility.md)
+---
+id: "_core_utilities_.objectutility"
+title: "ObjectUtility"
+sidebar_label: "ObjectUtility"
+---
 
-# Interface: ObjectUtility
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Utilities"](../modules/_core_utilities_.md) › [ObjectUtility](_core_utilities_.objectutility.md)
 
 ## Hierarchy
 

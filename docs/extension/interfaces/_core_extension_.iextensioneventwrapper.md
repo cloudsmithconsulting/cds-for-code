@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Extension"](../modules/_core_extension_.md) › [IExtensionEventWrapper](_core_extension_.iextensioneventwrapper.md)
+---
+id: "_core_extension_.iextensioneventwrapper"
+title: "IExtensionEventWrapper"
+sidebar_label: "IExtensionEventWrapper"
+---
 
-# Interface: IExtensionEventWrapper
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Extension"](../modules/_core_extension_.md) › [IExtensionEventWrapper](_core_extension_.iextensioneventwrapper.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Templates/Types"](_components_templates_types_.md)
+---
+id: "_components_templates_types_"
+title: "components/Templates/Types"
+sidebar_label: "components/Templates/Types"
+---
 
-# External module: "components/Templates/Types"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Templates/Types"](_components_templates_types_.md)
 
 ## Index
 

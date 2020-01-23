@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.views.svcUtilConfigView"](_views_cs_cds_views_svcutilconfigview_.md)
+---
+id: "_views_cs_cds_views_svcutilconfigview_"
+title: "views/cs.cds.views.svcUtilConfigView"
+sidebar_label: "views/cs.cds.views.svcUtilConfigView"
+---
 
-# External module: "views/cs.cds.views.svcUtilConfigView"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.views.svcUtilConfigView"](_views_cs_cds_views_svcutilconfigview_.md)
 
 ## Index
 

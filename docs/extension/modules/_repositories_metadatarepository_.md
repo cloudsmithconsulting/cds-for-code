@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["repositories/metadataRepository"](_repositories_metadatarepository_.md)
+---
+id: "_repositories_metadatarepository_"
+title: "repositories/metadataRepository"
+sidebar_label: "repositories/metadataRepository"
+---
 
-# External module: "repositories/metadataRepository"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["repositories/metadataRepository"](_repositories_metadatarepository_.md)
 
 ## Index
 

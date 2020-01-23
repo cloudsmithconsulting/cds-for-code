@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/webui/WebviewBridge"](_core_webui_webviewbridge_.md)
+---
+id: "_core_webui_webviewbridge_"
+title: "core/webui/WebviewBridge"
+sidebar_label: "core/webui/WebviewBridge"
+---
 
-# External module: "core/webui/WebviewBridge"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/webui/WebviewBridge"](_core_webui_webviewbridge_.md)
 
 ## Index
 

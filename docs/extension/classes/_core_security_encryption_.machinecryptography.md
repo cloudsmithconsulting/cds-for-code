@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Encryption"](../modules/_core_security_encryption_.md) › [MachineCryptography](_core_security_encryption_.machinecryptography.md)
+---
+id: "_core_security_encryption_.machinecryptography"
+title: "MachineCryptography"
+sidebar_label: "MachineCryptography"
+---
 
-# Class: MachineCryptography
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Encryption"](../modules/_core_security_encryption_.md) › [MachineCryptography](_core_security_encryption_.machinecryptography.md)
 
 Represents a cryptography API that can secure items on a given computer.  The
 encrypted values cannot be decrypted on other machines.

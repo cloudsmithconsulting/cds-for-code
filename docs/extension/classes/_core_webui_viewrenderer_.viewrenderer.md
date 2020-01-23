@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/webui/ViewRenderer"](../modules/_core_webui_viewrenderer_.md) › [ViewRenderer](_core_webui_viewrenderer_.viewrenderer.md)
+---
+id: "_core_webui_viewrenderer_.viewrenderer"
+title: "ViewRenderer"
+sidebar_label: "ViewRenderer"
+---
 
-# Class: ViewRenderer
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/webui/ViewRenderer"](../modules/_core_webui_viewrenderer_.md) › [ViewRenderer](_core_webui_viewrenderer_.viewrenderer.md)
 
 ## Hierarchy
 

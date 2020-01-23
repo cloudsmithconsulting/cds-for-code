@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.addSolutionComponent"](_commands_cs_cds_deployment_addsolutioncomponent_.md)
+---
+id: "_commands_cs_cds_deployment_addsolutioncomponent_"
+title: "commands/cs.cds.deployment.addSolutionComponent"
+sidebar_label: "commands/cs.cds.deployment.addSolutionComponent"
+---
 
-# External module: "commands/cs.cds.deployment.addSolutionComponent"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.addSolutionComponent"](_commands_cs_cds_deployment_addsolutioncomponent_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/WebDownloaders/Types"](../modules/_components_webdownloaders_types_.md) › [ScriptedIconFormat](_components_webdownloaders_types_.scriptediconformat.md)
+---
+id: "_components_webdownloaders_types_.scriptediconformat"
+title: "ScriptedIconFormat"
+sidebar_label: "ScriptedIconFormat"
+---
 
-# Enumeration: ScriptedIconFormat
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/WebDownloaders/Types"](../modules/_components_webdownloaders_types_.md) › [ScriptedIconFormat](_components_webdownloaders_types_.scriptediconformat.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Templates/TemplateManager"](../modules/_components_templates_templatemanager_.md) › [TemplateManager](_components_templates_templatemanager_.templatemanager.md)
+---
+id: "_components_templates_templatemanager_.templatemanager"
+title: "TemplateManager"
+sidebar_label: "TemplateManager"
+---
 
-# Class: TemplateManager
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Templates/TemplateManager"](../modules/_components_templates_templatemanager_.md) › [TemplateManager](_components_templates_templatemanager_.templatemanager.md)
 
 Main class to handle the logic of the Project Templates
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [controls](../modules/_cs_.cds.controls.md) › [quickPicker](_cs_.cds.controls.quickpicker.md)
+---
+id: "_cs_.cds.controls.quickpicker"
+title: "quickPicker"
+sidebar_label: "quickPicker"
+---
 
-# Class: quickPicker
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [controls](../modules/_cs_.cds.controls.md) › [quickPicker](_cs_.cds.controls.quickpicker.md)
 
 ## Hierarchy
 

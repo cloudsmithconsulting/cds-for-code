@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/utilities/RequestConverter"](../modules/_api_cds_webapi_utilities_requestconverter_.md) › [RequestConverter](_api_cds_webapi_utilities_requestconverter_.requestconverter.md)
+---
+id: "_api_cds_webapi_utilities_requestconverter_.requestconverter"
+title: "RequestConverter"
+sidebar_label: "RequestConverter"
+---
 
-# Class: RequestConverter
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/utilities/RequestConverter"](../modules/_api_cds_webapi_utilities_requestconverter_.md) › [RequestConverter](_api_cds_webapi_utilities_requestconverter_.requestconverter.md)
 
 ## Hierarchy
 

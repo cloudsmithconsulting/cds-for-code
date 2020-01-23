@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["repositories/apiRepository"](../modules/_repositories_apirepository_.md) › [ApiRepository](_repositories_apirepository_.apirepository.md)
+---
+id: "_repositories_apirepository_.apirepository"
+title: "ApiRepository"
+sidebar_label: "ApiRepository"
+---
 
-# Class: ApiRepository
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["repositories/apiRepository"](../modules/_repositories_apirepository_.md) › [ApiRepository](_repositories_apirepository_.apirepository.md)
 
 ## Hierarchy
 

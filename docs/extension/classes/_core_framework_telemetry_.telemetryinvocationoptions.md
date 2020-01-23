@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/framework/Telemetry"](../modules/_core_framework_telemetry_.md) › [TelemetryInvocationOptions](_core_framework_telemetry_.telemetryinvocationoptions.md)
+---
+id: "_core_framework_telemetry_.telemetryinvocationoptions"
+title: "TelemetryInvocationOptions"
+sidebar_label: "TelemetryInvocationOptions"
+---
 
-# Class: TelemetryInvocationOptions
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/framework/Telemetry"](../modules/_core_framework_telemetry_.md) › [TelemetryInvocationOptions](_core_framework_telemetry_.telemetryinvocationoptions.md)
 
 ## Hierarchy
 

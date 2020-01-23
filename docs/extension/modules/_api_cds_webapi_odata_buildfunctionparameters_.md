@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/buildFunctionParameters"](_api_cds_webapi_odata_buildfunctionparameters_.md)
+---
+id: "_api_cds_webapi_odata_buildfunctionparameters_"
+title: "api/cds-webapi/odata/buildFunctionParameters"
+sidebar_label: "api/cds-webapi/odata/buildFunctionParameters"
+---
 
-# External module: "api/cds-webapi/odata/buildFunctionParameters"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/buildFunctionParameters"](_api_cds_webapi_odata_buildfunctionparameters_.md)
 
 ## Index
 

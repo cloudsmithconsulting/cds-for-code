@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.viewContainers.cdsExplorer"](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md) › [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)
+---
+id: "_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry"
+title: "CdsTreeEntry"
+sidebar_label: "CdsTreeEntry"
+---
 
-# Class: CdsTreeEntry
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.viewContainers.cdsExplorer"](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md) › [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)
 
 Represents an entry that is dispalbed in the CdsexplorerView
 

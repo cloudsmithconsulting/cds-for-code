@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/helpers/Encoding"](_core_helpers_encoding_.md)
+---
+id: "_core_helpers_encoding_"
+title: "core/helpers/Encoding"
+sidebar_label: "core/helpers/Encoding"
+---
 
-# External module: "core/helpers/Encoding"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/helpers/Encoding"](_core_helpers_encoding_.md)
 
 ## Index
 

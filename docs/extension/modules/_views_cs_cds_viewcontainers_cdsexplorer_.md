@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.viewContainers.cdsExplorer"](_views_cs_cds_viewcontainers_cdsexplorer_.md)
+---
+id: "_views_cs_cds_viewcontainers_cdsexplorer_"
+title: "views/cs.cds.viewContainers.cdsExplorer"
+sidebar_label: "views/cs.cds.viewContainers.cdsExplorer"
+---
 
-# External module: "views/cs.cds.viewContainers.cdsExplorer"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.viewContainers.cdsExplorer"](_views_cs_cds_viewcontainers_cdsexplorer_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/webui/WebSocketBridge.browser"](_core_webui_websocketbridge_browser_.md)
+---
+id: "_core_webui_websocketbridge_browser_"
+title: "core/webui/WebSocketBridge.browser"
+sidebar_label: "core/webui/WebSocketBridge.browser"
+---
 
-# External module: "core/webui/WebSocketBridge.browser"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/webui/WebSocketBridge.browser"](_core_webui_websocketbridge_browser_.md)
 
 ## Index
 

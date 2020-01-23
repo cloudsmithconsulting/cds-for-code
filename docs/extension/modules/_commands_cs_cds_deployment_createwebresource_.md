@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.createWebResource"](_commands_cs_cds_deployment_createwebresource_.md)
+---
+id: "_commands_cs_cds_deployment_createwebresource_"
+title: "commands/cs.cds.deployment.createWebResource"
+sidebar_label: "commands/cs.cds.deployment.createWebResource"
+---
 
-# External module: "commands/cs.cds.deployment.createWebResource"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.createWebResource"](_commands_cs_cds_deployment_createwebresource_.md)
 
 ## Index
 

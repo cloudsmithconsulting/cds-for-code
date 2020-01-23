@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/WebDownloaders/Types"](../modules/_components_webdownloaders_types_.md) › [IconResolver](_components_webdownloaders_types_.iconresolver.md)
+---
+id: "_components_webdownloaders_types_.iconresolver"
+title: "IconResolver"
+sidebar_label: "IconResolver"
+---
 
-# Class: IconResolver
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/WebDownloaders/Types"](../modules/_components_webdownloaders_types_.md) › [IconResolver](_components_webdownloaders_types_.iconresolver.md)
 
 ## Hierarchy
 

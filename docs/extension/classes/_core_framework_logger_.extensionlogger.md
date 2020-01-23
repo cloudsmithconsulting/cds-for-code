@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/framework/Logger"](../modules/_core_framework_logger_.md) › [ExtensionLogger](_core_framework_logger_.extensionlogger.md)
+---
+id: "_core_framework_logger_.extensionlogger"
+title: "ExtensionLogger"
+sidebar_label: "ExtensionLogger"
+---
 
-# Class: ExtensionLogger
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/framework/Logger"](../modules/_core_framework_logger_.md) › [ExtensionLogger](_core_framework_logger_.extensionlogger.md)
 
 ## Hierarchy
 

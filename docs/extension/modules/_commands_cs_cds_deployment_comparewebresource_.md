@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.compareWebResource"](_commands_cs_cds_deployment_comparewebresource_.md)
+---
+id: "_commands_cs_cds_deployment_comparewebresource_"
+title: "commands/cs.cds.deployment.compareWebResource"
+sidebar_label: "commands/cs.cds.deployment.compareWebResource"
+---
 
-# External module: "commands/cs.cds.deployment.compareWebResource"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.compareWebResource"](_commands_cs_cds_deployment_comparewebresource_.md)
 
 ## Index
 

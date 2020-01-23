@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/webui/View"](../modules/_core_webui_view_.md) › [View](_core_webui_view_.view.md)
+---
+id: "_core_webui_view_.view"
+title: "View"
+sidebar_label: "View"
+---
 
-# Class: View
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/webui/View"](../modules/_core_webui_view_.md) › [View](_core_webui_view_.view.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Terminal/SecureTerminal"](../modules/_components_terminal_secureterminal_.md) › [MaskedBuffer](_components_terminal_secureterminal_.maskedbuffer.md)
+---
+id: "_components_terminal_secureterminal_.maskedbuffer"
+title: "MaskedBuffer"
+sidebar_label: "MaskedBuffer"
+---
 
-# Class: MaskedBuffer
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Terminal/SecureTerminal"](../modules/_components_terminal_secureterminal_.md) › [MaskedBuffer](_components_terminal_secureterminal_.maskedbuffer.md)
 
 ## Hierarchy
 

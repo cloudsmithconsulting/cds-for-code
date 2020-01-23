@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [Utility](_api_cds_webapi_cdswebapi_.cdswebapi.utility.md)
+---
+id: "_api_cds_webapi_cdswebapi_.cdswebapi.utility"
+title: "Utility"
+sidebar_label: "Utility"
+---
 
-# Interface: Utility
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [Utility](_api_cds_webapi_cdswebapi_.cdswebapi.utility.md)
 
 ## Hierarchy
 

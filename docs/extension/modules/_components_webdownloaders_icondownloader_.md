@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/WebDownloaders/IconDownloader"](_components_webdownloaders_icondownloader_.md)
+---
+id: "_components_webdownloaders_icondownloader_"
+title: "components/WebDownloaders/IconDownloader"
+sidebar_label: "components/WebDownloaders/IconDownloader"
+---
 
-# External module: "components/WebDownloaders/IconDownloader"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/WebDownloaders/IconDownloader"](_components_webdownloaders_icondownloader_.md)
 
 ## Index
 

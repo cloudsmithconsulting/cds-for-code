@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [WebApiClient](_api_cds_webapi_cdswebapi_.cdswebapi.webapiclient.md)
+---
+id: "_api_cds_webapi_cdswebapi_.cdswebapi.webapiclient"
+title: "WebApiClient"
+sidebar_label: "WebApiClient"
+---
 
-# Class: WebApiClient
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [WebApiClient](_api_cds_webapi_cdswebapi_.cdswebapi.webapiclient.md)
 
 ## Hierarchy
 

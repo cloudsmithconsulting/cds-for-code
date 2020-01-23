@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [configuration](../modules/_cs_.cds.configuration.md) › [web](_cs_.cds.configuration.web.md)
+---
+id: "_cs_.cds.configuration.web"
+title: "web"
+sidebar_label: "web"
+---
 
-# Class: web
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [configuration](../modules/_cs_.cds.configuration.md) › [web](_cs_.cds.configuration.web.md)
 
 ## Hierarchy
 

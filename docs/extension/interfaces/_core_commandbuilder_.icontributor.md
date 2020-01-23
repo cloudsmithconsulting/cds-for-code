@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/CommandBuilder"](../modules/_core_commandbuilder_.md) › [IContributor](_core_commandbuilder_.icontributor.md)
+---
+id: "_core_commandbuilder_.icontributor"
+title: "IContributor"
+sidebar_label: "IContributor"
+---
 
-# Interface: IContributor
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/CommandBuilder"](../modules/_core_commandbuilder_.md) › [IContributor](_core_commandbuilder_.icontributor.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/getFetchXmlPagingCookie"](_api_cds_webapi_odata_getfetchxmlpagingcookie_.md)
+---
+id: "_api_cds_webapi_odata_getfetchxmlpagingcookie_"
+title: "api/cds-webapi/odata/getFetchXmlPagingCookie"
+sidebar_label: "api/cds-webapi/odata/getFetchXmlPagingCookie"
+---
 
-# External module: "api/cds-webapi/odata/getFetchXmlPagingCookie"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/getFetchXmlPagingCookie"](_api_cds_webapi_odata_getfetchxmlpagingcookie_.md)
 
 ## Index
 

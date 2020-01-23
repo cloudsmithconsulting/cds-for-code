@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [ICryptography](_core_security_types_.icryptography.md)
+---
+id: "_core_security_types_.icryptography"
+title: "ICryptography"
+sidebar_label: "ICryptography"
+---
 
-# Interface: ICryptography
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [ICryptography](_core_security_types_.icryptography.md)
 
 Represents an type that can perform symetric encryption/decryption.
 

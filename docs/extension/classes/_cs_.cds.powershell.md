@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [powerShell](_cs_.cds.powershell.md)
+---
+id: "_cs_.cds.powershell"
+title: "powerShell"
+sidebar_label: "powerShell"
+---
 
-# Class: powerShell
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [powerShell](_cs_.cds.powershell.md)
 
 ## Hierarchy
 

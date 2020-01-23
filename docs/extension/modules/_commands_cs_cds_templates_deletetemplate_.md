@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.templates.deleteTemplate"](_commands_cs_cds_templates_deletetemplate_.md)
+---
+id: "_commands_cs_cds_templates_deletetemplate_"
+title: "commands/cs.cds.templates.deleteTemplate"
+sidebar_label: "commands/cs.cds.templates.deleteTemplate"
+---
 
-# External module: "commands/cs.cds.templates.deleteTemplate"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.templates.deleteTemplate"](_commands_cs_cds_templates_deletetemplate_.md)
 
 ## Index
 

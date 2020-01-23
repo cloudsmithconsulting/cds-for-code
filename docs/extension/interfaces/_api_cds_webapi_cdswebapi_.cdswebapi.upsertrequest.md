@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [UpsertRequest](_api_cds_webapi_cdswebapi_.cdswebapi.upsertrequest.md)
+---
+id: "_api_cds_webapi_cdswebapi_.cdswebapi.upsertrequest"
+title: "UpsertRequest"
+sidebar_label: "UpsertRequest"
+---
 
-# Interface: UpsertRequest
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [UpsertRequest](_api_cds_webapi_cdswebapi_.cdswebapi.upsertrequest.md)
 
 ## Hierarchy
 

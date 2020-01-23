@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.viewContainers.templateExplorer"](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md) › [TemplateExplorer](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorer.md)
+---
+id: "_views_cs_cds_viewcontainers_templateexplorer_.templateexplorer"
+title: "TemplateExplorer"
+sidebar_label: "TemplateExplorer"
+---
 
-# Class: TemplateExplorer
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.viewContainers.templateExplorer"](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md) › [TemplateExplorer](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorer.md)
 
 ## Hierarchy
 

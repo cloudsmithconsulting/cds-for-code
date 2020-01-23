@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Solutions/SolutionMap"](_components_solutions_solutionmap_.md)
+---
+id: "_components_solutions_solutionmap_"
+title: "components/Solutions/SolutionMap"
+sidebar_label: "components/Solutions/SolutionMap"
+---
 
-# External module: "components/Solutions/SolutionMap"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Solutions/SolutionMap"](_components_solutions_solutionmap_.md)
 
 ## Index
 

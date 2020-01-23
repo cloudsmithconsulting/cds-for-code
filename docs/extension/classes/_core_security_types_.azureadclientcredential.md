@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [AzureAdClientCredential](_core_security_types_.azureadclientcredential.md)
+---
+id: "_core_security_types_.azureadclientcredential"
+title: "AzureAdClientCredential"
+sidebar_label: "AzureAdClientCredential"
+---
 
-# Class: AzureAdClientCredential
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [AzureAdClientCredential](_core_security_types_.azureadclientcredential.md)
 
 ## Hierarchy
 

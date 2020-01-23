@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Templates/TemplateManager"](../modules/_components_templates_templatemanager_.md) › [TemplateFilesystemItem](_components_templates_templatemanager_.templatefilesystemitem.md)
+---
+id: "_components_templates_templatemanager_.templatefilesystemitem"
+title: "TemplateFilesystemItem"
+sidebar_label: "TemplateFilesystemItem"
+---
 
-# Class: TemplateFilesystemItem
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Templates/TemplateManager"](../modules/_components_templates_templatemanager_.md) › [TemplateFilesystemItem](_components_templates_templatemanager_.templatefilesystemitem.md)
 
 ## Hierarchy
 

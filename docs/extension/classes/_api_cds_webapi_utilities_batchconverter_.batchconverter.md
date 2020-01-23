@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/utilities/BatchConverter"](../modules/_api_cds_webapi_utilities_batchconverter_.md) › [BatchConverter](_api_cds_webapi_utilities_batchconverter_.batchconverter.md)
+---
+id: "_api_cds_webapi_utilities_batchconverter_.batchconverter"
+title: "BatchConverter"
+sidebar_label: "BatchConverter"
+---
 
-# Class: BatchConverter
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/utilities/BatchConverter"](../modules/_api_cds_webapi_utilities_batchconverter_.md) › [BatchConverter](_api_cds_webapi_utilities_batchconverter_.batchconverter.md)
 
 **`param`** array of requests
 

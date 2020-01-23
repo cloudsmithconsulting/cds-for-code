@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/WebDownloaders/Types"](../modules/_components_webdownloaders_types_.md) › [ExtensionIconTheme](_components_webdownloaders_types_.extensionicontheme.md)
+---
+id: "_components_webdownloaders_types_.extensionicontheme"
+title: "ExtensionIconTheme"
+sidebar_label: "ExtensionIconTheme"
+---
 
-# Class: ExtensionIconTheme
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/WebDownloaders/Types"](../modules/_components_webdownloaders_types_.md) › [ExtensionIconTheme](_components_webdownloaders_types_.extensionicontheme.md)
 
 ## Hierarchy
 

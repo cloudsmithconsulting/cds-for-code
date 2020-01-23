@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/http/defaultResponseHandler.nodejs"](_core_http_defaultresponsehandler_nodejs_.md)
+---
+id: "_core_http_defaultresponsehandler_nodejs_"
+title: "core/http/defaultResponseHandler.nodejs"
+sidebar_label: "core/http/defaultResponseHandler.nodejs"
+---
 
-# External module: "core/http/defaultResponseHandler.nodejs"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/http/defaultResponseHandler.nodejs"](_core_http_defaultresponsehandler_nodejs_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/io/FileManager"](_core_io_filemanager_.md)
+---
+id: "_core_io_filemanager_"
+title: "core/io/FileManager"
+sidebar_label: "core/io/FileManager"
+---
 
-# External module: "core/io/FileManager"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/io/FileManager"](_core_io_filemanager_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/webui/ViewRenderer"](_core_webui_viewrenderer_.md)
+---
+id: "_core_webui_viewrenderer_"
+title: "core/webui/ViewRenderer"
+sidebar_label: "core/webui/ViewRenderer"
+---
 
-# External module: "core/webui/ViewRenderer"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/webui/ViewRenderer"](_core_webui_viewrenderer_.md)
 
 ## Index
 

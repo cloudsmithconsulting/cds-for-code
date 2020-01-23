@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Utilities"](../modules/_core_utilities_.md) › [BrowserUtility](_core_utilities_.browserutility.md)
+---
+id: "_core_utilities_.browserutility"
+title: "BrowserUtility"
+sidebar_label: "BrowserUtility"
+---
 
-# Interface: BrowserUtility
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Utilities"](../modules/_core_utilities_.md) › [BrowserUtility](_core_utilities_.browserutility.md)
 
 ## Hierarchy
 

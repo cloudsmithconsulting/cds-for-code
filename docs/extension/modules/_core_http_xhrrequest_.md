@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/http/xhrRequest"](_core_http_xhrrequest_.md)
+---
+id: "_core_http_xhrrequest_"
+title: "core/http/xhrRequest"
+sidebar_label: "core/http/xhrRequest"
+---
 
-# External module: "core/http/xhrRequest"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/http/xhrRequest"](_core_http_xhrrequest_.md)
 
 ## Index
 

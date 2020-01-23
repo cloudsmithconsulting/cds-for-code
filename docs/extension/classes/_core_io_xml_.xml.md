@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/io/Xml"](../modules/_core_io_xml_.md) › [Xml](_core_io_xml_.xml.md)
+---
+id: "_core_io_xml_.xml"
+title: "Xml"
+sidebar_label: "Xml"
+---
 
-# Class: Xml
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/io/Xml"](../modules/_core_io_xml_.md) › [Xml](_core_io_xml_.xml.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["repositories/discoveryRepository"](../modules/_repositories_discoveryrepository_.md) › [DiscoveryRepository](_repositories_discoveryrepository_.discoveryrepository.md)
+---
+id: "_repositories_discoveryrepository_.discoveryrepository"
+title: "DiscoveryRepository"
+sidebar_label: "DiscoveryRepository"
+---
 
-# Class: DiscoveryRepository
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["repositories/discoveryRepository"](../modules/_repositories_discoveryrepository_.md) › [DiscoveryRepository](_repositories_discoveryrepository_.discoveryrepository.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/framework/EnumParser"](_core_framework_enumparser_.md)
+---
+id: "_core_framework_enumparser_"
+title: "core/framework/EnumParser"
+sidebar_label: "core/framework/EnumParser"
+---
 
-# External module: "core/framework/EnumParser"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/framework/EnumParser"](_core_framework_enumparser_.md)
 
 ## Index
 

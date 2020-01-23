@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [Config](_api_cds_webapi_cdswebapi_.cdswebapi.config.md)
+---
+id: "_api_cds_webapi_cdswebapi_.cdswebapi.config"
+title: "Config"
+sidebar_label: "Config"
+---
 
-# Interface: Config
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [Config](_api_cds_webapi_cdswebapi_.cdswebapi.config.md)
 
 Configuration object for DynamicsWebApi
 

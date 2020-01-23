@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Quickly"](_core_quickly_.md)
+---
+id: "_core_quickly_"
+title: "core/Quickly"
+sidebar_label: "core/Quickly"
+---
 
-# External module: "core/Quickly"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Quickly"](_core_quickly_.md)
 
 ## Index
 

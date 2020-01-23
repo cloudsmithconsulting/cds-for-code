@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Utilities"](../modules/_core_utilities_.md) › [GuidUtility](_core_utilities_.guidutility.md)
+---
+id: "_core_utilities_.guidutility"
+title: "GuidUtility"
+sidebar_label: "GuidUtility"
+---
 
-# Interface: GuidUtility
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Utilities"](../modules/_core_utilities_.md) › [GuidUtility](_core_utilities_.guidutility.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/helpers/Browser"](_core_helpers_browser_.md)
+---
+id: "_core_helpers_browser_"
+title: "core/helpers/Browser"
+sidebar_label: "core/helpers/Browser"
+---
 
-# External module: "core/helpers/Browser"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/helpers/Browser"](_core_helpers_browser_.md)
 
 ## Index
 

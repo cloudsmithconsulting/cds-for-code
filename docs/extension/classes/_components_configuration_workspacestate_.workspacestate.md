@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Configuration/WorkspaceState"](../modules/_components_configuration_workspacestate_.md) › [WorkspaceState](_components_configuration_workspacestate_.workspacestate.md)
+---
+id: "_components_configuration_workspacestate_.workspacestate"
+title: "WorkspaceState"
+sidebar_label: "WorkspaceState"
+---
 
-# Class: WorkspaceState
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Configuration/WorkspaceState"](../modules/_components_configuration_workspacestate_.md) › [WorkspaceState](_components_configuration_workspacestate_.workspacestate.md)
 
 ## Hierarchy
 

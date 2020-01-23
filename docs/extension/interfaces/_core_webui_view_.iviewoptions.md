@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/webui/View"](../modules/_core_webui_view_.md) › [IViewOptions](_core_webui_view_.iviewoptions.md)
+---
+id: "_core_webui_view_.iviewoptions"
+title: "IViewOptions"
+sidebar_label: "IViewOptions"
+---
 
-# Interface: IViewOptions
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/webui/View"](../modules/_core_webui_view_.md) › [IViewOptions](_core_webui_view_.iviewoptions.md)
 
 ## Hierarchy
 

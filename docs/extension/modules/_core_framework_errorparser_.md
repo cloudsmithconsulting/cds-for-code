@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/framework/ErrorParser"](_core_framework_errorparser_.md)
+---
+id: "_core_framework_errorparser_"
+title: "core/framework/ErrorParser"
+sidebar_label: "core/framework/ErrorParser"
+---
 
-# External module: "core/framework/ErrorParser"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/framework/ErrorParser"](_core_framework_errorparser_.md)
 
 ## Index
 

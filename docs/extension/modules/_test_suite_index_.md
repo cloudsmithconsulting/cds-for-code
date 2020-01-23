@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["test/suite/index"](_test_suite_index_.md)
+---
+id: "_test_suite_index_"
+title: "test/suite/index"
+sidebar_label: "test/suite/index"
+---
 
-# External module: "test/suite/index"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["test/suite/index"](_test_suite_index_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Extension"](../modules/_core_extension_.md) › [IExtensionEventInvocationOptions](_core_extension_.iextensioneventinvocationoptions.md)
+---
+id: "_core_extension_.iextensioneventinvocationoptions"
+title: "IExtensionEventInvocationOptions"
+sidebar_label: "IExtensionEventInvocationOptions"
+---
 
-# Interface: IExtensionEventInvocationOptions
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Extension"](../modules/_core_extension_.md) › [IExtensionEventInvocationOptions](_core_extension_.iextensioneventinvocationoptions.md)
 
 ## Hierarchy
 

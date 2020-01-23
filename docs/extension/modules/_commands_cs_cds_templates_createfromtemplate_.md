@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.templates.createFromTemplate"](_commands_cs_cds_templates_createfromtemplate_.md)
+---
+id: "_commands_cs_cds_templates_createfromtemplate_"
+title: "commands/cs.cds.templates.createFromTemplate"
+sidebar_label: "commands/cs.cds.templates.createFromTemplate"
+---
 
-# External module: "commands/cs.cds.templates.createFromTemplate"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.templates.createFromTemplate"](_commands_cs_cds_templates_createfromtemplate_.md)
 
 ## Index
 

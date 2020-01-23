@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.createProcess"](_commands_cs_cds_deployment_createprocess_.md)
+---
+id: "_commands_cs_cds_deployment_createprocess_"
+title: "commands/cs.cds.deployment.createProcess"
+sidebar_label: "commands/cs.cds.deployment.createProcess"
+---
 
-# External module: "commands/cs.cds.deployment.createProcess"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.createProcess"](_commands_cs_cds_deployment_createprocess_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/FetchQueryResolver"](../modules/_api_cds_webapi_fetchqueryresolver_.md) › [FetchQueryResolver](_api_cds_webapi_fetchqueryresolver_.fetchqueryresolver.md)
+---
+id: "_api_cds_webapi_fetchqueryresolver_.fetchqueryresolver"
+title: "FetchQueryResolver"
+sidebar_label: "FetchQueryResolver"
+---
 
-# Class: FetchQueryResolver
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/FetchQueryResolver"](../modules/_api_cds_webapi_fetchqueryresolver_.md) › [FetchQueryResolver](_api_cds_webapi_fetchqueryresolver_.fetchqueryresolver.md)
 
 ## Hierarchy
 

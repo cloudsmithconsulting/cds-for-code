@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Encryption"](../modules/_core_security_encryption_.md) › [SymetricCryptography](_core_security_encryption_.symetriccryptography.md)
+---
+id: "_core_security_encryption_.symetriccryptography"
+title: "SymetricCryptography"
+sidebar_label: "SymetricCryptography"
+---
 
-# Class: SymetricCryptography
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Encryption"](../modules/_core_security_encryption_.md) › [SymetricCryptography](_core_security_encryption_.symetriccryptography.md)
 
 Abstraction for handling symetric cryptography using algorithms like AES, 3DES, etc.
 

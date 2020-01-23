@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/helpers/Parameters"](_core_helpers_parameters_.md)
+---
+id: "_core_helpers_parameters_"
+title: "core/helpers/Parameters"
+sidebar_label: "core/helpers/Parameters"
+---
 
-# External module: "core/helpers/Parameters"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/helpers/Parameters"](_core_helpers_parameters_.md)
 
 ## Index
 

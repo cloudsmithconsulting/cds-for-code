@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.viewContainers.cdsExplorer"](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md) › [CdsExplorer](_views_cs_cds_viewcontainers_cdsexplorer_.cdsexplorer.md)
+---
+id: "_views_cs_cds_viewcontainers_cdsexplorer_.cdsexplorer"
+title: "CdsExplorer"
+sidebar_label: "CdsExplorer"
+---
 
-# Class: CdsExplorer
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.viewContainers.cdsExplorer"](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md) › [CdsExplorer](_views_cs_cds_viewcontainers_cdsexplorer_.cdsexplorer.md)
 
 TreeView implementation that helps end-users navigate items in their Common Data Services (CDS) environments.
 This class implements VSCode's TreeDataProvider and is used as a single-instance (singleton) in the CDS for Code toolkit.

@@ -350,7 +350,7 @@ module.exports = function (grunt) {
                 }
             },
             typedoc_markdown: {
-                command: 'npx typedoc --plugin typedoc-plugin-markdown --out docs/extension src',
+                command: 'npx typedoc --plugin typedoc-plugin-markdown --theme docusaurus2 --out docs/extension src',
                 options: {
                     async: false,
                     execOptions: { cwd: '.' }

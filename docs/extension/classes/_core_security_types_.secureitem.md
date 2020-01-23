@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [SecureItem](_core_security_types_.secureitem.md)
+---
+id: "_core_security_types_.secureitem"
+title: "SecureItem"
+sidebar_label: "SecureItem"
+---
 
-# Class: SecureItem
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [SecureItem](_core_security_types_.secureitem.md)
 
 Represents a secure item (string or buffer) with the needed components
 (minus key, of course) to decrypt them.

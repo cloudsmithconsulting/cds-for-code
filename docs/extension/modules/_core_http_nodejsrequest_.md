@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/http/nodeJsRequest"](_core_http_nodejsrequest_.md)
+---
+id: "_core_http_nodejsrequest_"
+title: "core/http/nodeJsRequest"
+sidebar_label: "core/http/nodeJsRequest"
+---
 
-# External module: "core/http/nodeJsRequest"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/http/nodeJsRequest"](_core_http_nodejsrequest_.md)
 
 ## Index
 

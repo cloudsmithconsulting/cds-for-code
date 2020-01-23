@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/FetchQuery"](../modules/_api_cds_webapi_fetchquery_.md) › [FetchQueryCondition](_api_cds_webapi_fetchquery_.fetchquerycondition.md)
+---
+id: "_api_cds_webapi_fetchquery_.fetchquerycondition"
+title: "FetchQueryCondition"
+sidebar_label: "FetchQueryCondition"
+---
 
-# Interface: FetchQueryCondition
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/FetchQuery"](../modules/_api_cds_webapi_fetchquery_.md) › [FetchQueryCondition](_api_cds_webapi_fetchquery_.fetchquerycondition.md)
 
 ## Hierarchy
 

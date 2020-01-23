@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/CdsSolutions"](../modules/_api_cdssolutions_.md) › [CdsSolutions](../modules/_api_cdssolutions_.cdssolutions.md) › [InteractiveDashboardLayout](_api_cdssolutions_.cdssolutions.interactivedashboardlayout.md)
+---
+id: "_api_cdssolutions_.cdssolutions.interactivedashboardlayout"
+title: "InteractiveDashboardLayout"
+sidebar_label: "InteractiveDashboardLayout"
+---
 
-# Enumeration: InteractiveDashboardLayout
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/CdsSolutions"](../modules/_api_cdssolutions_.md) › [CdsSolutions](../modules/_api_cdssolutions_.cdssolutions.md) › [InteractiveDashboardLayout](_api_cdssolutions_.cdssolutions.interactivedashboardlayout.md)
 
 ## Index
 

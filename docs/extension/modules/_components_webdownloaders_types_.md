@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/WebDownloaders/Types"](_components_webdownloaders_types_.md)
+---
+id: "_components_webdownloaders_types_"
+title: "components/WebDownloaders/Types"
+sidebar_label: "components/WebDownloaders/Types"
+---
 
-# External module: "components/WebDownloaders/Types"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/WebDownloaders/Types"](_components_webdownloaders_types_.md)
 
 ## Index
 

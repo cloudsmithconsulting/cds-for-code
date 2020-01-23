@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Templates/Types"](../modules/_components_templates_types_.md) › [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)
+---
+id: "_components_templates_types_.templateplaceholder"
+title: "TemplatePlaceholder"
+sidebar_label: "TemplatePlaceholder"
+---
 
-# Class: TemplatePlaceholder
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Templates/Types"](../modules/_components_templates_types_.md) › [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)
 
 ## Hierarchy
 

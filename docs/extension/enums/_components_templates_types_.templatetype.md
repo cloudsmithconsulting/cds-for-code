@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Templates/Types"](../modules/_components_templates_types_.md) › [TemplateType](_components_templates_types_.templatetype.md)
+---
+id: "_components_templates_types_.templatetype"
+title: "TemplateType"
+sidebar_label: "TemplateType"
+---
 
-# Enumeration: TemplateType
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Templates/Types"](../modules/_components_templates_types_.md) › [TemplateType](_components_templates_types_.templatetype.md)
 
 ## Index
 

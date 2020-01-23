@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Quickly"](../modules/_core_quickly_.md) › [Quickly](_core_quickly_.quickly.md)
+---
+id: "_core_quickly_.quickly"
+title: "Quickly"
+sidebar_label: "Quickly"
+---
 
-# Class: Quickly
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Quickly"](../modules/_core_quickly_.md) › [Quickly](_core_quickly_.quickly.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [ISecureItem](_core_security_types_.isecureitem.md)
+---
+id: "_core_security_types_.isecureitem"
+title: "ISecureItem"
+sidebar_label: "ISecureItem"
+---
 
-# Interface: ISecureItem
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [ISecureItem](_core_security_types_.isecureitem.md)
 
 Represents an item that has been encrypted and can be decrypted by it's correspodnign
 private key (or private key store)

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/types/PromiseInfo"](../modules/_core_types_promiseinfo_.md) › [IPromiseInfo](_core_types_promiseinfo_.ipromiseinfo.md)
+---
+id: "_core_types_promiseinfo_.ipromiseinfo"
+title: "IPromiseInfo"
+sidebar_label: "IPromiseInfo"
+---
 
-# Interface: IPromiseInfo <**T**>
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/types/PromiseInfo"](../modules/_core_types_promiseinfo_.md) › [IPromiseInfo](_core_types_promiseinfo_.ipromiseinfo.md)
 
 ## Type parameters
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.views.svcUtilConfigView"](../modules/_views_cs_cds_views_svcutilconfigview_.md) › [SvcUtilConfigView](_views_cs_cds_views_svcutilconfigview_.svcutilconfigview.md)
+---
+id: "_views_cs_cds_views_svcutilconfigview_.svcutilconfigview"
+title: "SvcUtilConfigView"
+sidebar_label: "SvcUtilConfigView"
+---
 
-# Class: SvcUtilConfigView
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.views.svcUtilConfigView"](../modules/_views_cs_cds_views_svcutilconfigview_.md) › [SvcUtilConfigView](_views_cs_cds_views_svcutilconfigview_.svcutilconfigview.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/webui/WebSocketBridge"](../modules/_core_webui_websocketbridge_.md) › [WebSocketBridge](_core_webui_websocketbridge_.websocketbridge.md)
+---
+id: "_core_webui_websocketbridge_.websocketbridge"
+title: "WebSocketBridge"
+sidebar_label: "WebSocketBridge"
+---
 
-# Class: WebSocketBridge
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/webui/WebSocketBridge"](../modules/_core_webui_websocketbridge_.md) › [WebSocketBridge](_core_webui_websocketbridge_.websocketbridge.md)
 
 ## Hierarchy
 

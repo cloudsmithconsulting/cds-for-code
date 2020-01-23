@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/helpers/Guid"](_core_helpers_guid_.md)
+---
+id: "_core_helpers_guid_"
+title: "core/helpers/Guid"
+sidebar_label: "core/helpers/Guid"
+---
 
-# External module: "core/helpers/Guid"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/helpers/Guid"](_core_helpers_guid_.md)
 
 ## Index
 

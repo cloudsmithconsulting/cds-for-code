@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["repositories/discoveryRepository"](_repositories_discoveryrepository_.md)
+---
+id: "_repositories_discoveryrepository_"
+title: "repositories/discoveryRepository"
+sidebar_label: "repositories/discoveryRepository"
+---
 
-# External module: "repositories/discoveryRepository"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["repositories/discoveryRepository"](_repositories_discoveryrepository_.md)
 
 ## Index
 

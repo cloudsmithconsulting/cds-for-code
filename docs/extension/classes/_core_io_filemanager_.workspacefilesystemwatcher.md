@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/io/FileManager"](../modules/_core_io_filemanager_.md) › [WorkspaceFileSystemWatcher](_core_io_filemanager_.workspacefilesystemwatcher.md)
+---
+id: "_core_io_filemanager_.workspacefilesystemwatcher"
+title: "WorkspaceFileSystemWatcher"
+sidebar_label: "WorkspaceFileSystemWatcher"
+---
 
-# Class: WorkspaceFileSystemWatcher
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/io/FileManager"](../modules/_core_io_filemanager_.md) › [WorkspaceFileSystemWatcher](_core_io_filemanager_.workspacefilesystemwatcher.md)
 
 ## Hierarchy
 

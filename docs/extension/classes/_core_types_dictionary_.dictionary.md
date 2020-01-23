@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/types/Dictionary"](../modules/_core_types_dictionary_.md) › [Dictionary](_core_types_dictionary_.dictionary.md)
+---
+id: "_core_types_dictionary_.dictionary"
+title: "Dictionary"
+sidebar_label: "Dictionary"
+---
 
-# Class: Dictionary <**TKey, T**>
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/types/Dictionary"](../modules/_core_types_dictionary_.md) › [Dictionary](_core_types_dictionary_.dictionary.md)
 
 ## Type parameters
 

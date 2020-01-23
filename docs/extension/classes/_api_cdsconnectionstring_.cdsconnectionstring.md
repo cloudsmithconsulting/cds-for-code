@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/CdsConnectionString"](../modules/_api_cdsconnectionstring_.md) › [CdsConnectionString](_api_cdsconnectionstring_.cdsconnectionstring.md)
+---
+id: "_api_cdsconnectionstring_.cdsconnectionstring"
+title: "CdsConnectionString"
+sidebar_label: "CdsConnectionString"
+---
 
-# Class: CdsConnectionString
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/CdsConnectionString"](../modules/_api_cdsconnectionstring_.md) › [CdsConnectionString](_api_cdsconnectionstring_.cdsconnectionstring.md)
 
 ## Hierarchy
 

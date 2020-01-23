@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Solutions/SolutionManager"](../modules/_components_solutions_solutionmanager_.md) › [SolutionManager](_components_solutions_solutionmanager_.solutionmanager.md)
+---
+id: "_components_solutions_solutionmanager_.solutionmanager"
+title: "SolutionManager"
+sidebar_label: "SolutionManager"
+---
 
-# Class: SolutionManager
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Solutions/SolutionManager"](../modules/_components_solutions_solutionmanager_.md) › [SolutionManager](_components_solutions_solutionmanager_.solutionmanager.md)
 
 ## Hierarchy
 

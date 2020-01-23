@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Utilities"](../modules/_core_utilities_.md) › [StringUtility](_core_utilities_.stringutility.md)
+---
+id: "_core_utilities_.stringutility"
+title: "StringUtility"
+sidebar_label: "StringUtility"
+---
 
-# Interface: StringUtility
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Utilities"](../modules/_core_utilities_.md) › [StringUtility](_core_utilities_.stringutility.md)
 
 ## Hierarchy
 

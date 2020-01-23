@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.packWebResource"](_commands_cs_cds_deployment_packwebresource_.md)
+---
+id: "_commands_cs_cds_deployment_packwebresource_"
+title: "commands/cs.cds.deployment.packWebResource"
+sidebar_label: "commands/cs.cds.deployment.packWebResource"
+---
 
-# External module: "commands/cs.cds.deployment.packWebResource"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.packWebResource"](_commands_cs_cds_deployment_packwebresource_.md)
 
 ## Index
 

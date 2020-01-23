@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/ExtensionConfiguration"](../modules/_core_extensionconfiguration_.md) › [ExtensionConfiguration](_core_extensionconfiguration_.extensionconfiguration.md)
+---
+id: "_core_extensionconfiguration_.extensionconfiguration"
+title: "ExtensionConfiguration"
+sidebar_label: "ExtensionConfiguration"
+---
 
-# Class: ExtensionConfiguration
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/ExtensionConfiguration"](../modules/_core_extensionconfiguration_.md) › [ExtensionConfiguration](_core_extensionconfiguration_.extensionconfiguration.md)
 
 ## Hierarchy
 

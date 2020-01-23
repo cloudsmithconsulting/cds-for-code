@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/buildPreferHeader"](_api_cds_webapi_odata_buildpreferheader_.md)
+---
+id: "_api_cds_webapi_odata_buildpreferheader_"
+title: "api/cds-webapi/odata/buildPreferHeader"
+sidebar_label: "api/cds-webapi/odata/buildPreferHeader"
+---
 
-# External module: "api/cds-webapi/odata/buildPreferHeader"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/buildPreferHeader"](_api_cds_webapi_odata_buildpreferheader_.md)
 
 ## Index
 

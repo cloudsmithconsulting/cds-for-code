@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Authentication"](_core_security_authentication_.md)
+---
+id: "_core_security_authentication_"
+title: "core/security/Authentication"
+sidebar_label: "core/security/Authentication"
+---
 
-# External module: "core/security/Authentication"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Authentication"](_core_security_authentication_.md)
 
 ## Index
 

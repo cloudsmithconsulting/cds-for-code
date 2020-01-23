@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Solutions/SolutionMap"](../modules/_components_solutions_solutionmap_.md) › [SolutionMap](_components_solutions_solutionmap_.solutionmap.md)
+---
+id: "_components_solutions_solutionmap_.solutionmap"
+title: "SolutionMap"
+sidebar_label: "SolutionMap"
+---
 
-# Class: SolutionMap
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Solutions/SolutionMap"](../modules/_components_solutions_solutionmap_.md) › [SolutionMap](_components_solutions_solutionmap_.solutionmap.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/http/defaultResponseHandler.xhr"](_core_http_defaultresponsehandler_xhr_.md)
+---
+id: "_core_http_defaultresponsehandler_xhr_"
+title: "core/http/defaultResponseHandler.xhr"
+sidebar_label: "core/http/defaultResponseHandler.xhr"
+---
 
-# External module: "core/http/defaultResponseHandler.xhr"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/http/defaultResponseHandler.xhr"](_core_http_defaultresponsehandler_xhr_.md)
 
 ## Index
 

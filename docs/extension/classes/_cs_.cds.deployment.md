@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [deployment](_cs_.cds.deployment.md)
+---
+id: "_cs_.cds.deployment"
+title: "deployment"
+sidebar_label: "deployment"
+---
 
-# Class: deployment
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [deployment](_cs_.cds.deployment.md)
 
 Static values related to deployment tasks in the CDS for Code extension
 

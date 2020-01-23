@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Command"](../modules/_core_command_.md) › [ICommandInvocationOptions](_core_command_.icommandinvocationoptions.md)
+---
+id: "_core_command_.icommandinvocationoptions"
+title: "ICommandInvocationOptions"
+sidebar_label: "ICommandInvocationOptions"
+---
 
-# Interface: ICommandInvocationOptions
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Command"](../modules/_core_command_.md) › [ICommandInvocationOptions](_core_command_.icommandinvocationoptions.md)
 
 ## Hierarchy
 

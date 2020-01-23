@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Command"](../modules/_core_command_.md) › [DefaultCommandInvocationOptions](_core_command_.defaultcommandinvocationoptions.md)
+---
+id: "_core_command_.defaultcommandinvocationoptions"
+title: "DefaultCommandInvocationOptions"
+sidebar_label: "DefaultCommandInvocationOptions"
+---
 
-# Class: DefaultCommandInvocationOptions
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Command"](../modules/_core_command_.md) › [DefaultCommandInvocationOptions](_core_command_.defaultcommandinvocationoptions.md)
 
 ## Hierarchy
 

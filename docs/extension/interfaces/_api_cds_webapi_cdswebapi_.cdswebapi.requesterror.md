@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [RequestError](_api_cds_webapi_cdswebapi_.cdswebapi.requesterror.md)
+---
+id: "_api_cds_webapi_cdswebapi_.cdswebapi.requesterror"
+title: "RequestError"
+sidebar_label: "RequestError"
+---
 
-# Interface: RequestError
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/CdsWebApi"](../modules/_api_cds_webapi_cdswebapi_.md) › [CdsWebApi](../modules/_api_cds_webapi_cdswebapi_.cdswebapi.md) › [RequestError](_api_cds_webapi_cdswebapi_.cdswebapi.requesterror.md)
 
 ## Hierarchy
 

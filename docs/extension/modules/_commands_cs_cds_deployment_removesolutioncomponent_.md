@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.removeSolutionComponent"](_commands_cs_cds_deployment_removesolutioncomponent_.md)
+---
+id: "_commands_cs_cds_deployment_removesolutioncomponent_"
+title: "commands/cs.cds.deployment.removeSolutionComponent"
+sidebar_label: "commands/cs.cds.deployment.removeSolutionComponent"
+---
 
-# External module: "commands/cs.cds.deployment.removeSolutionComponent"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.removeSolutionComponent"](_commands_cs_cds_deployment_removesolutioncomponent_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/webui/LocalBridge"](../modules/_core_webui_localbridge_.md) › [LocalBridge](_core_webui_localbridge_.localbridge.md)
+---
+id: "_core_webui_localbridge_.localbridge"
+title: "LocalBridge"
+sidebar_label: "LocalBridge"
+---
 
-# Class: LocalBridge
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/webui/LocalBridge"](../modules/_core_webui_localbridge_.md) › [LocalBridge](_core_webui_localbridge_.localbridge.md)
 
 ## Hierarchy
 

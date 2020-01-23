@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Solutions/WebResourceManager"](../modules/_components_solutions_webresourcemanager_.md) › [WebResourceManager](_components_solutions_webresourcemanager_.webresourcemanager.md)
+---
+id: "_components_solutions_webresourcemanager_.webresourcemanager"
+title: "WebResourceManager"
+sidebar_label: "WebResourceManager"
+---
 
-# Class: WebResourceManager
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Solutions/WebResourceManager"](../modules/_components_solutions_webresourcemanager_.md) › [WebResourceManager](_components_solutions_webresourcemanager_.webresourcemanager.md)
 
 ## Hierarchy
 

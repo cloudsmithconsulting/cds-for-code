@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.templates.editTemplateCatalog"](_commands_cs_cds_templates_edittemplatecatalog_.md)
+---
+id: "_commands_cs_cds_templates_edittemplatecatalog_"
+title: "commands/cs.cds.templates.editTemplateCatalog"
+sidebar_label: "commands/cs.cds.templates.editTemplateCatalog"
+---
 
-# External module: "commands/cs.cds.templates.editTemplateCatalog"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.templates.editTemplateCatalog"](_commands_cs_cds_templates_edittemplatecatalog_.md)
 
 ## Index
 

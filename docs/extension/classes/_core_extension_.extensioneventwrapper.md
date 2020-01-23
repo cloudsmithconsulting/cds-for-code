@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Extension"](../modules/_core_extension_.md) › [ExtensionEventWrapper](_core_extension_.extensioneventwrapper.md)
+---
+id: "_core_extension_.extensioneventwrapper"
+title: "ExtensionEventWrapper"
+sidebar_label: "ExtensionEventWrapper"
+---
 
-# Class: ExtensionEventWrapper
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Extension"](../modules/_core_extension_.md) › [ExtensionEventWrapper](_core_extension_.extensioneventwrapper.md)
 
 ## Hierarchy
 

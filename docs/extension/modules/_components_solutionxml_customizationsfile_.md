@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/SolutionXml/CustomizationsFile"](_components_solutionxml_customizationsfile_.md)
+---
+id: "_components_solutionxml_customizationsfile_"
+title: "components/SolutionXml/CustomizationsFile"
+sidebar_label: "components/SolutionXml/CustomizationsFile"
+---
 
-# External module: "components/SolutionXml/CustomizationsFile"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/SolutionXml/CustomizationsFile"](_components_solutionxml_customizationsfile_.md)
 
 ## Index
 

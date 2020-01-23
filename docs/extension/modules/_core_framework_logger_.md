@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/framework/Logger"](_core_framework_logger_.md)
+---
+id: "_core_framework_logger_"
+title: "core/framework/Logger"
+sidebar_label: "core/framework/Logger"
+---
 
-# External module: "core/framework/Logger"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/framework/Logger"](_core_framework_logger_.md)
 
 ## Index
 

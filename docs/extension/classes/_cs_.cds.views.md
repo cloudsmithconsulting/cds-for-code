@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [views](_cs_.cds.views.md)
+---
+id: "_cs_.cds.views"
+title: "views"
+sidebar_label: "views"
+---
 
-# Class: views
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [views](_cs_.cds.views.md)
 
 ## Hierarchy
 

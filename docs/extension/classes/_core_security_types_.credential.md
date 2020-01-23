@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [Credential](_core_security_types_.credential.md)
+---
+id: "_core_security_types_.credential"
+title: "Credential"
+sidebar_label: "Credential"
+---
 
-# Class: Credential
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [Credential](_core_security_types_.credential.md)
 
 ## Hierarchy
 

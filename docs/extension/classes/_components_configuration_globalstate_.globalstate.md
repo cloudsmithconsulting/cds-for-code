@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Configuration/GlobalState"](../modules/_components_configuration_globalstate_.md) › [GlobalState](_components_configuration_globalstate_.globalstate.md)
+---
+id: "_components_configuration_globalstate_.globalstate"
+title: "GlobalState"
+sidebar_label: "GlobalState"
+---
 
-# Class: GlobalState
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Configuration/GlobalState"](../modules/_components_configuration_globalstate_.md) › [GlobalState](_components_configuration_globalstate_.globalstate.md)
 
 ## Hierarchy
 

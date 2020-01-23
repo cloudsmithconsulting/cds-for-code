@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/framework/EnvironmentVariables"](../modules/_core_framework_environmentvariables_.md) › [EnvironmentVariables](_core_framework_environmentvariables_.environmentvariables.md)
+---
+id: "_core_framework_environmentvariables_.environmentvariables"
+title: "EnvironmentVariables"
+sidebar_label: "EnvironmentVariables"
+---
 
-# Class: EnvironmentVariables
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/framework/EnvironmentVariables"](../modules/_core_framework_environmentvariables_.md) › [EnvironmentVariables](_core_framework_environmentvariables_.environmentvariables.md)
 
 ## Hierarchy
 

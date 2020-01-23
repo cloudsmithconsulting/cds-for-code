@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/CdsUtilities"](_api_cdsutilities_.md)
+---
+id: "_api_cdsutilities_"
+title: "api/CdsUtilities"
+sidebar_label: "api/CdsUtilities"
+---
 
-# External module: "api/CdsUtilities"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/CdsUtilities"](_api_cdsutilities_.md)
 
 ## Index
 

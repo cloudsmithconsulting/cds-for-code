@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/helpers/Object"](_core_helpers_object_.md)
+---
+id: "_core_helpers_object_"
+title: "core/helpers/Object"
+sidebar_label: "core/helpers/Object"
+---
 
-# External module: "core/helpers/Object"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/helpers/Object"](_core_helpers_object_.md)
 
 ## Index
 

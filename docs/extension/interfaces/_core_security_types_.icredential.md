@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [ICredential](_core_security_types_.icredential.md)
+---
+id: "_core_security_types_.icredential"
+title: "ICredential"
+sidebar_label: "ICredential"
+---
 
-# Interface: ICredential
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/security/Types"](../modules/_core_security_types_.md) › [ICredential](_core_security_types_.icredential.md)
 
 Represents a set of credentials that can be encrypted and decrypted.
 

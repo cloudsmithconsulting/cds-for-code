@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.viewContainers.templateExplorer"](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md) › [TreeEntryCache](_views_cs_cds_viewcontainers_templateexplorer_.treeentrycache.md)
+---
+id: "_views_cs_cds_viewcontainers_templateexplorer_.treeentrycache"
+title: "TreeEntryCache"
+sidebar_label: "TreeEntryCache"
+---
 
-# Class: TreeEntryCache
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.viewContainers.templateExplorer"](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md) › [TreeEntryCache](_views_cs_cds_viewcontainers_templateexplorer_.treeentrycache.md)
 
 ## Hierarchy
 

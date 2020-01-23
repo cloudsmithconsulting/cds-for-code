@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/CdsSolutions"](../modules/_api_cdssolutions_.md) › [CdsSolutions](../modules/_api_cdssolutions_.cdssolutions.md) › [WebResourceFileType](_api_cdssolutions_.cdssolutions.webresourcefiletype.md)
+---
+id: "_api_cdssolutions_.cdssolutions.webresourcefiletype"
+title: "WebResourceFileType"
+sidebar_label: "WebResourceFileType"
+---
 
-# Enumeration: WebResourceFileType
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/CdsSolutions"](../modules/_api_cdssolutions_.md) › [CdsSolutions](../modules/_api_cdssolutions_.cdssolutions.md) › [WebResourceFileType](_api_cdssolutions_.cdssolutions.webresourcefiletype.md)
 
 ## Index
 

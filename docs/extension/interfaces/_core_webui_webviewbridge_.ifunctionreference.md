@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/webui/WebviewBridge"](../modules/_core_webui_webviewbridge_.md) › [IFunctionReference](_core_webui_webviewbridge_.ifunctionreference.md)
+---
+id: "_core_webui_webviewbridge_.ifunctionreference"
+title: "IFunctionReference"
+sidebar_label: "IFunctionReference"
+---
 
-# Interface: IFunctionReference
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/webui/WebviewBridge"](../modules/_core_webui_webviewbridge_.md) › [IFunctionReference](_core_webui_webviewbridge_.ifunctionreference.md)
 
 ## Hierarchy
 

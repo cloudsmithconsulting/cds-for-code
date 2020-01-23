@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/Command"](../modules/_core_command_.md) › [ICommandWrapper](_core_command_.icommandwrapper.md)
+---
+id: "_core_command_.icommandwrapper"
+title: "ICommandWrapper"
+sidebar_label: "ICommandWrapper"
+---
 
-# Interface: ICommandWrapper <**T**>
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/Command"](../modules/_core_command_.md) › [ICommandWrapper](_core_command_.icommandwrapper.md)
 
 ## Type parameters
 

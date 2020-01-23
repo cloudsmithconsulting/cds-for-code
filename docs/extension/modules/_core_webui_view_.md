@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/webui/View"](_core_webui_view_.md)
+---
+id: "_core_webui_view_"
+title: "core/webui/View"
+sidebar_label: "core/webui/View"
+---
 
-# External module: "core/webui/View"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/webui/View"](_core_webui_view_.md)
 
 ## Index
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/cs.cds.views.newWorkspaceView"](../modules/_views_cs_cds_views_newworkspaceview_.md) › [NewWorkspaceView](_views_cs_cds_views_newworkspaceview_.newworkspaceview.md)
+---
+id: "_views_cs_cds_views_newworkspaceview_.newworkspaceview"
+title: "NewWorkspaceView"
+sidebar_label: "NewWorkspaceView"
+---
 
-# Class: NewWorkspaceView
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/cs.cds.views.newWorkspaceView"](../modules/_views_cs_cds_views_newworkspaceview_.md) › [NewWorkspaceView](_views_cs_cds_views_newworkspaceview_.newworkspaceview.md)
 
 ## Hierarchy
 

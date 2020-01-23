@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Terminal/SecureTerminal"](../modules/_components_terminal_secureterminal_.md) › [Masker](_components_terminal_secureterminal_.masker.md)
+---
+id: "_components_terminal_secureterminal_.masker"
+title: "Masker"
+sidebar_label: "Masker"
+---
 
-# Class: Masker
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Terminal/SecureTerminal"](../modules/_components_terminal_secureterminal_.md) › [Masker](_components_terminal_secureterminal_.masker.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/ExtensionContext"](../modules/_core_extensioncontext_.md) › [ExtensionContext](_core_extensioncontext_.extensioncontext.md)
+---
+id: "_core_extensioncontext_.extensioncontext"
+title: "ExtensionContext"
+sidebar_label: "ExtensionContext"
+---
 
-# Class: ExtensionContext
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/ExtensionContext"](../modules/_core_extensioncontext_.md) › [ExtensionContext](_core_extensioncontext_.extensioncontext.md)
 
 ## Hierarchy
 

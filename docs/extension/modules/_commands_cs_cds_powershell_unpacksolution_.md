@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.powerShell.unpackSolution"](_commands_cs_cds_powershell_unpacksolution_.md)
+---
+id: "_commands_cs_cds_powershell_unpacksolution_"
+title: "commands/cs.cds.powerShell.unpackSolution"
+sidebar_label: "commands/cs.cds.powerShell.unpackSolution"
+---
 
-# External module: "commands/cs.cds.powerShell.unpackSolution"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["commands/cs.cds.powerShell.unpackSolution"](_commands_cs_cds_powershell_unpacksolution_.md)
 
 ## Index
 

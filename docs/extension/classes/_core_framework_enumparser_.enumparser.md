@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/framework/EnumParser"](../modules/_core_framework_enumparser_.md) › [EnumParser](_core_framework_enumparser_.enumparser.md)
+---
+id: "_core_framework_enumparser_.enumparser"
+title: "EnumParser"
+sidebar_label: "EnumParser"
+---
 
-# Class: EnumParser
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/framework/EnumParser"](../modules/_core_framework_enumparser_.md) › [EnumParser](_core_framework_enumparser_.enumparser.md)
 
 ## Hierarchy
 

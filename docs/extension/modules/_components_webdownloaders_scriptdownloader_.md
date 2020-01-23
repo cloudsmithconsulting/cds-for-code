@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/WebDownloaders/ScriptDownloader"](_components_webdownloaders_scriptdownloader_.md)
+---
+id: "_components_webdownloaders_scriptdownloader_"
+title: "components/WebDownloaders/ScriptDownloader"
+sidebar_label: "components/WebDownloaders/ScriptDownloader"
+---
 
-# External module: "components/WebDownloaders/ScriptDownloader"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/WebDownloaders/ScriptDownloader"](_components_webdownloaders_scriptdownloader_.md)
 
 ## Index
 

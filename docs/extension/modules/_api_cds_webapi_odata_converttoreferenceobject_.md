@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/convertToReferenceObject"](_api_cds_webapi_odata_converttoreferenceobject_.md)
+---
+id: "_api_cds_webapi_odata_converttoreferenceobject_"
+title: "api/cds-webapi/odata/convertToReferenceObject"
+sidebar_label: "api/cds-webapi/odata/convertToReferenceObject"
+---
 
-# External module: "api/cds-webapi/odata/convertToReferenceObject"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["api/cds-webapi/odata/convertToReferenceObject"](_api_cds_webapi_odata_converttoreferenceobject_.md)
 
 ## Index
 

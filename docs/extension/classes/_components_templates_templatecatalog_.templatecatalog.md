@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/Templates/TemplateCatalog"](../modules/_components_templates_templatecatalog_.md) › [TemplateCatalog](_components_templates_templatecatalog_.templatecatalog.md)
+---
+id: "_components_templates_templatecatalog_.templatecatalog"
+title: "TemplateCatalog"
+sidebar_label: "TemplateCatalog"
+---
 
-# Class: TemplateCatalog
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/Templates/TemplateCatalog"](../modules/_components_templates_templatecatalog_.md) › [TemplateCatalog](_components_templates_templatecatalog_.templatecatalog.md)
 
 ## Hierarchy
 

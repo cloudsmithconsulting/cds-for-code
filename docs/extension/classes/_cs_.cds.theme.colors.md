@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [theme](../modules/_cs_.cds.theme.md) › [colors](_cs_.cds.theme.colors.md)
+---
+id: "_cs_.cds.theme.colors"
+title: "colors"
+sidebar_label: "colors"
+---
 
-# Class: colors
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["cs"](../modules/_cs_.md) › [cds](../modules/_cs_.cds.md) › [theme](../modules/_cs_.cds.theme.md) › [colors](_cs_.cds.theme.colors.md)
 
 ## Hierarchy
 

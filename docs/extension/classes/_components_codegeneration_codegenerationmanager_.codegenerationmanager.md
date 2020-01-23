@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["components/CodeGeneration/CodeGenerationManager"](../modules/_components_codegeneration_codegenerationmanager_.md) › [CodeGenerationManager](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md)
+---
+id: "_components_codegeneration_codegenerationmanager_.codegenerationmanager"
+title: "CodeGenerationManager"
+sidebar_label: "CodeGenerationManager"
+---
 
-# Class: CodeGenerationManager
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["components/CodeGeneration/CodeGenerationManager"](../modules/_components_codegeneration_codegenerationmanager_.md) › [CodeGenerationManager](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md)
 
 ## Hierarchy
 

@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["core/io/Xml"](_core_io_xml_.md)
+---
+id: "_core_io_xml_"
+title: "core/io/Xml"
+sidebar_label: "core/io/Xml"
+---
 
-# External module: "core/io/Xml"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["core/io/Xml"](_core_io_xml_.md)
 
 ## Index
 

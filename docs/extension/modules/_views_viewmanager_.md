@@ -1,6 +1,10 @@
-[cds-for-code](../README.md) › [Globals](../globals.md) › ["views/ViewManager"](_views_viewmanager_.md)
+---
+id: "_views_viewmanager_"
+title: "views/ViewManager"
+sidebar_label: "views/ViewManager"
+---
 
-# External module: "views/ViewManager"
+[cds-for-code](../index.md) › [Globals](../globals.md) › ["views/ViewManager"](_views_viewmanager_.md)
 
 ## Index
 
