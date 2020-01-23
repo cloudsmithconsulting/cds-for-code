@@ -11,7 +11,7 @@
 	"bugs": {
 		"url": "https://github.com/cloudsmithconsulting/cds-for-code/issues"
 	},
-	"version": "0.8.9",
+	"version": "0.8.8",
 	"preview": true,
 	"engines": {
 		"vscode": "^1.41.0"
