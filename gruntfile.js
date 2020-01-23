@@ -308,42 +308,42 @@ module.exports = function (grunt) {
         // Running dotnet core commands through shell
         shell: {
             crmsvcutil_restore: {
-                command: 'dotnet restore --packages ..\\packages\\',
+                command: 'dotnet restore --packages ../packages/',
                 options: { 
                     async: false,
                     execOptions: { cwd: 'resources/tools/CloudSmith.Cds.CrmSvcUtil' }
                 }
             },
             crmsvcutil_build_debug: {
-                command: 'dotnet build .\\CloudSmith.Cds.CrmSvcUtil.csproj -c "Debug"',
+                command: 'dotnet build ./CloudSmith.Cds.CrmSvcUtil.csproj -c "Debug"',
                 options: { 
                     async: false,
                     execOptions: { cwd: 'resources/tools/CloudSmith.Cds.CrmSvcUtil' }
                 }
             },
             crmsvcutil_build_release: {
-                command: 'dotnet build .\\CloudSmith.Cds.CrmSvcUtil.csproj -c "Release"',
+                command: 'dotnet build ./CloudSmith.Cds.CrmSvcUtil.csproj -c "Release"',
                 options: { 
                     async: false,
                     execOptions: { cwd: 'resources/tools/CloudSmith.Cds.CrmSvcUtil' }
                 }
             },
             assemblyscanner_restore: {
-                command: 'dotnet restore --packages ..\\packages\\',
+                command: 'dotnet restore --packages ../packages/',
                 options: { 
                     async: false,
                     execOptions: { cwd: 'resources/tools/CloudSmith.Tools.AssemblyScanner' }
                 }
             },
             assemblyscanner_build_debug: {
-                command: 'dotnet build .\\CloudSmith.Tools.AssemblyScanner.csproj -c "Debug"',
+                command: 'dotnet build ./CloudSmith.Tools.AssemblyScanner.csproj -c "Debug"',
                 options: { 
                     async: false,
                     execOptions: { cwd: 'resources/tools/CloudSmith.Tools.AssemblyScanner' }
                 }
             },
             assemblyscanner_build_release: {
-                command: 'dotnet build .\\CloudSmith.Tools.AssemblyScanner.csproj -c "Release"',
+                command: 'dotnet build ./CloudSmith.Tools.AssemblyScanner.csproj -c "Release"',
                 options: { 
                     async: false,
                     execOptions: { cwd: 'resources/tools/CloudSmith.Tools.AssemblyScanner' }
