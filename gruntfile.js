@@ -3,6 +3,7 @@ module.exports = function (grunt) {
 
     // configure the tasks
     let config = {
+        pkg: grunt.file.readJSON('package.json'),
         mkdir: {
             all: {
                 options: {
@@ -365,6 +366,12 @@ module.exports = function (grunt) {
 
         //  Watch Files
         watch: {
+            grunt: {
+                files: ['Gruntfile.js'],
+                options: {
+                    reload: true
+                }
+            },
             js: {
                 files: ['resources/framework/**/*.js'],
                 tasks: ['js_compile'],
