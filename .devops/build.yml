@@ -4,12 +4,18 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- master
+- user/brandon
 
 pool:
   vmImage: 'windows-2019'
 
 steps:
+- task: oneLuckiDevJson2Variable@1
+  inputs:
+    jsonFile: 'package.json'
+    shouldPrefixVariables: true
+    variablePrefix: 'package'
+
 - task: PowerShell@2
   displayName: 'Promote repo to GitHub'
   inputs:
