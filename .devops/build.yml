@@ -9,13 +9,24 @@ trigger:
 pool:
   vmImage: 'windows-2019'
 
+variables:
+- group: CDS-release
+- name: packageVersion
+  value: "$(package.version)"
+
 steps:
 - task: oneLuckiDevJson2Variable@1
-  displayName: 'Read package.json file'
+  displayName: 'Parse package.json file'
   inputs:
     jsonFile: 'package.json'
     shouldPrefixVariables: true
     variablePrefix: 'package'
+
+- task: PowerShell@2
+  displayName: 'Update CDS package version in Library'
+  inputs:
+    targetType: 'inline'
+    script: 'Write-Host "##vso[task.setvariable variable=packageVersion;]$(package.version)"'
 
 - task: PowerShell@2
   displayName: 'Promote repo to GitHub'
