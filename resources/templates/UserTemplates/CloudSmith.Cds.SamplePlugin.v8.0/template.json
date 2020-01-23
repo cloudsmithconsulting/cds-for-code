@@ -1,9 +1,9 @@
 {
     "type": "Project Template",
-    "name": "CloudSmith.Dynamics365.SamplePlugin.v8.1",
-    "displayName": "Dynamics CRM 8.1 Plugin with validation and tests",
+    "name": "CloudSmith.Cds.SamplePlugin.v8.0",
+    "displayName": "Dynamics CRM 8.0 Plugin with validation and tests",
     "publisher": "CloudSmith Consulting LLC",
-    "location": "CloudSmith.Dynamics365.SamplePlugin.v8.1",
+    "location": "CloudSmith.Cds.SamplePlugin.v8.0",
     "outputPath": "#{Namespace}",
     "categories": ["Dynamics", "Plugins"],
     "placeholders": [{

@@ -6,7 +6,7 @@ module.exports = function (grunt) {
         mkdir: {
             all: {
                 options: {
-                    create: ['out/temp', 'out/temp/browser', 'dist/web', 'dist/release', 'dist/templates' ]
+                    create: ['out/temp', 'out/temp/browser', 'dist/web', 'dist/release', 'dist/templates', 'dist/tools' ]
                 },
             },
             dev: {
@@ -16,7 +16,7 @@ module.exports = function (grunt) {
             },
             release: {
                 options: {
-                    create: ['out/temp', 'out/temp/browser', 'dist/release', 'dist/templates' ]
+                    create: ['out/temp', 'out/temp/browser', 'dist/release', 'dist/templates', 'dist/tools' ]
                 },
             }
         },
@@ -262,25 +262,35 @@ module.exports = function (grunt) {
                 src: [ 'resources/templates/BuiltInTemplates/**'], 
                 dest: 'dist/templates/SystemTemplates.zip'
             },
-            'CloudSmith.Dynamics365.SamplePlugin.v8.0': {
-                cwd: 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v8.0',
-                src: [ 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v8.0/**'], 
-                dest: 'dist/templates/CloudSmith.Dynamics365.SamplePlugin.v8.0.zip'
+            'CloudSmith.Cds.SamplePlugin.v8.0': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v8.0',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v8.0/**'], 
+                dest: 'dist/templates/CloudSmith.Cds.SamplePlugin.v8.0.zip'
             },
-            'CloudSmith.Dynamics365.SamplePlugin.v8.1': {
-                cwd: 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v8.1',
-                src: [ 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v8.1/**'], 
-                dest: 'dist/templates/CloudSmith.Dynamics365.SamplePlugin.v8.1.zip'
+            'CloudSmith.Cds.SamplePlugin.v8.1': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v8.1',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v8.1/**'], 
+                dest: 'dist/templates/CloudSmith.Cds.SamplePlugin.v8.1.zip'
             },
-            'CloudSmith.Dynamics365.SamplePlugin.v8.2': {
-                cwd: 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v8.2',
-                src: [ 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v8.2/**'], 
-                dest: 'dist/templates/CloudSmith.Dynamics365.SamplePlugin.v8.2.zip'
+            'CloudSmith.Cds.SamplePlugin.v8.2': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v8.2',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v8.2/**'], 
+                dest: 'dist/templates/CloudSmith.Cds.SamplePlugin.v8.2.zip'
             },
-            'CloudSmith.Dynamics365.SamplePlugin.v9.0': {
-                cwd: 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v9.0',
-                src: [ 'resources/templates/UserTemplates/CloudSmith.Dynamics365.SamplePlugin.v9.0/**'], 
-                dest: 'dist/templates/CloudSmith.Dynamics365.SamplePlugin.v9.0.zip'
+            'CloudSmith.Cds.SamplePlugin.v9.0': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v9.0',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v9.0/**'], 
+                dest: 'dist/templates/CloudSmith.Cds.SamplePlugin.v9.0.zip'
+            },
+            'CloudSmith.Cds.CrmSvcUtil': {
+                cwd: 'resources/tools/CloudSmith.Cds.CrmSvcUtil/bin/Release',
+                src: [ 'resources/tools/CloudSmith.Cds.CrmSvcUtil/bin/Release/**'], 
+                dest: 'dist/tools/CloudSmith.Cds.CrmSvcUtil.zip'
+            },
+            'CloudSmith.Tools.AssemblyScanner': {
+                cwd: 'resources/tools/CloudSmith.Tools.AssemblyScanner/bin/Release/netcoreapp3.0',
+                src: [ 'resources/tools/CloudSmith.Tools.AssemblyScanner/bin/Release/netcoreapp3.0/**'], 
+                dest: 'dist/tools/CloudSmith.Tools.AssemblyScanner.zip'
             }
         },
 
@@ -292,6 +302,52 @@ module.exports = function (grunt) {
                 src: '**',
                 dest: 'dist/scripts'
             }
+        },
+
+        // Running dotnet core commands through shell
+        shell: {
+            crmsvcutil_restore: {
+                command: 'dotnet restore --packages ..\\packages\\',
+                options: { 
+                    async: false,
+                    execOptions: { cwd: 'resources/tools/CloudSmith.Cds.CrmSvcUtil' }
+                }
+            },
+            crmsvcutil_build_debug: {
+                command: 'dotnet build .\\CloudSmith.Cds.CrmSvcUtil.csproj -c "Debug"',
+                options: { 
+                    async: false,
+                    execOptions: { cwd: 'resources/tools/CloudSmith.Cds.CrmSvcUtil' }
+                }
+            },
+            crmsvcutil_build_release: {
+                command: 'dotnet build .\\CloudSmith.Cds.CrmSvcUtil.csproj -c "Release"',
+                options: { 
+                    async: false,
+                    execOptions: { cwd: 'resources/tools/CloudSmith.Cds.CrmSvcUtil' }
+                }
+            },
+            assemblyscanner_restore: {
+                command: 'dotnet restore --packages ..\\packages\\',
+                options: { 
+                    async: false,
+                    execOptions: { cwd: 'resources/tools/CloudSmith.Tools.AssemblyScanner' }
+                }
+            },
+            assemblyscanner_build_debug: {
+                command: 'dotnet build .\\CloudSmith.Tools.AssemblyScanner.csproj -c "Debug"',
+                options: { 
+                    async: false,
+                    execOptions: { cwd: 'resources/tools/CloudSmith.Tools.AssemblyScanner' }
+                }
+            },
+            assemblyscanner_build_release: {
+                command: 'dotnet build .\\CloudSmith.Tools.AssemblyScanner.csproj -c "Release"',
+                options: { 
+                    async: false,
+                    execOptions: { cwd: 'resources/tools/CloudSmith.Tools.AssemblyScanner' }
+                }
+            },
         },
 
         //  Clean
@@ -406,6 +462,16 @@ module.exports = function (grunt) {
                     success: true,
                     duration: 1
                 }
+            },
+
+            tools_compile: {
+                options: {
+                    enabled: true,
+                    message: 'Tools built and zipped',
+                    title: 'CDS for Code',
+                    success: true,
+                    duration: 1
+                }
             }
         },
 
@@ -467,6 +533,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-postcss');
     grunt.loadNpmTasks('grunt-rename-util');
     grunt.loadNpmTasks('grunt-sass');
+    grunt.loadNpmTasks('grunt-shell-spawn');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-ts');
     grunt.loadNpmTasks('grunt-zip');
@@ -484,6 +551,7 @@ module.exports = function (grunt) {
         'replace:version',
         'replace:readme',
         'templates_compile',
+        'tools_release',
         'copy:powershell',
         'clean:temp'
     ]);
@@ -501,7 +569,9 @@ module.exports = function (grunt) {
         'notify:sass_compile'
     ]);
     grunt.registerTask('ts_compile_browser', [ 'mkdir:dev', 'ts:browser', 'browserify:dev', 'clean:temp_ts', 'notify:ts_compile_browser' ]);
-    grunt.registerTask('templates_compile', [ 'zip:SystemTemplates', 'zip:CloudSmith.Dynamics365.SamplePlugin.v8.0', 'zip:CloudSmith.Dynamics365.SamplePlugin.v8.1', 'zip:CloudSmith.Dynamics365.SamplePlugin.v8.2', 'zip:CloudSmith.Dynamics365.SamplePlugin.v9.0', 'notify:templates_compile' ])
+    grunt.registerTask('templates_compile', [ 'zip:SystemTemplates', 'zip:CloudSmith.Cds.SamplePlugin.v8.0', 'zip:CloudSmith.Cds.SamplePlugin.v8.1', 'zip:CloudSmith.Cds.SamplePlugin.v8.2', 'zip:CloudSmith.Cds.SamplePlugin.v9.0', 'notify:templates_compile' ]);
+    grunt.registerTask('tools_compile', [ 'shell:crmsvcutil_restore', 'shell:crmsvcutil_build_debug', 'shell:assemblyscanner_restore', 'shell:assemblyscanner_build_debug' ]);
+    grunt.registerTask('tools_release', [ 'shell:crmsvcutil_restore', 'shell:crmsvcutil_build_release', 'zip:CloudSmith.Cds.CrmSvcUtil', 'shell:assemblyscanner_restore', 'shell:assemblyscanner_build_release', 'zip:CloudSmith.Tools.AssemblyScanner', 'notify:tools_compile' ]);
 
     grunt.registerTask('monitor', [ 'concurrent:monitor' ]);
     grunt.registerTask('travis', [ 'ts_compile_browser', 'js_compile', 'sass_compile' ]);
