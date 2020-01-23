@@ -1,0 +1,48 @@
+[cds-for-code](../README.md) › [Globals](../globals.md) › ["commands/cs.cds.deployment.dotNetBuild"](_commands_cs_cds_deployment_dotnetbuild_.md)
+
+# External module: "commands/cs.cds.deployment.dotNetBuild"
+
+## Index
+
+### Functions
+
+* [incrementBuild](_commands_cs_cds_deployment_dotnetbuild_.md#const-incrementbuild)
+* [run](_commands_cs_cds_deployment_dotnetbuild_.md#run)
+
+## Functions
+
+### `Const` incrementBuild
+
+▸ **incrementBuild**(`build`: string): *string*
+
+Defined in src/commands/cs.cds.deployment.dotNetBuild.ts:15
+
+This command can be invoked by the Explorer file viewer and builds a .Net Core project
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`build` | string |
+
+**Returns:** *string*
+
+void
+
+___
+
+###  run
+
+▸ **run**(`file?`: Uri, `updateVersionBuild`: boolean, `logFile?`: string): *Promise‹any›*
+
+Defined in src/commands/cs.cds.deployment.dotNetBuild.ts:29
+
+**Parameters:**
+
+Name | Type | Default |
+------ | ------ | ------ |
+`file?` | Uri | - |
+`updateVersionBuild` | boolean | true |
+`logFile?` | string | - |
+
+**Returns:** *Promise‹any›*

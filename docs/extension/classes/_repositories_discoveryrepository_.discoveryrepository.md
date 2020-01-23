@@ -1,0 +1,146 @@
+[cds-for-code](../README.md) › [Globals](../globals.md) › ["repositories/discoveryRepository"](../modules/_repositories_discoveryrepository_.md) › [DiscoveryRepository](_repositories_discoveryrepository_.discoveryrepository.md)
+
+# Class: DiscoveryRepository
+
+## Hierarchy
+
+* **DiscoveryRepository**
+
+## Index
+
+### Constructors
+
+* [constructor](_repositories_discoveryrepository_.discoveryrepository.md#constructor)
+
+### Properties
+
+* [webapi](_repositories_discoveryrepository_.discoveryrepository.md#private-webapi)
+
+### Accessors
+
+* [config](_repositories_discoveryrepository_.discoveryrepository.md#config)
+
+### Methods
+
+* [retrieveOrganizations](_repositories_discoveryrepository_.discoveryrepository.md#retrieveorganizations)
+* [createOrganizationConnection](_repositories_discoveryrepository_.discoveryrepository.md#static-createorganizationconnection)
+* [getConnections](_repositories_discoveryrepository_.discoveryrepository.md#static-getconnections)
+* [getOrgConnections](_repositories_discoveryrepository_.discoveryrepository.md#static-getorgconnections)
+* [saveConnections](_repositories_discoveryrepository_.discoveryrepository.md#static-saveconnections)
+
+## Constructors
+
+###  constructor
+
+\+ **new DiscoveryRepository**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *[DiscoveryRepository](_repositories_discoveryrepository_.discoveryrepository.md)*
+
+Defined in src/repositories/discoveryRepository.ts:8
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`config` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+
+**Returns:** *[DiscoveryRepository](_repositories_discoveryrepository_.discoveryrepository.md)*
+
+## Properties
+
+### `Private` webapi
+
+• **webapi**: *[WebApiClient](_api_cds_webapi_cdswebapi_.cdswebapi.webapiclient.md)*
+
+Defined in src/repositories/discoveryRepository.ts:13
+
+## Accessors
+
+###  config
+
+• **get config**(): *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
+
+Defined in src/repositories/discoveryRepository.ts:15
+
+**Returns:** *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
+
+## Methods
+
+###  retrieveOrganizations
+
+▸ **retrieveOrganizations**(`filter?`: string): *Promise‹any›*
+
+Defined in src/repositories/discoveryRepository.ts:19
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`filter?` | string |
+
+**Returns:** *Promise‹any›*
+
+___
+
+### `Static` createOrganizationConnection
+
+▸ **createOrganizationConnection**(`org`: any, `connection`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
+
+Defined in src/repositories/discoveryRepository.ts:69
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`org` | any |
+`connection` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+
+**Returns:** *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
+
+___
+
+### `Static` getConnections
+
+▸ **getConnections**(`context`: ExtensionContext): *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)[]*
+
+Defined in src/repositories/discoveryRepository.ts:33
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`context` | ExtensionContext |
+
+**Returns:** *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)[]*
+
+___
+
+### `Static` getOrgConnections
+
+▸ **getOrgConnections**(`context`: ExtensionContext, `exactMatchesOnly`: boolean): *Promise‹[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)[]›*
+
+Defined in src/repositories/discoveryRepository.ts:39
+
+**Parameters:**
+
+Name | Type | Default |
+------ | ------ | ------ |
+`context` | ExtensionContext | - |
+`exactMatchesOnly` | boolean | false |
+
+**Returns:** *Promise‹[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)[]›*
+
+___
+
+### `Static` saveConnections
+
+▸ **saveConnections**(`context`: ExtensionContext, `connections`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)[]): *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)[]*
+
+Defined in src/repositories/discoveryRepository.ts:63
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`context` | ExtensionContext |
+`connections` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)[] |
+
+**Returns:** *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)[]*

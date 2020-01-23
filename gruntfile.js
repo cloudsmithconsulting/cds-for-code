@@ -349,6 +349,13 @@ module.exports = function (grunt) {
                     execOptions: { cwd: 'resources/tools/CloudSmith.Tools.AssemblyScanner' }
                 }
             },
+            typedoc_markdown: {
+                command: 'npx typedoc --plugin typedoc-plugin-markdown --out docs/extension src',
+                options: {
+                    async: false,
+                    execOptions: { cwd: '.' }
+                }
+            }
         },
 
         //  Clean
@@ -372,6 +379,7 @@ module.exports = function (grunt) {
                     reload: true
                 }
             },
+
             js: {
                 files: ['resources/framework/**/*.js'],
                 tasks: ['js_compile'],
@@ -397,6 +405,15 @@ module.exports = function (grunt) {
                     interrupt: false,
                     spawn: false
                 }
+            },
+
+            ts_docs: {
+                files: ['src/**/*.ts'],
+                tasks: ['docs_compile'],
+                options: {
+                    interrupt: false,
+                    spawn: false
+                }
             }
         },
 
@@ -412,6 +429,7 @@ module.exports = function (grunt) {
                     'js_compile',
                     'ts_compile_browser',
                     'watch:ts',
+                    'watch:ts_docs',
                     'watch:js',
                     'watch:sass',
                     'notify:watching'
@@ -435,6 +453,16 @@ module.exports = function (grunt) {
                 options: {
                     enabled: true,
                     message: 'Sass files compiled',
+                    title: 'CDS for Code',
+                    success: true,
+                    duration: 1
+                }
+            },
+
+            docs_compile: {
+                options: {
+                    enabled: true,
+                    message: 'Extension documentation updated',
                     title: 'CDS for Code',
                     success: true,
                     duration: 1
@@ -557,6 +585,7 @@ module.exports = function (grunt) {
         'usebanner:release',
         'replace:version',
         'replace:readme',
+        'docs_compile',
         'templates_compile',
         'tools_release',
         'copy:powershell',
@@ -567,6 +596,7 @@ module.exports = function (grunt) {
         config.babel.dev.options.inputSourceMap = grunt.file.readJSON('out/temp/materialize_concat.js.map');
     });
 
+    grunt.registerTask('docs_compile', [ 'shell:typedoc_markdown', 'notify:docs_compile' ]);
     grunt.registerTask('js_compile', [ 'concat:dev', 'configureBabel', 'babel:dev', 'uglify:dev', 'clean:temp_js', 'notify:js_compile' ]);
     grunt.registerTask('sass_compile', [
         'sass:dev',
