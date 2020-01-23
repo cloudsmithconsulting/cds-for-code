@@ -17,5 +17,6 @@ src/**
 **/tslint.json
 **/omnisharp.json
 **/*.map
+**/*.nupkg
 **/*.ts
 **/*.yml

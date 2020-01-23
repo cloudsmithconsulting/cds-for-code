@@ -4,13 +4,14 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- user/brandon
+- master
 
 pool:
   vmImage: 'windows-2019'
 
 steps:
 - task: oneLuckiDevJson2Variable@1
+  displayName: 'Read package.json file'
   inputs:
     jsonFile: 'package.json'
     shouldPrefixVariables: true
@@ -64,6 +65,7 @@ steps:
   displayName: 'Create extension package'
 
 - task: CopyFiles@2
+  displayName: 'Copy files to artifacts staging directory'
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)'
     Contents: |
@@ -76,11 +78,10 @@ steps:
       package.json
       README.md
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
-  displayName: 'Copy to staging directory'
 
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish to Azure blob storage'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'extension'
     publishLocation: 'Container'
-  displayName: 'Publish to Azure blob storage'

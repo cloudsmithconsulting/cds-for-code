@@ -109,7 +109,7 @@
 				"cs.cds.configuration.tools.updateSource": {
 					"type": "string",
 					"format": "uri",
-					"default": "https://raw.githubusercontent.com/cloudsmithconsulting/cds-for-code/master/",
+					"default": "https://cloudsmithprodstorage.blob.core.windows.net/cds-for-code",
 					"description": "The URL where supporting scripts are located"
 				},
 				"cs.cds.configuration.tools.updateChannel": {

@@ -13,7 +13,10 @@ CloudSmith would like to recognize and thank the contributors and underlying pro
 
 ---
 
-## CDS For Code Preview Program participants
+## CDS For Code Early Preview Program participants
+
+We would like to give a special thank you to each of our early preview program participants.  These individuals worked tirelessly to give us
+feedback, spot bugs and log issues so that we could deliver a better quality experience.  Our deepest thanks and hats go off to the individuals below:
 
 - Brandon Kelly
 - Ira Mellor
