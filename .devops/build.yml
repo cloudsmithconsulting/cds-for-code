@@ -14,12 +14,6 @@ variables:
 
 steps:
 - task: PowerShell@2
-  displayName: 'Update CDS package version in Library'
-  inputs:
-    targetType: 'inline'
-    script: 'Write-Host "##vso[task.setvariable variable=packageVersion;]$(package.version)"'
-
-- task: PowerShell@2
   displayName: 'Promote repo to GitHub'
   inputs:
     targetType: 'inline'
@@ -63,7 +57,7 @@ steps:
   displayName: 'Install node packages (dependencies)'
 
 - script: |
-    npm version $(package.version)
+    npm version $(package.version) --allow-same-version
   displayName: 'Update package version to $(package.version)'
 
 - script: |
