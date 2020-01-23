@@ -108,6 +108,8 @@ export default async function run(config?:CdsWebApi.Config, solutionId?:string, 
         Quickly.error(`Web resource names are required to begin "${requiredPrefix}"`);
         // lets do this again shall we?
         webResource.name = await Quickly.ask("What is the name (including path and extension) of your web resource?", defaultName || requiredPrefix, defaultName || requiredPrefix);
+        // if they hit esc, end the ever lasting loop
+        if (!webResource.name) { return; } // user cancelled
     }
 
     logger.info(`Web Resource Name: ${webResource.name}`);
