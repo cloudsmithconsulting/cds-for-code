@@ -9,6 +9,9 @@ trigger:
 pool:
   vmImage: 'windows-2019'
 
+variables:
+- group: CDS-release
+
 steps:
 - task: PowerShell@2
   displayName: 'Promote repo to GitHub'
@@ -33,7 +36,7 @@ steps:
           $br = $_.TrimStart().Substring("origin/".Length)
           Write-Host "Pushing $br to GitHub"
           
-          git push -u github $br 
+          git push -f -u github $br 
       }   
 
       git push github --tags
@@ -54,10 +57,15 @@ steps:
   displayName: 'Install node packages (dependencies)'
 
 - script: |
+    npm version $(package.version) --allow-same-version --no-git-tag-version
+  displayName: 'Update package version to $(package.version)'
+
+- script: |
     npm run vscode:package
   displayName: 'Create extension package'
 
 - task: CopyFiles@2
+  displayName: 'Copy files to artifacts staging directory'
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)'
     Contents: |
@@ -70,11 +78,10 @@ steps:
       package.json
       README.md
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
-  displayName: 'Copy to staging directory'
 
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish to Azure blob storage'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'extension'
     publishLocation: 'Container'
-  displayName: 'Publish to Azure blob storage'

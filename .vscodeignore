@@ -11,10 +11,12 @@ resources/framework/**
 resources/powershell/**
 resources/templates/**
 resources/tools/**
+resources/tools/packages/**
 src/**
 **/tsconfig*.json
 **/tslint.json
 **/omnisharp.json
 **/*.map
+**/*.nupkg
 **/*.ts
 **/*.yml

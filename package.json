@@ -3,8 +3,13 @@
 	"displayName": "CDS for Code",
 	"publisher": "CloudSmith",
 	"description": "VS Code extension providing development capabilities for Microsoft&trade; Common Data Service written by CloudSmith Consulting LLC",
+	"homepage": "https://github.com/cloudsmithconsulting/cds-for-code",
 	"repository": {
+		"type": "git",
 		"url": "https://github.com/cloudsmithconsulting/cds-for-code.git"
+	},
+	"bugs": {
+		"url": "https://github.com/cloudsmithconsulting/cds-for-code/issues"
 	},
 	"version": "0.8.8",
 	"preview": true,
@@ -104,12 +109,12 @@
 				"cs.cds.configuration.tools.updateSource": {
 					"type": "string",
 					"format": "uri",
-					"default": "https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/",
+					"default": "https://cloudsmithprodstorage.blob.core.windows.net/cds-for-code",
 					"description": "The URL where supporting scripts are located"
 				},
 				"cs.cds.configuration.tools.updateChannel": {
 					"type": "string",
-					"default": "production",
+					"default": "stable",
 					"enum": [
 						"stable",
 						"preview"
@@ -964,6 +969,7 @@
 		"grunt-remove-logging": "^0.2.0",
 		"grunt-rename-util": "^1.0.0",
 		"grunt-sass": "^3.1.0",
+		"grunt-shell-spawn": "^0.4.0",
 		"grunt-text-replace": "^0.4.0",
 		"grunt-ts": "^6.0.0-beta.22",
 		"grunt-zip": "^0.18.2",
@@ -977,6 +983,8 @@
 		"prettier": "^1.19.1",
 		"sass-lint": "^1.13.1",
 		"tslint": "^5.20.1",
+		"typedoc": "^0.16.8",
+		"typedoc-plugin-markdown": "^2.2.16",
 		"typescript": "^3.7.5",
 		"vsce": "^1.71.0",
 		"vscode-test": "^1.3.0"

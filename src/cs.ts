@@ -1,6 +1,13 @@
 import * as vscode from "vscode";
 
 export namespace cds {
+
+    /**
+     * Static values related to deployment tasks in the CDS for Code extension
+     *
+     * @export
+     * @class deployment
+     */
     // tslint:disable-next-line: class-name
     export class deployment {
         static readonly _namespace: string = "cs.cds.deployment";
