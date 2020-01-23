@@ -30,6 +30,7 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 - Bugfix: New plugin image steps do not save under certain conditions ([#550](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/550/))
 - Bugfix: On-prem connections do not always expand after clicking refresh in CDS Explorer ([#551](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/551/))
 - Bugfix: Plugins show "vundefined" in CDS Explorer ([#552](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/552/))
+- Bugfix: Generate entities command can fail with online users using MFA ([#558](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/558/))
 
 ### v0.8.7 (January 13, 2020)
 - Feature: Icons now match color from VS code theme more accurately ([#336](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/336/))

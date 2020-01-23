@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { CdsWebApi } from './cds-webapi/CdsWebApi';
-import { ICredential, WindowsCredential, OAuthCredential, AzureAdUserCredential, AzureAdClientCredential, CdsOnlineCredential } from '../core/security/Types';
+import { ICredential, WindowsCredential, OAuthCredential, AzureAdClientCredential, CdsOnlineCredential } from '../core/security/Types';
 
 export default class CdsConnectionString {
     constructor(connectionString?:string | undefined) {
@@ -20,7 +20,7 @@ export default class CdsConnectionString {
     redirectUri?: vscode.Uri;
     tokenCacheStorePath?: string;
 
-    static from(connectionString:string, into?:CdsConnectionString): CdsConnectionString {
+    static from(connectionString: string, into?: CdsConnectionString): CdsConnectionString {
         into = into || new CdsConnectionString();
 
         connectionString.split(';').forEach(pair => {

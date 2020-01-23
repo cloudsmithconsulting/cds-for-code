@@ -49,20 +49,28 @@
 Param
 (
 	[string] 
-	[parameter(Mandatory = $true, HelpMessage = "A url or path to the SDK endpoint to contact for metadata")]
+	[parameter(Mandatory = $true, ParameterSetName = "NoConnectionString", HelpMessage = "A url or path to the SDK endpoint to contact for metadata")]
 	$Url,
 
 	[string] 
-	[parameter(Mandatory = $true, HelpMessage = "Username to use when connecting to the server for authentication")]
+	[parameter(Mandatory = $true, ParameterSetName = "NoConnectionString", HelpMessage = "Username to use when connecting to the server for authentication")]
 	$Username,
 
-	[string]
-	[parameter(Mandatory = $true, HelpMessage = "Password to use when connecting to the server for authentication")]
+	[Security.SecureString]
+	[parameter(Mandatory = $true, ParameterSetName = "NoConnectionString", HelpMessage = "Password to use when connecting to the server for authentication")]
 	$Password,
 
 	[string] 
-	[parameter(Mandatory = $false, HelpMessage = " Domain to authenticate against when connecting to the server")]
+	[parameter(Mandatory = $false, ParameterSetName = "NoConnectionString", HelpMessage = " Domain to authenticate against when connecting to the server")]
 	$Domain = "",
+
+	[string] 
+	[parameter(Mandatory = $true, ParameterSetName = "ConnectionString", HelpMessage = "Connection string to use to connect to the server")]
+	$ConnectionString,
+
+	[switch]
+	[parameter(Mandatory = $true, ParameterSetName = "Interactive", HelpMessage = "If supplied, will instruct CrmSvcUtil to prompt for login information.")]
+	$Interactive = $Null,
 
 	[string]
 	[parameter(Mandatory = $true, HelpMessage = "The path where the generated files will go.")]
@@ -119,6 +127,17 @@ if ($GenerateActions)
 }
 
 $CrmSvcUtil = (Join-Path $ToolsPath -ChildPath "CrmSvcUtil.exe")
-$Arguments = "/nologo /url:'$Url' /username:$Username /password:$Password $Domain$Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
+
+if ($Interactive) {
+	$Arguments = "/nologo /url:'$Url' /interactivelogin $Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
+} else {
+	if ($ConnectionString -eq "") {
+		$UnsecurePassword = ConvertFrom-SecureString $Password -AsPlainText
+
+		$Arguments = "/nologo /url:'$Url' /username:$Username /password:$UnsecurePassword $Domain$Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
+	} else {
+		$Arguments = "/nologo /url:'$Url' /connectionstring:'$ConnectionString' $Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
+	}
+}
 
 Invoke-Expression "& `"$CrmSvcUtil`" $Arguments"

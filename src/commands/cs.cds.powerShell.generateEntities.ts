@@ -16,26 +16,35 @@ import logger from '../core/framework/Logger';
  * This command can be invoked by the Command Pallette or external sources and generates .Net code
  * using CrmSvcUtil.exe (included with the Dynamics365 SDK)
  * @export run command function
- * @param {CdsWebApi.Config} [config] Optional web API connection to use when generating entities.
+ * @param {CdsWebApi.Config | string} [config] Optional web API connection to use when generating entities, or a string containing a connection string
  * @param {string} [folder] Optional folder to store entitiy code in
  * @param {string} [outputFileName] Optional filename to use when generating entities
  * @param {string} [namespace] Optional namespace for generated output
  * @returns Promise with output from terminal command running CrmSvcUtil.exe
  */
-export default async function run(config?:CdsWebApi.Config, folder?:string, outputFileName?: string, namespace?: string) {
+export default async function run(config?: CdsWebApi.Config | string, folder?: string, outputFileName?: string, namespace?: string) {
 	// setup configurations
 	const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.cds.configuration.tools.sdkInstallPath);
 	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 
-	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
+	if (!config) {
+		const connectionChoice = await Quickly.pick("Would you like to connect to CDS using an existing connection or a connection string?", "Existing Connection", "Connection String");
+
+		if (connectionChoice.label === "Existing Connection") {
+			config = await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
+		} else {
+			config = (await Quickly.ask("Enter the connection string use when connecting to CDS", "AuthType=Office365; ServiceUri=https://orgname.crm.dynamics.com; Username=username; Password=password")).toString();
+		}
+	}
+
 	if (!config) { 
 		logger.warn("Configuration not chosen, command cancelled");
 		return; 
 	}
 
 	if (!folder && !outputFileName) {
-		const chosenItem:WorkspaceFileItem = await Quickly.pickWorkspaceAny(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the destination where generated code will go", undefined, true);
+		const chosenItem: WorkspaceFileItem = await Quickly.pickWorkspaceAny(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the destination where generated code will go", undefined, true);
 
 		if (!chosenItem) {
 			logger.warn("Workspace file/folder not chosen, command cancelled");
@@ -79,23 +88,56 @@ export default async function run(config?:CdsWebApi.Config, folder?:string, outp
 	logger.log("Generating entity code");
 	return TerminalManager.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => {
-			return await terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
-				.text(`-ToolsPath ${coreToolsRoot} `)
-				.text(`-Url "${Utilities.String.withTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `)
-				.if(() => Security.Credential.isCredential(config.credentials), c => {
-					c.text(`-Username "`)
-					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
-					 .text(`" -Password "`)
-					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.password.toString())
-					 .text(`" `)
-					 .if(() => Security.Credential.isWindowsCredential(config.credentials), c2 => {
-						 c2.text(` -Domain "`)
-						   .credential(config.credentials, GlobalStateCredentialStore.Instance, creds2 => (<Security.WindowsCredential>creds2).domain.toString())
-						   .text(`" `);
-					 });
-				})
-				.text(`-Path "${folder}" `)
-				.text(`-OutputFile "${outputFileName}" `)
-				.text(!Utilities.$Object.isNull(namespace) ? `-Namespace "${namespace}" ` : ''));
+			let returnPromise: Promise<TerminalCommand>;
+
+			if (typeof config !== 'string') {
+				const typedConfig = <CdsWebApi.Config>config;
+
+				returnPromise = terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
+					.text(`-ToolsPath ${coreToolsRoot} `)
+					.text(`-Url "${Utilities.String.withTrailingSlash(typedConfig.webApiUrl)}XRMServices/2011/Organization.svc" `)
+					.if(() => !typedConfig.credentials, c => c.text(`-Interactive `))
+					.if(() => Security.Credential.isCredential(typedConfig.credentials), c => {
+						c.text(`-Username "`)
+						 .credential(typedConfig.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
+						 .text(`" -Password "`)
+						 .credential(typedConfig.credentials, GlobalStateCredentialStore.Instance, creds => creds.password.toString())
+						 .text(`" `)
+						 .if(() => Security.Credential.isWindowsCredential(typedConfig.credentials), c2 => {
+							 c2.text(` -Domain "`)
+							   .credential(typedConfig.credentials, GlobalStateCredentialStore.Instance, creds2 => (<Security.WindowsCredential>creds2).domain.toString())
+							   .text(`" `);
+						 });
+					})
+					.text(`-Path "${folder}" `)
+					.text(`-OutputFile "${outputFileName}" `)
+					.text(!Utilities.$Object.isNull(namespace) ? `-Namespace "${namespace}" ` : ''));
+			} else {
+				returnPromise = terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
+					.text(`-ToolsPath ${coreToolsRoot} `)
+					.text(`-ConnectionString "`)
+					.sensitive(<string>config)
+					.text(`" -Path "${folder}" `)
+					.text(`-OutputFile "${outputFileName}" `)
+					.text(!Utilities.$Object.isNull(namespace) ? `-Namespace "${namespace}" ` : ''));
+			}
+
+			return await returnPromise
+				.then(async result => { 
+					if (result && result.output.indexOf("Invalid Login Information : An unsecured or incorrectly secured fault was received from the other party.") !== -1) {
+						await Quickly.askToRetry('CrmSvcUtil returned a fault attempting to login with the credentials supplied.  Would you like to retry with an interactive login?', 
+							async () => { 
+								return terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
+									.text(`-ToolsPath ${coreToolsRoot} `)
+									.text(`-Path "${folder}" `)
+									.text(`-OutputFile "${outputFileName}" `)
+									.text(!Utilities.$Object.isNull(namespace) ? `-Namespace "${namespace}" ` : '')
+									.text(`-Interactive `));
+							},
+							"Yes", "No");
+					} else {
+						return result;
+					}
+				});
 		});
 }
