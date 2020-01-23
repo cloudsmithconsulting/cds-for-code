@@ -9,6 +9,11 @@ trigger:
 pool:
   vmImage: 'windows-2019'
 
+variables:
+- group: CDS-release
+- name: packageVersion
+  value: "$(package.version)"
+
 steps:
 - task: oneLuckiDevJson2Variable@1
   inputs:
