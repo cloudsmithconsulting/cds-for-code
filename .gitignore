@@ -3,6 +3,7 @@ node_modules
 .vscode-test/
 *.vsix
 dist/**
+resources/tools/packages/**
 **/*.dll
 **/*.obj
 **/bin/**
