@@ -13,6 +13,7 @@ import { ICredentialStore, Credential, SecureOutput } from '../../core/security/
 import PromiseInfo from "../../core/types/PromiseInfo";
 import ExtensionContext from '../../core/ExtensionContext';
 import command from '../../core/Command';
+import { extensionActivate } from '../../core/Extension';
 
 export class TerminalCommand {
 	private _command:string;
@@ -770,8 +771,19 @@ export class Terminal implements vscode.Terminal {
 export default class TerminalManager {
 	private static terminals: Dictionary<string, Terminal> = new Dictionary<string, Terminal>();
 
+	@extensionActivate(cs.cds.extension.productId)
+	static async activate(context: ExtensionContext) {
+		setTimeout(async () => {
+			const folder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 
+				? vscode.workspace.workspaceFolders[0].uri.fsPath 
+				: ExtensionContext.Instance.extensionPath;
+
+			await TerminalManager.showTerminal(folder);
+		}, 2500);
+	}
+
 	@command(cs.cds.extension.createTerminal, "Create Terminal")
-	static async showTerminal(folder: string, name?: string): Promise<Terminal> {
+	static async showTerminal(folder: string, name?: string, preserveFocus: boolean = false): Promise<Terminal> {
 		if (!folder || !fs.existsSync(folder)) {
 			folder = ExtensionContext.Instance.globalStoragePath;
 		}
@@ -785,10 +797,10 @@ export default class TerminalManager {
 				terminal.dispose();
 			});
 
-			terminal.show(false);
+			terminal.show(preserveFocus);
 			TerminalManager.terminals.add(name, terminal);
 		} else {
-			TerminalManager.terminals[name].show(false);
+			TerminalManager.terminals[name].show(preserveFocus);
 
 			await TerminalManager.terminals[name].setPath(folder);
 		}

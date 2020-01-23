@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Authors>CloudSmith Consulting LLC</Authors>
+    <Product>CloudSmith CDS for Code</Product>
+    <Description>Simple .Net Core executable scans an assembly and reports type information to aid in plugin registration process.</Description>
+    <AssemblyName>assemblyscanner</AssemblyName>
+  </PropertyGroup>
+
+</Project>

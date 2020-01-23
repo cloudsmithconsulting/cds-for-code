@@ -261,8 +261,13 @@ export default class ApiRepository {
             });
     }
 
-    retrieveWebResource(webResourceId:string): Promise<any> {
-        return this.webapi.retrieve(webResourceId, "webresourceset");
+    retrieveWebResource(webResourceId:string, throwIfEmpty: boolean = true): Promise<any> {
+        return this.webapi.retrieve(webResourceId, "webresourceset")
+            .catch(err => {
+                if (err.status !== 404 || (err.status === 404 && throwIfEmpty)) {
+                    throw err;
+                }
+            });
     }
 
     createProcess(workflow: any): Promise<any> {
@@ -280,7 +285,7 @@ export default class ApiRepository {
         let forceCreate:boolean = false;
 
         if (webResource && webResource.webresourceid) {
-            const newWebResource = await this.retrieveWebResource(webResource.webresourceid);
+            const newWebResource = await this.retrieveWebResource(webResource.webresourceid, false);
 
             forceCreate = !newWebResource;
         }

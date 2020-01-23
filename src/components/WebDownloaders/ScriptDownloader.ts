@@ -217,7 +217,7 @@ export default class ScriptDownloader {
 	static async installCdsSdk(): Promise<TerminalCommand> {
 		const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.cds.configuration.tools.sdkInstallPath);
 
-		if (!FileSystem.exists(sdkInstallPath) && FileSystem.exists(path.join(ExtensionContext.Instance.globalStoragePath, "/Scripts/Install-Sdk.ps1"))) {
+		if (!FileSystem.exists(sdkInstallPath) || !FileSystem.exists(path.join(sdkInstallPath, "CoreTools")) && FileSystem.exists(path.join(ExtensionContext.Instance.globalStoragePath, "/Scripts/Install-Sdk.ps1"))) {
 			FileSystem.makeFolderSync(sdkInstallPath);
 		
 			Logger.warn(`Extension: SDK not detected in ${sdkInstallPath}, downloading and extracting automatically.`);

@@ -82,7 +82,7 @@ export default async function run(config?:CdsWebApi.Config, folder?:string, outp
 			return await terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
 				.text(`-ToolsPath ${coreToolsRoot} `)
 				.text(`-Url "${Utilities.String.withTrailingSlash(config.webApiUrl)}XRMServices/2011/Organization.svc" `)
-				.if(() => Security.Credential.isCredential(config.credentials) && !(<any>config.credentials).isMultiFactorAuthentication, c => {
+				.if(() => Security.Credential.isCredential(config.credentials), c => {
 					c.text(`-Username "`)
 					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
 					 .text(`" -Password "`)

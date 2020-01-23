@@ -1,15 +1,11 @@
-$GithubPAT = "$(GithubPAT)"
 $GithubRepoUri = "https://github.com/cloudsmithconsulting/cds-for-code.git"
 
 # track all local branches
 git branch -r | findstr /v "\->" | ForEach-Object { $br = $_.TrimStart(); git branch --track $br.Substring("origin/".Length) $br }
 
-# parse off the protocol as we need to re-write this URL with the PAT
-$GithubRepoUri = $GithubRepoUri.Substring(8)
-
 # push all branches to vsts project
-Write-Host "Using GitHub connection at: https://$GithubPAT@$GithubRepoUri"
-git remote add github "https://$GithubPAT@$GithubRepoUri"
+Write-Host "Using GitHub connection at: $GithubRepoUri"
+git remote add github "$GithubRepoUri"
 git branch -r | findstr /v "\->" | ForEach-Object { 
     $br = $_.TrimStart().Substring("origin/".Length)
     Write-Host "Pushing $br to GitHub"

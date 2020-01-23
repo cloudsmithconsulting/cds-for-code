@@ -96,7 +96,7 @@ If (!(Test-Path -Path $Path))
 }
 
 $FullPath = (Join-Path -Path $Path -ChildPath $OutputFile)
-$GeerateActionsString = " "
+$GenerateActionsString = " "
 
 if ($Domain -ne "")
 {

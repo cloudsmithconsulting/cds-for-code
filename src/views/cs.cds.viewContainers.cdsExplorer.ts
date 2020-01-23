@@ -253,7 +253,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
      */
     @extensionActivate(cs.cds.extension.productId)
     async activate(context: vscode.ExtensionContext) {
-        TreeEntryCache.Instance.SolutionMap = await SolutionMap.loadFromWorkspace(undefined, false);
+        TreeEntryCache.Instance.solutionMap = await SolutionMap.loadFromWorkspace(undefined, false);
 
         ExtensionContext.subscribe(vscode.window.registerTreeDataProvider(cs.cds.viewContainers.cdsExplorer, CdsExplorer.Instance));
     }
@@ -358,7 +358,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     @command(cs.cds.controls.cdsExplorer.moveSolution, "Move or re-map solution")
     async moveSolution(item?: CdsTreeEntry) {
         return await vscode.commands.executeCommand(cs.cds.deployment.updateSolutionMapping, item.solutionMapping, item.config)
-            .then(result => TreeEntryCache.Instance.ClearMap());
+            .then(result => TreeEntryCache.Instance.clearMap());
     }
 
     @command(cs.cds.controls.cdsExplorer.openInApp, "Open in App")
@@ -378,7 +378,11 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
     @command(cs.cds.controls.cdsExplorer.refreshEntry, "Refresh")
     refresh(item?: CdsTreeEntry): void {
-        // do not check for .Instance here as it will create a circular reference.
+        if (TreeEntryCache.Instance) {
+            TreeEntryCache.Instance.remove(item ? item.id : undefined);
+        }
+
+        // do not check for .Instance here as it will create a circular reference.        
         if (CdsExplorer.instance) {
             CdsExplorer.instance._onDidChangeTreeData.fire(item);
         }
@@ -386,9 +390,9 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
     refreshSolution(solutionPath?: string): void {
         if (solutionPath) {
-            TreeEntryCache.Instance.Items
+            TreeEntryCache.Instance.items
                 .where(i => i.id === solutionPath)
-                .forEach(i => this._onDidChangeTreeData.fire(i));
+                .forEach(i => this.refresh(i));
         }
     }
 
@@ -415,7 +419,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
             const componentType = CdsExplorer.solutionComponentMappings[item.itemType].componentType;
 
             if (!Utilities.$Object.isNullOrEmpty(item.solutionIdPath)) {
-                const solutions = TreeEntryCache.Instance.Items.where(i => i.id === item.solutionIdPath).toArray();
+                const solutions = TreeEntryCache.Instance.items.where(i => i.id === item.solutionIdPath).toArray();
                 
                 if (solutions && solutions.length > 0 && componentId && componentType) {
                     return await vscode.commands.executeCommand(cs.cds.deployment.removeSolutionComponent, item.config, solutions[0].context, componentId, componentType)
@@ -896,10 +900,10 @@ class TreeEntryCache {
     private _items:CdsTreeEntry[] = [];
 
     private constructor() { 
-        this.SolutionMap = new SolutionMap();
+        this.solutionMap = new SolutionMap();
 
         if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
-            SolutionMap.loadFromWorkspace().then(map => this.SolutionMap = map || this.SolutionMap);
+            SolutionMap.loadFromWorkspace().then(map => this.solutionMap = map || this.solutionMap);
         }
     }
 
@@ -911,26 +915,36 @@ class TreeEntryCache {
         return this._instance;
     }
 
-    AddEntry(entry:CdsTreeEntry): void {
+    add(entry: CdsTreeEntry): void {
         this._items.push(entry);
     }
 
-    Clear(): void {
+    clear(): void {
         this._items = [];
     }
 
-    ClearMap(): void { 
-        this.SolutionMap = null;
+    clearMap(): void { 
+        this.solutionMap = null;
     }
 
-    get Items(): TS.Linq.Enumerator<CdsTreeEntry> {
+    get items(): TS.Linq.Enumerator<CdsTreeEntry> {
         return new TS.Linq.Enumerator(this._items);
     }
 
-    SolutionMap: SolutionMap;
+    solutionMap: SolutionMap;
 
-    Under(path:string): TS.Linq.Enumerator<CdsTreeEntry> {
-        return this.Items.where(item => item.id.startsWith(path));
+    remove(path?: string) {
+        if (!path || path === "") {
+            this.clear();
+        } else {
+            this.under(path).forEach(i => {
+                this._items.slice(this._items.indexOf(i), 1);
+            });
+        }
+    }
+
+    under(path:string): TS.Linq.Enumerator<CdsTreeEntry> {
+        return this.items.where(item => item.id.startsWith(path));
     }
 }
 
@@ -988,7 +1002,7 @@ class CdsTreeEntry extends vscode.TreeItem {
             } 
 
             // We can't have duplicate ids in the treeview.
-            const count = TreeEntryCache.Instance.Items.count(t => t.id === id || t.id && t.id.startsWith(id + "_"));
+            const count = TreeEntryCache.Instance.items.count(t => t.id === id || t.id && t.id.startsWith(id + "_"));
             
             if (count > 0) {
                 id += `_${count}`;
@@ -1000,14 +1014,14 @@ class CdsTreeEntry extends vscode.TreeItem {
 
         if (parentItem && parentItem.configId) {
             this.configId = parentItem.configId;
-        } else if (context && context.id) {
+        } else if (context && context.webApiUrl && context.id) {
             this.configId = context.id;
             this.context = undefined;
         }
 
         this.contextValue = this.capabilities.join(",");
 
-        TreeEntryCache.Instance.AddEntry(this);
+        TreeEntryCache.Instance.add(this);
     }
 
     /**
@@ -1055,7 +1069,7 @@ class CdsTreeEntry extends vscode.TreeItem {
             const split = this.id.split("/");            
             
             if (split.length >= 4 && connection) {
-                const orgEntry = TreeEntryCache.Instance.Items.first(i => i.id === split.slice(0, 4).join("/"));
+                const orgEntry = TreeEntryCache.Instance.items.first(i => i.id === split.slice(0, 4).join("/"));
 
                 if (orgEntry && orgEntry.context) {
                     return DiscoveryRepository.createOrganizationConnection(orgEntry.context, connection);
@@ -1081,7 +1095,7 @@ class CdsTreeEntry extends vscode.TreeItem {
             if (split.length > 0) {
                 const parentId = split.join("/");
 
-                return TreeEntryCache.Instance.Items.first(i => i.id === parentId);
+                return TreeEntryCache.Instance.items.first(i => i.id === parentId);
             }
         }
 
@@ -1144,7 +1158,7 @@ class CdsTreeEntry extends vscode.TreeItem {
             
             if (index >= 0) {
                 const solutionTreeId = split.slice(0, index + 2).join('/');
-                const solutionTreeEntry = TreeEntryCache.Instance.Items.where(i => i.id === solutionTreeId).toArray();
+                const solutionTreeEntry = TreeEntryCache.Instance.items.where(i => i.id === solutionTreeId).toArray();
 
                 if (solutionTreeEntry && solutionTreeEntry.length > 0) {
                     solution = solutionTreeEntry[0].context;
@@ -1185,8 +1199,8 @@ class CdsTreeEntry extends vscode.TreeItem {
      */
     get solutionMapping(): SolutionWorkspaceMapping {
         if (this.id && this.itemType === "Solution") {
-            if (TreeEntryCache.Instance && TreeEntryCache.Instance.SolutionMap) {
-                const maps = TreeEntryCache.Instance.SolutionMap.getBySolutionId(this.context.solutionid, this.config.orgId);
+            if (TreeEntryCache.Instance && TreeEntryCache.Instance.solutionMap) {
+                const maps = TreeEntryCache.Instance.solutionMap.getBySolutionId(this.context.solutionid, this.config.orgId);
 
                 if (maps && maps.length > 0) {
                     return maps[0];
