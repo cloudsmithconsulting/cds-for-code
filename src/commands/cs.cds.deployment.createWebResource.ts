@@ -37,7 +37,7 @@ export default async function run(config?:CdsWebApi.Config, solutionId?:string, 
         }
 
         map = await this.getSolutionMapping(fsPath, config ? config.orgId : undefined);
-    } else if (config.orgId && solutionId) {
+    } else if (config && config.orgId && solutionId) {
         map = await this.getSolutionMapping(undefined, config.orgId, solutionId);
     }
 
@@ -88,15 +88,32 @@ export default async function run(config?:CdsWebApi.Config, solutionId?:string, 
         defaultName += path.basename(fsPath);
     }
 
-    webResource.name = webResource.name || await Quickly.ask("What is the name (including path and extension) of your web resource?", defaultName, defaultName);
+    let solution;
+    let requiredPrefix;
+    if (defaultName === "" && (solutionId || (map && map.solutionId))) {
+        // lets get the prefix from the publisher on the solution
+        solution = await api.retrieveSolution(solutionId || map.solutionId);
+        requiredPrefix = `${solution.publisherid.customizationprefix}_`;
+    } else if (defaultName !== "" && defaultName.indexOf("_") !== -1) {
+        // get the beginning of the name (ex: new_)
+        requiredPrefix = defaultName.substring(0, defaultName.indexOf("_") + 1);
+    }
+
+    webResource.name = webResource.name || await Quickly.ask("What is the name (including path and extension) of your web resource?", defaultName || requiredPrefix, defaultName || requiredPrefix);
+    
+    if (!webResource.name) { return; } // user cancelled
+
+    // check the required prefix as long as we need to
+    while (requiredPrefix && !webResource.name.startsWith(requiredPrefix)) {
+        Quickly.error(`Web resource names are required to begin "${requiredPrefix}"`);
+        // lets do this again shall we?
+        webResource.name = await Quickly.ask("What is the name (including path and extension) of your web resource?", defaultName || requiredPrefix, defaultName || requiredPrefix);
+    }
+
     logger.info(`Web Resource Name: ${webResource.name}`);
 
     if (webResource.name && (<string>webResource.name).indexOf(".") > -1) {
         defaultType = defaultType || this.getWebResourceType(path.extname(webResource.name));
-    }
-
-    if (!webResource.name) {
-        return;
     }
 
     webResource.displayname = webResource.displayname || await Quickly.ask("What is the display name for this web resource?");
@@ -138,13 +155,9 @@ export default async function run(config?:CdsWebApi.Config, solutionId?:string, 
     // Double check as we have calculated a path now, is there a map?
     if (!map) { map = await this.getSolutionMapping(fsPath, config.orgId); }
 
-    let solution;
-
-    if ((!map || !map.solutionId) && !solutionId) {
+    if (!solution && ((!map || !map.solutionId) && !solutionId)) {
         solution = await Quickly.pickCdsSolution(config, "Would you like to add this web resource to a solution?");
         map = await this.getSolutionMapping(undefined, config.orgId, solution.solutionid);
-    } else {
-        solution = await api.retrieveSolution(solutionId || map.solutionId);
     }
 
     try {

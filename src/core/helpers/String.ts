@@ -28,7 +28,7 @@ export function withTrailingSlash(path: string | undefined): string {
 
 export function noTrailingSlash(string: string): string {
     if (string.endsWith("/") || string.endsWith("\\")) {
-        string = string.substr(0, string.length - 1);
+        string = string.substring(0, string.length - 1);
     }
 
     return string;

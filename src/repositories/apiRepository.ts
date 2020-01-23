@@ -48,7 +48,11 @@ export default class ApiRepository {
     }
 
     retrieveSolution(solutionId:string) : Promise<any[]> {
-        return this.webapi.retrieveRequest({ collection: "solutions", id: solutionId });
+        return this.webapi.retrieveRequest({ 
+            collection: "solutions", 
+            id: solutionId,
+            expand: [ { property: "publisherid", select: ["publisherid", "friendlyname", "uniquename", "customizationprefix"] } ]
+        });
     }
 
     async retrieveBuiltInSolution(builtInType: "System" | "Active" | "Default", select: string[] = ApiRepository.defaultSelections["solutions"]): Promise<any> {
