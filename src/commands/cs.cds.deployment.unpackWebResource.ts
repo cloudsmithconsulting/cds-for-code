@@ -32,7 +32,7 @@ export default async function run(config?:CdsWebApi.Config, webResource?:any, fi
         fsPath = fileUri.fsPath;
     }
 
-    let map:SolutionWorkspaceMapping = this.getSolutionMapping(fsPath, config.orgId);
+    let map:SolutionWorkspaceMapping = await this.getSolutionMapping(fsPath, config.orgId);
 
     webResource = webResource || await Quickly.pickCdsSolutionComponent(config, map ? map.solutionId : undefined, CdsSolutions.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
     if (!webResource) {
@@ -61,7 +61,7 @@ export default async function run(config?:CdsWebApi.Config, webResource?:any, fi
 
     // If we don't have a map, attempt to reload it with the new path.
     if (!map && fsPath) {
-        map = this.getSolutionMapping(fsPath, config.orgId);
+        map = await this.getSolutionMapping(fsPath, config.orgId);
     }
 
     // Check again :) If we do have a map, enforce that we put files where we are supposed to, regardless of user preference.
@@ -74,7 +74,7 @@ export default async function run(config?:CdsWebApi.Config, webResource?:any, fi
 
     // If we're part of a solution, we need to write the data XML file so that solution packager can pick this up.
     if (map) {
-        await this.writeDataXmlFile(config, map, webResource, fsPath);
+        await this.writeDataXmlFile(map, webResource, fsPath, true);
     }
 
     if (!autoOpen) {
