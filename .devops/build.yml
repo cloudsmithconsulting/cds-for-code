@@ -11,17 +11,8 @@ pool:
 
 variables:
 - group: CDS-release
-- name: packageVersion
-  value: "$(package.version)"
 
 steps:
-- task: oneLuckiDevJson2Variable@1
-  displayName: 'Parse package.json file'
-  inputs:
-    jsonFile: 'package.json'
-    shouldPrefixVariables: true
-    variablePrefix: 'package'
-
 - task: PowerShell@2
   displayName: 'Update CDS package version in Library'
   inputs:
@@ -70,6 +61,10 @@ steps:
 - script: |
     npm install
   displayName: 'Install node packages (dependencies)'
+
+- script: |
+    npm version $(package.version)
+  displayName: 'Update package version to $(package.version)'
 
 - script: |
     npm run vscode:package
