@@ -11,7 +11,7 @@ git branch -r | findstr /v "\->" | ForEach-Object {
     Write-Host "Pushing $br to GitHub"
     
     & git pull origin $br --rebase
-    & git push -u github $br 
+    & git push -f -u github $br 
 }      
 
 # don't forget the tags

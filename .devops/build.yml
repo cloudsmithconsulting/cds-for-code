@@ -33,7 +33,7 @@ steps:
           $br = $_.TrimStart().Substring("origin/".Length)
           Write-Host "Pushing $br to GitHub"
           
-          git push -u github $br 
+          git push -f -u github $br 
       }   
 
       git push github --tags
