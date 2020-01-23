@@ -109,12 +109,12 @@
 				"cs.cds.configuration.tools.updateSource": {
 					"type": "string",
 					"format": "uri",
-					"default": "https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/",
+					"default": "https://raw.githubusercontent.com/cloudsmithconsulting/cds-for-code/master/",
 					"description": "The URL where supporting scripts are located"
 				},
 				"cs.cds.configuration.tools.updateChannel": {
 					"type": "string",
-					"default": "production",
+					"default": "stable",
 					"enum": [
 						"stable",
 						"preview"

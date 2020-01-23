@@ -132,8 +132,8 @@ For a more comprehensive walkthrough of features you can check out our How To ar
 |:--|:--|:--|
 |cs.cds.configuration.web.usePowerAppsUi|Use the PowerApps Maker UX where possible|true|
 |cs.cds.configuration.tools.sdkInstallPath|The full path to the root of the Dynamics 365/CDS SDK installation on your computer|C:\Deploy\Tools|
-|cs.cds.configuration.tools.updateSource|The URL where supporting scripts are located|[https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master/](https://raw.githubusercontent.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/master)|
-|cs.cds.configuration.tools.updateChannel|The update channel to use when downloading new versions of this extension|production|
+|cs.cds.configuration.tools.updateSource|The URL where supporting scripts are located|[https://raw.githubusercontent.com/cloudsmithconsulting/cds-for-code/master/](https://raw.githubusercontent.com/cloudsmithconsulting/cds-for-code/master)|
+|cs.cds.configuration.tools.updateChannel|The update channel to use when downloading new versions of this extension|stable|
 |cs.cds.configuration.iconThemes.selectedTheme|The icon set to use in the CDS Explorer view|default|
 |cs.cds.configuration.explorer.showDefaultSolution|Show the Default Solution in the CDS Explorer view|false|
 |cs.cds.configuration.explorer.showWelcomeExperience|Show the welcome experience for this extension|true|
