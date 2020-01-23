@@ -57,7 +57,7 @@ steps:
   displayName: 'Install node packages (dependencies)'
 
 - script: |
-    npm version $(package.version) --allow-same-version
+    npm version $(package.version) --allow-same-version --no-git-tag-version
   displayName: 'Update package version to $(package.version)'
 
 - script: |
