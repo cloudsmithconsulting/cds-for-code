@@ -20,7 +20,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.explorer"
 
-Defined in src/cs.ts:102
+Defined in src/cs.ts:109
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 ▪ **showDefaultSolution**: *string* = `${explorer._namespace}.showDefaultSolution`
 
-Defined in src/cs.ts:103
+Defined in src/cs.ts:110
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 ▪ **showWelcomeExperience**: *string* = `${explorer._namespace}.showWelcomeExperience`
 
-Defined in src/cs.ts:104
+Defined in src/cs.ts:111

@@ -19,7 +19,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.web"
 
-Defined in src/cs.ts:96
+Defined in src/cs.ts:103
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 ▪ **usePowerAppsUi**: *string* = `${web._namespace}.usePowerAppsUi`
 
-Defined in src/cs.ts:97
+Defined in src/cs.ts:104

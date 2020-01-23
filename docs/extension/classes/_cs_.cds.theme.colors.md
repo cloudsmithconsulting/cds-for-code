@@ -19,7 +19,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.theme.colors"
 
-Defined in src/cs.ts:241
+Defined in src/cs.ts:248
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 ▪ **icons**: *string* = `${colors._namespace}.icons`
 
-Defined in src/cs.ts:242
+Defined in src/cs.ts:249

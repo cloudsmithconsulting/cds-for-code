@@ -25,7 +25,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.extension"
 
-Defined in src/cs.ts:32
+Defined in src/cs.ts:39
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 ▪ **clearTerminal**: *string* = `${extension._namespace}.clearTerminal`
 
-Defined in src/cs.ts:33
+Defined in src/cs.ts:40
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 ▪ **createTerminal**: *string* = `${extension._namespace}.createTerminal`
 
-Defined in src/cs.ts:34
+Defined in src/cs.ts:41
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 ▪ **downloadRequiredIcons**: *string* = `${extension._namespace}.downloadRequiredIcons`
 
-Defined in src/cs.ts:35
+Defined in src/cs.ts:42
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 ▪ **downloadRequiredScripts**: *string* = `${extension._namespace}.downloadRequiredScripts`
 
-Defined in src/cs.ts:36
+Defined in src/cs.ts:43
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 ▪ **productId**: *string* = `CloudSmith.cds-for-code`
 
-Defined in src/cs.ts:37
+Defined in src/cs.ts:44
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 ▪ **productName**: *string* = `CloudSmith CDS for Code`
 
-Defined in src/cs.ts:38
+Defined in src/cs.ts:45
 
 ___
 
@@ -81,4 +81,4 @@ ___
 
 ▪ **telemetryKey**: *string* = `8e60943e-a073-4ccd-a199-45516b5d7cf3`
 
-Defined in src/cs.ts:39
+Defined in src/cs.ts:46

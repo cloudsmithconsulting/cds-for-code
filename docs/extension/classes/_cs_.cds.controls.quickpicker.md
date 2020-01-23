@@ -20,7 +20,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.controls.quickPicker"
 
-Defined in src/cs.ts:211
+Defined in src/cs.ts:218
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 ▪ **cancel**: *string* = `search.action.focusActiveEditor`
 
-Defined in src/cs.ts:212
+Defined in src/cs.ts:219
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 ▪ **quit**: *string* = `workbench.action.quit`
 
-Defined in src/cs.ts:213
+Defined in src/cs.ts:220

@@ -19,7 +19,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.controls.pluginStepImage"
 
-Defined in src/cs.ts:205
+Defined in src/cs.ts:212
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 ▪ **open**: *string* = `${pluginStepImage._namespace}.open`
 
-Defined in src/cs.ts:206
+Defined in src/cs.ts:213

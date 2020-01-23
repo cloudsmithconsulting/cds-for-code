@@ -26,7 +26,7 @@
 
 ▪ **_namespace**: *string* = "extension"
 
-Defined in src/cs.ts:52
+Defined in src/cs.ts:59
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 ▪ **commandCompleted**: *string* = `${telemetryEvents._namespace}.commandCompleted`
 
-Defined in src/cs.ts:54
+Defined in src/cs.ts:61
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 ▪ **commandInvoked**: *string* = `${telemetryEvents._namespace}.commandInvoked`
 
-Defined in src/cs.ts:53
+Defined in src/cs.ts:60
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 ▪ **extensionActivated**: *string* = `${telemetryEvents._namespace}.activated`
 
-Defined in src/cs.ts:55
+Defined in src/cs.ts:62
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 ▪ **extensionDeactivated**: *string* = `${telemetryEvents._namespace}.deactivated`
 
-Defined in src/cs.ts:56
+Defined in src/cs.ts:63
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 ▪ **httpError**: *string* = `${telemetryEvents._namespace}.httpError`
 
-Defined in src/cs.ts:58
+Defined in src/cs.ts:65
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 ▪ **httpRequest**: *string* = `${telemetryEvents._namespace}.httpRequest`
 
-Defined in src/cs.ts:57
+Defined in src/cs.ts:64
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 ▪ **loginFailure**: *string* = `${telemetryEvents._namespace}.loginFailure`
 
-Defined in src/cs.ts:59
+Defined in src/cs.ts:66
 
 ___
 
@@ -90,4 +90,4 @@ ___
 
 ▪ **performanceCritical**: *string* = `${telemetryEvents._namespace}.performanceCritical`
 
-Defined in src/cs.ts:60
+Defined in src/cs.ts:67

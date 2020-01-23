@@ -23,7 +23,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.templates"
 
-Defined in src/cs.ts:123
+Defined in src/cs.ts:130
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 ▪ **placeholderRegExp**: *string* = `${templates._namespace}.placeholderRegExp`
 
-Defined in src/cs.ts:125
+Defined in src/cs.ts:132
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 ▪ **placeholders**: *string* = `${templates._namespace}.placeholders`
 
-Defined in src/cs.ts:124
+Defined in src/cs.ts:131
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 ▪ **templatesDirectory**: *string* = `${templates._namespace}.templatesDirectory`
 
-Defined in src/cs.ts:126
+Defined in src/cs.ts:133
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 ▪ **treeViewGroupPreference**: *string* = `${templates._namespace}.treeViewGroupPreference`
 
-Defined in src/cs.ts:127
+Defined in src/cs.ts:134
 
 ___
 
@@ -63,4 +63,4 @@ ___
 
 ▪ **usePlaceholders**: *string* = `${templates._namespace}.usePlaceholders`
 
-Defined in src/cs.ts:128
+Defined in src/cs.ts:135

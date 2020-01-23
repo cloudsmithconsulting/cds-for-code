@@ -20,7 +20,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.globalState"
 
-Defined in src/cs.ts:109
+Defined in src/cs.ts:116
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 ▪ **dynamicsConnections**: *string* = `${globalState._namespace}:dynamicsConnections`
 
-Defined in src/cs.ts:110
+Defined in src/cs.ts:117
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 ▪ **powerShellScriptVersion**: *string* = `${globalState._namespace}:powerShellScriptVersion`
 
-Defined in src/cs.ts:111
+Defined in src/cs.ts:118

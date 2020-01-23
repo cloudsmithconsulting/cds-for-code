@@ -21,7 +21,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.powerShell"
 
-Defined in src/cs.ts:44
+Defined in src/cs.ts:51
 
 ___
 
@@ -29,7 +29,7 @@ ___
 
 ▪ **generateEntities**: *string* = `${powerShell._namespace}.generateEntities`
 
-Defined in src/cs.ts:45
+Defined in src/cs.ts:52
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 ▪ **packSolution**: *string* = `${powerShell._namespace}.packSolution`
 
-Defined in src/cs.ts:46
+Defined in src/cs.ts:53
 
 ___
 
@@ -45,4 +45,4 @@ ___
 
 ▪ **unpackSolution**: *string* = `${powerShell._namespace}.unpackSolution`
 
-Defined in src/cs.ts:47
+Defined in src/cs.ts:54

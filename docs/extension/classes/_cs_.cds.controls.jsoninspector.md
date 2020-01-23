@@ -19,7 +19,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.controls.jsonInspector"
 
-Defined in src/cs.ts:187
+Defined in src/cs.ts:194
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 ▪ **open**: *string* = `${jsonInspector._namespace}.open`
 
-Defined in src/cs.ts:188
+Defined in src/cs.ts:195

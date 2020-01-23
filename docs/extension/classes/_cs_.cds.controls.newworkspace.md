@@ -19,7 +19,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.controls.newWorkspace"
 
-Defined in src/cs.ts:193
+Defined in src/cs.ts:200
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 ▪ **open**: *string* = `${newWorkspace._namespace}.open`
 
-Defined in src/cs.ts:194
+Defined in src/cs.ts:201

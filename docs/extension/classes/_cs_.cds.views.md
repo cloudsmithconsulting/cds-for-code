@@ -24,7 +24,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.views"
 
-Defined in src/cs.ts:84
+Defined in src/cs.ts:91
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 ▪ **connectionEditor**: *string* = `${viewContainers._namespace}.connectionEditor`
 
-Defined in src/cs.ts:85
+Defined in src/cs.ts:92
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 ▪ **jsonInspectorView**: *string* = `${viewContainers._namespace}.jsonInspectorView`
 
-Defined in src/cs.ts:86
+Defined in src/cs.ts:93
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 ▪ **newWorkspaceView**: *string* = `${viewContainers._namespace}.newWorkspaceView`
 
-Defined in src/cs.ts:87
+Defined in src/cs.ts:94
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 ▪ **pluginStepEditor**: *string* = `${viewContainers._namespace}.pluginStepEditor`
 
-Defined in src/cs.ts:88
+Defined in src/cs.ts:95
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 ▪ **pluginStepImageEditor**: *string* = `${viewContainers._namespace}.pluginStepImageEditor`
 
-Defined in src/cs.ts:89
+Defined in src/cs.ts:96
 
 ___
 
@@ -72,4 +72,4 @@ ___
 
 ▪ **svcUtilConfigView**: *string* = `${viewContainers._namespace}.svcUtilConfigView`
 
-Defined in src/cs.ts:90
+Defined in src/cs.ts:97

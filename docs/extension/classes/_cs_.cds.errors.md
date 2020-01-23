@@ -20,7 +20,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.errors"
 
-Defined in src/cs.ts:25
+Defined in src/cs.ts:32
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 ▪ **userCancelledAction**: *string* = `${errors._namespace}.userCancelledAction`
 
-Defined in src/cs.ts:26
+Defined in src/cs.ts:33
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 ▪ **webApiResponseError**: *string* = `${errors._namespace}.webApiResponseError`
 
-Defined in src/cs.ts:27
+Defined in src/cs.ts:34

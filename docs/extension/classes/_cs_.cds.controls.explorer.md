@@ -31,7 +31,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.controls.explorer"
 
-Defined in src/cs.ts:169
+Defined in src/cs.ts:176
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 ▪ **craeteWebResource**: *string* = `${explorer._namespace}.createWebResource`
 
-Defined in src/cs.ts:172
+Defined in src/cs.ts:179
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 ▪ **createFromItemTemplate**: *string* = `${explorer._namespace}.createFromItemTemplate`
 
-Defined in src/cs.ts:170
+Defined in src/cs.ts:177
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 ▪ **createFromProjectTemplate**: *string* = `${explorer._namespace}.createFromProjectTemplate`
 
-Defined in src/cs.ts:171
+Defined in src/cs.ts:178
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 ▪ **dotNetBuild**: *string* = `${explorer._namespace}.dotNetBuild`
 
-Defined in src/cs.ts:173
+Defined in src/cs.ts:180
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 ▪ **dotNetTest**: *string* = `${explorer._namespace}.dotNetTest`
 
-Defined in src/cs.ts:174
+Defined in src/cs.ts:181
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 ▪ **generateEntityCodeToFile**: *string* = `${explorer._namespace}.generateEntityCodeToFile`
 
-Defined in src/cs.ts:176
+Defined in src/cs.ts:183
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 ▪ **generateEntityCodeToFolder**: *string* = `${explorer._namespace}.generateEntityCodeToFolder`
 
-Defined in src/cs.ts:175
+Defined in src/cs.ts:182
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 ▪ **packSolutionFromFolder**: *string* = `${explorer._namespace}.packSolutionFromFolder`
 
-Defined in src/cs.ts:177
+Defined in src/cs.ts:184
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 ▪ **packWebResource**: *string* = `${explorer._namespace}.packWebResource`
 
-Defined in src/cs.ts:178
+Defined in src/cs.ts:185
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 ▪ **registerPluginFile**: *string* = `${explorer._namespace}.registerPluginFile`
 
-Defined in src/cs.ts:181
+Defined in src/cs.ts:188
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 ▪ **saveTemplateFile**: *string* = `${explorer._namespace}.saveTemplateFile`
 
-Defined in src/cs.ts:179
+Defined in src/cs.ts:186
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 ▪ **saveTemplateFolder**: *string* = `${explorer._namespace}.saveTemplateFolder`
 
-Defined in src/cs.ts:180
+Defined in src/cs.ts:187
 
 ___
 
@@ -135,4 +135,4 @@ ___
 
 ▪ **unpackSolutionToFolder**: *string* = `${explorer._namespace}.unpackSolutionToFolder`
 
-Defined in src/cs.ts:182
+Defined in src/cs.ts:189

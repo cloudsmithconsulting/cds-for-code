@@ -20,7 +20,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.iconThemes"
 
-Defined in src/cs.ts:116
+Defined in src/cs.ts:123
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 ▪ **default**: *string* = `${iconThemes._namespace}.default`
 
-Defined in src/cs.ts:117
+Defined in src/cs.ts:124
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 ▪ **selectedTheme**: *string* = `${iconThemes._namespace}.selectedTheme`
 
-Defined in src/cs.ts:118
+Defined in src/cs.ts:125

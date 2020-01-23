@@ -19,7 +19,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.workspaceState"
 
-Defined in src/cs.ts:141
+Defined in src/cs.ts:148
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 ▪ **solutionMap**: *string* = `${workspaceState._namespace}:solutionMap`
 
-Defined in src/cs.ts:142
+Defined in src/cs.ts:149

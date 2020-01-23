@@ -21,7 +21,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.tools"
 
-Defined in src/cs.ts:133
+Defined in src/cs.ts:140
 
 ___
 
@@ -29,7 +29,7 @@ ___
 
 ▪ **sdkInstallPath**: *string* = `${tools._namespace}.sdkInstallPath`
 
-Defined in src/cs.ts:134
+Defined in src/cs.ts:141
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 ▪ **updateChannel**: *string* = `${tools._namespace}.updateChannel`
 
-Defined in src/cs.ts:136
+Defined in src/cs.ts:143
 
 ___
 
@@ -45,4 +45,4 @@ ___
 
 ▪ **updateSource**: *string* = `${tools._namespace}.updateSource`
 
-Defined in src/cs.ts:135
+Defined in src/cs.ts:142

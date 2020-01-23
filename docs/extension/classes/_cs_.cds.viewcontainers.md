@@ -20,7 +20,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.viewContainers"
 
-Defined in src/cs.ts:77
+Defined in src/cs.ts:84
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 ▪ **cdsExplorer**: *string* = `${viewContainers._namespace}.cdsExplorer`
 
-Defined in src/cs.ts:78
+Defined in src/cs.ts:85
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 ▪ **templateExplorer**: *string* = `${viewContainers._namespace}.templateExplorer`
 
-Defined in src/cs.ts:79
+Defined in src/cs.ts:86

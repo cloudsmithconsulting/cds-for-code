@@ -19,7 +19,7 @@
 
 ▪ **_namespace**: *string* = "cs.cds.controls.svcUtilConfig"
 
-Defined in src/cs.ts:218
+Defined in src/cs.ts:225
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 ▪ **open**: *string* = `${svcUtilConfig._namespace}.open`
 
-Defined in src/cs.ts:219
+Defined in src/cs.ts:226
