@@ -119,7 +119,7 @@ Now your project is created and assembly is signed. To see the rest of the code 
 
 You'll find the CDS for Code Template Explorer in the VSCode Explorer view. It will look similar to this:
 
-![img](../images/cds-template-explorer.png)
+![img](../../images/cds-template-explorer.png)
 
 > Note: Once your project is created you may see a VSCode notification saying that the project needs packages to be restored. Saying yes will restore the packages used by the plugin project.
 
@@ -167,13 +167,13 @@ Plugin steps can be created in CDS Explorer by:
 
 Your CDS Explorer view will look similar to this:
 
-![img](../images/cds-explorer-add-plugin-step.png)
+![img](../../images/cds-explorer-add-plugin-step.png)
 
 ### Plugin step UI
 
 Creating or editing a plugin step will be done on the following screen:
 
-![img](../images/cds-configure-plugin-step.png)
+![img](../../images/cds-configure-plugin-step.png)
 
 > Note: Fields like message, primary entity and second entity will have auto complete
 
@@ -193,7 +193,7 @@ Plugin steps can be edited or deleted in CDS Explorer by:
 
 The view for CDS Explorer will look similar to this:
 
-![img](../images/cds-explorer-edit-remove-plugin-step.png)
+![img](../../images/cds-explorer-edit-remove-plugin-step.png)
 
 ## Plugin step images
 
@@ -213,7 +213,7 @@ Plugin steps images can be edited or deleted in CDS Explorer by:
 
 The view for CDS Explorer will look similar to this:
 
-![img](../images/cds-configure-plugin-step-image.png)
+![img](../../images/cds-configure-plugin-step-image.png)
 
 ### Modify or remove plugin step images
 

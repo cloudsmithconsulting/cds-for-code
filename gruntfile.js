@@ -350,7 +350,7 @@ module.exports = function (grunt) {
                 }
             },
             typedoc_markdown: {
-                command: 'npx typedoc --plugin typedoc-plugin-markdown --theme docusaurus2 --out docs/extension src',
+                command: 'npx typedoc --plugin typedoc-plugin-markdown --theme docusaurus2 --out docs/extension/api src',
                 options: {
                     async: false,
                     execOptions: { cwd: '.' }
@@ -539,7 +539,7 @@ module.exports = function (grunt) {
                     position: 'top',
                     banner: '/*!\n * CloudSmith CDS for Code v' +
                         grunt.option('newver') +
-                        ' (http://www.cloudsmithconsulting.com)\n * Copyright 2019 CloudSmith Consulting LLC\n * MIT License (https://raw.githubusercontent.com/CloudSmithConsulting/CDS-for-Code/master/LICENSE)\n */',
+                        ' (http://www.cloudsmithconsulting.com)\n * Copyright 2020 CloudSmith Consulting LLC\n * MIT License (https://raw.githubusercontent.com/CloudSmithConsulting/CDS-for-Code/master/LICENSE)\n */',
                     linebreak: true
                 },
                 files: {
@@ -573,42 +573,71 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-ts');
     grunt.loadNpmTasks('grunt-zip');
 
+    const fs = require('fs');
+    const path = require('path');
+    const crypto = require('crypto');
+
+    const walkSync = (currentDirPath, callback) => {
+        fs.readdirSync(currentDirPath).forEach(function (name) {
+            const filePath = path.join(currentDirPath, name);
+            const stat = fs.statSync(filePath);
+            
+            if (stat.isFile()) {
+                callback(filePath, stat);
+            } else if (stat.isDirectory()) {
+                walkSync(filePath, callback);
+            }
+        });
+    };
+
     // define the tasks
-    grunt.registerTask('release', [
-        'sass:release',
-        'sass:release_min',
-        'postcss:release',
-        'postcss:release_min',
-        'concat:release',
-        'babel:release',
-        'uglify:release',
-        'usebanner:release',
-        'replace:version',
-        'replace:readme',
-        'docs_compile',
-        'templates_compile',
-        'tools_release',
-        'copy:powershell',
-        'clean:temp'
-    ]);
+    grunt.registerTask('release', 
+        [ 'sass:release', 'sass:release_min', 'postcss:release', 'postcss:release_min', 'concat:release',
+          'babel:release', 'uglify:release',  'usebanner:release', 'replace:version', 'replace:readme',
+          'docs_compile', 'templates_compile', 'tools_release', 'copy:powershell', 'writeManifest', 
+          'clean:temp' ]);
 
     grunt.task.registerTask('configureBabel', 'configures babel options', function () {
         config.babel.dev.options.inputSourceMap = grunt.file.readJSON('out/temp/materialize_concat.js.map');
     });
 
+    grunt.task.registerTask('writeManifest', 'write dist/manifest.json', function() {
+        const manifest = { 
+            version: grunt.config.get('pkg').version,
+            files: [] 
+        };
+
+        walkSync(path.join(__dirname, "dist/"), async (fsPath, stat) => {
+            if (path.basename(fsPath) !== 'manifest.json') {
+                const hash = crypto.createHash('md5');
+                hash.update(grunt.file.read(fsPath, { encoding: null }));
+                
+                manifest.files.push({
+                    filename: path.basename(fsPath),
+                    path: path.relative(path.join(__dirname, "dist/"), path.dirname(fsPath)),
+                    hash: hash.digest('hex')
+                });
+            }
+        });
+
+        grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
+    });
+
     grunt.registerTask('docs_compile', [ 'shell:typedoc_markdown', 'notify:docs_compile' ]);
     grunt.registerTask('js_compile', [ 'concat:dev', 'configureBabel', 'babel:dev', 'uglify:dev', 'clean:temp_js', 'notify:js_compile' ]);
-    grunt.registerTask('sass_compile', [
-        'sass:dev',
-        'sass:release',
-        'sass:release_min',
-        'postcss:dev',
-        'notify:sass_compile'
-    ]);
+    grunt.registerTask('sass_compile', [ 'sass:dev', 'sass:release', 'sass:release_min', 'postcss:dev', 'notify:sass_compile' ]);
     grunt.registerTask('ts_compile_browser', [ 'mkdir:dev', 'ts:browser', 'browserify:dev', 'clean:temp_ts', 'notify:ts_compile_browser' ]);
-    grunt.registerTask('templates_compile', [ 'zip:SystemTemplates', 'zip:CloudSmith.Cds.SamplePlugin.v8.0', 'zip:CloudSmith.Cds.SamplePlugin.v8.1', 'zip:CloudSmith.Cds.SamplePlugin.v8.2', 'zip:CloudSmith.Cds.SamplePlugin.v9.0', 'notify:templates_compile' ]);
-    grunt.registerTask('tools_compile', [ 'shell:crmsvcutil_restore', 'shell:crmsvcutil_build_debug', 'shell:assemblyscanner_restore', 'shell:assemblyscanner_build_debug' ]);
-    grunt.registerTask('tools_release', [ 'shell:crmsvcutil_restore', 'shell:crmsvcutil_build_release', 'zip:CloudSmith.Cds.CrmSvcUtil', 'shell:assemblyscanner_restore', 'shell:assemblyscanner_build_release', 'zip:CloudSmith.Tools.AssemblyScanner', 'notify:tools_compile' ]);
+
+    grunt.registerTask('templates_compile', 
+        [ 'zip:SystemTemplates', 'zip:CloudSmith.Cds.SamplePlugin.v8.0', 'zip:CloudSmith.Cds.SamplePlugin.v8.1', 
+          'zip:CloudSmith.Cds.SamplePlugin.v8.2', 'zip:CloudSmith.Cds.SamplePlugin.v9.0', 'notify:templates_compile' ]);
+          
+    grunt.registerTask('tools_compile', 
+        [ 'shell:crmsvcutil_restore', 'shell:crmsvcutil_build_debug', 'shell:assemblyscanner_restore', 'shell:assemblyscanner_build_debug' ]);
+
+    grunt.registerTask('tools_release', 
+        [ 'shell:crmsvcutil_restore', 'shell:crmsvcutil_build_release', 'zip:CloudSmith.Cds.CrmSvcUtil', 'shell:assemblyscanner_restore', 
+          'shell:assemblyscanner_build_release', 'zip:CloudSmith.Tools.AssemblyScanner', 'notify:tools_compile' ]);
 
     grunt.registerTask('monitor', [ 'concurrent:monitor' ]);
     grunt.registerTask('travis', [ 'ts_compile_browser', 'js_compile', 'sass_compile' ]);

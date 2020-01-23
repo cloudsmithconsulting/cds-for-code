@@ -32,7 +32,7 @@ The CDS Explorer view in VSCode is where you can view connected servers, organiz
 
 Here's an example of what the CDS Exporer will look like:
 
-![img](../images/cds-explorer-default-view.png)
+![img](../../images/cds-explorer-default-view.png)
 
 ## Connecting to Common Data Service
 
@@ -52,7 +52,7 @@ To connect to Dynamics 365 On-Premises through the CDS for Code extension:
 
 Here is an example of what it will look like:
 
-![img](../images/create-new-cds-connection-onprem.gif)
+![img](../../images/create-new-cds-connection-onprem.gif)
 
 ### Connecting to CDS Online
 
@@ -68,7 +68,7 @@ To connect to CDS Online through the CDS for Code extension:
 
 Here is an example of what it will look like:
 
-![img](../images/create-new-cds-connection.gif)
+![img](../../images/create-new-cds-connection.gif)
 
 ### Azure AD Connections
 
@@ -96,7 +96,7 @@ Once you have [connected to CDS](#Connecting-to-Common-Data-Service), your conne
 
 It will look similar to this:
 
-![img](../images/edit-cds-connection-onprem.gif)
+![img](../../images/edit-cds-connection-onprem.gif)
 
 ## Security
 

@@ -24,11 +24,11 @@ export default class ScriptDownloader {
     static async runScriptCheck() {
 		// get local storage folder
 		const scriptsFolder = path.join(ExtensionContext.Instance.globalStoragePath, "/scripts/");
-		const appsFolder = path.join(ExtensionContext.Instance.globalStoragePath, "/tools/");
+		const toolsFolder = path.join(ExtensionContext.Instance.globalStoragePath, "/tools/");
 		
 		// Checks to see if folder exist
 		FileSystem.makeFolderSync(scriptsFolder);
-		FileSystem.makeFolderSync(appsFolder);
+		FileSystem.makeFolderSync(toolsFolder);
 		
 		const zipsToFetch = [
 			"releases/download/v0.8/SystemTemplates.zip",
@@ -50,8 +50,8 @@ export default class ScriptDownloader {
 			"src/CloudSmith.Dynamics365.SampleScripts/runonce-script.ps1"
 		];
 
-		const remoteFolderPath:string = Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateSource));
-		const updateChannel:string = ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateChannel);
+		const remoteFolderPath: string = Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateSource));
+		const updateChannel: string = ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateChannel);
 
 		const returnValue = await this.checkVersion(remoteFolderPath, updateChannel)
 			.then(async version => {
@@ -125,7 +125,7 @@ export default class ScriptDownloader {
 									return { zipFile: localPath, extractPath: systemTemplatesFolder, isTemplate: false };
 								}
 
-								return { zipFile: localPath, extractPath: path.join(appsFolder, subfolder), isTemplate: false };
+								return { zipFile: localPath, extractPath: path.join(toolsFolder, subfolder), isTemplate: false };
 							})
 							.then(async options => {
 								if (options) {

@@ -122,7 +122,7 @@ Defined in src/repositories/apiRepository.ts:20
 
 ▸ **addSolutionComponent**(`solution`: any, `componentId`: string, `componentType`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md), `addRequiredComponents`: boolean, `doNotIncludeSubcomponents`: boolean, `componentSettings?`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:608
+Defined in src/repositories/apiRepository.ts:612
 
 **Parameters:**
 
@@ -143,7 +143,7 @@ ___
 
 ▸ **createProcess**(`workflow`: any): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:273
+Defined in src/repositories/apiRepository.ts:277
 
 **Parameters:**
 
@@ -159,7 +159,7 @@ ___
 
 ▸ **createProcessFromTemplate**(`processTemplateId`: string, `name`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:277
+Defined in src/repositories/apiRepository.ts:281
 
 **Parameters:**
 
@@ -176,7 +176,7 @@ ___
 
 ▸ **getSolutionComponent**(`componentId`: string, `componentType`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md), `select`: string[]): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:622
+Defined in src/repositories/apiRepository.ts:626
 
 **Parameters:**
 
@@ -220,7 +220,7 @@ ___
 
 ▸ **removePluginStep**(`step`: any): *Promise‹boolean›*
 
-Defined in src/repositories/apiRepository.ts:633
+Defined in src/repositories/apiRepository.ts:637
 
 **Parameters:**
 
@@ -236,7 +236,7 @@ ___
 
 ▸ **removePluginStepImage**(`stepImage`: any): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:649
+Defined in src/repositories/apiRepository.ts:653
 
 **Parameters:**
 
@@ -252,7 +252,7 @@ ___
 
 ▸ **removeSolutionComponent**(`solution`: any, `componentId`: string, `componentType`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md)): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:656
+Defined in src/repositories/apiRepository.ts:660
 
 **Parameters:**
 
@@ -270,7 +270,7 @@ ___
 
 ▸ **retrieveApplications**(`solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:66
+Defined in src/repositories/apiRepository.ts:70
 
 **Parameters:**
 
@@ -287,7 +287,7 @@ ___
 
 ▸ **retrieveBuiltInSolution**(`builtInType`: "System" | "Active" | "Default", `select`: string[]): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:54
+Defined in src/repositories/apiRepository.ts:58
 
 **Parameters:**
 
@@ -304,7 +304,7 @@ ___
 
 ▸ **retrieveEntityTypeCodes**(): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:358
+Defined in src/repositories/apiRepository.ts:362
 
 **Returns:** *Promise‹any[]›*
 
@@ -314,7 +314,7 @@ ___
 
 ▸ **retrievePluginAssemblies**(`solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:300
+Defined in src/repositories/apiRepository.ts:304
 
 **Parameters:**
 
@@ -331,7 +331,7 @@ ___
 
 ▸ **retrievePluginStep**(`sdkmessageprocessingstepid`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:393
+Defined in src/repositories/apiRepository.ts:397
 
 **Parameters:**
 
@@ -347,7 +347,7 @@ ___
 
 ▸ **retrievePluginStepImages**(`pluginStepId`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:436
+Defined in src/repositories/apiRepository.ts:440
 
 **Parameters:**
 
@@ -363,7 +363,7 @@ ___
 
 ▸ **retrievePluginSteps**(`pluginTypeId`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:409
+Defined in src/repositories/apiRepository.ts:413
 
 **Parameters:**
 
@@ -379,7 +379,7 @@ ___
 
 ▸ **retrievePluginTypes**(`pluginAssemblyId`: string, `select`: string[]): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:314
+Defined in src/repositories/apiRepository.ts:318
 
 **Parameters:**
 
@@ -396,7 +396,7 @@ ___
 
 ▸ **retrieveProcessTemplates**(`processType`: [ProcessType](../enums/_api_cdssolutions_.cdssolutions.processtype.md), `entityName`: string, `solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:142
+Defined in src/repositories/apiRepository.ts:146
 
 **Parameters:**
 
@@ -415,7 +415,7 @@ ___
 
 ▸ **retrieveProcesses**(`entityName?`: string, `solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:110
+Defined in src/repositories/apiRepository.ts:114
 
 **Parameters:**
 
@@ -433,7 +433,7 @@ ___
 
 ▸ **retrieveSdkMessageDetails**(`sdkMessageId`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:384
+Defined in src/repositories/apiRepository.ts:388
 
 **Parameters:**
 
@@ -449,7 +449,7 @@ ___
 
 ▸ **retrieveSdkMessageFilters**(`select`: string[]): *Promise‹unknown[]›*
 
-Defined in src/repositories/apiRepository.ts:374
+Defined in src/repositories/apiRepository.ts:378
 
 **Parameters:**
 
@@ -465,7 +465,7 @@ ___
 
 ▸ **retrieveSdkMessages**(`select`: string[]): *Promise‹unknown[]›*
 
-Defined in src/repositories/apiRepository.ts:364
+Defined in src/repositories/apiRepository.ts:368
 
 **Parameters:**
 
@@ -497,7 +497,7 @@ ___
 
 ▸ **retrieveSolutions**(`select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:93
+Defined in src/repositories/apiRepository.ts:97
 
 **Parameters:**
 
@@ -513,7 +513,7 @@ ___
 
 ▸ **retrieveSystemUsers**(`select`: string[]): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:451
+Defined in src/repositories/apiRepository.ts:455
 
 **Parameters:**
 
@@ -529,7 +529,7 @@ ___
 
 ▸ **retrieveWebResource**(`webResourceId`: string, `throwIfEmpty`: boolean): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:264
+Defined in src/repositories/apiRepository.ts:268
 
 **Parameters:**
 
@@ -546,7 +546,7 @@ ___
 
 ▸ **retrieveWebResourceFolders**(`solutionId?`: string, `folder?`: string, `customizableOnly`: boolean): *Promise‹string[]›*
 
-Defined in src/repositories/apiRepository.ts:174
+Defined in src/repositories/apiRepository.ts:178
 
 **Parameters:**
 
@@ -564,7 +564,7 @@ ___
 
 ▸ **retrieveWebResources**(`solutionId?`: string, `folder?`: string, `customizableOnly`: boolean, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:210
+Defined in src/repositories/apiRepository.ts:214
 
 **Parameters:**
 
@@ -583,7 +583,7 @@ ___
 
 ▸ **uploadPluginAssembly**(`assemblyUri`: Uri, `pluginAssemblyId?`: string, `isSandboxed`: boolean): *Thenable‹any›*
 
-Defined in src/repositories/apiRepository.ts:463
+Defined in src/repositories/apiRepository.ts:467
 
 **Parameters:**
 
@@ -601,7 +601,7 @@ ___
 
 ▸ **upsertPluginStep**(`step`: any): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:511
+Defined in src/repositories/apiRepository.ts:515
 
 **Parameters:**
 
@@ -617,7 +617,7 @@ ___
 
 ▸ **upsertPluginStepImage**(`stepImage`: any): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:580
+Defined in src/repositories/apiRepository.ts:584
 
 **Parameters:**
 
@@ -633,7 +633,7 @@ ___
 
 ▸ **upsertPluginType**(`pluginAssemblyId`: string, `typeName`: string, `name`: string, `friendlyName`: string, `description?`: string): *Promise‹void›*
 
-Defined in src/repositories/apiRepository.ts:331
+Defined in src/repositories/apiRepository.ts:335
 
 **Parameters:**
 
@@ -653,7 +653,7 @@ ___
 
 ▸ **upsertWebResource**(`webResource`: any): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:284
+Defined in src/repositories/apiRepository.ts:288
 
 **Parameters:**
 
