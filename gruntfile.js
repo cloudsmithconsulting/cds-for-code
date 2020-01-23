@@ -604,6 +604,7 @@ module.exports = function (grunt) {
     grunt.task.registerTask('writeManifest', 'write dist/manifest.json', function() {
         const manifest = { 
             version: grunt.config.get('pkg').version,
+            channel: grunt.config.get('pkg').preview ? 'preview' : 'stable',
             files: [] 
         };
 
