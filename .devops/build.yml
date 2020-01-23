@@ -73,9 +73,8 @@ steps:
       docs/**
       **/*.vsix
       **/*.nupkg
-      CHANGELOG.md
-      LICENSE
       package.json
+      LICENSE
       README.md
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 

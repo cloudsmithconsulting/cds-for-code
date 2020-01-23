@@ -16,7 +16,7 @@ sidebar_label: "commands/cs.cds.powerShell.generateEntities"
 
 ###  run
 
-▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `outputFileName?`: string, `namespace?`: string): *Promise‹[TerminalCommand](../classes/_components_terminal_secureterminal_.terminalcommand.md)‹››*
+▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) | string, `folder?`: string, `outputFileName?`: string, `namespace?`: string): *Promise‹[TerminalCommand](../classes/_components_terminal_secureterminal_.terminalcommand.md)‹››*
 
 Defined in src/commands/cs.cds.powerShell.generateEntities.ts:25
 
@@ -29,7 +29,7 @@ using CrmSvcUtil.exe (included with the Dynamics365 SDK)
 
 Name | Type |
 ------ | ------ |
-`config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) &#124; string |
 `folder?` | string |
 `outputFileName?` | string |
 `namespace?` | string |

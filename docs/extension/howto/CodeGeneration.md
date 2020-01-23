@@ -26,7 +26,7 @@ To generate entities using the command palette:
 
 When put into action it will look similar to this:
 
-![img](../images/cds-generate-entities-command-palette.gif)
+![img](../../images/cds-generate-entities-command-palette.gif)
 
 ## From File Explorer
 
@@ -39,7 +39,7 @@ To generate entites from VSCode File Explorer:
 
 Generating code from File Explorer will look similar to this:
 
-![img](../images/cds-generate-entities-file-explorer.gif)
+![img](../../images/cds-generate-entities-file-explorer.gif)
 
 ## From CDS Explorer
 

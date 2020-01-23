@@ -40,7 +40,7 @@ To view web resources in a connected CDS instance:
 
 This view will show all web resources within the solution and the naming/folder structure it contains as shown in the image below.
 
-![img](../images/cds-explorer-web-resource-view.png)
+![img](../../images/cds-explorer-web-resource-view.png)
 
 ## Create a Web Resource
 
@@ -83,7 +83,7 @@ To create a new web resource in the File Explorer view in your CDS workspace:
 
 After completing the new web resource wizard, you will have the ability to edit this web resource locally inside your workspace.
 
-![img](../images/web-resource-view-in-workspace.png)
+![img](../../images/web-resource-view-in-workspace.png)
 
 ## Edit a Web Resource
 
@@ -135,7 +135,7 @@ To export a solution to a new or existing local workspace:
 
 The context menu for exporting your solution will look like the image below
 
-![img](../images/solution-export-to-workspace.png)
+![img](../../images/solution-export-to-workspace.png)
 
 ### Packing Web Resources
 

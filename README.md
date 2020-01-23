@@ -74,12 +74,12 @@ This VS Code extension will help you perform these tasks in your CDS development
 
 For a more comprehensive walkthrough of features you can check out our How To articles on the following topics:
 
-- [Working with Solutions](docs/howto/Solutions.md)
-- [Working with Web Resources](docs/howto/WebResources.md)
-- [Working with Plugins](docs/howto/Plugins.md)
-- [Working with Code Generation and SvcUtil](docs/howto/CodeGeneration.md)
-- [Working with Templates for code and projects](docs/howto/Templates.md)
-- [Overview of Security Features](docs/howto/SecurityFeatures.md)
+- [Working with Solutions](docs/extension/howto/Solutions.md)
+- [Working with Web Resources](docs/extension/howto/WebResources.md)
+- [Working with Plugins](docs/extension/howto/Plugins.md)
+- [Working with Code Generation and CrmSvcUtil](docs/extension/howto/CodeGeneration.md)
+- [Working with Templates for code and projects](docs/extension/howto/Templates.md)
+- [Overview of Security Features](docs/extension/howto/SecurityFeatures.md)
 
 ---
 
