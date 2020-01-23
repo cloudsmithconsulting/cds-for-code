@@ -1,10 +1,11 @@
 .babelrc
 .browserlistrc
+.gitignore
 .vscode/**
 .vscode-test/**
-.gitignore
-gruntfile.js
 dist/**
+gruntfile.js
+docs/**
 out/test/**
 resources/framework/**
 resources/powershell/**
