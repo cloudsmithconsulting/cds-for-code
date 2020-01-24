@@ -84,7 +84,7 @@ ___
 
 ###  openPluginStep
 
-▸ **openPluginStep**(`context`: ExtensionContext, `pluginAssemblyId`: string, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `step?`: any): *Promise‹[View](_core_webui_view_.view.md)›*
+▸ **openPluginStep**(`pluginAssemblyId`: string, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `step?`: any): *Promise‹[View](_core_webui_view_.view.md)›*
 
 Defined in src/views/ViewManager.ts:27
 
@@ -92,7 +92,6 @@ Defined in src/views/ViewManager.ts:27
 
 Name | Type |
 ------ | ------ |
-`context` | ExtensionContext |
 `pluginAssemblyId` | string |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
 `step?` | any |
@@ -103,7 +102,7 @@ ___
 
 ###  openPluginStepImage
 
-▸ **openPluginStepImage**(`context`: ExtensionContext, `sdkmessageprocessingstepid`: string, `pluginStepImage`: any, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](_core_webui_view_.view.md)›*
+▸ **openPluginStepImage**(`sdkmessageprocessingstepid`: string, `pluginStepImage`: any, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](_core_webui_view_.view.md)›*
 
 Defined in src/views/ViewManager.ts:32
 
@@ -111,7 +110,6 @@ Defined in src/views/ViewManager.ts:32
 
 Name | Type |
 ------ | ------ |
-`context` | ExtensionContext |
 `sdkmessageprocessingstepid` | string |
 `pluginStepImage` | any |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |

@@ -26,7 +26,7 @@ sidebar_label: "UtilityObject"
 
 • **$Object**: *[ObjectUtility](_core_utilities_.objectutility.md)*
 
-Defined in src/core/Utilities.ts:53
+Defined in src/core/Utilities.ts:58
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 • **Browser**: *[BrowserUtility](_core_utilities_.browserutility.md)*
 
-Defined in src/core/Utilities.ts:50
+Defined in src/core/Utilities.ts:55
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 • **Encoding**: *[EncodingUtility](_core_utilities_.encodingutility.md)*
 
-Defined in src/core/Utilities.ts:51
+Defined in src/core/Utilities.ts:56
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 • **Guid**: *[GuidUtility](_core_utilities_.guidutility.md)*
 
-Defined in src/core/Utilities.ts:52
+Defined in src/core/Utilities.ts:57
 
 ___
 
@@ -58,4 +58,4 @@ ___
 
 • **String**: *[StringUtility](_core_utilities_.stringutility.md)*
 
-Defined in src/core/Utilities.ts:54
+Defined in src/core/Utilities.ts:59

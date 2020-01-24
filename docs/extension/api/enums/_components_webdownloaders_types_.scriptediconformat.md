@@ -20,7 +20,7 @@ sidebar_label: "ScriptedIconFormat"
 
 • **js**: = ".js"
 
-Defined in src/components/WebDownloaders/Types.ts:187
+Defined in src/components/WebDownloaders/Types.ts:184
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 • **json**: = ".json"
 
-Defined in src/components/WebDownloaders/Types.ts:188
+Defined in src/components/WebDownloaders/Types.ts:185
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 • **svg**: = ".svg"
 
-Defined in src/components/WebDownloaders/Types.ts:186
+Defined in src/components/WebDownloaders/Types.ts:183

@@ -24,7 +24,7 @@ sidebar_label: "GuidUtility"
 
 ▸ **isGuid**(`parameter`: string): *boolean*
 
-Defined in src/core/Utilities.ts:26
+Defined in src/core/Utilities.ts:31
 
 **Parameters:**
 
@@ -40,7 +40,7 @@ ___
 
 ▸ **newGuid**(): *string*
 
-Defined in src/core/Utilities.ts:25
+Defined in src/core/Utilities.ts:30
 
 **Returns:** *string*
 
@@ -50,7 +50,7 @@ ___
 
 ▸ **trimGuid**(`id`: string): *string*
 
-Defined in src/core/Utilities.ts:27
+Defined in src/core/Utilities.ts:32
 
 **Parameters:**
 

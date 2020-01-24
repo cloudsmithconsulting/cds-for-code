@@ -10,13 +10,13 @@ sidebar_label: "core/http/defaultResponseHandler.nodejs"
 
 ### Functions
 
-* [oDataResponse](_core_http_defaultresponsehandler_nodejs_.md#odataresponse)
+* [handleResponse](_core_http_defaultresponsehandler_nodejs_.md#handleresponse)
 
 ## Functions
 
-###  oDataResponse
+###  handleResponse
 
-▸ **oDataResponse**(`request`: any, `data`: any, `response`: any, `responseParams`: any, `successCallback`: function, `errorCallback`: function): *void*
+▸ **handleResponse**(`request`: any, `data`: any, `response`: any, `responseParams`: any, `successCallback`: function, `errorCallback`: function): *void*
 
 Defined in src/core/http/defaultResponseHandler.nodejs.ts:3
 

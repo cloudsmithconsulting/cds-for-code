@@ -15,6 +15,7 @@ sidebar_label: "Utilities"
 ### Accessors
 
 * [$Object](_core_utilities_.utilities.md#static-object)
+* [Async](_core_utilities_.utilities.md#static-async)
 * [Browser](_core_utilities_.utilities.md#static-browser)
 * [Encoding](_core_utilities_.utilities.md#static-encoding)
 * [Guid](_core_utilities_.utilities.md#static-guid)
@@ -26,9 +27,19 @@ sidebar_label: "Utilities"
 
 • **get $Object**(): *[ObjectUtility](../interfaces/_core_utilities_.objectutility.md)*
 
-Defined in src/core/Utilities.ts:61
+Defined in src/core/Utilities.ts:67
 
 **Returns:** *[ObjectUtility](../interfaces/_core_utilities_.objectutility.md)*
+
+___
+
+### `Static` Async
+
+• **get Async**(): *[AsyncUtility](../interfaces/_core_utilities_.asyncutility.md)*
+
+Defined in src/core/Utilities.ts:63
+
+**Returns:** *[AsyncUtility](../interfaces/_core_utilities_.asyncutility.md)*
 
 ___
 
@@ -36,7 +47,7 @@ ___
 
 • **get Browser**(): *[BrowserUtility](../interfaces/_core_utilities_.browserutility.md)*
 
-Defined in src/core/Utilities.ts:58
+Defined in src/core/Utilities.ts:64
 
 **Returns:** *[BrowserUtility](../interfaces/_core_utilities_.browserutility.md)*
 
@@ -46,7 +57,7 @@ ___
 
 • **get Encoding**(): *[EncodingUtility](../interfaces/_core_utilities_.encodingutility.md)*
 
-Defined in src/core/Utilities.ts:59
+Defined in src/core/Utilities.ts:65
 
 **Returns:** *[EncodingUtility](../interfaces/_core_utilities_.encodingutility.md)*
 
@@ -56,7 +67,7 @@ ___
 
 • **get Guid**(): *[GuidUtility](../interfaces/_core_utilities_.guidutility.md)*
 
-Defined in src/core/Utilities.ts:60
+Defined in src/core/Utilities.ts:66
 
 **Returns:** *[GuidUtility](../interfaces/_core_utilities_.guidutility.md)*
 
@@ -66,6 +77,6 @@ ___
 
 • **get String**(): *[StringUtility](../interfaces/_core_utilities_.stringutility.md)*
 
-Defined in src/core/Utilities.ts:62
+Defined in src/core/Utilities.ts:68
 
 **Returns:** *[StringUtility](../interfaces/_core_utilities_.stringutility.md)*
