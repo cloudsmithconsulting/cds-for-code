@@ -24,13 +24,13 @@ export default class ViewManager {
     }
 
     @command(cs.cds.controls.pluginStep.open, "Open plugin step registration view")
-    async openPluginStep(context: vscode.ExtensionContext, pluginAssemblyId:string, config?: CdsWebApi.Config, step?: any): Promise<View> {
-        return await pluginStepEditor.apply(this, [context, pluginAssemblyId, config, step]);
+    async openPluginStep(pluginAssemblyId:string, config?: CdsWebApi.Config, step?: any): Promise<View> {
+        return await pluginStepEditor.apply(this, [pluginAssemblyId, config, step]);
     }
 
     @command(cs.cds.controls.pluginStepImage.open, "Open plugin step image registration view")
-    async openPluginStepImage(context: vscode.ExtensionContext, sdkmessageprocessingstepid: string, pluginStepImage: any, config?: CdsWebApi.Config): Promise<View> {
-        return await pluginStepImageEditor.apply(this, [context, sdkmessageprocessingstepid, pluginStepImage, config]);
+    async openPluginStepImage(sdkmessageprocessingstepid: string, pluginStepImage: any, config?: CdsWebApi.Config): Promise<View> {
+        return await pluginStepImageEditor.apply(this, [sdkmessageprocessingstepid, pluginStepImage, config]);
     }
 
     @command(cs.cds.controls.jsonInspector.open, "Open JSON inspector view")

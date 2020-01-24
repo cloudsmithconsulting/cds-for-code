@@ -146,7 +146,7 @@ export namespace cds {
         // tslint:disable-next-line: class-name
         export class workspaceState {
             static readonly _namespace: string = "cs.cds.configuration.workspaceState";
-            static readonly solutionMap: string = `${workspaceState._namespace}:solutionMap`;
+            static readonly solutionMap: string = `${workspaceState._namespace}.solutionMap`;
         }
     }
 

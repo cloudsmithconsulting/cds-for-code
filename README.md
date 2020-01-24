@@ -6,8 +6,10 @@ This extension is designed to help developers with a simple development loop for
 
 Release version: 0.8.8
 
-[![Board Status](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/dcd00a1d-957f-4b19-bcdc-f2951aed4c88/_apis/work/boardbadge/dca6f347-6bc4-4c07-831c-bda22d8068c3)](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/_boards/board/t/dcd00a1d-957f-4b19-bcdc-f2951aed4c88/Microsoft.RequirementCategory/)
+[![Board Status](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/b63fc4c8-773b-4ffc-ac61-c71890277c2c/_apis/work/boardbadge/350decde-59a7-49b4-a6f6-ee220fa7e391)](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/_boards/board/t/b63fc4c8-773b-4ffc-ac61-c71890277c2c/Microsoft.RequirementCategory/)
+[![Build Status](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_apis/build/status/cds-for-code?branchName=master)](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_build/latest?definitionId=2&branchName=master)
 [![Release Status](https://vsrm.dev.azure.com/cloudsmith-consulting/_apis/public/Release/badge/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/1/2)](https://vsrm.dev.azure.com/cloudsmith-consulting/_apis/public/Release/badge/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/1/2)
+
 ---
 
 ## Table of Contents
@@ -170,5 +172,6 @@ All of this could not be possible without community projects and our preview pro
 ## Feedback
 
 - Create a [new GitHub issue](https://github.com/cloudsmithconsulting/cds-for-code/issues/new)
-- Insiders can drop us a line in [CDS For Code Early Preview Teams Channel](https://teams.microsoft.com/l/channel/19%3aeb4e28a080cc4330b10effdef32b0ca0%40thread.skype/General?groupId=da1048fb-6db5-4fcf-8a87-27ceb8ac7b68&tenantId=b7d98656-670d-4ae0-b419-b03097edb814)
-- Insiders can file a bug in [CloudSmith Azure DevOps Dashboard](http://cslink.co/cds-for-code-dashboard)
+- @ Us [on Twitter @CloudSmithGurus](https://twitter.com/CloudSmithGurus)
+- DM us [on Twitter @CloudSmithGurus](https://twitter.com/direct_messages/create/CloudSmithGurus)
+- Find us [on LinkedIn - CloudSmith Consulting LLC](https://www.linkedin.com/company/cloudsmithconsulting)

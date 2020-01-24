@@ -65,7 +65,7 @@ export default class WebResourceManager {
         const solutionMap = await SolutionMap.loadFromWorkspace();
         let mappings;
 
-        if (fsPath && FileSystem.exists(fsPath)) {
+        if (fsPath) {
             mappings = solutionMap.getByPathOrParent(fsPath, orgId);
         } else if (solutionId) {
             mappings = solutionMap.getBySolutionId(solutionId, orgId);
