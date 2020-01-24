@@ -6,11 +6,21 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 
 ## v0.9 Public Preview - January 2020
 
-**We expect the first 0.9 build to drop to GitHub on or before January 27, 2020.**  Check back soon for release notes.
+**We expect the first 0.9 build to drop to GitHub on or around January 30, 2020.**  Check back soon for release notes.
 
 ---
 
 ## v0.8 Early Preview - December 2019 - January 2020
+
+### v0.8.10 (January 24, 2020)
+
+- Bugfix: Critical - extension does not activate due to publisher name change ([#566](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/566/))
+
+### v0.8.9 (January 24, 2020)
+
+- Doc Updates: Badging added to README
+- DevOps: Release pipeline added publish step to Marketplace
+- DevOps: Marketplace build is now available
 
 ### v0.8.8 (January 23, 2020)
 
