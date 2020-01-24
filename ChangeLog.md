@@ -12,6 +12,12 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 
 ## v0.8 Early Preview - December 2019 - January 2020
 
+### v0.8.9 (January 24, 2020)
+
+- Doc Updates: Badging added to README
+- DevOps: Release pipeline added publish step to Marketplace
+- DevOps: Marketplace build is now available
+
 ### v0.8.8 (January 23, 2020)
 
 - Feature: DevOps - Add built in template sources to solution/deployment ([#395](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/395/))
