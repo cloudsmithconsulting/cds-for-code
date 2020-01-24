@@ -157,8 +157,6 @@ export default class ScriptDownloader {
 		}
 	}
 
-
-
 	private static async unzipDownload(options: any) {
 		if (options) {
 			if (options.extractPath) { FileSystem.makeFolderSync(options.extractPath); }
