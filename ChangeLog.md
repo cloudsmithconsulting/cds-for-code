@@ -27,6 +27,7 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 - Feature: Refactor icon/script download calls to use new deployment mechanism/download logic ([#335](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/335/))
 - Bugfix: Naming webresources without the correct prefix fails on solution import ([#384](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/384/))
 - Bugfix: Save button for connection sometimes not visible ([#521](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/521/))
+- Bugfix: Configure plugin step dialog hangs after deploying assembly to CDS ([#538](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/538/))
 - Bugfix: Regression - OnPrem connections do not obtain AppUri correctly ([#543](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/543/))
 - Bugfix: Security - Certain conditions may cause a password to be exposed in terminal ([#547](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/547/))
 - Bugfix: New web resource deployments to CDS outside solution packing can error ([#549](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/549/))
