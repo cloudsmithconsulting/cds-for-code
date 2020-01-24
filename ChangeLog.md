@@ -24,6 +24,7 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 - Feature: Multiple usability enhancements in the "Add new Connection" screen ([#539](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/539/))
 - Feature: Add "Apps" support to CDS explorer view ([#540](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/540/))
 - Feature: Loading indicator updated on plugin step screen ([#557](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/557/))
+- Feature: Refactor icon/script download calls to use new deployment mechanism/download logic ([#335](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/335/))
 - Bugfix: Naming webresources without the correct prefix fails on solution import ([#384](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/384/))
 - Bugfix: Save button for connection sometimes not visible ([#521](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/521/))
 - Bugfix: Regression - OnPrem connections do not obtain AppUri correctly ([#543](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/543/))
