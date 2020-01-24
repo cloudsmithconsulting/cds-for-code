@@ -5,6 +5,7 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 ---
 
 ## v0.9 Public Preview - January 2020
+
 **We expect the first 0.9 build to drop to GitHub on or before January 27, 2020.**  Check back soon for release notes.
 
 ---
@@ -12,6 +13,7 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 ## v0.8 Early Preview - December 2019 - January 2020
 
 ### v0.8.8 (January 23, 2020)
+
 - Feature: DevOps - Add built in template sources to solution/deployment ([#395](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/395/))
 - Feature: Docs - How to manage solution assets ([#407](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/407/))
 - Feature: Docs - How to create/manage web resources ([#408](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/408/))
@@ -32,8 +34,10 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 - Bugfix: On-prem connections do not always expand after clicking refresh in CDS Explorer ([#551](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/551/))
 - Bugfix: Plugins show "vundefined" in CDS Explorer ([#552](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/552/))
 - Bugfix: Generate entities command can fail with online users using MFA ([#558](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/558/))
+- Bugfix: Clicking the edit button on a Web Resource in CDS Explorer does nothing ([#559](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/559/))
 
 ### v0.8.7 (January 13, 2020)
+
 - Feature: Icons now match color from VS code theme more accurately ([#336](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/336/))
 - Feature: Telemetry and performance stats are optimizsed and evaluated for treeview loads ([#522](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/522/))
 - Feature: TreeView entries only query CDS API for minimum required attributes ([#524](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/524/))

@@ -63,7 +63,7 @@ export default async function run(config?: CdsWebApi.Config, pluginAssembly?: an
     }
 
     solution = solution || await Quickly.pickCdsSolution(config, "Choose a solution", true);
-    pluginAssembly = pluginAssembly || await Quickly.pickCdsSolutionComponent(config, solution, CdsSolutions.SolutionComponent.PluginAssembly, "Choose a plugin assembly to update (or press esc for new)");
+    pluginAssembly = pluginAssembly || await Quickly.pickCdsSolutionComponent(config, solution, CdsSolutions.SolutionComponent.PluginAssembly, undefined, "Choose a plugin assembly to update (or press esc for new)");
    
     const api = new ApiRepository(config);
 
@@ -114,7 +114,7 @@ export default async function run(config?: CdsWebApi.Config, pluginAssembly?: an
                             logger.log(`Plugin ${file}: Opening step window`);
 
                             if (!pluginAssembly) {
-                                vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, assemblyId, undefined, config);
+                                vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, assemblyId, config, undefined);
                             }
                         }).then(() => {
                             logger.log(`Plugin ${file}: Registration complete`);
