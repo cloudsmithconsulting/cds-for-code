@@ -145,7 +145,7 @@ ___
 
 ▸ **notify**(`namespace`: string, `notify?`: function): *void*
 
-Defined in src/core/ExtensionConfiguration.ts:97
+Defined in src/core/ExtensionConfiguration.ts:101
 
 **Parameters:**
 
@@ -169,7 +169,7 @@ ___
 
 ▸ **parseConfigurationString**(...`config`: string[]): *object*
 
-Defined in src/core/ExtensionConfiguration.ts:109
+Defined in src/core/ExtensionConfiguration.ts:113
 
 **Parameters:**
 
@@ -189,7 +189,7 @@ ___
 
 ▸ **parseConfigurationValue**<**T**>(`workspaceConfig`: WorkspaceConfiguration, ...`config`: string[]): *T*
 
-Defined in src/core/ExtensionConfiguration.ts:91
+Defined in src/core/ExtensionConfiguration.ts:95
 
 **Type parameters:**
 
@@ -232,7 +232,7 @@ ___
 
 ▸ **unnotify**(`namespace`: string): *void*
 
-Defined in src/core/ExtensionConfiguration.ts:103
+Defined in src/core/ExtensionConfiguration.ts:107
 
 **Parameters:**
 
