@@ -14,6 +14,7 @@ sidebar_label: "core/Utilities"
 
 ### Interfaces
 
+* [AsyncUtility](../interfaces/_core_utilities_.asyncutility.md)
 * [BrowserUtility](../interfaces/_core_utilities_.browserutility.md)
 * [EncodingUtility](../interfaces/_core_utilities_.encodingutility.md)
 * [GuidUtility](../interfaces/_core_utilities_.guidutility.md)

@@ -12,10 +12,15 @@ sidebar_label: "README"
 
 This extension is designed to help developers with a simple development loop for Microsoft&trade; Common Data Service (CDS) using Visual Studio Code.  Many developers do not have access to a full Visual Studio license in order to use Microsoft&trade; CDS Development Toolkit.  This extension is designed to get you started.
 
-Release version: 0.8.8
+|Version|Link|
+|:--|:--|
+|Current Development Version:|0.8.9|
+|Current Release Version:|[0.8.8](https://github.com/cloudsmithconsulting/cds-for-code/releases/tag/v0.8.8)|
 
-[![Board Status](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/dcd00a1d-957f-4b19-bcdc-f2951aed4c88/_apis/work/boardbadge/dca6f347-6bc4-4c07-831c-bda22d8068c3)](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/_boards/board/t/dcd00a1d-957f-4b19-bcdc-f2951aed4c88/Microsoft.RequirementCategory/)
+[![Board Status](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/b63fc4c8-773b-4ffc-ac61-c71890277c2c/_apis/work/boardbadge/350decde-59a7-49b4-a6f6-ee220fa7e391)](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/_boards/board/t/b63fc4c8-773b-4ffc-ac61-c71890277c2c/Microsoft.RequirementCategory/)
+[![Build Status](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_apis/build/status/cds-for-code?branchName=master)](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_build/latest?definitionId=2&branchName=master)
 [![Release Status](https://vsrm.dev.azure.com/cloudsmith-consulting/_apis/public/Release/badge/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/1/2)](https://vsrm.dev.azure.com/cloudsmith-consulting/_apis/public/Release/badge/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/1/2)
+
 ---
 
 ## Table of Contents
@@ -82,12 +87,12 @@ This VS Code extension will help you perform these tasks in your CDS development
 
 For a more comprehensive walkthrough of features you can check out our How To articles on the following topics:
 
-- [Working with Solutions](docs/howto/Solutions.md)
-- [Working with Web Resources](docs/howto/WebResources.md)
-- [Working with Plugins](docs/howto/Plugins.md)
-- [Working with Code Generation and SvcUtil](docs/howto/CodeGeneration.md)
-- [Working with Templates for code and projects](docs/howto/Templates.md)
-- [Overview of Security Features](docs/howto/SecurityFeatures.md)
+- [Working with Solutions](docs/extension/howto/Solutions.md)
+- [Working with Web Resources](docs/extension/howto/WebResources.md)
+- [Working with Plugins](docs/extension/howto/Plugins.md)
+- [Working with Code Generation and CrmSvcUtil](docs/extension/howto/CodeGeneration.md)
+- [Working with Templates for code and projects](docs/extension/howto/Templates.md)
+- [Overview of Security Features](docs/extension/howto/SecurityFeatures.md)
 
 ---
 
@@ -116,8 +121,8 @@ For a more comprehensive walkthrough of features you can check out our How To ar
 |Download required PowerShell scripts from GitHub|Download the supporting PowerShell scripts necessary for functionality in the CDS for Code extension|
 |Download & unpack solution from a registered CDS environment|Get the contents of a solutions from a connected CDS instance and put it inside of a local workspace for editing|
 |Pack & deploy solution to a registerd CDS environment|Packages up local changes to a CDS solution and deploys them to a connected CDS instance|
-|Configure entity code generation for use with CrmSvcUtil.exe|Configure options for code generation based on the [CloudSmith SvcUtil Extensions](https://github.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/tree/master/src/CloudSmith.Dynamics365.CrmSvcUtil)|
-|Generate entity code from metadata on a registered CDS environment|Generates entity code using the CDS for Code Secure Terminal with a call to SvcUtil|
+|Configure entity code generation for use with CrmSvcUtil.exe|Configure options for code generation based on the [CloudSmith CrmSvcUtil Extensions](docs/tools/CrmSvcUtil.md)|
+|Generate entity code from metadata on a registered CDS environment|Generates entity code using the CDS for Code Secure Terminal with a call to CrmSvcUtil|
 |Create new items or projects from a template|Create a new item or project from an existing template within the template catalog|
 |Delete a template from the catalog|Deletes a template from the template catalog|
 |Open template catalog in code editor|Opens the template catalog inside of the VSCode editor|
@@ -140,7 +145,7 @@ For a more comprehensive walkthrough of features you can check out our How To ar
 |:--|:--|:--|
 |cs.cds.configuration.web.usePowerAppsUi|Use the PowerApps Maker UX where possible|true|
 |cs.cds.configuration.tools.sdkInstallPath|The full path to the root of the Dynamics 365/CDS SDK installation on your computer|C:\Deploy\Tools|
-|cs.cds.configuration.tools.updateSource|The URL where supporting scripts are located|[https://cloudsmithprodstorage.blob.core.windows.net/cds-for-code](https://cloudsmithprodstorage.blob.core.windows.net/cds-for-code)|
+|cs.cds.configuration.tools.updateSource|The URL where supporting scripts are located|[https://gihub.com/CloudSmithConsulting/cds-for-code/releases/download/](https://gihub.com/CloudSmithConsulting/cds-for-code/releases/download/)|
 |cs.cds.configuration.tools.updateChannel|The update channel to use when downloading new versions of this extension|stable|
 |cs.cds.configuration.iconThemes.selectedTheme|The icon set to use in the CDS Explorer view|default|
 |cs.cds.configuration.explorer.showDefaultSolution|Show the Default Solution in the CDS Explorer view|false|
@@ -171,12 +176,13 @@ You can stay up to date with the latest changes by checking out [our change log 
 
 ## Contributors
 
-All of this could not be possible without community projects and our preview program participants. You can read more about [our contributors here](/docs/Contributors.md)
+All of this could not be possible without community projects and our preview program participants. You can read more about [our contributors here](/docs/extension/Contributors.md)
 
 ---
 
 ## Feedback
 
 - Create a [new GitHub issue](https://github.com/cloudsmithconsulting/cds-for-code/issues/new)
-- Insiders can drop us a line in [CDS For Code Early Preview Teams Channel](https://teams.microsoft.com/l/channel/19%3aeb4e28a080cc4330b10effdef32b0ca0%40thread.skype/General?groupId=da1048fb-6db5-4fcf-8a87-27ceb8ac7b68&tenantId=b7d98656-670d-4ae0-b419-b03097edb814)
-- Insiders can file a bug in [CloudSmith Azure DevOps Dashboard](http://cslink.co/cds-for-code-dashboard)
+- @ Us [on Twitter @CloudSmithGurus](https://twitter.com/CloudSmithGurus)
+- DM us [on Twitter @CloudSmithGurus](https://twitter.com/direct_messages/create/CloudSmithGurus)
+- Find us [on LinkedIn - CloudSmith Consulting LLC](https://www.linkedin.com/company/cloudsmithconsulting)

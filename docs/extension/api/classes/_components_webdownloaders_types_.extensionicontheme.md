@@ -133,7 +133,7 @@ ___
 
 ▸ **getIcons**(`mappings`: [Dictionary](_core_types_dictionary_.dictionary.md)‹[ExtensionIcon](../modules/_components_webdownloaders_types_.md#extensionicon), string›, `lightColor?`: string, `darkColor?`: string): *[IconifyIcon](_components_webdownloaders_types_.iconifyicon.md)[]*
 
-Defined in src/components/WebDownloaders/Types.ts:126
+Defined in src/components/WebDownloaders/Types.ts:123
 
 **Parameters:**
 

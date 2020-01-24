@@ -45,7 +45,7 @@ sidebar_label: "IconifyIcon"
 
 \+ **new IconifyIcon**(`name`: string, `color?`: string, `annotation?`: string, `height`: number, `width`: number, `format`: [ScriptedIconFormat](../enums/_components_webdownloaders_types_.scriptediconformat.md), `extensionIcon?`: [ExtensionIcon](../modules/_components_webdownloaders_types_.md#extensionicon)): *[IconifyIcon](_components_webdownloaders_types_.iconifyicon.md)*
 
-Defined in src/components/WebDownloaders/Types.ts:213
+Defined in src/components/WebDownloaders/Types.ts:210
 
 **Parameters:**
 
@@ -67,7 +67,7 @@ Name | Type | Default |
 
 • **_color**: *string*
 
-Defined in src/components/WebDownloaders/Types.ts:206
+Defined in src/components/WebDownloaders/Types.ts:203
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 • **annotation**: *string*
 
-Defined in src/components/WebDownloaders/Types.ts:212
+Defined in src/components/WebDownloaders/Types.ts:209
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 • **extensionIcon**: *[ExtensionIcon](../modules/_components_webdownloaders_types_.md#extensionicon)*
 
-Defined in src/components/WebDownloaders/Types.ts:213
+Defined in src/components/WebDownloaders/Types.ts:210
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 • **format**: *[ScriptedIconFormat](../enums/_components_webdownloaders_types_.scriptediconformat.md)*
 
-Defined in src/components/WebDownloaders/Types.ts:211
+Defined in src/components/WebDownloaders/Types.ts:208
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 • **height**? : *number*
 
-Defined in src/components/WebDownloaders/Types.ts:208
+Defined in src/components/WebDownloaders/Types.ts:205
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 • **name**: *string*
 
-Defined in src/components/WebDownloaders/Types.ts:210
+Defined in src/components/WebDownloaders/Types.ts:207
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 • **width**? : *number*
 
-Defined in src/components/WebDownloaders/Types.ts:209
+Defined in src/components/WebDownloaders/Types.ts:206
 
 ## Accessors
 
@@ -123,13 +123,13 @@ Defined in src/components/WebDownloaders/Types.ts:209
 
 • **get color**(): *string*
 
-Defined in src/components/WebDownloaders/Types.ts:225
+Defined in src/components/WebDownloaders/Types.ts:222
 
 **Returns:** *string*
 
 • **set color**(`value`: string): *void*
 
-Defined in src/components/WebDownloaders/Types.ts:226
+Defined in src/components/WebDownloaders/Types.ts:223
 
 **Parameters:**
 
@@ -145,7 +145,7 @@ ___
 
 • **get mappedOutputFile**(): *string*
 
-Defined in src/components/WebDownloaders/Types.ts:236
+Defined in src/components/WebDownloaders/Types.ts:233
 
 **Returns:** *string*
 
@@ -155,7 +155,7 @@ ___
 
 • **get mimeType**(): *string*
 
-Defined in src/components/WebDownloaders/Types.ts:244
+Defined in src/components/WebDownloaders/Types.ts:241
 
 **Returns:** *string*
 
@@ -165,7 +165,7 @@ ___
 
 • **get outputfile**(): *string*
 
-Defined in src/components/WebDownloaders/Types.ts:240
+Defined in src/components/WebDownloaders/Types.ts:237
 
 **Returns:** *string*
 
@@ -175,7 +175,7 @@ ___
 
 • **get url**(): *string*
 
-Defined in src/components/WebDownloaders/Types.ts:232
+Defined in src/components/WebDownloaders/Types.ts:229
 
 **Returns:** *string*
 
@@ -185,7 +185,7 @@ Defined in src/components/WebDownloaders/Types.ts:232
 
 ▸ **isColorCode**(`value`: string): *boolean*
 
-Defined in src/components/WebDownloaders/Types.ts:255
+Defined in src/components/WebDownloaders/Types.ts:252
 
 **Parameters:**
 
@@ -201,6 +201,6 @@ ___
 
 ▸ **toQueryObject**(): *any*
 
-Defined in src/components/WebDownloaders/Types.ts:259
+Defined in src/components/WebDownloaders/Types.ts:256
 
 **Returns:** *any*

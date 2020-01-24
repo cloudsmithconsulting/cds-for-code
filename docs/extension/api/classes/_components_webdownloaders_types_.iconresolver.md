@@ -28,7 +28,7 @@ sidebar_label: "IconResolver"
 
 \+ **new IconResolver**(`lightPath`: string, `darkPath`: string): *[IconResolver](_components_webdownloaders_types_.iconresolver.md)*
 
-Defined in src/components/WebDownloaders/Types.ts:192
+Defined in src/components/WebDownloaders/Types.ts:189
 
 **Parameters:**
 
@@ -45,7 +45,7 @@ Name | Type |
 
 • **darkPath**: *string*
 
-Defined in src/components/WebDownloaders/Types.ts:196
+Defined in src/components/WebDownloaders/Types.ts:193
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 • **iconPath**: *object* = null
 
-Defined in src/components/WebDownloaders/Types.ts:192
+Defined in src/components/WebDownloaders/Types.ts:189
 
 #### Type declaration:
 
@@ -67,4 +67,4 @@ ___
 
 • **lightPath**: *string*
 
-Defined in src/components/WebDownloaders/Types.ts:195
+Defined in src/components/WebDownloaders/Types.ts:192

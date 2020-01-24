@@ -58,13 +58,13 @@ ___
 
 ###  PowerShellScriptVersion
 
-• **get PowerShellScriptVersion**(): *number*
+• **get PowerShellScriptVersion**(): *string*
 
 Defined in src/components/Configuration/GlobalState.ts:56
 
-**Returns:** *number*
+**Returns:** *string*
 
-• **set PowerShellScriptVersion**(`value`: number): *void*
+• **set PowerShellScriptVersion**(`value`: string): *void*
 
 Defined in src/components/Configuration/GlobalState.ts:59
 
@@ -72,7 +72,7 @@ Defined in src/components/Configuration/GlobalState.ts:59
 
 Name | Type |
 ------ | ------ |
-`value` | number |
+`value` | string |
 
 **Returns:** *void*
 

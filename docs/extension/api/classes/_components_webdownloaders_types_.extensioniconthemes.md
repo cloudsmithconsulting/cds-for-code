@@ -33,7 +33,7 @@ sidebar_label: "ExtensionIconThemes"
 
 ▪ **_themes**: *[ExtensionIconTheme](_components_webdownloaders_types_.extensionicontheme.md)[]* = [ ExtensionIconThemes.default ]
 
-Defined in src/components/WebDownloaders/Types.ts:156
+Defined in src/components/WebDownloaders/Types.ts:153
 
 ## Accessors
 
@@ -41,7 +41,7 @@ Defined in src/components/WebDownloaders/Types.ts:156
 
 • **get default**(): *[ExtensionIconTheme](_components_webdownloaders_types_.extensionicontheme.md)*
 
-Defined in src/components/WebDownloaders/Types.ts:150
+Defined in src/components/WebDownloaders/Types.ts:147
 
 **Returns:** *[ExtensionIconTheme](_components_webdownloaders_types_.extensionicontheme.md)*
 
@@ -51,7 +51,7 @@ ___
 
 • **get selected**(): *[ExtensionIconTheme](_components_webdownloaders_types_.extensionicontheme.md)*
 
-Defined in src/components/WebDownloaders/Types.ts:158
+Defined in src/components/WebDownloaders/Types.ts:155
 
 **Returns:** *[ExtensionIconTheme](_components_webdownloaders_types_.extensionicontheme.md)*
 
@@ -61,7 +61,7 @@ Defined in src/components/WebDownloaders/Types.ts:158
 
 ▸ **get**(`name`: string): *[ExtensionIconTheme](_components_webdownloaders_types_.extensionicontheme.md)‹›*
 
-Defined in src/components/WebDownloaders/Types.ts:168
+Defined in src/components/WebDownloaders/Types.ts:165
 
 **Parameters:**
 
@@ -77,7 +77,7 @@ ___
 
 ▸ **register**(`theme`: [ExtensionIconTheme](_components_webdownloaders_types_.extensionicontheme.md)): *void*
 
-Defined in src/components/WebDownloaders/Types.ts:172
+Defined in src/components/WebDownloaders/Types.ts:169
 
 **Parameters:**
 
@@ -93,7 +93,7 @@ ___
 
 ▸ **unregister**(`theme`: [ExtensionIconTheme](_components_webdownloaders_types_.extensionicontheme.md)): *void*
 
-Defined in src/components/WebDownloaders/Types.ts:178
+Defined in src/components/WebDownloaders/Types.ts:175
 
 **Parameters:**
 

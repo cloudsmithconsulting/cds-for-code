@@ -29,6 +29,6 @@ ___
 
 ### `Static` solutionMap
 
-▪ **solutionMap**: *string* = `${workspaceState._namespace}:solutionMap`
+▪ **solutionMap**: *string* = `${workspaceState._namespace}.solutionMap`
 
 Defined in src/cs.ts:149
