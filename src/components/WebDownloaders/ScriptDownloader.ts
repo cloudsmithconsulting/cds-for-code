@@ -24,6 +24,10 @@ export default class ScriptDownloader {
 
 	@command(cs.cds.extension.downloadRequiredScripts, "Download required PowerShell scripts and templates")
     static async runScriptCheck() {
+		if (!FileSystem.exists(ExtensionContext.Instance.globalStoragePath)) {
+			FileSystem.makeFolderSync(ExtensionContext.Instance.globalStoragePath);
+		}
+
 		const version: string = vscode.extensions.getExtension(cs.cds.extension.productId).packageJSON.version;
 		const remoteFolderPath: string = `${Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateSource))}version-${version}/dist/`;
 		const updateChannel: string = ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateChannel);
