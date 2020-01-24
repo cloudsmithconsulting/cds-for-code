@@ -67,7 +67,7 @@ ___
 
 ### `Static` productId
 
-▪ **productId**: *string* = `CloudSmith.cds-for-code`
+▪ **productId**: *string* = `CloudSmithConsulting.cds-for-code`
 
 Defined in src/cs.ts:44
 
