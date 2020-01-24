@@ -108,8 +108,8 @@ For a more comprehensive walkthrough of features you can check out our How To ar
 |Download required PowerShell scripts from GitHub|Download the supporting PowerShell scripts necessary for functionality in the CDS for Code extension|
 |Download & unpack solution from a registered CDS environment|Get the contents of a solutions from a connected CDS instance and put it inside of a local workspace for editing|
 |Pack & deploy solution to a registerd CDS environment|Packages up local changes to a CDS solution and deploys them to a connected CDS instance|
-|Configure entity code generation for use with CrmSvcUtil.exe|Configure options for code generation based on the [CloudSmith SvcUtil Extensions](https://github.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/tree/master/src/CloudSmith.Dynamics365.CrmSvcUtil)|
-|Generate entity code from metadata on a registered CDS environment|Generates entity code using the CDS for Code Secure Terminal with a call to SvcUtil|
+|Configure entity code generation for use with CrmSvcUtil.exe|Configure options for code generation based on the [CloudSmith CrmSvcUtil Extensions](docs/tools/CrmSvcUtil.md)|
+|Generate entity code from metadata on a registered CDS environment|Generates entity code using the CDS for Code Secure Terminal with a call to CrmSvcUtil|
 |Create new items or projects from a template|Create a new item or project from an existing template within the template catalog|
 |Delete a template from the catalog|Deletes a template from the template catalog|
 |Open template catalog in code editor|Opens the template catalog inside of the VSCode editor|
@@ -132,7 +132,7 @@ For a more comprehensive walkthrough of features you can check out our How To ar
 |:--|:--|:--|
 |cs.cds.configuration.web.usePowerAppsUi|Use the PowerApps Maker UX where possible|true|
 |cs.cds.configuration.tools.sdkInstallPath|The full path to the root of the Dynamics 365/CDS SDK installation on your computer|C:\Deploy\Tools|
-|cs.cds.configuration.tools.updateSource|The URL where supporting scripts are located|[https://cloudsmithprodstorage.blob.core.windows.net/cds-for-code](https://cloudsmithprodstorage.blob.core.windows.net/cds-for-code)|
+|cs.cds.configuration.tools.updateSource|The URL where supporting scripts are located|[https://gihub.com/CloudSmithConsulting/cds-for-code/releases/download/](https://gihub.com/CloudSmithConsulting/cds-for-code/releases/download/)|
 |cs.cds.configuration.tools.updateChannel|The update channel to use when downloading new versions of this extension|stable|
 |cs.cds.configuration.iconThemes.selectedTheme|The icon set to use in the CDS Explorer view|default|
 |cs.cds.configuration.explorer.showDefaultSolution|Show the Default Solution in the CDS Explorer view|false|
@@ -157,13 +157,13 @@ We are currently on the insider preview program of CDS for Code. This build may 
 
 ## Change Log
 
-You can stay up to date with the latest changes by checking out [our change log located here](ChangeLog.md).
+You can stay up to date with the latest changes by checking out [our change log located here](docs/extension/ChangeLog.md).
 
 ---
 
 ## Contributors
 
-All of this could not be possible without community projects and our preview program participants. You can read more about [our contributors here](/docs/Contributors.md)
+All of this could not be possible without community projects and our preview program participants. You can read more about [our contributors here](/docs/extension/Contributors.md)
 
 ---
 

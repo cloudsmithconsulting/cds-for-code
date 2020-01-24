@@ -53,10 +53,10 @@ export default class GlobalState {
         }
     }
 
-    get PowerShellScriptVersion(): number {
-        return ExtensionContext.Instance.globalState.get<number>(cs.cds.configuration.globalState.powerShellScriptVersion);
+    get PowerShellScriptVersion(): string {
+        return ExtensionContext.Instance.globalState.get<string>(cs.cds.configuration.globalState.powerShellScriptVersion);
     }
-    set PowerShellScriptVersion(value: number) {
+    set PowerShellScriptVersion(value: string) {
         ExtensionContext.Instance.globalState.update(cs.cds.configuration.globalState.powerShellScriptVersion, value);
     }
     

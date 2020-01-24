@@ -9,7 +9,7 @@ import { extensionActivate } from '../../core/Extension';
 export default class IconLoader {
 	@extensionActivate(cs.cds.extension.productId)
     async activate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-        setTimeout(async () => await IconLoader.downloadIconTheme(context), 20 * 1000);
+        setTimeout(async () => await IconLoader.downloadIconTheme(context), 45000);
     }
 
     @command(cs.cds.extension.downloadRequiredIcons, "Download required icons")

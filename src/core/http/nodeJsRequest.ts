@@ -18,7 +18,7 @@ export type ResponseHandler = (request: any, data: any, response: any, responseP
  *
  */
 export default function nodeJsRequest(options: any) {
-    const method = options.method ? options.method.toLowerCase() : "get";
+    const method = options.method ? options.method.toUpperCase() : "GET";
     const uri = options.uri;
     const data = options.data;
     const additionalHeaders = options.additionalHeaders;
@@ -48,12 +48,14 @@ export default function nodeJsRequest(options: any) {
     const protocol = parsedUrl.protocol.replace(':', '');
     let protocolInterface = useWindowsAuth ? httpntlm : protocol === 'http' ? http : https;
     let internalOptions: any = {
+        protocol: `${protocol}:`,
         hostname: parsedUrl.hostname,
-        port: parsedUrl.port,
+        port: parsedUrl.port || (protocol === 'http' ? 80 : 443),
         path: parsedUrl.path,
         method: method,
         timeout: timeout,
-        headers: headers
+        headers: headers,
+        agent: protocolInterface === http ? new http.Agent( { keepAlive: true } ) : protocolInterface === https ? new https.Agent( { keepAlive: true } ) : null
     };
 
     if (process.env[`${protocol}_proxy`]) {
@@ -99,8 +101,10 @@ export default function nodeJsRequest(options: any) {
                 requestEndTime = moment.now();
 
                 if (error) {
-                    responseParams.length = 0;
-
+                    if (responseParams) {
+                        responseParams.length = 0;
+                    }
+        
                     logger.error(`HTTP error: ${internalOptions.method.toUpperCase()} ${internalOptions.url} (out: ${data ? data.length : 0}b, time: ${requestEndTime - requestStartTime}ms, error: ${(error.message || error).toString()})`);
                     Telemetry.Instance.error(error, {
                         requestId,
@@ -112,7 +116,7 @@ export default function nodeJsRequest(options: any) {
                         statusCode: "-1"
                     }, {
                         executionTime: requestEndTime - requestStartTime,
-                        requestBytes: data.length,
+                        requestBytes: data ? data.length : 0,
                         responseBytes: 0
                     });
 
@@ -149,43 +153,49 @@ export default function nodeJsRequest(options: any) {
                 }
             });
     } else {
-        executeHttpRequest = (protocol:any, options:any, responseDelegate: ResponseHandler) => protocol.request(
-            options, 
-            (response) => {
-                let rawData = '';
+        executeHttpRequest = (protocol:any, options:any, responseDelegate: ResponseHandler) => {
+            const returnRequest = protocol.request(
+                options, 
+                (response) => {
+                    let rawData = '';
 
-                response.setEncoding('utf8');
-                response.on('data', (chunk: any) => {
-                    rawData += chunk;
-                }); 
-                response.on('end', () => {
-                    requestEndTime = moment.now();
+                    response.setEncoding('utf8');
+                    response.on('data', (chunk: any) => {
+                        rawData += chunk;
+                    }); 
+                    response.on('end', () => {
+                        requestEndTime = moment.now();
 
-                    if (response.statusCode === 401 && authRetry()) {
-                        logger.log("Auth: HTTP 401 received");
-                    } else if (responseDelegate) {
-                        logger.log(`HTTP ${response.statusCode} received: ${internalOptions.method.toUpperCase()} ${parsedUrl.href} (out: ${data ? data.length : 0}b, in: ${rawData ? rawData.length : 0}b, time: ${requestEndTime - requestStartTime}ms)`);
+                        if (response.statusCode === 401 && authRetry()) {
+                            logger.log("Auth: HTTP 401 received");
+                        } else if (responseDelegate) {
+                            logger.log(`HTTP ${response.statusCode} received: ${internalOptions.method.toUpperCase()} ${parsedUrl.href} (out: ${data ? data.length : 0}b, in: ${rawData ? rawData.length : 0}b, time: ${requestEndTime - requestStartTime}ms)`);
 
-                        Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.httpRequest, {
-                            requestId,
-                            method: internalOptions.method,
-                            host: internalOptions.hostname,
-                            port: internalOptions.port,
-                            url: parsedUrl.href,
-                            username: headers["authorization"],
-                            statusCode: response.statusCode
-                        }, {
-                            executionTime: requestEndTime - requestStartTime,
-                            requestBytes: data ? data.length : 0,
-                            responseBytes: rawData ? rawData.length : 0
-                        });
+                            Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.httpRequest, {
+                                requestId,
+                                method: internalOptions.method,
+                                host: internalOptions.hostname,
+                                port: internalOptions.port,
+                                url: parsedUrl.href,
+                                username: headers ? headers["authorization"] : null,
+                                statusCode: response.statusCode
+                            }, {
+                                executionTime: requestEndTime - requestStartTime,
+                                requestBytes: data ? data.length : 0,
+                                responseBytes: rawData ? rawData.length : 0
+                            });
 
-                        responseDelegate(parsedUrl.href, rawData, response, responseParams, successCallback, errorCallback);
+                            responseDelegate(parsedUrl.href, rawData, response, responseParams, successCallback, errorCallback);
+                        }
+                    });
+
+                    if (responseParams) {
+                        responseParams.length = 0;
                     }
                 });
 
-                responseParams.length = 0;
-            });
+            return returnRequest;
+        };
     }
 
     const requestId = Utilities.Guid.newGuid();
@@ -204,7 +214,10 @@ export default function nodeJsRequest(options: any) {
         }
 
         request.on('error', (error) => {
-            responseParams.length = 0;
+            if (responseParams) {
+                responseParams.length = 0;
+            }
+
             requestEndTime = moment.now();
 
             logger.error(`HTTP error: ${internalOptions.method} ${parsedUrl.href} (request: ${data ? data.length : 0}b, time: ${requestEndTime - requestStartTime}ms, error: ${(error.message || error).toString()})`);
@@ -217,7 +230,7 @@ export default function nodeJsRequest(options: any) {
                 username: internalOptions.username
             }, {
                 executionTime: requestEndTime - requestStartTime,
-                requestBytes: data.length
+                requestBytes: data ? data.length : 0
             });
 
             errorCallback(error);
