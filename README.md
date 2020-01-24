@@ -159,7 +159,7 @@ We are currently on the insider preview program of CDS for Code. This build may 
 
 ## Change Log
 
-You can stay up to date with the latest changes by checking out [our change log located here](docs/extension/ChangeLog.md).
+You can stay up to date with the latest changes by checking out [our change log located here](ChangeLog.md).
 
 ---
 

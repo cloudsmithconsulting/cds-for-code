@@ -75,6 +75,7 @@ steps:
       **/*.nupkg
       package.json
       LICENSE
+      CHANGELOG.md
       README.md
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
