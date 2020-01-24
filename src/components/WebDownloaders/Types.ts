@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as cs from '../../cs';
-import fetch from 'node-fetch';
 import { Utilities } from '../../core/Utilities';
 import Dictionary from '../../core/types/Dictionary';
 import * as FileSystem from '../../core/io/FileSystem';
@@ -10,6 +9,7 @@ import { TS } from 'typescript-linq';
 import * as TemplateTreeView from '../../views/cs.cds.viewContainers.templateExplorer';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import logger from '../../core/framework/Logger';
+import download from '../../core/http/nodeJsFileDownloader';
 
 export type ExtensionIcon = DynamicsTreeView.CdsExplorerEntryType | TemplateTreeView.TemplateExplorerEntryType | 'Add' | 'Edit' | 'Delete' | 'Refresh' | 'Save' | 'Cancel';
 
@@ -95,7 +95,7 @@ export class ExtensionIconTheme {
 		const destination = path.join(folder, this.name.replace(`${cs.cds.configuration.iconThemes._namespace}.`, ''));
 	
 		if (this.icons) {
-			await this.icons.forEach(async icon => {
+			await Utilities.Async.forEach(this.icons.toArray(), async icon => {
 				const localPath = path.join(destination, icon.mappedOutputFile);
 		
 				FileSystem.makeFolderSync(path.dirname(localPath));
@@ -103,15 +103,12 @@ export class ExtensionIconTheme {
 				if (FileSystem.exists(localPath)) {
 					return;
 				}
-		
-				return await fetch(icon.url, { method: 'get', headers: { 'Accepts': icon.mimeType } })
-					.then(res => res.text())
-					.then(body => {
-						FileSystem.writeFileSync(localPath, body);
 
+				await download(icon.url, localPath)
+					.then(file => {
 						logger.log(`Command: ${cs.cds.extension.downloadRequiredIcons} Download icon: ${icon.url} completed.`);
 		
-						return localPath;
+						return file;
 					}).catch(error => {
 						const message = (error.message || error).toString();
 

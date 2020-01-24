@@ -54,7 +54,8 @@ export default function nodeJsRequest(options: any) {
         path: parsedUrl.path,
         method: method,
         timeout: timeout,
-        headers: headers
+        headers: headers,
+        agent: protocolInterface === http ? new http.Agent( { keepAlive: true } ) : protocolInterface === https ? new https.Agent( { keepAlive: true } ) : null
     };
 
     if (process.env[`${protocol}_proxy`]) {

@@ -1,10 +1,15 @@
 import * as vscode from 'vscode';
+import * as AsyncHelper from "./helpers/Async";
 import * as BrowserHelper from "./helpers/Browser";
 import * as EncodingHelper from "./helpers/Encoding";
 import * as GuidHelper from "./helpers/Guid";
 import * as ObjectHelper from "./helpers/Object";
 import * as StringHelper from "./helpers/String";
 import { TextEncoder } from 'util';
+
+export interface AsyncUtility {
+   forEach<T>(array: T[], callback: (item: T, index?: number, array?: T[]) => Promise<void>);
+}
 
 export interface BrowserUtility { 
    openWindow(uri:vscode.Uri | string): Promise<void>;
@@ -55,6 +60,7 @@ export interface UtilityObject {
 }
 
 export class Utilities {
+   static get Async(): AsyncUtility { return AsyncHelper; }
    static get Browser(): BrowserUtility { return BrowserHelper; }
    static get Encoding(): EncodingUtility { return EncodingHelper; }
    static get Guid(): GuidUtility { return GuidHelper; }

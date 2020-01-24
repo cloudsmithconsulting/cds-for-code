@@ -69,9 +69,9 @@ export default async function run(config?: CdsWebApi.Config, pluginAssembly?: an
 
     logger.log(`Plugin ${file}: Attempting registration of plugin on '${config.appUrl}'`);
 
-    return await TerminalManager.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Tools\\CloudSmith.Dynamics365.AssemblyScanner\\"))
+    return await TerminalManager.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Tools\\CloudSmith.Tools.AssemblyScanner\\"))
         .then(async terminal => { 
-            logger.log(`Plugin ${file}:  Scanning for plugin types.`);
+            logger.log(`Plugin ${file}: Scanning for plugin types.`);
 
             return await terminal.run(new TerminalCommand(`.\\AssemblyScanner.exe "${file.fsPath}"`))
                 .then(tc => {
@@ -86,16 +86,16 @@ export default async function run(config?: CdsWebApi.Config, pluginAssembly?: an
                     }
 
                     logger.log(`Plugin ${file}: ${types.length} plugins found.`);
-                    logger.log(`Plugin ${file}:  Uploading plugin assembly.`);
+                    logger.log(`Plugin ${file}: Uploading plugin assembly.`);
 
                     return api.uploadPluginAssembly(file, pluginAssembly ? pluginAssembly.pluginassemblyid : null)
                         .then(pluginAssemblyId => {
                             assemblyId = pluginAssemblyId;
 
-                            logger.log(`Plugin ${file}:  Upload successful for ${assemblyId}`);
+                            logger.log(`Plugin ${file}: Upload successful for ${assemblyId}`);
 
                             if (!pluginAssembly && solution) {
-                                logger.log(`Plugin ${file}:  Adding plugin to ${solution.uniquename}`);
+                                logger.log(`Plugin ${file}: Adding plugin to ${solution.uniquename}`);
 
                                 return api.addSolutionComponent(solution, pluginAssemblyId, CdsSolutions.SolutionComponent.PluginAssembly, true, false);
                             }                        
@@ -103,7 +103,7 @@ export default async function run(config?: CdsWebApi.Config, pluginAssembly?: an
                         .then(response => {
                             const promises:Promise<void>[] = [];
 
-                            logger.log(`Plugin ${file}:  Adding plugin types`);
+                            logger.log(`Plugin ${file}: Adding plugin types`);
 
                             for (let i = 0; i < types.length; i++) {
                                 promises.push(api.upsertPluginType(assemblyId, types[i].Name));
@@ -111,13 +111,13 @@ export default async function run(config?: CdsWebApi.Config, pluginAssembly?: an
                             
                             return Promise.all(promises);
                         }).then(responses => {
-                            logger.log(`Plugin ${file}:  Opening step window`);
+                            logger.log(`Plugin ${file}: Opening step window`);
 
                             if (!pluginAssembly) {
                                 vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, assemblyId, undefined, config);
                             }
                         }).then(() => {
-                            logger.log(`Plugin ${file}:  Registration complete`);
+                            logger.log(`Plugin ${file}: Registration complete`);
 
                             Quickly.inform(`The plugin assembly '${path.basename(file.fsPath)}' has been registered on the Dynamics 365 server.`);
                         });

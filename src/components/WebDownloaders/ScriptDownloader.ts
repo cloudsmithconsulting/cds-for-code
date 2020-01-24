@@ -19,7 +19,7 @@ import download from '../../core/http/nodeJsFileDownloader';
 export default class ScriptDownloader {
 	@extensionActivate(cs.cds.extension.productId)
     async activate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-        setTimeout(async () => await ScriptDownloader.runScriptCheck(), 5 * 1000);
+        setTimeout(async () => await ScriptDownloader.runScriptCheck(), 10000);
     }
 
 	@command(cs.cds.extension.downloadRequiredScripts, "Download required PowerShell scripts and templates")
@@ -79,7 +79,7 @@ export default class ScriptDownloader {
 		const systemTemplatesFolder = await TemplateManager.getTemplatesFolder(true);
 		let filesDownloaded: number = 0;
 
-		await manifest.files.forEach(async f => {
+		Utilities.Async.forEach(manifest.files, async (f: any) => {
 			const remoteFilePath = `${remoteFolderPath}${Utilities.String.withTrailingSlash(f.path)}${f.filename}`;
 			const localFolderPath = path.join(ExtensionContext.Instance.globalStoragePath, f.path);
 			const localFilePath = path.join(localFolderPath, f.filename);
