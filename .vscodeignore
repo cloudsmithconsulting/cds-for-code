@@ -1,8 +1,11 @@
 .babelrc
 .browserlistrc
+.devops/**
 .gitignore
+.github/**
 .vscode/**
 .vscode-test/**
+CNAME
 dist/**
 gruntfile.js
 docs/**
