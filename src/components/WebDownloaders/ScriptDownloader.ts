@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as cs from '../../cs';
-import fetch from 'node-fetch';
+import * as crypto from 'crypto';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import TerminalManager, { TerminalCommand } from '../Terminal/SecureTerminal';
 import { Utilities } from '../../core/Utilities';
@@ -13,205 +13,132 @@ import Quickly from '../../core/Quickly';
 import command from '../../core/Command';
 import Logger from '../../core/framework/Logger';
 import { extensionActivate } from '../../core/Extension';
+import logger from '../../core/framework/Logger';
+import download from '../../core/http/nodeJsFileDownloader';
 
 export default class ScriptDownloader {
 	@extensionActivate(cs.cds.extension.productId)
     async activate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-        setTimeout(async () => await ScriptDownloader.runScriptCheck(), 45 * 1000);
+        setTimeout(async () => await ScriptDownloader.runScriptCheck(), 5 * 1000);
     }
 
 	@command(cs.cds.extension.downloadRequiredScripts, "Download required PowerShell scripts and templates")
     static async runScriptCheck() {
-		// get local storage folder
-		const scriptsFolder = path.join(ExtensionContext.Instance.globalStoragePath, "/scripts/");
-		const toolsFolder = path.join(ExtensionContext.Instance.globalStoragePath, "/tools/");
-		
-		// Checks to see if folder exist
-		FileSystem.makeFolderSync(scriptsFolder);
-		FileSystem.makeFolderSync(toolsFolder);
-		
-		const zipsToFetch = [
-			"releases/download/v0.8/SystemTemplates.zip",
-			"releases/download/v0.8/CloudSmith.Dynamics365.AssemblyScanner.zip",
-			"releases/download/v0.8/CloudSmith.Dynamics365.SamplePlugin.v8.0.zip",
-			"releases/download/v0.8/CloudSmith.Dynamics365.SamplePlugin.v8.1.zip",
-			"releases/download/v0.8/CloudSmith.Dynamics365.SamplePlugin.v8.2.zip",
-			"releases/download/v0.8/CloudSmith.Dynamics365.SamplePlugin.v9.0.zip"
-		];
-
-		// Array that stores script names
-		const scriptsToFetch = [
-			"src/CloudSmith.Dynamics365.SampleScripts/Deploy-XrmSolution.ps1",
-			"src/CloudSmith.Dynamics365.SampleScripts/Generate-XrmEntities.ps1",
-			"src/CloudSmith.Dynamics365.SampleScripts/Get-XrmSolution.ps1",
-			"src/CloudSmith.Dynamics365.SampleScripts/Install-Sdk.ps1",
-			"src/CloudSmith.Dynamics365.SampleScripts/Install-XrmToolbox.ps1",
-			"src/CloudSmith.Dynamics365.SampleScripts/Setup-EasyRepro.ps1",
-			"src/CloudSmith.Dynamics365.SampleScripts/runonce-script.ps1"
-		];
-
-		const remoteFolderPath: string = Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateSource));
+		const version: string = vscode.extensions.getExtension(cs.cds.extension.productId).packageJSON.version;
+		const remoteFolderPath: string = `${Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateSource))}version-${version}/dist/`;
 		const updateChannel: string = ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateChannel);
+		const manifestFile = path.join(ExtensionContext.Instance.globalStoragePath, "manifest.json");
+		const alreadyHasManifest: boolean = FileSystem.exists(manifestFile);
+		
+		if (!alreadyHasManifest) {
+			await download(remoteFolderPath + 'manifest.json', manifestFile);
+		}
 
-		const returnValue = await this.checkVersion(remoteFolderPath, updateChannel)
-			.then(async version => {
-				if (version === -1) {
-					Quickly.error(`The CDS for Code extension could not check for updates in the ${updateChannel} channel.  Please check the configuration updateSource and updateChannel to ensure they are set correctly.`);
+		const manifest = JSON.parse(FileSystem.readFileSync(manifestFile));
+
+		Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} Manifest ${manifestFile} loaded for v${version}`);
+		let proceed: boolean;
+
+		if (!alreadyHasManifest && manifest.version !== version) {
+			logger.warn(`Command: ${cs.cds.extension.downloadRequiredScripts} Manifest version ${manifest.version} does not match product version ${version}`);
+
+			await Quickly.warn(
+				`The remote scripts needed to support CDS for Code are version '${manifest.version}', which does not match the product version '${version}'.  Would you like to download scripts from this source anyway?`, 
+				undefined, 
+				'Yes', 
+				() => proceed = true,
+				'No',
+				() => proceed = false);
+
+				if (!proceed) {
+					logger.error(`Command: ${cs.cds.extension.downloadRequiredScripts} cancelled by user`);
 
 					return;
 				}
+		}
 
-				const currentVersion = GlobalState.Instance.PowerShellScriptVersion;
+		if (!alreadyHasManifest && manifest.channel !== updateChannel) {
+			logger.warn(`Command: ${cs.cds.extension.downloadRequiredScripts} Manifest update channel ${manifest.channel} does not match configured update channel ${updateChannel}`);
 
-				// For loop to iterate through the array of scripts
-				for (var i = 0; i < scriptsToFetch.length; i++ ) {
-					// hold the file name for this iteration
-					const fileName = scriptsToFetch[i];
-					// uri containing remote file location
-					const remoteFilePath = `${remoteFolderPath}${fileName}`;
-					// local file location
-					let localFilePath;
-					localFilePath = path.join(scriptsFolder, path.basename(fileName));
+			await Quickly.warn(
+				`The remote scripts needed to support CDS for Code are from the update channel '${manifest.channel}', which does not match the configured vlaue '${updateChannel}'.  Would you like to download scripts from this source anyway?`,
+				undefined, 
+				'Yes', 
+				() => proceed = true,
+				'No',
+				() => proceed = false);
 
-					// see if file exists & if our current version is less than the new version.
-					if ((!FileSystem.exists(localFilePath))
-						|| (!currentVersion || currentVersion !== version))
-					{
-						Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} Downloading ${fileName}, version ${version}`);
+				if (!proceed) {
+					logger.error(`Command: ${cs.cds.extension.downloadRequiredScripts} cancelled by user`);
 
-						// file doesn't exist, get it from remote location
-						await ScriptDownloader.downloadScript(remoteFilePath, localFilePath)
-							.then(async localPath => {
-								await Quickly.inform(`${fileName} PowerShell script downloaded`);
-
-								return localPath;
-							}).then(async localPath => {
-								if (localPath.endsWith("Install-Sdk.ps1")) {
-									await ScriptDownloader.installCdsSdk();
-								}
-							}).then(async () => {
-								GlobalState.Instance.PowerShellScriptVersion = version;
-							});
-					} else {
-						Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} File ${fileName} is current: version ${currentVersion}`);
-					}
+					return;
 				}
+		}
 
-				const systemTemplatesFolder = await TemplateManager.getTemplatesFolder(true);
+		const currentVersion = GlobalState.Instance.PowerShellScriptVersion;
+		const systemTemplatesFolder = await TemplateManager.getTemplatesFolder(true);
+		let filesDownloaded: number = 0;
 
-				// For loop to iterate through the array of "apps"
-				for (var j = 0; j < zipsToFetch.length; j++ ) {
-					// hold the file name for this iteration
-					const fileName = zipsToFetch[j];
-					// uri containing remote file location
-					const remoteFilePath = `https://github.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/${fileName}`;
-					// local file location
-					const localFilePath = path.join(ExtensionContext.Instance.globalStoragePath, path.basename(fileName));
-					// see if file exists & if our current version is less than the new version.
-					if ((!FileSystem.exists(localFilePath))
-						|| (!currentVersion || currentVersion !== version))
-					{
-						Logger.log(`Command: [${cs.cds.extension.downloadRequiredScripts}] Downloading ${fileName}, version ${version}`);
+		await manifest.files.forEach(async f => {
+			const remoteFilePath = `${remoteFolderPath}${Utilities.String.withTrailingSlash(f.path)}${f.filename}`;
+			const localFolderPath = path.join(ExtensionContext.Instance.globalStoragePath, f.path);
+			const localFilePath = path.join(localFolderPath, f.filename);
+			const alreadyHasFile = FileSystem.exists(localFilePath);
 
-						// file doesn't exist, get it from remote location
-						await ScriptDownloader.downloadZip(remoteFilePath, localFilePath)
-							.then(async localPath => {
-								let subfolder = path.basename(localPath.replace(path.extname(localPath), ""));
-
-								// Sample projects are templates
-								if (path.basename(fileName).startsWith("CloudSmith.Dynamics365.Sample")) {																	
-									return { zipFile: localPath, isTemplate: true };
-								} else if (path.basename(fileName) === "SystemTemplates.zip") {
-									return { zipFile: localPath, extractPath: systemTemplatesFolder, isTemplate: false };
-								}
-
-								return { zipFile: localPath, extractPath: path.join(toolsFolder, subfolder), isTemplate: false };
-							})
-							.then(async options => {
-								if (options) {
-									if (options.extractPath) { FileSystem.makeFolderSync(options.extractPath); }
-
-									if (options.isTemplate) {
-										Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} Importing template: ${options.zipFile}`);
-
-										await vscode.commands.executeCommand(cs.cds.templates.importTemplate, vscode.Uri.file(options.zipFile));
-									} else {
-										Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} Unzipping downloaded file: ${options.zipFile}`);
-
-										await FileSystem.unzip(options.zipFile, options.extractPath);
-										await Quickly.inform(`Items were extracted from ${options.zipFile} into ${options.extractPath}`);
-									}
-								}
-							})
-							.then(() => {
-								GlobalState.Instance.PowerShellScriptVersion = version;
-							});
-					} else {
-						Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} File ${fileName} is current: version ${currentVersion}`);
-					}
-				}
-			});
-
-		return returnValue;
-    }
-
-	//TODO: remove dependence on fetch.
-    private static async downloadScript(remoteFilePath: string, localFilePath: string): Promise<string> {
-        return fetch(remoteFilePath, {
-            method: 'get',
-            headers: {
-                'Accepts': 'text/plain'
+			if (!alreadyHasFile) {
+				FileSystem.makeFolderSync(localFolderPath);
 			}
-        })
-		.then(res => res.text())
-		.then(body => {
-			FileSystem.writeFileSync(localFilePath, body);
 
-			return localFilePath;
-        })
-        .catch(err => {
-			console.error(err);
+			if (!alreadyHasFile || (!currentVersion || currentVersion !== version)) {
+				Logger.info(`Command: ${cs.cds.extension.downloadRequiredScripts} Downloading ${remoteFilePath} (v${version})`);
 
-			return "";
-		});
-	}
-
-	//TODO: remove dependence on fetch.
-	static async downloadZip(remoteFilePath: string, localFilePath: string): Promise<string> {
-		return fetch(remoteFilePath, {
-			method: 'get',
-			headers: {
-				'Accepts': 'application/zip'
+				await download(remoteFilePath, localFilePath);
+				filesDownloaded++;
+			} else {
+				Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} File ${localFilePath} is current (v${currentVersion})`);
 			}
-		})
-		.then(res => res.buffer())
-		.then(body => {
-			FileSystem.writeFileSync(localFilePath, body);
 
-			return localFilePath;
-		})
-		.catch(err => {
-			console.error(err);
+			const hash = crypto.createHash('md5');
+			hash.update(FileSystem.readFileSync(localFilePath, { encoding: null }));
 
-			return "";
-		});
-	}
+			if (hash.digest('hex') !== f.hash && alreadyHasFile) {
+				FileSystem.deleteItem(localFilePath);
+
+				Logger.warn(`Command: ${cs.cds.extension.downloadRequiredScripts} MD5 hash did not match for ${localFilePath}, downloading file from known source`);
+				await download(remoteFilePath, localFilePath);
+				filesDownloaded++;
+			}
+
+			if (localFilePath.endsWith("Install-Sdk.ps1")) {
+				await ScriptDownloader.installCdsSdk();
+			}
 	
-	//TODO: remove dependence on fetch.
-    static async checkVersion(remoteFilePath: string, channel: string): Promise<number> {
-        return fetch(`${Utilities.String.withTrailingSlash(remoteFilePath)}${channel}.version`, {
-            method: 'get',
-            headers: {
-                'Accepts': 'text/plain'
+			if (localFilePath.endsWith(".zip")) {
+				let options: any;
+				let subfolder = path.basename(localFilePath.replace(path.extname(localFilePath), ""));
+		
+				// Treat templates a little different from other .zip files as they need to be imported.
+				if (f.path === "templates") {																	
+					if (f.filename === "SystemTemplates.zip") {
+						options = { zipFile: localFilePath, extractPath: systemTemplatesFolder, isTemplate: false };
+					} else {
+						options = { zipFile: localFilePath, isTemplate: true };
+					}
+				} else {
+					options = { zipFile: localFilePath, extractPath: path.join(ExtensionContext.Instance.globalStoragePath, f.path, subfolder), isTemplate: false };
+				}
+		
+				if (options) {
+					await ScriptDownloader.unzipDownload(options);
+				}
 			}
-        })
-		.then(res => res.text())
-		.then(text => parseFloat(text))
-        .catch(err => {
-			console.error(err);
-
-			return -1;
 		});
+
+		GlobalState.Instance.PowerShellScriptVersion = version;
+
+		if (filesDownloaded > 0) {
+			await Quickly.inform(`Remote scripts needed to run CDS for Code have been updated to ${version}.  ${filesDownloaded} files were downloaded`);
+		}
 	}
 
 	static async installCdsSdk(): Promise<TerminalCommand> {
@@ -229,5 +156,22 @@ export default class ScriptDownloader {
 				});
 		}
 	}
-}
 
+
+
+	private static async unzipDownload(options: any) {
+		if (options) {
+			if (options.extractPath) { FileSystem.makeFolderSync(options.extractPath); }
+
+			if (options.isTemplate) {
+				Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} Importing template: ${options.zipFile}`);
+
+				await vscode.commands.executeCommand(cs.cds.templates.importTemplate, vscode.Uri.file(options.zipFile));
+			} else {
+				Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} Unzipping downloaded file: ${options.zipFile}`);
+
+				await FileSystem.unzip(options.zipFile, options.extractPath);				
+			}
+		}
+	}
+}

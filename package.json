@@ -109,7 +109,7 @@
 				"cs.cds.configuration.tools.updateSource": {
 					"type": "string",
 					"format": "uri",
-					"default": "https://gihub.com/CloudSmithConsulting/cds-for-code/releases/download/",
+					"default": "https://cloudsmithprodstorage.blob.core.windows.net/cds-for-code/",
 					"description": "The URL where supporting scripts are located"
 				},
 				"cs.cds.configuration.tools.updateChannel": {

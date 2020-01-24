@@ -1,6 +1,6 @@
 import * as Parameters from '../helpers/Parameters';
 
-export default function oDataResponse(request: any, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) {
+export default function handleResponse(request: any, data: any, response: any, responseParams: any, successCallback: (response:any) => void, errorCallback: (error:any) => void) {
     switch (response.statusCode) {
         case 200: // Success with content returned in response body.
         case 201: // Success with content returned in response body.
