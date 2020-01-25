@@ -80,7 +80,11 @@ export default class ExtensionConfiguration {
     }
 
     static getConfigurationValueOrDefault<T>(config: string, defaultValue: T): T | undefined {
-        const returnValue:T | undefined = this.getConfigurationValue(config);
+        let returnValue:T | undefined = this.getConfigurationValue(config);
+
+        if (returnValue && <any>returnValue === "undefined") {
+            returnValue = undefined;
+        }
 
         return returnValue || defaultValue;
     }

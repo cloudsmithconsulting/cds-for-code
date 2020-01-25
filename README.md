@@ -4,14 +4,10 @@
 
 This extension is designed to help developers with a simple development loop for Microsoft&trade; Common Data Service (CDS) using Visual Studio Code.  Many developers do not have access to a full Visual Studio license in order to use Microsoft&trade; CDS Development Toolkit.  This extension is designed to get you started.
 
-|Version|Link|
-|:--|:--|
-|Current Preview Version:|[0.8.10](https://github.com/cloudsmithconsulting/cds-for-code/releases/tag/v0.8.10)|
-|Current Release Version:|[0.8.8](https://github.com/cloudsmithconsulting/cds-for-code/releases/tag/v0.8.8)|
-
-[![Board Status](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/b63fc4c8-773b-4ffc-ac61-c71890277c2c/_apis/work/boardbadge/350decde-59a7-49b4-a6f6-ee220fa7e391)](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/_boards/board/t/b63fc4c8-773b-4ffc-ac61-c71890277c2c/Microsoft.RequirementCategory/)
-[![Build Status](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_apis/build/status/cds-for-code?branchName=master)](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_build/latest?definitionId=2&branchName=master)
-[![Release Status](https://vsrm.dev.azure.com/cloudsmith-consulting/_apis/public/Release/badge/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/1/2)](https://vsrm.dev.azure.com/cloudsmith-consulting/_apis/public/Release/badge/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/1/2)
+|Version|Link||
+|:--|:--|:--|
+|Release Version:|[0.8.10](https://github.com/cloudsmithconsulting/cds-for-code/releases/tag/v0.8.10)|![Marketplace: Version](https://flat.badgen.net/vs-marketplace/v/cloudsmithconsulting.cds-for-code) ![Marketplace: Installs](https://flat.badgen.net/vs-marketplace/i/cloudsmithconsulting.cds-for-code) ![Marketplace: Downloads](https://flat.badgen.net/vs-marketplace/d/cloudsmithconsulting.cds-for-code) ![Marketplace: Rating](https://flat.badgen.net/vs-marketplace/rating/cloudsmithconsulting.cds-for-code) ![Open Issues](https://flat.badgen.net/github/open-issues/cloudsmithconsulting/cds-for-code) ![Stars](https://flat.badgen.net/github/stars/cloudsmithconsulting/cds-for-code)|
+|Development Version:|[0.9.0](https://github.com/cloudsmithconsulting/cds-for-code/releases/tag/v0.9.0)|[![Board Status](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/b63fc4c8-773b-4ffc-ac61-c71890277c2c/_apis/work/boardbadge/350decde-59a7-49b4-a6f6-ee220fa7e391)](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/_boards/board/t/b63fc4c8-773b-4ffc-ac61-c71890277c2c/Microsoft.RequirementCategory/) [![Build Status](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_apis/build/status/cds-for-code?branchName=master)](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_build/latest?definitionId=2&branchName=master) [![Release Status](https://vsrm.dev.azure.com/cloudsmith-consulting/_apis/public/Release/badge/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/1/2)](https://vsrm.dev.azure.com/cloudsmith-consulting/_apis/public/Release/badge/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/1/2)|
 
 ---
 
@@ -54,9 +50,9 @@ The remaining dependencies will be downloaded on the first activation of the CDS
 
 This extension allows you to connect to CDS/Dynamics instances in the following ways:
 
-- Microsoft&trade; Common Data Service Online
-- Dynamics On-Premise (8.0+)
-- Azure AD integrated into a Dynamice On-Premise installation
+- Microsoft&trade; Common Data Service (CDS) Online - also called Microsoft Dynamics 365 online
+- Dynamics CRM On-Premises (8.0, 8.1) or Dynamics 365 Customer Engagement (8.2, 9.0)
+- Azure AD hosted/integrated into an On-Premises installation
 
 ![gif](https://raw.githubusercontent.com/cloudsmithconsulting/cds-for-code/master/docs/images/create-new-cds-connection.gif)
 
@@ -89,6 +85,8 @@ For a more comprehensive walkthrough of features you can check out our How To ar
 ---
 
 ## Commands
+
+![gif](https://raw.githubusercontent.com/cloudsmithconsulting/cds-for-code/master/docs/images/cds-for-code-command-palette.gif)
 
 ### Commands and Descriptions
 
@@ -123,13 +121,11 @@ For a more comprehensive walkthrough of features you can check out our How To ar
 |Open template folder in explorer|Opens the template catalog folder in Windows Explorer|
 |Save workspace items as a template in the template catalog|Save a file or project in the current workspace as a template to the template catalog|
 
-### These commands can be executed directly through the VSCode command palette
-
-![gif](https://raw.githubusercontent.com/cloudsmithconsulting/cds-for-code/master/docs/images/cds-for-code-command-palette.gif)
-
 ---
 
 ## Settings
+
+![gif](https://raw.githubusercontent.com/cloudsmithconsulting/cds-for-code/master/docs/images/cds-for-code-settings-editor.gif)
 
 ### Settings and Descriptions
 
@@ -147,10 +143,6 @@ For a more comprehensive walkthrough of features you can check out our How To ar
 |cs.cds.configuration.templates.templatesDirectory|Filesystem path that stores templates||
 |cs.cds.configuration.templates.treeViewGroupPreference|Preference for grouping templates in the Template Explorer|Publisher|
 |cs.cds.configuration.templates.usePlaceholders|Look for and replace placeholders in template (e.g. #{author})|true|
-
-### These settings are editable inside the VSCode Settings Editor
-
-![gif](https://raw.githubusercontent.com/cloudsmithconsulting/cds-for-code/master/docs/images/cds-for-code-settings-editor.gif)
 
 ---
 

@@ -539,7 +539,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     }
 
     private async getSolutionLevelDetails(element: CdsTreeEntry) : Promise<CdsTreeEntry[]> {
-        const showDefaultSolution = <boolean>ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.explorer.showDefaultSolution);
+        const showDefaultSolution = <boolean>ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.explorer.showDefaultSolution, false);
         const returnValue: CdsTreeEntry[] = [];
         const api = new ApiRepository(element.config);
 

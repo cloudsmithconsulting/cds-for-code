@@ -24,9 +24,13 @@ export default class ScriptDownloader {
 
 	@command(cs.cds.extension.downloadRequiredScripts, "Download required PowerShell scripts and templates")
     static async runScriptCheck() {
+		if (!FileSystem.exists(ExtensionContext.Instance.globalStoragePath)) {
+			FileSystem.makeFolderSync(ExtensionContext.Instance.globalStoragePath);
+		}
+
 		const version: string = vscode.extensions.getExtension(cs.cds.extension.productId).packageJSON.version;
-		const remoteFolderPath: string = `${Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateSource))}version-${version}/dist/`;
-		const updateChannel: string = ExtensionConfiguration.getConfigurationValue(cs.cds.configuration.tools.updateChannel);
+		const remoteFolderPath: string = `${Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.tools.updateSource, "https://cloudsmithprodstorage.blob.core.windows.net/cds-for-code/"))}version-${version}/dist/`;
+		const updateChannel: string = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.tools.updateChannel, "stable");
 		const manifestFile = path.join(ExtensionContext.Instance.globalStoragePath, "manifest.json");
 		const alreadyHasManifest: boolean = FileSystem.exists(manifestFile);
 		
@@ -142,7 +146,7 @@ export default class ScriptDownloader {
 	}
 
 	static async installCdsSdk(): Promise<TerminalCommand> {
-		const sdkInstallPath = ExtensionConfiguration.getConfigurationValue<string>(cs.cds.configuration.tools.sdkInstallPath);
+		const sdkInstallPath = ExtensionConfiguration.getConfigurationValueOrDefault<string>(cs.cds.configuration.tools.sdkInstallPath, path.join(ExtensionContext.Instance.globalStoragePath, "Sdk"));
 
 		if (!FileSystem.exists(sdkInstallPath) || !FileSystem.exists(path.join(sdkInstallPath, "CoreTools")) && FileSystem.exists(path.join(ExtensionContext.Instance.globalStoragePath, "/Scripts/Install-Sdk.ps1"))) {
 			FileSystem.makeFolderSync(sdkInstallPath);

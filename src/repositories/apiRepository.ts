@@ -95,7 +95,7 @@ export default class ApiRepository {
     }
 
     retrieveSolutions(select: string[] = ApiRepository.defaultSelections["solutions"]) : Promise<any[]> {
-        const showDefaultSolution: boolean = ExtensionConfiguration.getConfigurationValue<boolean>(cs.cds.configuration.explorer.showDefaultSolution);
+        const showDefaultSolution: boolean = ExtensionConfiguration.getConfigurationValueOrDefault<boolean>(cs.cds.configuration.explorer.showDefaultSolution, false);
         const request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "solutions",
             filter: "isvisible eq true",

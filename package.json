@@ -2,7 +2,7 @@
 	"name": "cds-for-code",
 	"displayName": "CDS for Code",
 	"publisher": "CloudSmithConsulting",
-	"description": "VS Code extension providing development capabilities for Microsoft&trade; Common Data Service written by CloudSmith Consulting LLC",
+	"description": "VS Code extension with development capabilities for Microsoft Common Data Service (online) and Dynamics 365 Customer Engagement (on premises) written by CloudSmith Consulting LLC",
 	"homepage": "https://github.com/cloudsmithconsulting/cds-for-code",
 	"repository": {
 		"type": "git",
@@ -11,7 +11,7 @@
 	"bugs": {
 		"url": "https://github.com/cloudsmithconsulting/cds-for-code/issues"
 	},
-	"version": "0.8.10",
+	"version": "0.9.0",
 	"preview": true,
 	"engines": {
 		"vscode": "^1.41.0"
@@ -26,6 +26,7 @@
 		"Common Data Service",
 		"PowerApps",
 		"Power Platform",
+		"PowerAutomate",
 		"Dynamics",
 		"Dynamics 365",
 		"Dynamics 365 CE",

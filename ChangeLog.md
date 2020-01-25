@@ -15,6 +15,8 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 ### v0.8.10 (January 24, 2020)
 
 - Bugfix: Critical - extension does not activate due to publisher name change ([#566](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/566/))
+- Bugfix: Critical - Registering a connection with Windows Auth gets a 401 error when it isn't supposed to ([#568](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/568/))
+- Bugfix: Critical - PowerShell scripts do not automatically download when the extension script path does not exist ([#569](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/569/))
 
 ### v0.8.9 (January 24, 2020)
 
