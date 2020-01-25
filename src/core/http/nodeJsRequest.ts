@@ -48,14 +48,12 @@ export default function nodeJsRequest(options: any) {
     const protocol = parsedUrl.protocol.replace(':', '');
     let protocolInterface = useWindowsAuth ? httpntlm : protocol === 'http' ? http : https;
     let internalOptions: any = {
-        protocol: `${protocol}:`,
         hostname: parsedUrl.hostname,
-        port: parsedUrl.port || (protocol === 'http' ? 80 : 443),
+        port: parsedUrl.port,
         path: parsedUrl.path,
         method: method,
         timeout: timeout,
-        headers: headers,
-        agent: protocolInterface === http ? new http.Agent( { keepAlive: true } ) : protocolInterface === https ? new https.Agent( { keepAlive: true } ) : null
+        headers: headers
     };
 
     if (process.env[`${protocol}_proxy`]) {
@@ -105,7 +103,7 @@ export default function nodeJsRequest(options: any) {
                         responseParams.length = 0;
                     }
         
-                    logger.error(`HTTP error: ${internalOptions.method.toUpperCase()} ${internalOptions.url} (out: ${data ? data.length : 0}b, time: ${requestEndTime - requestStartTime}ms, error: ${(error.message || error).toString()})`);
+                    logger.error(`HTTP error: ${internalOptions.method} ${internalOptions.url} (out: ${data ? data.length : 0}b, time: ${requestEndTime - requestStartTime}ms, error: ${(error.message || error).toString()})`);
                     Telemetry.Instance.error(error, {
                         requestId,
                         method: internalOptions.method,
