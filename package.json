@@ -99,7 +99,7 @@
 			"properties": {
 				"cs.cds.configuration.web.usePowerAppsUi": {
 					"type": "boolean",
-					"default": "true",
+					"default": true,
 					"description": "Use the PowerApps Maker UX where possible"
 				},
 				"cs.cds.configuration.tools.sdkInstallPath": {
@@ -139,12 +139,12 @@
 				},
 				"cs.cds.configuration.explorer.showDefaultSolution": {
 					"type": "boolean",
-					"default": "false",
+					"default": false,
 					"description": "Show the Default Solution in the CDS Explorer view"
 				},
 				"cs.cds.configuration.explorer.showWelcomeExperience": {
 					"type": "boolean",
-					"default": "true",
+					"default": true,
 					"description": "Show the welcome experience for this extension"
 				},
 				"cs.cds.configuration.templates.placeholders": {
