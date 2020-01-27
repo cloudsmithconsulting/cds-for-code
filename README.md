@@ -160,7 +160,7 @@ You can stay up to date with the latest changes by checking out [our change log 
 
 ## Contributors
 
-All of this could not be possible without community projects and our preview program participants. You can read more about [our contributors here](/docs/extension/Contributors.md)
+All of this could not be possible without community projects and our preview program participants. You can read more about [our contributors here](docs/extension/Contributors.md)
 
 ---
 
