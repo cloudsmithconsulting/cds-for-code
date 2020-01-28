@@ -31,7 +31,7 @@ sidebar_label: "core/http/nodeJsFileDownloader"
     { key: ".jpg", value: "image/jpeg" }
 ])
 
-Defined in src/core/http/nodeJsFileDownloader.ts:7
+Defined in src/core/http/nodeJsFileDownloader.ts:8
 
 ## Functions
 
@@ -39,7 +39,7 @@ Defined in src/core/http/nodeJsFileDownloader.ts:7
 
 ▸ **download**(`remoteFilePath`: string, `localFilePath`: string): *Promise‹string›*
 
-Defined in src/core/http/nodeJsFileDownloader.ts:18
+Defined in src/core/http/nodeJsFileDownloader.ts:19
 
 **Parameters:**
 

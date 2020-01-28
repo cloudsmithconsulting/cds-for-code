@@ -3,6 +3,7 @@ import * as FileSystem from "../../core/io/FileSystem";
 import fetch from 'node-fetch';
 import nodeJsRequest from './nodeJsRequest';
 import Dictionary from '../types/Dictionary';
+import ExtensionContext from '../ExtensionContext';
 
 const mimeTypes = new Dictionary<string, string>([
     { key: ".zip", value: "application/x-zip-compressed" },
@@ -26,8 +27,16 @@ export default async function download(remoteFilePath: string, localFilePath: st
     }
 
     return fetch(remoteFilePath, { method: 'get', headers: { 'Accepts': mimeType } })
-        .then(res => res.buffer())
-        .then(body => {
+        .then(res => res.text())
+        .then(async body => {
+            if (remoteFilePath.indexOf('manifest.json') !== -1 && body.indexOf('<?xml') !== -1) {
+                // we got an error, use manifest from local dev
+                const manifestPath = path.join(ExtensionContext.Instance.extensionPath, 'dist/manifest.json');
+                if (FileSystem.exists(manifestPath)) {
+                    await FileSystem.copyItem(manifestPath, localFilePath);
+                    return localFilePath;
+                }
+            }
             FileSystem.writeFileSync(localFilePath, body);
 
             return localFilePath;
