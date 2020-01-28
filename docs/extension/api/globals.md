@@ -37,6 +37,8 @@ sidebar_label: "Globals"
 * ["commands/cs.cds.deployment.createWebResource"](modules/_commands_cs_cds_deployment_createwebresource_.md)
 * ["commands/cs.cds.deployment.dotNetBuild"](modules/_commands_cs_cds_deployment_dotnetbuild_.md)
 * ["commands/cs.cds.deployment.dotNetTest"](modules/_commands_cs_cds_deployment_dotnettest_.md)
+* ["commands/cs.cds.deployment.exportSolution"](modules/_commands_cs_cds_deployment_exportsolution_.md)
+* ["commands/cs.cds.deployment.importSolution"](modules/_commands_cs_cds_deployment_importsolution_.md)
 * ["commands/cs.cds.deployment.packWebResource"](modules/_commands_cs_cds_deployment_packwebresource_.md)
 * ["commands/cs.cds.deployment.publishCustomizations"](modules/_commands_cs_cds_deployment_publishcustomizations_.md)
 * ["commands/cs.cds.deployment.registerPluginAssembly"](modules/_commands_cs_cds_deployment_registerpluginassembly_.md)

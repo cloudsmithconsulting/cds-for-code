@@ -12,6 +12,7 @@ import SolutionFile from '../components/SolutionXml/SolutionFile';
 import ExtensionContext from '../core/ExtensionContext';
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
 import logger from '../core/framework/Logger';
+import * as FileSystem from '../core/io/FileSystem';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.
@@ -132,6 +133,11 @@ export default async function run(config?:CdsWebApi.Config, folder?:string, solu
 							ConvertToManaged: managed,
 						},
 						false);
+				})
+				.then(() => {
+					logger.log(`Command: ${cs.cds.powerShell.packSolution} Deleting zipped solution file`);
+
+					FileSystem.deleteItem(solutionFile);
 				})
 				.then(async () => {
 					if (publishXml) {

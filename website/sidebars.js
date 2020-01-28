@@ -30,6 +30,8 @@ module.exports = {
       "modules/_commands_cs_cds_deployment_createwebresource_",
       "modules/_commands_cs_cds_deployment_dotnetbuild_",
       "modules/_commands_cs_cds_deployment_dotnettest_",
+      "modules/_commands_cs_cds_deployment_exportsolution_",
+      "modules/_commands_cs_cds_deployment_importsolution_",
       "modules/_commands_cs_cds_deployment_packwebresource_",
       "modules/_commands_cs_cds_deployment_publishcustomizations_",
       "modules/_commands_cs_cds_deployment_registerpluginassembly_",

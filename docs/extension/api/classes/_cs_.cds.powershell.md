@@ -25,7 +25,7 @@ sidebar_label: "powerShell"
 
 ▪ **_namespace**: *string* = "cs.cds.powerShell"
 
-Defined in src/cs.ts:51
+Defined in src/cs.ts:53
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 ▪ **generateEntities**: *string* = `${powerShell._namespace}.generateEntities`
 
-Defined in src/cs.ts:52
+Defined in src/cs.ts:54
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 ▪ **packSolution**: *string* = `${powerShell._namespace}.packSolution`
 
-Defined in src/cs.ts:53
+Defined in src/cs.ts:55
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 ▪ **unpackSolution**: *string* = `${powerShell._namespace}.unpackSolution`
 
-Defined in src/cs.ts:54
+Defined in src/cs.ts:56

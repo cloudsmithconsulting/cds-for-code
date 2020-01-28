@@ -29,7 +29,7 @@ sidebar_label: "templates"
 
 ▪ **_namespace**: *string* = "cs.cds.templates"
 
-Defined in src/cs.ts:72
+Defined in src/cs.ts:74
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 ▪ **createFromTemplate**: *string* = `${templates._namespace}.createFromTemplate`
 
-Defined in src/cs.ts:73
+Defined in src/cs.ts:75
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 ▪ **deleteTemplate**: *string* = `${templates._namespace}.deleteTemplate`
 
-Defined in src/cs.ts:74
+Defined in src/cs.ts:76
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 ▪ **editTemplateCatalog**: *string* = `${templates._namespace}.editTemplateCatalog`
 
-Defined in src/cs.ts:75
+Defined in src/cs.ts:77
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 ▪ **exportTemplate**: *string* = `${templates._namespace}.exportTemplate`
 
-Defined in src/cs.ts:76
+Defined in src/cs.ts:78
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 ▪ **importTemplate**: *string* = `${templates._namespace}.importTemplate`
 
-Defined in src/cs.ts:77
+Defined in src/cs.ts:79
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 ▪ **openTemplateFolder**: *string* = `${templates._namespace}.openTemplateFolder`
 
-Defined in src/cs.ts:78
+Defined in src/cs.ts:80
 
 ___
 
@@ -85,4 +85,4 @@ ___
 
 ▪ **saveTemplate**: *string* = `${templates._namespace}.saveTemplate`
 
-Defined in src/cs.ts:79
+Defined in src/cs.ts:81
