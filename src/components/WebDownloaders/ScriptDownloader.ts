@@ -14,7 +14,7 @@ import command from '../../core/Command';
 import Logger from '../../core/framework/Logger';
 import { extensionActivate } from '../../core/Extension';
 import logger from '../../core/framework/Logger';
-import download from '../../core/http/nodeJsFileDownloader';
+import download, { exists } from '../../core/http/nodeJsFileDownloader';
 
 export default class ScriptDownloader {
 	@extensionActivate(cs.cds.extension.productId)
@@ -35,7 +35,21 @@ export default class ScriptDownloader {
 		const alreadyHasManifest: boolean = FileSystem.exists(manifestFile);
 		
 		if (!alreadyHasManifest) {
-			await download(remoteFolderPath + 'manifest.json', manifestFile);
+			const manifestRemotePath = remoteFolderPath + 'manifest.json';
+			// first see if we can connect to the remote path
+			const remoteManifestExists = await exists(manifestRemotePath);
+			const devManifestPath = path.join(ExtensionContext.Instance.extensionPath, "dist/manifest.json");
+			const devManifestExists = FileSystem.exists(devManifestPath);
+			if (!remoteManifestExists && !devManifestExists) {
+				// no remote or local, we might be disconnected
+				logger.warn(`Command: ${cs.cds.extension.downloadRequiredScripts} Manifest ${manifestFile} was not found remotely or in a dev build, skipping checks`);
+				return; // return out here, we're done
+			} else if (!remoteManifestExists && devManifestExists) {
+				// not found on remote, but exists in /dist folder, so copy it for use
+				await FileSystem.copyItem(devManifestPath, manifestFile);
+			} else {
+				await download(manifestRemotePath, manifestFile);
+			}
 		}
 
 		const manifest = JSON.parse(FileSystem.readFileSync(manifestFile));
