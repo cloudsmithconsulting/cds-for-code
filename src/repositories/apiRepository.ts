@@ -9,6 +9,7 @@ import ApiHelper from "./ApiHelper";
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import { CWA } from '../api/cds-webapi/CWA';
 import Dictionary from '../core/types/Dictionary';
+import { ExportSolutionOptions } from '../commands/cs.cds.deployment.exportSolution';
 
 export default class ApiRepository {
     constructor (config: CdsWebApi.Config) {
@@ -674,5 +675,14 @@ export default class ApiRepository {
                 return returnObject;
             })
             .then(params => this.webapi.executeUnboundAction("RemoveSolutionComponent", params));
+    }
+
+    exportSolution(options: ExportSolutionOptions): Promise<Buffer> {
+        return this.webapi.executeUnboundAction("ExportSolution", options)
+            .then(async response => {
+                const file = response.ExportSolutionFile;
+
+                return Buffer.from(file, 'base64');
+            });
     }
 }

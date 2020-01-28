@@ -59,6 +59,8 @@
 		"onCommand:cs.cds.deployment.createProcess",
 		"onCommand:cs.cds.deployment.dotNetBuild",
 		"onCommand:cs.cds.deployment.dotNetTest",
+		"onCommand:cs.cds.deployment.exportSolution",
+		"onCommand:cs.cds.deployment.importSolution",
 		"onCommand:cs.cds.deployment.packWebResource",
 		"onCommand:cs.cds.deployment.publishCustomizations",
 		"onCommand:cs.cds.deployment.registerPluginAssembly",
@@ -237,12 +239,12 @@
 			},
 			{
 				"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
-				"title": "Add to Solution",
+				"title": "Add to solution",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.cds.controls.cdsExplorer.removeEntryFromSolution",
-				"title": "Remove from Solution",
+				"title": "Remove from solution",
 				"category": "UserInterface"
 			},
 			{
@@ -251,23 +253,28 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.cds.controls.cdsExplorer.exportSolution",
+				"title": "Export solution",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.cds.controls.cdsExplorer.openInApp",
-				"title": "Open in App",
+				"title": "Open in app",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.cds.controls.cdsExplorer.openInBrowser",
-				"title": "Open in Browser",
+				"title": "Open in browser",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.cds.controls.cdsExplorer.openInEditor",
-				"title": "Open in Text Editor",
+				"title": "Open in text editor",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.cds.controls.cdsExplorer.unpackSolution",
-				"title": "Export into workspace",
+				"title": "Export and unpack solution",
 				"category": "UserInterface"
 			},
 			{
@@ -306,6 +313,11 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.cds.controls.explorer.importSolution",
+				"title": "Import solution to CDS",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.cds.controls.explorer.packSolutionFromFolder",
 				"title": "Deploy solution to CDS",
 				"category": "UserInterface"
@@ -332,7 +344,7 @@
 			},
 			{
 				"command": "cs.cds.controls.explorer.unpackSolutionToFolder",
-				"title": "Download & unpack CDS solution here",
+				"title": "Export & unpack CDS solution here",
 				"category": "UserInterface"
 			},
 			{
@@ -383,27 +395,27 @@
 			},
 			{
 				"command": "cs.cds.controls.templateExplorer.createInWorkspace",
-				"title": "Create in Workspace",
+				"title": "Create in workspace",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.cds.controls.templateExplorer.openEntry",
-				"title": "Open in Explorer",
+				"title": "Open in explorer",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.cds.controls.templateExplorer.exportEntry",
-				"title": "Export Template",
+				"title": "Export template",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.cds.controls.templateExplorer.importEntry",
-				"title": "Import Template",
+				"title": "Import template",
 				"category": "UserInterface"
 			},
 			{
 				"command": "cs.cds.deployment.addSolutionComponent",
-				"title": "Add component to a CDS Solution",
+				"title": "Add component to a CDS solution",
 				"category": "CDS for Code"
 			},
 			{
@@ -437,8 +449,18 @@
 				"category": "CDS for Code"
 			},
 			{
+				"command": "cs.cds.deployment.exportSolution",
+				"title": "Export a solution from CDS to a local file",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.deployment.importSolution",
+				"title": "Import a solution from a local file into CDS",
+				"category": "CDS for Code"
+			},
+			{
 				"command": "cs.cds.deployment.packWebResource",
-				"title": "Deploy a Web Resource to CDS",
+				"title": "Deploy a web resource to CDS",
 				"category": "CDS for Code"
 			},
 			{
@@ -596,6 +618,10 @@
 					"when": "false"
 				},
 				{
+					"command": "cs.cds.controls.explorer.importSolution",
+					"when": "false"
+				},
+				{
 					"command": "cs.cds.controls.explorer.packSolutionFromFolder",
 					"when": "false"
 				},
@@ -645,6 +671,10 @@
 				},
 				{
 					"command": "cs.cds.controls.cdsExplorer.editEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.exportSolution",
 					"when": "false"
 				},
 				{
@@ -726,6 +756,11 @@
 					"command": "cs.cds.controls.explorer.dotNetTest",
 					"when": "explorerResourceIsFolder == true || resourceExtname == .csproj || resourceExtname == .vbproj",
 					"group": "build@2"
+				},
+				{
+					"command": "cs.cds.controls.explorer.importSolution",
+					"when": "resourceExtname == .zip",
+					"group": "build@3"
 				},
 				{
 					"command": "cs.cds.controls.explorer.generateEntityCodeToFile",
@@ -847,23 +882,28 @@
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
 				},
 				{
-					"command": "cs.cds.controls.cdsExplorer.unpackSolution",
+					"command": "cs.cds.controls.cdsExplorer.exportSolution",
 					"group": "deployment@1",
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canExportSolution)(.*)$/"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.unpackSolution",
+					"group": "deployment@2",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canUnpackSolution)(.*)$/"
 				},
 				{
 					"command": "cs.cds.controls.cdsExplorer.moveSolution",
-					"group": "deployment@1",
+					"group": "deployment@2",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canMoveSolution)(.*)$/"
 				},
 				{
 					"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
-					"group": "deployment@2",
+					"group": "deployment@3",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canAddToSolution)(.*)$/"
 				},
 				{
 					"command": "cs.cds.controls.cdsExplorer.removeEntryFromSolution",
-					"group": "deployment@3",
+					"group": "deployment@4",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canRemoveFromSolution)(.*)$/"
 				},
 				{
