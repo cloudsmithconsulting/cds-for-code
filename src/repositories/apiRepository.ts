@@ -10,6 +10,7 @@ import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import { CWA } from '../api/cds-webapi/CWA';
 import Dictionary from '../core/types/Dictionary';
 import { ExportSolutionOptions } from '../commands/cs.cds.deployment.exportSolution';
+import { ImportSolutionOptions } from '../commands/cs.cds.deployment.importSolution';
 
 export default class ApiRepository {
     constructor (config: CdsWebApi.Config) {
@@ -675,6 +676,26 @@ export default class ApiRepository {
                 return returnObject;
             })
             .then(params => this.webapi.executeUnboundAction("RemoveSolutionComponent", params));
+    }
+
+    importSolution(customizations: Buffer, options: ImportSolutionOptions): Promise<string> {
+        const guid = Utilities.Guid.newGuid();
+
+        return this.webapi.executeUnboundAction("ImportSolution", {
+            OverwriteUnmanagedCustomizations: options.OverwriteUnmanagedCustomizations,
+            PublishWorkflows: options.PublishWorkflows,
+            CustomizationFile: customizations.toString('base64'),
+            ImportJobId: guid,
+            ConvertToManaged: options.ConvertToManaged,
+            SkipProductUpdateDependencies: options.SkipProductUpdateDependencies,
+            HoldingSolution: options.HoldingSolution
+        }).then(response => {
+            return guid;
+        });
+    }
+
+    getSolutionImportStatus(importJobId: string): Promise<any> {
+        return this.webapi.retrieve(importJobId, 'asyncoperations', [ 'asyncoperationid', 'statuscode', 'errorcode', 'executiontimespan', 'friendlymessage' ]);
     }
 
     exportSolution(options: ExportSolutionOptions): Promise<Buffer> {
