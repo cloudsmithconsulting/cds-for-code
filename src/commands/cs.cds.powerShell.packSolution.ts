@@ -133,13 +133,11 @@ export default async function run(config?:CdsWebApi.Config, folder?:string, solu
 							ConvertToManaged: managed,
 						},
 						false);
-				})
-				.then(() => {
+
 					logger.log(`Command: ${cs.cds.powerShell.packSolution} Deleting zipped solution file`);
 
 					FileSystem.deleteItem(solutionPath);
-				})
-				.then(async () => {
+
 					if (publishXml) {
 						logger.log(`Command: ${cs.cds.powerShell.packSolution} Publishing customizations`);
 
