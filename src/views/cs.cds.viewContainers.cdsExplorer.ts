@@ -334,6 +334,17 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         return this.runCommand(CdsExplorer.editCommands, item);
     }
 
+    @command(cs.cds.controls.cdsExplorer.exportSolution, "Export solution")
+    async exportSolution(item?: CdsTreeEntry) {
+        if (!item.solutionId) {
+            await vscode.window.showInformationMessage(`The item ${item.label} is not part of a solution.`);
+
+            return;
+        }
+
+        return await vscode.commands.executeCommand(cs.cds.deployment.exportSolution, item.config, item.context);
+    }
+
     getTreeItem(element: CdsTreeEntry): vscode.TreeItem {
 		return element;
 	}
@@ -955,10 +966,11 @@ class TreeEntryCache {
  * @extends {vscode.TreeItem}
  */
 class CdsTreeEntry extends vscode.TreeItem {
-    private static readonly canRefreshEntryTypes: CdsExplorerEntryType[] = [ "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries" ];
+    private static readonly canRefreshEntryTypes: CdsExplorerEntryType[] = [ "Solutions", "Solution", "Plugins", "Entities", "Entity", "OptionSets", "OptionSet", "WebResources", "Folder", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries" ];
     private static readonly canAddEntryTypes: CdsExplorerEntryType[] = [ "Applications", "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries", "PluginType", "PluginStep" ];
     private static readonly canEditEntryTypes: CdsExplorerEntryType[] = [ "Connection", "Application", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep", "PluginStepImage" ];
     private static readonly canDeleteEntryTypes: CdsExplorerEntryType[] = [ "Connection", "PluginStep", "PluginStepImage" ];
+    private static readonly canExportSolutionTypes: CdsExplorerEntryType[] = [ "Solution" ];
     private static readonly canInspectEntryTypes: CdsExplorerEntryType[] = [ "Connection", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
     private static readonly canUnpackSolutionEntryTypes: CdsExplorerEntryType[] = [ "Solution" ];
     private static readonly canMoveSolutionEntryTypes: CdsExplorerEntryType[] = [ "Solution" ];
@@ -1226,8 +1238,9 @@ class CdsTreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canAddItem", CdsTreeEntry.canAddEntryTypes);
         this.addCapability(returnValue, "canEditItem", CdsTreeEntry.canEditEntryTypes);
         this.addCapability(returnValue, "canDeleteItem", CdsTreeEntry.canDeleteEntryTypes);
+        this.addCapability(returnValue, "canExportSolution", CdsTreeEntry.canExportSolutionTypes, () => this.context && !this.context.ismanaged);
         this.addCapability(returnValue, "canInspectItem", CdsTreeEntry.canInspectEntryTypes);
-        this.addCapability(returnValue, "canUnpackSolution", CdsTreeEntry.canUnpackSolutionEntryTypes);
+        this.addCapability(returnValue, "canUnpackSolution", CdsTreeEntry.canUnpackSolutionEntryTypes, () => this.context && !this.context.ismanaged);
         this.addCapability(returnValue, "canAddToSolution", CdsTreeEntry.canAddToSolutionEntryTypes, () => !this.solutionId);
         this.addCapability(returnValue, "canRemoveFromSolution", CdsTreeEntry.canRemoveFromSolutionEntryTypes, () => !Utilities.$Object.isNullOrEmpty(this.solutionId));
         this.addCapability(returnValue, "canMoveSolution", CdsTreeEntry.canMoveSolutionEntryTypes, () => this.solutionMapping && !Utilities.$Object.isNullOrEmpty(this.solutionMapping.path));

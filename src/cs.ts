@@ -18,6 +18,8 @@ export namespace cds {
         static readonly createProcess: string = `${deployment._namespace}.createProcess`;
         static readonly dotNetBuild: string = `${deployment._namespace}.dotNetBuild`;
         static readonly dotNetTest: string = `${deployment._namespace}.dotNetTest`;
+        static readonly exportSolution: string = `${deployment._namespace}.exportSolution`;
+        static readonly importSolution: string = `${deployment._namespace}.importSolution`;
         static readonly packWebResource: string = `${deployment._namespace}.packWebResource`;
         static readonly publishCustomizations: string = `${deployment._namespace}.publishCustomizations`;
         static readonly registerPluginAssembly: string = `${deployment._namespace}.registerPluginAssembly`;
@@ -161,6 +163,7 @@ export namespace cds {
             static readonly deleteEntry: string = `${cdsExplorer._namespace}.deleteEntry`;
             static readonly editConnection: string = `${cdsExplorer._namespace}.editConnection`;
             static readonly editEntry: string = `${cdsExplorer._namespace}.editEntry`;
+            static readonly exportSolution: string = `${cdsExplorer._namespace}.exportSolution`;
             static readonly inspectEntry: string = `${cdsExplorer._namespace}.inspectEntry`;
             static readonly moveSolution: string = `${cdsExplorer._namespace}.moveSolution`;
             static readonly openInApp: string = `${cdsExplorer._namespace}.openInApp`;
@@ -181,6 +184,7 @@ export namespace cds {
             static readonly dotNetTest: string = `${explorer._namespace}.dotNetTest`;
             static readonly generateEntityCodeToFolder: string = `${explorer._namespace}.generateEntityCodeToFolder`;
             static readonly generateEntityCodeToFile: string = `${explorer._namespace}.generateEntityCodeToFile`;
+            static readonly importSolution: string = `${explorer._namespace}.importSolution`;
             static readonly packSolutionFromFolder: string = `${explorer._namespace}.packSolutionFromFolder`;
             static readonly packWebResource: string = `${explorer._namespace}.packWebResource`;
             static readonly saveTemplateFile: string = `${explorer._namespace}.saveTemplateFile`;

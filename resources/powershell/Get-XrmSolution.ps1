@@ -1,12 +1,12 @@
 ﻿<# PSScriptInfo
-.VERSION 1.0.0
+.VERSION 0.8.11
 .GUID e009159d-97e2-492a-a289-42426518dd41
 .AUTHOR CloudSmith Consulting LLC
 .COMPANYNAME CloudSmith Consulting LLC
-.COPYRIGHT (c) 2019 CloudSmith Consulting LLC.  All Rights Reserved.
+.COPYRIGHT (c) 2020 CloudSmith Consulting LLC.  All Rights Reserved.
 .TAGS Windows PowerShell Development Dev Dynamics CRM OnPremises DevOps
-.LICENSEURI https://github.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/blob/master/LICENSE
-.PROJECTURI https://github.com/cloudsmithconsulting/Dynamics365-VsCode-Samples
+.LICENSEURI https://github.com/cloudsmithconsulting/Cds-For-Code/blob/master/LICENSE
+.PROJECTURI https://github.com/cloudsmithconsulting/Cds-For-Code
 .ICONURI 
 .EXTERNALMODULEDEPENDENCIES Microsoft.Xrm.Data.PowerShell
 .REQUIREDSCRIPTS 
@@ -49,13 +49,24 @@
 Param
 (
 	[string] 
-	[parameter(Mandatory = $true, HelpMessage = "Dynamics 365 CE server URL (no org name)")]
+	[parameter(Mandatory = $true, ParameterSetName = "NoSolutionFile", HelpMessage = "Dynamics 365 CE server URL (no org name)")]
 	[ValidatePattern('http(s)?://[\w-]+(/[\w- ./?%&=]*)?')]
 	$ServerUrl,
 
 	[string] 
-	[parameter(Mandatory = $true, HelpMessage = "Dynamics 365 CE organization name")]
+	[parameter(Mandatory = $true, ParameterSetName = "NoSolutionFile", HelpMessage = "Dynamics 365 CE organization name")]
 	$OrgName,
+
+    [System.Management.Automation.PSCredential]
+	[Parameter(Mandatory=$false, ParameterSetName = "NoSolutionFile", HelpMessage = "Credentials of user for authentication.")]
+    [ValidateNotNull()]
+    [System.Management.Automation.Credential()]
+	$Credential = $Null,
+
+	[string]
+	[parameter(Mandatory = $true, ParameterSetName = "SolutionFile", HelpMessage = "Name of the solution file to export")]
+	[ValidateScript({Test-Path $_})]
+	$SolutionFile,
 
 	[string]
 	[parameter(Mandatory = $true, HelpMessage = "Name of the solution to export")]
@@ -65,12 +76,6 @@ Param
 	[parameter(Mandatory = $true, HelpMessage = "The path where solution files will be unpacked")]
 	[ValidateScript({Test-Path $_})]
 	$Path,
-
-    [System.Management.Automation.PSCredential]
-	[Parameter(Mandatory=$false, HelpMessage = "Credentials of user for authentication.")]
-    [ValidateNotNull()]
-    [System.Management.Automation.Credential()]
-	$Credential = $Null,
 
 	[string] 
 	[parameter(Mandatory = $true, HelpMessage = "Path to SolutionPackager.exe")]
@@ -99,39 +104,44 @@ Param
 	$AllowDelete
 )
 
-# locals
-[string] $ModuleName = "Microsoft.Xrm.Data.Powershell";
-[string] $ModuleVersion = "2.7.2";
+if ($SolutionFile -eq $null) 
+{
+	# locals
+	[string] $ModuleName = "Microsoft.Xrm.Data.Powershell";
+	[string] $ModuleVersion = "2.7.2";
 
-# ensure Microsoft.Xrm.Data.PowerShell dependency is installed and imported.
-if (!(Get-Module -ListAvailable -Name $ModuleName )) {
-    Install-Module -Name $ModuleName -MinimumVersion $ModuleVersion -Force
+	# ensure Microsoft.Xrm.Data.PowerShell dependency is installed and imported.
+	if (!(Get-Module -ListAvailable -Name $ModuleName )) {
+		Install-Module -Name $ModuleName -MinimumVersion $ModuleVersion -Force
+	}
+
+	Import-Module $ModuleName
+
+	# connect to on-prem
+	$Conn;
+
+	Write-Host "Connecting to $ServerUrl/$OrgName`r";
+
+	if ($Credential -ne $null) {
+		$Conn = Connect-CrmOnPremDiscovery -Credential $Credential -ServerUrl $ServerUrl -OrganizationName $OrgName 
+	} else {
+		$Conn = Connect-CrmOnPremDiscovery -ServerUrl $ServerUrl -OrganizationName $OrgName 
+	}
+
+	$Folder = (Join-Path -Path $env:TEMP -ChildPath $SolutionName)
+
+	if (!(Test-Path -Path $Folder)) {
+		New-Item -Path $Folder -ItemType Directory | Out-Null
+	} else {
+		Remove-Item $Folder\*.*
+	}
+
+	Write-Host "Running export job on: $SolutionName`r";
+
+	Export-CrmSolution -conn $Conn -SolutionName $SolutionName -SolutionFilePath $Folder -SolutionZipFileName "$SolutionName.zip"
+
+	$SolutionFile = "$Folder\\$SolutionName.zip"	
 }
-
-Import-Module $ModuleName
-
-# connect to on-prem
-$Conn;
-
-Write-Host "Connecting to $ServerUrl/$OrgName`r";
-
-if ($Credential -ne $null) {
-	$Conn = Connect-CrmOnPremDiscovery -Credential $Credential -ServerUrl $ServerUrl -OrganizationName $OrgName 
-} else {
-	$Conn = Connect-CrmOnPremDiscovery -ServerUrl $ServerUrl -OrganizationName $OrgName 
-}
-
-$Folder = (Join-Path -Path $env:TEMP -ChildPath $SolutionName)
-
-if (!(Test-Path -Path $Folder)) {
-    New-Item -Path $Folder -ItemType Directory | Out-Null
-} else {
-	Remove-Item $Folder\*.*
-}
-
-Write-Host "Running export job on: $SolutionName`r";
-
-Export-CrmSolution -conn $Conn -SolutionName $SolutionName -SolutionFilePath $Folder -SolutionZipFileName "$SolutionName.zip"
 
 $SolutionPath = (Join-Path $Path -ChildPath $SolutionName);
 
@@ -140,7 +150,7 @@ If (!(Test-Path -Path $SolutionPath)) {
     New-Item -Path $SolutionPath -ItemType Directory | Out-Null
 }
 
-$Arguments = "/action:extract /folder:""$SolutionPath"" /zipfile:""$Folder\$SolutionName.zip"" /sourceLoc:""$TemplateResourceLanguageCode"" /nologo"
+$Arguments = "/action:extract /folder:""$SolutionPath"" /zipfile:""$SolutionFile"" /sourceLoc:""$TemplateResourceLanguageCode"" /nologo"
 
 if (-not ([string]::IsNullOrEmpty($MapFile))) {
 	$Arguments += " /map:""$MapFile"""

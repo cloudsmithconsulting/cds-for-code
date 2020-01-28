@@ -9,10 +9,9 @@ import { Utilities } from '../core/Utilities';
 import SolutionMap from '../components/Solutions/SolutionMap';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import ExtensionContext from '../core/ExtensionContext';
-import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
-import { Credential } from '../core/security/Types';
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
 import logger from '../core/framework/Logger';
+import { ExportSolutionOptions } from './cs.cds.deployment.exportSolution';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.
@@ -29,13 +28,13 @@ export default async function run(config?: CdsWebApi.Config, folder?: string, so
 
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
-		logger.warn("Organization not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.powerShell.unpackSolution} Organization not chosen, command cancelled`);
 		return; 
 	}
 
 	solution = solution || await Quickly.pickCdsSolution(config, "Choose a Solution to unpack", true);
 	if (!solution) { 
-		logger.warn("Solution not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.powerShell.unpackSolution} Solution not chosen, command cancelled`);
 		return; 
 	}
 
@@ -54,7 +53,7 @@ export default async function run(config?: CdsWebApi.Config, folder?: string, so
 	folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a folder where the solution will be unpacked", true, true);
 	if (Utilities.$Object.isNullOrEmpty(folder)) {
 		vscode.window.showInformationMessage("You must select a workspace folder to unpack a solution.");
-		logger.warn("Workspace not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.powerShell.unpackSolution} Workspace not chosen, command cancelled`);
 		return; 
 	}
 
@@ -93,23 +92,39 @@ export default async function run(config?: CdsWebApi.Config, folder?: string, so
 		serverUrl = serverUrl.substring(0, serverUrl.length - 1);
 	}
 
-	await ScriptDownloader.installCdsSdk();
+	const solutionLocation = path.join(folder, `${solution.uniquename}_temp.zip`);
+	const solutionExportOptions: ExportSolutionOptions = {
+		SolutionName: solution.uniquename,
+		Managed: false,
+		ExportIsvConfig: true,
+		ExportExternalApplications: true
+	};
+
+	logger.log(`Command: ${cs.cds.powerShell.unpackSolution} Checking to see if CDS SDK is installed`);
+	await ScriptDownloader.installCdsSdk();	
+
+	logger.log(`Command: ${cs.cds.powerShell.unpackSolution} Exporting solution`);
+	const result = await vscode.commands.executeCommand(
+		cs.cds.deployment.exportSolution, 
+		config, 
+		solution, 
+		vscode.Uri.file(solutionLocation), 
+		solutionExportOptions,
+		false);
+
+	if (!result) {
+		logger.log(`Command: ${cs.cds.powerShell.unpackSolution} Export cancelled, exiting command invocation`);
+
+		return;
+	}
 
 	return await TerminalManager.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => { 
 			return await terminal.run(new TerminalCommand(`.\\Get-XrmSolution.ps1 `)
-				.text(`-ServerUrl "${serverUrl}" `)
-				.text(`-OrgName "${orgName}" `)
+				.text(`-SolutionFile "${solutionLocation}" `)
 				.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
 				.text(`-Path "${folder}" `)
 				.text(`-ToolsPath "${toolsPath}" `)
-				.if(() => Credential.isCredential(config.credentials), c => {
-					c.text(`-Credential (New-Object System.Management.Automation.PSCredential ("`)
-					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
-					 .text(`", (ConvertTo-SecureString "`)
-					 .credential(config.credentials, GlobalStateCredentialStore.Instance, creds => Utilities.String.powerShellSafe(creds.password.toString(), '"'))
-					 .text(`" -AsPlainText -Force))) `);
-				})
 				.if(() => !Utilities.$Object.isNullOrEmpty(mappingFile), c => c.text(` -MapFile "${mappingFile}"`))
 				.if(() => !Utilities.$Object.isNullOrEmpty(logFile), c => c.text(` -LogFile "${logFile}"`))
 				.if(() => !Utilities.$Object.isNullOrEmpty(templateResourceCode), c => c.text(` -TemplateResourceLanguageCode "${templateResourceCode}"`))
@@ -118,12 +133,23 @@ export default async function run(config?: CdsWebApi.Config, folder?: string, so
 				.then(async tc => { 
 					map.map(config.orgId, solution.solutionid, path.join(folder, solution.uniquename));
 					await map.saveToWorkspace();
-				}).then(() => {
+
+					return tc;
+				}).then(tc => {
 					if (logFile) {
 						vscode.workspace.openTextDocument(logFile)
 							.then(d => vscode.window.showTextDocument(d));	
 					}
+
+					return tc;
 				});
+		})
+		.then(result => {
+			logger.log(`Command: ${cs.cds.powerShell.unpackSolution} Deleting zipped solution file`);
+
+			FileSystem.deleteItem(solutionLocation);
+
+			return result;
 		});
 
 }
