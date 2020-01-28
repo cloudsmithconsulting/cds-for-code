@@ -137,7 +137,7 @@ export default async function run(config?:CdsWebApi.Config, folder?:string, solu
 				.then(() => {
 					logger.log(`Command: ${cs.cds.powerShell.packSolution} Deleting zipped solution file`);
 
-					FileSystem.deleteItem(solutionFile);
+					FileSystem.deleteItem(solutionPath);
 				})
 				.then(async () => {
 					if (publishXml) {
