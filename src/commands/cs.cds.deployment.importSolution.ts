@@ -22,7 +22,7 @@ export type ImportSolutionOptions = {
  * @param {vscode.Uri} [defaultUri] that invoked the command
  * @returns void
  */
-export default async function run(config?: CdsWebApi.Config, solutionFile?: vscode.Uri, options?: ImportSolutionOptions): Promise<any> {
+export default async function run(config?: CdsWebApi.Config, solutionFile?: vscode.Uri, options?: ImportSolutionOptions, inform: boolean = true): Promise<any> {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
     if (!config) { 
 		logger.warn(`Command: ${cs.cds.deployment.importSolution} Organization not chosen, command cancelled`);
@@ -45,7 +45,11 @@ export default async function run(config?: CdsWebApi.Config, solutionFile?: vsco
 
     logger.info(`Command: ${cs.cds.deployment.importSolution} Import job started`);
     const importId = await api.importSolution(FileSystem.readFileSync(solutionFile.fsPath, { encoding: 'base64' }), options);
-    
+
+    if (inform) {
+        await Quickly.inform(`Solution ${solutionFile.fsPath} import complete`);
+    }
+
     logger.info(`Command: ${cs.cds.deployment.importSolution} Import job ${importId} complete`);
     return importId;
 }

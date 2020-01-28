@@ -114,6 +114,7 @@ export default class ScriptDownloader {
 				filesDownloaded++;
 			} else {
 				Logger.log(`Command: ${cs.cds.extension.downloadRequiredScripts} File ${localFilePath} is current (v${currentVersion})`);
+				return;
 			}
 
 			const hash = crypto.createHash('md5');

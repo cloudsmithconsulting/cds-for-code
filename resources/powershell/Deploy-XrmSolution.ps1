@@ -47,13 +47,23 @@
 Param
 (
 	[string] 
-	[parameter(Mandatory = $true, HelpMessage = "Dynamics 365 CE server URL (no org name)")]
+	[parameter(Mandatory = $true, ParameterSetName = "NoSolutionFile", HelpMessage = "Dynamics 365 CE server URL (no org name)")]
 	[ValidatePattern('http(s)?://[\w-]+(/[\w- ./?%&=]*)?')]
 	$ServerUrl,
 
 	[string] 
-	[parameter(Mandatory = $true, HelpMessage = "Dynamics 365 CE organization name")]
+	[parameter(Mandatory = $true, ParameterSetName = "NoSolutionFile", HelpMessage = "Dynamics 365 CE organization name")]
 	$OrgName,
+
+	[System.Management.Automation.PSCredential]
+	[Parameter(Mandatory=$false, ParameterSetName = "NoSolutionFile", HelpMessage = "Credentials of user for authentication.")]
+    [ValidateNotNull()]
+    [System.Management.Automation.Credential()]
+	$Credential = $Null,
+
+	[string]
+	[parameter(Mandatory = $true, ParameterSetName = "SolutionFile", HelpMessage = "Name of the solution file to export")]
+	$SolutionFile,
 
 	[string]
 	[parameter(Mandatory = $true, HelpMessage = "Name of the solution to deploy")]
@@ -63,12 +73,6 @@ Param
 	[parameter(Mandatory = $true, HelpMessage = "The path where solution files will be packed")]
 	[ValidateScript({Test-Path $_})]
 	$Path,
-
-    [System.Management.Automation.PSCredential]
-	[Parameter(Mandatory=$false, HelpMessage = "Credentials of user for authentication.")]
-    [ValidateNotNull()]
-    [System.Management.Automation.Credential()]
-	$Credential = $Null,
 
 	[string] 
 	[parameter(Mandatory = $true, HelpMessage = "Path to SolutionPackager.exe")]
@@ -88,49 +92,51 @@ Param
 	[parameter(HelpMessage = "Switch indicating if SolutionPackager will extract or merge all string resources into .resx files.")]
 	$IncludeResourceFiles,
 
-	[string] 
-	[parameter(Mandatory = $false, HelpMessage = "Path where temporary solution file will be deployed.  If specified, the solution file is kept in this path.")]
-	[ValidateScript({Test-Path $_})]
-	$SaveSolution = $Null,
-
 	[switch] 
 	[parameter(HelpMessage = "Switch indicating if this should be deployed as a managed solution.")]
 	$Managed
 )
 
-# locals
-[string] $ModuleName = "Microsoft.Xrm.Data.Powershell";
-[string] $ModuleVersion = "2.7.2";
+$RequireImport = ($SolutionFile -eq $null)
 
-# ensure Microsoft.Xrm.Data.PowerShell dependency is installed and imported.
-if (!(Get-Module -ListAvailable -Name $ModuleName ))  {
-    Install-Module -Name $ModuleName -MinimumVersion $ModuleVersion -Force
+if ($SolutionFile -eq $null) 
+{
+	# locals
+	[string] $ModuleName = "Microsoft.Xrm.Data.Powershell";
+	[string] $ModuleVersion = "2.7.2";
+
+	# ensure Microsoft.Xrm.Data.PowerShell dependency is installed and imported.
+	if (!(Get-Module -ListAvailable -Name $ModuleName ))  {
+		Install-Module -Name $ModuleName -MinimumVersion $ModuleVersion -Force
+	}
+
+	Import-Module $ModuleName
+
+	# connect to on-prem
+	$Conn;
+
+	Write-Host "Connecting to $ServerUrl/$OrgName`r";
+
+	if ($Credential -ne $null) {
+		$Conn = Connect-CrmOnPremDiscovery -Credential $Credential -ServerUrl $ServerUrl -OrganizationName $OrgName 
+	} else {
+		$Conn = Connect-CrmOnPremDiscovery -ServerUrl $ServerUrl -OrganizationName $OrgName 
+	}
+
+	if (-not ([string]::IsNullOrEmpty($SaveSolution))) {
+		$Folder = $SaveSolution
+	} else {
+		$Folder = (Join-Path -Path $env:TEMP -ChildPath $SolutionName)
+	}
+
+	If (!(Test-Path -Path $Folder)) {
+		New-Item -Path $Folder -ItemType Directory | Out-Null
+	}
+
+	$SolutionFile = "$Folder\\$SolutionName.zip"	
 }
 
-Import-Module $ModuleName
-
-# connect to on-prem
-$Conn;
-
-Write-Host "Connecting to $ServerUrl/$OrgName`r";
-
-if ($Credential -ne $null) {
-	$Conn = Connect-CrmOnPremDiscovery -Credential $Credential -ServerUrl $ServerUrl -OrganizationName $OrgName 
-} else {
-	$Conn = Connect-CrmOnPremDiscovery -ServerUrl $ServerUrl -OrganizationName $OrgName 
-}
-
-if (-not ([string]::IsNullOrEmpty($SaveSolution))) {
-	$Folder = $SaveSolution
-} else {
-	$Folder = (Join-Path -Path $env:TEMP -ChildPath $SolutionName)
-}
-
-If (!(Test-Path -Path $Folder)) {
-    New-Item -Path $Folder -ItemType Directory | Out-Null
-}
-
-$Arguments = "/action:pack /folder:$Path /zipfile:$Folder\$SolutionName.zip /nologo" 
+$Arguments = "/action:pack /folder:$Path /zipfile:$SolutionFile /nologo" 
 
 if (-not ([string]::IsNullOrEmpty($MapFile))) {
 	$Arguments += " /map:""$MapFile"""
@@ -153,10 +159,10 @@ Write-Host "Packing solution $SolutionName with arguments: $Arguments`r";
 $SolutionPackagerExe = (Join-Path $ToolsPath -ChildPath "SolutionPackager.exe")
 Invoke-Expression "& `"$SolutionPackagerExe`" $Arguments"
 
-Write-Host "Running import job on: $SolutionName`r";
+if ($RequireImport -eq $true) {
+	Write-Host "Running import job on: $SolutionName`r";
+	Import-CrmSolution -conn $Conn -SolutionFilePath "$Folder\$SolutionName.zip"
 
-Import-CrmSolution -conn $Conn -SolutionFilePath "$Folder\$SolutionName.zip"
-
-Remove-Item $Folder -Force -Recurse
-
-Write-Host "`r" 
+	Remove-Item $Folder -Force -Recurse
+	Write-Host "`r" 
+}

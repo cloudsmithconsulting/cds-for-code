@@ -5,7 +5,7 @@ import { CdsSolutions } from '../../api/CdsSolutions';
 import addSolutionComponent from "../../commands/cs.cds.deployment.addSolutionComponent";
 import removeSolutionComponent from "../../commands/cs.cds.deployment.removeSolutionComponent";
 import exportSolution, { ExportSolutionOptions } from "../../commands/cs.cds.deployment.exportSolution";
-import importSolution from "../../commands/cs.cds.deployment.importSolution";
+import importSolution, { ImportSolutionOptions } from "../../commands/cs.cds.deployment.importSolution";
 import packSolution from "../../commands/cs.cds.powerShell.packSolution";
 import unpackSolution from "../../commands/cs.cds.powerShell.unpackSolution";
 import registerPluginAssembly from "../../commands/cs.cds.deployment.registerPluginAssembly";
@@ -30,13 +30,13 @@ export default class SolutionManager {
     }
 
     @command(cs.cds.deployment.exportSolution, "Export Solution")
-    static async exportSolution(config?: CdsWebApi.Config, solutionFile?: vscode.Uri, options?: ExportSolutionOptions): Promise<void> {
-        return await exportSolution.apply(this, [ config, solutionFile, options ]);
+    static async exportSolution(config?: CdsWebApi.Config, solution?: any, solutionFile?: vscode.Uri, options?: ExportSolutionOptions, inform: boolean = true): Promise<void> {
+        return await exportSolution.apply(this, [ config, solution, solutionFile, options, inform ]);
     }
 
     @command(cs.cds.deployment.importSolution, "Import Solution")
-    static async importSolution(config?: CdsWebApi.Config, solutionFile?: vscode.Uri): Promise<void> {
-        return await importSolution.apply(this, [ config, solutionFile ]);
+    static async importSolution(config?: CdsWebApi.Config, solutionFile?: vscode.Uri, options?: ImportSolutionOptions, inform: boolean = true): Promise<void> {
+        return await importSolution.apply(this, [ config, solutionFile, options, inform ]);
     }
 
     @command(cs.cds.controls.explorer.importSolution, "Import Solution")

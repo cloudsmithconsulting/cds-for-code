@@ -7,7 +7,7 @@ This extension is designed to help developers with a simple development loop for
 |Version|Link||
 |:--|:--|:--|
 |Release Version:|[0.8.10](https://github.com/cloudsmithconsulting/cds-for-code/releases/tag/v0.8.10)|![Marketplace: Version](https://flat.badgen.net/vs-marketplace/v/cloudsmithconsulting.cds-for-code) ![Marketplace: Installs](https://flat.badgen.net/vs-marketplace/i/cloudsmithconsulting.cds-for-code) ![Marketplace: Downloads](https://flat.badgen.net/vs-marketplace/d/cloudsmithconsulting.cds-for-code) ![Marketplace: Rating](https://flat.badgen.net/vs-marketplace/rating/cloudsmithconsulting.cds-for-code) ![Open Issues](https://flat.badgen.net/github/open-issues/cloudsmithconsulting/cds-for-code) ![Stars](https://flat.badgen.net/github/stars/cloudsmithconsulting/cds-for-code)|
-|Development Version:|[0.9.0](https://github.com/cloudsmithconsulting/cds-for-code/releases/tag/v0.9.0)|[![Board Status](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/b63fc4c8-773b-4ffc-ac61-c71890277c2c/_apis/work/boardbadge/350decde-59a7-49b4-a6f6-ee220fa7e391)](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/_boards/board/t/b63fc4c8-773b-4ffc-ac61-c71890277c2c/Microsoft.RequirementCategory/) [![Build Status](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_apis/build/status/cds-for-code?branchName=master)](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_build/latest?definitionId=2&branchName=master) [![Release Status](https://vsrm.dev.azure.com/cloudsmith-consulting/_apis/public/Release/badge/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/1/2)](https://vsrm.dev.azure.com/cloudsmith-consulting/_apis/public/Release/badge/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/1/2)|
+|Development Version:|[0.8.11](https://github.com/cloudsmithconsulting/cds-for-code/releases/tag/v0.8.11)|[![Board Status](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/b63fc4c8-773b-4ffc-ac61-c71890277c2c/_apis/work/boardbadge/350decde-59a7-49b4-a6f6-ee220fa7e391)](https://dev.azure.com/cloudsmith-consulting/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/_boards/board/t/b63fc4c8-773b-4ffc-ac61-c71890277c2c/Microsoft.RequirementCategory/) [![Build Status](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_apis/build/status/cds-for-code?branchName=master)](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_build/latest?definitionId=2&branchName=master) [![Release Status](https://vsrm.dev.azure.com/cloudsmith-consulting/_apis/public/Release/badge/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/1/2)](https://vsrm.dev.azure.com/cloudsmith-consulting/_apis/public/Release/badge/c20ca92d-a9a9-45af-8bdb-da3ce0803b59/1/2)|
 
 ---
 
@@ -34,13 +34,14 @@ This extension is designed to help developers with a simple development loop for
 
 ## Prerequisites
 
-Before you start you must install the Microsoft.Xrm.Data.PowerShell module. To do this run PowerShell **as Administrator** and then execute the following command:
+All pre-requisites are downloaded automatically when the extension first runs or upon update.  Speciifcally, the following 
+pre-requisites are downloaded:
 
-``` PowerShell
-Install-Package Microsoft.Xrm.Data.PowerShell
-```
-
-The remaining dependencies will be downloaded on the first activation of the CDS for Code extension.
+1. Microsoft Dynamics 365 SDK (latest version) obtained from NuGet
+1. PowerShell scripts that support deployment tasks
+1. Assembly Scanner tool that supports plugin registration
+1. CrmSvcUtil extensions that support custom code generation using CrmSvcUtil
+1. Templates that are used by the extension
 
 ---
 

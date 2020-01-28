@@ -32,7 +32,7 @@ export type ExportSolutionOptions = {
  * @param {vscode.Uri} [defaultUri] that invoked the command
  * @returns void
  */
-export default async function run(config?: CdsWebApi.Config, solution?: any, solutionFile?: vscode.Uri, options?: ExportSolutionOptions) {
+export default async function run(config?: CdsWebApi.Config, solution?: any, solutionFile?: vscode.Uri, options?: ExportSolutionOptions, inform: boolean = true) {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
 		logger.warn(`Command: ${cs.cds.deployment.exportSolution} Organization not chosen, command cancelled`);
@@ -70,7 +70,9 @@ export default async function run(config?: CdsWebApi.Config, solution?: any, sol
 
     FileSystem.writeFileSync(solutionFile.fsPath, result);
 
-    await Quickly.inform(`Solution ${solution.uniquename} export complete`, undefined, 'Open file location', () => FileSystem.openFolderInExplorer(path.dirname(solutionFile.fsPath)));
+    if (inform) {
+        await Quickly.inform(`Solution ${solution.uniquename} export complete`, undefined, 'Open file location', () => FileSystem.openFolderInExplorer(path.dirname(solutionFile.fsPath)));
+    }
 
     return solutionFile;
 }
