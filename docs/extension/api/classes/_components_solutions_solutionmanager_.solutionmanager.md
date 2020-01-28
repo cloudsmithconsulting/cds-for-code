@@ -16,6 +16,9 @@ sidebar_label: "SolutionManager"
 
 * [addSolutionComponent](_components_solutions_solutionmanager_.solutionmanager.md#static-addsolutioncomponent)
 * [createProcess](_components_solutions_solutionmanager_.solutionmanager.md#static-createprocess)
+* [exportSolution](_components_solutions_solutionmanager_.solutionmanager.md#static-exportsolution)
+* [importSolution](_components_solutions_solutionmanager_.solutionmanager.md#static-importsolution)
+* [importSolutionFromFile](_components_solutions_solutionmanager_.solutionmanager.md#static-importsolutionfromfile)
 * [packSolution](_components_solutions_solutionmanager_.solutionmanager.md#static-packsolution)
 * [packSolutionFromFolder](_components_solutions_solutionmanager_.solutionmanager.md#static-packsolutionfromfolder)
 * [publishCustomizations](_components_solutions_solutionmanager_.solutionmanager.md#static-publishcustomizations)
@@ -32,7 +35,7 @@ sidebar_label: "SolutionManager"
 
 ▸ **addSolutionComponent**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution?`: any, `componentId?`: string, `componentType?`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md), `addRequiredComponents?`: boolean, `doNotIncludeSubcomponents?`: boolean, `componentSettings?`: string): *Promise‹any›*
 
-Defined in src/components/Solutions/SolutionManager.ts:21
+Defined in src/components/Solutions/SolutionManager.ts:23
 
 **Parameters:**
 
@@ -54,7 +57,7 @@ ___
 
 ▸ **createProcess**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solutionId?`: string): *Promise‹any›*
 
-Defined in src/components/Solutions/SolutionManager.ts:16
+Defined in src/components/Solutions/SolutionManager.ts:18
 
 **Parameters:**
 
@@ -67,11 +70,66 @@ Name | Type |
 
 ___
 
+### `Static` exportSolution
+
+▸ **exportSolution**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution?`: any, `solutionFile?`: Uri, `options?`: [ExportSolutionOptions](../modules/_commands_cs_cds_deployment_exportsolution_.md#exportsolutionoptions), `inform`: boolean): *Promise‹void›*
+
+Defined in src/components/Solutions/SolutionManager.ts:33
+
+**Parameters:**
+
+Name | Type | Default |
+------ | ------ | ------ |
+`config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) | - |
+`solution?` | any | - |
+`solutionFile?` | Uri | - |
+`options?` | [ExportSolutionOptions](../modules/_commands_cs_cds_deployment_exportsolution_.md#exportsolutionoptions) | - |
+`inform` | boolean | true |
+
+**Returns:** *Promise‹void›*
+
+___
+
+### `Static` importSolution
+
+▸ **importSolution**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solutionFile?`: Uri, `options?`: [ImportSolutionOptions](../modules/_commands_cs_cds_deployment_importsolution_.md#importsolutionoptions), `inform`: boolean): *Promise‹void›*
+
+Defined in src/components/Solutions/SolutionManager.ts:38
+
+**Parameters:**
+
+Name | Type | Default |
+------ | ------ | ------ |
+`config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) | - |
+`solutionFile?` | Uri | - |
+`options?` | [ImportSolutionOptions](../modules/_commands_cs_cds_deployment_importsolution_.md#importsolutionoptions) | - |
+`inform` | boolean | true |
+
+**Returns:** *Promise‹void›*
+
+___
+
+### `Static` importSolutionFromFile
+
+▸ **importSolutionFromFile**(`solutionFile?`: Uri): *Promise‹void›*
+
+Defined in src/components/Solutions/SolutionManager.ts:43
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`solutionFile?` | Uri |
+
+**Returns:** *Promise‹void›*
+
+___
+
 ### `Static` packSolution
 
 ▸ **packSolution**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `solution?`: any, `toolsPath?`: string, `logFile?`: string, `mappingFile?`: string, `includeResourceFiles?`: boolean, `solutionPath?`: string, `managed?`: boolean): *Promise‹any›*
 
-Defined in src/components/Solutions/SolutionManager.ts:36
+Defined in src/components/Solutions/SolutionManager.ts:53
 
 **Parameters:**
 
@@ -95,7 +153,7 @@ ___
 
 ▸ **packSolutionFromFolder**(`folder?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/Solutions/SolutionManager.ts:31
+Defined in src/components/Solutions/SolutionManager.ts:48
 
 **Parameters:**
 
@@ -111,7 +169,7 @@ ___
 
 ▸ **publishCustomizations**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `components?`: object[]): *Promise‹any›*
 
-Defined in src/components/Solutions/SolutionManager.ts:66
+Defined in src/components/Solutions/SolutionManager.ts:83
 
 **Parameters:**
 
@@ -128,7 +186,7 @@ ___
 
 ▸ **registerPluginAssembly**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `pluginAssembly?`: any, `file?`: Uri, `solution?`: any): *Promise‹any›*
 
-Defined in src/components/Solutions/SolutionManager.ts:61
+Defined in src/components/Solutions/SolutionManager.ts:78
 
 **Parameters:**
 
@@ -147,7 +205,7 @@ ___
 
 ▸ **registerPluginFile**(`file?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/Solutions/SolutionManager.ts:56
+Defined in src/components/Solutions/SolutionManager.ts:73
 
 **Parameters:**
 
@@ -163,7 +221,7 @@ ___
 
 ▸ **removeSolutionComponent**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution?`: any, `componentId?`: string, `componentType?`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md)): *Promise‹any›*
 
-Defined in src/components/Solutions/SolutionManager.ts:26
+Defined in src/components/Solutions/SolutionManager.ts:28
 
 **Parameters:**
 
@@ -182,7 +240,7 @@ ___
 
 ▸ **unpackSolution**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `solution?`: any, `toolsPath?`: string, `logFile?`: string, `mappingFile?`: string, `templateResourceCode?`: string, `includeResourceFiles?`: boolean, `allowDelete`: boolean): *Promise‹any›*
 
-Defined in src/components/Solutions/SolutionManager.ts:51
+Defined in src/components/Solutions/SolutionManager.ts:68
 
 **Parameters:**
 
@@ -206,7 +264,7 @@ ___
 
 ▸ **unpackSolutionFromTreeView**(`item`: any): *Promise‹unknown›*
 
-Defined in src/components/Solutions/SolutionManager.ts:41
+Defined in src/components/Solutions/SolutionManager.ts:58
 
 **Parameters:**
 
@@ -222,7 +280,7 @@ ___
 
 ▸ **unpackSolutionToFolder**(`folder?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/Solutions/SolutionManager.ts:46
+Defined in src/components/Solutions/SolutionManager.ts:63
 
 **Parameters:**
 

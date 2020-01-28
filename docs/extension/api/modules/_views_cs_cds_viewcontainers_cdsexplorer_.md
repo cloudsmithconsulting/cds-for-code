@@ -28,7 +28,7 @@ sidebar_label: "views/cs.cds.viewContainers.cdsExplorer"
 
 Ƭ **CdsExplorerEntryType**: *"Connection" | "Organization" | "Entities" | "OptionSets" | "WebResources" | "Plugins" | "Processes" | "Solutions" | "Applications" | "Entity" | "OptionSet" | "Option" | "WebResource" | "Plugin" | "PluginType" | "PluginStep" | "PluginStepImage" | "Process" | "Solution" | "Application" | "Attributes" | "Views" | "Charts" | "Dashboards" | "Keys" | "Relationships" | "Forms" | "Attribute" | "View" | "Chart" | "Dashboard" | "Key" | "OneToManyRelationship" | "ManyToOneRelationship" | "ManyToManyRelationship" | "Form" | "Entry" | "Entries" | "Folder"*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1267
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1280
 
 ## Variables
 

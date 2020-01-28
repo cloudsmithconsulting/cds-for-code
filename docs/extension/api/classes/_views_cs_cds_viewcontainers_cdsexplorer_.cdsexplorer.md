@@ -62,6 +62,7 @@ This class implements VSCode's TreeDataProvider and is used as a single-instance
 * [createEntries](_views_cs_cds_viewcontainers_cdsexplorer_.cdsexplorer.md#private-createentries)
 * [delete](_views_cs_cds_viewcontainers_cdsexplorer_.cdsexplorer.md#delete)
 * [edit](_views_cs_cds_viewcontainers_cdsexplorer_.cdsexplorer.md#edit)
+* [exportSolution](_views_cs_cds_viewcontainers_cdsexplorer_.cdsexplorer.md#exportsolution)
 * [getApplicationDetails](_views_cs_cds_viewcontainers_cdsexplorer_.cdsexplorer.md#private-getapplicationdetails)
 * [getChildren](_views_cs_cds_viewcontainers_cdsexplorer_.cdsexplorer.md#getchildren)
 * [getConnectionDetails](_views_cs_cds_viewcontainers_cdsexplorer_.cdsexplorer.md#private-getconnectiondetails)
@@ -507,7 +508,7 @@ ___
 
 ▸ **createContainers**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `parentType`: [CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype), `types`: [CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]): *[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:432
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:443
 
 **Parameters:**
 
@@ -525,7 +526,7 @@ ___
 
 ▸ **createEntries**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `onRetreive`: function, `onParse`: function, `onErrorMessage?`: function, `onRetry?`: Function): *Promise‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:458
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:469
 
 **Parameters:**
 
@@ -593,11 +594,27 @@ Name | Type |
 
 ___
 
+###  exportSolution
+
+▸ **exportSolution**(`item?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹unknown›*
+
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:338
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`item?` | [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md) |
+
+**Returns:** *Promise‹unknown›*
+
+___
+
 ### `Private` getApplicationDetails
 
 ▸ **getApplicationDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `solution?`: any): *Promise‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:567
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:578
 
 **Parameters:**
 
@@ -614,7 +631,7 @@ ___
 
 ▸ **getChildren**(`element?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:341
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:352
 
 **Parameters:**
 
@@ -630,7 +647,7 @@ ___
 
 ▸ **getConnectionDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:519
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:530
 
 **Parameters:**
 
@@ -646,7 +663,7 @@ ___
 
 ▸ **getConnectionEntries**(): *[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:509
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:520
 
 **Returns:** *[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]*
 
@@ -656,7 +673,7 @@ ___
 
 ▸ **getEntityAttributeDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `entity?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:726
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:737
 
 **Parameters:**
 
@@ -673,7 +690,7 @@ ___
 
 ▸ **getEntityChartDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `solutionId?`: string, `entity?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:750
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:761
 
 **Parameters:**
 
@@ -691,7 +708,7 @@ ___
 
 ▸ **getEntityDashboardDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `solutionId?`: string, `entity?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:774
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:785
 
 **Parameters:**
 
@@ -709,7 +726,7 @@ ___
 
 ▸ **getEntityDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `solution?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:714
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:725
 
 **Parameters:**
 
@@ -726,7 +743,7 @@ ___
 
 ▸ **getEntityFormDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `solutionId?`: string, `entity?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:762
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:773
 
 **Parameters:**
 
@@ -744,7 +761,7 @@ ___
 
 ▸ **getEntityKeyDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `entity?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:786
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:797
 
 **Parameters:**
 
@@ -761,7 +778,7 @@ ___
 
 ▸ **getEntityRelationshipDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `entity?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:814
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:825
 
 **Parameters:**
 
@@ -778,7 +795,7 @@ ___
 
 ▸ **getEntityViewDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `solutionId?`: string, `entity?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:738
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:749
 
 **Parameters:**
 
@@ -796,7 +813,7 @@ ___
 
 ▸ **getOptionDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:694
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:705
 
 **Parameters:**
 
@@ -812,7 +829,7 @@ ___
 
 ▸ **getOptionSetDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `solution?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:682
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:693
 
 **Parameters:**
 
@@ -829,7 +846,7 @@ ___
 
 ▸ **getPluginDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `solution?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:591
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:602
 
 **Parameters:**
 
@@ -846,7 +863,7 @@ ___
 
 ▸ **getPluginStepDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `pluginType?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:615
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:626
 
 **Parameters:**
 
@@ -863,7 +880,7 @@ ___
 
 ▸ **getPluginStepImageDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `pluginStep?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:627
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:638
 
 **Parameters:**
 
@@ -880,7 +897,7 @@ ___
 
 ▸ **getPluginTypeDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `plugin?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:603
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:614
 
 **Parameters:**
 
@@ -897,7 +914,7 @@ ___
 
 ▸ **getProcessDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `context?`: any): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:670
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:681
 
 **Parameters:**
 
@@ -914,7 +931,7 @@ ___
 
 ▸ **getSolutionDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:579
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:590
 
 **Parameters:**
 
@@ -930,7 +947,7 @@ ___
 
 ▸ **getSolutionLevelDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:541
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:552
 
 **Parameters:**
 
@@ -946,7 +963,7 @@ ___
 
 ▸ **getTreeItem**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *TreeItem*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:337
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:348
 
 **Parameters:**
 
@@ -962,7 +979,7 @@ ___
 
 ▸ **getWebResourcesDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `solution?`: any, `folder?`: string): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:651
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:662
 
 **Parameters:**
 
@@ -980,7 +997,7 @@ ___
 
 ▸ **getWebResourcesFolderDetails**(`element`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md), `solution?`: any, `folder?`: string): *Thenable‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:639
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:650
 
 **Parameters:**
 
@@ -998,7 +1015,7 @@ ___
 
 ▸ **inspect**(`item?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹unknown›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:354
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:365
 
 **Parameters:**
 
@@ -1014,7 +1031,7 @@ ___
 
 ▸ **moveSolution**(`item?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:359
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:370
 
 **Parameters:**
 
@@ -1030,7 +1047,7 @@ ___
 
 ▸ **openInApp**(`item?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:365
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:376
 
 **Parameters:**
 
@@ -1046,7 +1063,7 @@ ___
 
 ▸ **openInBrowser**(`item?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:370
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:381
 
 **Parameters:**
 
@@ -1062,7 +1079,7 @@ ___
 
 ▸ **openInEditor**(`item?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:375
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:386
 
 **Parameters:**
 
@@ -1078,7 +1095,7 @@ ___
 
 ▸ **refresh**(`item?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *void*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:380
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:391
 
 **Parameters:**
 
@@ -1094,7 +1111,7 @@ ___
 
 ▸ **refreshSolution**(`solutionPath?`: string): *void*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:391
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:402
 
 **Parameters:**
 
@@ -1110,7 +1127,7 @@ ___
 
 ▸ **removeConnection**(`connection`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *void*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:399
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:410
 
 **Parameters:**
 
@@ -1126,7 +1143,7 @@ ___
 
 ▸ **removeFromSolution**(`item?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:410
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:421
 
 **Parameters:**
 
@@ -1142,7 +1159,7 @@ ___
 
 ▸ **removePluginStep**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `step`: any): *Promise‹void›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:876
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:887
 
 **Parameters:**
 
@@ -1159,7 +1176,7 @@ ___
 
 ▸ **removePluginStepImage**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `stepImage`: any): *Promise‹void›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:883
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:894
 
 **Parameters:**
 
@@ -1176,7 +1193,7 @@ ___
 
 ▸ **runCommand**(`definitions`: [Dictionary](_core_types_dictionary_.dictionary.md)‹[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype), function›, `item?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹any›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:890
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:901
 
 **Parameters:**
 

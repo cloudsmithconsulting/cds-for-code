@@ -28,6 +28,8 @@ Static values related to deployment tasks in the CDS for Code extension
 * [createWebResource](_cs_.cds.deployment.md#static-createwebresource)
 * [dotNetBuild](_cs_.cds.deployment.md#static-dotnetbuild)
 * [dotNetTest](_cs_.cds.deployment.md#static-dotnettest)
+* [exportSolution](_cs_.cds.deployment.md#static-exportsolution)
+* [importSolution](_cs_.cds.deployment.md#static-importsolution)
 * [packWebResource](_cs_.cds.deployment.md#static-packwebresource)
 * [publishCustomizations](_cs_.cds.deployment.md#static-publishcustomizations)
 * [registerPluginAssembly](_cs_.cds.deployment.md#static-registerpluginassembly)
@@ -102,11 +104,27 @@ Defined in src/cs.ts:20
 
 ___
 
+### `Static` exportSolution
+
+▪ **exportSolution**: *string* = `${deployment._namespace}.exportSolution`
+
+Defined in src/cs.ts:21
+
+___
+
+### `Static` importSolution
+
+▪ **importSolution**: *string* = `${deployment._namespace}.importSolution`
+
+Defined in src/cs.ts:22
+
+___
+
 ### `Static` packWebResource
 
 ▪ **packWebResource**: *string* = `${deployment._namespace}.packWebResource`
 
-Defined in src/cs.ts:21
+Defined in src/cs.ts:23
 
 ___
 
@@ -114,7 +132,7 @@ ___
 
 ▪ **publishCustomizations**: *string* = `${deployment._namespace}.publishCustomizations`
 
-Defined in src/cs.ts:22
+Defined in src/cs.ts:24
 
 ___
 
@@ -122,7 +140,7 @@ ___
 
 ▪ **registerPluginAssembly**: *string* = `${deployment._namespace}.registerPluginAssembly`
 
-Defined in src/cs.ts:23
+Defined in src/cs.ts:25
 
 ___
 
@@ -130,7 +148,7 @@ ___
 
 ▪ **removeSolutionComponent**: *string* = `${deployment._namespace}.removeSolutionComponent`
 
-Defined in src/cs.ts:24
+Defined in src/cs.ts:26
 
 ___
 
@@ -138,7 +156,7 @@ ___
 
 ▪ **removeSolutionMapping**: *string* = `${deployment._namespace}.removeSolutionMapping`
 
-Defined in src/cs.ts:25
+Defined in src/cs.ts:27
 
 ___
 
@@ -146,7 +164,7 @@ ___
 
 ▪ **unpackWebResource**: *string* = `${deployment._namespace}.unpackWebResource`
 
-Defined in src/cs.ts:26
+Defined in src/cs.ts:28
 
 ___
 
@@ -154,4 +172,4 @@ ___
 
 ▪ **updateSolutionMapping**: *string* = `${deployment._namespace}.updateSolutionMapping`
 
-Defined in src/cs.ts:27
+Defined in src/cs.ts:29

@@ -15,6 +15,7 @@ sidebar_label: "core/http/nodeJsFileDownloader"
 ### Functions
 
 * [download](_core_http_nodejsfiledownloader_.md#download)
+* [exists](_core_http_nodejsfiledownloader_.md#exists)
 
 ## Variables
 
@@ -31,7 +32,7 @@ sidebar_label: "core/http/nodeJsFileDownloader"
     { key: ".jpg", value: "image/jpeg" }
 ])
 
-Defined in src/core/http/nodeJsFileDownloader.ts:8
+Defined in src/core/http/nodeJsFileDownloader.ts:7
 
 ## Functions
 
@@ -39,7 +40,7 @@ Defined in src/core/http/nodeJsFileDownloader.ts:8
 
 ▸ **download**(`remoteFilePath`: string, `localFilePath`: string): *Promise‹string›*
 
-Defined in src/core/http/nodeJsFileDownloader.ts:19
+Defined in src/core/http/nodeJsFileDownloader.ts:24
 
 **Parameters:**
 
@@ -49,3 +50,19 @@ Name | Type |
 `localFilePath` | string |
 
 **Returns:** *Promise‹string›*
+
+___
+
+###  exists
+
+▸ **exists**(`remoteFilePath`: string): *Promise‹boolean›*
+
+Defined in src/core/http/nodeJsFileDownloader.ts:18
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`remoteFilePath` | string |
+
+**Returns:** *Promise‹boolean›*
