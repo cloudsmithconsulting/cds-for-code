@@ -407,10 +407,10 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         }
     }
 
-    removeConnection(connection: CdsWebApi.Config): void { 
+    async removeConnection(connection: CdsWebApi.Config): Promise<void> { 
         const removeIndex = this._connections.findIndex(c => c.webApiUrl === connection.webApiUrl);
         
-        if (removeIndex >= 0) {
+        if (removeIndex >= 0 && (await Quickly.pickBoolean(`Are you sure you want to remove the connection named '${this._connections[removeIndex].name}'?`, 'Yes', 'No'))) {
             this._connections.splice(removeIndex, 1);
             DiscoveryRepository.saveConnections(ExtensionContext.Instance, this._connections);
             this.refresh();
