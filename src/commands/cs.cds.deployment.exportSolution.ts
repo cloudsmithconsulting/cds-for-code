@@ -2,7 +2,6 @@ import * as cs from "../cs";
 import * as path from 'path';
 import * as vscode from 'vscode';
 import * as FileSystem from '../core/io/FileSystem';
-import * as FileManager from '../core/io/FileManager';
 import { CdsWebApi } from "../api/cds-webapi/CdsWebApi";
 import Quickly, { QuickPickOption } from "../core/Quickly";
 import ExtensionContext from "../core/ExtensionContext";
@@ -72,7 +71,7 @@ export default async function run(config?: CdsWebApi.Config, solution?: any, sol
     FileSystem.writeFileSync(solutionFile.fsPath, result);
 
     await Quickly.inform(`Solution ${solution.uniquename} export complete`, undefined, 'Open file location', () => FileSystem.openFolderInExplorer(path.dirname(solutionFile.fsPath)));
-    
+
     return solutionFile;
 }
 

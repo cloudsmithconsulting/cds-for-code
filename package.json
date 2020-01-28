@@ -1047,7 +1047,6 @@
 		"node-machine-id": "^1.1.12",
 		"node-stream-zip": "^1.9.1",
 		"opn": "^6.0.0",
-		"sleep-async": "^1.0.5",
 		"typescript-linq": "^1.0.6",
 		"vscode-extension-telemetry": "^0.1.2",
 		"ws": "^7.2.1",

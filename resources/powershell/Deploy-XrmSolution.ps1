@@ -1,12 +1,12 @@
 ﻿<# PSScriptInfo
-.VERSION 1.0.0
+.VERSION 0.8.11
 .GUID e009159d-97e2-492a-a289-42426518dd41
 .AUTHOR CloudSmith Consulting LLC
 .COMPANYNAME CloudSmith Consulting LLC
-.COPYRIGHT (c) 2019 CloudSmith Consulting LLC.  All Rights Reserved.
+.COPYRIGHT (c) 2020 CloudSmith Consulting LLC.  All Rights Reserved.
 .TAGS Windows PowerShell Development Dev Dynamics CRM OnPremises DevOps
-.LICENSEURI https://github.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/blob/master/LICENSE
-.PROJECTURI https://github.com/cloudsmithconsulting/Dynamics365-VsCode-Samples
+.LICENSEURI https://github.com/cloudsmithconsulting/Cds-For-Code/blob/master/LICENSE
+.PROJECTURI https://github.com/cloudsmithconsulting/Cds-For-Code
 .ICONURI 
 .EXTERNALMODULEDEPENDENCIES Microsoft.Xrm.Data.PowerShell
 .REQUIREDSCRIPTS 

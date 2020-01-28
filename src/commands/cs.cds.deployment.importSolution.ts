@@ -15,8 +15,6 @@ export type ImportSolutionOptions = {
     HoldingSolution?: boolean
 };
 
-const sleep = require('sleep-async')().Promise;
-
 /**
  * This command can be invoked by the by either the file explorer view or the Dynamics TreeView
  * and can compare two copies of a web resource.
