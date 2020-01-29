@@ -40,7 +40,7 @@ class SvcUtilConfigView extends View {
 
     get commands(): Dictionary<string, Function> {
         return new Dictionary<string, Function>([
-            { key: 'save', value: message => this.save(message.svcUtilConfig) },
+            { key: 'save', value: message => this.save(message.config) },
             { key: 'retrieveListForAttribute', value: message => this.retrieveAttributes(message.entityKey, message.targetElem) }
          ]);
     }
@@ -52,7 +52,8 @@ class SvcUtilConfigView extends View {
         this.postMessage({ command: 'updateAttributes', attributes, targetElem });
     }
 
-    private save(svcUtilConfig :any) {
+    private save(config :any) {
+        
         Quickly.inform(`SvcUtil Configuration was saved.`);
         this.dispose();
     }

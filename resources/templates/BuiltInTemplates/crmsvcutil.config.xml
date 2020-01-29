@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <configSections>
     <section name="ServiceExtensions" type="CloudSmith.Cds.CrmSvcUtil.Configuration.ServiceExtensionsConfigurationSection, CloudSmith.Cds.CrmSvcUtil" />
@@ -10,70 +10,6 @@
     <add key="namingservice" value="CloudSmith.Cds.CrmSvcUtil.CompositeNamingService, CloudSmith.Cds.CrmSvcUtil" />
   </appSettings>
   <ServiceExtensions>
-    <Filtering>
-      <Whitelist filter="Exclusive">
-        <Entities>
-          <add entity="account" />
-          <add entity="contact" />
-        </Entities>
-        <Attributes>
-          <add entity="*" attribute="name" />
-        </Attributes>
-        <OptionSets>
-          <add entity="*" optionSet="addresstype" />
-        </OptionSets>
-        <Filters>
-          <entity expression=".*" ignoreCase="true" />
-          <attribute entity="*" expression=".*" ignoreCase="true" />
-        </Filters>        
-        <Solutions>
-          <add solution="TestSolution" />
-        </Solutions>
-        <!-- Valid values are Default, CustomOnly, and UncustomizedOnly -->
-        <Customizations strategy="Default" />
-      </Whitelist>
-      <Blacklist>
-        <Entities>
-          <!-- wont be blacklisted as it's on the whitelist -->
-          <add entity="contact" />
-        </Entities>
-        <Attributes>
-          <add entity="*" attribute="description" />
-        </Attributes>
-      </Blacklist>
-    </Filtering>
-    <Naming>
-      <!-- configuration that goes here only applies for the NamingService -->
-      <PublisherRules>
-        <add name="cs_" action="remove" />
-      </PublisherRules>
-      <MappingRules>
-        <add from="sample_entity" to="MyEntity" type="entity"/>
-        <add from="sample_entity.foo" to="Bar" type="attribute"/>
-      </MappingRules>
-    </Naming>
-    <CodeGeneration path=".\Output" language="CSharp">
-      <!--
-      <Annotations>
-        <add attribute="DataContract" to="Entities" />
-        <add attribute="DebuggerNonUserCode" to="Attributes" />
-      </Annotations>
-      -->
-      <Behaviors>
-        <add name="TranslateOptionSetsAsEnums" />
-        <add name="ImportNamespaces" arguments="System,System.ComponentModel,System.Runtime.Serialization,System.CodeDom.Compiler,Microsoft.Xrm.Sdk" />
-      </Behaviors>
-      <Files>
-        <!-- options for type include: Entities, AttributeConstants, OptionSets, Requests, Responses, ServiceContext -->
-        <!-- options for generate include: OneFilePerItem, OneFilePerType, SingleFile -->
-        <!-- format string is up to 3 parameters: (root filename (no suffix); type; name; formatted as filename safe) -->
-        <!-- paths are relative to the code generation path above, or output switch, or current folder -->
-        <add filename="{0}.{1}.{2}.cs" type="Entities" generate="OneFilePerItem" />
-        <add filename="{0}.{1}.cs" type="AttributeConstants" generate="OneFilePerType" />
-        <add filename="{0}.{1}.cs" type="OptionSets" generate="OneFilePerType" />
-        <add filename="{0}.{1}.cs" type="Requests" generate="OneFilePerType" />
-      </Files>
-    </CodeGeneration>
   </ServiceExtensions>
   <system.diagnostics>
     <trace autoflush="true"/>
