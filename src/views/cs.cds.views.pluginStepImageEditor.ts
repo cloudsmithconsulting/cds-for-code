@@ -14,7 +14,6 @@ export default async function openView(sdkmessageprocessingstepid: string, plugi
         title: 'Configure Plugin Step Image - Dynamics 365 CE',
         type: cs.cds.views.pluginStepImageEditor,
         preserveFocus: false,
-        bridge: BridgeCommunicationMethod.Ipc,
         onReady: view => view.setInitialState(sdkmessageprocessingstepid, pluginStepImage, config)
     });
 

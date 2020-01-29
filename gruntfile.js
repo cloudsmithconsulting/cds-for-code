@@ -7,17 +7,17 @@ module.exports = function (grunt) {
         mkdir: {
             all: {
                 options: {
-                    create: ['out/temp', 'out/temp/browser', 'dist/web', 'dist/release', 'dist/templates', 'dist/tools' ]
+                    create: ['out/temp', 'dist/web', 'dist/release', 'dist/templates', 'dist/tools' ]
                 },
             },
             dev: {
                 options: {
-                    create: ['out/temp', 'out/temp/browser', 'dist/web', 'dist/templates' ]
+                    create: ['out/temp', 'dist/web', 'dist/templates' ]
                 },
             },
             release: {
                 options: {
-                    create: ['out/temp', 'out/temp/browser', 'dist/release', 'dist/templates', 'dist/tools' ]
+                    create: ['out/temp', 'dist/release', 'dist/templates', 'dist/tools' ]
                 },
             }
         },
@@ -75,49 +75,6 @@ module.exports = function (grunt) {
             },
             release: {
                 src: 'dist/web/materialize.vscode.css'
-            }
-        },
-
-        ts: {
-            browser: {
-                src: ["src/core/webui/LocalBridge.browser.ts", "src/core/webui/WebSocketBridge.browser.ts"],
-                outDir: "out/temp/browser",
-                options: {
-                    rootDir: "src/core",
-                    fast: 'never',
-                    failOnTypeErrors: false,
-                    target: "es6",
-                    module: "commonjs",
-                    lib: ["es6", "dom"],
-                    sourceMap: true,
-                    moduleResolution: "node"
-                }
-            },
-            extension: {
-                tsconfig: './tsconfig.json'
-            }
-        },
-
-        browserify: {
-            dev: {
-                src: [
-                    'out/temp/browser/**/*.js'
-                ],
-                dest: 'resources/scripts/cs.vscode.webviews.js',
-                options: {
-                    browserifyOptions: { debug: true }
-                    //transform: [["babelify", { "presets": ['@babel/preset-env'] }]],
-                }
-            },
-            release: {
-                src: [
-                    'out/temp/browser/**/*.js'
-                ],
-                dest: 'dist/web/cs.vscode.webviews.js',
-                options: {
-                    browserifyOptions: { debug: false }
-                    //transform: [["babelify", { "presets": ['@babel/preset-env'] }]],
-                }
             }
         },
 
@@ -365,10 +322,7 @@ module.exports = function (grunt) {
             },
             temp_js: {
                 src: ['out/temp/**/materialize*.*']
-            },
-            temp_ts: {
-                src: ['out/temp/browser']
-            }            
+            }
         },
 
         //  Watch Files
@@ -398,15 +352,6 @@ module.exports = function (grunt) {
                 }
             },
 
-            ts: {
-                files: ['src/**/*.browser.ts'],
-                tasks: ['ts_compile_browser'],
-                options: {
-                    interrupt: false,
-                    spawn: false
-                }
-            },
-
             ts_docs: {
                 files: ['src/**/*.ts'],
                 tasks: ['docs_compile'],
@@ -427,8 +372,6 @@ module.exports = function (grunt) {
                 tasks: [
                     'sass_compile',
                     'js_compile',
-                    'ts_compile_browser',
-                    'watch:ts',
                     'watch:ts_docs',
                     'watch:js',
                     'watch:sass',
@@ -473,16 +416,6 @@ module.exports = function (grunt) {
                 options: {
                     enabled: true,
                     message: 'JS files compiled',
-                    title: 'CDS for Code',
-                    success: true,
-                    duration: 1
-                }
-            },
-
-            ts_compile_browser: {
-                options: {
-                    enabled: true,
-                    message: 'TS files transpiled',
                     title: 'CDS for Code',
                     success: true,
                     duration: 1
@@ -627,7 +560,6 @@ module.exports = function (grunt) {
     grunt.registerTask('docs_compile', [ 'shell:typedoc_markdown', 'notify:docs_compile' ]);
     grunt.registerTask('js_compile', [ 'concat:dev', 'configureBabel', 'babel:dev', 'uglify:dev', 'clean:temp_js', 'notify:js_compile' ]);
     grunt.registerTask('sass_compile', [ 'sass:dev', 'sass:release', 'sass:release_min', 'postcss:dev', 'notify:sass_compile' ]);
-    grunt.registerTask('ts_compile_browser', [ 'mkdir:dev', 'ts:browser', 'browserify:dev', 'clean:temp_ts', 'notify:ts_compile_browser' ]);
 
     grunt.registerTask('templates_compile', 
         [ 'zip:SystemTemplates', 'zip:CloudSmith.Cds.SamplePlugin.v8.0', 'zip:CloudSmith.Cds.SamplePlugin.v8.1', 
@@ -641,5 +573,5 @@ module.exports = function (grunt) {
           'shell:assemblyscanner_build_release', 'zip:CloudSmith.Tools.AssemblyScanner', 'notify:tools_compile' ]);
 
     grunt.registerTask('monitor', [ 'concurrent:monitor' ]);
-    grunt.registerTask('travis', [ 'ts_compile_browser', 'js_compile', 'sass_compile' ]);
+    grunt.registerTask('travis', [ 'js_compile', 'sass_compile' ]);
 };

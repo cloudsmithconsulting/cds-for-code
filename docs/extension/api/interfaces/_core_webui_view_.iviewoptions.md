@@ -15,8 +15,6 @@ sidebar_label: "IViewOptions"
 ### Properties
 
 * [alwaysNew](_core_webui_view_.iviewoptions.md#optional-alwaysnew)
-* [bridge](_core_webui_view_.iviewoptions.md#optional-bridge)
-* [channel](_core_webui_view_.iviewoptions.md#optional-channel)
 * [icon](_core_webui_view_.iviewoptions.md#optional-icon)
 * [onReady](_core_webui_view_.iviewoptions.md#optional-onready)
 * [preserveFocus](_core_webui_view_.iviewoptions.md#optional-preservefocus)
@@ -30,23 +28,7 @@ sidebar_label: "IViewOptions"
 
 • **alwaysNew**? : *boolean*
 
-Defined in src/core/webui/View.ts:23
-
-___
-
-### `Optional` bridge
-
-• **bridge**? : *[BridgeCommunicationMethod](../enums/_core_webui_view_.bridgecommunicationmethod.md)*
-
-Defined in src/core/webui/View.ts:24
-
-___
-
-### `Optional` channel
-
-• **channel**? : *WebSocket*
-
-Defined in src/core/webui/View.ts:25
+Defined in src/core/webui/View.ts:19
 
 ___
 
@@ -54,7 +36,7 @@ ___
 
 • **icon**? : *string*
 
-Defined in src/core/webui/View.ts:22
+Defined in src/core/webui/View.ts:18
 
 ___
 
@@ -62,7 +44,7 @@ ___
 
 • **onReady**? : *function*
 
-Defined in src/core/webui/View.ts:27
+Defined in src/core/webui/View.ts:21
 
 #### Type declaration:
 
@@ -80,7 +62,7 @@ ___
 
 • **preserveFocus**? : *boolean*
 
-Defined in src/core/webui/View.ts:19
+Defined in src/core/webui/View.ts:15
 
 ___
 
@@ -88,7 +70,7 @@ ___
 
 • **title**: *string*
 
-Defined in src/core/webui/View.ts:20
+Defined in src/core/webui/View.ts:16
 
 ___
 
@@ -96,7 +78,7 @@ ___
 
 • **type**: *string*
 
-Defined in src/core/webui/View.ts:21
+Defined in src/core/webui/View.ts:17
 
 ___
 
@@ -104,4 +86,4 @@ ___
 
 • **useCsp**? : *boolean*
 
-Defined in src/core/webui/View.ts:26
+Defined in src/core/webui/View.ts:20

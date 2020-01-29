@@ -30,6 +30,6 @@ sidebar_label: "core/webui/View"
 
 Ƭ **ViewConstructor**: *object*
 
-Defined in src/core/webui/View.ts:30
+Defined in src/core/webui/View.ts:24
 
 #### Type declaration:

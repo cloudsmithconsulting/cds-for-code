@@ -1049,7 +1049,6 @@
 		"opn": "^6.0.0",
 		"typescript-linq": "^1.0.6",
 		"vscode-extension-telemetry": "^0.1.2",
-		"ws": "^7.2.1",
 		"xml2js": "^0.4.23"
 	}
 }

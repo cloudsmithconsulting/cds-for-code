@@ -38,7 +38,7 @@ sidebar_label: "DiscoveryRepository"
 
 \+ **new DiscoveryRepository**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *[DiscoveryRepository](_repositories_discoveryrepository_.discoveryrepository.md)*
 
-Defined in src/repositories/discoveryRepository.ts:8
+Defined in src/repositories/discoveryRepository.ts:9
 
 **Parameters:**
 
@@ -54,7 +54,7 @@ Name | Type |
 
 • **webapi**: *[WebApiClient](_api_cds_webapi_cdswebapi_.cdswebapi.webapiclient.md)*
 
-Defined in src/repositories/discoveryRepository.ts:13
+Defined in src/repositories/discoveryRepository.ts:14
 
 ## Accessors
 
@@ -62,7 +62,7 @@ Defined in src/repositories/discoveryRepository.ts:13
 
 • **get config**(): *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
-Defined in src/repositories/discoveryRepository.ts:15
+Defined in src/repositories/discoveryRepository.ts:16
 
 **Returns:** *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
@@ -72,7 +72,7 @@ Defined in src/repositories/discoveryRepository.ts:15
 
 ▸ **retrieveOrganizations**(`filter?`: string): *Promise‹any›*
 
-Defined in src/repositories/discoveryRepository.ts:19
+Defined in src/repositories/discoveryRepository.ts:20
 
 **Parameters:**
 
@@ -88,7 +88,7 @@ ___
 
 ▸ **createOrganizationConnection**(`org`: any, `connection`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
-Defined in src/repositories/discoveryRepository.ts:69
+Defined in src/repositories/discoveryRepository.ts:70
 
 **Parameters:**
 
@@ -105,7 +105,7 @@ ___
 
 ▸ **getConnections**(`context`: ExtensionContext): *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)[]*
 
-Defined in src/repositories/discoveryRepository.ts:33
+Defined in src/repositories/discoveryRepository.ts:34
 
 **Parameters:**
 
@@ -121,7 +121,7 @@ ___
 
 ▸ **getOrgConnections**(`context`: ExtensionContext, `exactMatchesOnly`: boolean): *Promise‹[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)[]›*
 
-Defined in src/repositories/discoveryRepository.ts:39
+Defined in src/repositories/discoveryRepository.ts:40
 
 **Parameters:**
 
@@ -138,7 +138,7 @@ ___
 
 ▸ **saveConnections**(`context`: ExtensionContext, `connections`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)[]): *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)[]*
 
-Defined in src/repositories/discoveryRepository.ts:63
+Defined in src/repositories/discoveryRepository.ts:64
 
 **Parameters:**
 

@@ -33,7 +33,6 @@ sidebar_label: "View"
 * [_onDidClose](_core_webui_view_.view.md#private-_ondidclose)
 * [_onDidReceiveMessage](_core_webui_view_.view.md#private-_ondidreceivemessage)
 * [_onReady](_core_webui_view_.view.md#private-_onready)
-* [bridge](_core_webui_view_.view.md#bridge)
 * [disposables](_core_webui_view_.view.md#protected-disposables)
 * [onDidClose](_core_webui_view_.view.md#ondidclose)
 * [onDidReceiveMessage](_core_webui_view_.view.md#ondidreceivemessage)
@@ -64,7 +63,7 @@ sidebar_label: "View"
 
 \+ **new View**(`panel`: WebviewPanel, `options`: [IViewOptions](../interfaces/_core_webui_view_.iviewoptions.md)): *[View](_core_webui_view_.view.md)*
 
-Defined in src/core/webui/View.ts:112
+Defined in src/core/webui/View.ts:105
 
 **Parameters:**
 
@@ -81,7 +80,7 @@ Name | Type |
 
 • **_onDidClose**: *EventEmitter‹[View](_core_webui_view_.view.md)›* = new vscode.EventEmitter()
 
-Defined in src/core/webui/View.ts:106
+Defined in src/core/webui/View.ts:99
 
 ___
 
@@ -89,7 +88,7 @@ ___
 
 • **_onDidReceiveMessage**: *EventEmitter‹any›* = new vscode.EventEmitter()
 
-Defined in src/core/webui/View.ts:107
+Defined in src/core/webui/View.ts:100
 
 ___
 
@@ -97,15 +96,7 @@ ___
 
 • **_onReady**: *EventEmitter‹[View](_core_webui_view_.view.md)›* = new vscode.EventEmitter()
 
-Defined in src/core/webui/View.ts:108
-
-___
-
-###  bridge
-
-• **bridge**: *[WebviewBridge](_core_webui_webviewbridge_.webviewbridge.md) | undefined*
-
-Defined in src/core/webui/View.ts:95
+Defined in src/core/webui/View.ts:101
 
 ___
 
@@ -113,7 +104,7 @@ ___
 
 • **disposables**: *Disposable[]* = []
 
-Defined in src/core/webui/View.ts:98
+Defined in src/core/webui/View.ts:91
 
 ___
 
@@ -121,7 +112,7 @@ ___
 
 • **onDidClose**: *Event‹[View](_core_webui_view_.view.md)›* = this._onDidClose.event
 
-Defined in src/core/webui/View.ts:110
+Defined in src/core/webui/View.ts:103
 
 ___
 
@@ -129,7 +120,7 @@ ___
 
 • **onDidReceiveMessage**: *Event‹any›* = this._onDidReceiveMessage.event
 
-Defined in src/core/webui/View.ts:111
+Defined in src/core/webui/View.ts:104
 
 ___
 
@@ -137,7 +128,7 @@ ___
 
 • **onReady**: *Event‹[View](_core_webui_view_.view.md)›* = this._onReady.event
 
-Defined in src/core/webui/View.ts:112
+Defined in src/core/webui/View.ts:105
 
 ___
 
@@ -145,7 +136,7 @@ ___
 
 • **options**: *[IViewOptions](../interfaces/_core_webui_view_.iviewoptions.md)*
 
-Defined in src/core/webui/View.ts:96
+Defined in src/core/webui/View.ts:89
 
 ___
 
@@ -153,7 +144,7 @@ ___
 
 • **panel**: *WebviewPanel*
 
-Defined in src/core/webui/View.ts:104
+Defined in src/core/webui/View.ts:97
 
 ___
 
@@ -161,7 +152,7 @@ ___
 
 • **renderer**: *[ViewRenderer](_core_webui_viewrenderer_.viewrenderer.md)*
 
-Defined in src/core/webui/View.ts:99
+Defined in src/core/webui/View.ts:92
 
 ___
 
@@ -169,7 +160,7 @@ ___
 
 ▪ **openViews**: *object*
 
-Defined in src/core/webui/View.ts:36
+Defined in src/core/webui/View.ts:30
 
 Track the currently panel. Only allow a single panel to exist at a time.
 
@@ -183,7 +174,7 @@ Track the currently panel. Only allow a single panel to exist at a time.
 
 • **get commands**(): *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, Function›*
 
-Defined in src/core/webui/View.ts:102
+Defined in src/core/webui/View.ts:95
 
 **Returns:** *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, Function›*
 
@@ -193,7 +184,7 @@ ___
 
 • **get cspSource**(): *string*
 
-Defined in src/core/webui/View.ts:161
+Defined in src/core/webui/View.ts:148
 
 **Returns:** *string*
 
@@ -203,7 +194,7 @@ Defined in src/core/webui/View.ts:161
 
 ▸ **asWebviewUri**(`localResource`: Uri): *Uri*
 
-Defined in src/core/webui/View.ts:157
+Defined in src/core/webui/View.ts:144
 
 **Parameters:**
 
@@ -219,7 +210,7 @@ ___
 
 ▸ **construct**(`renderer`: [ViewRenderer](_core_webui_viewrenderer_.viewrenderer.md)): *string*
 
-Defined in src/core/webui/View.ts:101
+Defined in src/core/webui/View.ts:94
 
 **Parameters:**
 
@@ -235,7 +226,7 @@ ___
 
 ▸ **dispose**(): *void*
 
-Defined in src/core/webui/View.ts:165
+Defined in src/core/webui/View.ts:152
 
 **Returns:** *void*
 
@@ -245,7 +236,7 @@ ___
 
 ▸ **postMessage**(`message`: any): *Thenable‹boolean›*
 
-Defined in src/core/webui/View.ts:182
+Defined in src/core/webui/View.ts:169
 
 **Parameters:**
 
@@ -261,7 +252,7 @@ ___
 
 ▸ **processSystemMessages**(`message`: any): *boolean*
 
-Defined in src/core/webui/View.ts:186
+Defined in src/core/webui/View.ts:173
 
 **Parameters:**
 
@@ -277,7 +268,7 @@ ___
 
 ▸ **update**(): *void*
 
-Defined in src/core/webui/View.ts:211
+Defined in src/core/webui/View.ts:198
 
 **Returns:** *void*
 
@@ -287,7 +278,7 @@ ___
 
 ▸ **show**<**T**>(`constructor`: [ViewConstructor](../modules/_core_webui_view_.md#viewconstructor)‹T›, `options`: [IViewOptions](../interfaces/_core_webui_view_.iviewoptions.md)): *T*
 
-Defined in src/core/webui/View.ts:38
+Defined in src/core/webui/View.ts:32
 
 **Type parameters:**
 
