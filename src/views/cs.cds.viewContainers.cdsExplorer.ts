@@ -33,6 +33,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 	private _onDidChangeTreeData: vscode.EventEmitter<CdsTreeEntry | undefined> = new vscode.EventEmitter<CdsTreeEntry | undefined>();
     readonly onDidChangeTreeData: vscode.Event<CdsTreeEntry | undefined> = this._onDidChangeTreeData.event;
     private _connections: CdsWebApi.Config[] = [];
+    private _orgConnections: CdsWebApi.Config[] = [];
 
     private static instance: CdsExplorer;
 
@@ -243,6 +244,17 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
      */
     get connections(): CdsWebApi.Config[] {
         return this._connections;
+    }
+
+    /**
+     * Gets an array of connections for individual organizations registered in the CDS explorer instance.
+     *
+     * @readonly
+     * @type {CdsWebApi.Config[]}
+     * @memberof CdsExplorer
+     */
+    get orgConnections(): CdsWebApi.Config[] { 
+        return this._orgConnections;        
     }
 
     /**
@@ -1077,18 +1089,28 @@ class CdsTreeEntry extends vscode.TreeItem {
      */
     get config(): CdsWebApi.Config {
         if (this.configId) {
-            const connection = CdsExplorer.Instance.connections.find(c => c.id === this.configId);
-            const split = this.id.split("/");            
-            
-            if (split.length >= 4 && connection) {
-                const orgEntry = TreeEntryCache.Instance.items.first(i => i.id === split.slice(0, 4).join("/"));
+            const orgConnection = CdsExplorer.Instance.orgConnections.find(c => c.id === this.configId);
 
-                if (orgEntry && orgEntry.context) {
-                    return DiscoveryRepository.createOrganizationConnection(orgEntry.context, connection);
+            if (!orgConnection) {
+                const connection = CdsExplorer.Instance.connections.find(c => c.id === this.configId);
+                const split = this.id.split("/");            
+                
+                if (split.length >= 4 && connection) {
+                    const orgEntry = TreeEntryCache.Instance.items.first(i => i.id === split.slice(0, 4).join("/"));
+    
+                    if (orgEntry && orgEntry.context) {
+                        const returnValue = DiscoveryRepository.createOrganizationConnection(orgEntry.context, connection);
+
+                        CdsExplorer.Instance.orgConnections.push(returnValue);
+
+                        return returnValue;
+                    }
                 }
+    
+                return connection;
+            } else {
+                return orgConnection;
             }
-
-            return connection;
         }
     }
 

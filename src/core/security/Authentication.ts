@@ -206,17 +206,19 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                                 const result: AuthenticationResult = { success: true, response };
 
                                 logger.log(`Auth: Auth code converted to token successfully`);
+                                
+                                credential.accessToken = (<adal.TokenResponse>result.response).accessToken;
+
+                                if (credential.refreshToken && result.response.refreshToken !== decrypted.refreshToken) {
+                                    credential.refreshToken = result.response.refreshToken;
+                                } 
+
+                                credential.isMultiFactorAuthentication = true;
+                                result.credentials = credential;
 
                                 if (credential.onAuthenticate) {
                                     credential.onAuthenticate(result);
-                                } else {
-                                    credential.accessToken = (<adal.TokenResponse>result.response).accessToken;
-                                    credential.refreshToken = (<adal.TokenResponse>result.response).refreshToken;
-                                }
-
-                                credential.isMultiFactorAuthentication = true;
-
-                                result.credentials = credential;
+                                } 
 
                                 res.send(`<html><head><title>Authentication complete</title></head><body><script>window.self.close();</script></body></html>`);
                                 
@@ -257,16 +259,18 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
 
                 logger.log(`Auth: Authentication successful`);
 
+                credential.accessToken = result.response.accessToken;
+
+                if (credential.refreshToken && result.response.refreshToken !== decrypted.refreshToken) {
+                    credential.refreshToken = result.response.refreshToken;
+                } 
+
+                credential.isMultiFactorAuthentication = false;
+                result.credentials = credential;
+
                 if (credential.onAuthenticate) {
                     credential.onAuthenticate(result);
-                } else {
-                    credential.accessToken = result.response.accessToken;
-                    credential.refreshToken = result.response.refreshToken;
-                }
-                
-                credential.isMultiFactorAuthentication = false;
-
-                result.credentials = credential;
+                } 
 
                 if (credential.storeKey) {
                     GlobalStateCredentialStore.Instance.store(credential, credential.storeKey, [ "accessToken", "isMultiFactorAuthentication", "resource" ]);
