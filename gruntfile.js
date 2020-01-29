@@ -259,6 +259,12 @@ module.exports = function (grunt) {
                 cwd: 'resources/powershell',
                 src: '**',
                 dest: 'dist/scripts'
+            },
+            doc_scripts: {
+                expand: true,
+                cwd: 'website',
+                src: '**',
+                dest: 'docs/website'
             }
         },
 
@@ -322,6 +328,9 @@ module.exports = function (grunt) {
             },
             temp_js: {
                 src: ['out/temp/**/materialize*.*']
+            },
+            doc_scripts: {
+                src: ['website/**']
             }
         },
 
@@ -557,7 +566,7 @@ module.exports = function (grunt) {
         grunt.file.write('dist/manifest.json', JSON.stringify(manifest));
     });
 
-    grunt.registerTask('docs_compile', [ 'shell:typedoc_markdown', 'notify:docs_compile' ]);
+    grunt.registerTask('docs_compile', [ 'shell:typedoc_markdown', 'copy:doc_scripts', 'clean:doc_scripts', 'notify:docs_compile' ]);
     grunt.registerTask('js_compile', [ 'concat:dev', 'configureBabel', 'babel:dev', 'uglify:dev', 'clean:temp_js', 'notify:js_compile' ]);
     grunt.registerTask('sass_compile', [ 'sass:dev', 'sass:release', 'sass:release_min', 'postcss:dev', 'notify:sass_compile' ]);
 
