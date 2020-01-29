@@ -10,6 +10,7 @@ import { CdsWebApi } from "../CdsWebApi";
 import { Credential, OAuthCredential } from '../../../core/security/Types';
 import Quickly from '../../../core/Quickly';
 import { isatty } from 'tty';
+import logger from '../../../core/framework/Logger';
 
 let _entityNames;
 
@@ -247,6 +248,7 @@ export function sendRequest(
 
         // Who fucking knows?  If you put this on line 263 typescript won't compile it.  Stupid lambdas.
         const removeToken = () => {
+            logger.log(`OAuth: removing existing token and attempting re-authentication flow.`);
             const returnValue = authRetry(config);
 
             if (returnValue) {

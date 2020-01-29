@@ -164,8 +164,8 @@ export default function nodeJsRequest(options: any) {
                     response.on('end', () => {
                         requestEndTime = moment.now();
 
-                        if (response.statusCode === 401 && authRetry()) {
-                            logger.log("Auth: HTTP 401 received");
+                        if (response.statusCode === 401 && authRetry && authRetry()) {
+                            logger.log("OAuth: HTTP 401 received");
                         } else if (responseDelegate) {
                             logger.log(`HTTP ${response.statusCode} received: ${internalOptions.method.toUpperCase()} ${parsedUrl.href} (out: ${data ? data.length : 0}b, in: ${rawData ? rawData.length : 0}b, time: ${requestEndTime - requestStartTime}ms)`);
 
