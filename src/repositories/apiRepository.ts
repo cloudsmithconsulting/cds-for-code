@@ -49,7 +49,7 @@ export default class ApiRepository {
         return await this.webapi.executeUnboundFunction('WhoAmI');
     }
 
-    retrieveSolution(solutionId:string) : Promise<any[]> {
+    retrieveSolution(solutionId:string) : Promise<any> {
         return this.webapi.retrieveRequest({ 
             collection: "solutions", 
             id: solutionId,

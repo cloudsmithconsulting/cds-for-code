@@ -20,7 +20,7 @@ sidebar_label: "BridgeCommunicationMethod"
 
 • **Ipc**:
 
-Defined in src/core/webui/View.ts:14
+Defined in src/core/webui/View.ts:10
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 • **None**:
 
-Defined in src/core/webui/View.ts:13
+Defined in src/core/webui/View.ts:9
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 • **WebSockets**:
 
-Defined in src/core/webui/View.ts:15
+Defined in src/core/webui/View.ts:11

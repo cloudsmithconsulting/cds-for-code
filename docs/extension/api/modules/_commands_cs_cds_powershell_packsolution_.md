@@ -18,7 +18,7 @@ sidebar_label: "commands/cs.cds.powerShell.packSolution"
 
 ▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `solution?`: any, `toolsPath?`: string, `logFile?`: string, `mappingFile?`: string, `includeResourceFiles?`: boolean, `solutionPath?`: string, `managed?`: boolean): *Promise‹void›*
 
-Defined in src/commands/cs.cds.powerShell.packSolution.ts:22
+Defined in src/commands/cs.cds.powerShell.packSolution.ts:23
 
 This command can be invoked by the Command Palette and packs a solution.
 

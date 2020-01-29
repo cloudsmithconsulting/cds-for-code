@@ -49,7 +49,7 @@ export default async function run(config?:CdsWebApi.Config, solutionId?:string, 
 
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
-		logger.warn("Configuration not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.deployment.createWebResource} Configuration not chosen, command cancelled`);
 		return; 
 	}
 
@@ -101,18 +101,24 @@ export default async function run(config?:CdsWebApi.Config, solutionId?:string, 
 
     webResource.name = webResource.name || await Quickly.ask("What is the name (including path and extension) of your web resource?", defaultName || requiredPrefix, defaultName || requiredPrefix);
     
-    if (!webResource.name) { return; } // user cancelled
+    if (!webResource.name) { 
+		logger.warn(`Command: ${cs.cds.deployment.createWebResource} Web resource name not chosen, command cancelled`);
+        return; 
+    } 
 
     // check the required prefix as long as we need to
     while (requiredPrefix && !webResource.name.startsWith(requiredPrefix)) {
-        Quickly.error(`Web resource names are required to begin "${requiredPrefix}"`);
+        Quickly.error(`Web resource names are required to begin with "${requiredPrefix}"`);
         // lets do this again shall we?
         webResource.name = await Quickly.ask("What is the name (including path and extension) of your web resource?", defaultName || requiredPrefix, defaultName || requiredPrefix);
         // if they hit esc, end the ever lasting loop
-        if (!webResource.name) { return; } // user cancelled
+        if (!webResource.name) {
+            logger.warn(`Command: ${cs.cds.deployment.createWebResource} Web resource name not chosen, command cancelled`);
+            return; 
+        } 
     }
 
-    logger.info(`Web Resource Name: ${webResource.name}`);
+    logger.info(`Command: ${cs.cds.deployment.createWebResource} Web Resource Name: ${webResource.name}`);
 
     if (webResource.name && (<string>webResource.name).indexOf(".") > -1) {
         defaultType = defaultType || this.getWebResourceType(path.extname(webResource.name));
@@ -131,7 +137,7 @@ export default async function run(config?:CdsWebApi.Config, solutionId?:string, 
     if (!fsPath) {
         fsPath = await Quickly.pickWorkspaceFolder(map && map.path ? vscode.Uri.file(map.path) : undefined, "Where would you like to save this web resource?");
         if (!fsPath) { 
-            logger.warn("Filesystem path not chosen, command cancelled");
+            logger.warn(`Command: ${cs.cds.deployment.createWebResource} Filesystem path not chosen, command cancelled`);
             return; 
         }
 
@@ -164,7 +170,7 @@ export default async function run(config?:CdsWebApi.Config, solutionId?:string, 
 
     try {
         if (solution && map) {
-            logger.info(`Web Resource: ${webResource.name} is mapped to solution ${solution.uniquename}`);
+            logger.info(`Command: ${cs.cds.deployment.createWebResource} Web Resource: ${webResource.name} is mapped to solution ${solution.uniquename}`);
 
             // We are pretty sure adding root nodes to customizations.xml is only required in 9.1+
             const version = config.webApiVersion.split(".");
@@ -177,7 +183,7 @@ export default async function run(config?:CdsWebApi.Config, solutionId?:string, 
                 await Quickly.inform(`The web resource '${webResource.name}' was saved to the local workspace.`);
             }
         } else {
-            logger.info(`Web Resource: ${webResource.name} is not mapped to a solution.  Creating on server.`);
+            logger.info(`Command: ${cs.cds.deployment.createWebResource} Web Resource: ${webResource.name} is not mapped to a solution.  Creating web resource on ${config.appUrl}.`);
 
             webResource = await this.upsertWebResource(config, webResource, solution);
 
@@ -188,7 +194,7 @@ export default async function run(config?:CdsWebApi.Config, solutionId?:string, 
 
         return { webResource, fsPath };
     } catch (error) {
-        logger.error(`Error saving web resource: ${error.message}`);
+        logger.error(`Command: ${cs.cds.deployment.createWebResource} Error saving web resource: ${error.message}`);
         
         await Quickly.error(`There was an error when saving the web resource.  The error returned was: ${error.toString()}`, undefined, "Try Again", () => vscode.commands.executeCommand(cs.cds.deployment.createWebResource, config, undefined, fileUri));
     }

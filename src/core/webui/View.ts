@@ -1,10 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as _ from 'lodash';
-import * as WebSocket from "ws";
-import WebviewBridge from './WebviewBridge';
-import { LocalBridge } from './LocalBridge';
-import { WebSocketBridge } from './WebSocketBridge';
 import { ViewRenderer } from './ViewRenderer';
 import ExtensionContext from '../ExtensionContext';
 import Dictionary from '../types/Dictionary';
@@ -21,8 +17,6 @@ export interface IViewOptions {
 	type: string;
 	icon?: string;
 	alwaysNew?: boolean;
-	bridge?: BridgeCommunicationMethod;
-	channel?: WebSocket;
 	useCsp?: boolean;
 	onReady?: (view: any) => void;
 }
@@ -92,7 +86,6 @@ export abstract class View {
 		return result;
 	}
 
-	readonly bridge: WebviewBridge | undefined;
 	readonly options: IViewOptions;
 
 	protected disposables: vscode.Disposable[] = [];
@@ -115,12 +108,6 @@ export abstract class View {
 		this.options = options;
 		this.panel = panel;
 		this.renderer = new ViewRenderer(this);
-
-		if (this.options.bridge && this.options.bridge === BridgeCommunicationMethod.Ipc) {
-			this.bridge = new LocalBridge(this.panel.webview);
-		} else if (this.options.bridge && this.options.bridge === BridgeCommunicationMethod.WebSockets && this.options.channel) {
-			this.bridge = new WebSocketBridge(this.options.channel);
-		}
 
 		// Set the webview's initial html content
 		this.update();

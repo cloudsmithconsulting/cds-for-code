@@ -98,7 +98,6 @@ export class ViewRenderer {
     render(htmlParial: string, useCsp?: boolean): string {
 		// add some default scripts
 		this.insertScriptAt(0, 'main.js');
-		this.insertScriptAt(0, "cs.vscode.webviews.js");
     
         // these are framework scripts hosted out of node_modules
 		this.insertFrameworkScript('lodash/lodash.min.js');

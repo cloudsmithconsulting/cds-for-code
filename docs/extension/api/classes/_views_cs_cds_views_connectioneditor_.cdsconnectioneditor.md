@@ -20,7 +20,6 @@ sidebar_label: "CdsConnectionEditor"
 
 ### Properties
 
-* [bridge](_views_cs_cds_views_connectioneditor_.cdsconnectioneditor.md#bridge)
 * [disposables](_views_cs_cds_views_connectioneditor_.cdsconnectioneditor.md#protected-disposables)
 * [onDidClose](_views_cs_cds_views_connectioneditor_.cdsconnectioneditor.md#ondidclose)
 * [onDidReceiveMessage](_views_cs_cds_views_connectioneditor_.cdsconnectioneditor.md#ondidreceivemessage)
@@ -54,7 +53,7 @@ sidebar_label: "CdsConnectionEditor"
 
 *Inherited from [View](_core_webui_view_.view.md).[constructor](_core_webui_view_.view.md#constructor)*
 
-Defined in src/core/webui/View.ts:112
+Defined in src/core/webui/View.ts:105
 
 **Parameters:**
 
@@ -67,23 +66,13 @@ Name | Type |
 
 ## Properties
 
-###  bridge
-
-• **bridge**: *[WebviewBridge](_core_webui_webviewbridge_.webviewbridge.md) | undefined*
-
-*Inherited from [View](_core_webui_view_.view.md).[bridge](_core_webui_view_.view.md#bridge)*
-
-Defined in src/core/webui/View.ts:95
-
-___
-
 ### `Protected` disposables
 
 • **disposables**: *Disposable[]* = []
 
 *Inherited from [View](_core_webui_view_.view.md).[disposables](_core_webui_view_.view.md#protected-disposables)*
 
-Defined in src/core/webui/View.ts:98
+Defined in src/core/webui/View.ts:91
 
 ___
 
@@ -93,7 +82,7 @@ ___
 
 *Inherited from [View](_core_webui_view_.view.md).[onDidClose](_core_webui_view_.view.md#ondidclose)*
 
-Defined in src/core/webui/View.ts:110
+Defined in src/core/webui/View.ts:103
 
 ___
 
@@ -103,7 +92,7 @@ ___
 
 *Inherited from [View](_core_webui_view_.view.md).[onDidReceiveMessage](_core_webui_view_.view.md#ondidreceivemessage)*
 
-Defined in src/core/webui/View.ts:111
+Defined in src/core/webui/View.ts:104
 
 ___
 
@@ -113,7 +102,7 @@ ___
 
 *Inherited from [View](_core_webui_view_.view.md).[onReady](_core_webui_view_.view.md#onready)*
 
-Defined in src/core/webui/View.ts:112
+Defined in src/core/webui/View.ts:105
 
 ___
 
@@ -123,7 +112,7 @@ ___
 
 *Inherited from [View](_core_webui_view_.view.md).[options](_core_webui_view_.view.md#options)*
 
-Defined in src/core/webui/View.ts:96
+Defined in src/core/webui/View.ts:89
 
 ___
 
@@ -133,7 +122,7 @@ ___
 
 *Inherited from [View](_core_webui_view_.view.md).[renderer](_core_webui_view_.view.md#protected-renderer)*
 
-Defined in src/core/webui/View.ts:99
+Defined in src/core/webui/View.ts:92
 
 ___
 
@@ -143,7 +132,7 @@ ___
 
 *Inherited from [View](_core_webui_view_.view.md).[openViews](_core_webui_view_.view.md#static-openviews)*
 
-Defined in src/core/webui/View.ts:36
+Defined in src/core/webui/View.ts:30
 
 Track the currently panel. Only allow a single panel to exist at a time.
 
@@ -159,7 +148,7 @@ Track the currently panel. Only allow a single panel to exist at a time.
 
 *Overrides [View](_core_webui_view_.view.md).[commands](_core_webui_view_.view.md#commands)*
 
-Defined in src/views/cs.cds.views.connectionEditor.ts:43
+Defined in src/views/cs.cds.views.connectionEditor.ts:42
 
 **Returns:** *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, Function›*
 
@@ -171,7 +160,7 @@ ___
 
 *Inherited from [View](_core_webui_view_.view.md).[cspSource](_core_webui_view_.view.md#cspsource)*
 
-Defined in src/core/webui/View.ts:161
+Defined in src/core/webui/View.ts:148
 
 **Returns:** *string*
 
@@ -183,7 +172,7 @@ Defined in src/core/webui/View.ts:161
 
 *Inherited from [View](_core_webui_view_.view.md).[asWebviewUri](_core_webui_view_.view.md#aswebviewuri)*
 
-Defined in src/core/webui/View.ts:157
+Defined in src/core/webui/View.ts:144
 
 **Parameters:**
 
@@ -201,7 +190,7 @@ ___
 
 *Overrides [View](_core_webui_view_.view.md).[construct](_core_webui_view_.view.md#abstract-construct)*
 
-Defined in src/views/cs.cds.views.connectionEditor.ts:28
+Defined in src/views/cs.cds.views.connectionEditor.ts:27
 
 **Parameters:**
 
@@ -219,7 +208,7 @@ ___
 
 *Inherited from [View](_core_webui_view_.view.md).[dispose](_core_webui_view_.view.md#dispose)*
 
-Defined in src/core/webui/View.ts:165
+Defined in src/core/webui/View.ts:152
 
 **Returns:** *void*
 
@@ -229,7 +218,7 @@ ___
 
 ▸ **editPassword**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.connectionEditor.ts:52
+Defined in src/views/cs.cds.views.connectionEditor.ts:51
 
 **Parameters:**
 
@@ -245,7 +234,7 @@ ___
 
 ▸ **parseConnectionString**(`connectionString`: string): *void*
 
-Defined in src/views/cs.cds.views.connectionEditor.ts:65
+Defined in src/views/cs.cds.views.connectionEditor.ts:64
 
 **Parameters:**
 
@@ -263,7 +252,7 @@ ___
 
 *Inherited from [View](_core_webui_view_.view.md).[postMessage](_core_webui_view_.view.md#postmessage)*
 
-Defined in src/core/webui/View.ts:182
+Defined in src/core/webui/View.ts:169
 
 **Parameters:**
 
@@ -279,7 +268,7 @@ ___
 
 ▸ **save**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `discoverOnly`: boolean): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.connectionEditor.ts:76
+Defined in src/views/cs.cds.views.connectionEditor.ts:75
 
 **Parameters:**
 
@@ -296,7 +285,7 @@ ___
 
 ▸ **setInitialState**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *void*
 
-Defined in src/views/cs.cds.views.connectionEditor.ts:153
+Defined in src/views/cs.cds.views.connectionEditor.ts:152
 
 **Parameters:**
 
@@ -314,7 +303,7 @@ ___
 
 *Inherited from [View](_core_webui_view_.view.md).[show](_core_webui_view_.view.md#static-show)*
 
-Defined in src/core/webui/View.ts:38
+Defined in src/core/webui/View.ts:32
 
 **Type parameters:**
 
