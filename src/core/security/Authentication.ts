@@ -127,7 +127,7 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                 const exception = ErrorParser.parseAdalError(error);
 
                 if (exception.type === 'interaction_required') {
-                    logger.log(`Auth: Multi-factor authentication (MFA) required, starting browser request`);
+                    logger.log(`OAuth: Multi-factor authentication (MFA) required, starting browser request`);
 
                     Quickly.inform("Your credentials use multi-factor authentication.  You will need to authenticate interactively.");
 
@@ -188,7 +188,7 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                             res.send('error: state does not match');
                         }
 
-                        logger.log(`Auth: Multi-factor authentication (MFA) completed and authorization code received`);
+                        logger.log(`OAuth: Multi-factor authentication (MFA) completed and authorization code received`);
 
                         context.acquireTokenWithAuthorizationCode(req.query.code, redirectUri, resource, clientId, null, (err, response) => {
                             if (err) {
@@ -205,18 +205,20 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
                             else {
                                 const result: AuthenticationResult = { success: true, response };
 
-                                logger.log(`Auth: Auth code converted to token successfully`);
+                                logger.log(`OAuth: Auth code converted to token successfully`);
+                                
+                                credential.accessToken = (<adal.TokenResponse>result.response).accessToken;
+
+                                if (credential.refreshToken && result.response.refreshToken !== decrypted.refreshToken) {
+                                    credential.refreshToken = result.response.refreshToken;
+                                } 
+
+                                credential.isMultiFactorAuthentication = true;
+                                result.credentials = credential;
 
                                 if (credential.onAuthenticate) {
                                     credential.onAuthenticate(result);
-                                } else {
-                                    credential.accessToken = (<adal.TokenResponse>result.response).accessToken;
-                                    credential.refreshToken = (<adal.TokenResponse>result.response).refreshToken;
-                                }
-
-                                credential.isMultiFactorAuthentication = true;
-
-                                result.credentials = credential;
+                                } 
 
                                 res.send(`<html><head><title>Authentication complete</title></head><body><script>window.self.close();</script></body></html>`);
                                 
@@ -255,18 +257,20 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
             else {
                 const result: AuthenticationResult = { success: true, response };
 
-                logger.log(`Auth: Authentication successful`);
+                logger.log(`OAuth: Authentication successful`);
+
+                credential.accessToken = result.response.accessToken;
+
+                if (credential.refreshToken && result.response.refreshToken !== decrypted.refreshToken) {
+                    credential.refreshToken = result.response.refreshToken;
+                } 
+
+                credential.isMultiFactorAuthentication = false;
+                result.credentials = credential;
 
                 if (credential.onAuthenticate) {
                     credential.onAuthenticate(result);
-                } else {
-                    credential.accessToken = result.response.accessToken;
-                    credential.refreshToken = result.response.refreshToken;
-                }
-                
-                credential.isMultiFactorAuthentication = false;
-
-                result.credentials = credential;
+                } 
 
                 if (credential.storeKey) {
                     GlobalStateCredentialStore.Instance.store(credential, credential.storeKey, [ "accessToken", "isMultiFactorAuthentication", "resource" ]);
@@ -279,11 +283,11 @@ async function performAdalAuthentication(authority: string, tenant: string, clie
         let refreshToken = decrypted.refreshToken ? decrypted.refreshToken.toString() : undefined;
         
         if (refreshToken) {
-            logger.log(`Auth: Refresh token found, invoking call to acquire auth token`);
+            logger.log(`OAuth: Refresh token found, invoking call to acquire auth token`);
             // If this errors, re-attempt this with username/password, as our refresh token has expired.
             context.acquireTokenWithRefreshToken(refreshToken, clientId, resource, callback);
         } else {
-            logger.log(`Auth: No refresh token found, invoking authentication with username/password`);
+            logger.log(`OAuth: No refresh token found, invoking authentication with username/password`);
 
             context.acquireTokenWithUsernamePassword(resource, decrypted.username.toString(), decrypted.password.toString(), clientId, callback);
         }

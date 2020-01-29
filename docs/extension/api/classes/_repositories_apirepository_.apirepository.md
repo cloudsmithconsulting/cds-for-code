@@ -30,7 +30,10 @@ sidebar_label: "ApiRepository"
 * [addSolutionComponent](_repositories_apirepository_.apirepository.md#addsolutioncomponent)
 * [createProcess](_repositories_apirepository_.apirepository.md#createprocess)
 * [createProcessFromTemplate](_repositories_apirepository_.apirepository.md#createprocessfromtemplate)
+* [exportSolution](_repositories_apirepository_.apirepository.md#exportsolution)
 * [getSolutionComponent](_repositories_apirepository_.apirepository.md#getsolutioncomponent)
+* [getSolutionImportStatus](_repositories_apirepository_.apirepository.md#getsolutionimportstatus)
+* [importSolution](_repositories_apirepository_.apirepository.md#importsolution)
 * [publishAllXml](_repositories_apirepository_.apirepository.md#publishallxml)
 * [publishXml](_repositories_apirepository_.apirepository.md#publishxml)
 * [removePluginStep](_repositories_apirepository_.apirepository.md#removepluginstep)
@@ -68,7 +71,7 @@ sidebar_label: "ApiRepository"
 
 \+ **new ApiRepository**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *[ApiRepository](_repositories_apirepository_.apirepository.md)*
 
-Defined in src/repositories/apiRepository.ts:13
+Defined in src/repositories/apiRepository.ts:15
 
 **Parameters:**
 
@@ -84,7 +87,7 @@ Name | Type |
 
 • **webapi**: *[WebApiClient](_api_cds_webapi_cdswebapi_.cdswebapi.webapiclient.md)*
 
-Defined in src/repositories/apiRepository.ts:18
+Defined in src/repositories/apiRepository.ts:20
 
 ___
 
@@ -104,7 +107,7 @@ ___
         { key: 'solutioncomponents', value: [ 'solutioncomponentid', 'componenttype', 'objectid' ] }
     ])
 
-Defined in src/repositories/apiRepository.ts:24
+Defined in src/repositories/apiRepository.ts:26
 
 ## Accessors
 
@@ -112,7 +115,7 @@ Defined in src/repositories/apiRepository.ts:24
 
 • **get config**(): *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
-Defined in src/repositories/apiRepository.ts:20
+Defined in src/repositories/apiRepository.ts:22
 
 **Returns:** *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
@@ -122,7 +125,7 @@ Defined in src/repositories/apiRepository.ts:20
 
 ▸ **addSolutionComponent**(`solution`: any, `componentId`: string, `componentType`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md), `addRequiredComponents`: boolean, `doNotIncludeSubcomponents`: boolean, `componentSettings?`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:612
+Defined in src/repositories/apiRepository.ts:614
 
 **Parameters:**
 
@@ -143,7 +146,7 @@ ___
 
 ▸ **createProcess**(`workflow`: any): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:277
+Defined in src/repositories/apiRepository.ts:279
 
 **Parameters:**
 
@@ -159,7 +162,7 @@ ___
 
 ▸ **createProcessFromTemplate**(`processTemplateId`: string, `name`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:281
+Defined in src/repositories/apiRepository.ts:283
 
 **Parameters:**
 
@@ -172,11 +175,27 @@ Name | Type |
 
 ___
 
+###  exportSolution
+
+▸ **exportSolution**(`options`: [ExportSolutionOptions](../modules/_commands_cs_cds_deployment_exportsolution_.md#exportsolutionoptions)): *Promise‹Buffer›*
+
+Defined in src/repositories/apiRepository.ts:701
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`options` | [ExportSolutionOptions](../modules/_commands_cs_cds_deployment_exportsolution_.md#exportsolutionoptions) |
+
+**Returns:** *Promise‹Buffer›*
+
+___
+
 ###  getSolutionComponent
 
 ▸ **getSolutionComponent**(`componentId`: string, `componentType`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md), `select`: string[]): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:626
+Defined in src/repositories/apiRepository.ts:628
 
 **Parameters:**
 
@@ -190,11 +209,44 @@ Name | Type | Default |
 
 ___
 
+###  getSolutionImportStatus
+
+▸ **getSolutionImportStatus**(`importJobId`: string): *Promise‹any›*
+
+Defined in src/repositories/apiRepository.ts:697
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`importJobId` | string |
+
+**Returns:** *Promise‹any›*
+
+___
+
+###  importSolution
+
+▸ **importSolution**(`customizations`: Buffer, `options`: [ImportSolutionOptions](../modules/_commands_cs_cds_deployment_importsolution_.md#importsolutionoptions)): *Promise‹string›*
+
+Defined in src/repositories/apiRepository.ts:681
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`customizations` | Buffer |
+`options` | [ImportSolutionOptions](../modules/_commands_cs_cds_deployment_importsolution_.md#importsolutionoptions) |
+
+**Returns:** *Promise‹string›*
+
+___
+
 ###  publishAllXml
 
 ▸ **publishAllXml**(): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:42
+Defined in src/repositories/apiRepository.ts:44
 
 **Returns:** *Promise‹any›*
 
@@ -204,7 +256,7 @@ ___
 
 ▸ **publishXml**(`xml`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:38
+Defined in src/repositories/apiRepository.ts:40
 
 **Parameters:**
 
@@ -220,7 +272,7 @@ ___
 
 ▸ **removePluginStep**(`step`: any): *Promise‹boolean›*
 
-Defined in src/repositories/apiRepository.ts:637
+Defined in src/repositories/apiRepository.ts:639
 
 **Parameters:**
 
@@ -236,7 +288,7 @@ ___
 
 ▸ **removePluginStepImage**(`stepImage`: any): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:653
+Defined in src/repositories/apiRepository.ts:655
 
 **Parameters:**
 
@@ -252,7 +304,7 @@ ___
 
 ▸ **removeSolutionComponent**(`solution`: any, `componentId`: string, `componentType`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md)): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:660
+Defined in src/repositories/apiRepository.ts:662
 
 **Parameters:**
 
@@ -270,7 +322,7 @@ ___
 
 ▸ **retrieveApplications**(`solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:70
+Defined in src/repositories/apiRepository.ts:72
 
 **Parameters:**
 
@@ -287,7 +339,7 @@ ___
 
 ▸ **retrieveBuiltInSolution**(`builtInType`: "System" | "Active" | "Default", `select`: string[]): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:58
+Defined in src/repositories/apiRepository.ts:60
 
 **Parameters:**
 
@@ -304,7 +356,7 @@ ___
 
 ▸ **retrieveEntityTypeCodes**(): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:362
+Defined in src/repositories/apiRepository.ts:364
 
 **Returns:** *Promise‹any[]›*
 
@@ -314,7 +366,7 @@ ___
 
 ▸ **retrievePluginAssemblies**(`solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:304
+Defined in src/repositories/apiRepository.ts:306
 
 **Parameters:**
 
@@ -331,7 +383,7 @@ ___
 
 ▸ **retrievePluginStep**(`sdkmessageprocessingstepid`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:397
+Defined in src/repositories/apiRepository.ts:399
 
 **Parameters:**
 
@@ -347,7 +399,7 @@ ___
 
 ▸ **retrievePluginStepImages**(`pluginStepId`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:440
+Defined in src/repositories/apiRepository.ts:442
 
 **Parameters:**
 
@@ -363,7 +415,7 @@ ___
 
 ▸ **retrievePluginSteps**(`pluginTypeId`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:413
+Defined in src/repositories/apiRepository.ts:415
 
 **Parameters:**
 
@@ -379,7 +431,7 @@ ___
 
 ▸ **retrievePluginTypes**(`pluginAssemblyId`: string, `select`: string[]): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:318
+Defined in src/repositories/apiRepository.ts:320
 
 **Parameters:**
 
@@ -396,7 +448,7 @@ ___
 
 ▸ **retrieveProcessTemplates**(`processType`: [ProcessType](../enums/_api_cdssolutions_.cdssolutions.processtype.md), `entityName`: string, `solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:146
+Defined in src/repositories/apiRepository.ts:148
 
 **Parameters:**
 
@@ -415,7 +467,7 @@ ___
 
 ▸ **retrieveProcesses**(`entityName?`: string, `solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:114
+Defined in src/repositories/apiRepository.ts:116
 
 **Parameters:**
 
@@ -433,7 +485,7 @@ ___
 
 ▸ **retrieveSdkMessageDetails**(`sdkMessageId`: string): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:388
+Defined in src/repositories/apiRepository.ts:390
 
 **Parameters:**
 
@@ -449,7 +501,7 @@ ___
 
 ▸ **retrieveSdkMessageFilters**(`select`: string[]): *Promise‹unknown[]›*
 
-Defined in src/repositories/apiRepository.ts:378
+Defined in src/repositories/apiRepository.ts:380
 
 **Parameters:**
 
@@ -465,7 +517,7 @@ ___
 
 ▸ **retrieveSdkMessages**(`select`: string[]): *Promise‹unknown[]›*
 
-Defined in src/repositories/apiRepository.ts:368
+Defined in src/repositories/apiRepository.ts:370
 
 **Parameters:**
 
@@ -481,7 +533,7 @@ ___
 
 ▸ **retrieveSolution**(`solutionId`: string): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:50
+Defined in src/repositories/apiRepository.ts:52
 
 **Parameters:**
 
@@ -497,7 +549,7 @@ ___
 
 ▸ **retrieveSolutions**(`select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:97
+Defined in src/repositories/apiRepository.ts:99
 
 **Parameters:**
 
@@ -513,7 +565,7 @@ ___
 
 ▸ **retrieveSystemUsers**(`select`: string[]): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:455
+Defined in src/repositories/apiRepository.ts:457
 
 **Parameters:**
 
@@ -529,7 +581,7 @@ ___
 
 ▸ **retrieveWebResource**(`webResourceId`: string, `throwIfEmpty`: boolean): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:268
+Defined in src/repositories/apiRepository.ts:270
 
 **Parameters:**
 
@@ -546,7 +598,7 @@ ___
 
 ▸ **retrieveWebResourceFolders**(`solutionId?`: string, `folder?`: string, `customizableOnly`: boolean): *Promise‹string[]›*
 
-Defined in src/repositories/apiRepository.ts:178
+Defined in src/repositories/apiRepository.ts:180
 
 **Parameters:**
 
@@ -564,7 +616,7 @@ ___
 
 ▸ **retrieveWebResources**(`solutionId?`: string, `folder?`: string, `customizableOnly`: boolean, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/apiRepository.ts:214
+Defined in src/repositories/apiRepository.ts:216
 
 **Parameters:**
 
@@ -583,7 +635,7 @@ ___
 
 ▸ **uploadPluginAssembly**(`assemblyUri`: Uri, `pluginAssemblyId?`: string, `isSandboxed`: boolean): *Thenable‹any›*
 
-Defined in src/repositories/apiRepository.ts:467
+Defined in src/repositories/apiRepository.ts:469
 
 **Parameters:**
 
@@ -601,7 +653,7 @@ ___
 
 ▸ **upsertPluginStep**(`step`: any): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:515
+Defined in src/repositories/apiRepository.ts:517
 
 **Parameters:**
 
@@ -617,7 +669,7 @@ ___
 
 ▸ **upsertPluginStepImage**(`stepImage`: any): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:584
+Defined in src/repositories/apiRepository.ts:586
 
 **Parameters:**
 
@@ -633,7 +685,7 @@ ___
 
 ▸ **upsertPluginType**(`pluginAssemblyId`: string, `typeName`: string, `name`: string, `friendlyName`: string, `description?`: string): *Promise‹void›*
 
-Defined in src/repositories/apiRepository.ts:335
+Defined in src/repositories/apiRepository.ts:337
 
 **Parameters:**
 
@@ -653,7 +705,7 @@ ___
 
 ▸ **upsertWebResource**(`webResource`: any): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:288
+Defined in src/repositories/apiRepository.ts:290
 
 **Parameters:**
 
@@ -669,6 +721,6 @@ ___
 
 ▸ **whoAmI**(): *Promise‹any›*
 
-Defined in src/repositories/apiRepository.ts:46
+Defined in src/repositories/apiRepository.ts:48
 
 **Returns:** *Promise‹any›*

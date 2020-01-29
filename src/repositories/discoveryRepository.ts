@@ -4,6 +4,7 @@ import { Utilities } from '../core/Utilities';
 import GlobalState from '../components/Configuration/GlobalState';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import Quickly from '../core/Quickly';
+import * as Security from '../core/security/Types';
 
 export default class DiscoveryRepository {
     constructor (config:CdsWebApi.Config) {
@@ -86,7 +87,15 @@ export default class DiscoveryRepository {
         orgConnection.orgName = org.UniqueName || org.Name;
         orgConnection.orgId = org.Id;
         orgConnection.environmentId = org.EnvironmentId;
+        orgConnection.credentials = Security.Credential.from(connection.credentials);
 
+        if (Security.OAuthCredential.requireToken(orgConnection.credentials)) {
+            (<Security.OAuthCredential>orgConnection.credentials).onDidAuthenticate(e => {
+                if (e.success) {
+                    orgConnection.credentials = e.credentials;
+                }
+            });
+        }
         return orgConnection;
     }
 }

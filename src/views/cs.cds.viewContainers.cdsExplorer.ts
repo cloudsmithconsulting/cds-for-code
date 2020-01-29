@@ -33,6 +33,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 	private _onDidChangeTreeData: vscode.EventEmitter<CdsTreeEntry | undefined> = new vscode.EventEmitter<CdsTreeEntry | undefined>();
     readonly onDidChangeTreeData: vscode.Event<CdsTreeEntry | undefined> = this._onDidChangeTreeData.event;
     private _connections: CdsWebApi.Config[] = [];
+    private _orgConnections: CdsWebApi.Config[] = [];
 
     private static instance: CdsExplorer;
 
@@ -246,6 +247,17 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     }
 
     /**
+     * Gets an array of connections for individual organizations registered in the CDS explorer instance.
+     *
+     * @readonly
+     * @type {CdsWebApi.Config[]}
+     * @memberof CdsExplorer
+     */
+    get orgConnections(): CdsWebApi.Config[] { 
+        return this._orgConnections;        
+    }
+
+    /**
      * Runs when the extension is loaded and registers the TreeView data provider.
      *
      * @param {vscode.ExtensionContext} context
@@ -407,10 +419,10 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         }
     }
 
-    removeConnection(connection: CdsWebApi.Config): void { 
+    async removeConnection(connection: CdsWebApi.Config): Promise<void> { 
         const removeIndex = this._connections.findIndex(c => c.webApiUrl === connection.webApiUrl);
         
-        if (removeIndex >= 0) {
+        if (removeIndex >= 0 && (await Quickly.pickBoolean(`Are you sure you want to remove the connection named '${this._connections[removeIndex].name}'?`, 'Yes', 'No'))) {
             this._connections.splice(removeIndex, 1);
             DiscoveryRepository.saveConnections(ExtensionContext.Instance, this._connections);
             this.refresh();
@@ -1077,18 +1089,28 @@ class CdsTreeEntry extends vscode.TreeItem {
      */
     get config(): CdsWebApi.Config {
         if (this.configId) {
-            const connection = CdsExplorer.Instance.connections.find(c => c.id === this.configId);
-            const split = this.id.split("/");            
-            
-            if (split.length >= 4 && connection) {
-                const orgEntry = TreeEntryCache.Instance.items.first(i => i.id === split.slice(0, 4).join("/"));
+            const orgConnection = CdsExplorer.Instance.orgConnections.find(c => c.id === this.configId);
 
-                if (orgEntry && orgEntry.context) {
-                    return DiscoveryRepository.createOrganizationConnection(orgEntry.context, connection);
+            if (!orgConnection) {
+                const connection = CdsExplorer.Instance.connections.find(c => c.id === this.configId);
+                const split = this.id.split("/");            
+                
+                if (split.length >= 4 && connection) {
+                    const orgEntry = TreeEntryCache.Instance.items.first(i => i.id === split.slice(0, 4).join("/"));
+    
+                    if (orgEntry && orgEntry.context) {
+                        const returnValue = DiscoveryRepository.createOrganizationConnection(orgEntry.context, connection);
+
+                        CdsExplorer.Instance.orgConnections.push(returnValue);
+
+                        return returnValue;
+                    }
                 }
+    
+                return connection;
+            } else {
+                return orgConnection;
             }
-
-            return connection;
         }
     }
 

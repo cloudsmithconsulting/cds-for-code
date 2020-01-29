@@ -12,6 +12,7 @@ import SolutionFile from '../components/SolutionXml/SolutionFile';
 import ExtensionContext from '../core/ExtensionContext';
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
 import logger from '../core/framework/Logger';
+import * as FileSystem from '../core/io/FileSystem';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.
@@ -103,7 +104,7 @@ export default async function run(config?:CdsWebApi.Config, folder?:string, solu
 		serverUrl = serverUrl.substring(0, serverUrl.length - 1);
 	}
 	
-	const solutionFile = path.join(folder, (typeof(solution) === 'string' ? solution : solution.uniquename) + '_temp.zip' );
+	solutionPath = solutionPath || path.join(folder, (typeof(solution) === 'string' ? solution : solution.uniquename) + '_temp.zip' );
 	
 	logger.log(`Command: ${cs.cds.powerShell.packSolution} Checking to see if CDS SDK is installed`);
 	await ScriptDownloader.installCdsSdk();
@@ -111,7 +112,7 @@ export default async function run(config?:CdsWebApi.Config, folder?:string, solu
 	return await TerminalManager.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => { 
 			return await terminal.run(new TerminalCommand(`.\\Deploy-XrmSolution.ps1 `)
-				.text(`-SolutionFile "${solutionFile}" `)
+				.text(`-SolutionFile "${solutionPath}" `)
 				.text(`-SolutionName "${typeof(solution) === 'string' ? solution : solution.uniquename}" `)
 				.text(`-Path "${folder}" `)
 				.text(`-ToolsPath "${toolsPath}" `)
@@ -125,15 +126,18 @@ export default async function run(config?:CdsWebApi.Config, folder?:string, solu
 					await vscode.commands.executeCommand(
 						cs.cds.deployment.importSolution, 
 						config, 
-						vscode.Uri.parse(solutionFile), 
+						vscode.Uri.parse(solutionPath), 
 						{
 							OverwriteUnmanagedCustomizations: true,
-							PublishWorkflows: true,
+							PublishWorkflows: publishXml,
 							ConvertToManaged: managed,
 						},
 						false);
-				})
-				.then(async () => {
+
+					logger.log(`Command: ${cs.cds.powerShell.packSolution} Deleting zipped solution file`);
+
+					FileSystem.deleteItem(solutionPath);
+
 					if (publishXml) {
 						logger.log(`Command: ${cs.cds.powerShell.packSolution} Publishing customizations`);
 

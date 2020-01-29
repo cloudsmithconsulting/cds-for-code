@@ -16,9 +16,9 @@ sidebar_label: "commands/cs.cds.powerShell.unpackSolution"
 
 ###  run
 
-▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `solution?`: any, `toolsPath?`: string, `logFile?`: string, `mappingFile?`: string, `templateResourceCode?`: string, `includeResourceFiles?`: boolean, `allowDelete`: boolean): *Promise‹void›*
+▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `solution?`: any, `toolsPath?`: string, `logFile?`: string, `mappingFile?`: string, `templateResourceCode?`: string, `includeResourceFiles?`: boolean, `allowDelete`: boolean): *Promise‹[TerminalCommand](../classes/_components_terminal_secureterminal_.terminalcommand.md)‹››*
 
-Defined in src/commands/cs.cds.powerShell.unpackSolution.ts:23
+Defined in src/commands/cs.cds.powerShell.unpackSolution.ts:22
 
 This command can be invoked by the Command Palette and packs a solution.
 
@@ -38,6 +38,6 @@ Name | Type | Default |
 `includeResourceFiles?` | boolean | - |
 `allowDelete` | boolean | true |
 
-**Returns:** *Promise‹void›*
+**Returns:** *Promise‹[TerminalCommand](../classes/_components_terminal_secureterminal_.terminalcommand.md)‹››*
 
 void
