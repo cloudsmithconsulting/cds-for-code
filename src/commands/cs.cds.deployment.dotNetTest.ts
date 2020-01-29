@@ -1,10 +1,12 @@
 import * as vscode from 'vscode';
 import * as FileSystem from '../core/io/FileSystem';
 import * as path from 'path';
+import * as cs from '../cs';
 import Quickly from '../core/Quickly';
 import TerminalManager, { TerminalCommand } from '../components/Terminal/SecureTerminal';
 import ExtensionContext from '../core/ExtensionContext';
 import { Utilities } from '../core/Utilities';
+import logger from '../core/framework/Logger';
 
 /**
  * This command can be invoked by the Command Palette and builds and tests a .Net Core project
@@ -27,7 +29,10 @@ export default async function run(file?:vscode.Uri, logFile?:string): Promise<an
 	}
 
 	file = file || await Quickly.pickWorkspaceFile(defaultFolder, "Choose a projet to test", undefined, false, this.projectFileTypes).then(r => vscode.Uri.file(r));
-	if (!file) { return; }
+	if (!file) { 
+		logger.warn(`Command: ${cs.cds.deployment.dotNetTest} Project file not chosen, command cancelled`);
+		return; 
+	}
 
 	if (!logFile) {
 		if ((await Quickly.pickBoolean("Do you want to review the log for this operation?", "Yes", "No"))) {
@@ -37,7 +42,7 @@ export default async function run(file?:vscode.Uri, logFile?:string): Promise<an
 	return TerminalManager.showTerminal(path.parse(file.fsPath).dir)
 		.then(async terminal => { 
 			return await terminal.run(new TerminalCommand(`dotnet test "${file.fsPath}"`))
-				.then(tc => {
+				.then(async tc => {
 					if (logFile) {
 						const folder = path.dirname(logFile);
 
@@ -47,7 +52,7 @@ export default async function run(file?:vscode.Uri, logFile?:string): Promise<an
 
 						FileSystem.writeFileSync(logFile, tc.output);
 
-						vscode.workspace.openTextDocument(logFile)
+						await vscode.workspace.openTextDocument(logFile)
 							.then(d => vscode.window.showTextDocument(d));	
 					}
 				});                      
