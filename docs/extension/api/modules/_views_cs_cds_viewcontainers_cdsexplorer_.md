@@ -34,6 +34,6 @@ Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1302
 
 ###  async
 
-• **async**: *"C:/Dev/Internal/cds-for-code/node_modules/@types/async/index"*
+• **async**: *"C:/dev/cds-for-code/node_modules/@types/async/index"*
 
 Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:23

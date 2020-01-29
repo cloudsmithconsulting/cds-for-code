@@ -259,7 +259,7 @@ ___
 
 ### `Private` save
 
-▸ **save**(`svcUtilConfig`: any): *void*
+▸ **save**(`config`: any): *void*
 
 Defined in src/views/cs.cds.views.svcUtilConfigView.ts:55
 
@@ -267,7 +267,7 @@ Defined in src/views/cs.cds.views.svcUtilConfigView.ts:55
 
 Name | Type |
 ------ | ------ |
-`svcUtilConfig` | any |
+`config` | any |
 
 **Returns:** *void*
 
@@ -277,7 +277,7 @@ ___
 
 ▸ **setInitialState**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.svcUtilConfigView.ts:60
+Defined in src/views/cs.cds.views.svcUtilConfigView.ts:61
 
 **Parameters:**
 
