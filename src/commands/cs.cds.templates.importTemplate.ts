@@ -15,7 +15,7 @@ import logger from '../core/framework/Logger';
  */
 export default async function run(sourceUri:vscode.Uri): Promise<void> {
     if (!sourceUri) {
-        const response = await Quickly.pickAnyFile(undefined, false, "Select template item", { "Zip Files": [ "*.zip" ]});
+        const response = await Quickly.pickAnyFile(undefined, false, "Select template item", { "Zip Files": [ "zip" ]});
         if (!response) { 
             logger.warn("File not chosen, command cancelled");
             return; 
