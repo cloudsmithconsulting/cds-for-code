@@ -394,14 +394,13 @@ export default class TemplateManager {
                 
                 // check if exists
                 if (FileSystem.exists(templateDir)) {
-                    await Quickly.pickBoolean(`Template '${templateName}' aleady exists.  Do you wish to overwrite?`, "Yes", "No")
-                        .then(async choice => { 
-                            if (choice) { 
-                                await FileSystem.deleteFolder(templateDir); 
-                            } else {
-                                return;
-                            }
-                        });
+                    const overwrite = await Quickly.pickBoolean(`Template '${templateName}' aleady exists.  Do you wish to overwrite?`, "Yes", "No");
+                    if (overwrite) { 
+                        await FileSystem.deleteFolder(templateDir); 
+                        FileSystem.makeFolderSync(templateDir);
+                    } else {
+                        return undefined;
+                    }
                 } else {
                     // Make the folder.
                     FileSystem.makeFolderSync(templateDir);
