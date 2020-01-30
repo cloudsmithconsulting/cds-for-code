@@ -45,10 +45,11 @@ When creating a template you will be asked for a publisher and template categori
 
 To change how templates are grouped in Template Explorer:
 
-1. Open the command palette (Ctrl + Shift + P)
-2. Select Preferences: Open User Settings
-3. Navigate to Extensions > CDS for Code
-4. Change the setting Cs › Cds › Configuration › Templates: Tree View Group Preference
+1. Open the file menu
+2. Select Preferences
+3. Select Settings
+4. Navigate to Extensions > CDS for Code
+5. Change the setting Cs › Cds › Configuration › Templates: Tree View Group Preference
 
 It should look similar to this:
 
