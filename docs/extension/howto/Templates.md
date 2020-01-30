@@ -113,10 +113,23 @@ Here is an example of exporting a template:
 
 ## Importing templates
 
+Right-clicking template explorer headers or folders will provide the ability to import a template.
+
+Here is an example of importing a template:
+
+![gif](../../images/import-template.gif)
+
 ## Create a project from a template
+
+1. Using VSCode File Explorer
+2. Using right-click > Create in Workspace
+3. Using the VSCode Command Palette (Ctrl + Shift + P)
+
+Here is an example of creating a project from a template:
+
+![gif](../../images/create-project-from-template.gif)
 
 ## What's not included
 
 - Custom template binding
-- Token base template logic
 - Templates used as code generators
