@@ -31,7 +31,7 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<Templat
     }
 
     private static readonly parsers = new Dictionary<TemplateExplorerEntryType, (item: any, element?: TemplateExplorerEntry, ...rest: any[]) => TemplateExplorerEntry>([
-        { key: "Folder", value: (folder, element) => element.createChildItem("Folder", folder, folder, folder, vscode.TreeItemCollapsibleState.Collapsed, folder) },
+        { key: "Folder", value: (folder, element) => element.createChildItem("Folder", folder, folder, folder, vscode.TreeItemCollapsibleState.Collapsed, undefined) },
         { key: "ProjectTemplate", value: (item, element) => element.createChildItem("ProjectTemplate", item.name, item.displayName, item.description, vscode.TreeItemCollapsibleState.None, item) },
         { key: "ItemTemplate", value: (item, element) => element.createChildItem("ItemTemplate", item.name, item.displayName, item.description, vscode.TreeItemCollapsibleState.None, item) }
     ]);

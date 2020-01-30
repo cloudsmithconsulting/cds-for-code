@@ -15,7 +15,7 @@ import logger from "../core/framework/Logger";
  * @param {vscode.Uri} [templateUri] supplied by vscode's contribution on file/explorer.
  * @returns void
  */
-export default async function run(templateUri: vscode.Uri, type:TemplateType) {
+export default async function run(templateUri?: vscode.Uri, type?:TemplateType) {
 	let path:string;
 
     type = type || await Quickly.pickEnum<TemplateType>(TemplateType, "What kind of template would you like to create?");

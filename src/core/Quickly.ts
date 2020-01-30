@@ -445,7 +445,7 @@ export default class Quickly {
         for (let value in enumObject) {
             if (typeof enumObject[value] === 'number' || typeof enumObject[value] === 'string') {
                 const label = typeof enumObject[value] === 'string' ? enumObject[value].toString() : value;
-                if (excludeOptions && excludeOptions.indexOf(label) === -1) {
+                if (excludeOptions === undefined || excludeOptions.indexOf(label) === -1) {
                     enumOptions.push(new QuickPickOption(label, undefined, undefined, enumObject[value]));
                 }
             }
