@@ -4,13 +4,15 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 
 ---
 
-## v0.9 Public Preview - January 2020
+## v0.9 Public Preview
 
-**We expect the first 0.9 build to drop to GitHub on or around January 30, 2020.**  Check back soon for release notes.
+**We expect the first 0.9 release build to drop to GitHub sometime in February, 2020.**  Check back soon for release notes.
 
 ---
 
 ## v0.8 Early Preview - December 2019 - January 2020
+
+### v0.8.11 (January 31, 2020)
 
 ### v0.8.10 (January 24, 2020)
 
