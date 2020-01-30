@@ -6,6 +6,7 @@ import { TemplateItem, TemplateType } from "../components/Templates/Types";
 import * as FileSystem from "../core/io/FileSystem";
 import * as p from 'path';
 import logger from "../core/framework/Logger";
+import TemplateManager from "../components/Templates/TemplateManager";
 
 /**
  * Command creates a folder or item in your workspace and restores a template from the catalog to it.
@@ -16,7 +17,7 @@ import logger from "../core/framework/Logger";
  * @param {vscode.Uri} [destinationUri] supplied by vscode's contribution on file/explorer.
  * @returns void
  */
-export default async function run(destinationUri?: vscode.Uri, type?:TemplateType, template?:TemplateItem): Promise<void> {
+export default async function run(this: TemplateManager, destinationUri?: vscode.Uri, type?:TemplateType, template?:TemplateItem): Promise<void> {
 	let path:string;
 
     if (template && !type) {
@@ -72,7 +73,7 @@ export default async function run(destinationUri?: vscode.Uri, type?:TemplateTyp
             }
         },
         (reason: any) => {
-            Quickly.error(`Failed to create items from the template in '${path}': ${reason}`, false, "Try Again", () => { this.run(destinationUri); }, "Cancel");
+            Quickly.error(`Failed to create items from the template in '${path}': ${reason}`, false, "Try Again", () => { this.createTemplate(destinationUri); }, "Cancel");
         }
     );
 }

@@ -11,6 +11,7 @@ import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceM
 import ExtensionContext from "../core/ExtensionContext";
 import DiscoveryRepository from "../repositories/discoveryRepository";
 import logger from "../core/framework/Logger";
+import WebResourceManager from "../components/Solutions/WebResourceManager";
 
 /**
  * This command can be invoked by the by either the file explorer view or the Dynamics TreeView
@@ -19,7 +20,7 @@ import logger from "../core/framework/Logger";
  * @param {vscode.Uri} [defaultUri] that invoked the command
  * @returns void
  */
-export default async function run(config?:CdsWebApi.Config, solutionId?:string, webResource?:any, fileUri?:vscode.Uri, defaultName:string = "", inform:boolean = true) {
+export default async function run(this: WebResourceManager, config?:CdsWebApi.Config, solutionId?:string, webResource?:any, fileUri?:vscode.Uri, defaultName:string = "", inform:boolean = true) {
     let fsPath:string;
     let map:SolutionWorkspaceMapping;
     let folder:string;

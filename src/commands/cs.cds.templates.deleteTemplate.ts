@@ -3,6 +3,7 @@ import * as cs from "../cs";
 import Quickly from "../core/Quickly";
 import { TemplateItem } from "../components/Templates/Types";
 import logger from "../core/framework/Logger";
+import TemplateManager from "../components/Templates/TemplateManager";
 
 /**
  * Main command to delete an existing template.
@@ -12,7 +13,7 @@ import logger from "../core/framework/Logger";
  * @param {TemplateItem} [template] supplied by the template tree view
  * @returns void
  */
-export default async function run(template: TemplateItem) {
+export default async function run(this: TemplateManager, template: TemplateItem) {
     // load latest configuration
     ExtensionConfiguration.updateConfiguration(cs.cds.configuration.templates._namespace);
 
@@ -32,7 +33,7 @@ export default async function run(template: TemplateItem) {
                 Quickly.inform(`Template '${template.name}' was removed from the library.`);
             } 
         }, (reason) => {             
-            Quickly.error(`Failed to delete the contents of '${template.location}': ${reason}`, false, "Try Again", () => { this.run(template); }, "Cancel");
+            Quickly.error(`Failed to delete the contents of '${template.location}': ${reason}`, false, "Try Again", () => { this.deleteTemplate(template); }, "Cancel");
         }
     );
     

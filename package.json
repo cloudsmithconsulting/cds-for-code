@@ -429,13 +429,18 @@
 				"category": "CDS for Code"
 			},
 			{
-				"command": "cs.cds.deployment.createWebResource",
-				"title": "Create a web resource in your workspace or on a CDS instance",
+				"command": "cs.cds.deployment.createCrmSvcUtilConfig",
+				"title": "Create a CrmSvcUtil.exe custom configuration file",
 				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.cds.deployment.createProcess",
 				"title": "Create a process on a CDS instance",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.deployment.createWebResource",
+				"title": "Create a web resource in your workspace or on a CDS instance",
 				"category": "CDS for Code"
 			},
 			{
@@ -1034,7 +1039,7 @@
 	"dependencies": {
 		"adal-node": "^0.2.1",
 		"archiver": "^3.1.1",
-		"async": "^3.1.0",
+		"async": "^3.1.1",
 		"eol": "^0.9.1",
 		"express": "^4.17.1",
 		"httpntlm": "^1.7.6",

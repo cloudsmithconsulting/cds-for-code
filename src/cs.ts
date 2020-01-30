@@ -14,8 +14,9 @@ export namespace cds {
         static readonly addSolutionComponent: string = `${deployment._namespace}.addSolutionComponent`;
         static readonly compareWebResource: string = `${deployment._namespace}.compareWebResource`;
         static readonly connectToCds: string = `${deployment._namespace}.connectToCds`;
-        static readonly createWebResource: string = `${deployment._namespace}.createWebResource`;
+        static readonly createCrmSvcUtilConfig: string = `${deployment._namespace}.createCrmSvcUtilConfig`;
         static readonly createProcess: string = `${deployment._namespace}.createProcess`;
+        static readonly createWebResource: string = `${deployment._namespace}.createWebResource`;
         static readonly dotNetBuild: string = `${deployment._namespace}.dotNetBuild`;
         static readonly dotNetTest: string = `${deployment._namespace}.dotNetTest`;
         static readonly exportSolution: string = `${deployment._namespace}.exportSolution`;

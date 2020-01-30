@@ -7,6 +7,7 @@ import ApiRepository from "../repositories/apiRepository";
 import EnumParser from "../core/framework/EnumParser";
 import ExtensionContext from "../core/ExtensionContext";
 import logger from "../core/framework/Logger";
+import WebResourceManager from "../components/Solutions/WebResourceManager";
 
 /**
  * This command can be invoked by the Explorer file viewer and creates or updates a web resource in Dynamics
@@ -14,7 +15,7 @@ import logger from "../core/framework/Logger";
  * @param {vscode.Uri} [defaultUri] that invoked the command
  * @returns void
  */
-export default async function run(config?:CdsWebApi.Config, solution?:any, webResource?:any, fileUri?:vscode.Uri, inform:boolean = true) {
+export default async function run(this: WebResourceManager, config?:CdsWebApi.Config, solution?:any, webResource?:any, fileUri?:vscode.Uri, inform:boolean = true) {
     fileUri = fileUri || vscode.Uri.file(await Quickly.pickWorkspaceFile(undefined, "Choose the web resource file to deploy", undefined, true, EnumParser.getNames(CdsSolutions.WebResourceFileType)));
     if (!fileUri) { 
         logger.warn("File not chosen, command cancelled");

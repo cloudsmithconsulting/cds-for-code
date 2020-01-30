@@ -6,6 +6,7 @@ import Quickly from "../core/Quickly";
 import ExtensionContext from "../core/ExtensionContext";
 import logger from "../core/framework/Logger";
 import ApiRepository from "../repositories/apiRepository";
+import SolutionManager from "../components/Solutions/SolutionManager";
 
 export type ImportSolutionOptions = {
     OverwriteUnmanagedCustomizations: boolean,
@@ -22,7 +23,7 @@ export type ImportSolutionOptions = {
  * @param {vscode.Uri} [defaultUri] that invoked the command
  * @returns void
  */
-export default async function run(config?: CdsWebApi.Config, solutionFile?: vscode.Uri, options?: ImportSolutionOptions, inform: boolean = true): Promise<any> {
+export default async function run(this: SolutionManager, config?: CdsWebApi.Config, solutionFile?: vscode.Uri, options?: ImportSolutionOptions, inform: boolean = true): Promise<any> {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
     if (!config) { 
 		logger.warn(`Command: ${cs.cds.deployment.importSolution} Organization not chosen, command cancelled`);

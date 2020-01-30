@@ -12,8 +12,9 @@ import { Octicon } from "../core/types/Octicon";
 import Quickly, { QuickPickOption } from '../core/Quickly';
 import ExtensionContext from '../core/ExtensionContext';
 import logger from '../core/framework/Logger';
+import SolutionManager from '../components/Solutions/SolutionManager';
 
-export default async function run(config?: CdsWebApi.Config, pluginAssembly?: any, file?: vscode.Uri, solution?: any): Promise<any> {
+export default async function run(this: SolutionManager, config?: CdsWebApi.Config, pluginAssembly?: any, file?: vscode.Uri, solution?: any): Promise<any> {
     const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
     let defaultFolder = workspaceFolder ? workspaceFolder.uri : undefined;
 
@@ -130,7 +131,7 @@ export default async function run(config?: CdsWebApi.Config, pluginAssembly?: an
                 `The plugin ${path.basename(file.fsPath)} was not registered successfully.  See the output window for details.`, 
                 undefined, 
                 'Retry', 
-                () => run(config, pluginAssembly, file, solution) );
+                () => SolutionManager.registerPluginAssembly(config, pluginAssembly, file, solution) );
         });
 
 }

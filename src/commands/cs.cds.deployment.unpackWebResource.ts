@@ -9,6 +9,7 @@ import { Utilities } from "../core/Utilities";
 import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
 import ExtensionContext from '../core/ExtensionContext';
 import logger from '../core/framework/Logger';
+import WebResourceManager from '../components/Solutions/WebResourceManager';
 
 /**
  * This command can be invoked by the Dynamics Explorer tree view and creates or updates a web resource in the local workspace.
@@ -18,7 +19,7 @@ import logger from '../core/framework/Logger';
  * @param {vscode.Uri} [fileUri] The Uri of the file to save the web resource as.
  * @returns void
  */
-export default async function run(config?:CdsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
+export default async function run(this: WebResourceManager, config?:CdsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
     if (!config) { 
         logger.warn("Configuration not chosen, command cancelled");

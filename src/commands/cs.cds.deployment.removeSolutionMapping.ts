@@ -9,7 +9,7 @@ import logger from '../core/framework/Logger';
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(item?: SolutionWorkspaceMapping): Promise<boolean> {
+export default async function run(this: SolutionMap, item?: SolutionWorkspaceMapping): Promise<boolean> {
 	const map = await SolutionMap.loadFromWorkspace();
 	let returnValue = false;
 

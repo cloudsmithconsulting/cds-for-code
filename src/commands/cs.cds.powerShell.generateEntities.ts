@@ -11,6 +11,7 @@ import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialSt
 import * as Security from "../core/security/Types";
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
 import logger from '../core/framework/Logger';
+import CodeGenerationManager from '../components/CodeGeneration/CodeGenerationManager';
 
 /**
  * This command can be invoked by the Command Pallette or external sources and generates .Net code
@@ -22,7 +23,7 @@ import logger from '../core/framework/Logger';
  * @param {string} [namespace] Optional namespace for generated output
  * @returns Promise with output from terminal command running CrmSvcUtil.exe
  */
-export default async function run(config?: CdsWebApi.Config | string, folder?: string, outputFileName?: string, namespace?: string) {
+export default async function run(this: CodeGenerationManager, config?: CdsWebApi.Config | string, folder?: string, outputFileName?: string, namespace?: string) {
 	// setup configurations
 	const sdkInstallPath = ExtensionConfiguration.getConfigurationValueOrDefault<string>(cs.cds.configuration.tools.sdkInstallPath, path.join(ExtensionContext.Instance.globalStoragePath, "Sdk"));
 	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;

@@ -17,7 +17,7 @@ import logger from "../core/framework/Logger";
  * @param {vscode.Uri} [destinationUri] supplied by vscode's contribution on file/explorer.
  * @returns void
  */
-export default async function run(template: TemplateItem, destinationUri:vscode.Uri): Promise<void> {
+export default async function run(this: TemplateManager, template: TemplateItem, destinationUri: vscode.Uri): Promise<void> {
     template = template || await Quickly.pickTemplate("Please select the template that you wish to export");
     if (!template) {
         logger.warn("Template not chosen, command cancelled");
@@ -43,6 +43,6 @@ export default async function run(template: TemplateItem, destinationUri:vscode.
             logger.info(`Exported template ${template.name}`);
             Quickly.inform(`Exported template '${template.name}'`);
         }).catch(error => {
-            Quickly.error(`Failed to export the template '${template.name}': ${error}`, false, "Try Again", () => { vscode.commands.executeCommand(cs.cds.templates.exportTemplate, template, destinationUri); }, "Cancel");
+            Quickly.error(`Failed to export the template '${template.name}': ${error}`, false, "Try Again", () => { this.exportTemplate(template, destinationUri); }, "Cancel");
         });
 }

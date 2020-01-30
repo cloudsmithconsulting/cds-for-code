@@ -6,6 +6,7 @@ import Quickly from '../core/Quickly';
 import { Utilities } from '../core/Utilities';
 import ExtensionContext from "../core/ExtensionContext";
 import logger from '../core/framework/Logger';
+import SolutionManager from '../components/Solutions/SolutionManager';
 
 /**
  * This command can be invoked by the Command Palette or the Dynamics TreeView and removes a solution component from a solution.
@@ -13,7 +14,7 @@ import logger from '../core/framework/Logger';
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(config?:CdsWebApi.Config, solution?:any, componentId?:string, componentType?:CdsSolutions.SolutionComponent): Promise<any> {
+export default async function run(this: SolutionManager, config?:CdsWebApi.Config, solution?:any, componentId?:string, componentType?:CdsSolutions.SolutionComponent): Promise<any> {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) {
 		logger.warn("Organization not chosen, command cancelled");

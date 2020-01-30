@@ -12,6 +12,7 @@ import ExtensionContext from '../core/ExtensionContext';
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
 import logger from '../core/framework/Logger';
 import { ExportSolutionOptions } from './cs.cds.deployment.exportSolution';
+import SolutionManager from '../components/Solutions/SolutionManager';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.
@@ -19,7 +20,7 @@ import { ExportSolutionOptions } from './cs.cds.deployment.exportSolution';
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(config?: CdsWebApi.Config, folder?: string, solution?: any, toolsPath?: string, logFile?: string, mappingFile?: string, templateResourceCode?: string, includeResourceFiles?: boolean, allowDelete: boolean = true) {
+export default async function run(this: SolutionManager, config?: CdsWebApi.Config, folder?: string, solution?: any, toolsPath?: string, logFile?: string, mappingFile?: string, templateResourceCode?: string, includeResourceFiles?: boolean, allowDelete: boolean = true) {
 	// setup configurations
 	const sdkInstallPath = ExtensionConfiguration.getConfigurationValueOrDefault<string>(cs.cds.configuration.tools.sdkInstallPath, path.join(ExtensionContext.Instance.globalStoragePath, "Sdk"));
 	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
