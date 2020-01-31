@@ -480,6 +480,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     })
     private createEntries(element: CdsTreeEntry, onRetreive: () => Promise<any[]>, onParse: (item: any) => CdsTreeEntry, onErrorMessage?: (message: string) => string, onRetry?: Function): Promise<CdsTreeEntry[]> {
         const context = Telemetry.Instance.context(`${cs.cds.viewContainers.cdsExplorer}.createEntries`);
+        context.property('parentType', element.itemType);
 
         return onRetreive()
             .then(items => {
@@ -493,7 +494,9 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
                     return;
                 }
-                
+
+                let identifiedItemType: boolean = false;
+
                 // Run these in paralell per #534 (Improve parse performance in TreeView for large batches)
                 async.each(items, async item => {
                     let treeItem;
@@ -508,6 +511,11 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                     }
 
                     if (treeItem) {
+                        if (!identifiedItemType) {
+                            context.property('childType', item.itemType);
+                            identifiedItemType = true;
+                        }
+        
                         parsed++;
                         result.push(treeItem);
                     }
@@ -838,6 +846,8 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         const context = Telemetry.Instance.context(`${cs.cds.viewContainers.cdsExplorer}.getEntityRelationshipDetails`);
         const api = new MetadataRepository(element.config);
 
+        context.property('parentType', element.itemType);
+
         return api.retrieveRelationships(entity.MetadataId)
             .then(items => {
                 const count = (items && items.oneToMany ? items.oneToMany.length : 0)
@@ -848,10 +858,13 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                 context.input("count.retrieve", count).mark("parse.start");
 
                 const result : CdsTreeEntry[] = new Array();
+                let hasOneToMany: boolean, hasManyToOne: boolean, hasManyToMany: boolean;
 
                 async.race([
                     async () => {
                         if (items && items.oneToMany && items.oneToMany.length > 0) {
+                            hasOneToMany = true;
+
                             items.oneToMany.forEach(r => {
                                 result.push(CdsExplorer.parsers["OneToManyRelationship"](r, element));
                                 parsed++;
@@ -860,6 +873,8 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                     },
                     async () => {
                         if (items && items.manyToOne && items.manyToOne.length > 0) {
+                            hasManyToOne = true;
+
                             items.manyToOne.forEach(r => {
                                 result.push(CdsExplorer.parsers["ManyToOneRelationship"](r, element));
                                 parsed++;
@@ -868,6 +883,8 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                     },
                     async () => {
                         if (items && items.manyToMany && items.manyToMany.length > 0) {
+                            hasManyToMany = true;
+
                             items.manyToMany.forEach(r => {
                                 result.push(CdsExplorer.parsers["ManyToManyRelationship"](r, element));
                                 parsed++;
@@ -883,6 +900,13 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                     }
                 });
 
+                const childTypes = [];
+
+                if (hasOneToMany) { childTypes.push('OneToManyRelationship'); }
+                if (hasManyToOne) { childTypes.push('ManyToOneRelationship'); }
+                if (hasManyToMany) { childTypes.push('ManyToManyRelationship'); }
+
+                context.property("childTypes", childTypes.join(", "));
                 context.input("count.parse", parsed);
 
                 return new TS.Linq.Enumerator(result).orderBy(r => r.label).toArray();

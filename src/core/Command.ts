@@ -60,7 +60,7 @@ export class DefaultCommandWrapper<T> extends CommandWrapper<T>{
         this.options.logger.error(`Command: ${this.id} error occurred: ${error.message}`);
 
         const telemetryProps = { command: this.id, invocation: this.invocationId };
-        const telemetryMeasures = { callDuration: this.endTime - this.startTime };
+        const telemetryMeasures = { 'duration.invocation': this.endTime - this.startTime };
 
         Telemetry.Instance.error(error, telemetryProps, telemetryMeasures);
     }
@@ -70,7 +70,7 @@ export class DefaultCommandWrapper<T> extends CommandWrapper<T>{
         this.options.logger.info(`Command: ${this.id} invocation complete`);
 
         const telemetryProps = { command: this.id, invocation: this.invocationId };
-        const telemetryMeasures = { callDuration: this.endTime - this.startTime };
+        const telemetryMeasures = { 'duration.invocation': this.endTime - this.startTime };
 
         Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.commandCompleted, telemetryProps, telemetryMeasures);
 
@@ -90,7 +90,7 @@ export default function command<T>(id: string, description: string, options?: IC
                 try { 
                     wrapper.onCommandInvoked(args);
                 } catch (error) {
-                    wrapper.options.logger.error(`An error occurred while executing onCommandInvoked for ${id}.  The error received was: ${error.message}`);
+                    wrapper.options.logger.error(`Command: ${id} An error occurred while executing onCommandInvoked for ${id}.  The error received was: ${error.message}`);
                 }
             }
         
@@ -101,7 +101,7 @@ export default function command<T>(id: string, description: string, options?: IC
                     try {
                         wrapper.onCommandError(error);
                     } catch (innerError) {
-                        wrapper.options.logger.error(`An error occurred while executing onCommandError for ${id}.  The error received was: ${innerError.message}`);
+                        wrapper.options.logger.error(`Command: ${id} An error occurred while executing onCommandError for ${id}.  The error received was: ${innerError.message}`);
                     }
                 }
             }
@@ -114,7 +114,7 @@ export default function command<T>(id: string, description: string, options?: IC
                         result = result2;
                     }
                 } catch (error) {
-                    wrapper.options.logger.error(`An error occurred while executing onCommandCompleted for ${id}.  The error received was: ${error.message}`);
+                    wrapper.options.logger.error(`Command: ${id} An error occurred while executing onCommandCompleted for ${id}.  The error received was: ${error.message}`);
                 }
             }
 
