@@ -132,7 +132,7 @@ if ($Interactive) {
 	$Arguments = "/nologo /url:'$Url' /interactivelogin $Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
 } else {
 	if ($ConnectionString -eq "") {
-		$UnsecurePassword = ConvertFrom-SecureString $Password -AsPlainText
+		$UnsecurePassword = ConvertFrom-SecureString $Password
 
 		$Arguments = "/nologo /url:'$Url' /username:$Username /password:$UnsecurePassword $Domain$Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
 	} else {
