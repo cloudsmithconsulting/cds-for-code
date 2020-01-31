@@ -67,7 +67,7 @@ export default async function run(this: SolutionManager, config?: CdsWebApi.Conf
 	
 	toolsPath = toolsPath || coreToolsRoot;
 	if (Utilities.$Object.isNull(toolsPath)) { 
-		logger.warn("Tools path not set, command cancelled");
+		logger.warn(`Command: ${cs.cds.powerShell.unpackSolution} Tools path not set, command cancelled`);
 		return; 
 	}
 

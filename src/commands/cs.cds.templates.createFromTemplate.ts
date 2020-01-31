@@ -1,4 +1,4 @@
-import vscode = require("vscode");
+import * as vscode from 'vscode';
 import ExtensionConfiguration from "../core/ExtensionConfiguration";
 import * as cs from "../cs";
 import Quickly from "../core/Quickly";
@@ -26,7 +26,7 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
 
     type = type || await Quickly.pickEnum<TemplateType>(TemplateType, "What kind of template would you like to create?");
     if (!type) {
-        logger.warn("Template not chosen, command cancelled");
+        logger.warn(`Command: ${cs.cds.templates.createFromTemplate} Template not chosen, command cancelled`);
         return; 
     }
 
@@ -56,7 +56,7 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
 
     if (!path) {
         Quickly.error("You must select a workspace and folder before you can create a templated project or item", false, "Try Again", () => { vscode.commands.executeCommand(cs.cds.templates.createFromTemplate, destinationUri, type); }, "Cancel");
-        logger.warn("Path not chosen, command cancelled");
+        logger.warn(`Command: ${cs.cds.templates.createFromTemplate} Path not chosen, command cancelled`);
 
         return;
     }
@@ -68,7 +68,7 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
     this.createFromFilesystem(path, type, template).then(
         (template) => {
             if (template) {
-                logger.info(`Template ${template.displayName} created in workspace: ${path}`);
+                logger.info(`Command: ${cs.cds.templates.createFromTemplate} Template ${template.displayName} created in workspace: ${path}`);
                 Quickly.inform(`Created ${template.type === TemplateType.ProjectTemplate ? "project" : "item"} from template '${template.displayName}'`);
             }
         },

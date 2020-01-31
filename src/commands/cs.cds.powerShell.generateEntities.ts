@@ -40,7 +40,7 @@ export default async function run(this: CodeGenerationManager, config?: CdsWebAp
 	}
 
 	if (!config) { 
-		logger.warn("Configuration not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.powerShell.generateEntities} Configuration not chosen, command cancelled`);
 		return; 
 	}
 
@@ -48,7 +48,7 @@ export default async function run(this: CodeGenerationManager, config?: CdsWebAp
 		const chosenItem: WorkspaceFileItem = await Quickly.pickWorkspaceAny(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the destination where generated code will go", undefined, true);
 
 		if (!chosenItem) {
-			logger.warn("Workspace file/folder not chosen, command cancelled");
+			logger.warn(`Command: ${cs.cds.powerShell.generateEntities} Workspace file/folder not chosen, command cancelled`);
 			return; 
 		}
 
@@ -62,7 +62,7 @@ export default async function run(this: CodeGenerationManager, config?: CdsWebAp
 
 	folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder to use when generating code");
 	if (Utilities.$Object.isNullOrEmpty(folder)) { 
-		logger.warn("Workspace folder not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.powerShell.generateEntities} Workspace folder not chosen, command cancelled`);
 		return; 
 	}
 
@@ -76,17 +76,17 @@ export default async function run(this: CodeGenerationManager, config?: CdsWebAp
 	}
 
 	if (Utilities.$Object.isNullOrEmpty(outputFileName)) { 
-		logger.warn("Workspace file not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.powerShell.generateEntities} Workspace file not chosen, command cancelled`);
 		return; 
 	}
 
 	namespace = namespace || await Quickly.ask("Enter the namespace for the generated code", undefined, path.basename(folder));
 
-	logger.log("Checking to see if the CRM SDK is installed");
+	logger.log(`Command: ${cs.cds.powerShell.generateEntities} Checking to see if the CRM SDK is installed`);
 	await ScriptDownloader.installCdsSdk();
 	
 	// build a powershell terminal
-	logger.log("Generating entity code");
+	logger.log(`Command: ${cs.cds.powerShell.generateEntities} Generating entity code`);
 	return TerminalManager.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => {
 			let returnPromise: Promise<TerminalCommand>;

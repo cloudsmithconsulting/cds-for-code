@@ -181,15 +181,15 @@ export default async function run(this: WebResourceManager, config?:CdsWebApi.Co
             await this.writeDataXmlFile(map, webResource, fsPath, providedVersion >= minimumVersionToEditCustomizationFiles);
 
             if (inform) {
-                await Quickly.inform(`The web resource '${webResource.name}' was saved to the local workspace.`);
+                await Quickly.inform(`The web resource '${webResource.name}' was saved to the local workspace`);
             }
         } else {
-            logger.info(`Command: ${cs.cds.deployment.createWebResource} Web Resource: ${webResource.name} is not mapped to a solution.  Creating web resource on ${config.appUrl}.`);
+            logger.info(`Command: ${cs.cds.deployment.createWebResource} Web Resource: ${webResource.name} is not mapped to a solution.  Creating web resource on ${config.appUrl}`);
 
             webResource = await this.upsertWebResource(config, webResource, solution);
 
             if (inform) {
-                await Quickly.inform(`The web resource '${webResource.name}' was saved to the Dynamics server.`);
+                await Quickly.inform(`The web resource '${webResource.name}' was saved to the CDS environment`);
             }
         }
 

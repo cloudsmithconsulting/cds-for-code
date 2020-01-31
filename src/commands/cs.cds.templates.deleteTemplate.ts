@@ -21,7 +21,7 @@ export default async function run(this: TemplateManager, template: TemplateItem)
 
     // no template chosen, simply exit
     if (!template || !template.location) {
-        logger.warn("Location of template not specified, command cancelled");
+        logger.warn(`Command: ${cs.cds.templates.deleteTemplate} Location of template not specified, command cancelled`);
         return;
     } 
 
@@ -29,7 +29,7 @@ export default async function run(this: TemplateManager, template: TemplateItem)
     this.deleteFromFilesystem(template)
         .then(deleted => { 
             if (deleted) {
-                logger.info(`Template ${template.name} deleted`);
+                logger.info(`Command: ${cs.cds.templates.deleteTemplate} Template ${template.name} deleted`);
                 Quickly.inform(`Template '${template.name}' was removed from the library.`);
             } 
         }, (reason) => {             

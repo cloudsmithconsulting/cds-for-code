@@ -1,3 +1,4 @@
+import * as cs from '../cs';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import { CdsSolutions } from '../api/CdsSolutions';
 import ApiRepository from '../repositories/apiRepository';
@@ -16,7 +17,7 @@ import SolutionManager from '../components/Solutions/SolutionManager';
 export default async function run(this: SolutionManager, config?: CdsWebApi.Config, components?: {type: CdsSolutions.SolutionComponent, id: string}[]) {
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
     if (!config) { 
-        logger.warn("Organization not chosen, command cancelled");
+        logger.warn(`Command: ${cs.cds.deployment.publishCustomizations} Organization not chosen, command cancelled`);
         return; 
     }
 
@@ -37,6 +38,6 @@ export default async function run(this: SolutionManager, config?: CdsWebApi.Conf
         parameterXml += "</webresources></importexportxml>";
 
         await api.publishXml(parameterXml);
-        await Quickly.inform("Components were published successfully");
+        await Quickly.inform(`Command: ${cs.cds.deployment.publishCustomizations} Components were published successfully`);
     }
 }

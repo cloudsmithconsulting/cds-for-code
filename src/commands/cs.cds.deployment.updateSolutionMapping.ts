@@ -1,3 +1,4 @@
+import * as cs from '../cs';
 import * as vscode from "vscode";
 import * as FileSystem from '../core/io/FileSystem';
 import * as path from 'path';
@@ -28,7 +29,7 @@ export default async function run(this: SolutionMap, item?: SolutionWorkspaceMap
 	if (!organizationId) {
 		config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 		if (!config) { 
-			logger.warn("Configuration not chosen, command cancelled");
+			logger.warn(`Command: ${cs.cds.deployment.updateSolutionMapping} Configuration not chosen, command cancelled`);
 			return; 
 		}
 	
@@ -38,7 +39,7 @@ export default async function run(this: SolutionMap, item?: SolutionWorkspaceMap
 	if (!solutionId) {
 		let solution = await Quickly.pickCdsSolution(config, "Choose a Solution to map to the local workspace", true);
 		if (!solution) { 
-			logger.warn("Solution not chosen, command cancelled");
+			logger.warn(`Command: ${cs.cds.deployment.updateSolutionMapping} Solution not chosen, command cancelled`);
 			return; 
 		}
 
@@ -47,7 +48,7 @@ export default async function run(this: SolutionMap, item?: SolutionWorkspaceMap
 
 	folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a workplace folder containing solution items.");
 	if (Utilities.$Object.isNullOrEmpty(folder)) { 
-		logger.warn("Folder not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.deployment.updateSolutionMapping} Folder not chosen, command cancelled`);
 		return; 
 	}
 	
@@ -64,7 +65,7 @@ export default async function run(this: SolutionMap, item?: SolutionWorkspaceMap
 
 		if (item.path !== folder) {
 			if (FileSystem.exists(item.path)) {
-				logger.info(`Copying contents of ${item.path} into ${folder}`);
+				logger.info(`Command: ${cs.cds.deployment.updateSolutionMapping} Copying contents of ${item.path} into ${folder}`);
 
 				await FileSystem.copyFolder(item.path, folder)
 					.then(() => FileSystem.deleteFolder(item.path));
@@ -72,7 +73,7 @@ export default async function run(this: SolutionMap, item?: SolutionWorkspaceMap
 		}
 	}
 
-	logger.info(`Updating and saving solution map for ${folder}`);
+	logger.info(`Command: ${cs.cds.deployment.updateSolutionMapping} Updating and saving solution map for ${folder}`);
 
 	map.map(organizationId, solutionId, folder);
 	map.saveToWorkspace(ExtensionContext.Instance);

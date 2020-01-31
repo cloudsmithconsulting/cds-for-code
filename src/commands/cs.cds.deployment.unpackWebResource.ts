@@ -1,3 +1,4 @@
+import * as cs from '../cs';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as FileSystem from "../core/io/FileSystem";
@@ -22,7 +23,7 @@ import WebResourceManager from '../components/Solutions/WebResourceManager';
 export default async function run(this: WebResourceManager, config?:CdsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
     if (!config) { 
-        logger.warn("Configuration not chosen, command cancelled");
+        logger.warn(`Command: ${cs.cds.deployment.unpackWebResource} Configuration not chosen, command cancelled`);
 
         return; 
     }
@@ -37,7 +38,7 @@ export default async function run(this: WebResourceManager, config?:CdsWebApi.Co
 
     webResource = webResource || await Quickly.pickCdsSolutionComponent(config, map ? map.solutionId : undefined, CdsSolutions.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
     if (!webResource) {
-        logger.warn("Web Resource not chosen, command cancelled");
+        logger.warn(`Command: ${cs.cds.deployment.unpackWebResource} Web Resource not chosen, command cancelled`);
         return; 
     }
 
