@@ -17,7 +17,6 @@ export default async function openView(config?: CdsWebApi.Config): Promise<View>
         title: (config && config.name) ? `Edit CDS Connection - ${config.name}` : 'New CDS Connection',
         type: cs.cds.views.connectionEditor,
         preserveFocus: false,
-        bridge: BridgeCommunicationMethod.Ipc,
         onReady: view => view.setInitialState(config)
     });
 

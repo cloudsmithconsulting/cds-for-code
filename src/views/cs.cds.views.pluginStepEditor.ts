@@ -14,7 +14,6 @@ export default async function openView(pluginAssemblyId:string, config?: CdsWebA
         title: 'Configure Plugin Step - Dynamics 365 CE',
         type: cs.cds.views.pluginStepEditor,
         preserveFocus: false,
-        bridge: BridgeCommunicationMethod.Ipc,
         onReady: view => view.setInitialState(pluginAssemblyId, config, step)
     });
 

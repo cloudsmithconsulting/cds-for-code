@@ -531,7 +531,7 @@ ___
 
 ###  retrieveSolution
 
-▸ **retrieveSolution**(`solutionId`: string): *Promise‹any[]›*
+▸ **retrieveSolution**(`solutionId`: string): *Promise‹any›*
 
 Defined in src/repositories/apiRepository.ts:52
 
@@ -541,7 +541,7 @@ Name | Type |
 ------ | ------ |
 `solutionId` | string |
 
-**Returns:** *Promise‹any[]›*
+**Returns:** *Promise‹any›*
 
 ___
 

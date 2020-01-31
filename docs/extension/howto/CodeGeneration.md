@@ -7,7 +7,6 @@
   - [Overview](#overview)
   - [From the Command Palette](#from-the-command-palette)
   - [From File Explorer](#from-file-explorer)
-  - [From CDS Explorer](#from-cds-explorer)
 
 ## Overview
 
@@ -40,7 +39,3 @@ To generate entites from VSCode File Explorer:
 Generating code from File Explorer will look similar to this:
 
 ![img](../../images/cds-generate-entities-file-explorer.gif)
-
-## From CDS Explorer
-
-Coming soon!

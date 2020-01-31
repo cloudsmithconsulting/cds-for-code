@@ -60,9 +60,9 @@
             entityMap: _.map(viewModel.entities, i => { return { value: i.LogicalName, text: i.LogicalName } }),
             optionsetMap: _.map(viewModel.optionsets, i => { return { value: i.Name, text: i.Name } }),
             solutionMap: _.map(viewModel.solutions, i => { return { value: i.uniquename, text: i.uniquename } }),
-            filterRules: [],
-            namingRules: [],
-            codeGeneration: { namingRules: [] }
+            filterRules: viewModel.filterRules || [],
+            namingRules: viewModel.namingRules || [],
+            codeGeneration: { namingRules: viewModel.codeGeneration && viewModel.codeGeneration.namingRules ? viewModel.codeGeneration.namingRules : [] }
         }
 
         $("[data-source='Entities']").each(function (index, element) {
