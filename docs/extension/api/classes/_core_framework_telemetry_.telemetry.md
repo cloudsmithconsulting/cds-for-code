@@ -109,7 +109,7 @@ ___
 
 ▸ **sendTelemetry**(`event`: string, `properties?`: object, `measurements?`: object): *void*
 
-Defined in src/core/framework/Telemetry.ts:49
+Defined in src/core/framework/Telemetry.ts:57
 
 **Parameters:**
 

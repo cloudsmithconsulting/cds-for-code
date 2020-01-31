@@ -1,3 +1,4 @@
+import * as cs from '../cs';
 import * as vscode from "vscode";
 import * as FileSystem from '../core/io/FileSystem';
 import * as path from 'path';
@@ -15,7 +16,7 @@ import logger from "../core/framework/Logger";
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(item?: SolutionWorkspaceMapping, config?: CdsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> {
+export default async function run(this: SolutionMap, item?: SolutionWorkspaceMapping, config?: CdsWebApi.Config, folder?: string): Promise<SolutionWorkspaceMapping[]> {
 	let solutionId;
 	let organizationId;
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
@@ -28,7 +29,7 @@ export default async function run(item?: SolutionWorkspaceMapping, config?: CdsW
 	if (!organizationId) {
 		config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 		if (!config) { 
-			logger.warn("Configuration not chosen, command cancelled");
+			logger.warn(`Command: ${cs.cds.deployment.updateSolutionMapping} Configuration not chosen, command cancelled`);
 			return; 
 		}
 	
@@ -38,7 +39,7 @@ export default async function run(item?: SolutionWorkspaceMapping, config?: CdsW
 	if (!solutionId) {
 		let solution = await Quickly.pickCdsSolution(config, "Choose a Solution to map to the local workspace", true);
 		if (!solution) { 
-			logger.warn("Solution not chosen, command cancelled");
+			logger.warn(`Command: ${cs.cds.deployment.updateSolutionMapping} Solution not chosen, command cancelled`);
 			return; 
 		}
 
@@ -47,7 +48,7 @@ export default async function run(item?: SolutionWorkspaceMapping, config?: CdsW
 
 	folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose a workplace folder containing solution items.");
 	if (Utilities.$Object.isNullOrEmpty(folder)) { 
-		logger.warn("Folder not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.deployment.updateSolutionMapping} Folder not chosen, command cancelled`);
 		return; 
 	}
 	
@@ -64,7 +65,7 @@ export default async function run(item?: SolutionWorkspaceMapping, config?: CdsW
 
 		if (item.path !== folder) {
 			if (FileSystem.exists(item.path)) {
-				logger.info(`Copying contents of ${item.path} into ${folder}`);
+				logger.info(`Command: ${cs.cds.deployment.updateSolutionMapping} Copying contents of ${item.path} into ${folder}`);
 
 				await FileSystem.copyFolder(item.path, folder)
 					.then(() => FileSystem.deleteFolder(item.path));
@@ -72,7 +73,7 @@ export default async function run(item?: SolutionWorkspaceMapping, config?: CdsW
 		}
 	}
 
-	logger.info(`Updating and saving solution map for ${folder}`);
+	logger.info(`Command: ${cs.cds.deployment.updateSolutionMapping} Updating and saving solution map for ${folder}`);
 
 	map.map(organizationId, solutionId, folder);
 	map.saveToWorkspace(ExtensionContext.Instance);

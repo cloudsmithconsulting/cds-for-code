@@ -23,7 +23,7 @@ sidebar_label: "commands/cs.cds.deployment.exportSolution"
 
 Ƭ **ExportSolutionOptions**: *object*
 
-Defined in src/commands/cs.cds.deployment.exportSolution.ts:11
+Defined in src/commands/cs.cds.deployment.exportSolution.ts:12
 
 #### Type declaration:
 
@@ -61,7 +61,7 @@ Defined in src/commands/cs.cds.deployment.exportSolution.ts:11
 
 ▸ **pickExportOptions**(`options`: [ExportSolutionOptions](_commands_cs_cds_deployment_exportsolution_.md#exportsolutionoptions)): *Promise‹[ExportSolutionOptions](_commands_cs_cds_deployment_exportsolution_.md#exportsolutionoptions)›*
 
-Defined in src/commands/cs.cds.deployment.exportSolution.ts:80
+Defined in src/commands/cs.cds.deployment.exportSolution.ts:81
 
 **Parameters:**
 
@@ -75,9 +75,9 @@ ___
 
 ###  run
 
-▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution?`: any, `solutionFile?`: Uri, `options?`: [ExportSolutionOptions](_commands_cs_cds_deployment_exportsolution_.md#exportsolutionoptions), `inform`: boolean): *Promise‹Uri‹››*
+▸ **run**(`this`: [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution?`: any, `solutionFile?`: Uri, `options?`: [ExportSolutionOptions](_commands_cs_cds_deployment_exportsolution_.md#exportsolutionoptions), `inform`: boolean): *Promise‹Uri‹››*
 
-Defined in src/commands/cs.cds.deployment.exportSolution.ts:35
+Defined in src/commands/cs.cds.deployment.exportSolution.ts:36
 
 This command can be invoked by the by either the file explorer view or the Dynamics TreeView
 and can compare two copies of a web resource.
@@ -88,6 +88,7 @@ and can compare two copies of a web resource.
 
 Name | Type | Default |
 ------ | ------ | ------ |
+`this` | [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md) | - |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) | - |
 `solution?` | any | - |
 `solutionFile?` | Uri | - |

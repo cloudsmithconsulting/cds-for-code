@@ -5,6 +5,7 @@ import ApiRepository from "../repositories/apiRepository";
 import Quickly, { QuickPickOption } from "../core/Quickly";
 import logger from "../core/framework/Logger";
 import ExtensionContext from "../core/ExtensionContext";
+import SolutionManager from "../components/Solutions/SolutionManager";
 
 /**
  * Creates a process for a CDS solution
@@ -14,7 +15,7 @@ import ExtensionContext from "../core/ExtensionContext";
  * @param {string} [solutionid]
  * @returns
  */
-export default async function run(config?: CdsWebApi.Config, solutionid?: string) {
+export default async function run(this: SolutionManager, config?: CdsWebApi.Config, solutionid?: string) {
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
 		logger.warn(`Command: ${cs.cds.deployment.createProcess} Configuration not chosen, command cancelled`);

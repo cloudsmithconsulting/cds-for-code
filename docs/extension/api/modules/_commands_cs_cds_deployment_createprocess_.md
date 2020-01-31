@@ -16,7 +16,7 @@ sidebar_label: "commands/cs.cds.deployment.createProcess"
 
 ###  run
 
-▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solutionid?`: string): *Promise‹object›*
+▸ **run**(`this`: [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solutionid?`: string): *Promise‹object›*
 
 Defined in src/commands/cs.cds.deployment.createProcess.ts:17
 
@@ -28,6 +28,7 @@ Creates a process for a CDS solution
 
 Name | Type |
 ------ | ------ |
+`this` | [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md) |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
 `solutionid?` | string |
 

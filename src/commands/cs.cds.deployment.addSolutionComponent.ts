@@ -7,6 +7,7 @@ import Quickly from '../core/Quickly';
 import { Utilities } from '../core/Utilities';
 import ExtensionContext from "../core/ExtensionContext";
 import logger from "../core/framework/Logger";
+import SolutionManager from "../components/Solutions/SolutionManager";
 
 /**
  * This command can be invoked by the Command Palette or the Dynamics TreeView and adds a solution component to a solution.
@@ -14,16 +15,16 @@ import logger from "../core/framework/Logger";
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(config?:CdsWebApi.Config, solution?:any, componentId?:string, componentType?:CdsSolutions.SolutionComponent, addRequiredComponents?:boolean, doNotIncludeSubcomponents?:boolean, componentSettings?:string): Promise<any> {
+export default async function run(this: SolutionManager, config?:CdsWebApi.Config, solution?:any, componentId?:string, componentType?:CdsSolutions.SolutionComponent, addRequiredComponents?:boolean, doNotIncludeSubcomponents?:boolean, componentSettings?:string): Promise<any> {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
-		logger.warn("Organization not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.deployment.addSolutionComponent} Organization not chosen, command cancelled`);
 		return; 
 	}
 
 	solution = solution || await Quickly.pickCdsSolution(config, "Choose a solution", true);
 	if (!solution) { 
-		logger.warn("Solution not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.deployment.addSolutionComponent} Solution not chosen, command cancelled`);
 		return; 
 	}
 
@@ -35,14 +36,14 @@ export default async function run(config?:CdsWebApi.Config, solution?:any, compo
 		CdsSolutions.SolutionComponent.Workflow
 	]);
 	if (!componentType) { 
-		logger.warn("Component Type not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.deployment.addSolutionComponent} Component Type not chosen, command cancelled`);
 		return; 
 	}
 	
 	if (Utilities.$Object.isNullOrEmpty(componentId)) { 
 		const pickResponse = await Quickly.pickCdsSolutionComponent(config, solution, componentType, "Choose a component to add");
 		if (!pickResponse) { 
-			logger.warn("Component not chosen, command cancelled");
+			logger.warn(`Command: ${cs.cds.deployment.addSolutionComponent} Component not chosen, command cancelled`);
 			return; 
 		}
 
@@ -58,7 +59,7 @@ export default async function run(config?:CdsWebApi.Config, solution?:any, compo
 
 	return await api.addSolutionComponent(solution, componentId, componentType, addRequiredComponents, doNotIncludeSubcomponents, componentSettings)
 		.then(() => solution)
-		.catch(error => Quickly.error(
+		.catch(async error => await Quickly.error(
 			`Could not add ${componentType.toString()} to solution.  The error returned was: ${error.message}`, 
 			undefined, 
 			"Retry", 

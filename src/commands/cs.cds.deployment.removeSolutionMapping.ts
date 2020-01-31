@@ -1,3 +1,4 @@
+import * as cs from '../cs';
 import * as FileSystem from '../core/io/FileSystem';
 import SolutionWorkspaceMapping from '../components/Solutions/SolutionWorkspaceMapping';
 import SolutionMap from '../components/Solutions/SolutionMap';
@@ -9,7 +10,7 @@ import logger from '../core/framework/Logger';
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(item?: SolutionWorkspaceMapping): Promise<boolean> {
+export default async function run(this: SolutionMap, item?: SolutionWorkspaceMapping): Promise<boolean> {
 	const map = await SolutionMap.loadFromWorkspace();
 	let returnValue = false;
 
@@ -19,7 +20,7 @@ export default async function run(item?: SolutionWorkspaceMapping): Promise<bool
 		if (item && item.path) {
 			if (FileSystem.exists(item.path)) {
 				returnValue = true;
-				logger.log(`Deleting folder ${item.path}`);
+				logger.log(`Command: ${cs.cds.deployment.removeSolutionMapping} Deleting folder ${item.path}`);
 				await FileSystem.deleteFolder(item.path);
 			}
 		}
@@ -31,7 +32,7 @@ export default async function run(item?: SolutionWorkspaceMapping): Promise<bool
 		}
 	}
 	
-	logger.log(`Saving new mappings to workspace`);
+	logger.log(`Command: ${cs.cds.deployment.removeSolutionMapping} Saving new mappings to workspace`);
 	map.saveToWorkspace();
 
 	return returnValue;

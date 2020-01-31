@@ -28,7 +28,7 @@ sidebar_label: "views"
 
 ▪ **_namespace**: *string* = "cs.cds.views"
 
-Defined in src/cs.ts:93
+Defined in src/cs.ts:94
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 ▪ **connectionEditor**: *string* = `${viewContainers._namespace}.connectionEditor`
 
-Defined in src/cs.ts:94
+Defined in src/cs.ts:95
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 ▪ **jsonInspectorView**: *string* = `${viewContainers._namespace}.jsonInspectorView`
 
-Defined in src/cs.ts:95
+Defined in src/cs.ts:96
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 ▪ **newWorkspaceView**: *string* = `${viewContainers._namespace}.newWorkspaceView`
 
-Defined in src/cs.ts:96
+Defined in src/cs.ts:97
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 ▪ **pluginStepEditor**: *string* = `${viewContainers._namespace}.pluginStepEditor`
 
-Defined in src/cs.ts:97
+Defined in src/cs.ts:98
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 ▪ **pluginStepImageEditor**: *string* = `${viewContainers._namespace}.pluginStepImageEditor`
 
-Defined in src/cs.ts:98
+Defined in src/cs.ts:99
 
 ___
 
@@ -76,4 +76,4 @@ ___
 
 ▪ **svcUtilConfigView**: *string* = `${viewContainers._namespace}.svcUtilConfigView`
 
-Defined in src/cs.ts:99
+Defined in src/cs.ts:100

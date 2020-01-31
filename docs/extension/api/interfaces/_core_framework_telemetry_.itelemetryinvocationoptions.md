@@ -28,7 +28,7 @@ sidebar_label: "ITelemetryInvocationOptions"
 
 • **logger**? : *[ExtensionLogger](../classes/_core_framework_logger_.extensionlogger.md)*
 
-Defined in src/core/framework/Telemetry.ts:198
+Defined in src/core/framework/Telemetry.ts:213
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 • **onEnd**? : *function*
 
-Defined in src/core/framework/Telemetry.ts:200
+Defined in src/core/framework/Telemetry.ts:215
 
 #### Type declaration:
 
@@ -56,7 +56,7 @@ ___
 
 • **onStart**? : *function*
 
-Defined in src/core/framework/Telemetry.ts:199
+Defined in src/core/framework/Telemetry.ts:214
 
 #### Type declaration:
 

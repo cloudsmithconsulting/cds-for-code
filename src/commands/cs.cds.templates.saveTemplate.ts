@@ -5,6 +5,7 @@ import Quickly from "../core/Quickly";
 import { TemplateType } from "../components/Templates/Types";
 import * as FileSystem from "../core/io/FileSystem";
 import logger from "../core/framework/Logger";
+import TemplateManager from "../components/Templates/TemplateManager";
 
 /**
  * This command saves a folder or item as a template.
@@ -15,12 +16,12 @@ import logger from "../core/framework/Logger";
  * @param {vscode.Uri} [templateUri] supplied by vscode's contribution on file/explorer.
  * @returns void
  */
-export default async function run(templateUri?: vscode.Uri, type?:TemplateType) {
+export default async function run(this: TemplateManager, templateUri?: vscode.Uri, type?: TemplateType) {
 	let path:string;
 
     type = type || await Quickly.pickEnum<TemplateType>(TemplateType, "What kind of template would you like to create?");
     if (!type) { 
-        logger.warn("Template not chosen, command cancelled");
+        logger.warn(`Command: ${cs.cds.templates.saveTemplate} Template not chosen, command cancelled`);
         return; 
     }
 
@@ -38,8 +39,8 @@ export default async function run(templateUri?: vscode.Uri, type?:TemplateType) 
     }
 
     if (!path) {
-        await Quickly.error("You must select a workspace and folder before you can save a project template", false, "Try Again", () => { vscode.commands.executeCommand(cs.cds.templates.saveTemplate, templateUri, type); }, "Cancel");
-        logger.warn("Path not chosen, command cancelled");
+        await Quickly.error("You must select a workspace and folder before you can save a project template", false, "Try Again", () => { this.saveTemplate(templateUri, type); }, "Cancel");
+        logger.warn(`Command: ${cs.cds.templates.saveTemplate} Path not chosen, command cancelled`);
 
         return;
     }
@@ -48,15 +49,15 @@ export default async function run(templateUri?: vscode.Uri, type?:TemplateType) 
 	ExtensionConfiguration.updateConfiguration(cs.cds.configuration.templates._namespace);
 
 	// save template to file system (will save to catalog)
-    this.saveToFilesystem(path, type).then(
-        (template) => {
+    await this.saveToFilesystem(path, type).then(
+        async (template) => {
             if (template) {
                 logger.info(`Created template ${template.name} from ${path}`);
-                Quickly.inform(`Created template '${template.name}' from ${type === TemplateType.ItemTemplate ? "item" : "folder"}`);
+                await Quickly.inform(`Created template '${template.name}' from ${type === TemplateType.ItemTemplate ? "item" : "folder"}`);
             }
         },
-        (reason: any) => {
-            Quickly.error(`Failed to save a template from the contents of '${path}': ${reason}`, false, "Try Again", () => { vscode.commands.executeCommand(cs.cds.templates.saveTemplate, templateUri, type); }, "Cancel");
+        async (reason: any) => {
+            await Quickly.error(`Failed to save a template from the contents of '${path}': ${reason}`, false, "Try Again", () => { this.saveTemplate(templateUri, type); }, "Cancel");
         }
 	);   
 }

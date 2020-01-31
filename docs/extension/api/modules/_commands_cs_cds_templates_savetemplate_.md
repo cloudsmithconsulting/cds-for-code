@@ -28,9 +28,9 @@ Defined in src/commands/cs.cds.templates.saveTemplate.ts:1
 
 ###  run
 
-▸ **run**(`templateUri`: Uri, `type`: [TemplateType](../enums/_components_templates_types_.templatetype.md)): *Promise‹void›*
+▸ **run**(`this`: [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md), `templateUri`: Uri, `type`: [TemplateType](../enums/_components_templates_types_.templatetype.md)): *Promise‹void›*
 
-Defined in src/commands/cs.cds.templates.saveTemplate.ts:18
+Defined in src/commands/cs.cds.templates.saveTemplate.ts:19
 
 This command saves a folder or item as a template.
 This command can be invoked by the Command Palette or in a folder context menu on the explorer view.
@@ -43,6 +43,7 @@ This command can be invoked by the Command Palette or in a folder context menu o
 
 Name | Type |
 ------ | ------ |
+`this` | [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md) |
 `templateUri` | Uri |
 `type` | [TemplateType](../enums/_components_templates_types_.templatetype.md) |
 

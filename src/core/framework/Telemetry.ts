@@ -7,7 +7,7 @@ import { extensionActivate, extensionDeactivate } from "../Extension";
 import moment = require('moment');
 import { Utilities } from '../Utilities';
 import Dictionary from '../types/Dictionary';
-import { ExtensionLogger } from './Logger';
+import logger, { ExtensionLogger } from './Logger';
 
 export default class Telemetry {
     static get Instance(): Telemetry {
@@ -43,11 +43,26 @@ export default class Telemetry {
     }
 
     error(error: Error, properties?: { [key: string]: string; }, measurements?: { [key: string]: number; }): void {
-        this.reporter.sendTelemetryException(error, properties, measurements);
+        if (vscode.env.machineId !== 'someValue.machineId') {
+            this.reporter.sendTelemetryException(error, properties, measurements);
+        } else {
+            const errorText = JSON.stringify(error); 
+            const propertiesText = JSON.stringify(properties);
+            const measurementsText = JSON.stringify(measurements);
+
+            logger.log(`[Debug] Telemetry.error(error: ${errorText}, properties: ${propertiesText}, measurements: ${measurementsText})`);
+        }
     }
 
     sendTelemetry(event: string, properties?: { [key: string]: string; }, measurements?: { [key: string]: number; }): void {
-        this.reporter.sendTelemetryEvent(event, properties, measurements);
+        if (vscode.env.machineId !== 'someValue.machineId') {
+            this.reporter.sendTelemetryEvent(event, properties, measurements);
+        } else {
+            const propertiesText = JSON.stringify(properties);
+            const measurementsText = JSON.stringify(measurements);
+
+            logger.log(`[Debug] Telemetry.sendTelemetry(event: ${event}, properties: ${propertiesText}, measurements: ${measurementsText})`);
+        }
     }
 }
 

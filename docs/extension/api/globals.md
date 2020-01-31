@@ -33,6 +33,7 @@ sidebar_label: "Globals"
 * ["api/cds-webapi/utilities/Utility"](modules/_api_cds_webapi_utilities_utility_.md)
 * ["commands/cs.cds.deployment.addSolutionComponent"](modules/_commands_cs_cds_deployment_addsolutioncomponent_.md)
 * ["commands/cs.cds.deployment.compareWebResource"](modules/_commands_cs_cds_deployment_comparewebresource_.md)
+* ["commands/cs.cds.deployment.createCrmSvcUtilConfig"](modules/_commands_cs_cds_deployment_createcrmsvcutilconfig_.md)
 * ["commands/cs.cds.deployment.createProcess"](modules/_commands_cs_cds_deployment_createprocess_.md)
 * ["commands/cs.cds.deployment.createWebResource"](modules/_commands_cs_cds_deployment_createwebresource_.md)
 * ["commands/cs.cds.deployment.dotNetBuild"](modules/_commands_cs_cds_deployment_dotnetbuild_.md)

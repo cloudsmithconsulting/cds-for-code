@@ -7,6 +7,7 @@ import Quickly, { QuickPickOption } from "../core/Quickly";
 import ExtensionContext from "../core/ExtensionContext";
 import logger from "../core/framework/Logger";
 import ApiRepository from "../repositories/apiRepository";
+import SolutionManager from "../components/Solutions/SolutionManager";
 
 export type ExportSolutionOptions = {
     SolutionName: string,
@@ -32,7 +33,7 @@ export type ExportSolutionOptions = {
  * @param {vscode.Uri} [defaultUri] that invoked the command
  * @returns void
  */
-export default async function run(config?: CdsWebApi.Config, solution?: any, solutionFile?: vscode.Uri, options?: ExportSolutionOptions, inform: boolean = true) {
+export default async function run(this: SolutionManager, config?: CdsWebApi.Config, solution?: any, solutionFile?: vscode.Uri, options?: ExportSolutionOptions, inform: boolean = true) {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
 		logger.warn(`Command: ${cs.cds.deployment.exportSolution} Organization not chosen, command cancelled`);

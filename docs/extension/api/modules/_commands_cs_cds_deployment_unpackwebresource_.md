@@ -16,9 +16,9 @@ sidebar_label: "commands/cs.cds.deployment.unpackWebResource"
 
 ###  run
 
-▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `webResource?`: any, `fileUri?`: Uri, `autoOpen`: boolean): *Promise‹void›*
+▸ **run**(`this`: [WebResourceManager](../classes/_components_solutions_webresourcemanager_.webresourcemanager.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `webResource?`: any, `fileUri?`: Uri, `autoOpen`: boolean): *Promise‹void›*
 
-Defined in src/commands/cs.cds.deployment.unpackWebResource.ts:21
+Defined in src/commands/cs.cds.deployment.unpackWebResource.ts:23
 
 This command can be invoked by the Dynamics Explorer tree view and creates or updates a web resource in the local workspace.
 
@@ -28,6 +28,7 @@ This command can be invoked by the Dynamics Explorer tree view and creates or up
 
 Name | Type | Default |
 ------ | ------ | ------ |
+`this` | [WebResourceManager](../classes/_components_solutions_webresourcemanager_.webresourcemanager.md) | - |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) | - |
 `webResource?` | any | - |
 `fileUri?` | Uri | - |

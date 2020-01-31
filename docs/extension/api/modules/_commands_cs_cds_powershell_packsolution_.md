@@ -16,9 +16,9 @@ sidebar_label: "commands/cs.cds.powerShell.packSolution"
 
 ###  run
 
-▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `solution?`: any, `toolsPath?`: string, `logFile?`: string, `mappingFile?`: string, `includeResourceFiles?`: boolean, `solutionPath?`: string, `managed?`: boolean): *Promise‹void›*
+▸ **run**(`this`: [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `solution?`: any, `toolsPath?`: string, `logFile?`: string, `mappingFile?`: string, `includeResourceFiles?`: boolean, `solutionPath?`: string, `managed?`: boolean): *Promise‹void›*
 
-Defined in src/commands/cs.cds.powerShell.packSolution.ts:23
+Defined in src/commands/cs.cds.powerShell.packSolution.ts:24
 
 This command can be invoked by the Command Palette and packs a solution.
 
@@ -28,6 +28,7 @@ This command can be invoked by the Command Palette and packs a solution.
 
 Name | Type |
 ------ | ------ |
+`this` | [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md) |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
 `folder?` | string |
 `solution?` | any |

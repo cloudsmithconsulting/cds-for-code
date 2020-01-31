@@ -19,7 +19,7 @@ sidebar_label: "commands/cs.cds.deployment.dotNetBuild"
 
 ▸ **incrementBuild**(`build`: string): *string*
 
-Defined in src/commands/cs.cds.deployment.dotNetBuild.ts:15
+Defined in src/commands/cs.cds.deployment.dotNetBuild.ts:18
 
 This command can be invoked by the Explorer file viewer and builds a .Net Core project
 
@@ -37,14 +37,15 @@ ___
 
 ###  run
 
-▸ **run**(`file?`: Uri, `updateVersionBuild`: boolean, `logFile?`: string): *Promise‹any›*
+▸ **run**(`this`: [VisualStudioProjectCommands](../classes/_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md), `file?`: Uri, `updateVersionBuild`: boolean, `logFile?`: string): *Promise‹any›*
 
-Defined in src/commands/cs.cds.deployment.dotNetBuild.ts:29
+Defined in src/commands/cs.cds.deployment.dotNetBuild.ts:32
 
 **Parameters:**
 
 Name | Type | Default |
 ------ | ------ | ------ |
+`this` | [VisualStudioProjectCommands](../classes/_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md) | - |
 `file?` | Uri | - |
 `updateVersionBuild` | boolean | true |
 `logFile?` | string | - |

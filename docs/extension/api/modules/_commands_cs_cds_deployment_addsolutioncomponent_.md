@@ -16,9 +16,9 @@ sidebar_label: "commands/cs.cds.deployment.addSolutionComponent"
 
 ###  run
 
-▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution?`: any, `componentId?`: string, `componentType?`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md), `addRequiredComponents?`: boolean, `doNotIncludeSubcomponents?`: boolean, `componentSettings?`: string): *Promise‹any›*
+▸ **run**(`this`: [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution?`: any, `componentId?`: string, `componentType?`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md), `addRequiredComponents?`: boolean, `doNotIncludeSubcomponents?`: boolean, `componentSettings?`: string): *Promise‹any›*
 
-Defined in src/commands/cs.cds.deployment.addSolutionComponent.ts:17
+Defined in src/commands/cs.cds.deployment.addSolutionComponent.ts:18
 
 This command can be invoked by the Command Palette or the Dynamics TreeView and adds a solution component to a solution.
 
@@ -28,6 +28,7 @@ This command can be invoked by the Command Palette or the Dynamics TreeView and 
 
 Name | Type |
 ------ | ------ |
+`this` | [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md) |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
 `solution?` | any |
 `componentId?` | string |

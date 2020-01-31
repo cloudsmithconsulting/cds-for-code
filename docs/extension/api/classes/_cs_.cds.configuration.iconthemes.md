@@ -24,7 +24,7 @@ sidebar_label: "iconThemes"
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.iconThemes"
 
-Defined in src/cs.ts:125
+Defined in src/cs.ts:126
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 ▪ **default**: *string* = `${iconThemes._namespace}.default`
 
-Defined in src/cs.ts:126
+Defined in src/cs.ts:127
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 ▪ **selectedTheme**: *string* = `${iconThemes._namespace}.selectedTheme`
 
-Defined in src/cs.ts:127
+Defined in src/cs.ts:128

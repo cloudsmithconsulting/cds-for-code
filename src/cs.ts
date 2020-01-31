@@ -14,8 +14,9 @@ export namespace cds {
         static readonly addSolutionComponent: string = `${deployment._namespace}.addSolutionComponent`;
         static readonly compareWebResource: string = `${deployment._namespace}.compareWebResource`;
         static readonly connectToCds: string = `${deployment._namespace}.connectToCds`;
-        static readonly createWebResource: string = `${deployment._namespace}.createWebResource`;
+        static readonly createCrmSvcUtilConfig: string = `${deployment._namespace}.createCrmSvcUtilConfig`;
         static readonly createProcess: string = `${deployment._namespace}.createProcess`;
+        static readonly createWebResource: string = `${deployment._namespace}.createWebResource`;
         static readonly dotNetBuild: string = `${deployment._namespace}.dotNetBuild`;
         static readonly dotNetTest: string = `${deployment._namespace}.dotNetTest`;
         static readonly exportSolution: string = `${deployment._namespace}.exportSolution`;
@@ -160,6 +161,7 @@ export namespace cds {
             static readonly addEntry: string = `${cdsExplorer._namespace}.addEntry`;
             static readonly addEntryToSolution: string = `${cdsExplorer._namespace}.addEntryToSolution`;
             static readonly clickEntry: string = `${cdsExplorer._namespace}.clickEntry`;
+            static readonly createCrmSvcUtilConfig: string = `${cdsExplorer._namespace}.createCrmSvcUtilConfig`;
             static readonly deleteEntry: string = `${cdsExplorer._namespace}.deleteEntry`;
             static readonly editConnection: string = `${cdsExplorer._namespace}.editConnection`;
             static readonly editEntry: string = `${cdsExplorer._namespace}.editEntry`;
@@ -177,6 +179,7 @@ export namespace cds {
         // tslint:disable-next-line: class-name
         export class explorer {
             static readonly _namespace: string = "cs.cds.controls.explorer";
+            static readonly createCrmSvcUtilConfig: string = `${explorer._namespace}.createCrmSvcUtilConfig`;
             static readonly createFromItemTemplate: string = `${explorer._namespace}.createFromItemTemplate`;
             static readonly createFromProjectTemplate: string = `${explorer._namespace}.createFromProjectTemplate`;
             static readonly craeteWebResource: string = `${explorer._namespace}.createWebResource`;

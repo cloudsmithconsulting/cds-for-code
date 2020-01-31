@@ -1,3 +1,4 @@
+import * as cs from '../cs';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as FileSystem from "../core/io/FileSystem";
@@ -9,6 +10,7 @@ import { Utilities } from "../core/Utilities";
 import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceMapping";
 import ExtensionContext from '../core/ExtensionContext';
 import logger from '../core/framework/Logger';
+import WebResourceManager from '../components/Solutions/WebResourceManager';
 
 /**
  * This command can be invoked by the Dynamics Explorer tree view and creates or updates a web resource in the local workspace.
@@ -18,10 +20,10 @@ import logger from '../core/framework/Logger';
  * @param {vscode.Uri} [fileUri] The Uri of the file to save the web resource as.
  * @returns void
  */
-export default async function run(config?:CdsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
+export default async function run(this: WebResourceManager, config?:CdsWebApi.Config, webResource?:any, fileUri?: vscode.Uri, autoOpen:boolean = false) {
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
     if (!config) { 
-        logger.warn("Configuration not chosen, command cancelled");
+        logger.warn(`Command: ${cs.cds.deployment.unpackWebResource} Configuration not chosen, command cancelled`);
 
         return; 
     }
@@ -36,7 +38,7 @@ export default async function run(config?:CdsWebApi.Config, webResource?:any, fi
 
     webResource = webResource || await Quickly.pickCdsSolutionComponent(config, map ? map.solutionId : undefined, CdsSolutions.SolutionComponent.WebResource, "Choose a web resource to export").then(r => r ? r.component : undefined);
     if (!webResource) {
-        logger.warn("Web Resource not chosen, command cancelled");
+        logger.warn(`Command: ${cs.cds.deployment.unpackWebResource} Web Resource not chosen, command cancelled`);
         return; 
     }
 

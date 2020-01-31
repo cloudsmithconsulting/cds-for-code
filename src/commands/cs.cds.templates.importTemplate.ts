@@ -13,7 +13,7 @@ import logger from '../core/framework/Logger';
  * @param {vscode.Uri} [sourceUri] supplied by vscode's contribution on file/explorer.
  * @returns void
  */
-export default async function run(sourceUri:vscode.Uri): Promise<void> {
+export default async function run(this: TemplateManager, sourceUri: vscode.Uri): Promise<void> {
     if (!sourceUri) {
         const response = await Quickly.pickAnyFile(undefined, false, "Select template item", { "Zip Files": [ "zip" ]});
         if (!response) { 
@@ -33,7 +33,7 @@ export default async function run(sourceUri:vscode.Uri): Promise<void> {
             logger.info(`Imported template ${template.name}`);
             Quickly.inform(`Imported template '${template.name}'`);
         }).catch(error => {
-            Quickly.error(`Failed to import the template '${sourceUri.fsPath}': ${error}`, false, "Try Again", () => { vscode.commands.executeCommand(cs.cds.templates.importTemplate, sourceUri); }, "Cancel");
+            Quickly.error(`Failed to import the template '${sourceUri.fsPath}': ${error}`, false, "Try Again", () => { this.importTemplate(sourceUri); }, "Cancel");
         });
 
 }

@@ -16,7 +16,7 @@ sidebar_label: "commands/cs.cds.templates.editTemplateCatalog"
 
 ###  run
 
-▸ **run**(`configFile?`: Uri): *Promise‹void›*
+▸ **run**(`this`: [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md), `configFile?`: Uri): *Promise‹void›*
 
 Defined in src/commands/cs.cds.templates.editTemplateCatalog.ts:14
 
@@ -31,6 +31,7 @@ This command can be invoked by the Command Palette or in the template treeview
 
 Name | Type |
 ------ | ------ |
+`this` | [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md) |
 `configFile?` | Uri |
 
 **Returns:** *Promise‹void›*

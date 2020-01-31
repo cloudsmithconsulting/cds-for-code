@@ -9,6 +9,6 @@ import TemplateManager from "../components/Templates/TemplateManager";
  * @param {TemplateItem} [template] supplied by the template tree view
  * @returns void
  */
-export default async function run(template: TemplateItem) {
+export default async function run(this: TemplateManager, template: TemplateItem) {
 	await TemplateManager.openTemplateFolderInExplorer(template);
 }

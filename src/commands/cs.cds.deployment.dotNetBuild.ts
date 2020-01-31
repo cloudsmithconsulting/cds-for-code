@@ -1,10 +1,13 @@
 import * as vscode from 'vscode';
 import * as FileSystem from '../core/io/FileSystem';
+import * as path from 'path';
+import * as cs from '../cs';
 import Quickly from '../core/Quickly';
 import TerminalManager, { TerminalCommand } from '../components/Terminal/SecureTerminal';
-import * as path from 'path';
 import ExtensionContext from '../core/ExtensionContext';
 import { Utilities } from '../core/Utilities';
+import logger from '../core/framework/Logger';
+import VisualStudioProjectCommands from '../components/DotNetCore/DotNetProjectManager';
 
 /**
  * This command can be invoked by the Explorer file viewer and builds a .Net Core project
@@ -26,7 +29,7 @@ const incrementBuild = (build:string) => {
 	return parts.join(".");
 };
 
-export default async function run(file?:vscode.Uri, updateVersionBuild:boolean = true, logFile?:string): Promise<any> {
+export default async function run(this: VisualStudioProjectCommands, file?:vscode.Uri, updateVersionBuild:boolean = true, logFile?:string): Promise<any> {
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
 	let defaultFolder = workspaceFolder ? workspaceFolder.uri : undefined;
 
@@ -36,15 +39,18 @@ export default async function run(file?:vscode.Uri, updateVersionBuild:boolean =
 			file = undefined;
 		} else {
 			// If we didn't specify a project file, return.
-			if (!this.fileIsProject(file)) { file = undefined; } 
+			if (!VisualStudioProjectCommands.fileIsProject(file)) { file = undefined; } 
 		}
 	}
 
-	file = file || await Quickly.pickWorkspaceFile(defaultFolder, "Choose a projet to build", undefined, false, this.projectFileTypes).then(r => vscode.Uri.file(r));
-	if (!file) { return; }
+	file = file || await Quickly.pickWorkspaceFile(defaultFolder, "Choose a projet to build", undefined, false, VisualStudioProjectCommands.projectFileTypes).then(r => vscode.Uri.file(r));
+	if (!file) { 
+		logger.warn(`Command: ${cs.cds.deployment.dotNetBuild} Project file not chosen, command cancelled`);
+		return; 
+	}
 
 	if (updateVersionBuild) {
-		await this.updateVersionNumber(file, incrementBuild);
+		await VisualStudioProjectCommands.updateVersionNumber(file, incrementBuild);
 	}
 
 	if (!logFile || logFile !== "!") {
@@ -59,7 +65,7 @@ export default async function run(file?:vscode.Uri, updateVersionBuild:boolean =
 	return TerminalManager.showTerminal(path.parse(file.fsPath).dir)
 		.then(async terminal => { 
 			return await terminal.run(new TerminalCommand(`dotnet build "${file.fsPath}"`))
-				.then(tc => {
+				.then(async tc => {
 					if (logFile) {
 						const folder = path.dirname(logFile);
 
@@ -69,7 +75,7 @@ export default async function run(file?:vscode.Uri, updateVersionBuild:boolean =
 
 						FileSystem.writeFileSync(logFile, tc.output);
 
-						vscode.workspace.openTextDocument(logFile)
+						await vscode.workspace.openTextDocument(logFile)
 							.then(d => vscode.window.showTextDocument(d));	
 					}
 				});                      

@@ -103,7 +103,7 @@ export default function nodeJsRequest(options: any) {
                         responseParams.length = 0;
                     }
         
-                    logger.error(`HTTP error: ${internalOptions.method} ${internalOptions.url} (out: ${data ? data.length : 0}b, time: ${requestEndTime - requestStartTime}ms, error: ${(error.message || error).toString()})`);
+                    logger.error(`HTTP: ${internalOptions.method} ${internalOptions.url} (statusCode: -1, out: ${data ? data.length : 0}b, time: ${requestEndTime - requestStartTime}ms, error: ${(error.message || error).toString()})`);
                     Telemetry.Instance.error(error, {
                         requestId,
                         method: internalOptions.method,
@@ -113,9 +113,9 @@ export default function nodeJsRequest(options: any) {
                         username: internalOptions.username,
                         statusCode: "-1"
                     }, {
-                        executionTime: requestEndTime - requestStartTime,
-                        requestBytes: data ? data.length : 0,
-                        responseBytes: 0
+                        'duration.invocation': requestEndTime - requestStartTime,
+                        'count.requestBytes': data ? data.length : 0,
+                        'count.responseBytes': 0
                     });
 
                     errorCallback(error);
@@ -128,7 +128,7 @@ export default function nodeJsRequest(options: any) {
                             errorType: 'authentication_failure', 
                             errorStatus: '401' });
                     } else {
-                        logger.log(`HTTP ${response.statusCode} received: ${internalOptions.method} ${internalOptions.url} (out: ${data ? data.length : 0}b, in: ${response && response.body ? response.body.length : 0}b, time: ${requestEndTime - requestStartTime}ms)`);
+                        logger.log(`HTTP ${internalOptions.method} ${internalOptions.url} (statusCode: ${response.statusCode}, out: ${data ? data.length : 0}b, in: ${response && response.body ? response.body.length : 0}b, time: ${requestEndTime - requestStartTime}ms)`);
 
                         Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.httpRequest, {
                             requestId,
@@ -139,9 +139,9 @@ export default function nodeJsRequest(options: any) {
                             username: internalOptions.username,
                             statusCode: response.statusCode
                         }, {
-                            executionTime: requestEndTime - requestStartTime,
-                            requestBytes: data ? data.length : 0,
-                            responseBytes: response && response.body ? response.body.length : 0
+                            'duration.invocation': requestEndTime - requestStartTime,
+                            'count.requestBytes': data ? data.length : 0,
+                            'count.responseBytes': response && response.body ? response.body.length : 0
                         });
                     }
 
@@ -167,7 +167,7 @@ export default function nodeJsRequest(options: any) {
                         if (response.statusCode === 401 && authRetry && authRetry()) {
                             logger.log("OAuth: HTTP 401 received");
                         } else if (responseDelegate) {
-                            logger.log(`HTTP ${response.statusCode} received: ${internalOptions.method.toUpperCase()} ${parsedUrl.href} (out: ${data ? data.length : 0}b, in: ${rawData ? rawData.length : 0}b, time: ${requestEndTime - requestStartTime}ms)`);
+                            logger.log(`HTTP ${internalOptions.method.toUpperCase()} ${parsedUrl.href} (statusCode: ${response.statusCode}, out: ${data ? data.length : 0}b, in: ${rawData ? rawData.length : 0}b, time: ${requestEndTime - requestStartTime}ms)`);
 
                             Telemetry.Instance.sendTelemetry(cs.cds.telemetryEvents.httpRequest, {
                                 requestId,
@@ -178,9 +178,9 @@ export default function nodeJsRequest(options: any) {
                                 username: headers ? headers["authorization"] : null,
                                 statusCode: response.statusCode
                             }, {
-                                executionTime: requestEndTime - requestStartTime,
-                                requestBytes: data ? data.length : 0,
-                                responseBytes: rawData ? rawData.length : 0
+                                'duration.invocation': requestEndTime - requestStartTime,
+                                'count.requestBytes': data ? data.length : 0,
+                                'count.responseBytes': rawData ? rawData.length : 0
                             });
 
                             responseDelegate(parsedUrl.href, rawData, response, responseParams, successCallback, errorCallback);
@@ -218,7 +218,7 @@ export default function nodeJsRequest(options: any) {
 
             requestEndTime = moment.now();
 
-            logger.error(`HTTP error: ${internalOptions.method} ${parsedUrl.href} (request: ${data ? data.length : 0}b, time: ${requestEndTime - requestStartTime}ms, error: ${(error.message || error).toString()})`);
+            logger.error(`HTTP ${internalOptions.method} ${parsedUrl.href} (statusCode: -1, request: ${data ? data.length : 0}b, time: ${requestEndTime - requestStartTime}ms, error: ${(error.message || error).toString()})`);
             Telemetry.Instance.error(error, {
                 requestId,
                 method: internalOptions.method,
@@ -227,8 +227,8 @@ export default function nodeJsRequest(options: any) {
                 url: internalOptions.url,
                 username: internalOptions.username
             }, {
-                executionTime: requestEndTime - requestStartTime,
-                requestBytes: data ? data.length : 0
+                'duration.invocation': requestEndTime - requestStartTime,
+                'count.requestBytes': data ? data.length : 0
             });
 
             errorCallback(error);

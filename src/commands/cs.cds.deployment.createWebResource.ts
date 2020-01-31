@@ -11,6 +11,7 @@ import SolutionWorkspaceMapping from "../components/Solutions/SolutionWorkspaceM
 import ExtensionContext from "../core/ExtensionContext";
 import DiscoveryRepository from "../repositories/discoveryRepository";
 import logger from "../core/framework/Logger";
+import WebResourceManager from "../components/Solutions/WebResourceManager";
 
 /**
  * This command can be invoked by the by either the file explorer view or the Dynamics TreeView
@@ -19,7 +20,7 @@ import logger from "../core/framework/Logger";
  * @param {vscode.Uri} [defaultUri] that invoked the command
  * @returns void
  */
-export default async function run(config?:CdsWebApi.Config, solutionId?:string, webResource?:any, fileUri?:vscode.Uri, defaultName:string = "", inform:boolean = true) {
+export default async function run(this: WebResourceManager, config?:CdsWebApi.Config, solutionId?:string, webResource?:any, fileUri?:vscode.Uri, defaultName:string = "", inform:boolean = true) {
     let fsPath:string;
     let map:SolutionWorkspaceMapping;
     let folder:string;
@@ -180,15 +181,15 @@ export default async function run(config?:CdsWebApi.Config, solutionId?:string, 
             await this.writeDataXmlFile(map, webResource, fsPath, providedVersion >= minimumVersionToEditCustomizationFiles);
 
             if (inform) {
-                await Quickly.inform(`The web resource '${webResource.name}' was saved to the local workspace.`);
+                await Quickly.inform(`The web resource '${webResource.name}' was saved to the local workspace`);
             }
         } else {
-            logger.info(`Command: ${cs.cds.deployment.createWebResource} Web Resource: ${webResource.name} is not mapped to a solution.  Creating web resource on ${config.appUrl}.`);
+            logger.info(`Command: ${cs.cds.deployment.createWebResource} Web Resource: ${webResource.name} is not mapped to a solution.  Creating web resource on ${config.appUrl}`);
 
             webResource = await this.upsertWebResource(config, webResource, solution);
 
             if (inform) {
-                await Quickly.inform(`The web resource '${webResource.name}' was saved to the Dynamics server.`);
+                await Quickly.inform(`The web resource '${webResource.name}' was saved to the CDS environment`);
             }
         }
 

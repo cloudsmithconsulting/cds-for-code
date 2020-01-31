@@ -16,9 +16,9 @@ sidebar_label: "commands/cs.cds.deployment.packWebResource"
 
 ###  run
 
-▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution?`: any, `webResource?`: any, `fileUri?`: Uri, `inform`: boolean): *Promise‹object›*
+▸ **run**(`this`: [WebResourceManager](../classes/_components_solutions_webresourcemanager_.webresourcemanager.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution?`: any, `webResource?`: any, `fileUri?`: Uri, `inform`: boolean): *Promise‹object›*
 
-Defined in src/commands/cs.cds.deployment.packWebResource.ts:17
+Defined in src/commands/cs.cds.deployment.packWebResource.ts:18
 
 This command can be invoked by the Explorer file viewer and creates or updates a web resource in Dynamics
 
@@ -28,6 +28,7 @@ This command can be invoked by the Explorer file viewer and creates or updates a
 
 Name | Type | Default |
 ------ | ------ | ------ |
+`this` | [WebResourceManager](../classes/_components_solutions_webresourcemanager_.webresourcemanager.md) | - |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) | - |
 `solution?` | any | - |
 `webResource?` | any | - |

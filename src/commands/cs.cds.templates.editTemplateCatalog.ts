@@ -11,7 +11,7 @@ import Quickly from "../core/Quickly";
  * @this TemplateManager instance that manages this command.
  * @returns void
  */
-export default async function run(configFile?:vscode.Uri) {
+export default async function run(this: TemplateManager, configFile?:vscode.Uri) {
 	let file;
 
 	if (configFile && configFile.fsPath && FileSystem.exists(configFile.fsPath)) {

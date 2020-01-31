@@ -13,6 +13,7 @@ import ExtensionContext from '../core/ExtensionContext';
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
 import logger from '../core/framework/Logger';
 import * as FileSystem from '../core/io/FileSystem';
+import SolutionManager from '../components/Solutions/SolutionManager';
 
 /**
  * This command can be invoked by the Command Palette and packs a solution.
@@ -20,7 +21,7 @@ import * as FileSystem from '../core/io/FileSystem';
  * @param {vscode.Uri} [file] that invoked the command
  * @returns void
  */
-export default async function run(config?:CdsWebApi.Config, folder?:string, solution?:any, toolsPath?:string, logFile?:string, mappingFile?:string, includeResourceFiles?:boolean, solutionPath?:string, managed?:boolean) {
+export default async function run(this: SolutionManager, config?:CdsWebApi.Config, folder?:string, solution?:any, toolsPath?:string, logFile?:string, mappingFile?:string, includeResourceFiles?:boolean, solutionPath?:string, managed?:boolean) {
 	// setup configurations
 	const sdkInstallPath = ExtensionConfiguration.getConfigurationValueOrDefault<string>(cs.cds.configuration.tools.sdkInstallPath, path.join(ExtensionContext.Instance.globalStoragePath, "Sdk"));
 	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
@@ -35,13 +36,13 @@ export default async function run(config?:CdsWebApi.Config, folder?:string, solu
 
 	folder = folder || await Quickly.pickWorkspaceFolder(workspaceFolder ? workspaceFolder.uri : undefined, "Choose the folder containing the solution to pack", true);
 	if (Utilities.$Object.isNullOrEmpty(folder)) { 
-		logger.warn("Folder not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.powerShell.packSolution} Folder not chosen, command cancelled`);
 		return; 
 	}
 	
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS organization", true);
 	if (!config) {
-		logger.warn("Organization not chosen, command cancelled");
+		logger.warn(`Command: ${cs.cds.powerShell.packSolution} Organization not chosen, command cancelled`);
 		return; 
 	}
 
@@ -53,7 +54,7 @@ export default async function run(config?:CdsWebApi.Config, folder?:string, solu
 			solution = await Quickly.pickCdsSolution(config, "Choose a CDS solution to pack", true);
 
 			if (!solution) {
-				logger.warn("Solution not chosen, command cancelled");
+				logger.warn(`Command: ${cs.cds.powerShell.packSolution} Solution not chosen, command cancelled`);
 				return; 
 			}
 		}
@@ -62,7 +63,7 @@ export default async function run(config?:CdsWebApi.Config, folder?:string, solu
 			const solutionFileXml:SolutionFile = await SolutionFile.from(solutionFile);
 			
 			if (!solutionFileXml.isValid) {
-				logger.error(`The solution file ${solutionFile} is not a valid CDS solution manifest.`);
+				logger.error(`Command: ${cs.cds.powerShell.packSolution} The solution file ${solutionFile} is not a valid CDS solution manifest.`);
 				Quickly.error(`The solution file ${solutionFile} is not a valid CDS solution manifest.`); 
 
 				return;

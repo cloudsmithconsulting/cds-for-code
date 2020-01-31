@@ -23,7 +23,7 @@ sidebar_label: "web"
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.web"
 
-Defined in src/cs.ts:105
+Defined in src/cs.ts:106
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 ▪ **usePowerAppsUi**: *string* = `${web._namespace}.usePowerAppsUi`
 
-Defined in src/cs.ts:106
+Defined in src/cs.ts:107

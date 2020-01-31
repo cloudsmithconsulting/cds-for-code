@@ -7,6 +7,7 @@ import ApiRepository from "../repositories/apiRepository";
 import EnumParser from "../core/framework/EnumParser";
 import ExtensionContext from "../core/ExtensionContext";
 import logger from "../core/framework/Logger";
+import WebResourceManager from "../components/Solutions/WebResourceManager";
 
 /**
  * This command can be invoked by the Explorer file viewer and creates or updates a web resource in Dynamics
@@ -14,10 +15,10 @@ import logger from "../core/framework/Logger";
  * @param {vscode.Uri} [defaultUri] that invoked the command
  * @returns void
  */
-export default async function run(config?:CdsWebApi.Config, solution?:any, webResource?:any, fileUri?:vscode.Uri, inform:boolean = true) {
+export default async function run(this: WebResourceManager, config?:CdsWebApi.Config, solution?:any, webResource?:any, fileUri?:vscode.Uri, inform:boolean = true) {
     fileUri = fileUri || vscode.Uri.file(await Quickly.pickWorkspaceFile(undefined, "Choose the web resource file to deploy", undefined, true, EnumParser.getNames(CdsSolutions.WebResourceFileType)));
     if (!fileUri) { 
-        logger.warn("File not chosen, command cancelled");
+        logger.warn(`Command: ${cs.cds.deployment.packWebResource} File not chosen, command cancelled`);
         return; 
     }
 
@@ -28,7 +29,7 @@ export default async function run(config?:CdsWebApi.Config, solution?:any, webRe
     
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
     if (!config) { 
-        logger.warn("Configuration not chosen, command cancelled");
+        logger.warn(`Command: ${cs.cds.deployment.packWebResource} Configuration not chosen, command cancelled`);
         return; 
     }
 
@@ -46,7 +47,7 @@ export default async function run(config?:CdsWebApi.Config, solution?:any, webRe
 
         webResource = result.webResource;
         if (!webResource) {
-            logger.warn("Web Resource not chosen, command cancelled");
+            logger.warn(`Command: ${cs.cds.deployment.packWebResource} Web Resource not chosen, command cancelled`);
             return; 
         }
     }
@@ -60,7 +61,7 @@ export default async function run(config?:CdsWebApi.Config, solution?:any, webRe
 
         return { webResource: result || webResource, fsPath: fileUri.fsPath };
     } catch (error) {
-        logger.error(error.message);
+        logger.error(`Command: ${cs.cds.deployment.packWebResource} Errors occurred while saving web resource: ${error.message}`);
 
         await Quickly.error(`There was an error when saving the web resource.  The error returned was: ${error && error.message ? error.message : error.toString() }`, undefined, "Try Again", () => vscode.commands.executeCommand(cs.cds.deployment.packWebResource, config, solution, webResource, fileUri));
     }
