@@ -16,7 +16,7 @@ sidebar_label: "commands/cs.cds.templates.openTemplateFolder"
 
 ###  run
 
-▸ **run**(`template`: [TemplateItem](../classes/_components_templates_types_.templateitem.md)): *Promise‹void›*
+▸ **run**(`this`: [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md), `template`: [TemplateItem](../classes/_components_templates_types_.templateitem.md)): *Promise‹void›*
 
 Defined in src/commands/cs.cds.templates.openTemplateFolder.ts:12
 
@@ -31,6 +31,7 @@ a template's folder in explorer.
 
 Name | Type |
 ------ | ------ |
+`this` | [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md) |
 `template` | [TemplateItem](../classes/_components_templates_types_.templateitem.md) |
 
 **Returns:** *Promise‹void›*

@@ -14,21 +14,21 @@ sidebar_label: "ViewManager"
 
 ### Methods
 
-* [editConnection](_views_viewmanager_.viewmanager.md#editconnection)
-* [openConnection](_views_viewmanager_.viewmanager.md#openconnection)
-* [openJsonInspector](_views_viewmanager_.viewmanager.md#openjsoninspector)
-* [openNewWorkspaceWelcome](_views_viewmanager_.viewmanager.md#opennewworkspacewelcome)
-* [openPluginStep](_views_viewmanager_.viewmanager.md#openpluginstep)
-* [openPluginStepImage](_views_viewmanager_.viewmanager.md#openpluginstepimage)
-* [openSvcUtilConfiguration](_views_viewmanager_.viewmanager.md#opensvcutilconfiguration)
+* [editConnection](_views_viewmanager_.viewmanager.md#static-editconnection)
+* [openConnection](_views_viewmanager_.viewmanager.md#static-openconnection)
+* [openJsonInspector](_views_viewmanager_.viewmanager.md#static-openjsoninspector)
+* [openNewWorkspaceWelcome](_views_viewmanager_.viewmanager.md#static-opennewworkspacewelcome)
+* [openPluginStep](_views_viewmanager_.viewmanager.md#static-openpluginstep)
+* [openPluginStepImage](_views_viewmanager_.viewmanager.md#static-openpluginstepimage)
+* [openSvcUtilConfiguration](_views_viewmanager_.viewmanager.md#static-opensvcutilconfiguration)
 
 ## Methods
 
-###  editConnection
+### `Static` editConnection
 
 ▸ **editConnection**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](_core_webui_view_.view.md)›*
 
-Defined in src/views/ViewManager.ts:22
+Defined in src/views/ViewManager.ts:19
 
 **Parameters:**
 
@@ -40,21 +40,21 @@ Name | Type |
 
 ___
 
-###  openConnection
+### `Static` openConnection
 
 ▸ **openConnection**(): *Promise‹[View](_core_webui_view_.view.md)›*
 
-Defined in src/views/ViewManager.ts:17
+Defined in src/views/ViewManager.ts:14
 
 **Returns:** *Promise‹[View](_core_webui_view_.view.md)›*
 
 ___
 
-###  openJsonInspector
+### `Static` openJsonInspector
 
 ▸ **openJsonInspector**(`item`: any): *Promise‹any›*
 
-Defined in src/views/ViewManager.ts:37
+Defined in src/views/ViewManager.ts:34
 
 **Parameters:**
 
@@ -66,11 +66,11 @@ Name | Type |
 
 ___
 
-###  openNewWorkspaceWelcome
+### `Static` openNewWorkspaceWelcome
 
 ▸ **openNewWorkspaceWelcome**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](_core_webui_view_.view.md)›*
 
-Defined in src/views/ViewManager.ts:42
+Defined in src/views/ViewManager.ts:39
 
 **Parameters:**
 
@@ -82,11 +82,11 @@ Name | Type |
 
 ___
 
-###  openPluginStep
+### `Static` openPluginStep
 
 ▸ **openPluginStep**(`pluginAssemblyId`: string, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `step?`: any): *Promise‹[View](_core_webui_view_.view.md)›*
 
-Defined in src/views/ViewManager.ts:27
+Defined in src/views/ViewManager.ts:24
 
 **Parameters:**
 
@@ -100,11 +100,11 @@ Name | Type |
 
 ___
 
-###  openPluginStepImage
+### `Static` openPluginStepImage
 
 ▸ **openPluginStepImage**(`sdkmessageprocessingstepid`: string, `pluginStepImage`: any, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](_core_webui_view_.view.md)›*
 
-Defined in src/views/ViewManager.ts:32
+Defined in src/views/ViewManager.ts:29
 
 **Parameters:**
 
@@ -118,11 +118,11 @@ Name | Type |
 
 ___
 
-###  openSvcUtilConfiguration
+### `Static` openSvcUtilConfiguration
 
 ▸ **openSvcUtilConfiguration**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](_core_webui_view_.view.md)›*
 
-Defined in src/views/ViewManager.ts:47
+Defined in src/views/ViewManager.ts:44
 
 **Parameters:**
 

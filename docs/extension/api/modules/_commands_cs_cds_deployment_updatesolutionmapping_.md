@@ -16,9 +16,9 @@ sidebar_label: "commands/cs.cds.deployment.updateSolutionMapping"
 
 ###  run
 
-▸ **run**(`item?`: [SolutionWorkspaceMapping](../classes/_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string): *Promise‹[SolutionWorkspaceMapping](../classes/_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md)[]›*
+▸ **run**(`this`: [SolutionMap](../classes/_components_solutions_solutionmap_.solutionmap.md), `item?`: [SolutionWorkspaceMapping](../classes/_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string): *Promise‹[SolutionWorkspaceMapping](../classes/_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md)[]›*
 
-Defined in src/commands/cs.cds.deployment.updateSolutionMapping.ts:18
+Defined in src/commands/cs.cds.deployment.updateSolutionMapping.ts:19
 
 This command can be invoked by the Command Palette or CDS Explorer View and removes a solution mapping from the local workspace
 
@@ -28,6 +28,7 @@ This command can be invoked by the Command Palette or CDS Explorer View and remo
 
 Name | Type |
 ------ | ------ |
+`this` | [SolutionMap](../classes/_components_solutions_solutionmap_.solutionmap.md) |
 `item?` | [SolutionWorkspaceMapping](../classes/_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md) |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
 `folder?` | string |

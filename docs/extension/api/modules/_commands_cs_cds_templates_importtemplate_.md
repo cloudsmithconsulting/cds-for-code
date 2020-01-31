@@ -28,7 +28,7 @@ Defined in src/commands/cs.cds.templates.importTemplate.ts:1
 
 ###  run
 
-▸ **run**(`sourceUri`: Uri): *Promise‹void›*
+▸ **run**(`this`: [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md), `sourceUri`: Uri): *Promise‹void›*
 
 Defined in src/commands/cs.cds.templates.importTemplate.ts:16
 
@@ -43,6 +43,7 @@ This command can be invoked by the Command Palette or in a folder context menu o
 
 Name | Type |
 ------ | ------ |
+`this` | [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md) |
 `sourceUri` | Uri |
 
 **Returns:** *Promise‹void›*

@@ -28,7 +28,7 @@ Defined in src/commands/cs.cds.templates.exportTemplate.ts:1
 
 ###  run
 
-▸ **run**(`template`: [TemplateItem](../classes/_components_templates_types_.templateitem.md), `destinationUri`: Uri): *Promise‹void›*
+▸ **run**(`this`: [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md), `template`: [TemplateItem](../classes/_components_templates_types_.templateitem.md), `destinationUri`: Uri): *Promise‹void›*
 
 Defined in src/commands/cs.cds.templates.exportTemplate.ts:20
 
@@ -43,6 +43,7 @@ This command can be invoked by the Command Palette or in a folder context menu o
 
 Name | Type |
 ------ | ------ |
+`this` | [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md) |
 `template` | [TemplateItem](../classes/_components_templates_types_.templateitem.md) |
 `destinationUri` | Uri |
 

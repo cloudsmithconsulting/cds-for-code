@@ -26,6 +26,7 @@ module.exports = {
       "modules/_api_cds_webapi_utilities_utility_",
       "modules/_commands_cs_cds_deployment_addsolutioncomponent_",
       "modules/_commands_cs_cds_deployment_comparewebresource_",
+      "modules/_commands_cs_cds_deployment_createcrmsvcutilconfig_",
       "modules/_commands_cs_cds_deployment_createprocess_",
       "modules/_commands_cs_cds_deployment_createwebresource_",
       "modules/_commands_cs_cds_deployment_dotnetbuild_",

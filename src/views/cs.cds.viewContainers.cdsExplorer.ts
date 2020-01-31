@@ -1004,6 +1004,7 @@ class TreeEntryCache {
 class CdsTreeEntry extends vscode.TreeItem {
     private static readonly canRefreshEntryTypes: CdsExplorerEntryType[] = [ "Solutions", "Solution", "Plugins", "Entities", "Entity", "OptionSets", "OptionSet", "WebResources", "Folder", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries" ];
     private static readonly canAddEntryTypes: CdsExplorerEntryType[] = [ "Applications", "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries", "PluginType", "PluginStep" ];
+    private static readonly canCreateCrmSvcUtilConfigTypes: CdsExplorerEntryType[] = [ "Entities" ];
     private static readonly canEditEntryTypes: CdsExplorerEntryType[] = [ "Connection", "Application", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep", "PluginStepImage" ];
     private static readonly canDeleteEntryTypes: CdsExplorerEntryType[] = [ "Connection", "PluginStep", "PluginStepImage" ];
     private static readonly canExportSolutionTypes: CdsExplorerEntryType[] = [ "Solution" ];
@@ -1282,6 +1283,7 @@ class CdsTreeEntry extends vscode.TreeItem {
         
         this.addCapability(returnValue, "canRefreshItem", CdsTreeEntry.canRefreshEntryTypes);
         this.addCapability(returnValue, "canAddItem", CdsTreeEntry.canAddEntryTypes);
+        this.addCapability(returnValue, "canCreateCrmSvcUtilConfig", CdsTreeEntry.canCreateCrmSvcUtilConfigTypes);
         this.addCapability(returnValue, "canEditItem", CdsTreeEntry.canEditEntryTypes);
         this.addCapability(returnValue, "canDeleteItem", CdsTreeEntry.canDeleteEntryTypes);
         this.addCapability(returnValue, "canExportSolution", CdsTreeEntry.canExportSolutionTypes, () => this.context && !this.context.ismanaged);

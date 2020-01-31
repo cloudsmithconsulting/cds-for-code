@@ -24,6 +24,7 @@ Static values related to deployment tasks in the CDS for Code extension
 * [addSolutionComponent](_cs_.cds.deployment.md#static-addsolutioncomponent)
 * [compareWebResource](_cs_.cds.deployment.md#static-comparewebresource)
 * [connectToCds](_cs_.cds.deployment.md#static-connecttocds)
+* [createCrmSvcUtilConfig](_cs_.cds.deployment.md#static-createcrmsvcutilconfig)
 * [createProcess](_cs_.cds.deployment.md#static-createprocess)
 * [createWebResource](_cs_.cds.deployment.md#static-createwebresource)
 * [dotNetBuild](_cs_.cds.deployment.md#static-dotnetbuild)
@@ -72,6 +73,14 @@ Defined in src/cs.ts:16
 
 ___
 
+### `Static` createCrmSvcUtilConfig
+
+▪ **createCrmSvcUtilConfig**: *string* = `${deployment._namespace}.createCrmSvcUtilConfig`
+
+Defined in src/cs.ts:17
+
+___
+
 ### `Static` createProcess
 
 ▪ **createProcess**: *string* = `${deployment._namespace}.createProcess`
@@ -84,7 +93,7 @@ ___
 
 ▪ **createWebResource**: *string* = `${deployment._namespace}.createWebResource`
 
-Defined in src/cs.ts:17
+Defined in src/cs.ts:19
 
 ___
 
@@ -92,7 +101,7 @@ ___
 
 ▪ **dotNetBuild**: *string* = `${deployment._namespace}.dotNetBuild`
 
-Defined in src/cs.ts:19
+Defined in src/cs.ts:20
 
 ___
 
@@ -100,7 +109,7 @@ ___
 
 ▪ **dotNetTest**: *string* = `${deployment._namespace}.dotNetTest`
 
-Defined in src/cs.ts:20
+Defined in src/cs.ts:21
 
 ___
 
@@ -108,7 +117,7 @@ ___
 
 ▪ **exportSolution**: *string* = `${deployment._namespace}.exportSolution`
 
-Defined in src/cs.ts:21
+Defined in src/cs.ts:22
 
 ___
 
@@ -116,7 +125,7 @@ ___
 
 ▪ **importSolution**: *string* = `${deployment._namespace}.importSolution`
 
-Defined in src/cs.ts:22
+Defined in src/cs.ts:23
 
 ___
 
@@ -124,7 +133,7 @@ ___
 
 ▪ **packWebResource**: *string* = `${deployment._namespace}.packWebResource`
 
-Defined in src/cs.ts:23
+Defined in src/cs.ts:24
 
 ___
 
@@ -132,7 +141,7 @@ ___
 
 ▪ **publishCustomizations**: *string* = `${deployment._namespace}.publishCustomizations`
 
-Defined in src/cs.ts:24
+Defined in src/cs.ts:25
 
 ___
 
@@ -140,7 +149,7 @@ ___
 
 ▪ **registerPluginAssembly**: *string* = `${deployment._namespace}.registerPluginAssembly`
 
-Defined in src/cs.ts:25
+Defined in src/cs.ts:26
 
 ___
 
@@ -148,7 +157,7 @@ ___
 
 ▪ **removeSolutionComponent**: *string* = `${deployment._namespace}.removeSolutionComponent`
 
-Defined in src/cs.ts:26
+Defined in src/cs.ts:27
 
 ___
 
@@ -156,7 +165,7 @@ ___
 
 ▪ **removeSolutionMapping**: *string* = `${deployment._namespace}.removeSolutionMapping`
 
-Defined in src/cs.ts:27
+Defined in src/cs.ts:28
 
 ___
 
@@ -164,7 +173,7 @@ ___
 
 ▪ **unpackWebResource**: *string* = `${deployment._namespace}.unpackWebResource`
 
-Defined in src/cs.ts:28
+Defined in src/cs.ts:29
 
 ___
 
@@ -172,4 +181,4 @@ ___
 
 ▪ **updateSolutionMapping**: *string* = `${deployment._namespace}.updateSolutionMapping`
 
-Defined in src/cs.ts:29
+Defined in src/cs.ts:30

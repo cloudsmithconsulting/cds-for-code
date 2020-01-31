@@ -16,9 +16,9 @@ sidebar_label: "commands/cs.cds.powerShell.unpackSolution"
 
 ###  run
 
-▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `solution?`: any, `toolsPath?`: string, `logFile?`: string, `mappingFile?`: string, `templateResourceCode?`: string, `includeResourceFiles?`: boolean, `allowDelete`: boolean): *Promise‹[TerminalCommand](../classes/_components_terminal_secureterminal_.terminalcommand.md)‹››*
+▸ **run**(`this`: [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `solution?`: any, `toolsPath?`: string, `logFile?`: string, `mappingFile?`: string, `templateResourceCode?`: string, `includeResourceFiles?`: boolean, `allowDelete`: boolean): *Promise‹[TerminalCommand](../classes/_components_terminal_secureterminal_.terminalcommand.md)‹››*
 
-Defined in src/commands/cs.cds.powerShell.unpackSolution.ts:22
+Defined in src/commands/cs.cds.powerShell.unpackSolution.ts:23
 
 This command can be invoked by the Command Palette and packs a solution.
 
@@ -28,6 +28,7 @@ This command can be invoked by the Command Palette and packs a solution.
 
 Name | Type | Default |
 ------ | ------ | ------ |
+`this` | [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md) | - |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) | - |
 `folder?` | string | - |
 `solution?` | any | - |

@@ -16,9 +16,9 @@ sidebar_label: "commands/cs.cds.deployment.publishCustomizations"
 
 ###  run
 
-▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `components?`: object[]): *Promise‹void›*
+▸ **run**(`this`: [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `components?`: object[]): *Promise‹void›*
 
-Defined in src/commands/cs.cds.deployment.publishCustomizations.ts:15
+Defined in src/commands/cs.cds.deployment.publishCustomizations.ts:17
 
 This command can be invoked by the Command Palette or the Dynamics TreeView and adds a solution component to a solution.
 
@@ -28,6 +28,7 @@ This command can be invoked by the Command Palette or the Dynamics TreeView and 
 
 Name | Type |
 ------ | ------ |
+`this` | [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md) |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
 `components?` | object[] |
 

@@ -16,9 +16,9 @@ sidebar_label: "commands/cs.cds.deployment.compareWebResource"
 
 ###  run
 
-▸ **run**(`defaultUri?`: Uri): *Promise‹void›*
+▸ **run**(`this`: [WebResourceManager](../classes/_components_solutions_webresourcemanager_.webresourcemanager.md), `defaultUri?`: Uri): *Promise‹void›*
 
-Defined in src/commands/cs.cds.deployment.compareWebResource.ts:11
+Defined in src/commands/cs.cds.deployment.compareWebResource.ts:12
 
 This command can be invoked by the by either the file explorer view or the Dynamics TreeView
 and can compare two copies of a web resource.
@@ -29,6 +29,7 @@ and can compare two copies of a web resource.
 
 Name | Type |
 ------ | ------ |
+`this` | [WebResourceManager](../classes/_components_solutions_webresourcemanager_.webresourcemanager.md) |
 `defaultUri?` | Uri |
 
 **Returns:** *Promise‹void›*

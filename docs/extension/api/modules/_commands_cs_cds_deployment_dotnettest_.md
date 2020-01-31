@@ -16,9 +16,9 @@ sidebar_label: "commands/cs.cds.deployment.dotNetTest"
 
 ###  run
 
-▸ **run**(`file?`: Uri, `logFile?`: string): *Promise‹any›*
+▸ **run**(`this`: [VisualStudioProjectCommands](../classes/_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md), `file?`: Uri, `logFile?`: string): *Promise‹any›*
 
-Defined in src/commands/cs.cds.deployment.dotNetTest.ts:15
+Defined in src/commands/cs.cds.deployment.dotNetTest.ts:18
 
 This command can be invoked by the Command Palette and builds and tests a .Net Core project
 
@@ -28,6 +28,7 @@ This command can be invoked by the Command Palette and builds and tests a .Net C
 
 Name | Type |
 ------ | ------ |
+`this` | [VisualStudioProjectCommands](../classes/_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md) |
 `file?` | Uri |
 `logFile?` | string |
 

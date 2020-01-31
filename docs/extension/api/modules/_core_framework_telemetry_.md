@@ -37,7 +37,7 @@ sidebar_label: "core/framework/Telemetry"
 
 Ƭ **TelemetryDefinition**: *object*
 
-Defined in src/core/framework/Telemetry.ts:184
+Defined in src/core/framework/Telemetry.ts:199
 
 #### Type declaration:
 
@@ -57,7 +57,7 @@ ___
 
 Ƭ **TelemetryItem**: *object*
 
-Defined in src/core/framework/Telemetry.ts:192
+Defined in src/core/framework/Telemetry.ts:207
 
 #### Type declaration:
 
@@ -79,7 +79,7 @@ Defined in src/core/framework/Telemetry.ts:7
 
 ▸ **telemetry**(`definition`: [TelemetryDefinition](_core_framework_telemetry_.md#telemetrydefinition), `options`: [ITelemetryInvocationOptions](../interfaces/_core_framework_telemetry_.itelemetryinvocationoptions.md)): *(Anonymous function)*
 
-Defined in src/core/framework/Telemetry.ts:218
+Defined in src/core/framework/Telemetry.ts:233
 
 **Parameters:**
 

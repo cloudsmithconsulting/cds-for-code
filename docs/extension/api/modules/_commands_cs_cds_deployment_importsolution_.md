@@ -22,7 +22,7 @@ sidebar_label: "commands/cs.cds.deployment.importSolution"
 
 Ƭ **ImportSolutionOptions**: *object*
 
-Defined in src/commands/cs.cds.deployment.importSolution.ts:10
+Defined in src/commands/cs.cds.deployment.importSolution.ts:11
 
 #### Type declaration:
 
@@ -40,9 +40,9 @@ Defined in src/commands/cs.cds.deployment.importSolution.ts:10
 
 ###  run
 
-▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solutionFile?`: Uri, `options?`: [ImportSolutionOptions](_commands_cs_cds_deployment_importsolution_.md#importsolutionoptions), `inform`: boolean): *Promise‹any›*
+▸ **run**(`this`: [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solutionFile?`: Uri, `options?`: [ImportSolutionOptions](_commands_cs_cds_deployment_importsolution_.md#importsolutionoptions), `inform`: boolean): *Promise‹any›*
 
-Defined in src/commands/cs.cds.deployment.importSolution.ts:25
+Defined in src/commands/cs.cds.deployment.importSolution.ts:26
 
 This command can be invoked by the by either the file explorer view or the Dynamics TreeView
 and can compare two copies of a web resource.
@@ -53,6 +53,7 @@ and can compare two copies of a web resource.
 
 Name | Type | Default |
 ------ | ------ | ------ |
+`this` | [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md) | - |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) | - |
 `solutionFile?` | Uri | - |
 `options?` | [ImportSolutionOptions](_commands_cs_cds_deployment_importsolution_.md#importsolutionoptions) | - |

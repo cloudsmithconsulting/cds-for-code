@@ -16,9 +16,9 @@ sidebar_label: "commands/cs.cds.deployment.removeSolutionMapping"
 
 ###  run
 
-▸ **run**(`item?`: [SolutionWorkspaceMapping](../classes/_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md)): *Promise‹boolean›*
+▸ **run**(`this`: [SolutionMap](../classes/_components_solutions_solutionmap_.solutionmap.md), `item?`: [SolutionWorkspaceMapping](../classes/_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md)): *Promise‹boolean›*
 
-Defined in src/commands/cs.cds.deployment.removeSolutionMapping.ts:12
+Defined in src/commands/cs.cds.deployment.removeSolutionMapping.ts:13
 
 This command can be invoked by the Command Palette or CDS Explorer View and removes a solution mapping from the local workspace
 
@@ -28,6 +28,7 @@ This command can be invoked by the Command Palette or CDS Explorer View and remo
 
 Name | Type |
 ------ | ------ |
+`this` | [SolutionMap](../classes/_components_solutions_solutionmap_.solutionmap.md) |
 `item?` | [SolutionWorkspaceMapping](../classes/_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md) |
 
 **Returns:** *Promise‹boolean›*

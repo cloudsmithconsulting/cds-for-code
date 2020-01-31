@@ -16,14 +16,15 @@ sidebar_label: "commands/cs.cds.deployment.registerPluginAssembly"
 
 ###  run
 
-▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `pluginAssembly?`: any, `file?`: Uri, `solution?`: any): *Promise‹any›*
+▸ **run**(`this`: [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `pluginAssembly?`: any, `file?`: Uri, `solution?`: any): *Promise‹any›*
 
-Defined in src/commands/cs.cds.deployment.registerPluginAssembly.ts:16
+Defined in src/commands/cs.cds.deployment.registerPluginAssembly.ts:17
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
+`this` | [SolutionManager](../classes/_components_solutions_solutionmanager_.solutionmanager.md) |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
 `pluginAssembly?` | any |
 `file?` | Uri |
