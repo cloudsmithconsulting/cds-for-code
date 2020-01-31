@@ -7,6 +7,7 @@ import Quickly from '../core/Quickly';
 import async = require('async');
 import Dictionary from '../core/types/Dictionary';
 import ExtensionContext from '../core/ExtensionContext';
+import MetadataRepository from '../repositories/metadataRepository';
 
 export default async function openView(pluginAssemblyId:string, config?: CdsWebApi.Config, step?: any): Promise<View> {
     const view = View.show(PluginStepEditor, {
@@ -40,8 +41,17 @@ class PluginStepEditor extends View {
 
     get commands(): Dictionary<string, Function> {
         return new Dictionary<string, Function>([
-            { key: 'save', value: message => this.save(message.step) }
+            { key: 'save', value: message => this.save(message.step) },
+            { key: 'retrieveEntityAttributes', value: message => this.retrieveAttributes(message.logicalName) }
          ]);
+    }
+
+    private async retrieveAttributes(logicalName: string) {
+        const metaApi = new MetadataRepository(this.config);
+        const metadataId = await metaApi.retrieveEntityMetadataId(logicalName);
+        const attributes = await metaApi.retrieveAttributes(metadataId);
+        // set the initial state
+        this.postMessage({ command: 'updateAttributes', attributes });
     }
 
     private save(step :any) {
@@ -62,11 +72,13 @@ class PluginStepEditor extends View {
         if (!this.config) { return; }
 
         const api = new ApiRepository(this.config);
+        const metaApi = new MetadataRepository(this.config);
 
+        if (step) {
+            step = await api.retrievePluginStep(step.sdkmessageprocessingstepid);
+        }
+        
         async.parallel({
-            // entityTypeCodes: async function(callback) {
-            //     callback(null, await api.retrieveEntityTypeCodes());
-            // },
             pluginTypes: async function(callback) {
                 callback(null, await api.retrievePluginTypes(pluginAssemblyId));
             },
@@ -79,18 +91,24 @@ class PluginStepEditor extends View {
             users: async function(callback) {
                 callback(null, await api.retrieveSystemUsers());
             },
-            step: async function(callback) {
+            attributes: async function(callback) {
                 if (!step) {
-                    callback(null);
+                    callback(null, null);
                     return;
                 }
-                callback(null, await api.retrievePluginStep(step.sdkmessageprocessingstepid));
+
+                const metadataId = await metaApi.retrieveEntityMetadataId(step.sdkmessagefilterid.primaryobjecttypecode);
+                callback(null, await metaApi.retrieveAttributes(metadataId));
             }
         }, (error: any, viewModel: any) => {
             if (error) {
                 Quickly.error(error.message);
                 return;
             }
+
+            // attach the step
+            viewModel.step = step;
+
             // set the initial state
             this.postMessage({ command: 'load', viewModel });
         });

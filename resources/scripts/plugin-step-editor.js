@@ -13,6 +13,9 @@
             case "load":
                 setInitialState(message.viewModel);
                 break;
+            case "updateAttributes":
+                setAttributes(message.attributes);
+                break;
             case "error":
                 CloudSmith.ErrorPanel.showError([`${message.message}`]);
                 break;
@@ -65,6 +68,7 @@
             sdkMessageFilters: viewModel.sdkMessageFilters,
             sdkMessages: viewModel.sdkMessages,
             users: viewModel.users,
+            attributes: viewModel.attributes || [],
             currentMessageFilters: [],
             sdkMessagesMap: {},
             primaryEntityMap: {},
@@ -89,6 +93,15 @@
         // initialize autocomplete for the text boxes
         $("#Message").autocomplete({ data: window.dataCache.sdkMessagesMap });
 
+        if (window.dataCache.attributes.length > 0) {
+            bindSelect($("#FilteringAttributes"), _.map(window.dataCache.attributes, i => { 
+                return { 
+                    value: i.LogicalName, 
+                    text: i.LogicalName 
+                } 
+            }));
+        }
+
         // bind select lists
         bindSelect($("#EventHandler"), _.map(viewModel.pluginTypes, i => {
             return { 
@@ -103,6 +116,10 @@
                 text: i.fullname
             }
         }), "Calling User");
+
+        if (viewModel.attributes && viewModel.attributes.length > 0) {
+            window.dataCache.attributes = viewModel.attributes
+        }
         
         if (viewModel.step) {
             const step = viewModel.step;
@@ -122,6 +139,10 @@
             $("#PostOperation").prop("checked", step.stage === 40);
             $("#Server").prop("checked", step.supporteddeployment === 0 || step.supporteddeployment === 2);
             $("#Offline").prop("checked", step.supporteddeployment === 1 || step.supporteddeployment === 2);
+
+            if (step && step.filteringattributes && step.filteringattributes.length > 0) {
+                $("#FilteringAttributes").val(step.filteringattributes.split(","))
+            }
 
             if (step && step.eventhandler_plugintype) {
                 $("#EventHandler").val(step.eventhandler_plugintype.plugintypeid);
@@ -143,6 +164,18 @@
 
         window.initializeComplete = true;
         // hide initialize info box
+        $("#loadingPanel").hide();
+    }
+
+    function setAttributes(attributes) {
+        window.dataCache.attributes = attributes;
+
+        bindSelect($("#FilteringAttributes"), _.map(window.dataCache.attributes, i => { 
+            return { 
+                value: i.LogicalName, 
+                text: i.LogicalName 
+            } 
+        }));
         $("#loadingPanel").hide();
     }
 
@@ -188,6 +221,17 @@
         // wire change of inputs that name and describe step automatically
         $("#Message,#PrimaryEntity,#EventHandler").change(function() {
            updateStepNameAndDescription(); 
+        });
+
+        $("#PrimaryEntity").change(function() {
+            if (!CloudSmith.Utilities.isNullOrEmpty(this.value)
+                && _.find(window.dataCache.currentMessageFilters, f => f.primaryobjecttypecode === this.value) != null) {
+                $("#loadingPanel").show();
+                vscode.postMessage({
+                    command: "retrieveEntityAttributes",
+                    logicalName: this.value
+                });
+            }
         });
 
         function validateForm(step) {
@@ -240,7 +284,7 @@
                 "sdkmessageid@odata.bind": `sdkmessages(${selectedMessageid()})`,
                 "sdkmessagefilterid@odata.bind": `sdkmessagefilters(${selectedFilterid()})`,
                 "eventhandler_plugintype@odata.bind": `plugintypes(${$("#EventHandler").val()})`,
-                filteringattributes: $("#FilteringAttributes").val(),
+                filteringattributes: $("#FilteringAttributes").val().join(","),
                 name: $("#StepName").val(),
                 rank: $("#ExecutionOrder").val(),
                 description: $("#Description").val(),

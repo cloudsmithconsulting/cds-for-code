@@ -23,6 +23,19 @@ export default class MetadataRepository {
         { key: 'savedqueryvisualizations', value: [ 'savedqueryvisualizationid', 'primaryentitytypecode', 'name', 'description' ] },
     ]);
 
+    retrieveEntityMetadataId(logicalName: string) : Promise<string> {
+        return this.retrieveEntityByLogicalName(logicalName, ['MetadataId'])
+            .then(response => (response) ? response.MetadataId : null);
+    }
+
+    retrieveEntityByKey(entityKey: string, select: string[] = MetadataRepository.defaultSelections["EntityDefinitions"]) : Promise<any> {
+        return this.webapi.retrieveEntity(entityKey, select);
+    }
+
+    retrieveEntityByLogicalName(logicalName: string, select: string[] = MetadataRepository.defaultSelections["EntityDefinitions"]) : Promise<any> {
+        return this.webapi.retrieveEntity(`LogicalName='${logicalName}'`, select);
+    }
+
     retrieveEntities(solutionId?: string, select: string[] = MetadataRepository.defaultSelections["EntityDefinitions"]) : Promise<any[]> {
         return this.webapi.retrieveEntities(select, "IsIntersect eq false")
             .then(entitiesResponse => ApiHelper.filterSolutionComponents(this.webapi, entitiesResponse, solutionId, CdsSolutions.SolutionComponent.Entity, e => e["MetadataId"]))
