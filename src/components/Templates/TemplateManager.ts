@@ -268,38 +268,31 @@ export default class TemplateManager {
      * @param template name of template
      * @returns success or failure
      */
-    async deleteFromFilesystem(template: TemplateItem) {
+    async deleteFromFilesystem(template: TemplateItem) : Promise<boolean> {
         // no template, cancel
         if (!template || !template.location) {
             return false;
         }
             
         let templateRoot = await TemplateManager.getTemplatesFolder();
-        let templateLocation:string = path.isAbsolute(template.location) ? template.location : path.join(templateRoot, template.location);
+        let templateLocation:string = path.join(templateRoot, template.name);
 
         if (FileSystem.exists(templateLocation)) {
-            await Quickly.pickBoolean(`Are you sure you want to delete the project template '${template}'?`, "Yes", "No")
-                .then(async (choice) => {
-                    if (choice) {
-                        if (FileSystem.stats(templateLocation).isDirectory()) {
-                            await FileSystem.deleteFolder(templateLocation);
-                        } else if (FileSystem.stats(templateLocation).isFile()) {
-                            await FileSystem.deleteItem(templateLocation);
-                        }
-                    }
+            const choice = await Quickly.pickBoolean(`Are you sure you want to delete the template '${template.name}'?`, "Yes", "No");
 
-                    return choice;
-                });
+            if (choice) {
+                const catalog = await TemplateManager.getTemplateCatalog();
+                const index = catalog.items.findIndex(i => i.name === template.name);
+                
+                if (index > -1) {
+                    catalog.items.splice(index, 1);
+                    catalog.save();
+                }
 
-            const catalog = await TemplateManager.getTemplateCatalog();
-            const index = catalog.items.findIndex(i => i.name === template.name);
-            
-            if (index > -1) {
-                catalog.items.splice(index, 1);
-                catalog.save();
+                await FileSystem.deleteFolder(templateLocation);
             }
 
-            return true;
+            return choice;
         }
 
         return false;
@@ -401,14 +394,13 @@ export default class TemplateManager {
                 
                 // check if exists
                 if (FileSystem.exists(templateDir)) {
-                    await Quickly.pickBoolean(`Template '${templateName}' aleady exists.  Do you wish to overwrite?`, "Yes", "No")
-                        .then(async choice => { 
-                            if (choice) { 
-                                await FileSystem.deleteFolder(templateDir); 
-                            } else {
-                                return;
-                            }
-                        });
+                    const overwrite = await Quickly.pickBoolean(`Template '${templateName}' aleady exists.  Do you wish to overwrite?`, "Yes", "No");
+                    if (overwrite) { 
+                        await FileSystem.deleteFolder(templateDir); 
+                        FileSystem.makeFolderSync(templateDir);
+                    } else {
+                        return undefined;
+                    }
                 } else {
                     // Make the folder.
                     FileSystem.makeFolderSync(templateDir);

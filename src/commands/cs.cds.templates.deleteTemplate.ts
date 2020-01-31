@@ -26,14 +26,14 @@ export default async function run(this: TemplateManager, template: TemplateItem)
     } 
 
     // delete template
-    this.deleteFromFilesystem(template)
+    await this.deleteFromFilesystem(template)
         .then(deleted => { 
             if (deleted) {
                 logger.info(`Command: ${cs.cds.templates.deleteTemplate} Template ${template.name} deleted`);
                 Quickly.inform(`Template '${template.name}' was removed from the library.`);
             } 
-        }, (reason) => {             
-            Quickly.error(`Failed to delete the contents of '${template.location}': ${reason}`, false, "Try Again", () => { this.deleteTemplate(template); }, "Cancel");
+        }, async (reason) => {             
+            await Quickly.error(`Failed to delete the contents of '${template.location}': ${reason}`, false, "Try Again", () => { this.deleteTemplate(template); }, "Cancel");
         }
     );
     
