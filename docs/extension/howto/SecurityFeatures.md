@@ -47,6 +47,8 @@ More information is available about Content Security Policies
 
 We understand that PII and PHI are sensitive, for that reason we take care not to expose any of that information in our logging or telemetry collection.
 
+You can read more about [CloudSmith Consulting's general privacy policy here](https://cloudsmithconsulting.com/About/Privacy).
+
 ### Sensitive logging
 
 Logging is done to the file system or the CDS for Code output window in VSCode. We take care to sanitize these logs so that sharing them back to us in bug reports should not be an issue, as no sensitive information exists in them. Some of the logging precautions we take are:
