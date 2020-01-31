@@ -100,9 +100,9 @@ export default async function run(config?: CdsWebApi.Config | string, folder?: s
 					.if(() => Security.Credential.isCredential(typedConfig.credentials), c => {
 						c.text(`-Username "`)
 						 .credential(typedConfig.credentials, GlobalStateCredentialStore.Instance, creds => creds.username.toString())
-						 .text(`" -Password "`)
+						 .text(`" -Password (ConvertTo-SecureString "`)
 						 .credential(typedConfig.credentials, GlobalStateCredentialStore.Instance, creds => creds.password.toString())
-						 .text(`" `)
+						 .text(`" -AsPlainText -Force) `)
 						 .if(() => Security.Credential.isWindowsCredential(typedConfig.credentials), c2 => {
 							 c2.text(` -Domain "`)
 							   .credential(typedConfig.credentials, GlobalStateCredentialStore.Instance, creds2 => (<Security.WindowsCredential>creds2).domain.toString())
