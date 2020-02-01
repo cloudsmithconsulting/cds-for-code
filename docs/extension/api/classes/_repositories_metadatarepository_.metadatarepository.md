@@ -31,6 +31,9 @@ sidebar_label: "MetadataRepository"
 * [retrieveCharts](_repositories_metadatarepository_.metadatarepository.md#retrievecharts)
 * [retrieveDashboards](_repositories_metadatarepository_.metadatarepository.md#retrievedashboards)
 * [retrieveEntities](_repositories_metadatarepository_.metadatarepository.md#retrieveentities)
+* [retrieveEntityByKey](_repositories_metadatarepository_.metadatarepository.md#retrieveentitybykey)
+* [retrieveEntityByLogicalName](_repositories_metadatarepository_.metadatarepository.md#retrieveentitybylogicalname)
+* [retrieveEntityMetadataId](_repositories_metadatarepository_.metadatarepository.md#retrieveentitymetadataid)
 * [retrieveForms](_repositories_metadatarepository_.metadatarepository.md#retrieveforms)
 * [retrieveKeys](_repositories_metadatarepository_.metadatarepository.md#retrievekeys)
 * [retrieveOptionSets](_repositories_metadatarepository_.metadatarepository.md#retrieveoptionsets)
@@ -91,7 +94,7 @@ Defined in src/repositories/metadataRepository.ts:14
 
 ▸ **retrieveAttributes**(`entityKey`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/metadataRepository.ts:32
+Defined in src/repositories/metadataRepository.ts:45
 
 **Parameters:**
 
@@ -108,7 +111,7 @@ ___
 
 ▸ **retrieveCharts**(`entityLogicalName`: string, `solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/metadataRepository.ts:82
+Defined in src/repositories/metadataRepository.ts:95
 
 **Parameters:**
 
@@ -126,7 +129,7 @@ ___
 
 ▸ **retrieveDashboards**(`entityLogicalName`: string, `solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/metadataRepository.ts:56
+Defined in src/repositories/metadataRepository.ts:69
 
 **Parameters:**
 
@@ -144,7 +147,7 @@ ___
 
 ▸ **retrieveEntities**(`solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/metadataRepository.ts:26
+Defined in src/repositories/metadataRepository.ts:39
 
 **Parameters:**
 
@@ -157,11 +160,61 @@ Name | Type | Default |
 
 ___
 
+###  retrieveEntityByKey
+
+▸ **retrieveEntityByKey**(`entityKey`: string, `select`: string[]): *Promise‹any›*
+
+Defined in src/repositories/metadataRepository.ts:31
+
+**Parameters:**
+
+Name | Type | Default |
+------ | ------ | ------ |
+`entityKey` | string | - |
+`select` | string[] | MetadataRepository.defaultSelections["EntityDefinitions"] |
+
+**Returns:** *Promise‹any›*
+
+___
+
+###  retrieveEntityByLogicalName
+
+▸ **retrieveEntityByLogicalName**(`logicalName`: string, `select`: string[]): *Promise‹any›*
+
+Defined in src/repositories/metadataRepository.ts:35
+
+**Parameters:**
+
+Name | Type | Default |
+------ | ------ | ------ |
+`logicalName` | string | - |
+`select` | string[] | MetadataRepository.defaultSelections["EntityDefinitions"] |
+
+**Returns:** *Promise‹any›*
+
+___
+
+###  retrieveEntityMetadataId
+
+▸ **retrieveEntityMetadataId**(`logicalName`: string): *Promise‹string›*
+
+Defined in src/repositories/metadataRepository.ts:26
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`logicalName` | string |
+
+**Returns:** *Promise‹string›*
+
+___
+
 ###  retrieveForms
 
 ▸ **retrieveForms**(`entityLogicalName`: string, `solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/metadataRepository.ts:43
+Defined in src/repositories/metadataRepository.ts:56
 
 **Parameters:**
 
@@ -179,7 +232,7 @@ ___
 
 ▸ **retrieveKeys**(`entityKey`: string): *Promise‹any[]›*
 
-Defined in src/repositories/metadataRepository.ts:95
+Defined in src/repositories/metadataRepository.ts:108
 
 **Parameters:**
 
@@ -195,7 +248,7 @@ ___
 
 ▸ **retrieveOptionSets**(`solutionId?`: string, `select?`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/metadataRepository.ts:37
+Defined in src/repositories/metadataRepository.ts:50
 
 **Parameters:**
 
@@ -212,7 +265,7 @@ ___
 
 ▸ **retrieveRelationships**(`entityKey`: string): *Promise‹object›*
 
-Defined in src/repositories/metadataRepository.ts:100
+Defined in src/repositories/metadataRepository.ts:113
 
 **Parameters:**
 
@@ -228,7 +281,7 @@ ___
 
 ▸ **retrieveViews**(`entityLogicalName`: string, `solutionId?`: string, `select`: string[]): *Promise‹any[]›*
 
-Defined in src/repositories/metadataRepository.ts:69
+Defined in src/repositories/metadataRepository.ts:82
 
 **Parameters:**
 

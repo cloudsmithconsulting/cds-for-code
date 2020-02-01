@@ -19,6 +19,7 @@ sidebar_label: "cdsExplorer"
 * [addEntry](_cs_.cds.controls.cdsexplorer.md#static-addentry)
 * [addEntryToSolution](_cs_.cds.controls.cdsexplorer.md#static-addentrytosolution)
 * [clickEntry](_cs_.cds.controls.cdsexplorer.md#static-clickentry)
+* [createCrmSvcUtilConfig](_cs_.cds.controls.cdsexplorer.md#static-createcrmsvcutilconfig)
 * [deleteEntry](_cs_.cds.controls.cdsexplorer.md#static-deleteentry)
 * [editConnection](_cs_.cds.controls.cdsexplorer.md#static-editconnection)
 * [editEntry](_cs_.cds.controls.cdsexplorer.md#static-editentry)
@@ -74,11 +75,19 @@ Defined in src/cs.ts:163
 
 ___
 
+### `Static` createCrmSvcUtilConfig
+
+▪ **createCrmSvcUtilConfig**: *string* = `${cdsExplorer._namespace}.createCrmSvcUtilConfig`
+
+Defined in src/cs.ts:164
+
+___
+
 ### `Static` deleteEntry
 
 ▪ **deleteEntry**: *string* = `${cdsExplorer._namespace}.deleteEntry`
 
-Defined in src/cs.ts:164
+Defined in src/cs.ts:165
 
 ___
 
@@ -86,7 +95,7 @@ ___
 
 ▪ **editConnection**: *string* = `${cdsExplorer._namespace}.editConnection`
 
-Defined in src/cs.ts:165
+Defined in src/cs.ts:166
 
 ___
 
@@ -94,7 +103,7 @@ ___
 
 ▪ **editEntry**: *string* = `${cdsExplorer._namespace}.editEntry`
 
-Defined in src/cs.ts:166
+Defined in src/cs.ts:167
 
 ___
 
@@ -102,7 +111,7 @@ ___
 
 ▪ **exportSolution**: *string* = `${cdsExplorer._namespace}.exportSolution`
 
-Defined in src/cs.ts:167
+Defined in src/cs.ts:168
 
 ___
 
@@ -110,7 +119,7 @@ ___
 
 ▪ **inspectEntry**: *string* = `${cdsExplorer._namespace}.inspectEntry`
 
-Defined in src/cs.ts:168
+Defined in src/cs.ts:169
 
 ___
 
@@ -118,7 +127,7 @@ ___
 
 ▪ **moveSolution**: *string* = `${cdsExplorer._namespace}.moveSolution`
 
-Defined in src/cs.ts:169
+Defined in src/cs.ts:170
 
 ___
 
@@ -126,7 +135,7 @@ ___
 
 ▪ **openInApp**: *string* = `${cdsExplorer._namespace}.openInApp`
 
-Defined in src/cs.ts:170
+Defined in src/cs.ts:171
 
 ___
 
@@ -134,7 +143,7 @@ ___
 
 ▪ **openInBrowser**: *string* = `${cdsExplorer._namespace}.openInBrowser`
 
-Defined in src/cs.ts:171
+Defined in src/cs.ts:172
 
 ___
 
@@ -142,7 +151,7 @@ ___
 
 ▪ **openInEditor**: *string* = `${cdsExplorer._namespace}.openInEditor`
 
-Defined in src/cs.ts:172
+Defined in src/cs.ts:173
 
 ___
 
@@ -150,7 +159,7 @@ ___
 
 ▪ **refreshEntry**: *string* = `${cdsExplorer._namespace}.refreshEntry`
 
-Defined in src/cs.ts:173
+Defined in src/cs.ts:174
 
 ___
 
@@ -158,7 +167,7 @@ ___
 
 ▪ **removeEntryFromSolution**: *string* = `${cdsExplorer._namespace}.removeEntryFromSolution`
 
-Defined in src/cs.ts:174
+Defined in src/cs.ts:175
 
 ___
 
@@ -166,4 +175,4 @@ ___
 
 ▪ **unpackSolution**: *string* = `${cdsExplorer._namespace}.unpackSolution`
 
-Defined in src/cs.ts:175
+Defined in src/cs.ts:176

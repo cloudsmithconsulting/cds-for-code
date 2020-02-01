@@ -86,7 +86,7 @@ ___
 ### `Static` `Private` parsers
 
 ▪ **parsers**: *[Dictionary](_core_types_dictionary_.dictionary.md)‹"Folder" | "ProjectTemplate" | "ItemTemplate", function›* = new Dictionary<TemplateExplorerEntryType, (item: any, element?: TemplateExplorerEntry, ...rest: any[]) => TemplateExplorerEntry>([
-        { key: "Folder", value: (folder, element) => element.createChildItem("Folder", folder, folder, folder, vscode.TreeItemCollapsibleState.Collapsed, folder) },
+        { key: "Folder", value: (folder, element) => element.createChildItem("Folder", folder, folder, folder, vscode.TreeItemCollapsibleState.Collapsed, undefined) },
         { key: "ProjectTemplate", value: (item, element) => element.createChildItem("ProjectTemplate", item.name, item.displayName, item.description, vscode.TreeItemCollapsibleState.None, item) },
         { key: "ItemTemplate", value: (item, element) => element.createChildItem("ItemTemplate", item.name, item.displayName, item.description, vscode.TreeItemCollapsibleState.None, item) }
     ])
