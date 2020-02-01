@@ -20,19 +20,48 @@
 
         // initialize framework
         M.updateTextFields();
+        // bind select controls
+        $("select").formSelect();
     });
+
+    function bindSelect($select, selectionArray, noSelectionOption) {
+        // remove prior options if they exist
+        $("option", $select).remove();
+        if (noSelectionOption) {
+            $select.append(`<option value="">${noSelectionOption}</option>`);
+        }
+        // add selections back
+        _.forEach(selectionArray, i => {
+            // create the dropdown option
+            const $option = $(`<option value="${i.value}">${i.text}</option>`);
+            // append this to the select list
+            $select.append($option);
+        });
+    }
 
     function setInitialState(viewModel, sdkmessageprocessingstepid) {
         $("#SdkMessageProcessingStepId").val(sdkmessageprocessingstepid);
 
-        if (viewModel) {
-            $("#Id").val(viewModel.sdkmessageprocessingstepimageid);
-            $("#PreImage").prop("checked", viewModel.imagetype === 0 || viewModel.imagetype === 2);
-            $("#PostImage").prop("checked", viewModel.imagetype === 1 || viewModel.imagetype === 2);
-            $("#Name").val(viewModel.name);
-            $("#Alias").val(viewModel.entityalias);
-            $("#Parameters").val(viewModel.attributes);
+        if (viewModel.attributes && viewModel.attributes.length > 0) {
+            bindSelect($("#Parameters"), _.map(viewModel.attributes, i => { 
+                return { 
+                    value: i.LogicalName, 
+                    text: i.LogicalName 
+                } 
+            }));
         }
+
+        const pluginStepImage = viewModel.pluginStepImage;
+        if (pluginStepImage) {
+            $("#Id").val(pluginStepImage.sdkmessageprocessingstepimageid);
+            $("#PreImage").prop("checked", pluginStepImage.imagetype === 0 || pluginStepImage.imagetype === 2);
+            $("#PostImage").prop("checked", pluginStepImage.imagetype === 1 || pluginStepImage.imagetype === 2);
+            $("#Name").val(pluginStepImage.name);
+            $("#Alias").val(pluginStepImage.entityalias);
+            $("#Parameters").val(pluginStepImage.attributes.split(","));
+        }
+
+        $("#loadingPanel").hide();
     }
 
     // this part starts on document ready
@@ -70,7 +99,7 @@
                 sdkmessageprocessingstepid: $("#SdkMessageProcessingStepId").val(),
                 name: $("#Name").val(),
                 entityalias: $("#Alias").val(),
-                attributes: $("#Parameters").val(),
+                attributes: $("#Parameters").val().join(","),
                 imagetype
             };
 

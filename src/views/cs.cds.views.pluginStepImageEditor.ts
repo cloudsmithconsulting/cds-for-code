@@ -7,6 +7,7 @@ import ApiRepository from '../repositories/apiRepository';
 import Dictionary from '../core/types/Dictionary';
 import Quickly from '../core/Quickly';
 import ExtensionContext from '../core/ExtensionContext';
+import MetadataRepository from '../repositories/metadataRepository';
 
 export default async function openView(sdkmessageprocessingstepid: string, pluginStepImage: any, config?: CdsWebApi.Config): Promise<View> {
     const view = View.show(PluginStepImageEditor, {
@@ -58,9 +59,21 @@ class PluginStepImageEditor extends View {
             });
     }
    
-    async setInitialState(sdkmessageprocessingstepid: string, viewModel: any, config: CdsWebApi.Config) {
+    async setInitialState(sdkmessageprocessingstepid: string, pluginStepImage: any, config: CdsWebApi.Config) {
         this.config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
         if (!this.config) { return; }
+
+        const api = new ApiRepository(config);
+        const metaApi = new MetadataRepository(config);
+
+        const step = await api.retrievePluginStep(sdkmessageprocessingstepid);
+        const metadataId = await metaApi.retrieveEntityMetadataId(step.sdkmessagefilterid.primaryobjecttypecode);
+        const attributes = await metaApi.retrieveAttributes(metadataId);
+
+        const viewModel = {
+            attributes,
+            pluginStepImage
+        };
 
         this.postMessage({ command: 'load', viewModel, sdkmessageprocessingstepid });
     }

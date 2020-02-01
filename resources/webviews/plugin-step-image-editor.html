@@ -17,6 +17,10 @@
             <span id="errorMessage"></span>
         </div>
     </blockquote>
+
+    <div class="progress" id="loadingPanel">
+        <div class="indeterminate"></div>
+    </div>
     
     <input type="hidden" id="Id" name="Id" value="" />
     <input type="hidden" id="SdkMessageProcessingStepId" name="SdkMessageProcessingStepId" value="" />
@@ -55,7 +59,7 @@
                 </div>
 
                 <div class="col s12 input-field">
-                    <input id="Parameters" name="Parameters" type="text" />
+                    <select id="Parameters" name="Parameters" multiple></select>
                     <label for="Parameters">Parameters</label>
                 </div>
             </li>
