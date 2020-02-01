@@ -116,10 +116,6 @@
                 text: i.fullname
             }
         }), "Calling User");
-
-        if (viewModel.attributes && viewModel.attributes.length > 0) {
-            window.dataCache.attributes = viewModel.attributes
-        }
         
         if (viewModel.step) {
             const step = viewModel.step;
