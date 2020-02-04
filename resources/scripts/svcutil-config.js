@@ -57,7 +57,7 @@
             entities: viewModel.entities,
             optionsets: viewModel.optionsets,
             solutions: viewModel.solutions,
-            entityMap: _.map(viewModel.entities, i => { return { value: i.LogicalName, text: i.LogicalName } }),
+            entityMap: _.map(viewModel.entities, i => { return { value: i.MetadataId, text: i.LogicalName } }),
             optionsetMap: _.map(viewModel.optionsets, i => { return { value: i.Name, text: i.Name } }),
             solutionMap: _.map(viewModel.solutions, i => { return { value: i.uniquename, text: i.uniquename } }),
             filterRules: viewModel.filterRules || [],
@@ -83,7 +83,7 @@
 
     function setAttributes(attributes, targetElem) {
         window.dataCache.attributes = attributes;
-        window.dataCache.attributesMap = _.map(attributes, i => { return { value: i.LogicalName, text: i.LogicalName } });
+        window.dataCache.attributesMap = _.map(attributes, i => { return { value: i.MetadataId, text: i.LogicalName } });
 
         bindSelect($(targetElem), window.dataCache.attributesMap);
     }
@@ -149,15 +149,29 @@
         const itemType = form[`${listType}-filterType`] === 'OptionSet' ? 'optionSet' : form[`${listType}-filterType`].toLowerCase();
 
         if (form[`${listType}-${itemType}-addmode`] === itemType) {
-            const options = itemType !== 'attribute' ? {} : { entity: form[`${listType}-${itemType}-allentities`] === 'true' ? '*' : form[`${listType}-${itemType}-entity`] };
+            const options = itemType !== 'attribute' ? {} : { entity: form[`${listType}-${itemType}-allentities`] === 'true' ? '*' : window.dataCache.entities.filter(e => e.MetadataId === form[`${listType}-${itemType}-entity`])[0].LogicalName };
             const idPrefix = `${listType}.${itemType}.exact-match.${options.entity ? options.entity + "." : ''}`;
 
             if (form[`${listType}-${itemType}-selections`] instanceof Array) {
                 form[`${listType}-${itemType}-selections`].forEach((value, index) => {
+                    if (itemType === 'entity') {
+                        value = window.dataCache.entities.filter(e => e.MetadataId === value)[0].LogicalName;
+                    } else if (itemType === 'attribute') {
+                        value = window.dataCache.attributes.filter(a => a.MetadataId === value)[0].LogicalName;
+                    }
+
                     items.push({ id: idPrefix + value, listType, scope: itemType, value, ruleType: 'exact-match', options });
                 });
             } else {
-                items.push({ id: idPrefix + form[`${listType}-${itemType}-selections`], listType, scope: itemType, value: form[`${listType}-${itemType}-selections`], ruleType: 'exact-match', options });
+                let value; 
+
+                if (itemType === 'entity') {
+                    value = window.dataCache.entities.filter(e => e.MetadataId === form[`${listType}-${itemType}-selections`])[0].LogicalName;
+                } else if (itemType === 'attribute') {
+                    value = window.dataCache.attributes.filter(a => a.MetadataId === form[`${listType}-${itemType}-selections`])[0].LogicalName;
+                }
+
+                items.push({ id: idPrefix + value, listType, scope: itemType, value, ruleType: 'exact-match', options });
             }
         } else {
             items.push({ id: `${listType}.${itemType}.regex`, listType, scope: itemType, value: form[`${listType}-${itemType}-regex`], ruleType: 'regex', options: { ignoreCase: form[`${listType}-${itemType}-regex-ignorecase`] === 'true' } });
@@ -182,11 +196,11 @@
         let newValue;
 
         if (itemType === "attribute") {
-            oldValue = (form["naming-mapping-attribute-allentities"] === "true" ? "*." : form["naming-mapping-attribute-entity"] + ".") 
-                + form["naming-mapping-attribute-selection"];
+            oldValue = (form["naming-mapping-attribute-allentities"] === "true" ? "*." : window.dataCache.entities.filter(e => e.MetadataId === form["naming-mapping-attribute-entity"])[0].LogicalName + ".") 
+                + window.dataCache.attributes.filter(a => a.MetadataId === form["naming-mapping-attribute-selection"])[0].LogicalName;
             newValue = form["naming-mapping-newname"];
         } else if (itemType === "entity") {
-            oldValue = form["naming-mapping-entity-selection"];
+            oldValue = window.dataCache.entities.filter(e => e.MetadataId === form["naming-mapping-entity-selection"])[0].LogicalName;
             newValue = form["naming-mapping-newname"];
         } else if (itemType === "publisher") {
             oldValue = form["naming-publisher-oldname"];
@@ -401,7 +415,14 @@
 
         // wire up click handler for the submit button
         $("[data-action='save']").click(function() {
-    
+            vscode.postMessage({
+                command: 'save',
+                config: {
+                    filterRules: window.dataCache.filterRules,
+                    namingRules: window.dataCache.namingRules,
+                    codeGeneration: window.dataCache.codeGeneration
+                }
+            })
         });
     });
 }());

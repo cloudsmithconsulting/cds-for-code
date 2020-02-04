@@ -8,6 +8,8 @@ import { CdsWebApi } from "../api/cds-webapi/CdsWebApi";
 import Quickly from "../core/Quickly";
 import ExtensionContext from "../core/ExtensionContext";
 import logger from "../core/framework/Logger";
+import Xml from "../core/io/Xml";
+import CodeGenerationManager from "../components/CodeGeneration/CodeGenerationManager";
 
 /**
  * This command can be invoked by the by either the file explorer view or the CDS Explorer
@@ -16,7 +18,7 @@ import logger from "../core/framework/Logger";
  * @param {vscode.Uri} [defaultUri] that invoked the command
  * @returns void
  */
-export default async function run(config?: CdsWebApi.Config, defaultUri?: vscode.Uri) {
+export default async function run(this: CodeGenerationManager, config?: CdsWebApi.Config, defaultUri?: vscode.Uri) {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
 		logger.warn(`Command: ${cs.cds.deployment.createCrmSvcUtilConfig} Organization not chosen, command cancelled`);
@@ -39,5 +41,8 @@ export default async function run(config?: CdsWebApi.Config, defaultUri?: vscode
 		FileSystem.writeFileSync(defaultUri.fsPath, configFile);
     }
 
+	const xml = await Xml.parseFile(defaultUri.fsPath);
+	const viewModel = this.parseXml(xml);
+	
     await ViewManager.openSvcUtilConfiguration(config);
 }

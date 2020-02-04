@@ -829,7 +829,7 @@
 				},
 				{
 					"command": "cs.cds.controls.explorer.createCrmSvcUtilConfig",
-					"when": "explorerResourceIsFolder || resourceExtName == .config",
+					"when": "explorerResourceIsFolder || resourceExtname == .config",
 					"group": "navigation@4"
 				},
 				{

@@ -14,16 +14,17 @@ sidebar_label: "CodeGenerationManager"
 
 ### Methods
 
-* [createCrmSvcUtilConfig](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#static-createcrmsvcutilconfig)
-* [createCrmSvcUtilConfigFromConfig](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#static-createcrmsvcutilconfigfromconfig)
-* [createCrmSvcUtilConfigToFile](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#static-createcrmsvcutilconfigtofile)
-* [generateEntities](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#static-generateentities)
-* [generateEntityCodeToFile](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#static-generateentitycodetofile)
-* [generateEntityCodeToFolder](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#static-generateentitycodetofolder)
+* [createCrmSvcUtilConfig](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#createcrmsvcutilconfig)
+* [createCrmSvcUtilConfigFromConfig](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#createcrmsvcutilconfigfromconfig)
+* [createCrmSvcUtilConfigToFile](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#createcrmsvcutilconfigtofile)
+* [generateEntities](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#generateentities)
+* [generateEntityCodeToFile](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#generateentitycodetofile)
+* [generateEntityCodeToFolder](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#generateentitycodetofolder)
+* [parseXml](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#parsexml)
 
 ## Methods
 
-### `Static` createCrmSvcUtilConfig
+###  createCrmSvcUtilConfig
 
 ▸ **createCrmSvcUtilConfig**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `file?`: Uri): *Promise‹void›*
 
@@ -40,7 +41,7 @@ Name | Type |
 
 ___
 
-### `Static` createCrmSvcUtilConfigFromConfig
+###  createCrmSvcUtilConfigFromConfig
 
 ▸ **createCrmSvcUtilConfigFromConfig**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹unknown›*
 
@@ -56,7 +57,7 @@ Name | Type |
 
 ___
 
-### `Static` createCrmSvcUtilConfigToFile
+###  createCrmSvcUtilConfigToFile
 
 ▸ **createCrmSvcUtilConfigToFile**(`defaultUri?`: Uri): *Promise‹unknown›*
 
@@ -72,7 +73,7 @@ Name | Type |
 
 ___
 
-### `Static` generateEntities
+###  generateEntities
 
 ▸ **generateEntities**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `outputFileName?`: string, `namespace?`: string): *Promise‹void›*
 
@@ -91,7 +92,7 @@ Name | Type |
 
 ___
 
-### `Static` generateEntityCodeToFile
+###  generateEntityCodeToFile
 
 ▸ **generateEntityCodeToFile**(`file?`: Uri): *Promise‹unknown›*
 
@@ -107,7 +108,7 @@ Name | Type |
 
 ___
 
-### `Static` generateEntityCodeToFolder
+###  generateEntityCodeToFolder
 
 ▸ **generateEntityCodeToFolder**(`folder?`: Uri): *Promise‹unknown›*
 
@@ -120,3 +121,19 @@ Name | Type |
 `folder?` | Uri |
 
 **Returns:** *Promise‹unknown›*
+
+___
+
+###  parseXml
+
+▸ **parseXml**(`xml`: any): *any*
+
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:40
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`xml` | any |
+
+**Returns:** *any*
