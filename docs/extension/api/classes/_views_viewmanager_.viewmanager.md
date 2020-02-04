@@ -120,7 +120,7 @@ ___
 
 ### `Static` openSvcUtilConfiguration
 
-▸ **openSvcUtilConfiguration**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](_core_webui_view_.view.md)›*
+▸ **openSvcUtilConfiguration**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `viewModel?`: any): *Promise‹[View](_core_webui_view_.view.md)›*
 
 Defined in src/views/ViewManager.ts:44
 
@@ -129,5 +129,6 @@ Defined in src/views/ViewManager.ts:44
 Name | Type |
 ------ | ------ |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`viewModel?` | any |
 
 **Returns:** *Promise‹[View](_core_webui_view_.view.md)›*

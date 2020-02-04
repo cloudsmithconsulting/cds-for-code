@@ -41,7 +41,7 @@ export default class ViewManager {
     }
 
     @command(cs.cds.controls.svcUtilConfig.open, "Open SvcUtil configuration view")
-    static async openSvcUtilConfiguration(config?: CdsWebApi.Config): Promise<View> {
-        return await svcUtilConfigView.apply(this, [config]);
+    static async openSvcUtilConfiguration(config?: CdsWebApi.Config, viewModel?: any): Promise<View> {
+        return await svcUtilConfigView.apply(this, [ config, viewModel ]);
     }
 }

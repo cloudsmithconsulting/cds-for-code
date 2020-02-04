@@ -1,0 +1,50 @@
+{
+    "codeGeneration": {
+        "namingRules": [{
+            "fileType": "Entities",
+            "format": "{0}.{1}.{2}.cs",
+            "id": "undefined.undefined",
+            "strategy": "OneFilePerItem"
+        }]
+    },
+    "filterRules": [{
+        "id": "whitelist.attribute.exact-match.aciviewmapper.createdon",
+        "listType": "whitelist",
+        "options": {
+            "entity": "aciviewmapper"
+        },
+        "ruleType": "exact-match",
+        "scope": "attribute",
+        "value": "createdon"
+    }, {
+        "id": "whitelist.optionSet.exact-match.activity_typecode",
+        "listType": "whitelist",
+        "options": {},
+        "ruleType": "exact-match",
+        "scope": "optionSet",
+        "value": "activity_typecode"
+    }, {
+        "id": "whitelist.optionSet.exact-match.activitypointer_isemailfollowed",
+        "listType": "whitelist",
+        "options": {},
+        "ruleType": "exact-match",
+        "scope": "optionSet",
+        "value": "activitypointer_isemailfollowed"
+    }, {
+        "id": "whitelist.optionSet.regex",
+        "listType": "whitelist",
+        "options": {
+            "ignoreCase": false
+        },
+        "ruleType": "regex",
+        "scope": "optionSet",
+        "value": "test"
+    }],
+    "namingRules": [{
+        "id": "attribute.*.accountid",
+        "newValue": "id",
+        "oldValue": "*.accountid",
+        "ruleType": "Mapping",
+        "scope": "attribute"
+    }]
+}

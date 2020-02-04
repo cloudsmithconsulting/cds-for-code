@@ -9,12 +9,12 @@ import MetadataRepository from '../repositories/metadataRepository';
 import async = require('async');
 import ApiRepository from '../repositories/apiRepository';
 
-export default async function openView(config?: CdsWebApi.Config): Promise<View> {
+export default async function openView(config?: CdsWebApi.Config, viewModel?: any): Promise<View> {
     const view = View.show(SvcUtilConfigView, {
         icon: './resources/images/cloudsmith-logo-only-50px.png',
         title: 'Configure entity code generation - CDS',
         type: cs.cds.views.svcUtilConfigView,
-        onReady: view => view.setInitialState(config)
+        onReady: view => view.setInitialState(config, viewModel)
     });
 
     return view;
@@ -52,15 +52,16 @@ class SvcUtilConfigView extends View {
         this.postMessage({ command: 'updateAttributes', attributes, targetElem });
     }
 
-    private save(config :any) {
-        
-        Quickly.inform(`SvcUtil Configuration was saved.`);
+    private save(config :any) {        
+        Quickly.inform(`CrmSvcUtil Configuration was saved.`);
         this.dispose();
     }
 
-    async setInitialState(config?: CdsWebApi.Config) {
+    async setInitialState(config?: CdsWebApi.Config, viewModel?: any) {
         this.config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
         if (!this.config) { return; }
+
+        viewModel = viewModel || {};
 
         const metaApi = new MetadataRepository(this.config);
         const webApi = new ApiRepository(this.config);
@@ -79,11 +80,16 @@ class SvcUtilConfigView extends View {
                 const solutions = await webApi.retrieveSolutions();
                 callback(null, solutions.filter(i => !i.ismanaged && i.isvisible));
             }
-        }, (error: any, viewModel: any) => {
+        }, (error: any, taskResults: any) => {
             if (error) {
                 Quickly.error(error.message);
                 return;
             }
+            
+            viewModel.entities = taskResults.entities;
+            viewModel.optionsets = taskResults.optionsets;
+            viewModel.solutions = taskResults.solutions;
+
             // set the initial state
             this.postMessage({ command: 'load', viewModel });
         });

@@ -77,6 +77,21 @@
             bindSelect($(element), window.dataCache.solutionMap, !element.multiple ? "- Select Solution -" : undefined);
         });
 
+        // cache html for mustache template
+        const filterRuleTemplate = $("#filter-rule-template").html();
+        const namingRuleTemplate = $("#naming-rule-template").html();
+        const codeGenerationNamingRuleTemplate = $("#code-generation-fileNaming-rule-template").html();
+
+        // cache template in mustache
+        Mustache.parse(filterRuleTemplate);
+        Mustache.parse(namingRuleTemplate);
+        Mustache.parse(codeGenerationNamingRuleTemplate);
+
+        renderTemplate(filterRuleTemplate, window.dataCache.filterRules.filter(i => i.listType === 'whitelist'), 'whitelist');
+        renderTemplate(filterRuleTemplate, window.dataCache.filterRules.filter(i => i.listType === 'blacklist'), 'blacklist');
+        renderTemplate(namingRuleTemplate, window.dataCache.namingRules, "naming");
+        renderTemplate(codeGenerationNamingRuleTemplate, window.dataCache.codeGeneration.namingRules, listType);
+                
         // hide initialize info box
         $("#loadingPanel").hide();
     }
@@ -163,7 +178,7 @@
                     items.push({ id: idPrefix + value, listType, scope: itemType, value, ruleType: 'exact-match', options });
                 });
             } else {
-                let value; 
+                let value = form[`${listType}-${itemType}-selections`]; 
 
                 if (itemType === 'entity') {
                     value = window.dataCache.entities.filter(e => e.MetadataId === form[`${listType}-${itemType}-selections`])[0].LogicalName;
