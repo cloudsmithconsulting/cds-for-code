@@ -1,8 +1,10 @@
+import * as vscode from 'vscode';
 import * as FileSystem from '../../core/io/FileSystem';
 import * as path from 'path';
 import Dictionary from '../../core/types/Dictionary';
 import TemplateManager from './TemplateManager';
 import Quickly from '../../core/Quickly';
+import TemplateEngine from './TemplateEngine';
 
 export class TemplateItem {
     constructor(
@@ -51,7 +53,7 @@ export class TemplateItem {
         }
 
         if (fileContents) {
-            return await TemplateManager.applyTemplate(this, fileContents, placeholders, object);
+            return await TemplateEngine.applyTemplate(this, fileContents, placeholders, object);
         }
     }
 
@@ -100,6 +102,13 @@ export class TemplateItem {
         
         return template;
     }    
+}
+
+export class TemplateFilesystemItem {
+    constructor(
+        public type: vscode.FileType,
+        public name: string
+    ) { }
 }
 
 export class TemplateDirective { 
