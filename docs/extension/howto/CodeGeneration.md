@@ -9,8 +9,9 @@
     - [From the Command Palette](#from-the-command-palette)
     - [From File Explorer](#from-file-explorer)
   - [Customizing Code Generation](#customizing-code-generation)
-    - [Generating CrmSvcUtil Configuration in File Explorer](#generating-crmsvcutil-configuration-in-file-explorer)
-    - [Executing Code Generation With Custom Configuration in File Explorer](#executing-code-generation-with-custom-configuration-in-file-explorer)
+    - [Generating CrmSvcUtil Configuration from File Explorer](#generating-crmsvcutil-configuration-from-file-explorer)
+    - [Editing a CrmSvcUtil Configuration File from File Explorer](#editing-a-crmsvcutil-configuration-file-from-file-explorer)
+    - [Executing Code Generation With Custom Configuration from File Explorer](#executing-code-generation-with-custom-configuration-from-file-explorer)
 
 ## Overview
 
@@ -50,7 +51,7 @@ Generating code from File Explorer will look similar to this:
 
 CDS for Code allows for customizing the output of CrmSvcUtil.exe utelizing a CloudSmith utility library. This library allows for configuring the code generation process using a configuration file. CDS for Code will help you generate and customize this file. You can see [documentation on configuring this file manually here](../../tools/CrmSvcUtil.md).
 
-### Generating CrmSvcUtil Configuration in File Explorer
+### Generating CrmSvcUtil Configuration from File Explorer
 
 A customizable CrmSvcUtil configuration file can be created by:
 
@@ -64,7 +65,15 @@ Here's an example of creating one in a templated plugin project:
 
 ![img](../../images/generate-crmsvcutil-config.gif)
 
-### Executing Code Generation With Custom Configuration in File Explorer
+### Editing a CrmSvcUtil Configuration File from File Explorer
+
+Right-clicking your config file in VSCode File Explorer will present you the option of editing this configuration using our configuration tool.
+
+In your editor, it will look something like this:
+
+![img](../../images/edit-svcutil-config.png)
+
+### Executing Code Generation With Custom Configuration from File Explorer
 
 Once you have a customized CrmSvcUtil configuration file, it can be used in place of the default configuration to generate early bound entities.
 
