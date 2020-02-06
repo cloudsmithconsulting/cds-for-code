@@ -1,9 +1,11 @@
 ﻿# ![Cloudsmith Consulting LLC](https://cloudsmithstatics.azureedge.net/web/cloudsmith-notagline-450x103.png "Cloudsmith Consulting")<br> CloudSmith's Common Data Service (CDS) CrmSvcUtil Extensions
+
 This sample is designed to help developers who are using CrmSvcUtil from the Microsoft Dynamics 365 SDK extend the code generation process.
 
 ---
 
 ## Objective
+
 The CrmSvcUtil.exe tool provided by the Dynamics 365 SDK allows developers to customize the process of the code generation.  Out of the box, the code generation has some limitations: 
 
 - [X] Only able to apply one custom filter or extension at a time.
@@ -19,6 +21,7 @@ The CrmSvcUtil.exe tool provided by the Dynamics 365 SDK allows developers to cu
 ---
 
 ## Getting started
+
 The CloudSmith.Cds.CrmSvcUtil package contains an assembly with public types, which can bu used to inject logic into the CrmSvcUtil.exe execution pipeline.
 Microsoft describes this process under [Create extensions for the code generation tool](https://msdn.microsoft.com/en-us/library/hh547384.aspx).
 
@@ -30,15 +33,18 @@ Microsoft describes this process under [Create extensions for the code generatio
 ```powershell
 Install-Package Microsoft.CrmSdk.CoreTools
 ```
-3) Add the CloudSmith.Cds.CrmSvcUtil package to you project:
+
+1) Add the CloudSmith.Cds.CrmSvcUtil package to you project:
+
 ```powershell
 Install-Package CloudSmith.Cds.CrmSvcUtil
 ```
-> As a result of the installation the assembly *CloudSmith.Cds.CrmSvcUtil.dll* will be copied to the `\bin\coretols` folder
 
+> As a result of the installation the assembly *CloudSmith.Cds.CrmSvcUtil.dll* will be copied to the `\bin\coretols` folder
 > **Note:** Alternatively, you can manually deploy CloudSmith.Cds.CrmSvcUtil.dll to the folder containing CrmSvcUtil.exe.
 
-4) Inject/configure the services you want to use to modify the generated code.  
+1) Inject/configure the services you want to use to modify the generated code.  
+
 > It is possible to run each individual service extension stand-alone.  For better results, we recommend using the Composite services listed below.  The composite services are designed to run more than one underlying service and consolidate the results.
 
 | Parameter / Key         | CrmSvcUtil Service Interface    | Extension Class                                                 | Configuration Section    |
@@ -51,7 +57,9 @@ Install-Package CloudSmith.Cds.CrmSvcUtil
 | namingservice           | INamingService                  | CloudSmith.Dynamics365.CrmSvcUtil.CompositeNamingService        | Naming                   |
 
 You may specify these types on the CrmSvcUtil command line, or in the CrmSvcUtil.exe.config file inside the _appSettings_ element as shown below.
+
 #### CrmSvcUtil.exe configuration
+
 ```xml
   <appSettings>
     <add key="codewriterfilter" value="CloudSmith.Cds.CrmSvcUtil.CompositeFilterService, CloudSmith.Cds.CrmSvcUtil" />
@@ -62,6 +70,7 @@ You may specify these types on the CrmSvcUtil command line, or in the CrmSvcUtil
 ```
 
 #### Command Line syntax
+
 ```powershell
 .\CrmSvcUtil.exe 
     /url:{url} 
@@ -76,6 +85,7 @@ You may specify these types on the CrmSvcUtil command line, or in the CrmSvcUtil
 ```
 
 #### Individual services
+
 It is possible to configure the individual services via the _appSettings_ Section in the _CrmSvcUtil.exe.config_ file, instead of using the composite services provided in the example above.  Below is a list of packaged services and the order in which rules are evaluated.
 > It is not necessarily to configure the individual services in most scenarios, using the composite services above will automatically execute each individual service below.
 
@@ -94,7 +104,7 @@ It is possible to configure the individual services via the _appSettings_ Sectio
 | 2     | CloudSmith.Dynamics365.CrmSvcUtil.Generation.ImportResolverCustomizationService | ICustomizeCodeDomService | Applies "using" or "Import" statements to each file generated               |
 | 3     | CloudSmith.Dynamics365.CrmSvcUtil.Generation.FileSplitCustomizationService      | ICustomizeCodeDomService | Slices generation tasks into separate for version control                   |
 
-5) Configure the extensions and run CrmSvcUtil.exe.
+1) Configure the extensions and run CrmSvcUtil.exe.
 
 ---
 
@@ -105,6 +115,7 @@ The CrmSvcUtil extensions use a .NET ConfigurationSection to locate its configur
 ### Adding the extension's configuration section
 
 To start configuring the CrmSvcUtil extensions you have to add a new section in the CrmSvcUtil.exe.config file as demonstrated below.
+
 ```xml
   <configSections>
     <section name="ServiceExtensions" type="CloudSmith.Cds.CrmSvcUtil.Configuration.ServiceExtensionsConfigurationSection, CloudSmith.Cds.CrmSvcUtil" />
@@ -112,6 +123,7 @@ To start configuring the CrmSvcUtil extensions you have to add a new section in 
 ```
 
 Inside the ServiceExtensions element you may input configuration values for each individual service.  This example shows a completed configuration section that uses all the services.
+
 ```xml
   <ServiceExtensions>
     <Filtering>
@@ -176,6 +188,7 @@ Inside the ServiceExtensions element you may input configuration values for each
 ```
 
 ### _Filtering_ element
+
 The _Filtering_ element allows you to configure the beavior of the filtering services using a Whitelist and a Blacklist.
 
 * Whitelist items are first processed, and when a match is made on the Whitelist the item will be generated, even if it is later blacklisted.
@@ -189,6 +202,7 @@ Whitelisting has 2 modes - Inclusive and Exclusive.
 * Inclusive whitelisting will ensrue items on the whitelist are generated, and will generate anything else not blacklisted.
 
 #### Collection Elements
+
 The _Entities_, _Attributes_, _OptionSets_ and _Solutions_ elements inside the _Filtering_ element are collection elements.  Collection
 elements can be layered in many configuration files, allowing a composite set of items to be procesed from different configurations.  The
 elements (tags) that can go inside collections include:
@@ -200,6 +214,7 @@ elements (tags) that can go inside collections include:
 | remove               | Removes an element from the collection.                                         |
 
 #### _Entities_ element
+
 The _Entities_ element allows you to configure specific entiites for whitelisting or blacklisting.  They are specified using these configuration attributes:
 
 | Attribute            | Purpose                                                                         |
@@ -217,6 +232,7 @@ The following example shows how to add an entity to a WhiteList in configuration
 ```
 
 #### _Attributes_ element
+
 The _Attributes_ element allows you to configure specific attributes (per entity or globally) for whitelisting or blacklisting.  They are specified using these configuration attributes:
 
 | Attribute            | Purpose                                                                         |
@@ -235,6 +251,7 @@ The following example shows how to add the attribute "name" to a WhiteList for a
 ```
 
 #### _OptionSet_ element
+
 The _OptionSets_ element allows you to configure specific option sets (per entity or globally) for whitelisting or blacklisting.  They are specified using these configuration attributes:
 
 | Attribute            | Purpose                                                                         |
@@ -253,6 +270,7 @@ The following example shows how to add the attribute "name" to a WhiteList for a
 ```
 
 #### _Filters_ element
+
 The _Filters_ element allows you to add custom filters for entities, attributes or OptionSets by using regular expressions.
 > By default the _Filters_ element contains the _expression_ "`.*`", which means that all items are part of the output.
 
@@ -300,6 +318,7 @@ Here is an example of regular expression filters applied to entities and attribu
 ```
 
 #### _Solutions_ element
+
 The _Solutions_ element allows you to configure which entities and attributes should be part of the generated code based on their inclusion in one or more solutions.  Items will be included or excluded based on their presence in a solution.  Here is an example of the _Solutions_ element in a whitelist.
 
 ```xml
@@ -312,6 +331,7 @@ The _Solutions_ element allows you to configure which entities and attributes sh
 ```
 
 ### _Customization_ element
+
 The _Customization_ element allows you to influence if you would like custom entities included or not.  It is a single element with just one attribute, _strategy_.
 
 The following values are defined for the "strategy" attribute.
@@ -332,6 +352,7 @@ Below is an example of using this filter in a whitelist.
 ```
 
 ### Naming Rules
+
 Naming rules allow you to change the behavior of how items are named when they are generated.  The following naming rules are available.
 
 | Rule                 | Purpose                                                                         |
@@ -340,6 +361,7 @@ Naming rules allow you to change the behavior of how items are named when they a
 | MappingRules         | Rules that can map types to alternative names                                   |
 
 #### PublisherRules element
+
 The _PublisherRules_ element configures how publisher prefixed names shoudld be handled.
 
 * The _name_ attribute identifies the *CRM Publisher* prefix
@@ -424,6 +446,7 @@ The _MappingRules_ section allows a detailed control for the naming of special C
 ---
 
 ### CodeGeneration Options
+
 It is possible to influence how the actual output files are generated in CrmSvcUtil.exe using options in the _Generation_ element.  The _Generation_ element can be configured in these ways:
 
 | Name                 | Purpose                                                                         |
@@ -434,6 +457,7 @@ It is possible to influence how the actual output files are generated in CrmSvcU
 | Files                | A collection of output files and strategies for outputting each item            |
 
 #### _outputPath_ attribute
+
 The outputPath attribute can remain empty (or missing), a relative path, or an absolute path.  The following table lists the expected outcome of each value.
 
 | Value                | Outcome                                                                         |
@@ -443,6 +467,7 @@ The outputPath attribute can remain empty (or missing), a relative path, or an a
 | absolute path        | The absolute path will be resolved as provided                                  |
 
 #### _language_ attribute
+
 The language attribute can remain empty (and will assume C# of whatever commandline variable was supplied), or contain one of these supported output types.
 
 | Value                | Outcome                                                                         |
@@ -452,6 +477,7 @@ The language attribute can remain empty (and will assume C# of whatever commandl
 | VisualBasic          | All types will be generated in Microsoft Visual Basic                           |
 
 #### _Behaviors_ element
+
 The behaviors element allows you to inject certain behaviors into the code generation process.  The following is a list of behaviors that currently ship with these extensions.
 
 | Behavior                     | Arguments                                | Outcome                                                                         |
@@ -471,6 +497,7 @@ The following example shows how to setup code generation with additional behavio
 ```
 
 #### _Files_ element
+
 You may generate up to 6 sets of files using the Files collection.  Each type of file hsa various strategies available for generation.
 
 | Type                 | File contains                                                                   | Applicable Strategies                        |

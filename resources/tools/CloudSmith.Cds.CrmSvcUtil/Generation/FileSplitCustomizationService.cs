@@ -31,7 +31,11 @@ namespace CloudSmith.Cds.CrmSvcUtil.Generation
             }
 
             Generator.Generate();
-            Generator.RemoveGeneratedTypes(codeUnit);
+
+            if (Generator.Files.Count > 1)
+            {
+                Generator.RemoveGeneratedTypes(codeUnit);
+            }
         }
     }
 }

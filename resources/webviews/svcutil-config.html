@@ -46,6 +46,7 @@
                     <option>Attribute</option>
                     <option>OptionSet</option>
                     <option>Solution</option>
+                    <option>Customizations</option>
                 </select>
                 <label for="whitelist-filterType">Which items do you want to add to the whitelist?</label>
             </div>
@@ -202,6 +203,17 @@
                 </div>
             </div>
 
+            <div class="row" style="margin-left: 40px;" data-filter-type="Customizations" hidden>
+                <div style="margin-top: 40px;" class="col s12 input-field">
+                    <select id="whitelist-customizations-selections" name="whitelist-customizations-selections">
+                        <option value="Default">Default (all customizations)</option>
+                        <option value="CustomOnly">Customized solution items only</option>
+                        <option value="UncustomizedOnly">System/default solution items only</option>
+                    </select>
+                    <label for="whitelist-customizations-selections">Which Customizations?</label>
+                </div>
+            </div>
+
             <div class="right">
                 <a class="btn-flat" href="#" title="Save" data-action="whitelist-save"><span class="iconify" data-icon="fa:save"></span>&nbsp;Add Whitelist Rule</a>
                 <a class="btn-flat" href="#" title="Cancel" data-action="whitelist-cancel"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a>
@@ -234,6 +246,7 @@
                     <option>Attribute</option>
                     <option>OptionSet</option>
                     <option>Solution</option>
+                    <option>Customizations</option>
                 </select>
                 <label for="blacklist-filterType">Which items do you want to add to the blacklist?</label>
             </div>
@@ -387,6 +400,17 @@
                         <input type="checkbox" name="blacklist-solution-regex-ignorecase" ux-group="SolutionBlacklistRegEx" value="true" class="filled-in" disabled />
                         <span>Ignore Case</span>
                     </label>
+                </div>
+            </div>
+
+            <div class="row" data-filter-type="Customizations" hidden>
+                <div class="col s12 input-field">
+                    <select id="blacklist-customizations-selections" name="blacklist-customizations-selections">
+                        <option value="Default">Default (all customizations)</option>
+                        <option value="CustomOnly">Customized solution items only</option>
+                        <option value="UncustomizedOnly">System/default solution items only</option>
+                    </select>
+                    <label for="blacklist-customizations-selections">Which Customizations?</label>
                 </div>
             </div>
 
