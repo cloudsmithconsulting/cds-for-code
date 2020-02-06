@@ -44,6 +44,7 @@
 		"onCommand:cs.cds.controls.explorer.createFromProjectTemplate",
 		"onCommand:cs.cds.controls.explorer.dotNetBuild",
 		"onCommand:cs.cds.controls.explorer.dotNetTest",
+		"onCommand:cs.cds.controls.explorer.editCrmSvcUtilConfig",
 		"onCommand:cs.cds.controls.explorer.generateEntityCodeToFolder",
 		"onCommand:cs.cds.controls.explorer.generateEntityCodeToFile",
 		"onCommand:cs.cds.controls.explorer.packSolutionFromFolder",
@@ -311,6 +312,11 @@
 			{
 				"command": "cs.cds.controls.explorer.dotNetTest",
 				"title": "Test project",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.cds.controls.explorer.editCrmSvcUtilConfig",
+				"title": "Edit CrmSvcUtil Configuration",
 				"category": "UserInterface"
 			},
 			{
@@ -606,6 +612,10 @@
 		"menus": {
 			"commandPalette": [
 				{
+					"command": "cs.cds.controls.explorer.createCrmSvcUtilConfig",
+					"when": "false"
+				},
+				{
 					"command": "cs.cds.controls.explorer.createFromItemTemplate",
 					"when": "false"
 				},
@@ -623,6 +633,10 @@
 				},
 				{
 					"command": "cs.cds.controls.explorer.dotNetTest",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.editCrmSvcUtilConfig",
 					"when": "false"
 				},
 				{
@@ -768,6 +782,36 @@
 			],
 			"explorer/context": [
 				{
+					"command": "cs.cds.controls.explorer.createFromItemTemplate",
+					"when": "explorerResourceIsFolder",
+					"group": "navigation@1"
+				},
+				{
+					"command": "cs.cds.controls.explorer.createFromProjectTemplate",
+					"when": "explorerResourceIsFolder",
+					"group": "navigation@2"
+				},
+				{
+					"command": "cs.cds.controls.explorer.createWebResource",
+					"when": "explorerResourceIsFolder",
+					"group": "navigation@3"
+				},
+				{
+					"command": "cs.cds.controls.explorer.createCrmSvcUtilConfig",
+					"when": "explorerResourceIsFolder",
+					"group": "navigation@4"
+				},
+				{
+					"command": "cs.cds.controls.explorer.saveTemplateFile",
+					"when": "explorerResourceIsFolder != true",
+					"group": "navigation@999"
+				},
+				{
+					"command": "cs.cds.controls.explorer.saveTemplateFolder",
+					"when": "explorerResourceIsFolder",
+					"group": "navigation@999"
+				},
+				{
 					"command": "cs.cds.controls.explorer.dotNetBuild",
 					"when": "explorerResourceIsFolder == true || resourceExtname == .csproj || resourceExtname == .vbproj",
 					"group": "build@1"
@@ -781,6 +825,11 @@
 					"command": "cs.cds.controls.explorer.importSolution",
 					"when": "resourceExtname == .zip",
 					"group": "build@3"
+				},
+				{
+					"command": "cs.cds.controls.explorer.editCrmSvcUtilConfig",
+					"when": "explorerResourceIsFolder != true && resourceExtname == .config",
+					"group": "generateCode@1"
 				},
 				{
 					"command": "cs.cds.controls.explorer.generateEntityCodeToFile",
@@ -811,36 +860,6 @@
 					"command": "cs.cds.controls.explorer.registerPluginFile",
 					"when": "explorerResourceIsFolder != true && resourceExtname == .csproj || resourceExtname == .vbproj || resourceExtname == .dll",
 					"group": "zzz_azuretools_deploy@4"
-				},
-				{
-					"command": "cs.cds.controls.explorer.createFromItemTemplate",
-					"when": "explorerResourceIsFolder",
-					"group": "navigation@1"
-				},
-				{
-					"command": "cs.cds.controls.explorer.createFromProjectTemplate",
-					"when": "explorerResourceIsFolder",
-					"group": "navigation@2"
-				},
-				{
-					"command": "cs.cds.controls.explorer.createWebResource",
-					"when": "explorerResourceIsFolder",
-					"group": "navigation@3"
-				},
-				{
-					"command": "cs.cds.controls.explorer.createCrmSvcUtilConfig",
-					"when": "explorerResourceIsFolder || resourceExtname == .config",
-					"group": "navigation@4"
-				},
-				{
-					"command": "cs.cds.controls.explorer.saveTemplateFile",
-					"when": "explorerResourceIsFolder != true",
-					"group": "navigation@999"
-				},
-				{
-					"command": "cs.cds.controls.explorer.saveTemplateFolder",
-					"when": "explorerResourceIsFolder",
-					"group": "navigation@999"
 				}
 			],
 			"view/title": [

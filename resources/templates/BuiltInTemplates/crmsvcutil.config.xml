@@ -26,7 +26,7 @@
           <add name="fileListener"/>
         </listeners>
       </source>
-      <source name="CloudSmith.Dynamics365.CrmSvcUtil" switchName="CloudSmith.Dynamics365.CrmSvcUtil" switchType="System.Diagnostics.SourceSwitch">
+      <source name="CloudSmith.Cds.CrmSvcUtil" switchName="CloudSmith.Cds.CrmSvcUtil" switchType="System.Diagnostics.SourceSwitch">
         <listeners>
           <add name="console" type="System.Diagnostics.ConsoleTraceListener"/>
           <add name="fileListener"/>
@@ -48,7 +48,7 @@
 
       <add name="Microsoft.Xrm.Tooling.CrmConnectControl" value="Error"/>
       <add name="Microsoft.Xrm.Tooling.Connector.CrmServiceClient" value="Off"/>
-      <add name="CloudSmith.Dynamics365.CrmSvcUtil" value="Information"/>
+      <add name="CloudSmith.Cds.CrmSvcUtil" value="Information"/>
       <add name="CrmSvcUtil" value="Error"/>
     </switches>
     <sharedListeners>
