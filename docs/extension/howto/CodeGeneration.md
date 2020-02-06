@@ -9,7 +9,7 @@
     - [From the Command Palette](#from-the-command-palette)
     - [From File Explorer](#from-file-explorer)
   - [Customizing Code Generation](#customizing-code-generation)
-    - [Generating the Configuration](#generating-the-configuration)
+    - [Generating CrmSvcUtil Configuration in File Explorer](#generating-crmsvcutil-configuration-in-file-explorer)
     - [Executing Code Generation With Custom Configuration in File Explorer](#executing-code-generation-with-custom-configuration-in-file-explorer)
 
 ## Overview
@@ -48,9 +48,9 @@ Generating code from File Explorer will look similar to this:
 
 ## Customizing Code Generation
 
-CDS for Code allows for customizing the output of CrmSvcUtil.exe utelizing a CloudSmith utility library. This library allows for configuring the code generation process using a configuration file. More about this library can be found [on GitHub in this repository](https://github.com/cloudsmithconsulting/Dynamics365-VsCode-Samples/tree/master/src/CloudSmith.Dynamics365.CrmSvcUtil).
+CDS for Code allows for customizing the output of CrmSvcUtil.exe utelizing a CloudSmith utility library. This library allows for configuring the code generation process using a configuration file. CDS for Code will help you generate and customize this file. You can see [documentation on configuring this file manually here](../../tools/CrmSvcUtil.md).
 
-### Generating the Configuration
+### Generating CrmSvcUtil Configuration in File Explorer
 
 A customizable CrmSvcUtil configuration file can be created by:
 
