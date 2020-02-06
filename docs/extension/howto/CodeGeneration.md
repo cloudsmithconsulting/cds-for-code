@@ -5,14 +5,21 @@
 - [How to: Use CrmSvcUtil to generate entities using CDS for Code](#how-to-use-crmsvcutil-to-generate-entities-using-cds-for-code)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
-  - [From the Command Palette](#from-the-command-palette)
-  - [From File Explorer](#from-file-explorer)
+  - [Standard Code Generation](#standard-code-generation)
+    - [From the Command Palette](#from-the-command-palette)
+    - [From File Explorer](#from-file-explorer)
+  - [Customizing Code Generation](#customizing-code-generation)
+    - [Generating CrmSvcUtil Configuration from File Explorer](#generating-crmsvcutil-configuration-from-file-explorer)
+    - [Editing a CrmSvcUtil Configuration File from File Explorer](#editing-a-crmsvcutil-configuration-file-from-file-explorer)
+    - [Executing Code Generation With Custom Configuration from File Explorer](#executing-code-generation-with-custom-configuration-from-file-explorer)
 
 ## Overview
 
 The CDS for Code extension will call out to the SvcUtil.exe application to generate strongly typed code for your project to use when communicating with CDS. You can read more about [creating early bound entity classes here](https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/org-service/create-early-bound-entity-classes-code-generation-tool).
 
-## From the Command Palette
+## Standard Code Generation
+
+### From the Command Palette
 
 To generate entities using the command palette:
 
@@ -27,7 +34,7 @@ When put into action it will look similar to this:
 
 ![img](../../images/cds-generate-entities-command-palette.gif)
 
-## From File Explorer
+### From File Explorer
 
 To generate entites from VSCode File Explorer:
 
@@ -39,3 +46,46 @@ To generate entites from VSCode File Explorer:
 Generating code from File Explorer will look similar to this:
 
 ![img](../../images/cds-generate-entities-file-explorer.gif)
+
+## Customizing Code Generation
+
+CDS for Code allows for customizing the output of CrmSvcUtil.exe utelizing a CloudSmith utility library. This library allows for configuring the code generation process using a configuration file. CDS for Code will help you generate and customize this file. You can see [documentation on configuring this file manually here](../../tools/CrmSvcUtil.md).
+
+### Generating CrmSvcUtil Configuration from File Explorer
+
+A customizable CrmSvcUtil configuration file can be created by:
+
+1. Right-click the directory you want the config file to be generated under
+2. Click New CrmSvcUtli Configuration
+3. Enter a file name for the output config file
+4. Add rules using the Configure entity code generation screen
+5. Click save
+
+Here's an example of creating one in a templated plugin project:
+
+![img](../../images/generate-crmsvcutil-config.gif)
+
+### Editing a CrmSvcUtil Configuration File from File Explorer
+
+Right-clicking your config file in VSCode File Explorer will present you the option of editing this configuration using our configuration tool.
+
+In your editor, it will look something like this:
+
+![img](../../images/edit-svcutil-config.png)
+
+### Executing Code Generation With Custom Configuration from File Explorer
+
+Once you have a customized CrmSvcUtil configuration file, it can be used in place of the default configuration to generate early bound entities.
+
+Inside of VSCode File Explorer:
+
+1. Right-click your customized CrmSvcUtil configuration file
+2. Click Generate CDS entity classes using this configuration
+3. Select your connection
+4. Select the location and file name for the generated code
+
+Here's an example of what you will see when right-clicking the file:
+
+![img](../../images/generate-classes-using-config.png)
+
+This will kick off the code generation process.
