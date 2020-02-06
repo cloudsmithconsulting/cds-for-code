@@ -12,7 +12,7 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 
 ## v0.8 Early Preview - December 2019 - January 2020
 
-### v0.8.11 (January 31, 2020)
+### v0.8.11 (February 6, 2020)
 
 ### v0.8.10 (January 24, 2020)
 

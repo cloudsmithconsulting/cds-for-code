@@ -132,7 +132,16 @@ if ($Interactive) {
 	$Arguments = "/nologo /url:'$Url' /interactivelogin $Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
 } else {
 	if ($ConnectionString -eq "") {
-		$UnsecurePassword = ConvertFrom-SecureString $Password
+		$bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password);
+
+		try
+		{
+			$UnsecurePassword = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr);
+		}
+		finally
+		{
+			[Runtime.InteropServices.Marshal]::FreeBSTR($bstr);
+		}
 
 		$Arguments = "/nologo /url:'$Url' /username:$Username /password:$UnsecurePassword $Domain$Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
 	} else {

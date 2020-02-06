@@ -7,7 +7,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration.Generation
 {
     public class CodeGenerationElement : ConfigurationElement
     {
-        [ConfigurationProperty("Files")]
+        [ConfigurationProperty("Files", IsDefaultCollection = false)]
         [ConfigurationCollection(typeof(CodeGenerationFileOptionsCollection),
           AddItemName = "add",
           ClearItemsName = "clear",

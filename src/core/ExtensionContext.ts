@@ -62,4 +62,8 @@ export default class ExtensionContext {
             await ExtensionContext._onDeactivate[id].forEach(async a => await a(ExtensionContext._instance, config));
         }
     }
+
+    static get isDebugging(): boolean {
+        return vscode.env.machineId === 'someValue.machineId';
+    }
 }

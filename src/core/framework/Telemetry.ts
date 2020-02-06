@@ -8,6 +8,7 @@ import moment = require('moment');
 import { Utilities } from '../Utilities';
 import Dictionary from '../types/Dictionary';
 import logger, { ExtensionLogger } from './Logger';
+import ExtensionContext from '../ExtensionContext';
 
 export default class Telemetry {
     static get Instance(): Telemetry {
@@ -43,7 +44,7 @@ export default class Telemetry {
     }
 
     error(error: Error, properties?: { [key: string]: string; }, measurements?: { [key: string]: number; }): void {
-        if (vscode.env.machineId !== 'someValue.machineId') {
+        if (!ExtensionContext.isDebugging) {
             this.reporter.sendTelemetryException(error, properties, measurements);
         } else {
             const errorText = JSON.stringify(error); 
@@ -55,7 +56,7 @@ export default class Telemetry {
     }
 
     sendTelemetry(event: string, properties?: { [key: string]: string; }, measurements?: { [key: string]: number; }): void {
-        if (vscode.env.machineId !== 'someValue.machineId') {
+        if (!ExtensionContext.isDebugging) {
             this.reporter.sendTelemetryEvent(event, properties, measurements);
         } else {
             const propertiesText = JSON.stringify(properties);
