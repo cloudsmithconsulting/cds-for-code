@@ -1,5 +1,6 @@
 import { View } from '../core/webui/View';
 import { ViewRenderer } from "../core/webui/ViewRenderer";
+import * as vscode from 'vscode';
 import * as cs from '../cs';
 import Dictionary from '../core/types/Dictionary';
 import Quickly from '../core/Quickly';
@@ -52,9 +53,12 @@ class SvcUtilConfigView extends View {
         this.postMessage({ command: 'updateAttributes', attributes, targetElem });
     }
 
-    private save(config :any) {        
+    private async save(config: any) {        
+        await vscode.commands.executeCommand(cs.cds.deployment.saveCrmSvcUtilConfig, config);
+        
         Quickly.inform(`CrmSvcUtil Configuration was saved.`);
-        this.dispose();
+
+        this.dispose();            
     }
 
     async setInitialState(config?: CdsWebApi.Config, viewModel?: any) {

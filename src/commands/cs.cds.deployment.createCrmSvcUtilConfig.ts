@@ -45,6 +45,8 @@ export default async function run(this: CodeGenerationManager, config?: CdsWebAp
 
 	const xml = await Xml.parseFile(defaultUri.fsPath);
 	const viewModel = this.parseXml(xml);
+	
+	viewModel.options = { fsPath: defaultUri.fsPath };
 
     await ViewManager.openSvcUtilConfiguration(config, viewModel);
 }

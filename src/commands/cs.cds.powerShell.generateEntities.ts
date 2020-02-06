@@ -1,6 +1,8 @@
 import * as path from 'path';
 import * as cs from "../cs";
 import * as vscode from 'vscode';
+import * as FileSystem from '../core/io/FileSystem';
+import * as Security from "../core/security/Types";
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import Quickly, { WorkspaceFileItem } from '../core/Quickly';
 import ExtensionContext from "../core/ExtensionContext";
@@ -8,7 +10,6 @@ import TerminalManager, { TerminalCommand } from '../components/Terminal/SecureT
 import { Utilities } from '../core/Utilities';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import GlobalStateCredentialStore from '../core/security/GlobalStateCredentialStore';
-import * as Security from "../core/security/Types";
 import ScriptDownloader from '../components/WebDownloaders/ScriptDownloader';
 import logger from '../core/framework/Logger';
 import CodeGenerationManager from '../components/CodeGeneration/CodeGenerationManager';
@@ -23,11 +24,11 @@ import CodeGenerationManager from '../components/CodeGeneration/CodeGenerationMa
  * @param {string} [namespace] Optional namespace for generated output
  * @returns Promise with output from terminal command running CrmSvcUtil.exe
  */
-export default async function run(this: CodeGenerationManager, config?: CdsWebApi.Config | string, folder?: string, outputFileName?: string, namespace?: string) {
+export default async function run(this: CodeGenerationManager, config?: CdsWebApi.Config | string, folder?: string, outputFileName?: string, namespace?: string, configFile?: vscode.Uri) {
 	// setup configurations
 	const sdkInstallPath = ExtensionConfiguration.getConfigurationValueOrDefault<string>(cs.cds.configuration.tools.sdkInstallPath, path.join(ExtensionContext.Instance.globalStoragePath, "Sdk"));
-	const coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
 	const workspaceFolder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 ? vscode.workspace.workspaceFolders[0] : null;
+	let coreToolsRoot = !Utilities.$Object.isNullOrEmpty(sdkInstallPath) ? path.join(sdkInstallPath, 'CoreTools') : null;
 
 	if (!config) {
 		const connectionChoice = await Quickly.pick("Would you like to connect to CDS using an existing connection or a connection string?", "Existing Connection", "Connection String");
@@ -82,12 +83,22 @@ export default async function run(this: CodeGenerationManager, config?: CdsWebAp
 
 	namespace = namespace || await Quickly.ask("Enter the namespace for the generated code", undefined, path.basename(folder));
 
+	let hasConfig: boolean = false;
+
+	if (configFile && configFile.fsPath && FileSystem.exists(configFile.fsPath)) {
+		hasConfig = true;
+		coreToolsRoot = path.join(ExtensionContext.Instance.globalStoragePath, `\\Tools\\${Utilities.Random.randomStringHex(10)}` ); 
+
+		FileSystem.copyFolder(path.join(ExtensionContext.Instance.globalStoragePath, `\\Tools\\CloudSmith.Cds.CrmSvcUtil\\`), coreToolsRoot);
+		FileSystem.copyItem(configFile.fsPath, path.join(coreToolsRoot, "CrmSvcUtil.exe.config"));
+	}
+
 	logger.log(`Command: ${cs.cds.powerShell.generateEntities} Checking to see if the CRM SDK is installed`);
 	await ScriptDownloader.installCdsSdk();
 	
 	// build a powershell terminal
 	logger.log(`Command: ${cs.cds.powerShell.generateEntities} Generating entity code`);
-	return TerminalManager.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
+	const result = await TerminalManager.showTerminal(path.join(ExtensionContext.Instance.globalStoragePath, "\\Scripts\\"))
 		.then(async terminal => {
 			let returnPromise: Promise<TerminalCommand>;
 
@@ -128,7 +139,7 @@ export default async function run(this: CodeGenerationManager, config?: CdsWebAp
 					if (result && result.output.indexOf("Invalid Login Information : An unsecured or incorrectly secured fault was received from the other party.") !== -1) {
 						await Quickly.askToRetry('CrmSvcUtil returned a fault attempting to login with the credentials supplied.  Would you like to retry with an interactive login?', 
 							async () => { 
-								return terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
+								return await terminal.run(new TerminalCommand(`.\\Generate-XrmEntities.ps1 `)
 									.text(`-ToolsPath ${coreToolsRoot} `)
 									.text(`-Path "${folder}" `)
 									.text(`-OutputFile "${outputFileName}" `)
@@ -141,4 +152,10 @@ export default async function run(this: CodeGenerationManager, config?: CdsWebAp
 					}
 				});
 		});
+
+	if (hasConfig) {
+		FileSystem.deleteFolder(coreToolsRoot);
+	}
+
+	return result;
 }

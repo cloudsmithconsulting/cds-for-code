@@ -26,6 +26,7 @@ export namespace cds {
         static readonly registerPluginAssembly: string = `${deployment._namespace}.registerPluginAssembly`;
         static readonly removeSolutionComponent: string = `${deployment._namespace}.removeSolutionComponent`;
         static readonly removeSolutionMapping: string = `${deployment._namespace}.removeSolutionMapping`;
+        static readonly saveCrmSvcUtilConfig: string = `${deployment._namespace}.saveCrmSvcUtilConfig`;
         static readonly unpackWebResource: string = `${deployment._namespace}.unpackWebResource`;
         static readonly updateSolutionMapping: string = `${deployment._namespace}.updateSolutionMapping`;
     }
@@ -185,8 +186,10 @@ export namespace cds {
             static readonly craeteWebResource: string = `${explorer._namespace}.createWebResource`;
             static readonly dotNetBuild: string = `${explorer._namespace}.dotNetBuild`;
             static readonly dotNetTest: string = `${explorer._namespace}.dotNetTest`;
+            static readonly editCrmSvcUtilConfig: string = `${explorer._namespace}.editCrmSvcUtilConfig`;
             static readonly generateEntityCodeToFolder: string = `${explorer._namespace}.generateEntityCodeToFolder`;
             static readonly generateEntityCodeToFile: string = `${explorer._namespace}.generateEntityCodeToFile`;
+            static readonly generateEntityCodeUsingConfig: string = `${explorer._namespace}.generateEntityCodeUsingConfig`;
             static readonly importSolution: string = `${explorer._namespace}.importSolution`;
             static readonly packSolutionFromFolder: string = `${explorer._namespace}.packSolutionFromFolder`;
             static readonly packWebResource: string = `${explorer._namespace}.packWebResource`;
