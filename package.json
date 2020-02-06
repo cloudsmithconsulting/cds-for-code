@@ -330,6 +330,11 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.cds.controls.explorer.generateEntityCodeUsingConfig",
+				"title": "Generate CDS entity classes using this configuration",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.cds.controls.explorer.importSolution",
 				"title": "Import solution to CDS",
 				"category": "UserInterface"
@@ -648,6 +653,10 @@
 					"when": "false"
 				},
 				{
+					"command": "cs.cds.controls.explorer.generateEntityCodeUsingConfig",
+					"when": "false"
+				},
+				{
 					"command": "cs.cds.controls.explorer.importSolution",
 					"when": "false"
 				},
@@ -830,6 +839,11 @@
 					"command": "cs.cds.controls.explorer.editCrmSvcUtilConfig",
 					"when": "explorerResourceIsFolder != true && resourceExtname == .config",
 					"group": "generateCode@1"
+				},
+				{
+					"command": "cs.cds.controls.explorer.generateEntityCodeUsingConfig",
+					"when": "explorerResourceIsFolder != true && resourceExtname == .config",
+					"group": "generateCode@2"
 				},
 				{
 					"command": "cs.cds.controls.explorer.generateEntityCodeToFile",

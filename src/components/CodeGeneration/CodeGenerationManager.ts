@@ -9,12 +9,17 @@ import { CdsWebApi } from '../../api/cds-webapi/CdsWebApi';
 
 export default class CodeGenerationManager {
     @command(cs.cds.controls.explorer.generateEntityCodeToFile, "Generate entity code to a file")
-    async generateEntityCodeToFile(file?:vscode.Uri) {
+    async generateEntityCodeToFile(file?: vscode.Uri) {
         return await vscode.commands.executeCommand(cs.cds.powerShell.generateEntities, undefined, path.dirname(file.fsPath), path.basename(file.fsPath), undefined);
     }
 
+    @command(cs.cds.controls.explorer.generateEntityCodeUsingConfig, "Generate entities using configuration file")
+    async generateEntityCodeUsingConfig(configFile?: vscode.Uri) {
+        return await vscode.commands.executeCommand(cs.cds.powerShell.generateEntities, undefined, undefined, undefined, undefined, configFile);
+    }
+
     @command(cs.cds.controls.explorer.generateEntityCodeToFolder, "Generate entity code to a folder")
-    async generateEntityCodeToFolder(folder?:vscode.Uri) {
+    async generateEntityCodeToFolder(folder?: vscode.Uri) {
         return await vscode.commands.executeCommand(cs.cds.powerShell.generateEntities, undefined, folder.fsPath, undefined, undefined);
     }
 
@@ -34,8 +39,8 @@ export default class CodeGenerationManager {
     }
 
     @command(cs.cds.powerShell.generateEntities, "Generate entity code using CrmSvcUtil")
-    async generateEntities(config?: CdsWebApi.Config, folder?: string, outputFileName?: string, namespace?: string) {
-        generateEntities.apply(this, [config, folder, outputFileName, namespace]);
+    async generateEntities(config?: CdsWebApi.Config, folder?: string, outputFileName?: string, namespace?: string, configFile?: vscode.Uri) {
+        generateEntities.apply(this, [ config, folder, outputFileName, namespace, configFile ]);
     }
 
     @command(cs.cds.deployment.createCrmSvcUtilConfig, "Create or edit CrmSvcUtil.exe.config")

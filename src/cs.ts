@@ -189,6 +189,7 @@ export namespace cds {
             static readonly editCrmSvcUtilConfig: string = `${explorer._namespace}.editCrmSvcUtilConfig`;
             static readonly generateEntityCodeToFolder: string = `${explorer._namespace}.generateEntityCodeToFolder`;
             static readonly generateEntityCodeToFile: string = `${explorer._namespace}.generateEntityCodeToFile`;
+            static readonly generateEntityCodeUsingConfig: string = `${explorer._namespace}.generateEntityCodeUsingConfig`;
             static readonly importSolution: string = `${explorer._namespace}.importSolution`;
             static readonly packSolutionFromFolder: string = `${explorer._namespace}.packSolutionFromFolder`;
             static readonly packWebResource: string = `${explorer._namespace}.packWebResource`;
