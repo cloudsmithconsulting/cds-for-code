@@ -22,7 +22,7 @@ sidebar_label: "views/cs.cds.views.pluginStepImageEditor"
 
 ▸ **openView**(`sdkmessageprocessingstepid`: string, `pluginStepImage`: any, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](../classes/_core_webui_view_.view.md)›*
 
-Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:11
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:12
 
 **Parameters:**
 

@@ -24,7 +24,7 @@ sidebar_label: "views/cs.cds.views.svcUtilConfigView"
 
 ###  async
 
-• **async**: *"C:/dev/cds-for-code/node_modules/@types/async/index"*
+• **async**: *"C:/Dev/Internal/cds-for-code/node_modules/@types/async/index"*
 
 Defined in src/views/cs.cds.views.svcUtilConfigView.ts:9
 
@@ -32,7 +32,7 @@ Defined in src/views/cs.cds.views.svcUtilConfigView.ts:9
 
 ###  openView
 
-▸ **openView**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](../classes/_core_webui_view_.view.md)›*
+▸ **openView**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `viewModel?`: any): *Promise‹[View](../classes/_core_webui_view_.view.md)›*
 
 Defined in src/views/cs.cds.views.svcUtilConfigView.ts:12
 
@@ -41,5 +41,6 @@ Defined in src/views/cs.cds.views.svcUtilConfigView.ts:12
 Name | Type |
 ------ | ------ |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`viewModel?` | any |
 
 **Returns:** *Promise‹[View](../classes/_core_webui_view_.view.md)›*

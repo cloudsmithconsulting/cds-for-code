@@ -8,15 +8,19 @@ import { CdsWebApi } from "../api/cds-webapi/CdsWebApi";
 import Quickly from "../core/Quickly";
 import ExtensionContext from "../core/ExtensionContext";
 import logger from "../core/framework/Logger";
+import Xml from "../core/io/Xml";
+import CodeGenerationManager from "../components/CodeGeneration/CodeGenerationManager";
 
 /**
  * This command can be invoked by the by either the file explorer view or the CDS Explorer
  * and can create a blank crmsvcutil.exe.config file or open an existing one up in the editor.
- * @export run command function
- * @param {vscode.Uri} [defaultUri] that invoked the command
+ * @export run command function, this is the default binding that will be invoked with the command.
+ * @param {CodeGenerationManager} this is a manager that handles code generation tasks (helpers)
+ * @param {CdsWebApi.Config} [config] indicating where to connect to a CDS instance
+ * @param {vscode.Uri} [defaultUri] location of where the crmsvcutil.exe.config file should be created/modified
  * @returns void
  */
-export default async function run(config?: CdsWebApi.Config, defaultUri?: vscode.Uri) {
+export default async function run(this: CodeGenerationManager, config?: CdsWebApi.Config, defaultUri?: vscode.Uri) {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
 		logger.warn(`Command: ${cs.cds.deployment.createCrmSvcUtilConfig} Organization not chosen, command cancelled`);
@@ -39,5 +43,10 @@ export default async function run(config?: CdsWebApi.Config, defaultUri?: vscode
 		FileSystem.writeFileSync(defaultUri.fsPath, configFile);
     }
 
-    await ViewManager.openSvcUtilConfiguration(config);
+	const xml = await Xml.parseFile(defaultUri.fsPath);
+	const viewModel = this.parseXml(xml);
+	
+	viewModel.options = { fsPath: defaultUri.fsPath };
+
+    await ViewManager.openSvcUtilConfiguration(config, viewModel);
 }

@@ -54,15 +54,17 @@
     function setInitialState(viewModel) {
         // form load here
         window.dataCache = {
+            options: { fsPath: viewModel.options ? viewModel.options.fsPath : undefined },
             entities: viewModel.entities,
             optionsets: viewModel.optionsets,
             solutions: viewModel.solutions,
-            entityMap: _.map(viewModel.entities, i => { return { value: i.LogicalName, text: i.LogicalName } }),
+            entityMap: _.map(viewModel.entities, i => { return { value: i.MetadataId, text: i.LogicalName } }),
             optionsetMap: _.map(viewModel.optionsets, i => { return { value: i.Name, text: i.Name } }),
             solutionMap: _.map(viewModel.solutions, i => { return { value: i.uniquename, text: i.uniquename } }),
+            filterOptions: viewModel.filterOptions || { },
             filterRules: viewModel.filterRules || [],
             namingRules: viewModel.namingRules || [],
-            codeGeneration: { namingRules: viewModel.codeGeneration && viewModel.codeGeneration.namingRules ? viewModel.codeGeneration.namingRules : [] }
+            codeGeneration: viewModel.codeGeneration || { namingRules: [], behaviors: {} }
         }
 
         $("[data-source='Entities']").each(function (index, element) {
@@ -77,13 +79,57 @@
             bindSelect($(element), window.dataCache.solutionMap, !element.multiple ? "- Select Solution -" : undefined);
         });
 
+        // cache html for mustache template
+        const filterRuleTemplate = $("#filter-rule-template").html();
+        const namingRuleTemplate = $("#naming-rule-template").html();
+        const codeGenerationNamingRuleTemplate = $("#code-generation-fileNaming-rule-template").html();
+
+        if (window.dataCache.filterOptions.whitelistMode) {
+            const $control = $('[data-action="whitelist-filtermode"]');
+            const newMode = window.dataCache.filterOptions.whitelistMode === 'Eclusive' ? 'Inclusive' : 'Exclusive';
+            const newText = `Switch to ${$control.attr("data-value")} Whitelist`;
+
+            $control.attr("data-value") = newMode;
+            $control.attr('title', newText)
+            $control.text(newText);
+        }
+
+        if (window.dataCache.codeGeneration.path) {
+            $("#code-generation-outputPath").val(window.dataCache.codeGeneration.path);
+        }
+
+        if (window.dataCache.codeGeneration.language) {
+            $("#code-generation-outputLanguage").val(window.dataCache.codeGeneration.language);
+            $("#code-generation-outputLanguage").formSelect();
+        }
+
+        if (window.dataCache.codeGeneration.behaviors) {
+            if (window.dataCache.codeGeneration.behaviors.translateOptionSetsAsEnums) {
+                $("#code-generation-translateOptionSets").prop("checked", true);
+            }
+
+            if (window.dataCache.codeGeneration.behaviors.importNamespaces) {
+                $("#code-generation-defaultImports").val(window.dataCache.codeGeneration.behaviors.importNamespaces);
+            }
+        }
+
+        // cache template in mustache
+        Mustache.parse(filterRuleTemplate);
+        Mustache.parse(namingRuleTemplate);
+        Mustache.parse(codeGenerationNamingRuleTemplate);
+
+        renderTemplate(filterRuleTemplate, window.dataCache.filterRules.filter(i => i.listType === 'whitelist'), 'whitelist');
+        renderTemplate(filterRuleTemplate, window.dataCache.filterRules.filter(i => i.listType === 'blacklist'), 'blacklist');
+        renderTemplate(namingRuleTemplate, window.dataCache.namingRules, "naming");
+        renderTemplate(codeGenerationNamingRuleTemplate, window.dataCache.codeGeneration.namingRules, "code-generation-fileNaming");
+                
         // hide initialize info box
         $("#loadingPanel").hide();
     }
 
     function setAttributes(attributes, targetElem) {
         window.dataCache.attributes = attributes;
-        window.dataCache.attributesMap = _.map(attributes, i => { return { value: i.LogicalName, text: i.LogicalName } });
+        window.dataCache.attributesMap = _.map(attributes, i => { return { value: i.MetadataId, text: i.LogicalName } });
 
         bindSelect($(targetElem), window.dataCache.attributesMap);
     }
@@ -149,15 +195,29 @@
         const itemType = form[`${listType}-filterType`] === 'OptionSet' ? 'optionSet' : form[`${listType}-filterType`].toLowerCase();
 
         if (form[`${listType}-${itemType}-addmode`] === itemType) {
-            const options = itemType !== 'attribute' ? {} : { entity: form[`${listType}-${itemType}-allentities`] === 'true' ? '*' : form[`${listType}-${itemType}-entity`] };
+            const options = itemType !== 'attribute' ? {} : { entity: form[`${listType}-${itemType}-allentities`] === 'true' ? '*' : window.dataCache.entities.filter(e => e.MetadataId === form[`${listType}-${itemType}-entity`])[0].LogicalName };
             const idPrefix = `${listType}.${itemType}.exact-match.${options.entity ? options.entity + "." : ''}`;
 
             if (form[`${listType}-${itemType}-selections`] instanceof Array) {
                 form[`${listType}-${itemType}-selections`].forEach((value, index) => {
+                    if (itemType === 'entity') {
+                        value = window.dataCache.entities.filter(e => e.MetadataId === value)[0].LogicalName;
+                    } else if (itemType === 'attribute') {
+                        value = window.dataCache.attributes.filter(a => a.MetadataId === value)[0].LogicalName;
+                    }
+
                     items.push({ id: idPrefix + value, listType, scope: itemType, value, ruleType: 'exact-match', options });
                 });
             } else {
-                items.push({ id: idPrefix + form[`${listType}-${itemType}-selections`], listType, scope: itemType, value: form[`${listType}-${itemType}-selections`], ruleType: 'exact-match', options });
+                let value = form[`${listType}-${itemType}-selections`]; 
+
+                if (itemType === 'entity') {
+                    value = window.dataCache.entities.filter(e => e.MetadataId === form[`${listType}-${itemType}-selections`])[0].LogicalName;
+                } else if (itemType === 'attribute') {
+                    value = window.dataCache.attributes.filter(a => a.MetadataId === form[`${listType}-${itemType}-selections`])[0].LogicalName;
+                }
+
+                items.push({ id: idPrefix + value, listType, scope: itemType, value, ruleType: 'exact-match', options });
             }
         } else {
             items.push({ id: `${listType}.${itemType}.regex`, listType, scope: itemType, value: form[`${listType}-${itemType}-regex`], ruleType: 'regex', options: { ignoreCase: form[`${listType}-${itemType}-regex-ignorecase`] === 'true' } });
@@ -182,11 +242,11 @@
         let newValue;
 
         if (itemType === "attribute") {
-            oldValue = (form["naming-mapping-attribute-allentities"] === "true" ? "*." : form["naming-mapping-attribute-entity"] + ".") 
-                + form["naming-mapping-attribute-selection"];
+            oldValue = (form["naming-mapping-attribute-allentities"] === "true" ? "*." : window.dataCache.entities.filter(e => e.MetadataId === form["naming-mapping-attribute-entity"])[0].LogicalName + ".") 
+                + window.dataCache.attributes.filter(a => a.MetadataId === form["naming-mapping-attribute-selection"])[0].LogicalName;
             newValue = form["naming-mapping-newname"];
         } else if (itemType === "entity") {
-            oldValue = form["naming-mapping-entity-selection"];
+            oldValue = window.dataCache.entities.filter(e => e.MetadataId === form["naming-mapping-entity-selection"])[0].LogicalName;
             newValue = form["naming-mapping-newname"];
         } else if (itemType === "publisher") {
             oldValue = form["naming-publisher-oldname"];
@@ -262,29 +322,40 @@
         Mustache.parse(namingRuleTemplate);
         Mustache.parse(codeGenerationNamingRuleTemplate);
 
-        $('[data-action=whitelist-add').click(function() {
+        $('[data-action="whitelist-filtermode"]').click(function() {
+            const $this = $(this);
+            const currentMode = $this.attr('data-value');
+            const newMode = currentMode === 'Exclusive' ? 'Inclusive' : 'Exclusive';
+            const newText = `Switch to ${currentMode} Whitelist`;
+
+            $this.attr('data-value', newMode);
+            $this.attr('title', newText)
+            $this.text(newText);
+        });
+
+        $('[data-action="whitelist-add"]').click(function() {
             $("#whitelist-nullpanel").hide();
             $("#whitelist-addpanel").show();
         });
 
-        $('[data-action=blacklist-add').click(function() {
+        $('[data-action="blacklist-add"]').click(function() {
             $("#blacklist-nullpanel").hide();
             $("#blacklist-addpanel").show();
         });
 
-        $('[data-action=naming-add-mapping').click(function() {
+        $('[data-action="naming-add-mapping"]').click(function() {
             $("#naming-nullpanel").hide();
             $("#naming-publisher-addpanel").hide();
             $("#naming-mapping-addpanel").show();
         });
 
-        $('[data-action=naming-add-publisher').click(function() {
+        $('[data-action="naming-add-publisher"]').click(function() {
             $("#naming-nullpanel").hide();
             $("#naming-mapping-addpanel").hide();
             $("#naming-publisher-addpanel").show();
         });
 
-        $('[data-action=code-generation-fileNaming-add').click(function() {
+        $('[data-action="code-generation-fileNaming-add"]').click(function() {
             $("#code-generation-fileNaming-nullpanel").hide();
             $("#code-generation-fileNaming-addpanel").show();
         });
@@ -401,7 +472,23 @@
 
         // wire up click handler for the submit button
         $("[data-action='save']").click(function() {
-    
+            // Save the handful of properties that aren't auto-saved.
+            window.dataCache.filterOptions.whitelistMode = $('[data-action="whitelist-filtermode"]').attr("data-value");
+            window.dataCache.codeGeneration.path = $("#code-generation-outputPath").val();
+            window.dataCache.codeGeneration.language = $("#code-generation-outputLanguage").val();
+            window.dataCache.codeGeneration.behaviors.translateOptionSetsAsEnums = $("#code-generation-translateOptionSets").prop("checked");
+            window.dataCache.codeGeneration.behaviors.importNamespaces = $("#code-generation-defaultImports").val();
+
+            vscode.postMessage({
+                command: 'save',
+                config: {
+                    options: window.dataCache.options,
+                    filterOptions: window.dataCache.filterOptions,
+                    filterRules: window.dataCache.filterRules,
+                    namingRules: window.dataCache.namingRules,
+                    codeGeneration: window.dataCache.codeGeneration
+                }
+            })
         });
     });
 }());

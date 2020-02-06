@@ -275,15 +275,16 @@ ___
 
 ###  setInitialState
 
-▸ **setInitialState**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹void›*
+▸ **setInitialState**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `viewModel?`: any): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.svcUtilConfigView.ts:61
+Defined in src/views/cs.cds.views.svcUtilConfigView.ts:60
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`viewModel?` | any |
 
 **Returns:** *Promise‹void›*
 

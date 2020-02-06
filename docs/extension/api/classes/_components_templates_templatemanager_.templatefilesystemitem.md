@@ -27,7 +27,7 @@ sidebar_label: "TemplateFilesystemItem"
 
 \+ **new TemplateFilesystemItem**(`type`: FileType, `name`: string): *[TemplateFilesystemItem](_components_templates_templatemanager_.templatefilesystemitem.md)*
 
-Defined in src/components/Templates/TemplateManager.ts:882
+Defined in src/components/Templates/TemplateManager.ts:874
 
 **Parameters:**
 
@@ -44,7 +44,7 @@ Name | Type |
 
 • **name**: *string*
 
-Defined in src/components/Templates/TemplateManager.ts:885
+Defined in src/components/Templates/TemplateManager.ts:877
 
 ___
 
@@ -52,4 +52,4 @@ ___
 
 • **type**: *FileType*
 
-Defined in src/components/Templates/TemplateManager.ts:884
+Defined in src/components/Templates/TemplateManager.ts:876

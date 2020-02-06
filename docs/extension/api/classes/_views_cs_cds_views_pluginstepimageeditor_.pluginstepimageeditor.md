@@ -69,7 +69,7 @@ Name | Type |
 
 • **config**: *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
-Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:24
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:25
 
 ___
 
@@ -155,7 +155,7 @@ Track the currently panel. Only allow a single panel to exist at a time.
 
 *Overrides [View](_core_webui_view_.view.md).[commands](_core_webui_view_.view.md#commands)*
 
-Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:41
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:42
 
 **Returns:** *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, Function›*
 
@@ -197,7 +197,7 @@ ___
 
 *Overrides [View](_core_webui_view_.view.md).[construct](_core_webui_view_.view.md#abstract-construct)*
 
-Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:26
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:27
 
 **Parameters:**
 
@@ -243,7 +243,7 @@ ___
 
 ▸ **save**(`pluginStepImage`: any): *void*
 
-Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:47
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:48
 
 **Parameters:**
 
@@ -257,16 +257,16 @@ ___
 
 ###  setInitialState
 
-▸ **setInitialState**(`sdkmessageprocessingstepid`: string, `viewModel`: any, `config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹void›*
+▸ **setInitialState**(`sdkmessageprocessingstepid`: string, `pluginStepImage`: any, `config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:61
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:62
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `sdkmessageprocessingstepid` | string |
-`viewModel` | any |
+`pluginStepImage` | any |
 `config` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
 
 **Returns:** *Promise‹void›*

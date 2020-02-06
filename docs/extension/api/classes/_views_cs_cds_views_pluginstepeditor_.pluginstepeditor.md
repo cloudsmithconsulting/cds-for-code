@@ -40,6 +40,7 @@ sidebar_label: "PluginStepEditor"
 * [construct](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#construct)
 * [dispose](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#dispose)
 * [postMessage](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#postmessage)
+* [retrieveAttributes](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#private-retrieveattributes)
 * [save](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#private-save)
 * [setInitialState](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#setinitialstate)
 * [show](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#static-show)
@@ -69,7 +70,7 @@ Name | Type |
 
 • **config**: *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:24
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:25
 
 ___
 
@@ -155,7 +156,7 @@ Track the currently panel. Only allow a single panel to exist at a time.
 
 *Overrides [View](_core_webui_view_.view.md).[commands](_core_webui_view_.view.md#commands)*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:41
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:42
 
 **Returns:** *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, Function›*
 
@@ -197,7 +198,7 @@ ___
 
 *Overrides [View](_core_webui_view_.view.md).[construct](_core_webui_view_.view.md#abstract-construct)*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:26
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:27
 
 **Parameters:**
 
@@ -239,11 +240,27 @@ Name | Type |
 
 ___
 
+### `Private` retrieveAttributes
+
+▸ **retrieveAttributes**(`logicalName`: string): *Promise‹void›*
+
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:49
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`logicalName` | string |
+
+**Returns:** *Promise‹void›*
+
+___
+
 ### `Private` save
 
 ▸ **save**(`step`: any): *void*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:47
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:57
 
 **Parameters:**
 
@@ -259,7 +276,7 @@ ___
 
 ▸ **setInitialState**(`pluginAssemblyId`: string, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `step?`: any): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:60
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:70
 
 **Parameters:**
 

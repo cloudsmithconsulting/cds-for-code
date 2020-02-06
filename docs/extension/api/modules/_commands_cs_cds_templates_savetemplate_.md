@@ -28,7 +28,7 @@ Defined in src/commands/cs.cds.templates.saveTemplate.ts:1
 
 ###  run
 
-▸ **run**(`this`: [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md), `templateUri`: Uri, `type`: [TemplateType](../enums/_components_templates_types_.templatetype.md)): *Promise‹void›*
+▸ **run**(`this`: [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md), `templateUri?`: Uri, `type?`: [TemplateType](../enums/_components_templates_types_.templatetype.md)): *Promise‹void›*
 
 Defined in src/commands/cs.cds.templates.saveTemplate.ts:19
 
@@ -44,8 +44,8 @@ This command can be invoked by the Command Palette or in a folder context menu o
 Name | Type |
 ------ | ------ |
 `this` | [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md) |
-`templateUri` | Uri |
-`type` | [TemplateType](../enums/_components_templates_types_.templatetype.md) |
+`templateUri?` | Uri |
+`type?` | [TemplateType](../enums/_components_templates_types_.templatetype.md) |
 
 **Returns:** *Promise‹void›*
 

@@ -1,24 +1,14 @@
 <nav class="nav-extended">
     <div class="nav-wrapper">
-        <a href="#" class="brand-logo left">
+        <a href="#" title="#{viewTitle}" class="brand-logo left">
             &nbsp;<span id="title">#{viewTitle}</span>
         </a>
-        <a href="#" data-target="extended-navigation" class="sidenav-trigger">
-            <span class="iconify" data-icon="ion-menu" data-width="32" data-height="24"></span>
-        </a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a data-action="save" href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
-            <li><a data-action="cancel" href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
+        <ul id="nav-mobile" class="right">
+            <li><a data-action="save" href="#" title="Save"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
+            <li><a data-action="cancel" href="#" title="Cancel"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
         </ul>
     </div>
 </nav>
-
-<ul class="sidenav" id="extended-navigation">
-    <li><a data-action="save" href="#"><span class="iconify" data-icon="fa:save"></span>&nbsp;Save</a></li>
-    <li><a data-action="cancel" href="#"><span class="iconify" data-icon="fa:ban"></span>&nbsp;Cancel</a></li>
-</ul>
-
-<br />
 
 <form class="row">
     <blockquote class="panel_error" id="errorPanel" hidden>
@@ -43,6 +33,7 @@
     <div id="whitelist" class="row">
         <div style="line-height: 50px; vertical-align: middle;">
             <a href="#" title="Add Items" class="btn-flat" data-action="whitelist-add"><span class="iconify" data-icon="fa:plus"></span>&nbsp;Add Items to Whitelist</a>
+            <a href="#" title="Switch to Inclusive Whitelist" class="btn-flat" data-action="whitelist-filtermode" data-value="Exclusive">&nbsp;Switch to Inclusive Whitelist</a>
         </div>
 
         <div id="whitelist-nullpanel" class="col s8">            
@@ -603,7 +594,7 @@
             </button>
         </div>
         <div class="col s12">
-            {{ruleType}}: {{value}}
+            {{ruleType}}: {{#options}}{{entity}}.{{/options}}{{value}}
         </div>
     </li>
     {{/items}}
@@ -631,7 +622,7 @@
     {{#items}}
     <li class="collection-item row">
         <div class="col s10 left">
-            {{strategy}}
+            {{fileType}}
         </div>
         <div class="col s2 right">
             <button class="button button--danger" onclick="removeRule('fileNaming', '{{id}}')">
@@ -639,7 +630,7 @@
             </button>
         </div>
         <div class="col s12">
-            {{fileType}} format: {{format}}
+            {{strategy}} format: {{format}}
         </div>
     </li>
     {{/items}}

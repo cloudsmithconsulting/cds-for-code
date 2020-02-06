@@ -24,7 +24,7 @@ sidebar_label: "views/cs.cds.views.pluginStepEditor"
 
 ###  async
 
-• **async**: *"C:/dev/cds-for-code/node_modules/@types/async/index"*
+• **async**: *"C:/Dev/Internal/cds-for-code/node_modules/@types/async/index"*
 
 Defined in src/views/cs.cds.views.pluginStepEditor.ts:7
 
@@ -34,7 +34,7 @@ Defined in src/views/cs.cds.views.pluginStepEditor.ts:7
 
 ▸ **openView**(`pluginAssemblyId`: string, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `step?`: any): *Promise‹[View](../classes/_core_webui_view_.view.md)›*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:11
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:12
 
 **Parameters:**
 

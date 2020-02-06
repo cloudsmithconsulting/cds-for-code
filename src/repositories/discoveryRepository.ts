@@ -70,7 +70,7 @@ export default class DiscoveryRepository {
     static createOrganizationConnection(org: any, connection: CdsWebApi.Config): CdsWebApi.Config {
         const versionSplit = org.Version.split('.');
         // Clone the current connection and override the endpoint and version.
-        const orgConnection = Utilities.$Object.clone<CdsWebApi.Config>(connection);
+        const orgConnection = Utilities.$Object.clone<CdsWebApi.Config>(connection, undefined, [ "onDidAuthenticate", "onInteractiveLoginRequired", "credentials" ] );
 
         if ((<any>orgConnection).accessToken) {
             delete (<any>orgConnection).accessToken;
@@ -95,7 +95,14 @@ export default class DiscoveryRepository {
                     orgConnection.credentials = e.credentials;
                 }
             });
+
+            (<Security.OAuthCredential>orgConnection.credentials).onInteractiveLoginRequired(e => {
+                if (e.success) {
+                    (<Security.OAuthCredential>orgConnection.credentials).isMultiFactorAuthentication = true;
+                }
+            });
         }
+        
         return orgConnection;
     }
 }

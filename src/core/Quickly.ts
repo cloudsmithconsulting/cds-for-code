@@ -395,7 +395,7 @@ export default class Quickly {
                         const input = await Quickly.ask(`What is the name of the new ${canPickFiles && !canPickFolders ? "File" : canPickFolders && !canPickFiles ? "Folder" : "Item" }?`);
 
                         if (input) {
-                            const isFolder = canPickFolders && !canPickFiles ? true : input.endsWith("/") || input.endsWith("\\") ? true : false;
+                            const isFolder = canPickFolders && !canPickFiles ? true : input.endsWith("/") || input.endsWith("\\");
                             let newPath = defaultUri.path.endsWith("/") ? defaultUri.path + input : defaultUri.path + "/" + input;
                             
                             if (isFolder && !newPath.endsWith("/")) { newPath += "/"; }
@@ -407,7 +407,7 @@ export default class Quickly {
 
                                 return this.pickWorkspaceFsItem(newUri, placeHolder, ignoreFocusOut, canPickFiles, canPickFolders, canPickLinks, canAddNewItem, allowedFileTypes);
                             } else {
-                                return new WorkspaceFileItem(newUri.fsPath, itemType);
+                                return new WorkspaceFileItem(newUri.fsPath, vscode.FileType.File);
                             }
                         }
                     } else {

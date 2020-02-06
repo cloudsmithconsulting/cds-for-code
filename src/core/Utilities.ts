@@ -4,6 +4,7 @@ import * as BrowserHelper from "./helpers/Browser";
 import * as EncodingHelper from "./helpers/Encoding";
 import * as GuidHelper from "./helpers/Guid";
 import * as ObjectHelper from "./helpers/Object";
+import * as RandomHelper from "./helpers/Random";
 import * as StringHelper from "./helpers/String";
 import { TextEncoder } from 'util';
 
@@ -41,6 +42,12 @@ export interface ObjectUtility {
    createInstance<T>(context: Object, name: string, ...args: any[]) : T;
 }
 
+export interface RandomUtility {
+   randomStringHex(length: number): string;
+   randomStringBase64(length: number): string;
+   randomString(length: number, chars?: string): string;
+}
+
 export interface StringUtility {
    parseUtcDate(date: string): Date;
    dateAsFilename(): string;
@@ -56,6 +63,7 @@ export interface UtilityObject {
    readonly Encoding: EncodingUtility;
    readonly Guid: GuidUtility;
    readonly $Object: ObjectUtility;
+   readonly Random: RandomUtility;
    readonly String: StringUtility;
 }
 
@@ -65,5 +73,6 @@ export class Utilities {
    static get Encoding(): EncodingUtility { return EncodingHelper; }
    static get Guid(): GuidUtility { return GuidHelper; }
    static get $Object(): ObjectUtility { return ObjectHelper; }
+   static get Random(): RandomUtility { return RandomHelper; }
    static get String(): StringUtility { return StringHelper; }
 }
