@@ -31,7 +31,7 @@ sidebar_label: "templateExplorer"
 
 ▪ **_namespace**: *string* = "cs.cds.controls.templateExplorer"
 
-Defined in src/cs.ts:238
+Defined in src/cs.ts:241
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 ▪ **addEntry**: *string* = `${templateExplorer._namespace}.addEntry`
 
-Defined in src/cs.ts:239
+Defined in src/cs.ts:242
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 ▪ **clickEntry**: *string* = `${templateExplorer._namespace}.clickEntry`
 
-Defined in src/cs.ts:240
+Defined in src/cs.ts:243
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 ▪ **createInWorkspace**: *string* = `${templateExplorer._namespace}.createInWorkspace`
 
-Defined in src/cs.ts:241
+Defined in src/cs.ts:244
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 ▪ **deleteEntry**: *string* = `${templateExplorer._namespace}.deleteEntry`
 
-Defined in src/cs.ts:242
+Defined in src/cs.ts:245
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 ▪ **editEntry**: *string* = `${templateExplorer._namespace}.editEntry`
 
-Defined in src/cs.ts:243
+Defined in src/cs.ts:246
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 ▪ **exportEntry**: *string* = `${templateExplorer._namespace}.exportEntry`
 
-Defined in src/cs.ts:244
+Defined in src/cs.ts:247
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 ▪ **importEntry**: *string* = `${templateExplorer._namespace}.importEntry`
 
-Defined in src/cs.ts:245
+Defined in src/cs.ts:248
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 ▪ **openEntry**: *string* = `${templateExplorer._namespace}.openEntry`
 
-Defined in src/cs.ts:246
+Defined in src/cs.ts:249
 
 ___
 
@@ -103,4 +103,4 @@ ___
 
 ▪ **refreshEntry**: *string* = `${templateExplorer._namespace}.refreshEntry`
 
-Defined in src/cs.ts:247
+Defined in src/cs.ts:250

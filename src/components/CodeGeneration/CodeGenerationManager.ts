@@ -107,6 +107,11 @@ export default class CodeGenerationManager {
                     });
                 }
 
+                // customizations
+                if (listElement.Customizations?.length > 0 && listElement.Customizations[0]?.$?.strategy) {
+                    viewModel.filterRules.push({ id: `${list}.customizations`, listType: list, scope: 'customizations', ruleType: 'customizations', value: listElement.Customizations[0].$.strategy });
+                }
+
                 // filters
                 if (listElement.Filters?.length > 0 ) {
                     listElement.Filters?.forEach(f => {
@@ -189,7 +194,7 @@ export default class CodeGenerationManager {
             
             if (listRules?.length > 0) {
                 listRules.forEach(r => {
-                    if (r.ruleType === 'exact-match') {
+                    if (r.ruleType === 'exact-match' || r.ruleType === 'customizations') {
                         switch (r.scope) {
                             case "entity":
                                 if (!listElement.Entities) {
@@ -218,6 +223,13 @@ export default class CodeGenerationManager {
                                 }
 
                                 listElement.Solutions[0].add.push({ $: { solution: r.value } });
+                                break;
+                            case "customizations":
+                                if (!listElement.Customizations) {
+                                    listElement.Customizations = [ { $: {} } ];
+                                }
+
+                                listElement.Customizations[0].$.strategy = r.value;                                
                                 break;
                         }
                     } else if (r.ruleType === 'regex') {

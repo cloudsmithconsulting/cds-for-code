@@ -19,6 +19,7 @@ sidebar_label: "Utilities"
 * [Browser](_core_utilities_.utilities.md#static-browser)
 * [Encoding](_core_utilities_.utilities.md#static-encoding)
 * [Guid](_core_utilities_.utilities.md#static-guid)
+* [Random](_core_utilities_.utilities.md#static-random)
 * [String](_core_utilities_.utilities.md#static-string)
 
 ## Accessors
@@ -27,7 +28,7 @@ sidebar_label: "Utilities"
 
 • **get $Object**(): *[ObjectUtility](../interfaces/_core_utilities_.objectutility.md)*
 
-Defined in src/core/Utilities.ts:67
+Defined in src/core/Utilities.ts:75
 
 **Returns:** *[ObjectUtility](../interfaces/_core_utilities_.objectutility.md)*
 
@@ -37,7 +38,7 @@ ___
 
 • **get Async**(): *[AsyncUtility](../interfaces/_core_utilities_.asyncutility.md)*
 
-Defined in src/core/Utilities.ts:63
+Defined in src/core/Utilities.ts:71
 
 **Returns:** *[AsyncUtility](../interfaces/_core_utilities_.asyncutility.md)*
 
@@ -47,7 +48,7 @@ ___
 
 • **get Browser**(): *[BrowserUtility](../interfaces/_core_utilities_.browserutility.md)*
 
-Defined in src/core/Utilities.ts:64
+Defined in src/core/Utilities.ts:72
 
 **Returns:** *[BrowserUtility](../interfaces/_core_utilities_.browserutility.md)*
 
@@ -57,7 +58,7 @@ ___
 
 • **get Encoding**(): *[EncodingUtility](../interfaces/_core_utilities_.encodingutility.md)*
 
-Defined in src/core/Utilities.ts:65
+Defined in src/core/Utilities.ts:73
 
 **Returns:** *[EncodingUtility](../interfaces/_core_utilities_.encodingutility.md)*
 
@@ -67,9 +68,19 @@ ___
 
 • **get Guid**(): *[GuidUtility](../interfaces/_core_utilities_.guidutility.md)*
 
-Defined in src/core/Utilities.ts:66
+Defined in src/core/Utilities.ts:74
 
 **Returns:** *[GuidUtility](../interfaces/_core_utilities_.guidutility.md)*
+
+___
+
+### `Static` Random
+
+• **get Random**(): *[RandomUtility](../interfaces/_core_utilities_.randomutility.md)*
+
+Defined in src/core/Utilities.ts:76
+
+**Returns:** *[RandomUtility](../interfaces/_core_utilities_.randomutility.md)*
 
 ___
 
@@ -77,6 +88,6 @@ ___
 
 • **get String**(): *[StringUtility](../interfaces/_core_utilities_.stringutility.md)*
 
-Defined in src/core/Utilities.ts:68
+Defined in src/core/Utilities.ts:77
 
 **Returns:** *[StringUtility](../interfaces/_core_utilities_.stringutility.md)*

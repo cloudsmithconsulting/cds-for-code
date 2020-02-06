@@ -10,5 +10,4 @@ sidebar_label: "components/Templates/TemplateManager"
 
 ### Classes
 
-* [TemplateFilesystemItem](../classes/_components_templates_templatemanager_.templatefilesystemitem.md)
 * [TemplateManager](../classes/_components_templates_templatemanager_.templatemanager.md)

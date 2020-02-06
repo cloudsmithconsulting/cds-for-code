@@ -194,38 +194,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="bin\coretools\CrmSvcUtil.exe.config" />
-    <None Include="bin\coretools\LicenseTerms.docx" />
-    <None Include="bin\coretools\SolutionPackager.exe.config" />
     <Content Include="CrmSvcUtil.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
-    <None Include="ReadMe.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="bin\coretools\CrmSvcUtil.exe" />
-    <Content Include="bin\coretools\CrmSvcUtil.xml" />
-    <Content Include="bin\coretools\Microsoft.Crm.Sdk.Proxy.dll" />
-    <Content Include="bin\coretools\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" />
-    <Content Include="bin\coretools\Microsoft.Rest.ClientRuntime.dll" />
-    <Content Include="bin\coretools\Microsoft.Xrm.Sdk.Deployment.dll" />
-    <Content Include="bin\coretools\Microsoft.Xrm.Sdk.dll" />
-    <Content Include="bin\coretools\Microsoft.Xrm.Tooling.Connector.dll" />
-    <Content Include="bin\coretools\Microsoft.Xrm.Tooling.CrmConnectControl.dll" />
-    <Content Include="bin\coretools\Microsoft.Xrm.Tooling.Ui.Styles.dll" />
-    <Content Include="bin\coretools\Newtonsoft.Json.dll" />
-    <Content Include="bin\coretools\Other Redistributable.txt" />
-    <Content Include="bin\coretools\SolutionPackager.exe" />
-    <Content Include="bin\coretools\SolutionPackagerLib.dll" />
-    <Content Include="bin\coretools\System.ValueTuple.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="bin\Debug\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>copy "$(ProjectDir)CrmSvcUtil.exe.config" "$(TargetDir)"</PreBuildEvent>
   </PropertyGroup>
 </Project>

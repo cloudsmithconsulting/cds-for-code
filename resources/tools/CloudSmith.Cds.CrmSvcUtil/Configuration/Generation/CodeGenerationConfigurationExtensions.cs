@@ -32,7 +32,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration.Generation
 
         public static CodeGenerationFileOptionsElement GetOutputOptions(this CodeGenerationElement @this, CodeGenerationFileType fileType)
         {
-            var options = @this.Files.FirstOrDefault(f => f.FileType == fileType);
+            var options = @this.Files.FirstOrDefault(f => f.FileType == fileType && !string.IsNullOrEmpty(f.Filename));
             var path = GetOutputPath(@this);
 
             return options ?? new CodeGenerationFileOptionsElement() { FileType = fileType, Filename = GetOutputFile(@this), Strategy = CodeGenerationFileStrategy.SingleFile };

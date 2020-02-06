@@ -22,7 +22,7 @@ sidebar_label: "AsyncUtility"
 
 ▸ **forEach**<**T**>(`array`: T[], `callback`: function): *any*
 
-Defined in src/core/Utilities.ts:11
+Defined in src/core/Utilities.ts:12
 
 **Type parameters:**
 

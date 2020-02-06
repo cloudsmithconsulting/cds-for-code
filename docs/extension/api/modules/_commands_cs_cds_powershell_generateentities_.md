@@ -16,9 +16,9 @@ sidebar_label: "commands/cs.cds.powerShell.generateEntities"
 
 ###  run
 
-▸ **run**(`this`: [CodeGenerationManager](../classes/_components_codegeneration_codegenerationmanager_.codegenerationmanager.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) | string, `folder?`: string, `outputFileName?`: string, `namespace?`: string): *Promise‹[TerminalCommand](../classes/_components_terminal_secureterminal_.terminalcommand.md)‹››*
+▸ **run**(`this`: [CodeGenerationManager](../classes/_components_codegeneration_codegenerationmanager_.codegenerationmanager.md), `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) | string, `folder?`: string, `outputFileName?`: string, `namespace?`: string, `configFile?`: Uri): *Promise‹[TerminalCommand](../classes/_components_terminal_secureterminal_.terminalcommand.md)‹››*
 
-Defined in src/commands/cs.cds.powerShell.generateEntities.ts:26
+Defined in src/commands/cs.cds.powerShell.generateEntities.ts:27
 
 This command can be invoked by the Command Pallette or external sources and generates .Net code
 using CrmSvcUtil.exe (included with the Dynamics365 SDK)
@@ -34,6 +34,7 @@ Name | Type |
 `folder?` | string |
 `outputFileName?` | string |
 `namespace?` | string |
+`configFile?` | Uri |
 
 **Returns:** *Promise‹[TerminalCommand](../classes/_components_terminal_secureterminal_.terminalcommand.md)‹››*
 

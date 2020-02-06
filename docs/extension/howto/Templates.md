@@ -85,7 +85,7 @@ Below is an example of creating a file template using VSCode File Explorer:
 
 ### Tokens and token format
 
-CDS for Code templating supports tokens for inputs to be run during interopolation of creating a project or file from a template. The default regular expression used is `#{([\s\S]+?)}` but this can be change in the settings.
+CDS for Code templating supports tokens for inputs to be run during interpolation of creating a project or file from a template. The default regular expression used is `#{([\s\S]+?)}` but this can be change in the settings.
 
 By default templates can use `#{variableName}` in the following manners:
 
@@ -94,13 +94,13 @@ By default templates can use `#{variableName}` in the following manners:
 
 These can be put anywhere in the template and the processor will find them prompting the user for inputs for them.
 
-Your template can also include a template.json file which will help define more things such as naming of the output directory, placeholder tokens description with optional required, and directives that will tell the processor to skip tokens on certain files. Having a **template.json file is not required** for the processor to replace tokens, although helps the processor by defining required fields and directives for skipping interopolation on certain files.
+Your template can also include a template.json file which will help define more things such as naming of the output directory, placeholder tokens description with optional required, and directives that will tell the processor to skip tokens on certain files. Having a **template.json file is not required** for the processor to replace tokens, although helps the processor by defining required fields and directives for skipping interpolation on certain files.
 
 You can see an example of one of [our templated projects here](https://github.com/cloudsmithconsulting/cds-for-code/tree/master/resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v9.0). Be sure to also check out the [associated template.json file found here](https://github.com/cloudsmithconsulting/cds-for-code/blob/master/resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v9.0/template.json).
 
 ### Interpolation
 
-Template interopolation will occur when the template is being used to create a new project or item. The template processor will read from any placeholders, prompting the user to give values for them.
+Template interpolation will occur when the template is being used to create a new project or item. The template processor will read from any placeholders, prompting the user to give values for them.
 
 Once the user has filled in all required values the processor will execute the token replacement during template creation in your workspace.
 

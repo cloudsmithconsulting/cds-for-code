@@ -12,7 +12,30 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 
 ## v0.8 Early Preview - December 2019 - January 2020
 
-### v0.8.11 (January 31, 2020)
+> Release 0.8.11 will likely be the last release in the 0.8 branch.  We look forward to shipping some exciting new features in 0.9 for evaluation soon!
+
+### v0.8.11 (February 6, 2020)
+
+- Feature: Code Generation: CrmSvcUtil now has CloudSmith extensions + configuration for customizing entity generation ([#509](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/509/))
+- Feature: Code Generation: CrmSvcUtil can be called with an external .config file ([#510](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/510/))
+- Feature: Solutions: Import and Export tasks no longer rely on Microsoft.Xrm.Data.PowerShell ([#542](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/542/))
+- Feature: Plugins: Attribute selection is now a picker on plugin step UI ([#555](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/555/))
+- Feature: Plugins: Attribute selection is now a picker on plugin step image UI ([#556](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/556/))
+- Feature: CDS Explorer: Removing a connection asks for confirmation ([#575](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/575/))
+- Docs: Privacy and security features are documented ([#412](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/412/))
+- Docs: Templating process is now documented ([#410](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/410/))
+- Bugfix: Critical - Geneate entities can show a password if errors occur in CrmSvcUtil ([#629](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/629/))
+- Bugfix: Import file picker does not show .zip files by default ([#628](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/628/))
+- Bugfix: Template explorer can error when expanding "publisher" nodes ([#580](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/580/))
+- Bugfix: Script/template auto-loader shows warning about template not existing when it does ([#579](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/579/))
+- Bugfix: Template explorer does not refresh when deleting templates ([#578](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/578/))
+- Bugfix: Plugin templates have the class name SamplePlugin ([#577](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/577/))
+- Bugfix: CDS Explorer: Creating a new process does not add it to the solution ([#576](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/576/))
+- Bugfix: Privacy link is incorrect (reported on GitHub) ([GitHub Issue #9](https://github.com/cloudsmithconsulting/cds-for-code/issues/9) | [#572](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/572/))
+- Bugfix: Version numbering causes bug downloading scripts ([#571](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/571/))
+- Bugfix: Access tokens for online connections were refreshed too frequently ([#570](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/570/))
+- Bugfix: PowerShell script downloader does not obtain correct assets under certain circumstances ([#569](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/569/))
+- Bugfix: Adding on-prem connections can result in a HTTP 401 response ([#568](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/568/))
 
 ### v0.8.10 (January 24, 2020)
 

@@ -19,13 +19,28 @@ import download, { exists } from '../../core/http/nodeJsFileDownloader';
 export default class ScriptDownloader {
 	@extensionActivate(cs.cds.extension.productId)
     async activate(context: vscode.ExtensionContext, config?:vscode.WorkspaceConfiguration) {
-        setTimeout(async () => await ScriptDownloader.runScriptCheck(), 10000);
+		setTimeout(async () => await ScriptDownloader.runScriptCheck(), 10000);
     }
 
 	@command(cs.cds.extension.downloadRequiredScripts, "Download required PowerShell scripts and templates")
     static async runScriptCheck() {
 		if (!FileSystem.exists(ExtensionContext.Instance.globalStoragePath)) {
 			FileSystem.makeFolderSync(ExtensionContext.Instance.globalStoragePath);
+		}
+
+		if (ExtensionContext.isDebugging) {
+			const extensionPath = vscode.extensions.getExtension(cs.cds.extension.productId).extensionPath;
+			const sourcePath = path.join(extensionPath, "resources/powershell/");
+			const destinationPath = path.join(ExtensionContext.Instance.globalStoragePath, "Scripts/");
+
+			if (FileSystem.exists(sourcePath)) {
+				FileSystem.makeFolderSync(destinationPath);				
+				FileSystem.copyFolder(sourcePath, destinationPath);
+			}
+
+			await this.installCdsSdk();
+			
+			return;
 		}
 
 		const version: string = vscode.extensions.getExtension(cs.cds.extension.productId).packageJSON.version;

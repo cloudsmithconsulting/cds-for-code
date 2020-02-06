@@ -38,14 +38,11 @@ Main class to handle the logic of the Project Templates
 * [importTemplate](_components_templates_templatemanager_.templatemanager.md#importtemplate)
 * [saveTemplate](_components_templates_templatemanager_.templatemanager.md#savetemplate)
 * [saveToFilesystem](_components_templates_templatemanager_.templatemanager.md#savetofilesystem)
-* [applyTemplate](_components_templates_templatemanager_.templatemanager.md#static-applytemplate)
 * [createItemTemplate](_components_templates_templatemanager_.templatemanager.md#static-createitemtemplate)
 * [createProjectTemplate](_components_templates_templatemanager_.templatemanager.md#static-createprojecttemplate)
 * [createTemplatesDirIfNotExists](_components_templates_templatemanager_.templatemanager.md#static-private-createtemplatesdirifnotexists)
-* [defaultResolver](_components_templates_templatemanager_.templatemanager.md#static-private-defaultresolver)
 * [exportTemplate](_components_templates_templatemanager_.templatemanager.md#static-exporttemplate)
 * [getDefaultTemplatesFolder](_components_templates_templatemanager_.templatemanager.md#static-getdefaulttemplatesfolder)
-* [getPlaceholders](_components_templates_templatemanager_.templatemanager.md#static-private-getplaceholders)
 * [getSystemTemplate](_components_templates_templatemanager_.templatemanager.md#static-getsystemtemplate)
 * [getSystemTemplates](_components_templates_templatemanager_.templatemanager.md#static-getsystemtemplates)
 * [getTemplateCatalog](_components_templates_templatemanager_.templatemanager.md#static-gettemplatecatalog)
@@ -54,10 +51,8 @@ Main class to handle the logic of the Project Templates
 * [getTemplates](_components_templates_templatemanager_.templatemanager.md#static-gettemplates)
 * [getTemplatesFolder](_components_templates_templatemanager_.templatemanager.md#static-gettemplatesfolder)
 * [importTemplate](_components_templates_templatemanager_.templatemanager.md#static-importtemplate)
-* [mergePlaceholders](_components_templates_templatemanager_.templatemanager.md#static-private-mergeplaceholders)
 * [openTemplateFolder](_components_templates_templatemanager_.templatemanager.md#static-opentemplatefolder)
 * [openTemplateFolderInExplorer](_components_templates_templatemanager_.templatemanager.md#static-opentemplatefolderinexplorer)
-* [resolvePlaceholders](_components_templates_templatemanager_.templatemanager.md#static-private-resolveplaceholders)
 * [saveItemTemplate](_components_templates_templatemanager_.templatemanager.md#static-saveitemtemplate)
 * [saveProjectTemplate](_components_templates_templatemanager_.templatemanager.md#static-saveprojecttemplate)
 
@@ -67,7 +62,7 @@ Main class to handle the logic of the Project Templates
 
 \+ **new TemplateManager**(`context`: ExtensionContext): *[TemplateManager](_components_templates_templatemanager_.templatemanager.md)*
 
-Defined in src/components/Templates/TemplateManager.ts:33
+Defined in src/components/Templates/TemplateManager.ts:32
 
 **Parameters:**
 
@@ -83,7 +78,7 @@ Name | Type |
 
 ▪ **_systemTemplates**: *[TemplateItem](_components_templates_types_.templateitem.md)[]*
 
-Defined in src/components/Templates/TemplateManager.ts:490
+Defined in src/components/Templates/TemplateManager.ts:468
 
 ## Methods
 
@@ -91,7 +86,7 @@ Defined in src/components/Templates/TemplateManager.ts:490
 
 ▸ **createFromFilesystem**(`fsPath`: string, `type`: [TemplateType](../enums/_components_templates_types_.templatetype.md), `template?`: [TemplateItem](_components_templates_types_.templateitem.md)): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)‹››*
 
-Defined in src/components/Templates/TemplateManager.ts:122
+Defined in src/components/Templates/TemplateManager.ts:100
 
 Populates a workspace folder with the contents of a template
 
@@ -111,7 +106,7 @@ ___
 
 ▸ **createTemplate**(`destinationUri?`: Uri, `type?`: [TemplateType](../enums/_components_templates_types_.templatetype.md), `template?`: [TemplateItem](_components_templates_types_.templateitem.md)): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:59
+Defined in src/components/Templates/TemplateManager.ts:58
 
 **Parameters:**
 
@@ -129,7 +124,7 @@ ___
 
 ▸ **deleteFromFilesystem**(`template`: [TemplateItem](_components_templates_types_.templateitem.md)): *Promise‹boolean›*
 
-Defined in src/components/Templates/TemplateManager.ts:271
+Defined in src/components/Templates/TemplateManager.ts:249
 
 Deletes a template from the template root directory
 
@@ -149,7 +144,7 @@ ___
 
 ▸ **deleteTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md)): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:64
+Defined in src/components/Templates/TemplateManager.ts:63
 
 **Parameters:**
 
@@ -165,7 +160,7 @@ ___
 
 ▸ **editTemplateCatalog**(`configFile?`: Uri): *Promise‹any›*
 
-Defined in src/components/Templates/TemplateManager.ts:69
+Defined in src/components/Templates/TemplateManager.ts:68
 
 **Parameters:**
 
@@ -181,7 +176,7 @@ ___
 
 ▸ **exportTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `destinationUri`: Uri): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:74
+Defined in src/components/Templates/TemplateManager.ts:73
 
 **Parameters:**
 
@@ -198,7 +193,7 @@ ___
 
 ▸ **getTemplates**(): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)[]›*
 
-Defined in src/components/Templates/TemplateManager.ts:93
+Defined in src/components/Templates/TemplateManager.ts:92
 
 **Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)[]›*
 
@@ -208,7 +203,7 @@ ___
 
 ▸ **importTemplate**(`sourceUri`: Uri): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:79
+Defined in src/components/Templates/TemplateManager.ts:78
 
 **Parameters:**
 
@@ -224,7 +219,7 @@ ___
 
 ▸ **saveTemplate**(`templateUri`: Uri, `type`: [TemplateType](../enums/_components_templates_types_.templatetype.md)): *Promise‹any›*
 
-Defined in src/components/Templates/TemplateManager.ts:89
+Defined in src/components/Templates/TemplateManager.ts:88
 
 **Parameters:**
 
@@ -241,7 +236,7 @@ ___
 
 ▸ **saveToFilesystem**(`fsPath`: string, `type`: [TemplateType](../enums/_components_templates_types_.templatetype.md)): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/TemplateManager.ts:376
+Defined in src/components/Templates/TemplateManager.ts:354
 
 Saves a workspace as a new template
 
@@ -258,30 +253,11 @@ name of template
 
 ___
 
-### `Static` applyTemplate
-
-▸ **applyTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `data`: string | Buffer, `placeholders?`: [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string›, `object?`: any): *Promise‹string | Buffer›*
-
-Defined in src/components/Templates/TemplateManager.ts:97
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`template` | [TemplateItem](_components_templates_types_.templateitem.md) |
-`data` | string &#124; Buffer |
-`placeholders?` | [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string› |
-`object?` | any |
-
-**Returns:** *Promise‹string | Buffer›*
-
-___
-
 ### `Static` createItemTemplate
 
 ▸ **createItemTemplate**(`uri?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/Templates/TemplateManager.ts:39
+Defined in src/components/Templates/TemplateManager.ts:38
 
 **Parameters:**
 
@@ -297,7 +273,7 @@ ___
 
 ▸ **createProjectTemplate**(`uri?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/Templates/TemplateManager.ts:44
+Defined in src/components/Templates/TemplateManager.ts:43
 
 **Parameters:**
 
@@ -313,7 +289,7 @@ ___
 
 ▸ **createTemplatesDirIfNotExists**(): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:641
+Defined in src/components/Templates/TemplateManager.ts:619
 
 Creates the templates directory if it does not exists
 
@@ -323,30 +299,11 @@ Creates the templates directory if it does not exists
 
 ___
 
-### `Static` `Private` defaultResolver
-
-▸ **defaultResolver**(`data`: string | Buffer, `placeholderRegExp`: RegExp, `template?`: [TemplateItem](_components_templates_types_.templateitem.md), `defaultPlaceholders?`: [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string›): *Promise‹string | Buffer›*
-
-Defined in src/components/Templates/TemplateManager.ts:788
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`data` | string &#124; Buffer |
-`placeholderRegExp` | RegExp |
-`template?` | [TemplateItem](_components_templates_types_.templateitem.md) |
-`defaultPlaceholders?` | [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string› |
-
-**Returns:** *Promise‹string | Buffer›*
-
-___
-
 ### `Static` exportTemplate
 
 ▸ **exportTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `archive`: string, `systemTemplate`: boolean): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:317
+Defined in src/components/Templates/TemplateManager.ts:295
 
 **Parameters:**
 
@@ -364,7 +321,7 @@ ___
 
 ▸ **getDefaultTemplatesFolder**(`systemTemplates`: boolean): *string*
 
-Defined in src/components/Templates/TemplateManager.ts:570
+Defined in src/components/Templates/TemplateManager.ts:548
 
 Returns the default templates location, which is based on the global storage-path directory.
 
@@ -380,29 +337,11 @@ default template directory
 
 ___
 
-### `Static` `Private` getPlaceholders
-
-▸ **getPlaceholders**(`fsItem`: string, `placeholderRegExp`: string, `isFolder`: boolean): *string[]*
-
-Defined in src/components/Templates/TemplateManager.ts:660
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`fsItem` | string |
-`placeholderRegExp` | string |
-`isFolder` | boolean |
-
-**Returns:** *string[]*
-
-___
-
 ### `Static` getSystemTemplate
 
 ▸ **getSystemTemplate**(`name`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/TemplateManager.ts:500
+Defined in src/components/Templates/TemplateManager.ts:478
 
 **Parameters:**
 
@@ -418,7 +357,7 @@ ___
 
 ▸ **getSystemTemplates**(): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)[]›*
 
-Defined in src/components/Templates/TemplateManager.ts:492
+Defined in src/components/Templates/TemplateManager.ts:470
 
 **Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)[]›*
 
@@ -428,7 +367,7 @@ ___
 
 ▸ **getTemplateCatalog**(`filename?`: string, `getSystemCatalog`: boolean): *Promise‹[TemplateCatalog](_components_templates_templatecatalog_.templatecatalog.md)›*
 
-Defined in src/components/Templates/TemplateManager.ts:463
+Defined in src/components/Templates/TemplateManager.ts:441
 
 Gets a copy of the template catalog
 
@@ -451,7 +390,7 @@ ___
 
 ▸ **getTemplateFolder**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `systemTemplate`: boolean): *Promise‹string›*
 
-Defined in src/components/Templates/TemplateManager.ts:301
+Defined in src/components/Templates/TemplateManager.ts:279
 
 **Parameters:**
 
@@ -466,9 +405,9 @@ ___
 
 ### `Static` `Private` getTemplateFolderItems
 
-▸ **getTemplateFolderItems**(`folder?`: string): *Promise‹[TemplateFilesystemItem](_components_templates_templatemanager_.templatefilesystemitem.md)[]›*
+▸ **getTemplateFolderItems**(`folder?`: string): *Promise‹[TemplateFilesystemItem](_components_templates_types_.templatefilesystemitem.md)[]›*
 
-Defined in src/components/Templates/TemplateManager.ts:610
+Defined in src/components/Templates/TemplateManager.ts:588
 
 Returns a list of available project templates by reading the Templates Directory.
 
@@ -478,7 +417,7 @@ Name | Type |
 ------ | ------ |
 `folder?` | string |
 
-**Returns:** *Promise‹[TemplateFilesystemItem](_components_templates_templatemanager_.templatefilesystemitem.md)[]›*
+**Returns:** *Promise‹[TemplateFilesystemItem](_components_templates_types_.templatefilesystemitem.md)[]›*
 
 list of templates found
 
@@ -488,7 +427,7 @@ ___
 
 ▸ **getTemplates**(`folder`: string, `mergeWith?`: [TemplateItem](_components_templates_types_.templateitem.md)[], `exclusions?`: string[]): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)[]›*
 
-Defined in src/components/Templates/TemplateManager.ts:505
+Defined in src/components/Templates/TemplateManager.ts:483
 
 **Parameters:**
 
@@ -506,7 +445,7 @@ ___
 
 ▸ **getTemplatesFolder**(`systemTemplates`: boolean): *Promise‹string›*
 
-Defined in src/components/Templates/TemplateManager.ts:550
+Defined in src/components/Templates/TemplateManager.ts:528
 
 Returns the templates directory location.
 If no user configuration is found, the extension will look for
@@ -529,7 +468,7 @@ ___
 
 ▸ **importTemplate**(`archive`: string, `systemTemplate`: boolean): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/TemplateManager.ts:325
+Defined in src/components/Templates/TemplateManager.ts:303
 
 **Parameters:**
 
@@ -542,28 +481,11 @@ Name | Type | Default |
 
 ___
 
-### `Static` `Private` mergePlaceholders
-
-▸ **mergePlaceholders**(`source`: [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[], `merge`: [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[]): *[TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)‹›[]*
-
-Defined in src/components/Templates/TemplateManager.ts:732
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`source` | [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[] |
-`merge` | [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[] |
-
-**Returns:** *[TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)‹›[]*
-
-___
-
 ### `Static` openTemplateFolder
 
 ▸ **openTemplateFolder**(`template`: [TemplateItem](_components_templates_types_.templateitem.md)): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:84
+Defined in src/components/Templates/TemplateManager.ts:83
 
 **Parameters:**
 
@@ -579,7 +501,7 @@ ___
 
 ▸ **openTemplateFolderInExplorer**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `systemTemplate`: boolean): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:366
+Defined in src/components/Templates/TemplateManager.ts:344
 
 **Parameters:**
 
@@ -592,37 +514,11 @@ Name | Type | Default |
 
 ___
 
-### `Static` `Private` resolvePlaceholders
-
-▸ **resolvePlaceholders**(`data`: string | Buffer, `placeholderRegExp`: string, `placeholders`: [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string›, `templateInfo`: [TemplateItem](_components_templates_types_.templateitem.md), `resolvers?`: function[]): *Promise‹string | Buffer›*
-
-Defined in src/components/Templates/TemplateManager.ts:764
-
-Replaces any placeholders found within the input data.  Will use a
-dictionary of values from the user's workspace settings, or will prompt
-if value is not known.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`data` | string &#124; Buffer | input data |
-`placeholderRegExp` | string | regular expression to use for detecting                           placeholders.  The first capture group is used                           as the key. |
-`placeholders` | [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string› | dictionary of placeholder key-value pairs |
-`templateInfo` | [TemplateItem](_components_templates_types_.templateitem.md) | - |
-`resolvers?` | function[] | - |
-
-**Returns:** *Promise‹string | Buffer›*
-
-the (potentially) modified data, with the same type as the input data
-
-___
-
 ### `Static` saveItemTemplate
 
 ▸ **saveItemTemplate**(`uri?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/Templates/TemplateManager.ts:49
+Defined in src/components/Templates/TemplateManager.ts:48
 
 **Parameters:**
 
@@ -638,7 +534,7 @@ ___
 
 ▸ **saveProjectTemplate**(`uri?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/Templates/TemplateManager.ts:54
+Defined in src/components/Templates/TemplateManager.ts:53
 
 **Parameters:**
 

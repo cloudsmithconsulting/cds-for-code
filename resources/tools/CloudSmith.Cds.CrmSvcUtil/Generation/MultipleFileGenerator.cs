@@ -94,9 +94,15 @@ namespace CloudSmith.Cds.CrmSvcUtil.Generation
                     optionSet = DynamicsMetadataCache.OptionSets.Where(o => o.Value.GeneratedTypeName == type.Name).Select(o => o.Value).FirstOrDefault();
                     isOptionSet = optionSet != null;
 
-                    entityTypeName = isOptionSet && !string.IsNullOrEmpty(optionSet.EntityLogicalName) && optionSet.EntityLogicalName != "*"
-                        ? DynamicsMetadataCache.Entities.First(e => e.Value.LogicalName == optionSet.EntityLogicalName).Value.GeneratedTypeName
-                        : string.Empty;
+                    if (isOptionSet && !string.IsNullOrEmpty(optionSet.EntityLogicalName) && optionSet.EntityLogicalName != "*"
+                        && DynamicsMetadataCache.Entities.Count(e => e.Value.LogicalName == optionSet.EntityLogicalName) > 0)
+                    {
+                        entityTypeName = DynamicsMetadataCache.Entities.First(e => e.Value.LogicalName == optionSet.EntityLogicalName).Value.GeneratedTypeName;
+                    }
+                    else
+                    {
+                        entityTypeName = string.Empty;
+                    }
                 }
 
                 if (type.IsStruct)

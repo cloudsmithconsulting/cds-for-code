@@ -32,7 +32,7 @@ sidebar_label: "TelemetryInvocationOptions"
 
 \+ **new TelemetryInvocationOptions**(`options?`: [ITelemetryInvocationOptions](../interfaces/_core_framework_telemetry_.itelemetryinvocationoptions.md)): *[TelemetryInvocationOptions](_core_framework_telemetry_.telemetryinvocationoptions.md)*
 
-Defined in src/core/framework/Telemetry.ts:218
+Defined in src/core/framework/Telemetry.ts:219
 
 **Parameters:**
 
@@ -50,7 +50,7 @@ Name | Type |
 
 *Implementation of [ITelemetryInvocationOptions](../interfaces/_core_framework_telemetry_.itelemetryinvocationoptions.md).[logger](../interfaces/_core_framework_telemetry_.itelemetryinvocationoptions.md#optional-logger)*
 
-Defined in src/core/framework/Telemetry.ts:228
+Defined in src/core/framework/Telemetry.ts:229
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 *Implementation of [ITelemetryInvocationOptions](../interfaces/_core_framework_telemetry_.itelemetryinvocationoptions.md).[onEnd](../interfaces/_core_framework_telemetry_.itelemetryinvocationoptions.md#optional-onend)*
 
-Defined in src/core/framework/Telemetry.ts:230
+Defined in src/core/framework/Telemetry.ts:231
 
 #### Type declaration:
 
@@ -82,7 +82,7 @@ ___
 
 *Implementation of [ITelemetryInvocationOptions](../interfaces/_core_framework_telemetry_.itelemetryinvocationoptions.md).[onStart](../interfaces/_core_framework_telemetry_.itelemetryinvocationoptions.md#optional-onstart)*
 
-Defined in src/core/framework/Telemetry.ts:229
+Defined in src/core/framework/Telemetry.ts:230
 
 #### Type declaration:
 

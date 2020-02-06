@@ -273,7 +273,7 @@ ___
 
 ▸ **render**(`htmlParial`: string, `useCsp?`: boolean): *string*
 
-Defined in src/core/webui/ViewRenderer.ts:98
+Defined in src/core/webui/ViewRenderer.ts:96
 
 **Parameters:**
 

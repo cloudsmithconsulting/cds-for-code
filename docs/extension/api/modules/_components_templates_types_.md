@@ -15,5 +15,6 @@ sidebar_label: "components/Templates/Types"
 ### Classes
 
 * [TemplateDirective](../classes/_components_templates_types_.templatedirective.md)
+* [TemplateFilesystemItem](../classes/_components_templates_types_.templatefilesystemitem.md)
 * [TemplateItem](../classes/_components_templates_types_.templateitem.md)
 * [TemplatePlaceholder](../classes/_components_templates_types_.templateplaceholder.md)

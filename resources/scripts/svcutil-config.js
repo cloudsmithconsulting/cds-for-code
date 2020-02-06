@@ -220,7 +220,11 @@
                 items.push({ id: idPrefix + value, listType, scope: itemType, value, ruleType: 'exact-match', options });
             }
         } else {
-            items.push({ id: `${listType}.${itemType}.regex`, listType, scope: itemType, value: form[`${listType}-${itemType}-regex`], ruleType: 'regex', options: { ignoreCase: form[`${listType}-${itemType}-regex-ignorecase`] === 'true' } });
+            if (itemType !== "customizations") {
+                items.push({ id: `${listType}.${itemType}.regex`, listType, scope: itemType, value: form[`${listType}-${itemType}-regex`], ruleType: 'regex', options: { ignoreCase: form[`${listType}-${itemType}-regex-ignorecase`] === 'true' } });
+            } else {
+                items.push({ id: `${listType}.${itemType}`, listType, scope: itemType, value: form[`${listType}-${itemType}-selections`], ruleType: 'customizations' });
+            }
         }
 
         items.forEach(i => {

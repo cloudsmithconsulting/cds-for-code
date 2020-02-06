@@ -6,6 +6,7 @@ dist/**
 resources/tools/packages/**
 **/*.dll
 **/*.obj
+**/.vs/**
 **/bin/**
 **/obj/**
 **/*.csproj.user
