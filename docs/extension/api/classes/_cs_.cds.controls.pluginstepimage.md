@@ -23,7 +23,7 @@ sidebar_label: "pluginStepImage"
 
 ▪ **_namespace**: *string* = "cs.cds.controls.pluginStepImage"
 
-Defined in src/cs.ts:219
+Defined in src/cs.ts:222
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 ▪ **open**: *string* = `${pluginStepImage._namespace}.open`
 
-Defined in src/cs.ts:220
+Defined in src/cs.ts:223

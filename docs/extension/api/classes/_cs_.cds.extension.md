@@ -29,7 +29,7 @@ sidebar_label: "extension"
 
 ▪ **_namespace**: *string* = "cs.cds.extension"
 
-Defined in src/cs.ts:42
+Defined in src/cs.ts:43
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 ▪ **clearTerminal**: *string* = `${extension._namespace}.clearTerminal`
 
-Defined in src/cs.ts:43
+Defined in src/cs.ts:44
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 ▪ **createTerminal**: *string* = `${extension._namespace}.createTerminal`
 
-Defined in src/cs.ts:44
+Defined in src/cs.ts:45
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 ▪ **downloadRequiredIcons**: *string* = `${extension._namespace}.downloadRequiredIcons`
 
-Defined in src/cs.ts:45
+Defined in src/cs.ts:46
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 ▪ **downloadRequiredScripts**: *string* = `${extension._namespace}.downloadRequiredScripts`
 
-Defined in src/cs.ts:46
+Defined in src/cs.ts:47
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 ▪ **productId**: *string* = `CloudSmithConsulting.cds-for-code`
 
-Defined in src/cs.ts:47
+Defined in src/cs.ts:48
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 ▪ **productName**: *string* = `CloudSmith CDS for Code`
 
-Defined in src/cs.ts:48
+Defined in src/cs.ts:49
 
 ___
 
@@ -85,4 +85,4 @@ ___
 
 ▪ **telemetryKey**: *string* = `8e60943e-a073-4ccd-a199-45516b5d7cf3`
 
-Defined in src/cs.ts:49
+Defined in src/cs.ts:50

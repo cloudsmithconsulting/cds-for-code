@@ -42,7 +42,7 @@ ___
 
 ▸ **installCdsSdk**(): *Promise‹[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)›*
 
-Defined in src/components/WebDownloaders/ScriptDownloader.ts:163
+Defined in src/components/WebDownloaders/ScriptDownloader.ts:178
 
 **Returns:** *Promise‹[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)›*
 
@@ -62,7 +62,7 @@ ___
 
 ▸ **unzipDownload**(`options`: any): *Promise‹void›*
 
-Defined in src/components/WebDownloaders/ScriptDownloader.ts:179
+Defined in src/components/WebDownloaders/ScriptDownloader.ts:194
 
 **Parameters:**
 

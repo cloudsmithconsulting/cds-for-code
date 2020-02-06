@@ -44,7 +44,7 @@ sidebar_label: "TemplateItem"
 
 \+ **new TemplateItem**(`type?`: [TemplateType](../enums/_components_templates_types_.templatetype.md), `name?`: string, `displayName?`: string, `description?`: string, `publisher?`: string, `location?`: string, `outputPath?`: string, `categories?`: string[], `placeholders?`: [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[], `directives?`: [TemplateDirective](_components_templates_types_.templatedirective.md)[]): *[TemplateItem](_components_templates_types_.templateitem.md)*
 
-Defined in src/components/Templates/Types.ts:7
+Defined in src/components/Templates/Types.ts:9
 
 **Parameters:**
 
@@ -69,7 +69,7 @@ Name | Type |
 
 • **categories**? : *string[]*
 
-Defined in src/components/Templates/Types.ts:16
+Defined in src/components/Templates/Types.ts:18
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 • **description**? : *string*
 
-Defined in src/components/Templates/Types.ts:12
+Defined in src/components/Templates/Types.ts:14
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 • **directives**? : *[TemplateDirective](_components_templates_types_.templatedirective.md)[]*
 
-Defined in src/components/Templates/Types.ts:18
+Defined in src/components/Templates/Types.ts:20
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 • **displayName**? : *string*
 
-Defined in src/components/Templates/Types.ts:11
+Defined in src/components/Templates/Types.ts:13
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 • **location**? : *string*
 
-Defined in src/components/Templates/Types.ts:14
+Defined in src/components/Templates/Types.ts:16
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 • **name**? : *string*
 
-Defined in src/components/Templates/Types.ts:10
+Defined in src/components/Templates/Types.ts:12
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 • **outputPath**? : *string*
 
-Defined in src/components/Templates/Types.ts:15
+Defined in src/components/Templates/Types.ts:17
 
 ___
 
@@ -125,7 +125,7 @@ ___
 
 • **placeholders**? : *[TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[]*
 
-Defined in src/components/Templates/Types.ts:17
+Defined in src/components/Templates/Types.ts:19
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 • **publisher**? : *string*
 
-Defined in src/components/Templates/Types.ts:13
+Defined in src/components/Templates/Types.ts:15
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 • **type**? : *[TemplateType](../enums/_components_templates_types_.templatetype.md)*
 
-Defined in src/components/Templates/Types.ts:9
+Defined in src/components/Templates/Types.ts:11
 
 ## Methods
 
@@ -149,7 +149,7 @@ Defined in src/components/Templates/Types.ts:9
 
 ▸ **apply**(`placeholders`: [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string›, `object?`: any): *Promise‹string | Buffer›*
 
-Defined in src/components/Templates/Types.ts:38
+Defined in src/components/Templates/Types.ts:40
 
 **Parameters:**
 
@@ -166,7 +166,7 @@ ___
 
 ▸ **load**(`filename?`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/Types.ts:58
+Defined in src/components/Templates/Types.ts:60
 
 **Parameters:**
 
@@ -182,7 +182,7 @@ ___
 
 ▸ **save**(`filename?`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/Types.ts:62
+Defined in src/components/Templates/Types.ts:64
 
 **Parameters:**
 
@@ -198,7 +198,7 @@ ___
 
 ▸ **from**(`from`: [TemplateItem](_components_templates_types_.templateitem.md)): *[TemplateItem](_components_templates_types_.templateitem.md)*
 
-Defined in src/components/Templates/Types.ts:24
+Defined in src/components/Templates/Types.ts:26
 
 **Parameters:**
 
@@ -214,7 +214,7 @@ ___
 
 ▸ **read**(`filename`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/Types.ts:66
+Defined in src/components/Templates/Types.ts:68
 
 **Parameters:**
 
@@ -230,7 +230,7 @@ ___
 
 ▸ **write**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `filename`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/Types.ts:85
+Defined in src/components/Templates/Types.ts:87
 
 **Parameters:**
 

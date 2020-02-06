@@ -21,8 +21,10 @@ sidebar_label: "explorer"
 * [createFromProjectTemplate](_cs_.cds.controls.explorer.md#static-createfromprojecttemplate)
 * [dotNetBuild](_cs_.cds.controls.explorer.md#static-dotnetbuild)
 * [dotNetTest](_cs_.cds.controls.explorer.md#static-dotnettest)
+* [editCrmSvcUtilConfig](_cs_.cds.controls.explorer.md#static-editcrmsvcutilconfig)
 * [generateEntityCodeToFile](_cs_.cds.controls.explorer.md#static-generateentitycodetofile)
 * [generateEntityCodeToFolder](_cs_.cds.controls.explorer.md#static-generateentitycodetofolder)
+* [generateEntityCodeUsingConfig](_cs_.cds.controls.explorer.md#static-generateentitycodeusingconfig)
 * [importSolution](_cs_.cds.controls.explorer.md#static-importsolution)
 * [packSolutionFromFolder](_cs_.cds.controls.explorer.md#static-packsolutionfromfolder)
 * [packWebResource](_cs_.cds.controls.explorer.md#static-packwebresource)
@@ -37,7 +39,7 @@ sidebar_label: "explorer"
 
 ▪ **_namespace**: *string* = "cs.cds.controls.explorer"
 
-Defined in src/cs.ts:181
+Defined in src/cs.ts:182
 
 ___
 
@@ -45,7 +47,7 @@ ___
 
 ▪ **craeteWebResource**: *string* = `${explorer._namespace}.createWebResource`
 
-Defined in src/cs.ts:185
+Defined in src/cs.ts:186
 
 ___
 
@@ -53,7 +55,7 @@ ___
 
 ▪ **createCrmSvcUtilConfig**: *string* = `${explorer._namespace}.createCrmSvcUtilConfig`
 
-Defined in src/cs.ts:182
+Defined in src/cs.ts:183
 
 ___
 
@@ -61,7 +63,7 @@ ___
 
 ▪ **createFromItemTemplate**: *string* = `${explorer._namespace}.createFromItemTemplate`
 
-Defined in src/cs.ts:183
+Defined in src/cs.ts:184
 
 ___
 
@@ -69,7 +71,7 @@ ___
 
 ▪ **createFromProjectTemplate**: *string* = `${explorer._namespace}.createFromProjectTemplate`
 
-Defined in src/cs.ts:184
+Defined in src/cs.ts:185
 
 ___
 
@@ -77,7 +79,7 @@ ___
 
 ▪ **dotNetBuild**: *string* = `${explorer._namespace}.dotNetBuild`
 
-Defined in src/cs.ts:186
+Defined in src/cs.ts:187
 
 ___
 
@@ -85,7 +87,15 @@ ___
 
 ▪ **dotNetTest**: *string* = `${explorer._namespace}.dotNetTest`
 
-Defined in src/cs.ts:187
+Defined in src/cs.ts:188
+
+___
+
+### `Static` editCrmSvcUtilConfig
+
+▪ **editCrmSvcUtilConfig**: *string* = `${explorer._namespace}.editCrmSvcUtilConfig`
+
+Defined in src/cs.ts:189
 
 ___
 
@@ -93,7 +103,7 @@ ___
 
 ▪ **generateEntityCodeToFile**: *string* = `${explorer._namespace}.generateEntityCodeToFile`
 
-Defined in src/cs.ts:189
+Defined in src/cs.ts:191
 
 ___
 
@@ -101,7 +111,15 @@ ___
 
 ▪ **generateEntityCodeToFolder**: *string* = `${explorer._namespace}.generateEntityCodeToFolder`
 
-Defined in src/cs.ts:188
+Defined in src/cs.ts:190
+
+___
+
+### `Static` generateEntityCodeUsingConfig
+
+▪ **generateEntityCodeUsingConfig**: *string* = `${explorer._namespace}.generateEntityCodeUsingConfig`
+
+Defined in src/cs.ts:192
 
 ___
 
@@ -109,7 +127,7 @@ ___
 
 ▪ **importSolution**: *string* = `${explorer._namespace}.importSolution`
 
-Defined in src/cs.ts:190
+Defined in src/cs.ts:193
 
 ___
 
@@ -117,7 +135,7 @@ ___
 
 ▪ **packSolutionFromFolder**: *string* = `${explorer._namespace}.packSolutionFromFolder`
 
-Defined in src/cs.ts:191
+Defined in src/cs.ts:194
 
 ___
 
@@ -125,7 +143,7 @@ ___
 
 ▪ **packWebResource**: *string* = `${explorer._namespace}.packWebResource`
 
-Defined in src/cs.ts:192
+Defined in src/cs.ts:195
 
 ___
 
@@ -133,7 +151,7 @@ ___
 
 ▪ **registerPluginFile**: *string* = `${explorer._namespace}.registerPluginFile`
 
-Defined in src/cs.ts:195
+Defined in src/cs.ts:198
 
 ___
 
@@ -141,7 +159,7 @@ ___
 
 ▪ **saveTemplateFile**: *string* = `${explorer._namespace}.saveTemplateFile`
 
-Defined in src/cs.ts:193
+Defined in src/cs.ts:196
 
 ___
 
@@ -149,7 +167,7 @@ ___
 
 ▪ **saveTemplateFolder**: *string* = `${explorer._namespace}.saveTemplateFolder`
 
-Defined in src/cs.ts:194
+Defined in src/cs.ts:197
 
 ___
 
@@ -157,4 +175,4 @@ ___
 
 ▪ **unpackSolutionToFolder**: *string* = `${explorer._namespace}.unpackSolutionToFolder`
 
-Defined in src/cs.ts:196
+Defined in src/cs.ts:199

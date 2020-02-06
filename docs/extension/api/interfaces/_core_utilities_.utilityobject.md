@@ -18,6 +18,7 @@ sidebar_label: "UtilityObject"
 * [Browser](_core_utilities_.utilityobject.md#browser)
 * [Encoding](_core_utilities_.utilityobject.md#encoding)
 * [Guid](_core_utilities_.utilityobject.md#guid)
+* [Random](_core_utilities_.utilityobject.md#random)
 * [String](_core_utilities_.utilityobject.md#string)
 
 ## Properties
@@ -26,7 +27,7 @@ sidebar_label: "UtilityObject"
 
 • **$Object**: *[ObjectUtility](_core_utilities_.objectutility.md)*
 
-Defined in src/core/Utilities.ts:58
+Defined in src/core/Utilities.ts:65
 
 ___
 
@@ -34,7 +35,7 @@ ___
 
 • **Browser**: *[BrowserUtility](_core_utilities_.browserutility.md)*
 
-Defined in src/core/Utilities.ts:55
+Defined in src/core/Utilities.ts:62
 
 ___
 
@@ -42,7 +43,7 @@ ___
 
 • **Encoding**: *[EncodingUtility](_core_utilities_.encodingutility.md)*
 
-Defined in src/core/Utilities.ts:56
+Defined in src/core/Utilities.ts:63
 
 ___
 
@@ -50,7 +51,15 @@ ___
 
 • **Guid**: *[GuidUtility](_core_utilities_.guidutility.md)*
 
-Defined in src/core/Utilities.ts:57
+Defined in src/core/Utilities.ts:64
+
+___
+
+###  Random
+
+• **Random**: *[RandomUtility](_core_utilities_.randomutility.md)*
+
+Defined in src/core/Utilities.ts:66
 
 ___
 
@@ -58,4 +67,4 @@ ___
 
 • **String**: *[StringUtility](_core_utilities_.stringutility.md)*
 
-Defined in src/core/Utilities.ts:59
+Defined in src/core/Utilities.ts:67

@@ -26,6 +26,7 @@ sidebar_label: "ExtensionContext"
 ### Accessors
 
 * [Instance](_core_extensioncontext_.extensioncontext.md#static-instance)
+* [isDebugging](_core_extensioncontext_.extensioncontext.md#static-isdebugging)
 
 ### Methods
 
@@ -93,6 +94,16 @@ Defined in src/core/ExtensionContext.ts:12
 Defined in src/core/ExtensionContext.ts:16
 
 **Returns:** *ExtensionContext*
+
+___
+
+### `Static` isDebugging
+
+• **get isDebugging**(): *boolean*
+
+Defined in src/core/ExtensionContext.ts:66
+
+**Returns:** *boolean*
 
 ## Methods
 

@@ -36,6 +36,7 @@ Static values related to deployment tasks in the CDS for Code extension
 * [registerPluginAssembly](_cs_.cds.deployment.md#static-registerpluginassembly)
 * [removeSolutionComponent](_cs_.cds.deployment.md#static-removesolutioncomponent)
 * [removeSolutionMapping](_cs_.cds.deployment.md#static-removesolutionmapping)
+* [saveCrmSvcUtilConfig](_cs_.cds.deployment.md#static-savecrmsvcutilconfig)
 * [unpackWebResource](_cs_.cds.deployment.md#static-unpackwebresource)
 * [updateSolutionMapping](_cs_.cds.deployment.md#static-updatesolutionmapping)
 
@@ -169,11 +170,19 @@ Defined in src/cs.ts:28
 
 ___
 
+### `Static` saveCrmSvcUtilConfig
+
+▪ **saveCrmSvcUtilConfig**: *string* = `${deployment._namespace}.saveCrmSvcUtilConfig`
+
+Defined in src/cs.ts:29
+
+___
+
 ### `Static` unpackWebResource
 
 ▪ **unpackWebResource**: *string* = `${deployment._namespace}.unpackWebResource`
 
-Defined in src/cs.ts:29
+Defined in src/cs.ts:30
 
 ___
 
@@ -181,4 +190,4 @@ ___
 
 ▪ **updateSolutionMapping**: *string* = `${deployment._namespace}.updateSolutionMapping`
 
-Defined in src/cs.ts:30
+Defined in src/cs.ts:31

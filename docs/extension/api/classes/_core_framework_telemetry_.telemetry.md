@@ -39,7 +39,7 @@ sidebar_label: "Telemetry"
 
 \+ **new Telemetry**(): *[Telemetry](_core_framework_telemetry_.telemetry.md)*
 
-Defined in src/core/framework/Telemetry.ts:22
+Defined in src/core/framework/Telemetry.ts:23
 
 **Returns:** *[Telemetry](_core_framework_telemetry_.telemetry.md)*
 
@@ -49,7 +49,7 @@ Defined in src/core/framework/Telemetry.ts:22
 
 • **reporter**: *TelemetryReporter*
 
-Defined in src/core/framework/Telemetry.ts:22
+Defined in src/core/framework/Telemetry.ts:23
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 ▪ **instance**: *[Telemetry](_core_framework_telemetry_.telemetry.md)*
 
-Defined in src/core/framework/Telemetry.ts:21
+Defined in src/core/framework/Telemetry.ts:22
 
 ## Accessors
 
@@ -65,7 +65,7 @@ Defined in src/core/framework/Telemetry.ts:21
 
 • **get Instance**(): *[Telemetry](_core_framework_telemetry_.telemetry.md)*
 
-Defined in src/core/framework/Telemetry.ts:13
+Defined in src/core/framework/Telemetry.ts:14
 
 **Returns:** *[Telemetry](_core_framework_telemetry_.telemetry.md)*
 
@@ -75,7 +75,7 @@ Defined in src/core/framework/Telemetry.ts:13
 
 ▸ **context**(`key`: string): *[TelemetryContext](_core_framework_telemetry_.telemetrycontext.md)*
 
-Defined in src/core/framework/Telemetry.ts:41
+Defined in src/core/framework/Telemetry.ts:42
 
 **Parameters:**
 
@@ -91,7 +91,7 @@ ___
 
 ▸ **error**(`error`: [Error](_core_security_authentication_.authenticationerror.md#static-error), `properties?`: object, `measurements?`: object): *void*
 
-Defined in src/core/framework/Telemetry.ts:45
+Defined in src/core/framework/Telemetry.ts:46
 
 **Parameters:**
 
@@ -109,7 +109,7 @@ ___
 
 ▸ **sendTelemetry**(`event`: string, `properties?`: object, `measurements?`: object): *void*
 
-Defined in src/core/framework/Telemetry.ts:57
+Defined in src/core/framework/Telemetry.ts:58
 
 **Parameters:**
 
@@ -127,7 +127,7 @@ ___
 
 ▸ **activate**(`context`: ExtensionContext): *Promise‹void›*
 
-Defined in src/core/framework/Telemetry.ts:31
+Defined in src/core/framework/Telemetry.ts:32
 
 **Parameters:**
 
@@ -143,6 +143,6 @@ ___
 
 ▸ **deactivate**(): *Promise‹void›*
 
-Defined in src/core/framework/Telemetry.ts:35
+Defined in src/core/framework/Telemetry.ts:36
 
 **Returns:** *Promise‹void›*

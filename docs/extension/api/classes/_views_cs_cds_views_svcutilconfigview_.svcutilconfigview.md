@@ -70,7 +70,7 @@ Name | Type |
 
 • **config**: *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
-Defined in src/views/cs.cds.views.svcUtilConfigView.ts:24
+Defined in src/views/cs.cds.views.svcUtilConfigView.ts:25
 
 ___
 
@@ -156,7 +156,7 @@ Track the currently panel. Only allow a single panel to exist at a time.
 
 *Overrides [View](_core_webui_view_.view.md).[commands](_core_webui_view_.view.md#commands)*
 
-Defined in src/views/cs.cds.views.svcUtilConfigView.ts:41
+Defined in src/views/cs.cds.views.svcUtilConfigView.ts:42
 
 **Returns:** *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, Function›*
 
@@ -198,7 +198,7 @@ ___
 
 *Overrides [View](_core_webui_view_.view.md).[construct](_core_webui_view_.view.md#abstract-construct)*
 
-Defined in src/views/cs.cds.views.svcUtilConfigView.ts:26
+Defined in src/views/cs.cds.views.svcUtilConfigView.ts:27
 
 **Parameters:**
 
@@ -244,7 +244,7 @@ ___
 
 ▸ **retrieveAttributes**(`entityKey`: string, `targetElem`: string): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.svcUtilConfigView.ts:48
+Defined in src/views/cs.cds.views.svcUtilConfigView.ts:49
 
 **Parameters:**
 
@@ -259,9 +259,9 @@ ___
 
 ### `Private` save
 
-▸ **save**(`config`: any): *void*
+▸ **save**(`config`: any): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.svcUtilConfigView.ts:55
+Defined in src/views/cs.cds.views.svcUtilConfigView.ts:56
 
 **Parameters:**
 
@@ -269,7 +269,7 @@ Name | Type |
 ------ | ------ |
 `config` | any |
 
-**Returns:** *void*
+**Returns:** *Promise‹void›*
 
 ___
 
@@ -277,7 +277,7 @@ ___
 
 ▸ **setInitialState**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `viewModel?`: any): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.svcUtilConfigView.ts:60
+Defined in src/views/cs.cds.views.svcUtilConfigView.ts:64
 
 **Parameters:**
 

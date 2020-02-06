@@ -45,7 +45,7 @@ sidebar_label: "TelemetryContext"
 
 \+ **new TelemetryContext**(`definition`: [TelemetryDefinition](../modules/_core_framework_telemetry_.md#telemetrydefinition)): *[TelemetryContext](_core_framework_telemetry_.telemetrycontext.md)*
 
-Defined in src/core/framework/Telemetry.ts:78
+Defined in src/core/framework/Telemetry.ts:79
 
 **Parameters:**
 
@@ -61,7 +61,7 @@ Name | Type |
 
 • **event**: *string*
 
-Defined in src/core/framework/Telemetry.ts:70
+Defined in src/core/framework/Telemetry.ts:71
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 • **inputs**: *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, number›*
 
-Defined in src/core/framework/Telemetry.ts:73
+Defined in src/core/framework/Telemetry.ts:74
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 • **instanceId**: *string*
 
-Defined in src/core/framework/Telemetry.ts:71
+Defined in src/core/framework/Telemetry.ts:72
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 • **key**: *string*
 
-Defined in src/core/framework/Telemetry.ts:72
+Defined in src/core/framework/Telemetry.ts:73
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 • **measurements**: *object*
 
-Defined in src/core/framework/Telemetry.ts:75
+Defined in src/core/framework/Telemetry.ts:76
 
 #### Type declaration:
 
@@ -105,7 +105,7 @@ ___
 
 • **properties**: *object*
 
-Defined in src/core/framework/Telemetry.ts:74
+Defined in src/core/framework/Telemetry.ts:75
 
 #### Type declaration:
 
@@ -117,7 +117,7 @@ ___
 
 ▪ **definitions**: *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, object›* = new Dictionary<string, TelemetryDefinition>()
 
-Defined in src/core/framework/Telemetry.ts:77
+Defined in src/core/framework/Telemetry.ts:78
 
 ___
 
@@ -125,7 +125,7 @@ ___
 
 ▪ **preserves**: *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, object›* = new Dictionary<string, { inputKeys: string[], propertyKeys: string[] }>()
 
-Defined in src/core/framework/Telemetry.ts:78
+Defined in src/core/framework/Telemetry.ts:79
 
 ## Methods
 
@@ -133,7 +133,7 @@ Defined in src/core/framework/Telemetry.ts:78
 
 ▸ **dispose**(): *void*
 
-Defined in src/core/framework/Telemetry.ts:162
+Defined in src/core/framework/Telemetry.ts:163
 
 **Returns:** *void*
 
@@ -143,7 +143,7 @@ ___
 
 ▸ **error**(`error`: [Error](_core_security_authentication_.authenticationerror.md#static-error)): *[TelemetryContext](_core_framework_telemetry_.telemetrycontext.md)*
 
-Defined in src/core/framework/Telemetry.ts:108
+Defined in src/core/framework/Telemetry.ts:109
 
 **Parameters:**
 
@@ -159,7 +159,7 @@ ___
 
 ▸ **input**(`key`: string, `value`: number): *[TelemetryContext](_core_framework_telemetry_.telemetrycontext.md)*
 
-Defined in src/core/framework/Telemetry.ts:116
+Defined in src/core/framework/Telemetry.ts:117
 
 **Parameters:**
 
@@ -176,7 +176,7 @@ ___
 
 ▸ **mark**(`key`: string): *[TelemetryContext](_core_framework_telemetry_.telemetrycontext.md)*
 
-Defined in src/core/framework/Telemetry.ts:136
+Defined in src/core/framework/Telemetry.ts:137
 
 **Parameters:**
 
@@ -192,7 +192,7 @@ ___
 
 ▸ **prepareForSend**(): *void*
 
-Defined in src/core/framework/Telemetry.ts:183
+Defined in src/core/framework/Telemetry.ts:184
 
 **Returns:** *void*
 
@@ -202,7 +202,7 @@ ___
 
 ▸ **property**(`key`: string, `value`: string): *[TelemetryContext](_core_framework_telemetry_.telemetrycontext.md)*
 
-Defined in src/core/framework/Telemetry.ts:142
+Defined in src/core/framework/Telemetry.ts:143
 
 **Parameters:**
 
@@ -219,7 +219,7 @@ ___
 
 ▸ **sendTelemetry**(): *[TelemetryContext](_core_framework_telemetry_.telemetrycontext.md)*
 
-Defined in src/core/framework/Telemetry.ts:154
+Defined in src/core/framework/Telemetry.ts:155
 
 **Returns:** *[TelemetryContext](_core_framework_telemetry_.telemetrycontext.md)*
 
@@ -229,7 +229,7 @@ ___
 
 ▸ **from**(`definition`: [TelemetryDefinition](../modules/_core_framework_telemetry_.md#telemetrydefinition)): *[TelemetryContext](_core_framework_telemetry_.telemetrycontext.md)*
 
-Defined in src/core/framework/Telemetry.ts:98
+Defined in src/core/framework/Telemetry.ts:99
 
 **Parameters:**
 
@@ -245,7 +245,7 @@ ___
 
 ▸ **get**(`key`: string): *[TelemetryContext](_core_framework_telemetry_.telemetrycontext.md)*
 
-Defined in src/core/framework/Telemetry.ts:104
+Defined in src/core/framework/Telemetry.ts:105
 
 **Parameters:**
 
