@@ -23,6 +23,7 @@ import exportTemplate from '../../commands/cs.cds.templates.exportTemplate';
 import importTemplate from '../../commands/cs.cds.templates.importTemplate';
 import openTemplateFolder from '../../commands/cs.cds.templates.openTemplateFolder';
 import saveTemplate from '../../commands/cs.cds.templates.saveTemplate';
+import TemplateResolver from './TemplateResolver';
 
 /**
  * Main class to handle the logic of the Project Templates
@@ -106,6 +107,8 @@ export default class TemplateManager {
         if (!template) {
             return;
         }
+
+        const tokens = await TemplateResolver.resolveTokens(template);
 
         if (fsPath && template.outputPath && !path.isAbsolute(template.outputPath)) {
             fsPath = path.join(fsPath, template.outputPath);
