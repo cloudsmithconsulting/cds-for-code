@@ -108,7 +108,8 @@ export default class TemplateManager {
             return;
         }
 
-        const tokens = await TemplateResolver.resolveTokens(template);
+        await TemplateResolver.executeTemplate(template, fsPath);
+        return;
 
         if (fsPath && template.outputPath && !path.isAbsolute(template.outputPath)) {
             fsPath = path.join(fsPath, template.outputPath);

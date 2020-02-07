@@ -104,6 +104,12 @@ export class TemplateItem {
     }    
 }
 
+export interface Interactive {
+    type: string;
+    message: string;
+    items?: string[];
+}
+
 export class TemplateFilesystemItem {
     constructor(
         public type: vscode.FileType,
