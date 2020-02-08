@@ -5,6 +5,7 @@ import Dictionary from '../../core/types/Dictionary';
 import TemplateManager from './TemplateManager';
 import Quickly from '../../core/Quickly';
 import TemplateEngine from './TemplateEngine';
+import { CdsWebApi } from '../../api/cds-webapi/CdsWebApi';
 
 export class TemplateItem {
     constructor(
@@ -108,7 +109,14 @@ export interface Interactive {
     type: string;
     message: string;
     items?: string[];
+    connection?: string;
 }
+
+export type TemplateContext = {
+    commands: any[],
+    params: { [name: string] : any },
+    context: any
+};
 
 export class TemplateFilesystemItem {
     constructor(
