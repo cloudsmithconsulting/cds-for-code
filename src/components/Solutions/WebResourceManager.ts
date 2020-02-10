@@ -3,7 +3,6 @@ import * as cs from '../../cs';
 import * as FileSystem from "../../core/io/FileSystem";
 import * as path from 'path';
 import { CdsWebApi } from "../../api/cds-webapi/CdsWebApi";
-import IContributor from '../../core/CommandBuilder';
 import { Utilities } from '../../core/Utilities';
 import SolutionMap from "./SolutionMap";
 import SolutionWorkspaceMapping from "./SolutionWorkspaceMapping";
@@ -150,7 +149,7 @@ export default class WebResourceManager {
 
         if (!FileSystem.exists(dataFile)) {
             await TemplateManager.getSystemTemplate("solution.webresource.xml")
-                .then(async template => template.apply(dataFile, { webresource: webResource, resolver: { resolvefilename: resolver } }));
+                .then(async template => await template.apply(dataFile, { webresource: webResource, resolver: { resolvefilename: resolver } }));
         }       
 
         // Edit the solution.xml file and add the component there, too.
