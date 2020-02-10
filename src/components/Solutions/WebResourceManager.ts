@@ -150,7 +150,7 @@ export default class WebResourceManager {
 
         if (!FileSystem.exists(dataFile)) {
             await TemplateManager.getSystemTemplate("solution.webresource.xml")
-                .then(async template => FileSystem.writeFileSync(dataFile, await template.apply(undefined, { webresource: webResource, resolver: { resolvefilename: resolver } })));
+                .then(async template => template.apply(dataFile, { webresource: webResource, resolver: { resolvefilename: resolver } }));
         }       
 
         // Edit the solution.xml file and add the component there, too.

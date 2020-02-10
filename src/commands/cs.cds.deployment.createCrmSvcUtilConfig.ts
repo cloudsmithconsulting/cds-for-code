@@ -37,10 +37,7 @@ export default async function run(this: CodeGenerationManager, config?: CdsWebAp
 
     if (defaultUri && !FileSystem.exists(defaultUri.fsPath)) {
         const template = await TemplateManager.getSystemTemplate("crmsvcutil.config.xml");
-        const configFile = await template.apply(undefined, { });
-	
-		FileSystem.makeFolderSync(path.dirname(defaultUri.fsPath));
-		FileSystem.writeFileSync(defaultUri.fsPath, configFile);
+        await template.apply(defaultUri.fsPath, { });
     }
 
 	const xml = await Xml.parseFile(defaultUri.fsPath);

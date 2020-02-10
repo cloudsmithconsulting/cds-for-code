@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
-import * as FileSystem from '../../core/io/FileSystem';
 import * as path from 'path';
+import * as doT from 'dot';
+import * as FileSystem from '../../core/io/FileSystem';
 import Dictionary from '../../core/types/Dictionary';
 import TemplateManager from './TemplateManager';
 import Quickly from '../../core/Quickly';
-import TemplateEngine from './TemplateEngine';
-import { CdsWebApi } from '../../api/cds-webapi/CdsWebApi';
+import TemplateResolver from './TemplateResolver';
 
 export class TemplateItem {
     constructor(
@@ -38,24 +38,11 @@ export class TemplateItem {
             from.directives);
     }
     
-    async apply(placeholders: Dictionary<string, string>, object?: any): Promise<string | Buffer> {
+    async apply(outputPath: string, ...object: any): Promise<void> {
         if (this.type !== TemplateType.ItemTemplate) {
-            throw new Error("Only item templates may invoke the .Apply function inline");
+            throw new Error("Only item templates may invoke the .apply function inline");
         }
-        const systemTemplates = await TemplateManager.getDefaultTemplatesFolder(true);
-        const userTemplates = await TemplateManager.getDefaultTemplatesFolder(true);
-        let fileContents: Buffer;
-
-        if (FileSystem.exists(path.join(systemTemplates, this.location))) {
-            fileContents = FileSystem.readFileSync(path.join(systemTemplates, this.location));
-        }
-        else if (FileSystem.exists(path.join(userTemplates, this.location))) {
-            fileContents = FileSystem.readFileSync(path.join(userTemplates, this.location));
-        }
-
-        if (fileContents) {
-            return await TemplateEngine.applyTemplate(this, fileContents, placeholders, object);
-        }
+        await TemplateResolver.executeTemplate(this, outputPath, ...object);
     }
 
     async load(filename?: string): Promise<TemplateItem> {
@@ -112,11 +99,23 @@ export interface Interactive {
     connection?: string;
 }
 
-export type TemplateContext = {
-    commands: any[],
-    params: { [name: string] : any },
-    context: any
-};
+export interface TemplateFileAnalysis {
+    destination: string;
+    source: string;
+    fileContents: string | Buffer;
+    templateFn: doT.RenderFunction;
+}
+
+export class TemplateAnalysis {
+    interactives: { [name: string]: Interactive } = {};
+    files: TemplateFileAnalysis[] = [];
+}
+
+export class TemplateContext {
+    commands: any[] = [];
+    parameters: { [name: string] : any } = {};
+    context: any = {};
+}
 
 export class TemplateFilesystemItem {
     constructor(

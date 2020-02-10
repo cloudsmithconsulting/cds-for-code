@@ -6,15 +6,14 @@ import * as os from 'os';
 import * as FileSystem from '../../core/io/FileSystem';
 import * as EnvironmentVariables from '../../core/framework/EnvironmentVariables';
 import * as _ from 'lodash';
-import { TemplatePlaceholder, TemplateItem, TemplateType, TemplateFilesystemItem } from './Types';
+import { TemplateItem, TemplateType, TemplateFilesystemItem } from './Types';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import Quickly from '../../core/Quickly';
-import Dictionary from '../../core/types/Dictionary';
 import { TemplateCatalog } from './TemplateCatalog';
 import TemplateTreeView from '../../views/cs.cds.viewContainers.templateExplorer';
 import ExtensionContext from '../../core/ExtensionContext';
 import command from '../../core/Command';
-import TemplateEngine from './TemplateEngine';
+import TemplateResolver from './TemplateResolver';
 
 import createTemplate from '../../commands/cs.cds.templates.createFromTemplate';
 import deleteTemplate from '../../commands/cs.cds.templates.deleteTemplate';
@@ -23,7 +22,6 @@ import exportTemplate from '../../commands/cs.cds.templates.exportTemplate';
 import importTemplate from '../../commands/cs.cds.templates.importTemplate';
 import openTemplateFolder from '../../commands/cs.cds.templates.openTemplateFolder';
 import saveTemplate from '../../commands/cs.cds.templates.saveTemplate';
-import TemplateResolver from './TemplateResolver';
 
 /**
  * Main class to handle the logic of the Project Templates
@@ -109,139 +107,7 @@ export default class TemplateManager {
         }
 
         await TemplateResolver.executeTemplate(template, fsPath);
-        return;
 
-        if (fsPath && template.outputPath && !path.isAbsolute(template.outputPath)) {
-            fsPath = path.join(fsPath, template.outputPath);
-        } else if (template.outputPath && path.isAbsolute(template.outputPath)) {
-            fsPath = template.outputPath;
-        }
-
-        // get template folder
-        let templateDir = path.isAbsolute(template.location) ? template.location : path.join(await TemplateManager.getTemplatesFolder(), template.location);
-
-        if (!fs.existsSync(templateDir)) {
-            Quickly.error(`Cannot extract this template as ${templateDir} is not a valid path.`);
-
-            return undefined;
-        }
-
-        // update placeholder configuration
-        const usePlaceholders = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.usePlaceholders, false);
-        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
-        const placeholders = ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.cds.configuration.templates.placeholders, new Dictionary<string, string>());
-
-        let overwriteAll:boolean = false;
-        let skipAll:boolean = false;
-        let renameAll:boolean = false;
-
-        // recursively copy files, replacing placeholders as necessary
-		const copyInternal = async (source: string, destination: string) => {
-            const directive = template && template.directives && template.directives.length > 0 ? template.directives.find(d => d.name === path.basename(source)) : undefined;
-            // maybe replace placeholders in filename
-            if (usePlaceholders && (!directive || directive.usePlaceholdersInFilename)) {
-                destination = await TemplateEngine.resolvePlaceholders(destination, placeholderRegExp, placeholders, template) as string;
-            }
-
-			if (fs.lstatSync(source).isDirectory()) {
-                // create directory if doesn't exist
-				if (!fs.existsSync(destination)) {
-					fs.mkdirSync(destination);
-				} else if (!fs.lstatSync(destination).isDirectory()) {
-                    // fail if file exists
-					throw new Error(`Failed to create directory "${destination}": A file with same name exists.`);
-				}
-            } else {
-                // ask before overwriting existing file
-                while (fs.existsSync(destination)) {
-                    // if it is not a file, cannot overwrite
-                    if (!fs.lstatSync(destination).isFile()) {
-                        let reldest = path.relative(fsPath, destination);
-       
-                        // get user's input
-                        destination = await Quickly.ask(`Cannot overwrite "${reldest}".  Please enter a new filename"`, undefined, reldest)
-                            .then(value => value ? value : destination);
-
-                        // if not absolute path, make workspace-relative
-                        if (!path.isAbsolute(destination)) {
-                            destination = path.join(fsPath, destination);
-                        }
-                    } else {
-                        // ask if user wants to replace, otherwise prompt for new filename
-                        let reldest = path.relative(fsPath, destination);
-                        let action;
-
-                        if (overwriteAll) { action = "Overwrite"; } else if (skipAll) { action = "Skip"; } else if (renameAll) { action = "Rename"; } else {
-                            action = (await Quickly.pick(`Destination file "${reldest}" already exists.  What would you like to do?`, "Overwrite", "Overwrite All", "Rename", "Rename All", "Skip", "Skip All", "Abort")).label;
-                        }
-
-                        overwriteAll = overwriteAll || action === "Overwrite All";
-                        skipAll = skipAll || action === "Skip All";
-                        renameAll = renameAll || action === "Rename All";
-
-                        switch(action) {
-                            case "Overwrite":
-                            case "Overwrite All":
-                                // delete existing file
-                                fs.unlinkSync(destination);
-
-                                break;
-                            case "Rename":
-                            case "Rename All":
-                                // get user's input
-                                destination = await Quickly
-                                    .ask("Please enter a new filename", undefined, reldest)
-                                    .then(value => value ? value : destination);
-
-                                // if not absolute path, make workspace-relative
-                                if (!path.isAbsolute(destination)) {
-                                    destination = path.join(fsPath, destination);
-                                }
-
-                                break;
-                            case "Skip":
-                            case "Skip All":
-                                // skip
-                                return true;
-                            default:
-                                // abort
-                                return false;
-                        }
-                    }  // if file
-                } // while file exists
-
-                // get src file contents
-                let fileContents : Buffer = fs.readFileSync(source);
-
-                if (usePlaceholders && (!directive || directive.usePlaceholders)) {
-                    fileContents = await TemplateEngine.resolvePlaceholders(fileContents, placeholderRegExp, placeholders, template) as Buffer;
-                }
-
-                // ensure directories exist
-                let parent = path.dirname(destination);
-                FileSystem.makeFolderSync(parent);
-
-                // write file contents to destination
-                fs.writeFileSync(destination, fileContents);
-            }
-
-            return true;
-        };  // copy function
-        
-        // actually copy the file recursively
-        try {
-            await FileSystem.recurse(templateDir, fsPath, copyInternal);
-        } catch (error) {
-            if (error.name && error.name === cs.cds.errors.userCancelledAction) {
-                // User initiated cancel of this template, remove the files that have been copied.
-                FileSystem.deleteFolder(fsPath);
-
-                return null;
-            }
-
-            throw error;
-        }
-        
         return template;
     }
 
@@ -486,7 +352,6 @@ export default class TemplateManager {
 
     static async getTemplates(folder: string, mergeWith?:TemplateItem[], exclusions?:string[]):Promise<TemplateItem[]> {
         const templates: TemplateItem[] = [];
-        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
 
         await this.getTemplateFolderItems(folder)
             .then(items => {
@@ -511,7 +376,6 @@ export default class TemplateManager {
                             templateItem.name = templateItem.name || i.name;
                             templateItem.type = type;
                             templateItem.location = templateItem.location || i.name;
-                            templateItem.placeholders = TemplateEngine.mergePlaceholders(templateItem.placeholders, TemplateEngine.getPlaceholders(path.join(folder, i.name), placeholderRegExp, i.type === vscode.FileType.Directory).map(i => new TemplatePlaceholder(i)));
     
                             templates.push(templateItem);
                         }
