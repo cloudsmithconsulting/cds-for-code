@@ -1,0 +1,2 @@
+{{#def.prompt('Namespace', 'Please enter the Namespace')}}
+{{#def.prompt('PluginName', 'Please enter the PluginName')}}

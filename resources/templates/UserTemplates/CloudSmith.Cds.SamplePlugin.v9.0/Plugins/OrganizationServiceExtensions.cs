@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 
-namespace #{Namespace}.Plugins
+namespace {{=$.parameters.Namespace}}.Plugins
 {
     public static class OrganizationServiceExtensions
     {

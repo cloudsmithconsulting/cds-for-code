@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace #{Namespace}.Plugins
+namespace {{=$.parameters.Namespace}}.Plugins
 {
     /// <summary>
     ///     A service that can obtain metadata from a Dynamics organization.

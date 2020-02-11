@@ -6,15 +6,6 @@
     "location": "CloudSmith.Cds.SamplePlugin.v9.0",
     "outputPath": "${Namespace}",
     "categories": ["Dynamics", "Plugins"],
-    "placeholders": [{
-        "name": "PluginName",
-        "displayName": "Plugin Class Name",
-        "required": true
-    }, {
-        "name": "Namespace",
-        "displayName": "Project namespace and assembly name",
-        "required": true
-    }],
     "directives": [{
         "name": "${Namespace}.snk",
         "usePlaceholdersInFilename": true,

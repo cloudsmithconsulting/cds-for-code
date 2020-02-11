@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>${Namespace}.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>{{=$.parameters.Namespace}}.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

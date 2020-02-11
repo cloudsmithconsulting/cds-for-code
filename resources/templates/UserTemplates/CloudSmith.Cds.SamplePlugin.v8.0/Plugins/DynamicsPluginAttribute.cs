@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xrm.Sdk;
 using System;
 
-namespace #{Namespace}.Plugins
+namespace {{=$.parameters.Namespace}}.Plugins
 {
     public abstract class DynamicsPluginAttribute : Attribute
     {

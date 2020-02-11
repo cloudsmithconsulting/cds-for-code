@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xrm.Sdk;
 using System;
 
-namespace #{Namespace}.Plugins
+namespace {{=$.parameters.Namespace}}.Plugins
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public sealed class RequireConfigurationAttribute : DynamicsPluginAttribute

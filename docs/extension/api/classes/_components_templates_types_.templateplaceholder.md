@@ -29,7 +29,7 @@ sidebar_label: "TemplatePlaceholder"
 
 \+ **new TemplatePlaceholder**(`name?`: string): *[TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)*
 
-Defined in src/components/Templates/Types.ts:126
+Defined in src/components/Templates/Types.ts:139
 
 **Parameters:**
 
@@ -45,7 +45,7 @@ Name | Type |
 
 • **displayName**: *string*
 
-Defined in src/components/Templates/Types.ts:136
+Defined in src/components/Templates/Types.ts:149
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 • **name**: *string*
 
-Defined in src/components/Templates/Types.ts:135
+Defined in src/components/Templates/Types.ts:148
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 • **required**: *boolean*
 
-Defined in src/components/Templates/Types.ts:137
+Defined in src/components/Templates/Types.ts:150
 
 ___
 
@@ -69,4 +69,4 @@ ___
 
 • **type**: *string*
 
-Defined in src/components/Templates/Types.ts:138
+Defined in src/components/Templates/Types.ts:151

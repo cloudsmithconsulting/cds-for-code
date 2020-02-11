@@ -28,7 +28,7 @@ sidebar_label: "TemplateDirective"
 
 \+ **new TemplateDirective**(`name?`: string): *[TemplateDirective](_components_templates_types_.templatedirective.md)*
 
-Defined in src/components/Templates/Types.ts:114
+Defined in src/components/Templates/Types.ts:127
 
 **Parameters:**
 
@@ -44,7 +44,7 @@ Name | Type |
 
 • **name**: *string*
 
-Defined in src/components/Templates/Types.ts:121
+Defined in src/components/Templates/Types.ts:134
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 • **usePlaceholders**: *boolean*
 
-Defined in src/components/Templates/Types.ts:122
+Defined in src/components/Templates/Types.ts:135
 
 ___
 
@@ -60,4 +60,4 @@ ___
 
 • **usePlaceholdersInFilename**: *boolean*
 
-Defined in src/components/Templates/Types.ts:123
+Defined in src/components/Templates/Types.ts:136
