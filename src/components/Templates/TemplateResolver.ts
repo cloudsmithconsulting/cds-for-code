@@ -70,7 +70,7 @@ export default class TemplateResolver {
         const result = new TemplateAnalysis();
         const interactives: { [name: string]: Interactive } = {};
 
-        const allTemplatePaths = (path.isAbsolute(templatePath))
+        const allTemplatePaths = (path.isAbsolute(templatePath) && !FileSystem.stats(templatePath).isDirectory())
             ? [ templatePath ]
             : FileSystem.walkSync(templatePath);
 
