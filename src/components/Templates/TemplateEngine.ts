@@ -7,7 +7,7 @@ import TemplateManager from './TemplateManager';
 import Quickly from '../../core/Quickly';
 import ExtensionContext from '../../core/ExtensionContext';
 
-export default class TemplateResolver {
+export default class TemplateEngine {
     private static readonly fileNameRegex = /\$\{([\s\S]+?)\}/g;
     private static readonly dotSettings: doT.TemplateSettings = {
         evaluate: /\{\{([\s\S]+?)\}\}\n?/g,

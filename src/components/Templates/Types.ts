@@ -2,10 +2,9 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as doT from 'dot';
 import * as FileSystem from '../../core/io/FileSystem';
-import Dictionary from '../../core/types/Dictionary';
 import TemplateManager from './TemplateManager';
 import Quickly from '../../core/Quickly';
-import TemplateResolver from './TemplateResolver';
+import TemplateEngine from './TemplateEngine';
 
 export class TemplateItem {
     constructor(
@@ -17,10 +16,8 @@ export class TemplateItem {
         public location?: string,
         public outputPath?: string,
         public categories?: string[],
-        public placeholders?: TemplatePlaceholder[],
         public directives?: TemplateDirective[]) { 
         if (!categories) { categories = []; }
-        if (!placeholders) { placeholders = []; }
         if (!directives) { directives = []; }
     }
 
@@ -34,7 +31,6 @@ export class TemplateItem {
             from.location, 
             from.outputPath,
             from.categories,
-            from.placeholders,
             from.directives);
     }
     
@@ -42,7 +38,7 @@ export class TemplateItem {
         if (this.type !== TemplateType.ItemTemplate) {
             throw new Error("Only item templates may invoke the .apply function inline");
         }
-        await TemplateResolver.executeTemplate(this, outputPath, ...object);
+        await TemplateEngine.executeTemplate(this, outputPath, ...object);
     }
 
     async load(filename?: string): Promise<TemplateItem> {
@@ -134,21 +130,6 @@ export class TemplateDirective {
     name: string;
     usePlaceholders: boolean;   
     usePlaceholdersInFilename: boolean;
-}
-
-export class TemplatePlaceholder {
-    constructor(name?: string) {
-        if (name) {
-            this.name = name;
-        }
-
-        this.required = false;
-    }
-    
-    name: string;
-    displayName: string;
-    required: boolean;
-    type: string;
 }
 
 

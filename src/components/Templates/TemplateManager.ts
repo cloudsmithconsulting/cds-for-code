@@ -13,7 +13,7 @@ import { TemplateCatalog } from './TemplateCatalog';
 import TemplateTreeView from '../../views/cs.cds.viewContainers.templateExplorer';
 import ExtensionContext from '../../core/ExtensionContext';
 import command from '../../core/Command';
-import TemplateResolver from './TemplateResolver';
+import TemplateEngine from './TemplateEngine';
 
 import createTemplate from '../../commands/cs.cds.templates.createFromTemplate';
 import deleteTemplate from '../../commands/cs.cds.templates.deleteTemplate';
@@ -106,7 +106,7 @@ export default class TemplateManager {
             return;
         }
 
-        await TemplateResolver.executeTemplate(template, fsPath);
+        await TemplateEngine.executeTemplate(template, fsPath);
 
         return template;
     }
