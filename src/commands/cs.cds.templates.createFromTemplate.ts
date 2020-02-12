@@ -66,10 +66,13 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
 
     // create project
     this.createFromFilesystem(path, type, template).then(
-        (template) => {
-            if (template) {
+        (context) => {
+            if (template && !context.userCanceled) {
                 logger.info(`Command: ${cs.cds.templates.createFromTemplate} Template ${template.displayName} created in workspace: ${path}`);
                 Quickly.inform(`Created ${template.type === TemplateType.ProjectTemplate ? "project" : "item"} from template '${template.displayName}'`);
+            } else if (context.userCanceled) {
+                logger.info(`Command: ${cs.cds.templates.createFromTemplate} Template ${template.displayName} execution canceled`);
+                Quickly.inform(`Canceled ${template.type === TemplateType.ProjectTemplate ? "project" : "item"} creation from template '${template.displayName}'`);
             }
         },
         (reason: any) => {

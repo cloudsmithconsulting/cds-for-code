@@ -1,11 +1,15 @@
+import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as doT from 'dot';
+import * as cs from '../../cs';
 import * as FileSystem from '../../core/io/FileSystem';
-import { TemplateItem, Interactive, TemplateAnalysis, TemplateContext } from "./Types";
+import { TemplateItem, Interactive, TemplateAnalysis, TemplateContext, TemplateCommand, TemplateCommandExecutionStage } from "./Types";
 import TemplateManager from './TemplateManager';
 import Quickly from '../../core/Quickly';
 import ExtensionContext from '../../core/ExtensionContext';
+import TerminalManager, { TerminalCommand } from '../Terminal/SecureTerminal';
+import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 
 export default class TemplateEngine {
     private static readonly fileNameRegex = /\$\{([\s\S]+?)\}/g;
@@ -25,10 +29,17 @@ export default class TemplateEngine {
         selfcontained: false
     };
 
-    static async executeTemplate(template: TemplateItem, outputPath: string, ...object: any): Promise<void> {    
+    static async executeTemplate(template: TemplateItem, outputPath: string, ...object: any): Promise<TemplateContext> {    
         const analysis = await this.analyzeTemplate(template, outputPath);
-        const templateContext = await this.resolveInteractives(analysis);
+        const templateContext = await this.buildTemplateContext(analysis);
+
+        if (templateContext.userCanceled) { return templateContext; }
+
         templateContext.parameters = Object.assign(templateContext.parameters, ...object);
+        templateContext.parameters = Object.assign(templateContext.parameters, 
+            ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.templateParameters, {}));
+
+        await this.executeCommands(templateContext, TemplateCommandExecutionStage.PreRun);
 
         for (let i = 0; i < analysis.files.length; i++) {
             const file = analysis.files[i];
@@ -41,6 +52,11 @@ export default class TemplateEngine {
                 return templateContext.parameters[key] || match;
             });
 
+            templateContext.executionContext.currentFile = {
+                source: file.source,
+                destination
+            };
+
             const fileContents = (file.templateFn)
                 ? file.templateFn(templateContext)
                 : file.fileContents;
@@ -49,10 +65,20 @@ export default class TemplateEngine {
             FileSystem.makeFolderSync(parentDir);
 
             FileSystem.writeFileSync(destination, fileContents);
+
+            templateContext.executionContext.processedFiles = templateContext.executionContext.processedFiles || [];
+            templateContext.executionContext.processedFiles.push({
+                source: file.source,
+                destination
+            });
         }
+
+        await this.executeCommands(templateContext, TemplateCommandExecutionStage.PostRun);
+
+        return templateContext;
     }
 
-    public static async analyzeTemplate(template: TemplateItem, outputPath?: string): Promise<TemplateAnalysis> {
+    static async analyzeTemplate(template: TemplateItem, outputPath?: string): Promise<TemplateAnalysis> {
         if (outputPath && template.outputPath && !path.isAbsolute(template.outputPath)) {
             outputPath = path.join(outputPath, template.outputPath);
         } else if (template.outputPath && path.isAbsolute(template.outputPath)) {
@@ -69,6 +95,7 @@ export default class TemplateEngine {
 
         const result = new TemplateAnalysis();
         const interactives: { [name: string]: Interactive } = {};
+        const commands: TemplateCommand[] = [];
 
         const allTemplatePaths = (path.isAbsolute(templatePath) && !FileSystem.stats(templatePath).isDirectory())
             ? [ templatePath ]
@@ -97,9 +124,9 @@ export default class TemplateEngine {
                 };
                 return '';
             },
-            solution(name: string, message: string, connection: string) {
+            cdsSolution(name: string, message: string, connection: string) {
                 interactives[name] = {
-                    type: 'solution',
+                    type: 'cdsSolution',
                     message: message,
                     connection: connection
                 };
@@ -111,6 +138,36 @@ export default class TemplateEngine {
                     message: message
                 };
                 return '';
+            },
+            dotnetBuild(fileName?: string) {
+                commands.push({
+                    type: 'dotnetBuild',
+                    target: fileName,
+                    stage: TemplateCommandExecutionStage.PostRun
+                });
+                return '';
+            },
+            dotnetTest(fileName?: string) {
+                commands.push({
+                    type: 'dotnetTest',
+                    target: fileName,
+                    stage: TemplateCommandExecutionStage.PostRun
+                });
+                return '';
+            },
+            dotnetRestore(fileName?: string) {
+                commands.push({
+                    type: 'dotnetRestore',
+                    target: fileName,
+                    stage: TemplateCommandExecutionStage.PostRun
+                });
+                return '';
+            },
+            npmInstall() {
+                commands.push({
+                    type: 'npmInstall',
+                    stage: TemplateCommandExecutionStage.PostRun
+                });
             }
         };
 
@@ -121,9 +178,16 @@ export default class TemplateEngine {
                 ? source.replace(templatePath, outputPath)
                 : '';
             const fileContents = fs.readFileSync(source);
-            const templateFn = (!directive || directive.usePlaceholders)
-                ? doT.template(fileContents.toString(), this.dotSettings, templateDefs)
-                : null;
+            
+            let templateFn;
+            try {
+                templateFn = (!directive || directive.usePlaceholders)
+                    ? doT.template(fileContents.toString(), this.dotSettings, templateDefs)
+                    : null;
+            } catch (error) {
+                Quickly.error(`Error while trying to parse the template file at ${source}, error message: ${error.message}`);
+                throw error;
+            }
 
             let match;
             while (match = this.fileNameRegex.exec(destination)) {
@@ -142,46 +206,130 @@ export default class TemplateEngine {
             });
         }
 
+        result.commands = commands;
         result.interactives = interactives;
 
         return result;
     }
 
-    public static async resolveInteractives(templateAnalysis: TemplateAnalysis): Promise<TemplateContext> {
+    private static async executeCommands(templateContext: TemplateContext, stage: TemplateCommandExecutionStage): Promise<void> {
+        const commands = templateContext.commands.filter(s => s.stage === stage);
+        for (let i = 0; i < commands.length; i++) {
+            const command = commands[i];
+            
+            switch (command.type) {
+                case 'dotnetBuild': {
+                    const targetFile = command.target || ".sln";
+                    const fileMap = this.extractFileMap(templateContext, targetFile);
+                   
+                    if (!fileMap) { continue; }
+                   
+                    command.output = await TerminalManager.showTerminal(fileMap.parentDir)
+                        .then(async terminal => { 
+                            return await terminal.run(new TerminalCommand(`dotnet build "${fileMap.destination}"`))
+                                .then(async tc => tc.output);                      
+                        });
+                }
+                    break;
+                case 'dotnetTest': {
+                    const targetFile = command.target || ".sln";
+                    const fileMap = this.extractFileMap(templateContext, targetFile);
+                    
+                    if (!fileMap) { continue; }
+                    
+                    command.output = await TerminalManager.showTerminal(fileMap.parentDir)
+                        .then(async terminal => { 
+                            return await terminal.run(new TerminalCommand(`dotnet test "${fileMap.destination}"`))
+                                .then(async tc => tc.output);                      
+                        });
+                }
+                    break;
+                case 'dotnetRestore': {
+                    const targetFile = command.target || ".sln";
+                    const fileMap = this.extractFileMap(templateContext, targetFile);
+                    
+                    if (!fileMap) { continue; }
+                    
+                    command.output = await TerminalManager.showTerminal(fileMap.parentDir)
+                        .then(async terminal => { 
+                            return await terminal.run(new TerminalCommand(`dotnet restore "${fileMap.destination}"`))
+                                .then(async tc => tc.output);                      
+                        });
+                }
+                    break;
+                case 'npmInstall': {
+                    const fileMap = this.extractFileMap(templateContext, '\\package.json');
+                    
+                    if (!fileMap) { continue; }
+                    
+                    command.output = await TerminalManager.showTerminal(fileMap.parentDir)
+                        .then(async terminal => { 
+                            return await terminal.run(new TerminalCommand(`npm install`))
+                                .then(async tc => tc.output);                      
+                        });
+                }
+                    break;
+            }
+        }
+    }
+
+    private static extractFileMap(templateContext: TemplateContext, name: string): any {
+        const fileMap = templateContext.executionContext.processedFiles.find(f => f.source.endsWith(name));
+        if (!fileMap) { return null; }
+        return {
+            source: fileMap.source,
+            destination: fileMap.destination,
+            parentDir: path.dirname(fileMap.destination) 
+        };
+    }
+
+    private static async buildTemplateContext(templateAnalysis: TemplateAnalysis): Promise<TemplateContext> {
         const result = new TemplateContext();
+        result.commands = templateAnalysis.commands;
+
         const interactives = templateAnalysis.interactives;
         const templateInputs = Object.keys(interactives);
         const iterator = templateInputs[Symbol.iterator]();
         let item = iterator.next();
 
         while (!item.done) {
+            if (result.userCanceled) { 
+                item.done = true;
+                continue; 
+            }
+
             const key = item.value;
             const interactive = interactives[key];
             switch (interactive.type) {
                 case 'prompt': {
                     result.parameters[key] = result.parameters[key] || await Quickly.ask(interactive.message);
+                    if (!result.parameters[key]) { result.userCanceled = true; }
                 }
                     break;
                 case 'select': {
                     result.parameters[key] = result.parameters[key] || await Quickly.pick(interactive.message, ...interactive.items)
                         .then(item => item.label);
+                    if (!result.parameters[key]) { result.userCanceled = true; }
                 }
                     break;
                 case 'confirm': {
                     result.parameters[key] = (result.parameters[key] === undefined)
                         ? await Quickly.pickBoolean(interactive.message, 'Yes', 'No')
                         : result.parameters[key];
+                    if (!result.parameters[key] === undefined) { result.userCanceled = true; }
                 }
                     break;
                 case 'cdsConnection': {
                     const config = await Quickly.pickCdsOrganization(ExtensionContext.Instance, interactive.message, true);
                     result.parameters[key] = config;
+                    if (!result.parameters[key]) { result.userCanceled = true; }
                 }
                     break;
-                case 'solution': {
+                case 'cdsSolution': {
                     let config = interactive.connection ? result[interactive.connection] : undefined;
                     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, `Pick CDS Organization that contains ${key}`, true);
                     result.parameters[key] = result.parameters[key] || await Quickly.pickCdsSolution(config, interactive.message, true);
+                    if (!result.parameters[key]) { result.userCanceled = true; }
                 }
                     break;
             }

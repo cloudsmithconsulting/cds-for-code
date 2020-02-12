@@ -43,7 +43,7 @@ export default async function run(this: VisualStudioProjectCommands, file?:vscod
 		}
 	}
 
-	file = file || await Quickly.pickWorkspaceFile(defaultFolder, "Choose a projet to build", undefined, false, VisualStudioProjectCommands.projectFileTypes).then(r => vscode.Uri.file(r));
+	file = file || await Quickly.pickWorkspaceFile(defaultFolder, "Choose a project to build", undefined, false, VisualStudioProjectCommands.projectFileTypes).then(r => vscode.Uri.file(r));
 	if (!file) { 
 		logger.warn(`Command: ${cs.cds.deployment.dotNetBuild} Project file not chosen, command cancelled`);
 		return; 
@@ -62,7 +62,7 @@ export default async function run(this: VisualStudioProjectCommands, file?:vscod
 
 	if (logFile && logFile === "!") { logFile = undefined; }
 
-	return TerminalManager.showTerminal(path.parse(file.fsPath).dir)
+	return await TerminalManager.showTerminal(path.parse(file.fsPath).dir)
 		.then(async terminal => { 
 			return await terminal.run(new TerminalCommand(`dotnet build "${file.fsPath}"`))
 				.then(async tc => {
@@ -78,6 +78,8 @@ export default async function run(this: VisualStudioProjectCommands, file?:vscod
 						await vscode.workspace.openTextDocument(logFile)
 							.then(d => vscode.window.showTextDocument(d));	
 					}
+
+					return tc.output;
 				});                      
 		});
 }

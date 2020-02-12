@@ -132,11 +132,9 @@ export namespace cds {
         // tslint:disable-next-line: class-name
         export class templates {
             static readonly _namespace: string = "cs.cds.configuration.templates";
-            static readonly placeholders: string = `${templates._namespace}.placeholders`;
-            static readonly placeholderRegExp: string = `${templates._namespace}.placeholderRegExp`;
+            static readonly templateParameters: string = `${templates._namespace}.templateParameters`;
             static readonly templatesDirectory: string = `${templates._namespace}.templatesDirectory`;
             static readonly treeViewGroupPreference: string = `${templates._namespace}.treeViewGroupPreference`;
-            static readonly usePlaceholders: string = `${templates._namespace}.usePlaceholders`;
         }
 
         // tslint:disable-next-line: class-name

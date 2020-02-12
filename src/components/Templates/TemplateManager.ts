@@ -6,7 +6,7 @@ import * as os from 'os';
 import * as FileSystem from '../../core/io/FileSystem';
 import * as EnvironmentVariables from '../../core/framework/EnvironmentVariables';
 import * as _ from 'lodash';
-import { TemplateItem, TemplateType, TemplateFilesystemItem } from './Types';
+import { TemplateItem, TemplateType, TemplateFilesystemItem, TemplateContext } from './Types';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import Quickly from '../../core/Quickly';
 import { TemplateCatalog } from './TemplateCatalog';
@@ -96,7 +96,7 @@ export default class TemplateManager {
      * Populates a workspace folder with the contents of a template
      * @param fsPath current workspace folder to populate
      */
-    async createFromFilesystem(fsPath: string, type:TemplateType, template?:TemplateItem) {
+    async createFromFilesystem(fsPath: string, type:TemplateType, template?:TemplateItem): Promise<TemplateContext> {
         await TemplateManager.createTemplatesDirIfNotExists();
 
         // choose a template
@@ -106,9 +106,8 @@ export default class TemplateManager {
             return;
         }
 
-        await TemplateEngine.executeTemplate(template, fsPath);
-
-        return template;
+        const result = await TemplateEngine.executeTemplate(template, fsPath);
+        return result;
     }
 
     /**

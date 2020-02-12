@@ -151,15 +151,10 @@
 					"default": true,
 					"description": "Show the welcome experience for this extension"
 				},
-				"cs.cds.configuration.templates.placeholders": {
+				"cs.cds.configuration.templates.templateParameters": {
 					"type": "object",
 					"default": {},
-					"description": "List of built in placeholders, in key-value string pairs."
-				},
-				"cs.cds.configuration.templates.placeholderRegExp": {
-					"type": "string",
-					"default": "#{([\\s\\S]+?)}",
-					"description": "Regular expression for detecting placeholders (e.g. \"#{([\\s\\S]+?)}\").  The first capture group dictates the placeholder key."
+					"description": "List of built in parameters to be passed into templates, in key-value string pairs."
 				},
 				"cs.cds.configuration.templates.templatesDirectory": {
 					"type": "string",
@@ -179,11 +174,6 @@
 						"Group by Category"
 					],
 					"description": "Preference for grouping templates in the Template Explorer"
-				},
-				"cs.cds.configuration.templates.usePlaceholders": {
-					"type": "boolean",
-					"default": true,
-					"description": "Look for and replace placeholders in template (e.g. #{author})"
 				}
 			}
 		},

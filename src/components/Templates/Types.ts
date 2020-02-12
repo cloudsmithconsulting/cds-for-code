@@ -95,6 +95,18 @@ export interface Interactive {
     connection?: string;
 }
 
+export enum TemplateCommandExecutionStage {
+    PreRun = "PreRun",
+    PostRun = "PostRun"
+}
+
+export interface TemplateCommand {
+    type: string;
+    stage: TemplateCommandExecutionStage;
+    target?: string;
+    output?: string;
+}
+
 export interface TemplateFileAnalysis {
     destination: string;
     source: string;
@@ -104,13 +116,15 @@ export interface TemplateFileAnalysis {
 
 export class TemplateAnalysis {
     interactives: { [name: string]: Interactive } = {};
+    commands: TemplateCommand[] = [];
     files: TemplateFileAnalysis[] = [];
 }
 
 export class TemplateContext {
-    commands: any[] = [];
+    userCanceled: boolean = false;
+    commands: TemplateCommand[] = [];
     parameters: { [name: string] : any } = {};
-    context: any = {};
+    executionContext: any = {};
 }
 
 export class TemplateFilesystemItem {
