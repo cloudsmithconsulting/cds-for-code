@@ -35,13 +35,8 @@ export default class TemplateEngine {
         }  
 
         const analysis = await this.analyzeTemplate(template, outputPath);
-        const templateContext = await this.buildTemplateContext(analysis);
-
+        const templateContext = await this.buildTemplateContext(analysis, ...object);
         if (templateContext.userCanceled) { return templateContext; }
-
-        templateContext.parameters = Object.assign(templateContext.parameters, ...object);
-        templateContext.parameters = Object.assign(templateContext.parameters, 
-            ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.templateParameters, {}));
 
         await this.executeCommands(templateContext, TemplateCommandExecutionStage.PreRun);
 
@@ -253,7 +248,7 @@ export default class TemplateEngine {
         }
     }
 
-    private static async buildTemplateContext(templateAnalysis: TemplateAnalysis): Promise<TemplateContext> {
+    private static async buildTemplateContext(templateAnalysis: TemplateAnalysis, ...object: any): Promise<TemplateContext> {
         const result = new TemplateContext();
         const interactives = templateAnalysis.interactives;
         const templateInputs = Object.keys(interactives);
@@ -303,6 +298,10 @@ export default class TemplateEngine {
             }
             item = iterator.next();
         }
+
+        result.parameters = Object.assign(result.parameters, ...object);
+        result.parameters = Object.assign(result.parameters, 
+            ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.templateParameters, {}));
 
         result.sourcePath = templateAnalysis.sourcePath;
         result.outputPath = templateAnalysis.outputPath.replace(this.fileNameRegex, (match, key) => result.parameters[key] || match);
