@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as doT from 'dot';
 import * as cs from '../../cs';
 import * as FileSystem from '../../core/io/FileSystem';
-import { TemplateItem, Interactive, TemplateAnalysis, TemplateContext, TemplateCommand, TemplateCommandExecutionStage } from "./Types";
+import { TemplateItem, Interactive, TemplateAnalysis, TemplateContext, TemplateCommand, TemplateCommandExecutionStage, TemplateType } from "./Types";
 import TemplateManager from './TemplateManager';
 import Quickly from '../../core/Quickly';
 import ExtensionContext from '../../core/ExtensionContext';
@@ -29,7 +29,11 @@ export default class TemplateEngine {
         selfcontained: false
     };
 
-    static async executeTemplate(template: TemplateItem, outputPath: string, ...object: any): Promise<TemplateContext> {    
+    static async executeTemplate(template: TemplateItem, outputPath: string, ...object: any): Promise<TemplateContext> {  
+        if (template.type === TemplateType.ItemTemplate && path.extname(outputPath).length === 0) {
+            throw Error(`Item templates must have a full file path`);
+        }  
+
         const analysis = await this.analyzeTemplate(template, outputPath);
         const templateContext = await this.buildTemplateContext(analysis);
 
