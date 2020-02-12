@@ -25,7 +25,7 @@ sidebar_label: "Interactive"
 
 • **connection**? : *string*
 
-Defined in src/components/Templates/Types.ts:99
+Defined in src/components/Templates/Types.ts:95
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 • **items**? : *string[]*
 
-Defined in src/components/Templates/Types.ts:98
+Defined in src/components/Templates/Types.ts:94
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 • **message**: *string*
 
-Defined in src/components/Templates/Types.ts:97
+Defined in src/components/Templates/Types.ts:93
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 • **type**: *string*
 
-Defined in src/components/Templates/Types.ts:96
+Defined in src/components/Templates/Types.ts:92

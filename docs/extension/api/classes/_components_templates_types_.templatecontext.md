@@ -15,24 +15,35 @@ sidebar_label: "TemplateContext"
 ### Properties
 
 * [commands](_components_templates_types_.templatecontext.md#commands)
-* [context](_components_templates_types_.templatecontext.md#context)
+* [executionContext](_components_templates_types_.templatecontext.md#executioncontext)
+* [outputPath](_components_templates_types_.templatecontext.md#outputpath)
 * [parameters](_components_templates_types_.templatecontext.md#parameters)
+* [sourcePath](_components_templates_types_.templatecontext.md#sourcepath)
+* [userCanceled](_components_templates_types_.templatecontext.md#usercanceled)
 
 ## Properties
 
 ###  commands
 
-• **commands**: *any[]* = []
+• **commands**: *[TemplateCommand](../interfaces/_components_templates_types_.templatecommand.md)[]* = []
 
-Defined in src/components/Templates/Types.ts:115
+Defined in src/components/Templates/Types.ts:129
 
 ___
 
-###  context
+###  executionContext
 
-• **context**: *any*
+• **executionContext**: *any*
 
-Defined in src/components/Templates/Types.ts:117
+Defined in src/components/Templates/Types.ts:131
+
+___
+
+###  outputPath
+
+• **outputPath**: *string*
+
+Defined in src/components/Templates/Types.ts:128
 
 ___
 
@@ -40,8 +51,24 @@ ___
 
 • **parameters**: *object*
 
-Defined in src/components/Templates/Types.ts:116
+Defined in src/components/Templates/Types.ts:130
 
 #### Type declaration:
 
 * \[ **name**: *string*\]: any
+
+___
+
+###  sourcePath
+
+• **sourcePath**: *string*
+
+Defined in src/components/Templates/Types.ts:127
+
+___
+
+###  userCanceled
+
+• **userCanceled**: *boolean* = false
+
+Defined in src/components/Templates/Types.ts:126

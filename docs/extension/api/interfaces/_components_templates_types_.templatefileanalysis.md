@@ -25,7 +25,7 @@ sidebar_label: "TemplateFileAnalysis"
 
 • **destination**: *string*
 
-Defined in src/components/Templates/Types.ts:103
+Defined in src/components/Templates/Types.ts:111
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 • **fileContents**: *string | Buffer*
 
-Defined in src/components/Templates/Types.ts:105
+Defined in src/components/Templates/Types.ts:113
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 • **source**: *string*
 
-Defined in src/components/Templates/Types.ts:104
+Defined in src/components/Templates/Types.ts:112
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 • **templateFn**: *doT.RenderFunction*
 
-Defined in src/components/Templates/Types.ts:106
+Defined in src/components/Templates/Types.ts:114

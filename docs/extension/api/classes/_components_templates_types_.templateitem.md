@@ -25,7 +25,6 @@ sidebar_label: "TemplateItem"
 * [location](_components_templates_types_.templateitem.md#optional-location)
 * [name](_components_templates_types_.templateitem.md#optional-name)
 * [outputPath](_components_templates_types_.templateitem.md#optional-outputpath)
-* [placeholders](_components_templates_types_.templateitem.md#optional-placeholders)
 * [publisher](_components_templates_types_.templateitem.md#optional-publisher)
 * [type](_components_templates_types_.templateitem.md#optional-type)
 
@@ -42,9 +41,9 @@ sidebar_label: "TemplateItem"
 
 ###  constructor
 
-\+ **new TemplateItem**(`type?`: [TemplateType](../enums/_components_templates_types_.templatetype.md), `name?`: string, `displayName?`: string, `description?`: string, `publisher?`: string, `location?`: string, `outputPath?`: string, `categories?`: string[], `placeholders?`: [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[], `directives?`: [TemplateDirective](_components_templates_types_.templatedirective.md)[]): *[TemplateItem](_components_templates_types_.templateitem.md)*
+\+ **new TemplateItem**(`type?`: [TemplateType](../enums/_components_templates_types_.templatetype.md), `name?`: string, `displayName?`: string, `description?`: string, `publisher?`: string, `location?`: string, `outputPath?`: string, `categories?`: string[], `directives?`: [TemplateDirective](_components_templates_types_.templatedirective.md)[]): *[TemplateItem](_components_templates_types_.templateitem.md)*
 
-Defined in src/components/Templates/Types.ts:10
+Defined in src/components/Templates/Types.ts:9
 
 **Parameters:**
 
@@ -58,7 +57,6 @@ Name | Type |
 `location?` | string |
 `outputPath?` | string |
 `categories?` | string[] |
-`placeholders?` | [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[] |
 `directives?` | [TemplateDirective](_components_templates_types_.templatedirective.md)[] |
 
 **Returns:** *[TemplateItem](_components_templates_types_.templateitem.md)*
@@ -69,7 +67,7 @@ Name | Type |
 
 • **categories**? : *string[]*
 
-Defined in src/components/Templates/Types.ts:19
+Defined in src/components/Templates/Types.ts:18
 
 ___
 
@@ -77,7 +75,7 @@ ___
 
 • **description**? : *string*
 
-Defined in src/components/Templates/Types.ts:15
+Defined in src/components/Templates/Types.ts:14
 
 ___
 
@@ -85,7 +83,7 @@ ___
 
 • **directives**? : *[TemplateDirective](_components_templates_types_.templatedirective.md)[]*
 
-Defined in src/components/Templates/Types.ts:21
+Defined in src/components/Templates/Types.ts:19
 
 ___
 
@@ -93,7 +91,7 @@ ___
 
 • **displayName**? : *string*
 
-Defined in src/components/Templates/Types.ts:14
+Defined in src/components/Templates/Types.ts:13
 
 ___
 
@@ -101,7 +99,7 @@ ___
 
 • **location**? : *string*
 
-Defined in src/components/Templates/Types.ts:17
+Defined in src/components/Templates/Types.ts:16
 
 ___
 
@@ -109,7 +107,7 @@ ___
 
 • **name**? : *string*
 
-Defined in src/components/Templates/Types.ts:13
+Defined in src/components/Templates/Types.ts:12
 
 ___
 
@@ -117,15 +115,7 @@ ___
 
 • **outputPath**? : *string*
 
-Defined in src/components/Templates/Types.ts:18
-
-___
-
-### `Optional` placeholders
-
-• **placeholders**? : *[TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[]*
-
-Defined in src/components/Templates/Types.ts:20
+Defined in src/components/Templates/Types.ts:17
 
 ___
 
@@ -133,7 +123,7 @@ ___
 
 • **publisher**? : *string*
 
-Defined in src/components/Templates/Types.ts:16
+Defined in src/components/Templates/Types.ts:15
 
 ___
 
@@ -141,7 +131,7 @@ ___
 
 • **type**? : *[TemplateType](../enums/_components_templates_types_.templatetype.md)*
 
-Defined in src/components/Templates/Types.ts:12
+Defined in src/components/Templates/Types.ts:11
 
 ## Methods
 
@@ -149,7 +139,7 @@ Defined in src/components/Templates/Types.ts:12
 
 ▸ **apply**(`outputPath`: string, ...`object`: any): *Promise‹void›*
 
-Defined in src/components/Templates/Types.ts:41
+Defined in src/components/Templates/Types.ts:37
 
 **Parameters:**
 
@@ -166,7 +156,7 @@ ___
 
 ▸ **load**(`filename?`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/Types.ts:48
+Defined in src/components/Templates/Types.ts:44
 
 **Parameters:**
 
@@ -182,7 +172,7 @@ ___
 
 ▸ **save**(`filename?`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/Types.ts:52
+Defined in src/components/Templates/Types.ts:48
 
 **Parameters:**
 
@@ -198,7 +188,7 @@ ___
 
 ▸ **from**(`from`: [TemplateItem](_components_templates_types_.templateitem.md)): *[TemplateItem](_components_templates_types_.templateitem.md)*
 
-Defined in src/components/Templates/Types.ts:27
+Defined in src/components/Templates/Types.ts:24
 
 **Parameters:**
 
@@ -214,7 +204,7 @@ ___
 
 ▸ **read**(`filename`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/Types.ts:56
+Defined in src/components/Templates/Types.ts:52
 
 **Parameters:**
 
@@ -230,7 +220,7 @@ ___
 
 ▸ **write**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `filename`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/Types.ts:75
+Defined in src/components/Templates/Types.ts:71
 
 **Parameters:**
 
