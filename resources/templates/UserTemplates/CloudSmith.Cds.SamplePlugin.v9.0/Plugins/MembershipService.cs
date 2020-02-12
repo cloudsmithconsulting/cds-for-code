@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace {{=$.parameters.Namespace}}.Plugins
+namespace {{=$this.parameters.Namespace}}.Plugins
 {
     public class MembershipService
     {

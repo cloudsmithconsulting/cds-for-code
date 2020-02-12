@@ -1,2 +1,3 @@
-{{#def.prompt('Namespace', 'Please enter the Namespace')}}
-{{#def.prompt('PluginName', 'Please enter the PluginName')}}
+{{#def.ui.prompt('Namespace', 'Please enter the Namespace')}}
+{{#def.ui.prompt('PluginName', 'Please enter the PluginName')}}
+{{#def.run.dotnet('build')}}

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xrm.Sdk;
 using System;
 
-namespace {{=$.parameters.Namespace}}.Plugins
+namespace {{=$this.parameters.Namespace}}.Plugins
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public sealed class AllowedMessageAttribute : DynamicsPluginAttribute

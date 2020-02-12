@@ -18,7 +18,7 @@ import TemplateManager from "../components/Templates/TemplateManager";
  * @returns void
  */
 export default async function run(this: TemplateManager, destinationUri?: vscode.Uri, type?:TemplateType, template?:TemplateItem): Promise<void> {
-	let path:string;
+    let path:string;
 
     if (template && !type) {
         type = template.type;
@@ -28,6 +28,12 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
     if (!type) {
         logger.warn(`Command: ${cs.cds.templates.createFromTemplate} Template not chosen, command cancelled`);
         return; 
+    }
+
+    template = template || await Quickly.pickTemplate("Choose a template that you would like to create.", type);
+    if (!template) {
+        logger.warn(`Command: ${cs.cds.templates.createFromTemplate} Template not chosen, command cancelled`);
+        return;
     }
 
     if (!destinationUri || !destinationUri.fsPath || !FileSystem.exists(destinationUri.fsPath)) {
@@ -43,7 +49,7 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
                     const filename = await Quickly.ask("What would you like to call the file that is created?");
                     if (!filename) { return; }
 
-                    path = p.join(path, filename);
+                    path = `${p.join(path, filename + p.extname(template.location))}`;
                 } else {
                     path = fileItem.fsPath;
                 }
@@ -59,6 +65,13 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
         logger.warn(`Command: ${cs.cds.templates.createFromTemplate} Path not chosen, command cancelled`);
 
         return;
+    }
+
+    if (type === TemplateType.ItemTemplate && p.extname(path).length === 0) {
+        const filename = await Quickly.ask("What would you like to call the file that is created?");
+        if (!filename) { return; }
+
+        path = `${p.join(path, filename + p.extname(template.location))}`;
     }
 
     // load latest configuration

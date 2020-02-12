@@ -106,6 +106,13 @@ export default class TemplateManager {
             return;
         }
 
+        if (type === TemplateType.ItemTemplate && path.extname(fsPath).length === 0) {
+            const filename = await Quickly.ask("What would you like to call the file that is created?");
+            if (!filename) { return; }
+    
+            fsPath = `${path.join(fsPath, filename + path.extname(template.location))}`;
+        }
+
         const result = await TemplateEngine.executeTemplate(template, fsPath);
         return result;
     }

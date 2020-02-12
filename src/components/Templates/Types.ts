@@ -102,8 +102,8 @@ export enum TemplateCommandExecutionStage {
 
 export interface TemplateCommand {
     type: string;
+    commandArgs: string;
     stage: TemplateCommandExecutionStage;
-    target?: string;
     output?: string;
 }
 
@@ -115,6 +115,8 @@ export interface TemplateFileAnalysis {
 }
 
 export class TemplateAnalysis {
+    sourcePath: string;
+    outputPath: string;
     interactives: { [name: string]: Interactive } = {};
     commands: TemplateCommand[] = [];
     files: TemplateFileAnalysis[] = [];
@@ -122,6 +124,8 @@ export class TemplateAnalysis {
 
 export class TemplateContext {
     userCanceled: boolean = false;
+    sourcePath: string;
+    outputPath: string;
     commands: TemplateCommand[] = [];
     parameters: { [name: string] : any } = {};
     executionContext: any = {};

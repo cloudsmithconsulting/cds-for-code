@@ -23,7 +23,7 @@ export default class TemplateEngine {
         defineParams: /^\s*([\w$]+):([\s\S]+)/,
         conditional: /\{\{\?(\?)?\s*([\s\S]*?)\s*\}\}\n?/g,
         iterate: /\{\{~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\}\})\n?/g,
-        varname: '$',
+        varname: '$this',
         strip: false,
         append: true,
         selfcontained: false
@@ -48,9 +48,7 @@ export default class TemplateEngine {
                 continue;
             }            
 
-            const destination = file.destination.replace(this.fileNameRegex, (match, key) => {
-                return templateContext.parameters[key] || match;
-            });
+            const destination = file.destination.replace(this.fileNameRegex, (match, key) => templateContext.parameters[key] || match);
 
             templateContext.executionContext.currentFile = {
                 source: file.source,
@@ -97,87 +95,77 @@ export default class TemplateEngine {
         const interactives: { [name: string]: Interactive } = {};
         const commands: TemplateCommand[] = [];
 
-        const allTemplatePaths = (path.isAbsolute(templatePath) && !FileSystem.stats(templatePath).isDirectory())
+        const allTemplatePaths = !FileSystem.stats(templatePath).isDirectory()
             ? [ templatePath ]
             : FileSystem.walkSync(templatePath);
 
         const templateDefs = {
-            prompt(name: string, message: string) {
-                interactives[name] = {
-                    type: 'prompt',
-                    message
-                };
-                return '';
+            ui: {
+                prompt(name: string, message: string) {
+                    interactives[name] = {
+                        type: 'prompt',
+                        message
+                    };
+                    return '';
+                },
+                select(name: string, message: string, items: string[]) {
+                    interactives[name] = {
+                        type: 'select',
+                        message,
+                        items
+                    };
+                    return '';
+                },
+                confirm(name: string, message: string) {
+                    interactives[name] = {
+                        type: 'confirm',
+                        message
+                    };
+                    return '';
+                },
+                cdsSolution(name: string, message: string, connection: string) {
+                    interactives[name] = {
+                        type: 'cdsSolution',
+                        message: message,
+                        connection: connection
+                    };
+                    return '';
+                },
+                cdsConnection(name: string, message: string) {
+                    interactives[name] = {
+                        type: 'cdsConnection',
+                        message: message
+                    };
+                    return '';
+                }
             },
-            select(name: string, message: string, items: string[]) {
-                interactives[name] = {
-                    type: 'select',
-                    message,
-                    items
-                };
-                return '';
-            },
-            confirm(name: string, message: string) {
-                interactives[name] = {
-                    type: 'confirm',
-                    message
-                };
-                return '';
-            },
-            cdsSolution(name: string, message: string, connection: string) {
-                interactives[name] = {
-                    type: 'cdsSolution',
-                    message: message,
-                    connection: connection
-                };
-                return '';
-            },
-            cdsConnection(name: string, message: string) {
-                interactives[name] = {
-                    type: 'cdsConnection',
-                    message: message
-                };
-                return '';
-            },
-            dotnetBuild(fileName?: string) {
-                commands.push({
-                    type: 'dotnetBuild',
-                    target: fileName,
-                    stage: TemplateCommandExecutionStage.PostRun
-                });
-                return '';
-            },
-            dotnetTest(fileName?: string) {
-                commands.push({
-                    type: 'dotnetTest',
-                    target: fileName,
-                    stage: TemplateCommandExecutionStage.PostRun
-                });
-                return '';
-            },
-            dotnetRestore(fileName?: string) {
-                commands.push({
-                    type: 'dotnetRestore',
-                    target: fileName,
-                    stage: TemplateCommandExecutionStage.PostRun
-                });
-                return '';
-            },
-            npmInstall() {
-                commands.push({
-                    type: 'npmInstall',
-                    stage: TemplateCommandExecutionStage.PostRun
-                });
+            run: {
+                dotnet(commandArgs: string) {
+                    commands.push({
+                        type: 'dotnet',
+                        commandArgs,
+                        stage: TemplateCommandExecutionStage.PostRun
+                    });
+                    return '';
+                },
+                npm(commandArgs: string) {
+                    commands.push({
+                        type: 'npm',
+                        commandArgs,
+                        stage: TemplateCommandExecutionStage.PostRun
+                    });
+                }
             }
         };
 
         for (let i = 0; i < allTemplatePaths.length; i++) {
             const source = allTemplatePaths[i];
+            const fileContents = fs.readFileSync(source);
             const directive = template.directives?.find(d => d.name === path.basename(source));
-            const destination =  !source.toLowerCase().endsWith('.def')
+            
+            const destination = !source.toLowerCase().endsWith('.def')
                 ? source.replace(templatePath, outputPath)
                 : '';
-            const fileContents = fs.readFileSync(source);
             
             let templateFn;
             try {
@@ -194,7 +182,7 @@ export default class TemplateEngine {
                 let key = match[1];
                 interactives[key] = interactives[key] || {
                     type: 'prompt',
-                    message: `Please supply a value for ${key}`
+                    message: `Please enter a file name for ${key}`
                 };
             }
 
@@ -206,6 +194,8 @@ export default class TemplateEngine {
             });
         }
 
+        result.sourcePath = templatePath;
+        result.outputPath = outputPath;
         result.commands = commands;
         result.interactives = interactives;
 
@@ -216,55 +206,24 @@ export default class TemplateEngine {
         const commands = templateContext.commands.filter(s => s.stage === stage);
         for (let i = 0; i < commands.length; i++) {
             const command = commands[i];
+
+            const rootPath = FileSystem.stats(templateContext.outputPath).isDirectory()
+                ? templateContext.outputPath
+                : path.dirname(templateContext.outputPath);
             
             switch (command.type) {
-                case 'dotnetBuild': {
-                    const targetFile = command.target || ".sln";
-                    const fileMap = this.extractFileMap(templateContext, targetFile);
-                   
-                    if (!fileMap) { continue; }
-                   
-                    command.output = await TerminalManager.showTerminal(fileMap.parentDir)
+                case 'dotnet': {
+                    command.output = await TerminalManager.showTerminal(rootPath)
                         .then(async terminal => { 
-                            return await terminal.run(new TerminalCommand(`dotnet build "${fileMap.destination}"`))
+                            return await terminal.run(new TerminalCommand(`dotnet ${command.commandArgs}`))
                                 .then(async tc => tc.output);                      
                         });
                 }
                     break;
-                case 'dotnetTest': {
-                    const targetFile = command.target || ".sln";
-                    const fileMap = this.extractFileMap(templateContext, targetFile);
-                    
-                    if (!fileMap) { continue; }
-                    
-                    command.output = await TerminalManager.showTerminal(fileMap.parentDir)
+                case 'npm': {
+                    command.output = await TerminalManager.showTerminal(rootPath)
                         .then(async terminal => { 
-                            return await terminal.run(new TerminalCommand(`dotnet test "${fileMap.destination}"`))
-                                .then(async tc => tc.output);                      
-                        });
-                }
-                    break;
-                case 'dotnetRestore': {
-                    const targetFile = command.target || ".sln";
-                    const fileMap = this.extractFileMap(templateContext, targetFile);
-                    
-                    if (!fileMap) { continue; }
-                    
-                    command.output = await TerminalManager.showTerminal(fileMap.parentDir)
-                        .then(async terminal => { 
-                            return await terminal.run(new TerminalCommand(`dotnet restore "${fileMap.destination}"`))
-                                .then(async tc => tc.output);                      
-                        });
-                }
-                    break;
-                case 'npmInstall': {
-                    const fileMap = this.extractFileMap(templateContext, '\\package.json');
-                    
-                    if (!fileMap) { continue; }
-                    
-                    command.output = await TerminalManager.showTerminal(fileMap.parentDir)
-                        .then(async terminal => { 
-                            return await terminal.run(new TerminalCommand(`npm install`))
+                            return await terminal.run(new TerminalCommand(`npm ${command.commandArgs}`))
                                 .then(async tc => tc.output);                      
                         });
                 }
@@ -273,20 +232,8 @@ export default class TemplateEngine {
         }
     }
 
-    private static extractFileMap(templateContext: TemplateContext, name: string): any {
-        const fileMap = templateContext.executionContext.processedFiles.find(f => f.source.endsWith(name));
-        if (!fileMap) { return null; }
-        return {
-            source: fileMap.source,
-            destination: fileMap.destination,
-            parentDir: path.dirname(fileMap.destination) 
-        };
-    }
-
     private static async buildTemplateContext(templateAnalysis: TemplateAnalysis): Promise<TemplateContext> {
         const result = new TemplateContext();
-        result.commands = templateAnalysis.commands;
-
         const interactives = templateAnalysis.interactives;
         const templateInputs = Object.keys(interactives);
         const iterator = templateInputs[Symbol.iterator]();
@@ -335,6 +282,10 @@ export default class TemplateEngine {
             }
             item = iterator.next();
         }
+
+        result.sourcePath = templateAnalysis.sourcePath;
+        result.outputPath = templateAnalysis.outputPath.replace(this.fileNameRegex, (match, key) => result.parameters[key] || match);
+        result.commands = templateAnalysis.commands;
 
         return result;
     }
