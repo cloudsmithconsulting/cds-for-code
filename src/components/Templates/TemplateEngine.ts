@@ -158,6 +158,15 @@ export default class TemplateEngine {
                         commandArgs,
                         stage: TemplateCommandExecutionStage.PostRun
                     });
+                    return '';
+                },
+                powershell(commandArgs: string) {
+                    commands.push({
+                        type: 'powershell',
+                        commandArgs,
+                        stage: TemplateCommandExecutionStage.PostRun
+                    });
+                    return '';
                 }
             }
         };
@@ -228,6 +237,14 @@ export default class TemplateEngine {
                     command.output = await TerminalManager.showTerminal(rootPath)
                         .then(async terminal => { 
                             return await terminal.run(new TerminalCommand(`npm ${command.commandArgs}`))
+                                .then(async tc => tc.output);                      
+                        });
+                }
+                    break;
+                case 'powershell': {
+                    command.output = await TerminalManager.showTerminal(rootPath)
+                        .then(async terminal => { 
+                            return await terminal.run(new TerminalCommand(`${command.commandArgs}`))
                                 .then(async tc => tc.output);                      
                         });
                 }
