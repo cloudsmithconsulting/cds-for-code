@@ -16,6 +16,7 @@ sidebar_label: "cds"
 
 ### Classes
 
+* [data](../classes/_cs_.cds.data.md)
 * [deployment](../classes/_cs_.cds.deployment.md)
 * [errors](../classes/_cs_.cds.errors.md)
 * [extension](../classes/_cs_.cds.extension.md)

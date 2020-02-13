@@ -33,7 +33,7 @@ sidebar_label: "api/cds-webapi/odata/sendRequest"
 
 • **_entityNames**: *any*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:15
+Defined in src/api/cds-webapi/odata/sendRequest.ts:16
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 • **batchRequestCollection**: *any[]* = []
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:117
+Defined in src/api/cds-webapi/odata/sendRequest.ts:118
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 • **responseParseParams**: *any[]* = []
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:118
+Defined in src/api/cds-webapi/odata/sendRequest.ts:119
 
 ## Functions
 
@@ -57,7 +57,7 @@ Defined in src/api/cds-webapi/odata/sendRequest.ts:118
 
 ▸ **_getCollectionName**(`entityName`: string, `config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `resolve?`: function, `reject?`: function): *void*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:377
+Defined in src/api/cds-webapi/odata/sendRequest.ts:382
 
 **Parameters:**
 
@@ -93,7 +93,7 @@ ___
 
 ▸ **_getEntityNames**(`entityName`: string, `config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `successCallback?`: function, `errorCallback?`: function): *void*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:318
+Defined in src/api/cds-webapi/odata/sendRequest.ts:323
 
 **Parameters:**
 
@@ -129,7 +129,7 @@ ___
 
 ▸ **_isEntityNameException**(`entityName`: string): *boolean*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:369
+Defined in src/api/cds-webapi/odata/sendRequest.ts:374
 
 **Parameters:**
 
@@ -145,7 +145,7 @@ ___
 
 ▸ **defaultAuthRetry**(`config`: any): *boolean*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:17
+Defined in src/api/cds-webapi/odata/sendRequest.ts:18
 
 **Parameters:**
 
@@ -161,7 +161,7 @@ ___
 
 ▸ **findCollectionName**(`entityName`: string): *string*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:26
+Defined in src/api/cds-webapi/odata/sendRequest.ts:27
 
 Searches for a collection name by provided entity name in a cached entity metadata.
 The returned collection name can be null.
@@ -182,7 +182,7 @@ ___
 
 ▸ **makeDiscoveryRequest**(`request`: any, `config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `resolve?`: function, `reject?`: function): *void*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:405
+Defined in src/api/cds-webapi/odata/sendRequest.ts:410
 
 **Parameters:**
 
@@ -218,7 +218,7 @@ ___
 
 ▸ **makeRequest**(`method`: string, `request`: any, `functionName`: string, `config`: any, `responseParams?`: any, `resolve?`: function, `reject?`: function): *void*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:425
+Defined in src/api/cds-webapi/odata/sendRequest.ts:430
 
 **Parameters:**
 
@@ -260,7 +260,7 @@ ___
 
 ▸ **sendRequest**(`method`: string, `path`: string, `config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `data`: any, `additionalHeaders`: object, `responseParams`: any, `successCallback`: function, `errorCallback`: function, `isBatch`: boolean, `isAsync`: boolean, `isDiscovery?`: boolean, `authRetry?`: function): *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:136
+Defined in src/api/cds-webapi/odata/sendRequest.ts:137
 
 Sends a request to given URL with given parameters
 
@@ -332,7 +332,7 @@ ___
 
 ▸ **setStandardHeaders**(`additionalHeaders`: object): *object*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:50
+Defined in src/api/cds-webapi/odata/sendRequest.ts:51
 
 **Parameters:**
 
@@ -350,7 +350,7 @@ ___
 
 ▸ **stringifyData**(`data`: any, `config`: any): *any*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:59
+Defined in src/api/cds-webapi/odata/sendRequest.ts:60
 
 **Parameters:**
 
