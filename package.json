@@ -119,7 +119,7 @@
 				},
 				"cs.cds.configuration.tools.updateChannel": {
 					"type": "string",
-					"default": "stable",
+					"default": "preview",
 					"enum": [
 						"stable",
 						"preview"

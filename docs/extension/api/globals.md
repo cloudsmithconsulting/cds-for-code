@@ -31,6 +31,7 @@ sidebar_label: "Globals"
 * ["api/cds-webapi/utilities/BatchConverter"](modules/_api_cds_webapi_utilities_batchconverter_.md)
 * ["api/cds-webapi/utilities/RequestConverter"](modules/_api_cds_webapi_utilities_requestconverter_.md)
 * ["api/cds-webapi/utilities/Utility"](modules/_api_cds_webapi_utilities_utility_.md)
+* ["commands/cs.cds.data.getFaker"](modules/_commands_cs_cds_data_getfaker_.md)
 * ["commands/cs.cds.deployment.addSolutionComponent"](modules/_commands_cs_cds_deployment_addsolutioncomponent_.md)
 * ["commands/cs.cds.deployment.compareWebResource"](modules/_commands_cs_cds_deployment_comparewebresource_.md)
 * ["commands/cs.cds.deployment.createCrmSvcUtilConfig"](modules/_commands_cs_cds_deployment_createcrmsvcutilconfig_.md)
