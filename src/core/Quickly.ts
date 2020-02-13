@@ -492,7 +492,7 @@ export default class Quickly {
     }
 
     static async pickCdsSolutionComponent(config:CdsWebApi.Config, solution:any, componentType:CdsSolutions.SolutionComponent, filterExpression?:string, placeHolder?:string): Promise<{ componentId:string, component:any }> {
-        const options:QuickPickOption[] = [];
+        const options: QuickPickOption[] = [];
         const metadataApi = new MetadataRepository(config);
         const api = new ApiRepository(config);
 

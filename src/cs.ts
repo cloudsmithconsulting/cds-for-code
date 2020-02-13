@@ -2,6 +2,12 @@ import * as vscode from "vscode";
 
 export namespace cds {
 
+    // tslint:disable-next-line: class-name
+    export class data {
+        static readonly _namespace: string = "cs.cds.data";
+        static readonly getFaker: string = `${data._namespace}.getFaker`;
+    }
+
     /**
      * Static values related to deployment tasks in the CDS for Code extension
      *

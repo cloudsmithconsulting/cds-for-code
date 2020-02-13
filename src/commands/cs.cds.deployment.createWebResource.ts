@@ -167,10 +167,14 @@ export default async function run(this: WebResourceManager, config?:CdsWebApi.Co
     if (!solution && ((!map || !map.solutionId) && !solutionId)) {
         solution = await Quickly.pickCdsSolution(config, "Would you like to add this web resource to a solution?");
         map = await this.getSolutionMapping(undefined, config.orgId, solution.solutionid);
+    } else if (!solution && (map?.solutionId || solutionId)) {
+        solution = await api.retrieveSolution(map?.solutionId || solutionId);
     }
 
     try {
-        if (solution && map) {
+        let shouldPublish: boolean = false;
+
+        if (map && solution) {
             logger.info(`Command: ${cs.cds.deployment.createWebResource} Web Resource: ${webResource.name} is mapped to solution ${solution.uniquename}`);
 
             // We are pretty sure adding root nodes to customizations.xml is only required in 9.1+
@@ -186,6 +190,7 @@ export default async function run(this: WebResourceManager, config?:CdsWebApi.Co
         } else {
             logger.info(`Command: ${cs.cds.deployment.createWebResource} Web Resource: ${webResource.name} is not mapped to a solution.  Creating web resource on ${config.appUrl}`);
 
+            shouldPublish = true;
             webResource = await this.upsertWebResource(config, webResource, solution);
 
             if (inform) {
@@ -193,7 +198,7 @@ export default async function run(this: WebResourceManager, config?:CdsWebApi.Co
             }
         }
 
-        return { webResource, fsPath };
+        return { webResource, fsPath, shouldPublish };
     } catch (error) {
         logger.error(`Command: ${cs.cds.deployment.createWebResource} Error saving web resource: ${error.message}`);
         
