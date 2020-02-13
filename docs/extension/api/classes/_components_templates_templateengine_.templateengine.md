@@ -41,7 +41,7 @@ Defined in src/components/Templates/TemplateEngine.ts:15
 
 ▸ **analyzeTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `outputPath?`: string): *Promise‹[TemplateAnalysis](_components_templates_types_.templateanalysis.md)›*
 
-Defined in src/components/Templates/TemplateEngine.ts:79
+Defined in src/components/Templates/TemplateEngine.ts:78
 
 **Parameters:**
 
@@ -56,15 +56,16 @@ ___
 
 ### `Static` `Private` buildTemplateContext
 
-▸ **buildTemplateContext**(`templateAnalysis`: [TemplateAnalysis](_components_templates_types_.templateanalysis.md)): *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
+▸ **buildTemplateContext**(`templateAnalysis`: [TemplateAnalysis](_components_templates_types_.templateanalysis.md), ...`object`: any): *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
 
-Defined in src/components/Templates/TemplateEngine.ts:235
+Defined in src/components/Templates/TemplateEngine.ts:251
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `templateAnalysis` | [TemplateAnalysis](_components_templates_types_.templateanalysis.md) |
+`...object` | any |
 
 **Returns:** *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
 
@@ -74,7 +75,7 @@ ___
 
 ▸ **executeCommands**(`templateContext`: [TemplateContext](_components_templates_types_.templatecontext.md), `stage`: [TemplateCommandExecutionStage](../enums/_components_templates_types_.templatecommandexecutionstage.md)): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateEngine.ts:205
+Defined in src/components/Templates/TemplateEngine.ts:213
 
 **Parameters:**
 
