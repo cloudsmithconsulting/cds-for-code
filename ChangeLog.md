@@ -12,7 +12,13 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 
 ## v0.8 Early Preview - December 2019 - January 2020
 
-> Release 0.8.11 will likely be the last release in the 0.8 branch.  We look forward to shipping some exciting new features in 0.9 for evaluation soon!
+### v0.8.12 (February 13, 2020)
+
+- Bugfix: Users received &quot;Authentication for this request failed.&quot; error when accessing non-US environments (reported on GitHub) ([GitHub Issue #10](https://github.com/cloudsmithconsulting/cds-for-code/issues/10) | [#636](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/636/))
+- Bugfix: Deploying web resources under locations not in the solution root fails under certain circumstances ([#637](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/637/))
+- Bugfix: Users received error &quot;Errors occurred while saving web resource: Property _modifiedonbehalfby_value cannot be updated to null. The reference property can only be deleted.&quot; when deploying web resource file to CDS outside of a solution not using the "New Web Resource" command ([#638](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/638/))
+- Bugfix: Web Resources do not expand under Solutions in the treeview if you've experienced issue #637 ([#639](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/639/))
+- Bugfix: Editing a connection fails after you encountered issue #637 ([#640](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/640/))
 
 ### v0.8.11 (February 6, 2020)
 
