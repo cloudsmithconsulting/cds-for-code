@@ -17,8 +17,8 @@ export class TemplateItem {
         public outputPath?: string,
         public categories?: string[],
         public directives?: TemplateDirective[]) { 
-        if (!categories) { categories = []; }
-        if (!directives) { directives = []; }
+        if (!categories) { this.categories = []; }
+        if (!directives) { this.directives = []; }
     }
 
     static from(from:TemplateItem): TemplateItem {
@@ -30,8 +30,28 @@ export class TemplateItem {
             from.publisher,
             from.location, 
             from.outputPath,
-            from.categories,
-            from.directives);
+            from.categories || [],
+            from.directives || []);
+    }
+
+    static merge(to: TemplateItem, from: TemplateItem) : TemplateItem {
+        const result = new TemplateItem(
+            from.type || to.type, 
+            from.name || to.name,
+            from.displayName || to.displayName, 
+            from.description || to.description, 
+            from.publisher || to.publisher,
+            from.location || to.location, 
+            from.outputPath || to.outputPath);
+        
+        result.categories = to.categories.concat(from.categories || []);
+        result.directives = to.directives;
+        
+        if (from.directives?.length > 0) {
+            result.directives.push(...from.directives);
+        }
+
+        return result;
     }
     
     async apply(outputPath: string, ...object: any): Promise<void> {
@@ -120,6 +140,7 @@ export class TemplateAnalysis {
     interactives: { [name: string]: Interactive } = {};
     commands: TemplateCommand[] = [];
     files: TemplateFileAnalysis[] = [];
+    template: TemplateItem;
 }
 
 export class TemplateContext {

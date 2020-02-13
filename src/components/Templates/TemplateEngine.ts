@@ -99,6 +99,10 @@ export default class TemplateEngine {
             : FileSystem.walkSync(templatePath);
 
         const templateDefs = {
+            template(item: TemplateItem) {
+                result.template = result.template || new TemplateItem();
+                result.template = TemplateItem.merge(result.template, item);
+            },
             ui: {
                 prompt(name: string, message: string) {
                     interactives[name] = {
