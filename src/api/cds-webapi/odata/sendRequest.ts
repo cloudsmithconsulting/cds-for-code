@@ -7,10 +7,11 @@ import nodeJsRequest from "../../../core/http/nodeJsRequest";
 import odataResponseNodeJs from "./odataResponse.nodejs";
 import odataResponseXhr from "./odataResponse.xhr";
 import { CdsWebApi } from "../CdsWebApi";
-import { Credential, OAuthCredential } from '../../../core/security/Types';
+import { Credential, OAuthCredential, CdsOnlineCredential } from '../../../core/security/Types';
 import Quickly from '../../../core/Quickly';
 import { isatty } from 'tty';
 import logger from '../../../core/framework/Logger';
+import { Utilities } from '../../../core/Utilities';
 
 let _entityNames;
 
@@ -284,18 +285,20 @@ export function sendRequest(
             if ((<OAuthCredential>config.credentials).accessToken) {
                 sendInternalRequest((<OAuthCredential>config.credentials).accessToken);
             } else {
+                // https://colinvermander.com/2017/01/19/calling-the-dynamics-global-discovery-service/ provides details into this flow.
                 Authentication(
                     config.id, 
                     config.credentials, 
-                    isDiscovery && config.type === CdsWebApi.ConfigType.Online ? `https://disco.${Utility.crmHostSuffix(config.webApiUrl)}/` : (<any>config.credentials).resource, 
+                    isDiscovery && config.type === CdsWebApi.ConfigType.Online ? Utilities.String.withTrailingSlash(CdsOnlineCredential.defaultResource) : (<any>config.credentials).resource, 
                     { timeout: config.timeout || CdsWebApi.WebApiClient.defaultTimeout })
                     .then(auth => {
                         if (!auth.success) {
                             config.onTokenRefresh(sendInternalRequest);
                         } else {
                             config.credentials = auth.credentials || config.credentials;
-                            sendInternalRequest(auth.response);
                         }
+
+                        sendInternalRequest(auth.response);
                     }).catch(error => {
                         if (error instanceof AuthenticationError) {
                             const type = (<AuthenticationError>error).type || "unknown_type";
@@ -306,6 +309,8 @@ export function sendRequest(
                         } else {
                             Quickly.error("Authentication for this request failed.");
                         }
+
+                        errorCallback(error);
                     });
             }
         }
