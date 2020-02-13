@@ -1,248 +1,312 @@
 import * as vscode from 'vscode';
-import * as _ from 'lodash';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as doT from 'dot';
 import * as cs from '../../cs';
-import { TemplateItem, TemplatePlaceholder } from './Types';
-import Dictionary from '../../core/types/Dictionary';
 import * as FileSystem from '../../core/io/FileSystem';
-import ExtensionConfiguration from '../../core/ExtensionConfiguration';
-import { Utilities } from '../../core/Utilities';
+import { TemplateItem, Interactive, TemplateAnalysis, TemplateContext, TemplateCommand, TemplateCommandExecutionStage, TemplateType } from "./Types";
+import TemplateManager from './TemplateManager';
 import Quickly from '../../core/Quickly';
+import ExtensionContext from '../../core/ExtensionContext';
+import TerminalManager, { TerminalCommand } from '../Terminal/SecureTerminal';
+import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 
 export default class TemplateEngine {
-    //static apply() {}
-    //static analyize() {}
+    private static readonly fileNameRegex = /\$\{([\s\S]+?)\}/g;
+    private static readonly dotSettings: doT.TemplateSettings = {
+        evaluate: /\{\{([\s\S]+?)\}\}\n?/g,
+        interpolate: /\{\{=([\s\S]+?)\}\}/g,
+        encode: /\{\{!([\s\S]+?)\}\}\n?/g,
+        use: /.*?\{\{#([\s\S]+?)\}\}\n?/g,
+        useParams: /(^|[^\w$])def(?:\.|\[[\'\"])([\w$\.]+)(?:[\'\"]\])?\s*\:\s*([\w$\.]+|\"[^\"]+\"|\'[^\']+\'|\{[^\}]+\})/g,
+        define: /.*?\{\{##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\}\}\n?/g,
+        defineParams: /^\s*([\w$]+):([\s\S]+)/,
+        conditional: /\{\{\?(\?)?\s*([\s\S]*?)\s*\}\}\n?/g,
+        iterate: /\{\{~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\}\})\n?/g,
+        varname: '$this',
+        strip: false,
+        append: true,
+        selfcontained: false
+    };
 
-    static async applyTemplate(template: TemplateItem, data:string | Buffer, placeholders?: Dictionary<string, string>, object?: any): Promise<string | Buffer> {
-        const usePlaceholders = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.usePlaceholders, false);
-        const placeholderRegExp = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.placeholderRegExp, "#{([\\s\\S]+?)}");
-        placeholders = placeholders || ExtensionConfiguration.getConfigurationValueOrDefault<Dictionary<string, string>>(cs.cds.configuration.templates.placeholders, new Dictionary<string, string>());
+    static async executeTemplate(template: TemplateItem, outputPath: string, ...object: any): Promise<TemplateContext> {  
+        if (template.type === TemplateType.ItemTemplate && path.extname(outputPath).length === 0) {
+            throw Error(`Item templates must have a full file path`);
+        }  
 
-        const resolver = (data:string | Buffer, placeholderRegExp:RegExp) => {
-            // use custom delimiter #{ }
-            _.templateSettings.interpolate = placeholderRegExp;
-            // compile the template
-            const compiled = _.template(data.toString());
+        const analysis = await this.analyzeTemplate(template, outputPath);
+        const templateContext = await this.buildTemplateContext(analysis, ...object);
+        if (templateContext.userCanceled) { return templateContext; }
 
-            return compiled(object);
-        };
+        await this.executeCommands(templateContext, TemplateCommandExecutionStage.PreRun);
 
-        if (usePlaceholders && placeholderRegExp) {
-            const returnValue = await this.resolvePlaceholders(data, placeholderRegExp, placeholders, template, object ? [ resolver ] : undefined);
+        for (let i = 0; i < analysis.files.length; i++) {
+            const file = analysis.files[i];
 
-            return returnValue;
-        }
-    }
-
-     /**
-     * Replaces any placeholders found within the input data.  Will use a 
-     * dictionary of values from the user's workspace settings, or will prompt
-     * if value is not known.
-     * 
-     * @param data input data
-     * @param placeholderRegExp  regular expression to use for detecting 
-     *                           placeholders.  The first capture group is used
-     *                           as the key.
-     * @param placeholders dictionary of placeholder key-value pairs
-     * @returns the (potentially) modified data, with the same type as the input data 
-     */
-    static async resolvePlaceholders(
-        data: string | Buffer, 
-        placeholderRegExp: string,
-        placeholders: Dictionary<string, string>,
-        templateInfo: TemplateItem,
-        resolvers?:((data:string | Buffer, placeholderRegExp:RegExp, template?:TemplateItem, defaultPlaceholders?:Dictionary<string, string>) => string | Buffer)[]): Promise<string | Buffer> {
-
-        // resolve each placeholder
-        const regex = RegExp(placeholderRegExp, 'g');
-
-        placeholders = placeholders || new Dictionary<string, string>();
-        resolvers = resolvers || [];
-
-        data = await this.defaultResolver(data, regex, templateInfo, placeholders);
-
-        if (resolvers && resolvers.length > 0) {
-            await resolvers.forEach(async resolver => {
-                data = await resolver(data, regex, templateInfo, placeholders);
-            });
-        }
-
-        return data;
-    }
-
-    private static async defaultResolver(data:string | Buffer, placeholderRegExp:RegExp, template?:TemplateItem, defaultPlaceholders?:Dictionary<string, string>): Promise<string | Buffer> {
-        let encoding: string = "utf8";
-        let isBuffer: boolean = false;
-
-        if (Buffer.isBuffer(data)) {
-            // get default encoding
-            encoding = vscode.workspace.getConfiguration('files').get("files.encoding", "utf8");
-            isBuffer = true;
-
-            try {
-                data = data.toString(encoding);
-            } catch(error) {
-                // cannot decipher text from encoding, assume raw data
-                return data;
-            }
-        } else {
-            data = data;
-        }
-
-        let match;
-        let nmatches = 0;
-        let placeholders = defaultPlaceholders || new Dictionary<string, string>();
-
-        while (match = placeholderRegExp.exec(<string>data)) {
-            let key = match[1];
-            let val : string | undefined = placeholders[key];
-            let placeholderItem;
-
-            if (template.placeholders && template.placeholders.length > 0) {
-                placeholderItem = <TemplatePlaceholder>template.placeholders.find(p => p.name === key);
-            }
-
-            let attempts:number = 0;
-            let cancel:boolean = false;
-
-            // This parser can't compile object expressions.
-            if (key && key.indexOf(".") > -1) {
+            if (file.destination?.length === 0) {
                 continue;
-            }
+            }            
 
-            while ((!val && attempts === 0) || (!val && placeholderItem && placeholderItem.required) || !cancel) {
-                if (attempts >= 1) {
-                    await Quickly.inform(`The template requires a response for the placeholder '${match[0]}'.`, false, "Try Again", undefined, "Cancel", () => cancel = true);
-                    
-                    if (cancel) {
-                        const error = new Error(`The user has requested to cancel template processing${template ? " for '" + template.name : "'"}`);
-                        error.name = cs.cds.errors.userCancelledAction;
+            const destination = file.destination.replace(this.fileNameRegex, (match, key) => templateContext.parameters[key] || match);
 
-                        throw error;
-                    }
-                }
+            templateContext.executionContext.currentFile = {
+                source: file.source,
+                destination
+            };
 
-                val = val || await Quickly.ask(placeholderItem ? placeholderItem.displayName : `Please enter the desired value for "${match[0]}"`)
-                    .then(value => { if (value) { placeholders[key] = value; } return value; });
+            const fileContents = (file.templateFn)
+                ? file.templateFn(templateContext)
+                : file.fileContents;
 
-                if (Utilities.$Object.isNullOrEmpty(val)) { val = undefined; }
-                if (val) { cancel = true; }
+            const parentDir = path.dirname(destination);
+            FileSystem.makeFolderSync(parentDir);
 
-                attempts++;
-            }
+            FileSystem.writeFileSync(destination, fileContents);
 
-            ++nmatches;
-        }
-
-        // reset regex
-        placeholderRegExp.lastIndex = 0;
-
-        // compute output
-        let out : string | Buffer = data;
-        
-        if (nmatches > 0) {
-            // replace placeholders in string
-            data = data.replace(placeholderRegExp, (match, key) => placeholders[key] || match);
-
-            // if input was a buffer, re-encode to buffer
-            if (isBuffer) {
-                out = Buffer.from(data, encoding);
-            } else {
-                out = data;
-            }
-        }
-
-        return out;
-    }
-
-    static getPlaceholders(fsItem: string, placeholderRegExp: string, isFolder:boolean): string[] {
-        const returnValue: string[] = [];
-        const _getPlaceholders:(data: string | Buffer) => string[] = (data) => {
-            // resolve each placeholder
-            const regex = RegExp(placeholderRegExp, 'g');
-            const returnValue: string[] = [];
-    
-            // collect set of expressions and their replacements
-            let match;
-            let str: string;
-            let encoding: string = "utf8";
-    
-            if (Buffer.isBuffer(data)) {
-                // get default encoding
-                encoding = vscode.workspace.getConfiguration('files').get("files.encoding", "utf8");
-    
-                try {
-                    str = data.toString(encoding);
-                } catch(error) {
-                    // cannot decipher text from encoding, assume raw data
-                    return null;
-                }
-            } else {
-                str = data;
-            }
-    
-            while (match = regex.exec(str)) {
-                const key = match[1];
-                
-                if (returnValue.indexOf(key) === -1) {
-                    returnValue.push(key);
-                }
-            }
-    
-            return returnValue;
-        };
-
-        if (isFolder) {
-            const paths = FileSystem.walkSync(fsItem);
-
-            if (paths && paths.length > 0) {
-                paths.forEach(p => {
-                    const filenamePlaceholders = _getPlaceholders(p);
-
-                    if (filenamePlaceholders && filenamePlaceholders.length > 0) {
-                        filenamePlaceholders.forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
-                    }
-
-                    const projectTemplatePlaceholders = _getPlaceholders(FileSystem.readFileSync(p));
-
-                    if (projectTemplatePlaceholders && projectTemplatePlaceholders.length > 0) {
-                        projectTemplatePlaceholders.forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
-                    }
-                });        
-            }
-        } else {
-            const filenamePlaceholders = _getPlaceholders(fsItem);
-
-            if (filenamePlaceholders && filenamePlaceholders.length > 0) {
-                filenamePlaceholders.forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
-            }
-
-            const projectTemplatePlaceholders = _getPlaceholders(FileSystem.readFileSync(fsItem));
-            
-            if (projectTemplatePlaceholders && projectTemplatePlaceholders.length > 0) {
-                projectTemplatePlaceholders.forEach(i => { if (returnValue.indexOf(i) === -1) { returnValue.push(i); } });
-            }
-        }
-
-        return returnValue;
-    }
-
-    static mergePlaceholders(source:TemplatePlaceholder[], merge:TemplatePlaceholder[]) {
-        let merged:TemplatePlaceholder[] = [];
-        
-        if (source) { 
-            merged.push(...source);
-        }
-
-        if (merge && merge.length > 0) {
-            merge.forEach(i => {
-                const index = merged.findIndex(m => m.name === i.name);
-
-                if (index === -1) {
-                    merged.push(i);
-                }
+            templateContext.executionContext.processedFiles = templateContext.executionContext.processedFiles || [];
+            templateContext.executionContext.processedFiles.push({
+                source: file.source,
+                destination
             });
         }
 
-        return merged;
+        await this.executeCommands(templateContext, TemplateCommandExecutionStage.PostRun);
+
+        return templateContext;
+    }
+
+    static async analyzeTemplate(template: TemplateItem, outputPath?: string): Promise<TemplateAnalysis> {
+        if (outputPath && template.outputPath && !path.isAbsolute(template.outputPath)) {
+            outputPath = path.join(outputPath, template.outputPath);
+        } else if (template.outputPath && path.isAbsolute(template.outputPath)) {
+            outputPath = template.outputPath;
+        }
+
+        let templatePath;
+        const systemTemplates = await TemplateManager.getDefaultTemplatesFolder(true);
+        if (FileSystem.exists(path.join(systemTemplates, template.location))) {
+            templatePath = path.join(systemTemplates, template.location);
+        } else {
+            templatePath = path.join(TemplateManager.getDefaultTemplatesFolder(false), template.location);
+        }
+
+        const result = new TemplateAnalysis();
+        const interactives: { [name: string]: Interactive } = {};
+        const commands: TemplateCommand[] = [];
+
+        const allTemplatePaths = !FileSystem.stats(templatePath).isDirectory()
+            ? [ templatePath ]
+            : FileSystem.walkSync(templatePath);
+
+        const templateDefs = {
+            ui: {
+                prompt(name: string, message: string) {
+                    interactives[name] = {
+                        type: 'prompt',
+                        message
+                    };
+                    return '';
+                },
+                select(name: string, message: string, items: string[]) {
+                    interactives[name] = {
+                        type: 'select',
+                        message,
+                        items
+                    };
+                    return '';
+                },
+                confirm(name: string, message: string) {
+                    interactives[name] = {
+                        type: 'confirm',
+                        message
+                    };
+                    return '';
+                },
+                cdsSolution(name: string, message: string, connection: string) {
+                    interactives[name] = {
+                        type: 'cdsSolution',
+                        message: message,
+                        connection: connection
+                    };
+                    return '';
+                },
+                cdsConnection(name: string, message: string) {
+                    interactives[name] = {
+                        type: 'cdsConnection',
+                        message: message
+                    };
+                    return '';
+                }
+            },
+            run: {
+                dotnet(commandArgs: string) {
+                    commands.push({
+                        type: 'dotnet',
+                        commandArgs,
+                        stage: TemplateCommandExecutionStage.PostRun
+                    });
+                    return '';
+                },
+                npm(commandArgs: string) {
+                    commands.push({
+                        type: 'npm',
+                        commandArgs,
+                        stage: TemplateCommandExecutionStage.PostRun
+                    });
+                    return '';
+                },
+                powershell(commandArgs: string) {
+                    commands.push({
+                        type: 'powershell',
+                        commandArgs,
+                        stage: TemplateCommandExecutionStage.PostRun
+                    });
+                    return '';
+                }
+            }
+        };
+
+        for (let i = 0; i < allTemplatePaths.length; i++) {
+            const source = allTemplatePaths[i];
+            const fileContents = fs.readFileSync(source);
+            const directive = template.directives?.find(d => d.name === path.basename(source));
+            
+            const destination = !source.toLowerCase().endsWith('.def')
+                ? source.replace(templatePath, outputPath)
+                : '';
+            
+            let templateFn;
+            try {
+                templateFn = (!directive || directive.usePlaceholders)
+                    ? doT.template(fileContents.toString(), this.dotSettings, templateDefs)
+                    : null;
+            } catch (error) {
+                Quickly.error(`Error while trying to parse the template file at ${source}, error message: ${error.message}`);
+                throw error;
+            }
+
+            let match;
+            while (match = this.fileNameRegex.exec(destination)) {
+                let key = match[1];
+                interactives[key] = interactives[key] || {
+                    type: 'prompt',
+                    message: `Please enter a file name for ${key}`
+                };
+            }
+
+            result.files.push({
+                destination,
+                source,
+                fileContents,
+                templateFn
+            });
+        }
+
+        result.sourcePath = templatePath;
+        result.outputPath = outputPath;
+        result.commands = commands;
+        result.interactives = interactives;
+
+        return result;
+    }
+
+    private static async executeCommands(templateContext: TemplateContext, stage: TemplateCommandExecutionStage): Promise<void> {
+        const commands = templateContext.commands.filter(s => s.stage === stage);
+        for (let i = 0; i < commands.length; i++) {
+            const command = commands[i];
+
+            const rootPath = FileSystem.stats(templateContext.outputPath).isDirectory()
+                ? templateContext.outputPath
+                : path.dirname(templateContext.outputPath);
+            
+            switch (command.type) {
+                case 'dotnet': {
+                    command.output = await TerminalManager.showTerminal(rootPath)
+                        .then(async terminal => { 
+                            return await terminal.run(new TerminalCommand(`dotnet ${command.commandArgs}`))
+                                .then(async tc => tc.output);                      
+                        });
+                }
+                    break;
+                case 'npm': {
+                    command.output = await TerminalManager.showTerminal(rootPath)
+                        .then(async terminal => { 
+                            return await terminal.run(new TerminalCommand(`npm ${command.commandArgs}`))
+                                .then(async tc => tc.output);                      
+                        });
+                }
+                    break;
+                case 'powershell': {
+                    command.output = await TerminalManager.showTerminal(rootPath)
+                        .then(async terminal => { 
+                            return await terminal.run(new TerminalCommand(`${command.commandArgs}`))
+                                .then(async tc => tc.output);                      
+                        });
+                }
+                    break;
+            }
+        }
+    }
+
+    private static async buildTemplateContext(templateAnalysis: TemplateAnalysis, ...object: any): Promise<TemplateContext> {
+        const result = new TemplateContext();
+        const interactives = templateAnalysis.interactives;
+        const templateInputs = Object.keys(interactives);
+        const iterator = templateInputs[Symbol.iterator]();
+        let item = iterator.next();
+
+        while (!item.done) {
+            if (result.userCanceled) { 
+                item.done = true;
+                continue; 
+            }
+
+            const key = item.value;
+            const interactive = interactives[key];
+            switch (interactive.type) {
+                case 'prompt': {
+                    result.parameters[key] = result.parameters[key] || await Quickly.ask(interactive.message);
+                    if (!result.parameters[key]) { result.userCanceled = true; }
+                }
+                    break;
+                case 'select': {
+                    result.parameters[key] = result.parameters[key] || await Quickly.pick(interactive.message, ...interactive.items)
+                        .then(item => item.label);
+                    if (!result.parameters[key]) { result.userCanceled = true; }
+                }
+                    break;
+                case 'confirm': {
+                    result.parameters[key] = (result.parameters[key] === undefined)
+                        ? await Quickly.pickBoolean(interactive.message, 'Yes', 'No')
+                        : result.parameters[key];
+                    if (!result.parameters[key] === undefined) { result.userCanceled = true; }
+                }
+                    break;
+                case 'cdsConnection': {
+                    const config = await Quickly.pickCdsOrganization(ExtensionContext.Instance, interactive.message, true);
+                    result.parameters[key] = config;
+                    if (!result.parameters[key]) { result.userCanceled = true; }
+                }
+                    break;
+                case 'cdsSolution': {
+                    let config = interactive.connection ? result[interactive.connection] : undefined;
+                    config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, `Pick CDS Organization that contains ${key}`, true);
+                    result.parameters[key] = result.parameters[key] || await Quickly.pickCdsSolution(config, interactive.message, true);
+                    if (!result.parameters[key]) { result.userCanceled = true; }
+                }
+                    break;
+            }
+            item = iterator.next();
+        }
+
+        result.parameters = Object.assign(result.parameters, ...object);
+        result.parameters = Object.assign(result.parameters, 
+            ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.templates.templateParameters, {}));
+
+        result.sourcePath = templateAnalysis.sourcePath;
+        result.outputPath = templateAnalysis.outputPath.replace(this.fileNameRegex, (match, key) => result.parameters[key] || match);
+        result.commands = templateAnalysis.commands;
+
+        return result;
     }
 }

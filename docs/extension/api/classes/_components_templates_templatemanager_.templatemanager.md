@@ -62,7 +62,7 @@ Main class to handle the logic of the Project Templates
 
 \+ **new TemplateManager**(`context`: ExtensionContext): *[TemplateManager](_components_templates_templatemanager_.templatemanager.md)*
 
-Defined in src/components/Templates/TemplateManager.ts:32
+Defined in src/components/Templates/TemplateManager.ts:31
 
 **Parameters:**
 
@@ -78,15 +78,15 @@ Name | Type |
 
 ▪ **_systemTemplates**: *[TemplateItem](_components_templates_types_.templateitem.md)[]*
 
-Defined in src/components/Templates/TemplateManager.ts:468
+Defined in src/components/Templates/TemplateManager.ts:344
 
 ## Methods
 
 ###  createFromFilesystem
 
-▸ **createFromFilesystem**(`fsPath`: string, `type`: [TemplateType](../enums/_components_templates_types_.templatetype.md), `template?`: [TemplateItem](_components_templates_types_.templateitem.md)): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)‹››*
+▸ **createFromFilesystem**(`fsPath`: string, `type`: [TemplateType](../enums/_components_templates_types_.templatetype.md), `template?`: [TemplateItem](_components_templates_types_.templateitem.md)): *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
 
-Defined in src/components/Templates/TemplateManager.ts:100
+Defined in src/components/Templates/TemplateManager.ts:99
 
 Populates a workspace folder with the contents of a template
 
@@ -98,7 +98,7 @@ Name | Type | Description |
 `type` | [TemplateType](../enums/_components_templates_types_.templatetype.md) | - |
 `template?` | [TemplateItem](_components_templates_types_.templateitem.md) | - |
 
-**Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)‹››*
+**Returns:** *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
 
 ___
 
@@ -106,7 +106,7 @@ ___
 
 ▸ **createTemplate**(`destinationUri?`: Uri, `type?`: [TemplateType](../enums/_components_templates_types_.templatetype.md), `template?`: [TemplateItem](_components_templates_types_.templateitem.md)): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:58
+Defined in src/components/Templates/TemplateManager.ts:57
 
 **Parameters:**
 
@@ -124,7 +124,7 @@ ___
 
 ▸ **deleteFromFilesystem**(`template`: [TemplateItem](_components_templates_types_.templateitem.md)): *Promise‹boolean›*
 
-Defined in src/components/Templates/TemplateManager.ts:249
+Defined in src/components/Templates/TemplateManager.ts:125
 
 Deletes a template from the template root directory
 
@@ -144,7 +144,7 @@ ___
 
 ▸ **deleteTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md)): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:63
+Defined in src/components/Templates/TemplateManager.ts:62
 
 **Parameters:**
 
@@ -160,7 +160,7 @@ ___
 
 ▸ **editTemplateCatalog**(`configFile?`: Uri): *Promise‹any›*
 
-Defined in src/components/Templates/TemplateManager.ts:68
+Defined in src/components/Templates/TemplateManager.ts:67
 
 **Parameters:**
 
@@ -176,7 +176,7 @@ ___
 
 ▸ **exportTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `destinationUri`: Uri): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:73
+Defined in src/components/Templates/TemplateManager.ts:72
 
 **Parameters:**
 
@@ -193,7 +193,7 @@ ___
 
 ▸ **getTemplates**(): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)[]›*
 
-Defined in src/components/Templates/TemplateManager.ts:92
+Defined in src/components/Templates/TemplateManager.ts:91
 
 **Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)[]›*
 
@@ -203,7 +203,7 @@ ___
 
 ▸ **importTemplate**(`sourceUri`: Uri): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:78
+Defined in src/components/Templates/TemplateManager.ts:77
 
 **Parameters:**
 
@@ -219,7 +219,7 @@ ___
 
 ▸ **saveTemplate**(`templateUri`: Uri, `type`: [TemplateType](../enums/_components_templates_types_.templatetype.md)): *Promise‹any›*
 
-Defined in src/components/Templates/TemplateManager.ts:88
+Defined in src/components/Templates/TemplateManager.ts:87
 
 **Parameters:**
 
@@ -236,7 +236,7 @@ ___
 
 ▸ **saveToFilesystem**(`fsPath`: string, `type`: [TemplateType](../enums/_components_templates_types_.templatetype.md)): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/TemplateManager.ts:354
+Defined in src/components/Templates/TemplateManager.ts:230
 
 Saves a workspace as a new template
 
@@ -257,7 +257,7 @@ ___
 
 ▸ **createItemTemplate**(`uri?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/Templates/TemplateManager.ts:38
+Defined in src/components/Templates/TemplateManager.ts:37
 
 **Parameters:**
 
@@ -273,7 +273,7 @@ ___
 
 ▸ **createProjectTemplate**(`uri?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/Templates/TemplateManager.ts:43
+Defined in src/components/Templates/TemplateManager.ts:42
 
 **Parameters:**
 
@@ -289,7 +289,7 @@ ___
 
 ▸ **createTemplatesDirIfNotExists**(): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:619
+Defined in src/components/Templates/TemplateManager.ts:493
 
 Creates the templates directory if it does not exists
 
@@ -303,7 +303,7 @@ ___
 
 ▸ **exportTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `archive`: string, `systemTemplate`: boolean): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:295
+Defined in src/components/Templates/TemplateManager.ts:171
 
 **Parameters:**
 
@@ -321,7 +321,7 @@ ___
 
 ▸ **getDefaultTemplatesFolder**(`systemTemplates`: boolean): *string*
 
-Defined in src/components/Templates/TemplateManager.ts:548
+Defined in src/components/Templates/TemplateManager.ts:422
 
 Returns the default templates location, which is based on the global storage-path directory.
 
@@ -341,7 +341,7 @@ ___
 
 ▸ **getSystemTemplate**(`name`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/TemplateManager.ts:478
+Defined in src/components/Templates/TemplateManager.ts:354
 
 **Parameters:**
 
@@ -357,7 +357,7 @@ ___
 
 ▸ **getSystemTemplates**(): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)[]›*
 
-Defined in src/components/Templates/TemplateManager.ts:470
+Defined in src/components/Templates/TemplateManager.ts:346
 
 **Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)[]›*
 
@@ -367,7 +367,7 @@ ___
 
 ▸ **getTemplateCatalog**(`filename?`: string, `getSystemCatalog`: boolean): *Promise‹[TemplateCatalog](_components_templates_templatecatalog_.templatecatalog.md)›*
 
-Defined in src/components/Templates/TemplateManager.ts:441
+Defined in src/components/Templates/TemplateManager.ts:317
 
 Gets a copy of the template catalog
 
@@ -390,7 +390,7 @@ ___
 
 ▸ **getTemplateFolder**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `systemTemplate`: boolean): *Promise‹string›*
 
-Defined in src/components/Templates/TemplateManager.ts:279
+Defined in src/components/Templates/TemplateManager.ts:155
 
 **Parameters:**
 
@@ -407,7 +407,7 @@ ___
 
 ▸ **getTemplateFolderItems**(`folder?`: string): *Promise‹[TemplateFilesystemItem](_components_templates_types_.templatefilesystemitem.md)[]›*
 
-Defined in src/components/Templates/TemplateManager.ts:588
+Defined in src/components/Templates/TemplateManager.ts:462
 
 Returns a list of available project templates by reading the Templates Directory.
 
@@ -427,7 +427,7 @@ ___
 
 ▸ **getTemplates**(`folder`: string, `mergeWith?`: [TemplateItem](_components_templates_types_.templateitem.md)[], `exclusions?`: string[]): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)[]›*
 
-Defined in src/components/Templates/TemplateManager.ts:483
+Defined in src/components/Templates/TemplateManager.ts:359
 
 **Parameters:**
 
@@ -445,7 +445,7 @@ ___
 
 ▸ **getTemplatesFolder**(`systemTemplates`: boolean): *Promise‹string›*
 
-Defined in src/components/Templates/TemplateManager.ts:528
+Defined in src/components/Templates/TemplateManager.ts:402
 
 Returns the templates directory location.
 If no user configuration is found, the extension will look for
@@ -468,7 +468,7 @@ ___
 
 ▸ **importTemplate**(`archive`: string, `systemTemplate`: boolean): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
 
-Defined in src/components/Templates/TemplateManager.ts:303
+Defined in src/components/Templates/TemplateManager.ts:179
 
 **Parameters:**
 
@@ -485,7 +485,7 @@ ___
 
 ▸ **openTemplateFolder**(`template`: [TemplateItem](_components_templates_types_.templateitem.md)): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:83
+Defined in src/components/Templates/TemplateManager.ts:82
 
 **Parameters:**
 
@@ -501,7 +501,7 @@ ___
 
 ▸ **openTemplateFolderInExplorer**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `systemTemplate`: boolean): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateManager.ts:344
+Defined in src/components/Templates/TemplateManager.ts:220
 
 **Parameters:**
 
@@ -518,7 +518,7 @@ ___
 
 ▸ **saveItemTemplate**(`uri?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/Templates/TemplateManager.ts:48
+Defined in src/components/Templates/TemplateManager.ts:47
 
 **Parameters:**
 
@@ -534,7 +534,7 @@ ___
 
 ▸ **saveProjectTemplate**(`uri?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/Templates/TemplateManager.ts:53
+Defined in src/components/Templates/TemplateManager.ts:52
 
 **Parameters:**
 

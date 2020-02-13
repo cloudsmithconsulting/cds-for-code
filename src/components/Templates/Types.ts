@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import * as FileSystem from '../../core/io/FileSystem';
 import * as path from 'path';
-import Dictionary from '../../core/types/Dictionary';
+import * as doT from 'dot';
+import * as FileSystem from '../../core/io/FileSystem';
 import TemplateManager from './TemplateManager';
 import Quickly from '../../core/Quickly';
 import TemplateEngine from './TemplateEngine';
@@ -16,10 +16,8 @@ export class TemplateItem {
         public location?: string,
         public outputPath?: string,
         public categories?: string[],
-        public placeholders?: TemplatePlaceholder[],
         public directives?: TemplateDirective[]) { 
         if (!categories) { categories = []; }
-        if (!placeholders) { placeholders = []; }
         if (!directives) { directives = []; }
     }
 
@@ -33,28 +31,14 @@ export class TemplateItem {
             from.location, 
             from.outputPath,
             from.categories,
-            from.placeholders,
             from.directives);
     }
     
-    async apply(placeholders: Dictionary<string, string>, object?: any): Promise<string | Buffer> {
+    async apply(outputPath: string, ...object: any): Promise<void> {
         if (this.type !== TemplateType.ItemTemplate) {
-            throw new Error("Only item templates may invoke the .Apply function inline");
+            throw new Error("Only item templates may invoke the .apply function inline");
         }
-        const systemTemplates = await TemplateManager.getDefaultTemplatesFolder(true);
-        const userTemplates = await TemplateManager.getDefaultTemplatesFolder(true);
-        let fileContents: Buffer;
-
-        if (FileSystem.exists(path.join(systemTemplates, this.location))) {
-            fileContents = FileSystem.readFileSync(path.join(systemTemplates, this.location));
-        }
-        else if (FileSystem.exists(path.join(userTemplates, this.location))) {
-            fileContents = FileSystem.readFileSync(path.join(userTemplates, this.location));
-        }
-
-        if (fileContents) {
-            return await TemplateEngine.applyTemplate(this, fileContents, placeholders, object);
-        }
+        await TemplateEngine.executeTemplate(this, outputPath, ...object);
     }
 
     async load(filename?: string): Promise<TemplateItem> {
@@ -104,6 +88,49 @@ export class TemplateItem {
     }    
 }
 
+export interface Interactive {
+    type: string;
+    message: string;
+    items?: string[];
+    connection?: string;
+}
+
+export enum TemplateCommandExecutionStage {
+    PreRun = "PreRun",
+    PostRun = "PostRun"
+}
+
+export interface TemplateCommand {
+    type: string;
+    commandArgs: string;
+    stage: TemplateCommandExecutionStage;
+    output?: string;
+}
+
+export interface TemplateFileAnalysis {
+    destination: string;
+    source: string;
+    fileContents: string | Buffer;
+    templateFn: doT.RenderFunction;
+}
+
+export class TemplateAnalysis {
+    sourcePath: string;
+    outputPath: string;
+    interactives: { [name: string]: Interactive } = {};
+    commands: TemplateCommand[] = [];
+    files: TemplateFileAnalysis[] = [];
+}
+
+export class TemplateContext {
+    userCanceled: boolean = false;
+    sourcePath: string;
+    outputPath: string;
+    commands: TemplateCommand[] = [];
+    parameters: { [name: string] : any } = {};
+    executionContext: any = {};
+}
+
 export class TemplateFilesystemItem {
     constructor(
         public type: vscode.FileType,
@@ -121,21 +148,6 @@ export class TemplateDirective {
     name: string;
     usePlaceholders: boolean;   
     usePlaceholdersInFilename: boolean;
-}
-
-export class TemplatePlaceholder {
-    constructor(name?: string) {
-        if (name) {
-            this.name = name;
-        }
-
-        this.required = false;
-    }
-    
-    name: string;
-    displayName: string;
-    required: boolean;
-    type: string;
 }
 
 

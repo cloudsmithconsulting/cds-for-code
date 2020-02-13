@@ -4,19 +4,10 @@
     "displayName": "Dynamics 365 9.0 Plugin with validation and tests",
     "publisher": "CloudSmith Consulting LLC",
     "location": "CloudSmith.Cds.SamplePlugin.v9.0",
-    "outputPath": "#{Namespace}",
+    "outputPath": "${Namespace}",
     "categories": ["Dynamics", "Plugins"],
-    "placeholders": [{
-        "name": "PluginName",
-        "displayName": "Plugin Class Name",
-        "required": true
-    }, {
-        "name": "Namespace",
-        "displayName": "Project namespace and assembly name",
-        "required": true
-    }],
     "directives": [{
-        "name": "#{Namespace}.snk",
+        "name": "${Namespace}.snk",
         "usePlaceholdersInFilename": true,
         "usePlaceholders": false
     }]

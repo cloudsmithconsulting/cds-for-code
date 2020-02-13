@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace #{Namespace}.Plugins
+namespace {{=$this.parameters.Namespace}}.Plugins
 {
     public sealed class DynamicsPluginServices
     {

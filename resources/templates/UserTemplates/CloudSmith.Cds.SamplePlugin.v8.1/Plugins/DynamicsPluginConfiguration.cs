@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace #{Namespace}.Plugins
+namespace {{=$this.parameters.Namespace}}.Plugins
 {
     public sealed class DynamicsPluginConfiguration
     {
