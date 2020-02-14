@@ -21,10 +21,8 @@ This extension is designed to help developers with a simple development loop for
   - [Features](#features)
   - [Commands](#commands)
     - [Commands and Descriptions](#commands-and-descriptions)
-    - [These commands can be executed directly through the VSCode command palette](#these-commands-can-be-executed-directly-through-the-vscode-command-palette)
   - [Settings](#settings)
     - [Settings and Descriptions](#settings-and-descriptions)
-    - [These settings are editable inside the VSCode Settings Editor](#these-settings-are-editable-inside-the-vscode-settings-editor)
   - [Known Issues](#known-issues)
   - [Change Log](#change-log)
   - [Contributors](#contributors)
@@ -139,11 +137,9 @@ For a more comprehensive walkthrough of features you can check out our How To ar
 |cs.cds.configuration.iconThemes.selectedTheme|The icon set to use in the CDS Explorer view|default|
 |cs.cds.configuration.explorer.showDefaultSolution|Show the Default Solution in the CDS Explorer view|false|
 |cs.cds.configuration.explorer.showWelcomeExperience|Show the welcome experience for this extension|true|
-|cs.cds.configuration.templates.placeholders|List of built in placeholders, in key-value string pairs|default|
-|cs.cds.configuration.templates.placeholderRegExp|Regular expression for detecting placeholders (e.g. \"#{([\\s\\S]+?)}\"). The first capture group dictates the placeholder key|#{([\\s\\S]+?)}|
+|cs.cds.configuration.templates.templateParameters|List of built in parameters to be passed to all templates, in key-value string pairs|default|
 |cs.cds.configuration.templates.templatesDirectory|Filesystem path that stores templates||
 |cs.cds.configuration.templates.treeViewGroupPreference|Preference for grouping templates in the Template Explorer|Publisher|
-|cs.cds.configuration.templates.usePlaceholders|Look for and replace placeholders in template (e.g. #{author})|true|
 
 ---
 

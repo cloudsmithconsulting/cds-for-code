@@ -30,12 +30,9 @@ export default class TemplateEngine {
     };
 
     static async executeTemplate(template: TemplateItem, outputPath: string, ...object: any): Promise<TemplateContext> {  
-        if (template.type === TemplateType.ItemTemplate && path.extname(outputPath).length === 0) {
-            throw Error(`Item templates must have a full file path`);
-        }  
-
         let templatePath;
         const systemTemplates = await TemplateManager.getDefaultTemplatesFolder(true);
+
         if (FileSystem.exists(path.join(systemTemplates, template.location))) {
             templatePath = path.join(systemTemplates, template.location);
         } else {
@@ -44,6 +41,7 @@ export default class TemplateEngine {
 
         const analysis = await this.analyzeTemplate(templatePath, outputPath);
         const templateContext = await this.buildTemplateContext(analysis, ...object);
+
         if (templateContext.userCanceled) { return templateContext; }
 
         await this.executeCommands(templateContext, TemplateCommandExecutionStage.PreRun);
@@ -92,6 +90,7 @@ export default class TemplateEngine {
         const templateDefs = {
             template(item: TemplateItem) {
                 template = TemplateItem.merge(template, item);
+                return '';
             },
             ui: {
                 prompt(name: string, message: string) {
@@ -178,11 +177,13 @@ export default class TemplateEngine {
             const source = allTemplatePaths[i];
             const fileContents = fs.readFileSync(source);
             const directive = template.directives?.find(d => d.name === path.basename(source));
-            const destination = source.replace(templatePath, outputPath);
+            const destination = template.type === TemplateType.ItemTemplate
+                ? source.replace(source, `${outputPath}${path.extname(source)}`)
+                : source.replace(templatePath, outputPath);
             
             let templateFn;
             try {
-                templateFn = (!directive || directive.usePlaceholders)
+                templateFn = (!directive || directive.processFile)
                     ? doT.template(fileContents.toString(), this.dotSettings, templateDefs)
                     : null;
             } catch (error) {

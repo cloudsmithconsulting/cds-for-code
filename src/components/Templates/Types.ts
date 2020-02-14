@@ -5,6 +5,7 @@ import * as FileSystem from '../../core/io/FileSystem';
 import TemplateManager from './TemplateManager';
 import Quickly from '../../core/Quickly';
 import TemplateEngine from './TemplateEngine';
+import { Utilities } from '../../core/Utilities';
 
 export class TemplateItem {
     constructor(
@@ -44,8 +45,17 @@ export class TemplateItem {
             from.location || to.location, 
             from.outputPath || to.outputPath);
         
-        result.categories = to.categories.concat(from.categories || []);
-        result.directives = to.directives;
+        result.categories = to.categories || [];
+
+        if (from.categories?.length > 0) {
+            from.categories.forEach(c => {
+                if (result.categories.indexOf(c) === -1) {
+                    result.categories.push(c);
+                }
+            });
+        }
+
+        result.directives = to.directives || [];
         
         if (from.directives?.length > 0) {
             result.directives.push(...from.directives);
@@ -67,6 +77,21 @@ export class TemplateItem {
 
     async save(filename?: string): Promise<TemplateItem> {
         return TemplateItem.write(this, filename);
+    }
+
+    async saveDef(missingInfo: any, filename: string = "template.def") {
+        if (Object.keys(missingInfo).length === 0) { return; }
+        
+        const folder = path.join(await TemplateManager.getTemplateFolder(this));
+        const file = path.join(folder, filename);
+        const missingDef = `{{#def.template(${JSON.stringify(missingInfo)})}}`;
+        
+        if (!FileSystem.exists(file)) {
+            FileSystem.writeFileSync(file, missingDef);
+        } else {
+            let fileContents = `${missingDef}\r\n${FileSystem.readFileSync(file)}`;
+            FileSystem.writeFileSync(file, fileContents);
+        }
     }
 
     static async read(filename: string = "template.json"): Promise<TemplateItem> {
@@ -162,13 +187,11 @@ export class TemplateFilesystemItem {
 export class TemplateDirective { 
     constructor(name?:string) {
         this.name = name;
-        this.usePlaceholders = true;
-        this.usePlaceholdersInFilename = true;
+        this.processFile = true;
     }
     
-    name: string;
-    usePlaceholders: boolean;   
-    usePlaceholdersInFilename: boolean;
+    name: string;  
+    processFile: boolean;
 }
 
 

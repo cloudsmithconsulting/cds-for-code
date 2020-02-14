@@ -106,13 +106,6 @@ export default class TemplateManager {
             return;
         }
 
-        if (type === TemplateType.ItemTemplate && path.extname(fsPath).length === 0) {
-            const filename = await Quickly.ask("What would you like to call the file that is created?");
-            if (!filename) { return; }
-    
-            fsPath = `${path.join(fsPath, filename + path.extname(template.location))}`;
-        }
-
         const result = await TemplateEngine.executeTemplate(template, fsPath);
         return result;
     }
@@ -156,11 +149,7 @@ export default class TemplateManager {
         const templateRoot = await TemplateManager.getTemplatesFolder(systemTemplate);
         
         if (template && template.location) {
-            let templateDir:string = path.isAbsolute(template.location) ? template.location : path.join(templateRoot, template.location);
-
-            if (template.type === TemplateType.ItemTemplate) {
-                templateDir = path.join(templateDir, "..");
-            }
+            let templateDir:string = path.isAbsolute(template.location) ? template.location : path.join(templateRoot, template.name);
 
             return templateDir;
         } else {
@@ -170,10 +159,40 @@ export default class TemplateManager {
 
     static async exportTemplate(template: TemplateItem, archive: string, systemTemplate:boolean = false): Promise<void> {
         const folder = await this.getTemplateFolder(template, systemTemplate);
+        const analysis = await TemplateEngine.analyzeTemplate(folder);
+        const templateItem = TemplateItem.merge(template, analysis.template);
+        const missingInfo = {};
+
+        if (!templateItem.type) {
+            templateItem.type = await Quickly.pickEnum(TemplateType, "What type of template");
+            missingInfo['type'] = templateItem.type;
+        }
+
+        if (!templateItem.name) {
+            templateItem.name = await Quickly.ask("Enter the desired template name");
+            missingInfo['name'] = templateItem.name;
+        }
+
+        if (!templateItem.displayName) {
+            templateItem.displayName = await Quickly.ask(`What should we call the display name for '${templateItem.name}'`, undefined, templateItem.name);
+            missingInfo['displayName'] = templateItem.displayName;
+        }
         
-        await template.save(path.join(folder, "template.json"));
+        if (!templateItem.publisher) {
+            templateItem.publisher = await Quickly.ask(`Who is the publisher name for '${templateItem.displayName}'`);
+            missingInfo['publisher'] = templateItem.publisher;
+        }
+        
+        if (templateItem.categories.length === 0) {
+            const templateCatalog = await TemplateManager.getTemplateCatalog();
+            const categoryList = templateCatalog.queryCategoriesByType();
+            templateItem.categories = await Quickly.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
+            missingInfo['categories'] = templateItem.categories;
+        }
+
+        await templateItem.saveDef(missingInfo);
+        
         await FileSystem.zipFolder(archive, folder);
-        await FileSystem.deleteItem(path.join(folder, "template.json"));
     }
 
     static async importTemplate(archive: string, systemTemplate:boolean = false): Promise<TemplateItem> {
@@ -183,34 +202,53 @@ export default class TemplateManager {
     
             await FileSystem.makeFolderSync(templateFolder);
             await FileSystem.unzip(archive, templateFolder);
-    
-            if (FileSystem.exists(path.join(templateFolder, "template.json"))) {
-                const template = await TemplateItem.read(path.join(templateFolder, "template.json"));
-                const catalog = await this.getTemplateCatalog(undefined, systemTemplate);
-                
-                if (template && catalog) {
-                    // We may have moved the location of the template (+ items), and need to re-calculate.                
-                    const filename = path.extname(template.location) !== "" ? path.basename(template.location) : "";
 
-                    if (template.type === TemplateType.ProjectTemplate) {
-                        template.location = path.relative(folder, templateFolder);
-                    } else {
-                        template.location = path.join(path.relative(folder, templateFolder), filename);
-                    }
+            const analysis = await TemplateEngine.analyzeTemplate(templateFolder);
+            const templateItem = analysis.template;
+            const missingInfo = {};
+
+            if (!templateItem.type) {
+                templateItem.type = await Quickly.pickEnum(TemplateType, "What type of template");
+                missingInfo['type'] = templateItem.type;
+            }
     
-                    const index = catalog.items.findIndex(i => i.name === template.name);
+            if (!templateItem.name) {
+                templateItem.name = await Quickly.ask("Enter the desired template name");
+                missingInfo['name'] = templateItem.name;
+            }
     
-                    if (index > -1) {
-                        catalog.items.splice(index, 1);
-                    }
+            if (!templateItem.displayName) {
+                templateItem.displayName = await Quickly.ask(`What should we call the display name for '${templateItem.name}'`, undefined, templateItem.name);
+                missingInfo['displayName'] = templateItem.displayName;
+            }
+            
+            if (!templateItem.publisher) {
+                templateItem.publisher = await Quickly.ask(`Who is the publisher name for '${templateItem.displayName}'`);
+                missingInfo['publisher'] = templateItem.publisher;
+            }
+            
+            if (templateItem.categories.length === 0) {
+                const templateCatalog = await TemplateManager.getTemplateCatalog();
+                const categoryList = templateCatalog.queryCategoriesByType();
+                templateItem.categories = await Quickly.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
+                missingInfo['categories'] = templateItem.categories;
+            }
     
-                    catalog.items.push(template);
-                    catalog.save();
+            await templateItem.saveDef(missingInfo);
     
-                    await FileSystem.deleteItem(path.join(templateFolder, "template.json"));
-    
-                    return template;
+            const catalog = await this.getTemplateCatalog(undefined, systemTemplate);
+                
+            if (templateItem && catalog) {
+                const index = catalog.items.findIndex(i => i.name === templateItem.name);
+
+                if (index > -1) {
+                    catalog.items.splice(index, 1);
                 }
+
+                catalog.items.push(templateItem);
+                catalog.save();
+
+                return templateItem;
             }
         } catch (error) {
             console.log(error);
@@ -241,9 +279,35 @@ export default class TemplateManager {
 
         const analysis = await TemplateEngine.analyzeTemplate(fsPath);
         const templateItem = analysis.template;
+        const missingInfo = {};
 
-        const templateName = await Quickly.ask("Enter the desired template name", undefined, fsBaseName);
+        if (!templateItem.type) {
+            templateItem.type = type;
+            missingInfo['type'] = templateItem.type;
+        }
+
+        if (!templateItem.name) {
+            templateItem.name = await Quickly.ask("Enter the desired template name", undefined, fsBaseName);
+            missingInfo['name'] = templateItem.name;
+        }
+
+        const templateName = templateItem.name;
         const templateDir = path.join(templatesDir, templateName);
+
+        if (!templateItem.displayName) {
+            templateItem.displayName = await Quickly.ask(`What should we call the display name for '${templateName}'`, undefined, templateName);
+            missingInfo['displayName'] = templateItem.displayName;
+        }
+        
+        if (!templateItem.publisher) {
+            templateItem.publisher = await Quickly.ask(`Who is the publisher name for '${templateItem.displayName}'`);
+            missingInfo['publisher'] = templateItem.publisher;
+        }
+        
+        if (templateItem.categories.length === 0) {
+            templateItem.categories = await Quickly.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
+            missingInfo['categories'] = templateItem.categories;
+        }
         
         // check if exists
         if (FileSystem.exists(templateDir)) {
@@ -271,20 +335,14 @@ export default class TemplateManager {
         }
 
         location = path.relative(templatesDir, location);
+        templateItem.location = location;
+        
         let isNew:boolean = false;
-
         if (templateCatalog && templateCatalog.query(c => c.where(i => i.name === templateName)).length === 0) {
             isNew = true;
         }
 
-        templateItem.name = templateName;
-        templateItem.location = location;
-        templateItem.type = type;
-        templateItem.displayName = templateItem.displayName || await Quickly.ask(`What should we call the display name for '${templateName}'`, undefined, templateName);
-        templateItem.publisher = templateItem.publisher || await Quickly.ask(`Who is the publisher name for '${templateItem.displayName}'`);
-        templateItem.categories = templateItem.categories.length > 0 
-            ? templateItem.categories
-            : await Quickly.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
+        templateItem.saveDef(missingInfo);
 
         if (isNew) {
             templateCatalog.add(templateItem);
@@ -366,8 +424,10 @@ export default class TemplateManager {
                                     templateItem = current;
                                 }
                             }
-    
-                            templateItem = templateItem || new TemplateItem();
+
+                            const analysis = await TemplateEngine.analyzeTemplate(path.join(folder, i.name));
+                            templateItem = analysis.template;
+                            
                             type = templateItem.type ? templateItem.type : i.type === vscode.FileType.Directory ? TemplateType.ProjectTemplate : TemplateType.ItemTemplate;
     
                             templateItem.name = templateItem.name || i.name;
