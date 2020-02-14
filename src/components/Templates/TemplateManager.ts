@@ -234,76 +234,67 @@ export default class TemplateManager {
         type = type || TemplateType.ProjectTemplate;
         const fsBaseName = path.basename(fsPath, path.extname(fsPath));
 
-        // prompt user
-        return await Quickly.ask("Enter the desired template name", undefined, fsBaseName)
-            .then(async templateName => {
-                // empty filename exits
-                if (!templateName) {
-                    return undefined;
-                }
+        // determine template dir
+        const templatesDir = await TemplateManager.getTemplatesFolder();
+        const templateCatalog = await TemplateManager.getTemplateCatalog();
+        const categoryList = templateCatalog.queryCategoriesByType();
 
-                // determine template dir
-                const templatesDir = await TemplateManager.getTemplatesFolder();
-                const templateDir = path.join(templatesDir, templateName);
-                
-                // check if exists
-                if (FileSystem.exists(templateDir)) {
-                    const overwrite = await Quickly.pickBoolean(`Template '${templateName}' aleady exists.  Do you wish to overwrite?`, "Yes", "No");
-                    if (overwrite) { 
-                        await FileSystem.deleteFolder(templateDir); 
-                        FileSystem.makeFolderSync(templateDir);
-                    } else {
-                        return undefined;
-                    }
-                } else {
-                    // Make the folder.
-                    FileSystem.makeFolderSync(templateDir);
-                }
+        const analysis = await TemplateEngine.analyzeTemplate(fsPath);
+        const templateItem = analysis.template;
 
-                // Check to see if this template exists in the catalog.
-                const templateCatalog = await TemplateManager.getTemplateCatalog();
-                const categoryList = templateCatalog.queryCategoriesByType();
-
-                let location:string;
-
-                if (type === TemplateType.ProjectTemplate) {
-                    location = templateDir;
-                    // copy current workspace to new template folder
-                    await FileSystem.copyFolder(fsPath, templateDir);
-                } else {
-                    location = path.join(templateDir, fsBaseName + path.extname(fsPath));
-                    FileSystem.copyItemSync(fsPath, location);
-                }
-
-                location = path.relative(templatesDir, location);
-                let templateItem;
-                let isNew:boolean = false;
-
-                if (templateCatalog && templateCatalog.query(c => c.where(i => i.name === templateName)).length === 0) {
-                    templateItem = new TemplateItem();
-                    isNew = true;
-                } else {
-                    templateItem = templateCatalog.query(c => c.where(i => i.name === templateName))[0];
-                }
-
-                templateItem.name = templateName;
-                templateItem.location = location;
-                templateItem.displayName = templateItem.displayName || await Quickly.ask(`What should we call the display name for '${templateName}'`, undefined, templateName);
-                templateItem.publisher = templateItem.publisher || await Quickly.ask(`Who is the publisher name for '${templateItem.displayName}'`);
-                templateItem.type = type;
-                templateItem.categories = templateItem.categories || await Quickly.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
-
-                if (isNew) {
-                    templateCatalog.add(templateItem);
-                }
-
-                templateCatalog.save();
-
-                TemplateTreeView.Instance.refresh();
-
-                return templateItem;
+        const templateName = await Quickly.ask("Enter the desired template name", undefined, fsBaseName);
+        const templateDir = path.join(templatesDir, templateName);
+        
+        // check if exists
+        if (FileSystem.exists(templateDir)) {
+            const overwrite = await Quickly.pickBoolean(`Template '${templateName}' already exists.  Do you wish to overwrite?`, "Yes", "No");
+            if (overwrite) { 
+                await FileSystem.deleteFolder(templateDir); 
+                FileSystem.makeFolderSync(templateDir);
+            } else {
+                return undefined;
             }
-        );
+        } else {
+            // Make the folder.
+            FileSystem.makeFolderSync(templateDir);
+        }
+
+        let location:string;
+
+        if (type === TemplateType.ProjectTemplate) {
+            location = templateDir;
+            // copy current workspace to new template folder
+            await FileSystem.copyFolder(fsPath, templateDir);
+        } else {
+            location = path.join(templateDir, fsBaseName + path.extname(fsPath));
+            FileSystem.copyItemSync(fsPath, location);
+        }
+
+        location = path.relative(templatesDir, location);
+        let isNew:boolean = false;
+
+        if (templateCatalog && templateCatalog.query(c => c.where(i => i.name === templateName)).length === 0) {
+            isNew = true;
+        }
+
+        templateItem.name = templateName;
+        templateItem.location = location;
+        templateItem.type = type;
+        templateItem.displayName = templateItem.displayName || await Quickly.ask(`What should we call the display name for '${templateName}'`, undefined, templateName);
+        templateItem.publisher = templateItem.publisher || await Quickly.ask(`Who is the publisher name for '${templateItem.displayName}'`);
+        templateItem.categories = templateItem.categories.length > 0 
+            ? templateItem.categories
+            : await Quickly.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
+
+        if (isNew) {
+            templateCatalog.add(templateItem);
+        }
+
+        templateCatalog.save();
+
+        TemplateTreeView.Instance.refresh();
+
+        return templateItem;
     }
 
     /**
