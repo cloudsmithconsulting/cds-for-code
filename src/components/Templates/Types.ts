@@ -1,11 +1,6 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import * as doT from 'dot';
-import * as FileSystem from '../../core/io/FileSystem';
-import TemplateManager from './TemplateManager';
-import Quickly from '../../core/Quickly';
 import TemplateEngine from './TemplateEngine';
-import { Utilities } from '../../core/Utilities';
 
 export class TemplateItem {
     constructor(

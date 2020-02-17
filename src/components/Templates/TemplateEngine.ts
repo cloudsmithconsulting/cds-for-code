@@ -180,7 +180,7 @@ export default class TemplateEngine {
             let destination;
             if (template.type === TemplateType.ItemTemplate) {
                 const ext = path.extname(source);
-                outputPath = !outputPath.toLocaleLowerCase().endsWith(ext)
+                outputPath = !outputPath?.toLowerCase().endsWith(ext)
                     ? `${outputPath}${ext}`
                     : outputPath;
                 destination = source.replace(source, outputPath);
