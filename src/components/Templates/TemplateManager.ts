@@ -157,18 +157,18 @@ export default class TemplateManager {
         }
     }
 
-    static async checkTemplateDef(templateItem: TemplateItem, defaultTemplateName?: string, filename: string = "template.def"): Promise<boolean> {
+    static async checkTemplateDef(templateItem: TemplateItem, defaultName?: string, defaultType?: TemplateType, filename: string = "template.def"): Promise<boolean> {
         const missingInfo = {};
         let canceled: boolean = false;
 
         if (!templateItem.type) {
-            templateItem.type = await Quickly.pickEnum(TemplateType, "What type of template");
+            templateItem.type = defaultType || await Quickly.pickEnum(TemplateType, "What type of template");
             canceled = !templateItem.type;
             missingInfo['type'] = templateItem.type;
         }
 
         if (!canceled && !templateItem.name) {
-            templateItem.name = await Quickly.ask("Enter the desired template name", undefined, defaultTemplateName);
+            templateItem.name = await Quickly.ask("Enter the desired template name", undefined, defaultName);
             canceled = !templateItem.name;
             missingInfo['name'] = templateItem.name;
         }
@@ -275,9 +275,8 @@ export default class TemplateManager {
 
         const analysis = await TemplateEngine.analyzeTemplate(fsPath);
         let templateItem = analysis.template;
-        templateItem.type = templateItem.type || type;
 
-        const canceled = await TemplateManager.checkTemplateDef(templateItem, fsBaseName);
+        const canceled = await TemplateManager.checkTemplateDef(templateItem, fsBaseName, type);
         if (canceled) { return null; }
         
         const templateName = templateItem.name;
