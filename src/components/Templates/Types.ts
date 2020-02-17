@@ -69,68 +69,7 @@ export class TemplateItem {
             throw new Error("Only item templates may invoke the .apply function inline");
         }
         await TemplateEngine.executeTemplate(this, outputPath, ...object);
-    }
-
-    async load(filename?: string): Promise<TemplateItem> {
-        return (TemplateItem.read(filename).then(item => TemplateItem.from(item)));
-    }
-
-    async save(filename?: string): Promise<TemplateItem> {
-        return TemplateItem.write(this, filename);
-    }
-
-    async saveDef(missingInfo: any, filename: string = "template.def") {
-        if (Object.keys(missingInfo).length === 0) { return; }
-        
-        const folder = path.join(await TemplateManager.getTemplateFolder(this));
-        const file = path.join(folder, filename);
-        const missingDef = `{{#def.template(${JSON.stringify(missingInfo)})}}`;
-        
-        if (!FileSystem.exists(file)) {
-            FileSystem.writeFileSync(file, missingDef);
-        } else {
-            let fileContents = `${missingDef}\r\n${FileSystem.readFileSync(file)}`;
-            FileSystem.writeFileSync(file, fileContents);
-        }
-    }
-
-    static async read(filename: string = "template.json"): Promise<TemplateItem> {
-        const file = path.isAbsolute(filename) ? filename : path.join(await TemplateManager.getTemplatesFolder(), filename);
-
-        if (FileSystem.exists(file)) {
-            try {
-                let returnObject = JSON.parse(FileSystem.readFileSync(file));
- 
-                if (returnObject) {
-                    return TemplateItem.from(returnObject);
-                }
-            }
-            catch (error) {
-                Quickly.error(`The template '${filename}' was found but could not be parsed.${error ? '  The error returned was: ' + error : ''}`);
-            }
-        }
-
-        return new TemplateItem();
-    }
-    
-    static async write(template: TemplateItem, filename: string = "template.json"): Promise<TemplateItem> {
-        const folder = path.isAbsolute(filename) ? path.dirname(filename) : path.join(await TemplateManager.getTemplateFolder(template), path.dirname(filename));
-        
-        if (!FileSystem.exists(folder)) {
-            FileSystem.makeFolderSync(folder);
-        }
-        
-        const file = path.isAbsolute(filename) ? filename : path.join(folder, filename);
-        
-        try {
-            FileSystem.writeFileSync(file, JSON.stringify(template));
-        }
-        catch (error) {
-            Quickly.error(`The template '${filename}' could not be saved to the template folder.${error ? '  The error returned was: ' + error : ''}`);
-        }
-        
-        return template;
-    }    
+    }  
 }
 
 export interface Interactive {

@@ -157,40 +157,64 @@ export default class TemplateManager {
         }
     }
 
-    static async exportTemplate(template: TemplateItem, archive: string, systemTemplate:boolean = false): Promise<void> {
-        const folder = await this.getTemplateFolder(template, systemTemplate);
-        const analysis = await TemplateEngine.analyzeTemplate(folder);
-        const templateItem = TemplateItem.merge(template, analysis.template);
+    static async checkTemplateDef(templateItem: TemplateItem, defaultTemplateName?: string, filename: string = "template.def"): Promise<boolean> {
         const missingInfo = {};
+        let canceled: boolean = false;
 
         if (!templateItem.type) {
             templateItem.type = await Quickly.pickEnum(TemplateType, "What type of template");
+            canceled = !templateItem.type;
             missingInfo['type'] = templateItem.type;
         }
 
-        if (!templateItem.name) {
-            templateItem.name = await Quickly.ask("Enter the desired template name");
+        if (!canceled && !templateItem.name) {
+            templateItem.name = await Quickly.ask("Enter the desired template name", undefined, defaultTemplateName);
+            canceled = !templateItem.name;
             missingInfo['name'] = templateItem.name;
         }
 
-        if (!templateItem.displayName) {
+        if (!canceled && !templateItem.displayName) {
             templateItem.displayName = await Quickly.ask(`What should we call the display name for '${templateItem.name}'`, undefined, templateItem.name);
+            canceled = !templateItem.displayName;
             missingInfo['displayName'] = templateItem.displayName;
         }
         
-        if (!templateItem.publisher) {
+        if (!canceled && !templateItem.publisher) {
             templateItem.publisher = await Quickly.ask(`Who is the publisher name for '${templateItem.displayName}'`);
+            canceled = !templateItem.publisher;
             missingInfo['publisher'] = templateItem.publisher;
         }
         
-        if (templateItem.categories.length === 0) {
-            const templateCatalog = await TemplateManager.getTemplateCatalog();
+        if (!canceled && templateItem.categories.length === 0) {
+            const templateCatalog = await this.getTemplateCatalog();
             const categoryList = templateCatalog.queryCategoriesByType();
             templateItem.categories = await Quickly.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
             missingInfo['categories'] = templateItem.categories;
         }
 
-        await templateItem.saveDef(missingInfo);
+        if (canceled || Object.keys(missingInfo).length === 0) { return canceled; }
+        
+        const folder = path.join(await this.getTemplateFolder(templateItem));
+        const file = path.join(folder, filename);
+        const missingDef = `{{#def.template(${JSON.stringify(missingInfo)})}}`;
+        
+        if (!FileSystem.exists(file)) {
+            FileSystem.writeFileSync(file, missingDef);
+        } else {
+            let fileContents = `${missingDef}\r\n${FileSystem.readFileSync(file)}`;
+            FileSystem.writeFileSync(file, fileContents);
+        }
+
+        return canceled;
+    }
+
+    static async exportTemplate(template: TemplateItem, archive: string, systemTemplate:boolean = false): Promise<void> {
+        const folder = await this.getTemplateFolder(template, systemTemplate);
+        const analysis = await TemplateEngine.analyzeTemplate(folder);
+        let templateItem = TemplateItem.merge(template, analysis.template);
+        
+        const canceled = await this.checkTemplateDef(templateItem);
+        if (canceled) { return; }
         
         await FileSystem.zipFolder(archive, folder);
     }
@@ -204,37 +228,10 @@ export default class TemplateManager {
             await FileSystem.unzip(archive, templateFolder);
 
             const analysis = await TemplateEngine.analyzeTemplate(templateFolder);
-            const templateItem = analysis.template;
-            const missingInfo = {};
+            let templateItem = analysis.template;
 
-            if (!templateItem.type) {
-                templateItem.type = await Quickly.pickEnum(TemplateType, "What type of template");
-                missingInfo['type'] = templateItem.type;
-            }
-    
-            if (!templateItem.name) {
-                templateItem.name = await Quickly.ask("Enter the desired template name");
-                missingInfo['name'] = templateItem.name;
-            }
-    
-            if (!templateItem.displayName) {
-                templateItem.displayName = await Quickly.ask(`What should we call the display name for '${templateItem.name}'`, undefined, templateItem.name);
-                missingInfo['displayName'] = templateItem.displayName;
-            }
-            
-            if (!templateItem.publisher) {
-                templateItem.publisher = await Quickly.ask(`Who is the publisher name for '${templateItem.displayName}'`);
-                missingInfo['publisher'] = templateItem.publisher;
-            }
-            
-            if (templateItem.categories.length === 0) {
-                const templateCatalog = await TemplateManager.getTemplateCatalog();
-                const categoryList = templateCatalog.queryCategoriesByType();
-                templateItem.categories = await Quickly.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
-                missingInfo['categories'] = templateItem.categories;
-            }
-    
-            await templateItem.saveDef(missingInfo);
+            const canceled = await this.checkTemplateDef(templateItem);
+            if (canceled) { return null; }
     
             const catalog = await this.getTemplateCatalog(undefined, systemTemplate);
                 
@@ -275,40 +272,17 @@ export default class TemplateManager {
         // determine template dir
         const templatesDir = await TemplateManager.getTemplatesFolder();
         const templateCatalog = await TemplateManager.getTemplateCatalog();
-        const categoryList = templateCatalog.queryCategoriesByType();
 
         const analysis = await TemplateEngine.analyzeTemplate(fsPath);
-        const templateItem = analysis.template;
-        const missingInfo = {};
+        let templateItem = analysis.template;
+        templateItem.type = templateItem.type || type;
 
-        if (!templateItem.type) {
-            templateItem.type = type;
-            missingInfo['type'] = templateItem.type;
-        }
-
-        if (!templateItem.name) {
-            templateItem.name = await Quickly.ask("Enter the desired template name", undefined, fsBaseName);
-            missingInfo['name'] = templateItem.name;
-        }
-
+        const canceled = await TemplateManager.checkTemplateDef(templateItem, fsBaseName);
+        if (canceled) { return null; }
+        
         const templateName = templateItem.name;
         const templateDir = path.join(templatesDir, templateName);
 
-        if (!templateItem.displayName) {
-            templateItem.displayName = await Quickly.ask(`What should we call the display name for '${templateName}'`, undefined, templateName);
-            missingInfo['displayName'] = templateItem.displayName;
-        }
-        
-        if (!templateItem.publisher) {
-            templateItem.publisher = await Quickly.ask(`Who is the publisher name for '${templateItem.displayName}'`);
-            missingInfo['publisher'] = templateItem.publisher;
-        }
-        
-        if (templateItem.categories.length === 0) {
-            templateItem.categories = await Quickly.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
-            missingInfo['categories'] = templateItem.categories;
-        }
-        
         // check if exists
         if (FileSystem.exists(templateDir)) {
             const overwrite = await Quickly.pickBoolean(`Template '${templateName}' already exists.  Do you wish to overwrite?`, "Yes", "No");
@@ -341,8 +315,6 @@ export default class TemplateManager {
         if (templateCatalog && templateCatalog.query(c => c.where(i => i.name === templateName)).length === 0) {
             isNew = true;
         }
-
-        templateItem.saveDef(missingInfo);
 
         if (isNew) {
             templateCatalog.add(templateItem);
