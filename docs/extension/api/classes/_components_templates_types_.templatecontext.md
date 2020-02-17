@@ -27,7 +27,7 @@ sidebar_label: "TemplateContext"
 
 • **commands**: *[TemplateCommand](../interfaces/_components_templates_types_.templatecommand.md)[]* = []
 
-Defined in src/components/Templates/Types.ts:129
+Defined in src/components/Templates/Types.ts:109
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 • **executionContext**: *any*
 
-Defined in src/components/Templates/Types.ts:131
+Defined in src/components/Templates/Types.ts:111
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 • **outputPath**: *string*
 
-Defined in src/components/Templates/Types.ts:128
+Defined in src/components/Templates/Types.ts:108
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 • **parameters**: *object*
 
-Defined in src/components/Templates/Types.ts:130
+Defined in src/components/Templates/Types.ts:110
 
 #### Type declaration:
 
@@ -63,7 +63,7 @@ ___
 
 • **sourcePath**: *string*
 
-Defined in src/components/Templates/Types.ts:127
+Defined in src/components/Templates/Types.ts:107
 
 ___
 
@@ -71,4 +71,4 @@ ___
 
 • **userCanceled**: *boolean* = false
 
-Defined in src/components/Templates/Types.ts:126
+Defined in src/components/Templates/Types.ts:106

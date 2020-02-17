@@ -24,7 +24,7 @@ sidebar_label: "viewContainers"
 
 ▪ **_namespace**: *string* = "cs.cds.viewContainers"
 
-Defined in src/cs.ts:88
+Defined in src/cs.ts:94
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 ▪ **cdsExplorer**: *string* = `${viewContainers._namespace}.cdsExplorer`
 
-Defined in src/cs.ts:89
+Defined in src/cs.ts:95
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 ▪ **templateExplorer**: *string* = `${viewContainers._namespace}.templateExplorer`
 
-Defined in src/cs.ts:90
+Defined in src/cs.ts:96
