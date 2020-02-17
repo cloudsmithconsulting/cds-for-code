@@ -157,7 +157,7 @@ export default class TemplateManager {
         }
     }
 
-    static async checkTemplateDef(templateItem: TemplateItem, defaultName?: string, defaultType?: TemplateType, filename: string = "template.def"): Promise<boolean> {
+    static async checkTemplateDef(templateItem: TemplateItem, defaultName?: string, defaultType?: TemplateType): Promise<any> {
         const missingInfo = {};
         let canceled: boolean = false;
 
@@ -192,7 +192,14 @@ export default class TemplateManager {
             missingInfo['categories'] = templateItem.categories;
         }
 
-        if (canceled || Object.keys(missingInfo).length === 0) { return canceled; }
+        return {
+            canceled,
+            missingInfo
+        };
+    }
+
+    static async writeTemplateDef(templateItem: TemplateItem, missingInfo: any, filename: string = "template.def"): Promise<void> {
+        if (Object.keys(missingInfo).length === 0) { return; }
         
         const folder = path.join(await this.getTemplateFolder(templateItem));
         const file = path.join(folder, filename);
@@ -204,8 +211,6 @@ export default class TemplateManager {
             let fileContents = `${missingDef}\r\n${FileSystem.readFileSync(file)}`;
             FileSystem.writeFileSync(file, fileContents);
         }
-
-        return canceled;
     }
 
     static async exportTemplate(template: TemplateItem, archive: string, systemTemplate:boolean = false): Promise<void> {
@@ -213,8 +218,9 @@ export default class TemplateManager {
         const analysis = await TemplateEngine.analyzeTemplate(folder);
         let templateItem = TemplateItem.merge(template, analysis.template);
         
-        const canceled = await this.checkTemplateDef(templateItem);
-        if (canceled) { return; }
+        const defCheck = await this.checkTemplateDef(templateItem);
+        if (defCheck.canceled) { return; }
+        this.writeTemplateDef(templateItem, defCheck.missingInfo);
         
         await FileSystem.zipFolder(archive, folder);
     }
@@ -230,8 +236,9 @@ export default class TemplateManager {
             const analysis = await TemplateEngine.analyzeTemplate(templateFolder);
             let templateItem = analysis.template;
 
-            const canceled = await this.checkTemplateDef(templateItem);
-            if (canceled) { return null; }
+            const defCheck = await this.checkTemplateDef(templateItem);
+            if (defCheck.canceled) { return; }
+            this.writeTemplateDef(templateItem, defCheck.missingInfo);
     
             const catalog = await this.getTemplateCatalog(undefined, systemTemplate);
                 
@@ -276,8 +283,8 @@ export default class TemplateManager {
         const analysis = await TemplateEngine.analyzeTemplate(fsPath);
         let templateItem = analysis.template;
 
-        const canceled = await TemplateManager.checkTemplateDef(templateItem, fsBaseName, type);
-        if (canceled) { return null; }
+        const defCheck = await TemplateManager.checkTemplateDef(templateItem, fsBaseName, type);
+        if (defCheck.canceled) { return null; }
         
         const templateName = templateItem.name;
         const templateDir = path.join(templatesDir, templateName);
@@ -306,6 +313,8 @@ export default class TemplateManager {
             location = path.join(templateDir, fsBaseName + path.extname(fsPath));
             FileSystem.copyItemSync(fsPath, location);
         }
+
+        TemplateManager.writeTemplateDef(templateItem, defCheck.missingInfo);
 
         location = path.relative(templatesDir, location);
         templateItem.location = location;

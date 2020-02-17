@@ -177,9 +177,16 @@ export default class TemplateEngine {
             const source = allTemplatePaths[i];
             const fileContents = fs.readFileSync(source);
             const directive = template.directives?.find(d => d.name === path.basename(source));
-            const destination = template.type === TemplateType.ItemTemplate
-                ? source.replace(source, `${outputPath}${path.extname(source)}`)
-                : source.replace(templatePath, outputPath);
+            let destination;
+            if (template.type === TemplateType.ItemTemplate) {
+                const ext = path.extname(source);
+                outputPath = !outputPath.toLocaleLowerCase().endsWith(ext)
+                    ? `${outputPath}${ext}`
+                    : outputPath;
+                destination = source.replace(source, outputPath);
+            } else {
+                destination = source.replace(templatePath, outputPath);
+            }
             
             let templateFn;
             try {
