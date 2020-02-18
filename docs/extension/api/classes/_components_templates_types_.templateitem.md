@@ -31,11 +31,8 @@ sidebar_label: "TemplateItem"
 ### Methods
 
 * [apply](_components_templates_types_.templateitem.md#apply)
-* [load](_components_templates_types_.templateitem.md#load)
-* [save](_components_templates_types_.templateitem.md#save)
 * [from](_components_templates_types_.templateitem.md#static-from)
-* [read](_components_templates_types_.templateitem.md#static-read)
-* [write](_components_templates_types_.templateitem.md#static-write)
+* [merge](_components_templates_types_.templateitem.md#static-merge)
 
 ## Constructors
 
@@ -43,7 +40,7 @@ sidebar_label: "TemplateItem"
 
 \+ **new TemplateItem**(`type?`: [TemplateType](../enums/_components_templates_types_.templatetype.md), `name?`: string, `displayName?`: string, `description?`: string, `publisher?`: string, `location?`: string, `outputPath?`: string, `categories?`: string[], `directives?`: [TemplateDirective](_components_templates_types_.templatedirective.md)[]): *[TemplateItem](_components_templates_types_.templateitem.md)*
 
-Defined in src/components/Templates/Types.ts:9
+Defined in src/components/Templates/Types.ts:5
 
 **Parameters:**
 
@@ -67,7 +64,7 @@ Name | Type |
 
 • **categories**? : *string[]*
 
-Defined in src/components/Templates/Types.ts:18
+Defined in src/components/Templates/Types.ts:14
 
 ___
 
@@ -75,7 +72,7 @@ ___
 
 • **description**? : *string*
 
-Defined in src/components/Templates/Types.ts:14
+Defined in src/components/Templates/Types.ts:10
 
 ___
 
@@ -83,7 +80,7 @@ ___
 
 • **directives**? : *[TemplateDirective](_components_templates_types_.templatedirective.md)[]*
 
-Defined in src/components/Templates/Types.ts:19
+Defined in src/components/Templates/Types.ts:15
 
 ___
 
@@ -91,7 +88,7 @@ ___
 
 • **displayName**? : *string*
 
-Defined in src/components/Templates/Types.ts:13
+Defined in src/components/Templates/Types.ts:9
 
 ___
 
@@ -99,7 +96,7 @@ ___
 
 • **location**? : *string*
 
-Defined in src/components/Templates/Types.ts:16
+Defined in src/components/Templates/Types.ts:12
 
 ___
 
@@ -107,7 +104,7 @@ ___
 
 • **name**? : *string*
 
-Defined in src/components/Templates/Types.ts:12
+Defined in src/components/Templates/Types.ts:8
 
 ___
 
@@ -115,7 +112,7 @@ ___
 
 • **outputPath**? : *string*
 
-Defined in src/components/Templates/Types.ts:17
+Defined in src/components/Templates/Types.ts:13
 
 ___
 
@@ -123,7 +120,7 @@ ___
 
 • **publisher**? : *string*
 
-Defined in src/components/Templates/Types.ts:15
+Defined in src/components/Templates/Types.ts:11
 
 ___
 
@@ -131,7 +128,7 @@ ___
 
 • **type**? : *[TemplateType](../enums/_components_templates_types_.templatetype.md)*
 
-Defined in src/components/Templates/Types.ts:11
+Defined in src/components/Templates/Types.ts:7
 
 ## Methods
 
@@ -139,7 +136,7 @@ Defined in src/components/Templates/Types.ts:11
 
 ▸ **apply**(`outputPath`: string, ...`object`: any): *Promise‹void›*
 
-Defined in src/components/Templates/Types.ts:37
+Defined in src/components/Templates/Types.ts:62
 
 **Parameters:**
 
@@ -152,43 +149,11 @@ Name | Type |
 
 ___
 
-###  load
-
-▸ **load**(`filename?`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
-
-Defined in src/components/Templates/Types.ts:44
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`filename?` | string |
-
-**Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
-
-___
-
-###  save
-
-▸ **save**(`filename?`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
-
-Defined in src/components/Templates/Types.ts:48
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`filename?` | string |
-
-**Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
-
-___
-
 ### `Static` from
 
 ▸ **from**(`from`: [TemplateItem](_components_templates_types_.templateitem.md)): *[TemplateItem](_components_templates_types_.templateitem.md)*
 
-Defined in src/components/Templates/Types.ts:24
+Defined in src/components/Templates/Types.ts:20
 
 **Parameters:**
 
@@ -200,33 +165,17 @@ Name | Type |
 
 ___
 
-### `Static` read
+### `Static` merge
 
-▸ **read**(`filename`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
+▸ **merge**(`to`: [TemplateItem](_components_templates_types_.templateitem.md), `from`: [TemplateItem](_components_templates_types_.templateitem.md)): *[TemplateItem](_components_templates_types_.templateitem.md)*
 
-Defined in src/components/Templates/Types.ts:52
-
-**Parameters:**
-
-Name | Type | Default |
------- | ------ | ------ |
-`filename` | string | "template.json" |
-
-**Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
-
-___
-
-### `Static` write
-
-▸ **write**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `filename`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
-
-Defined in src/components/Templates/Types.ts:71
+Defined in src/components/Templates/Types.ts:33
 
 **Parameters:**
 
-Name | Type | Default |
------- | ------ | ------ |
-`template` | [TemplateItem](_components_templates_types_.templateitem.md) | - |
-`filename` | string | "template.json" |
+Name | Type |
+------ | ------ |
+`to` | [TemplateItem](_components_templates_types_.templateitem.md) |
+`from` | [TemplateItem](_components_templates_types_.templateitem.md) |
 
-**Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
+**Returns:** *[TemplateItem](_components_templates_types_.templateitem.md)*

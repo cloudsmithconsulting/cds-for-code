@@ -30,23 +30,24 @@ export default class TemplateEngine {
     };
 
     static async executeTemplate(template: TemplateItem, outputPath: string, ...object: any): Promise<TemplateContext> {  
-        if (template.type === TemplateType.ItemTemplate && path.extname(outputPath).length === 0) {
-            throw Error(`Item templates must have a full file path`);
-        }  
+        let templatePath;
+        const systemTemplates = await TemplateManager.getDefaultTemplatesFolder(true);
 
-        const analysis = await this.analyzeTemplate(template, outputPath);
+        if (FileSystem.exists(path.join(systemTemplates, template.location))) {
+            templatePath = path.join(systemTemplates, template.location);
+        } else {
+            templatePath = path.join(TemplateManager.getDefaultTemplatesFolder(false), template.location);
+        }
+
+        const analysis = await this.analyzeTemplate(templatePath, outputPath);
         const templateContext = await this.buildTemplateContext(analysis, ...object);
+
         if (templateContext.userCanceled) { return templateContext; }
 
         await this.executeCommands(templateContext, TemplateCommandExecutionStage.PreRun);
 
         for (let i = 0; i < analysis.files.length; i++) {
             const file = analysis.files[i];
-
-            if (file.destination?.length === 0) {
-                continue;
-            }            
-
             const destination = file.destination.replace(this.fileNameRegex, (match, key) => templateContext.parameters[key] || match);
 
             templateContext.executionContext.currentFile = {
@@ -75,22 +76,10 @@ export default class TemplateEngine {
         return templateContext;
     }
 
-    static async analyzeTemplate(template: TemplateItem, outputPath?: string): Promise<TemplateAnalysis> {
-        if (outputPath && template.outputPath && !path.isAbsolute(template.outputPath)) {
-            outputPath = path.join(outputPath, template.outputPath);
-        } else if (template.outputPath && path.isAbsolute(template.outputPath)) {
-            outputPath = template.outputPath;
-        }
-
-        let templatePath;
-        const systemTemplates = await TemplateManager.getDefaultTemplatesFolder(true);
-        if (FileSystem.exists(path.join(systemTemplates, template.location))) {
-            templatePath = path.join(systemTemplates, template.location);
-        } else {
-            templatePath = path.join(TemplateManager.getDefaultTemplatesFolder(false), template.location);
-        }
-
+    static async analyzeTemplate(templatePath: string, outputPath?: string): Promise<TemplateAnalysis> {
         const result = new TemplateAnalysis();
+        let template = new TemplateItem();
+
         const interactives: { [name: string]: Interactive } = {};
         const commands: TemplateCommand[] = [];
 
@@ -99,6 +88,10 @@ export default class TemplateEngine {
             : FileSystem.walkSync(templatePath);
 
         const templateDefs = {
+            template(item: TemplateItem) {
+                template = TemplateItem.merge(template, item);
+                return '';
+            },
             ui: {
                 prompt(name: string, message: string) {
                     interactives[name] = {
@@ -166,18 +159,38 @@ export default class TemplateEngine {
             }
         };
 
+        let defFileIndex = allTemplatePaths.findIndex(f => f.toLowerCase().endsWith('\\template.def'));
+        defFileIndex = (defFileIndex === -1) ? allTemplatePaths.findIndex(f => f.endsWith('.def')) : defFileIndex;
+        while (defFileIndex > 0) {
+            doT.template(FileSystem.readFileSync(allTemplatePaths[defFileIndex]), this.dotSettings, templateDefs);
+            allTemplatePaths.splice(defFileIndex, 1);
+            defFileIndex = allTemplatePaths.findIndex(f => f.endsWith('.def'));
+        }
+
+        if (outputPath && template.outputPath && !path.isAbsolute(template.outputPath)) {
+            outputPath = path.join(outputPath, template.outputPath);
+        } else if (template.outputPath && path.isAbsolute(template.outputPath)) {
+            outputPath = template.outputPath;
+        }
+
         for (let i = 0; i < allTemplatePaths.length; i++) {
             const source = allTemplatePaths[i];
             const fileContents = fs.readFileSync(source);
             const directive = template.directives?.find(d => d.name === path.basename(source));
-            
-            const destination = !source.toLowerCase().endsWith('.def')
-                ? source.replace(templatePath, outputPath)
-                : '';
+            let destination;
+            if (template.type === TemplateType.ItemTemplate) {
+                const ext = path.extname(source);
+                outputPath = !outputPath?.toLowerCase().endsWith(ext)
+                    ? `${outputPath}${ext}`
+                    : outputPath;
+                destination = source.replace(source, outputPath);
+            } else {
+                destination = source.replace(templatePath, outputPath);
+            }
             
             let templateFn;
             try {
-                templateFn = (!directive || directive.usePlaceholders)
+                templateFn = (!directive || directive.processFile)
                     ? doT.template(fileContents.toString(), this.dotSettings, templateDefs)
                     : null;
             } catch (error) {
@@ -202,6 +215,7 @@ export default class TemplateEngine {
             });
         }
 
+        result.template = template;
         result.sourcePath = templatePath;
         result.outputPath = outputPath;
         result.commands = commands;

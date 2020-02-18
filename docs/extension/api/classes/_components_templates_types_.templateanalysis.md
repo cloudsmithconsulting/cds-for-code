@@ -19,6 +19,7 @@ sidebar_label: "TemplateAnalysis"
 * [interactives](_components_templates_types_.templateanalysis.md#interactives)
 * [outputPath](_components_templates_types_.templateanalysis.md#outputpath)
 * [sourcePath](_components_templates_types_.templateanalysis.md#sourcepath)
+* [template](_components_templates_types_.templateanalysis.md#template)
 
 ## Properties
 
@@ -26,7 +27,7 @@ sidebar_label: "TemplateAnalysis"
 
 • **commands**: *[TemplateCommand](../interfaces/_components_templates_types_.templatecommand.md)[]* = []
 
-Defined in src/components/Templates/Types.ts:121
+Defined in src/components/Templates/Types.ts:100
 
 ___
 
@@ -34,7 +35,7 @@ ___
 
 • **files**: *[TemplateFileAnalysis](../interfaces/_components_templates_types_.templatefileanalysis.md)[]* = []
 
-Defined in src/components/Templates/Types.ts:122
+Defined in src/components/Templates/Types.ts:101
 
 ___
 
@@ -42,7 +43,7 @@ ___
 
 • **interactives**: *object*
 
-Defined in src/components/Templates/Types.ts:120
+Defined in src/components/Templates/Types.ts:99
 
 #### Type declaration:
 
@@ -54,7 +55,7 @@ ___
 
 • **outputPath**: *string*
 
-Defined in src/components/Templates/Types.ts:119
+Defined in src/components/Templates/Types.ts:98
 
 ___
 
@@ -62,4 +63,12 @@ ___
 
 • **sourcePath**: *string*
 
-Defined in src/components/Templates/Types.ts:118
+Defined in src/components/Templates/Types.ts:97
+
+___
+
+###  template
+
+• **template**: *[TemplateItem](_components_templates_types_.templateitem.md)*
+
+Defined in src/components/Templates/Types.ts:102

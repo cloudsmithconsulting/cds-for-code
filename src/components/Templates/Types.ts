@@ -1,9 +1,5 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import * as doT from 'dot';
-import * as FileSystem from '../../core/io/FileSystem';
-import TemplateManager from './TemplateManager';
-import Quickly from '../../core/Quickly';
 import TemplateEngine from './TemplateEngine';
 
 export class TemplateItem {
@@ -17,8 +13,8 @@ export class TemplateItem {
         public outputPath?: string,
         public categories?: string[],
         public directives?: TemplateDirective[]) { 
-        if (!categories) { categories = []; }
-        if (!directives) { directives = []; }
+        if (!categories) { this.categories = []; }
+        if (!directives) { this.directives = []; }
     }
 
     static from(from:TemplateItem): TemplateItem {
@@ -30,8 +26,37 @@ export class TemplateItem {
             from.publisher,
             from.location, 
             from.outputPath,
-            from.categories,
-            from.directives);
+            from.categories || [],
+            from.directives || []);
+    }
+
+    static merge(to: TemplateItem, from: TemplateItem) : TemplateItem {
+        const result = new TemplateItem(
+            from.type || to.type, 
+            from.name || to.name,
+            from.displayName || to.displayName, 
+            from.description || to.description, 
+            from.publisher || to.publisher,
+            from.location || to.location, 
+            from.outputPath || to.outputPath);
+        
+        result.categories = to.categories || [];
+
+        if (from.categories?.length > 0) {
+            from.categories.forEach(c => {
+                if (result.categories.indexOf(c) === -1) {
+                    result.categories.push(c);
+                }
+            });
+        }
+
+        result.directives = to.directives || [];
+        
+        if (from.directives?.length > 0) {
+            result.directives.push(...from.directives);
+        }
+
+        return result;
     }
     
     async apply(outputPath: string, ...object: any): Promise<void> {
@@ -39,53 +64,7 @@ export class TemplateItem {
             throw new Error("Only item templates may invoke the .apply function inline");
         }
         await TemplateEngine.executeTemplate(this, outputPath, ...object);
-    }
-
-    async load(filename?: string): Promise<TemplateItem> {
-        return (TemplateItem.read(filename).then(item => TemplateItem.from(item)));
-    }
-
-    async save(filename?: string): Promise<TemplateItem> {
-        return TemplateItem.write(this, filename);
-    }
-
-    static async read(filename: string = "template.json"): Promise<TemplateItem> {
-        const file = path.isAbsolute(filename) ? filename : path.join(await TemplateManager.getTemplatesFolder(), filename);
-
-        if (FileSystem.exists(file)) {
-            try {
-                let returnObject = JSON.parse(FileSystem.readFileSync(file));
- 
-                if (returnObject) {
-                    return TemplateItem.from(returnObject);
-                }
-            }
-            catch (error) {
-                Quickly.error(`The template '${filename}' was found but could not be parsed.${error ? '  The error returned was: ' + error : ''}`);
-            }
-        }
-
-        return new TemplateItem();
-    }
-    
-    static async write(template: TemplateItem, filename: string = "template.json"): Promise<TemplateItem> {
-        const folder = path.isAbsolute(filename) ? path.dirname(filename) : path.join(await TemplateManager.getTemplateFolder(template), path.dirname(filename));
-        
-        if (!FileSystem.exists(folder)) {
-            FileSystem.makeFolderSync(folder);
-        }
-        
-        const file = path.isAbsolute(filename) ? filename : path.join(folder, filename);
-        
-        try {
-            FileSystem.writeFileSync(file, JSON.stringify(template));
-        }
-        catch (error) {
-            Quickly.error(`The template '${filename}' could not be saved to the template folder.${error ? '  The error returned was: ' + error : ''}`);
-        }
-        
-        return template;
-    }    
+    }  
 }
 
 export interface Interactive {
@@ -120,6 +99,7 @@ export class TemplateAnalysis {
     interactives: { [name: string]: Interactive } = {};
     commands: TemplateCommand[] = [];
     files: TemplateFileAnalysis[] = [];
+    template: TemplateItem;
 }
 
 export class TemplateContext {
@@ -141,13 +121,11 @@ export class TemplateFilesystemItem {
 export class TemplateDirective { 
     constructor(name?:string) {
         this.name = name;
-        this.usePlaceholders = true;
-        this.usePlaceholdersInFilename = true;
+        this.processFile = true;
     }
     
-    name: string;
-    usePlaceholders: boolean;   
-    usePlaceholdersInFilename: boolean;
+    name: string;  
+    processFile: boolean;
 }
 
 

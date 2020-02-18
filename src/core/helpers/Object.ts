@@ -25,7 +25,7 @@ export function clone<T extends Object>(source: T, target?: any, excludeProperti
         if (source.hasOwnProperty(prop) && (!excludeProperties || excludeProperties.indexOf(prop) === -1)) {
             // we deep clone here
             if (isObject(source[prop])) {
-                target[prop] = clone(source[prop], undefined, excludeProperties);
+                target[prop] = Object.assign({}, source[prop]);
             } else {
                 target[prop] = source[prop];
             }

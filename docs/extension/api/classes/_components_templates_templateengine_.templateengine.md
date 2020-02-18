@@ -39,15 +39,15 @@ Defined in src/components/Templates/TemplateEngine.ts:15
 
 ### `Static` analyzeTemplate
 
-▸ **analyzeTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `outputPath?`: string): *Promise‹[TemplateAnalysis](_components_templates_types_.templateanalysis.md)›*
+▸ **analyzeTemplate**(`templatePath`: string, `outputPath?`: string): *Promise‹[TemplateAnalysis](_components_templates_types_.templateanalysis.md)›*
 
-Defined in src/components/Templates/TemplateEngine.ts:78
+Defined in src/components/Templates/TemplateEngine.ts:79
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`template` | [TemplateItem](_components_templates_types_.templateitem.md) |
+`templatePath` | string |
 `outputPath?` | string |
 
 **Returns:** *Promise‹[TemplateAnalysis](_components_templates_types_.templateanalysis.md)›*
@@ -58,7 +58,7 @@ ___
 
 ▸ **buildTemplateContext**(`templateAnalysis`: [TemplateAnalysis](_components_templates_types_.templateanalysis.md), ...`object`: any): *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
 
-Defined in src/components/Templates/TemplateEngine.ts:251
+Defined in src/components/Templates/TemplateEngine.ts:265
 
 **Parameters:**
 
@@ -75,7 +75,7 @@ ___
 
 ▸ **executeCommands**(`templateContext`: [TemplateContext](_components_templates_types_.templatecontext.md), `stage`: [TemplateCommandExecutionStage](../enums/_components_templates_types_.templatecommandexecutionstage.md)): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateEngine.ts:213
+Defined in src/components/Templates/TemplateEngine.ts:227
 
 **Parameters:**
 

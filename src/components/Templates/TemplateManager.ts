@@ -106,13 +106,6 @@ export default class TemplateManager {
             return;
         }
 
-        if (type === TemplateType.ItemTemplate && path.extname(fsPath).length === 0) {
-            const filename = await Quickly.ask("What would you like to call the file that is created?");
-            if (!filename) { return; }
-    
-            fsPath = `${path.join(fsPath, filename + path.extname(template.location))}`;
-        }
-
         const result = await TemplateEngine.executeTemplate(template, fsPath);
         return result;
     }
@@ -156,11 +149,7 @@ export default class TemplateManager {
         const templateRoot = await TemplateManager.getTemplatesFolder(systemTemplate);
         
         if (template && template.location) {
-            let templateDir:string = path.isAbsolute(template.location) ? template.location : path.join(templateRoot, template.location);
-
-            if (template.type === TemplateType.ItemTemplate) {
-                templateDir = path.join(templateDir, "..");
-            }
+            let templateDir:string = path.isAbsolute(template.location) ? template.location : path.join(templateRoot, template.name);
 
             return templateDir;
         } else {
@@ -168,12 +157,72 @@ export default class TemplateManager {
         }
     }
 
+    static async checkTemplateDef(templateItem: TemplateItem, defaultName?: string, defaultType?: TemplateType): Promise<any> {
+        const missingInfo = {};
+        let canceled: boolean = false;
+
+        if (!templateItem.type) {
+            templateItem.type = defaultType || await Quickly.pickEnum(TemplateType, "What type of template");
+            canceled = !templateItem.type;
+            missingInfo['type'] = templateItem.type;
+        }
+
+        if (!canceled && !templateItem.name) {
+            templateItem.name = await Quickly.ask("Enter the desired template name", undefined, defaultName);
+            canceled = !templateItem.name;
+            missingInfo['name'] = templateItem.name;
+        }
+
+        if (!canceled && !templateItem.displayName) {
+            templateItem.displayName = await Quickly.ask(`What should we call the display name for '${templateItem.name}'`, undefined, templateItem.name);
+            canceled = !templateItem.displayName;
+            missingInfo['displayName'] = templateItem.displayName;
+        }
+        
+        if (!canceled && !templateItem.publisher) {
+            templateItem.publisher = await Quickly.ask(`Who is the publisher name for '${templateItem.displayName}'`);
+            canceled = !templateItem.publisher;
+            missingInfo['publisher'] = templateItem.publisher;
+        }
+        
+        if (!canceled && templateItem.categories.length === 0) {
+            const templateCatalog = await this.getTemplateCatalog();
+            const categoryList = templateCatalog.queryCategoriesByType();
+            templateItem.categories = await Quickly.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
+            missingInfo['categories'] = templateItem.categories;
+        }
+
+        return {
+            canceled,
+            missingInfo
+        };
+    }
+
+    static async writeTemplateDef(templateItem: TemplateItem, missingInfo: any, filename: string = "template.def"): Promise<void> {
+        if (Object.keys(missingInfo).length === 0) { return; }
+        
+        const folder = path.join(await this.getTemplateFolder(templateItem));
+        const file = path.join(folder, filename);
+        const missingDef = `{{#def.template(${JSON.stringify(missingInfo)})}}`;
+        
+        if (!FileSystem.exists(file)) {
+            FileSystem.writeFileSync(file, missingDef);
+        } else {
+            let fileContents = `${missingDef}\r\n${FileSystem.readFileSync(file)}`;
+            FileSystem.writeFileSync(file, fileContents);
+        }
+    }
+
     static async exportTemplate(template: TemplateItem, archive: string, systemTemplate:boolean = false): Promise<void> {
         const folder = await this.getTemplateFolder(template, systemTemplate);
+        const analysis = await TemplateEngine.analyzeTemplate(folder);
+        let templateItem = TemplateItem.merge(template, analysis.template);
         
-        await template.save(path.join(folder, "template.json"));
+        const defCheck = await this.checkTemplateDef(templateItem);
+        if (defCheck.canceled) { return; }
+        this.writeTemplateDef(templateItem, defCheck.missingInfo);
+        
         await FileSystem.zipFolder(archive, folder);
-        await FileSystem.deleteItem(path.join(folder, "template.json"));
     }
 
     static async importTemplate(archive: string, systemTemplate:boolean = false): Promise<TemplateItem> {
@@ -183,34 +232,27 @@ export default class TemplateManager {
     
             await FileSystem.makeFolderSync(templateFolder);
             await FileSystem.unzip(archive, templateFolder);
-    
-            if (FileSystem.exists(path.join(templateFolder, "template.json"))) {
-                const template = await TemplateItem.read(path.join(templateFolder, "template.json"));
-                const catalog = await this.getTemplateCatalog(undefined, systemTemplate);
-                
-                if (template && catalog) {
-                    // We may have moved the location of the template (+ items), and need to re-calculate.                
-                    const filename = path.extname(template.location) !== "" ? path.basename(template.location) : "";
 
-                    if (template.type === TemplateType.ProjectTemplate) {
-                        template.location = path.relative(folder, templateFolder);
-                    } else {
-                        template.location = path.join(path.relative(folder, templateFolder), filename);
-                    }
+            const analysis = await TemplateEngine.analyzeTemplate(templateFolder);
+            let templateItem = analysis.template;
+
+            const defCheck = await this.checkTemplateDef(templateItem);
+            if (defCheck.canceled) { return; }
+            this.writeTemplateDef(templateItem, defCheck.missingInfo);
     
-                    const index = catalog.items.findIndex(i => i.name === template.name);
-    
-                    if (index > -1) {
-                        catalog.items.splice(index, 1);
-                    }
-    
-                    catalog.items.push(template);
-                    catalog.save();
-    
-                    await FileSystem.deleteItem(path.join(templateFolder, "template.json"));
-    
-                    return template;
+            const catalog = await this.getTemplateCatalog(undefined, systemTemplate);
+                
+            if (templateItem && catalog) {
+                const index = catalog.items.findIndex(i => i.name === templateItem.name);
+
+                if (index > -1) {
+                    catalog.items.splice(index, 1);
                 }
+
+                catalog.items.push(templateItem);
+                catalog.save();
+
+                return templateItem;
             }
         } catch (error) {
             console.log(error);
@@ -234,76 +276,63 @@ export default class TemplateManager {
         type = type || TemplateType.ProjectTemplate;
         const fsBaseName = path.basename(fsPath, path.extname(fsPath));
 
-        // prompt user
-        return await Quickly.ask("Enter the desired template name", undefined, fsBaseName)
-            .then(async templateName => {
-                // empty filename exits
-                if (!templateName) {
-                    return undefined;
-                }
+        // determine template dir
+        const templatesDir = await TemplateManager.getTemplatesFolder();
+        const templateCatalog = await TemplateManager.getTemplateCatalog();
 
-                // determine template dir
-                const templatesDir = await TemplateManager.getTemplatesFolder();
-                const templateDir = path.join(templatesDir, templateName);
-                
-                // check if exists
-                if (FileSystem.exists(templateDir)) {
-                    const overwrite = await Quickly.pickBoolean(`Template '${templateName}' aleady exists.  Do you wish to overwrite?`, "Yes", "No");
-                    if (overwrite) { 
-                        await FileSystem.deleteFolder(templateDir); 
-                        FileSystem.makeFolderSync(templateDir);
-                    } else {
-                        return undefined;
-                    }
-                } else {
-                    // Make the folder.
-                    FileSystem.makeFolderSync(templateDir);
-                }
+        const analysis = await TemplateEngine.analyzeTemplate(fsPath);
+        let templateItem = analysis.template;
 
-                // Check to see if this template exists in the catalog.
-                const templateCatalog = await TemplateManager.getTemplateCatalog();
-                const categoryList = templateCatalog.queryCategoriesByType();
+        const defCheck = await TemplateManager.checkTemplateDef(templateItem, fsBaseName, type);
+        if (defCheck.canceled) { return null; }
+        
+        const templateName = templateItem.name;
+        const templateDir = path.join(templatesDir, templateName);
 
-                let location:string;
-
-                if (type === TemplateType.ProjectTemplate) {
-                    location = templateDir;
-                    // copy current workspace to new template folder
-                    await FileSystem.copyFolder(fsPath, templateDir);
-                } else {
-                    location = path.join(templateDir, fsBaseName + path.extname(fsPath));
-                    FileSystem.copyItemSync(fsPath, location);
-                }
-
-                location = path.relative(templatesDir, location);
-                let templateItem;
-                let isNew:boolean = false;
-
-                if (templateCatalog && templateCatalog.query(c => c.where(i => i.name === templateName)).length === 0) {
-                    templateItem = new TemplateItem();
-                    isNew = true;
-                } else {
-                    templateItem = templateCatalog.query(c => c.where(i => i.name === templateName))[0];
-                }
-
-                templateItem.name = templateName;
-                templateItem.location = location;
-                templateItem.displayName = templateItem.displayName || await Quickly.ask(`What should we call the display name for '${templateName}'`, undefined, templateName);
-                templateItem.publisher = templateItem.publisher || await Quickly.ask(`Who is the publisher name for '${templateItem.displayName}'`);
-                templateItem.type = type;
-                templateItem.categories = templateItem.categories || await Quickly.pickAnyOrNew("What categories apply to this template?", ...categoryList).then(i => i.map(c => c.label));
-
-                if (isNew) {
-                    templateCatalog.add(templateItem);
-                }
-
-                templateCatalog.save();
-
-                TemplateTreeView.Instance.refresh();
-
-                return templateItem;
+        // check if exists
+        if (FileSystem.exists(templateDir)) {
+            const overwrite = await Quickly.pickBoolean(`Template '${templateName}' already exists.  Do you wish to overwrite?`, "Yes", "No");
+            if (overwrite) { 
+                await FileSystem.deleteFolder(templateDir); 
+                FileSystem.makeFolderSync(templateDir);
+            } else {
+                return undefined;
             }
-        );
+        } else {
+            // Make the folder.
+            FileSystem.makeFolderSync(templateDir);
+        }
+
+        let location:string;
+
+        if (type === TemplateType.ProjectTemplate) {
+            location = templateDir;
+            // copy current workspace to new template folder
+            await FileSystem.copyFolder(fsPath, templateDir);
+        } else {
+            location = path.join(templateDir, fsBaseName + path.extname(fsPath));
+            FileSystem.copyItemSync(fsPath, location);
+        }
+
+        TemplateManager.writeTemplateDef(templateItem, defCheck.missingInfo);
+
+        location = path.relative(templatesDir, location);
+        templateItem.location = location;
+        
+        let isNew:boolean = false;
+        if (templateCatalog && templateCatalog.query(c => c.where(i => i.name === templateName)).length === 0) {
+            isNew = true;
+        }
+
+        if (isNew) {
+            templateCatalog.add(templateItem);
+        }
+
+        templateCatalog.save();
+
+        TemplateTreeView.Instance.refresh();
+
+        return templateItem;
     }
 
     /**
@@ -375,8 +404,10 @@ export default class TemplateManager {
                                     templateItem = current;
                                 }
                             }
-    
-                            templateItem = templateItem || new TemplateItem();
+
+                            const analysis = await TemplateEngine.analyzeTemplate(path.join(folder, i.name));
+                            templateItem = analysis.template;
+                            
                             type = templateItem.type ? templateItem.type : i.type === vscode.FileType.Directory ? TemplateType.ProjectTemplate : TemplateType.ItemTemplate;
     
                             templateItem.name = templateItem.name || i.name;

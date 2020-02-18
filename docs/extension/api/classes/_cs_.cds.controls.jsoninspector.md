@@ -23,7 +23,7 @@ sidebar_label: "jsonInspector"
 
 ▪ **_namespace**: *string* = "cs.cds.controls.jsonInspector"
 
-Defined in src/cs.ts:202
+Defined in src/cs.ts:208
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 ▪ **open**: *string* = `${jsonInspector._namespace}.open`
 
-Defined in src/cs.ts:203
+Defined in src/cs.ts:209

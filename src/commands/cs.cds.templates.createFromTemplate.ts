@@ -36,6 +36,7 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
         return;
     }
 
+    let filename;
     if (!destinationUri || !destinationUri.fsPath || !FileSystem.exists(destinationUri.fsPath)) {
         switch (type) {
             case TemplateType.ProjectTemplate:
@@ -46,10 +47,10 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
                 path = fileItem.fsPath;
 
                 if (fileItem.itemType === vscode.FileType.Directory) {
-                    const filename = await Quickly.ask("What would you like to call the file that is created?");
+                    filename = await Quickly.ask("What would you like to call the file that is created?");
                     if (!filename) { return; }
 
-                    path = `${p.join(path, filename + p.extname(template.location))}`;
+                    path = `${p.join(path, filename)}`;
                 } else {
                     path = fileItem.fsPath;
                 }
@@ -67,11 +68,11 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
         return;
     }
 
-    if (type === TemplateType.ItemTemplate && p.extname(path).length === 0) {
+    if (filename?.length === 0 && type === TemplateType.ItemTemplate && p.extname(path).length === 0) {
         const filename = await Quickly.ask("What would you like to call the file that is created?");
         if (!filename) { return; }
 
-        path = `${p.join(path, filename + p.extname(template.location))}`;
+        path = `${p.join(path, filename)}`;
     }
 
     // load latest configuration
