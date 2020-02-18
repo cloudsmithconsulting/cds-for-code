@@ -76,7 +76,9 @@ export class ViewRenderer {
     renderFile(webviewFileName: string, useCsp?: boolean): string {
 		const pathOnDisk = path.join(ExtensionContext.Instance.extensionPath, 'resources', 'webviews', webviewFileName);
 		const fileHtml = FileSystem.readFileSync(pathOnDisk).toString();
-    
+	
+		_.templateSettings.interpolate = /#{([\s\S]+?)}/g;
+		
 		const compiled = _.template(fileHtml);
 		const viewModel = {
 			viewTitle: this.view.options.title,
