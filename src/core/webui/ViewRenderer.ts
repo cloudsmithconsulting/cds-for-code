@@ -78,7 +78,7 @@ export class ViewRenderer {
 		const fileHtml = FileSystem.readFileSync(pathOnDisk).toString();
 	
 		_.templateSettings.interpolate = /#{([\s\S]+?)}/g;
-		
+
 		const compiled = _.template(fileHtml);
 		const viewModel = {
 			viewTitle: this.view.options.title,
@@ -95,7 +95,7 @@ export class ViewRenderer {
         return this.render(compiled(viewModel), useCsp);
 	}
     
-    render(htmlParial: string, useCsp?: boolean): string {
+    render(htmlPartial: string, useCsp?: boolean): string {
 		// add some default scripts
 		this.insertScriptAt(0, 'main.js');
     
@@ -147,7 +147,7 @@ export class ViewRenderer {
 </head>
 <body>
 	<div class="main-container">
-		${htmlParial}
+		${htmlPartial}
 	</div>
 	${scriptHtml}
 </body>
