@@ -30,7 +30,7 @@ export class ViewRenderer {
 	}
     
     private insertScriptAt(index: number, scriptName: string) {
-		this._scripts.insert(0, scriptName, this.getFileUri('resources', 'scripts', scriptName));
+		this._scripts.insert(index, scriptName, this.getFileUri('resources', 'scripts', scriptName));
 	}
     
     addFrameworkScript(scriptName: string) {
@@ -101,7 +101,7 @@ export class ViewRenderer {
     
         // these are framework scripts hosted out of node_modules
 		this.insertFrameworkScript('lodash/lodash.min.js');
-		this.insertFrameworkScript('@iconify/iconify/dist/iconify.min.js');
+		this.insertScriptAt(0, 'iconify.min.js');
 		this.insertFrameworkScript('mustache/mustache.min.js');
 		this.insertFrameworkScript('jquery/dist/jquery.min.js');
     
