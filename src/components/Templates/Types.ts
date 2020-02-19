@@ -1,9 +1,5 @@
 import * as vscode from 'vscode';
-import * as FileSystem from '../../core/io/FileSystem';
-import * as path from 'path';
-import Dictionary from '../../core/types/Dictionary';
-import TemplateManager from './TemplateManager';
-import Quickly from '../../core/Quickly';
+import * as doT from 'dot';
 import TemplateEngine from './TemplateEngine';
 
 export class TemplateItem {
@@ -16,11 +12,9 @@ export class TemplateItem {
         public location?: string,
         public outputPath?: string,
         public categories?: string[],
-        public placeholders?: TemplatePlaceholder[],
         public directives?: TemplateDirective[]) { 
-        if (!categories) { categories = []; }
-        if (!placeholders) { placeholders = []; }
-        if (!directives) { directives = []; }
+        if (!categories) { this.categories = []; }
+        if (!directives) { this.directives = []; }
     }
 
     static from(from:TemplateItem): TemplateItem {
@@ -32,76 +26,89 @@ export class TemplateItem {
             from.publisher,
             from.location, 
             from.outputPath,
-            from.categories,
-            from.placeholders,
-            from.directives);
-    }
-    
-    async apply(placeholders: Dictionary<string, string>, object?: any): Promise<string | Buffer> {
-        if (this.type !== TemplateType.ItemTemplate) {
-            throw new Error("Only item templates may invoke the .Apply function inline");
-        }
-        const systemTemplates = await TemplateManager.getDefaultTemplatesFolder(true);
-        const userTemplates = await TemplateManager.getDefaultTemplatesFolder(true);
-        let fileContents: Buffer;
-
-        if (FileSystem.exists(path.join(systemTemplates, this.location))) {
-            fileContents = FileSystem.readFileSync(path.join(systemTemplates, this.location));
-        }
-        else if (FileSystem.exists(path.join(userTemplates, this.location))) {
-            fileContents = FileSystem.readFileSync(path.join(userTemplates, this.location));
-        }
-
-        if (fileContents) {
-            return await TemplateEngine.applyTemplate(this, fileContents, placeholders, object);
-        }
+            from.categories || [],
+            from.directives || []);
     }
 
-    async load(filename?: string): Promise<TemplateItem> {
-        return (TemplateItem.read(filename).then(item => TemplateItem.from(item)));
-    }
+    static merge(to: TemplateItem, from: TemplateItem) : TemplateItem {
+        const result = new TemplateItem(
+            from.type || to.type, 
+            from.name || to.name,
+            from.displayName || to.displayName, 
+            from.description || to.description, 
+            from.publisher || to.publisher,
+            from.location || to.location, 
+            from.outputPath || to.outputPath);
+        
+        result.categories = to.categories || [];
 
-    async save(filename?: string): Promise<TemplateItem> {
-        return TemplateItem.write(this, filename);
-    }
-
-    static async read(filename: string = "template.json"): Promise<TemplateItem> {
-        const file = path.isAbsolute(filename) ? filename : path.join(await TemplateManager.getTemplatesFolder(), filename);
-
-        if (FileSystem.exists(file)) {
-            try {
-                let returnObject = JSON.parse(FileSystem.readFileSync(file));
- 
-                if (returnObject) {
-                    return TemplateItem.from(returnObject);
+        if (from.categories?.length > 0) {
+            from.categories.forEach(c => {
+                if (result.categories.indexOf(c) === -1) {
+                    result.categories.push(c);
                 }
-            }
-            catch (error) {
-                Quickly.error(`The template '${filename}' was found but could not be parsed.${error ? '  The error returned was: ' + error : ''}`);
-            }
+            });
         }
 
-        return new TemplateItem();
+        result.directives = to.directives || [];
+        
+        if (from.directives?.length > 0) {
+            result.directives.push(...from.directives);
+        }
+
+        return result;
     }
     
-    static async write(template: TemplateItem, filename: string = "template.json"): Promise<TemplateItem> {
-        const folder = path.isAbsolute(filename) ? path.dirname(filename) : path.join(await TemplateManager.getTemplateFolder(template), path.dirname(filename));
-        
-        if (!FileSystem.exists(folder)) {
-            FileSystem.makeFolderSync(folder);
+    async apply(outputPath: string, ...object: any): Promise<void> {
+        if (this.type !== TemplateType.ItemTemplate) {
+            throw new Error("Only item templates may invoke the .apply function inline");
         }
-        
-        const file = path.isAbsolute(filename) ? filename : path.join(folder, filename);
-        
-        try {
-            FileSystem.writeFileSync(file, JSON.stringify(template));
-        }
-        catch (error) {
-            Quickly.error(`The template '${filename}' could not be saved to the template folder.${error ? '  The error returned was: ' + error : ''}`);
-        }
-        
-        return template;
-    }    
+        await TemplateEngine.executeTemplate(this, outputPath, ...object);
+    }  
+}
+
+export interface Interactive {
+    type: string;
+    message: string;
+    items?: string[];
+    connection?: string;
+}
+
+export enum TemplateCommandExecutionStage {
+    PreRun = "PreRun",
+    PostRun = "PostRun"
+}
+
+export interface TemplateCommand {
+    type: string;
+    commandArgs: string;
+    stage: TemplateCommandExecutionStage;
+    output?: string;
+}
+
+export interface TemplateFileAnalysis {
+    destination: string;
+    source: string;
+    fileContents: string | Buffer;
+    templateFn: doT.RenderFunction;
+}
+
+export class TemplateAnalysis {
+    sourcePath: string;
+    outputPath: string;
+    interactives: { [name: string]: Interactive } = {};
+    commands: TemplateCommand[] = [];
+    files: TemplateFileAnalysis[] = [];
+    template: TemplateItem;
+}
+
+export class TemplateContext {
+    userCanceled: boolean = false;
+    sourcePath: string;
+    outputPath: string;
+    commands: TemplateCommand[] = [];
+    parameters: { [name: string] : any } = {};
+    executionContext: any = {};
 }
 
 export class TemplateFilesystemItem {
@@ -114,28 +121,11 @@ export class TemplateFilesystemItem {
 export class TemplateDirective { 
     constructor(name?:string) {
         this.name = name;
-        this.usePlaceholders = true;
-        this.usePlaceholdersInFilename = true;
+        this.processFile = true;
     }
     
-    name: string;
-    usePlaceholders: boolean;   
-    usePlaceholdersInFilename: boolean;
-}
-
-export class TemplatePlaceholder {
-    constructor(name?: string) {
-        if (name) {
-            this.name = name;
-        }
-
-        this.required = false;
-    }
-    
-    name: string;
-    displayName: string;
-    required: boolean;
-    type: string;
+    name: string;  
+    processFile: boolean;
 }
 
 

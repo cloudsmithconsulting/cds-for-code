@@ -1,0 +1,15 @@
+{{#def.template({
+    "type": "Project Template",
+    "name": "CloudSmith.Cds.SamplePlugin.v8.0",
+    "displayName": "Dynamics CRM 8.0 Plugin with validation and tests",
+    "publisher": "CloudSmith Consulting LLC",
+    "outputPath": "${Namespace}",
+    "categories": ["Dynamics", "Plugins"],
+    "directives": [{
+        "name": "${Namespace}.snk",
+        "processFile": false
+    }]
+})}}
+{{#def.ui.prompt('Namespace', 'Please enter the Namespace')}}
+{{#def.ui.prompt('PluginName', 'Please enter the PluginName')}}
+{{#def.run.dotnet('build')}}

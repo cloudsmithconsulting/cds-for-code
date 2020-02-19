@@ -12,109 +12,180 @@ sidebar_label: "TemplateEngine"
 
 ## Index
 
+### Properties
+
+* [fileNameRegex](_components_templates_templateengine_.templateengine.md#static-private-filenameregex)
+
 ### Methods
 
-* [applyTemplate](_components_templates_templateengine_.templateengine.md#static-applytemplate)
-* [defaultResolver](_components_templates_templateengine_.templateengine.md#static-private-defaultresolver)
-* [getPlaceholders](_components_templates_templateengine_.templateengine.md#static-getplaceholders)
-* [mergePlaceholders](_components_templates_templateengine_.templateengine.md#static-mergeplaceholders)
-* [resolvePlaceholders](_components_templates_templateengine_.templateengine.md#static-resolveplaceholders)
+* [analyzeTemplate](_components_templates_templateengine_.templateengine.md#static-analyzetemplate)
+* [buildTemplateContext](_components_templates_templateengine_.templateengine.md#static-private-buildtemplatecontext)
+* [executeCommands](_components_templates_templateengine_.templateengine.md#static-private-executecommands)
+* [executeTemplate](_components_templates_templateengine_.templateengine.md#static-executetemplate)
+
+### Object literals
+
+* [dotSettings](_components_templates_templateengine_.templateengine.md#static-private-dotsettings)
+
+## Properties
+
+### `Static` `Private` fileNameRegex
+
+▪ **fileNameRegex**: *RegExp‹›* = /\$\{([\s\S]+?)\}/g
+
+Defined in src/components/Templates/TemplateEngine.ts:15
 
 ## Methods
 
-### `Static` applyTemplate
+### `Static` analyzeTemplate
 
-▸ **applyTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `data`: string | Buffer, `placeholders?`: [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string›, `object?`: any): *Promise‹string | Buffer›*
+▸ **analyzeTemplate**(`templatePath`: string, `outputPath?`: string): *Promise‹[TemplateAnalysis](_components_templates_types_.templateanalysis.md)›*
 
-Defined in src/components/Templates/TemplateEngine.ts:15
+Defined in src/components/Templates/TemplateEngine.ts:79
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`templatePath` | string |
+`outputPath?` | string |
+
+**Returns:** *Promise‹[TemplateAnalysis](_components_templates_types_.templateanalysis.md)›*
+
+___
+
+### `Static` `Private` buildTemplateContext
+
+▸ **buildTemplateContext**(`templateAnalysis`: [TemplateAnalysis](_components_templates_types_.templateanalysis.md), ...`object`: any): *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
+
+Defined in src/components/Templates/TemplateEngine.ts:265
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`templateAnalysis` | [TemplateAnalysis](_components_templates_types_.templateanalysis.md) |
+`...object` | any |
+
+**Returns:** *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
+
+___
+
+### `Static` `Private` executeCommands
+
+▸ **executeCommands**(`templateContext`: [TemplateContext](_components_templates_types_.templatecontext.md), `stage`: [TemplateCommandExecutionStage](../enums/_components_templates_types_.templatecommandexecutionstage.md)): *Promise‹void›*
+
+Defined in src/components/Templates/TemplateEngine.ts:227
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`templateContext` | [TemplateContext](_components_templates_types_.templatecontext.md) |
+`stage` | [TemplateCommandExecutionStage](../enums/_components_templates_types_.templatecommandexecutionstage.md) |
+
+**Returns:** *Promise‹void›*
+
+___
+
+### `Static` executeTemplate
+
+▸ **executeTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `outputPath`: string, ...`object`: any): *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
+
+Defined in src/components/Templates/TemplateEngine.ts:32
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `template` | [TemplateItem](_components_templates_types_.templateitem.md) |
-`data` | string &#124; Buffer |
-`placeholders?` | [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string› |
-`object?` | any |
+`outputPath` | string |
+`...object` | any |
 
-**Returns:** *Promise‹string | Buffer›*
+**Returns:** *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
 
-___
+## Object literals
 
-### `Static` `Private` defaultResolver
+### `Static` `Private` dotSettings
 
-▸ **defaultResolver**(`data`: string | Buffer, `placeholderRegExp`: RegExp, `template?`: [TemplateItem](_components_templates_types_.templateitem.md), `defaultPlaceholders?`: [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string›): *Promise‹string | Buffer›*
+### ▪ **dotSettings**: *object*
 
-Defined in src/components/Templates/TemplateEngine.ts:72
+Defined in src/components/Templates/TemplateEngine.ts:16
 
-**Parameters:**
+###  append
 
-Name | Type |
------- | ------ |
-`data` | string &#124; Buffer |
-`placeholderRegExp` | RegExp |
-`template?` | [TemplateItem](_components_templates_types_.templateitem.md) |
-`defaultPlaceholders?` | [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string› |
+• **append**: *true* = true
 
-**Returns:** *Promise‹string | Buffer›*
+Defined in src/components/Templates/TemplateEngine.ts:28
 
-___
+###  conditional
 
-### `Static` getPlaceholders
+• **conditional**: *RegExp‹›* = /\{\{\?(\?)?\s*([\s\S]*?)\s*\}\}\n?/g
 
-▸ **getPlaceholders**(`fsItem`: string, `placeholderRegExp`: string, `isFolder`: boolean): *string[]*
+Defined in src/components/Templates/TemplateEngine.ts:24
 
-Defined in src/components/Templates/TemplateEngine.ts:157
+###  define
 
-**Parameters:**
+• **define**: *RegExp‹›* = /.*?\{\{##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\}\}\n?/g
 
-Name | Type |
------- | ------ |
-`fsItem` | string |
-`placeholderRegExp` | string |
-`isFolder` | boolean |
+Defined in src/components/Templates/TemplateEngine.ts:22
 
-**Returns:** *string[]*
+###  defineParams
 
-___
+• **defineParams**: *RegExp‹›* = /^\s*([\w$]+):([\s\S]+)/
 
-### `Static` mergePlaceholders
+Defined in src/components/Templates/TemplateEngine.ts:23
 
-▸ **mergePlaceholders**(`source`: [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[], `merge`: [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[]): *[TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)‹›[]*
+###  encode
 
-Defined in src/components/Templates/TemplateEngine.ts:229
+• **encode**: *RegExp‹›* = /\{\{!([\s\S]+?)\}\}\n?/g
 
-**Parameters:**
+Defined in src/components/Templates/TemplateEngine.ts:19
 
-Name | Type |
------- | ------ |
-`source` | [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[] |
-`merge` | [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[] |
+###  evaluate
 
-**Returns:** *[TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)‹›[]*
+• **evaluate**: *RegExp‹›* = /\{\{([\s\S]+?)\}\}\n?/g
 
-___
+Defined in src/components/Templates/TemplateEngine.ts:17
 
-### `Static` resolvePlaceholders
+###  interpolate
 
-▸ **resolvePlaceholders**(`data`: string | Buffer, `placeholderRegExp`: string, `placeholders`: [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string›, `templateInfo`: [TemplateItem](_components_templates_types_.templateitem.md), `resolvers?`: function[]): *Promise‹string | Buffer›*
+• **interpolate**: *RegExp‹›* = /\{\{=([\s\S]+?)\}\}/g
 
-Defined in src/components/Templates/TemplateEngine.ts:48
+Defined in src/components/Templates/TemplateEngine.ts:18
 
-Replaces any placeholders found within the input data.  Will use a
-dictionary of values from the user's workspace settings, or will prompt
-if value is not known.
+###  iterate
 
-**Parameters:**
+• **iterate**: *RegExp‹›* = /\{\{~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\}\})\n?/g
 
-Name | Type | Description |
------- | ------ | ------ |
-`data` | string &#124; Buffer | input data |
-`placeholderRegExp` | string | regular expression to use for detecting                           placeholders.  The first capture group is used                           as the key. |
-`placeholders` | [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string› | dictionary of placeholder key-value pairs |
-`templateInfo` | [TemplateItem](_components_templates_types_.templateitem.md) | - |
-`resolvers?` | function[] | - |
+Defined in src/components/Templates/TemplateEngine.ts:25
 
-**Returns:** *Promise‹string | Buffer›*
+###  selfcontained
 
-the (potentially) modified data, with the same type as the input data
+• **selfcontained**: *false* = false
+
+Defined in src/components/Templates/TemplateEngine.ts:29
+
+###  strip
+
+• **strip**: *false* = false
+
+Defined in src/components/Templates/TemplateEngine.ts:27
+
+###  use
+
+• **use**: *RegExp‹›* = /.*?\{\{#([\s\S]+?)\}\}\n?/g
+
+Defined in src/components/Templates/TemplateEngine.ts:20
+
+###  useParams
+
+• **useParams**: *RegExp‹›* = /(^|[^\w$])def(?:\.|\[[\'\"])([\w$\.]+)(?:[\'\"]\])?\s*\:\s*([\w$\.]+|\"[^\"]+\"|\'[^\']+\'|\{[^\}]+\})/g
+
+Defined in src/components/Templates/TemplateEngine.ts:21
+
+###  varname
+
+• **varname**: *string* = "$this"
+
+Defined in src/components/Templates/TemplateEngine.ts:26

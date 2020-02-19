@@ -9,7 +9,8 @@ CloudSmith would like to recognize and thank the contributors and underlying pro
 |Project|Author|License|
 |--|--|--|
 |[DynamicsWebApi](https://github.com/AleksandrRogov/DynamicsWebApi)|[Aleksandr Rogov](https://github.com/AleksandrRogov)|MIT|
-|[VSCode Project Templates](https://github.com/cantonios/vscode-project-templates)|[C. Antonio Sánchez](https://github.com/cantonios)|MIT|
+|[doT.js](https://github.com/olado/doT)|[Laura Doktorova](https://github.com/olado)|MIT|
+|[file-templates-manager](https://github.com/3axap4eHko/file-templates-manager)|[Ivan Zakharchanka](https://github.com/3axap4eHko)|MIT|
 
 ---
 

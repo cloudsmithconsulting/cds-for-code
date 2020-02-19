@@ -18,7 +18,7 @@ import TemplateManager from "../components/Templates/TemplateManager";
  * @returns void
  */
 export default async function run(this: TemplateManager, destinationUri?: vscode.Uri, type?:TemplateType, template?:TemplateItem): Promise<void> {
-	let path:string;
+    let path:string;
 
     if (template && !type) {
         type = template.type;
@@ -30,6 +30,13 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
         return; 
     }
 
+    template = template || await Quickly.pickTemplate("Choose a template that you would like to create.", type);
+    if (!template) {
+        logger.warn(`Command: ${cs.cds.templates.createFromTemplate} Template not chosen, command cancelled`);
+        return;
+    }
+
+    let filename;
     if (!destinationUri || !destinationUri.fsPath || !FileSystem.exists(destinationUri.fsPath)) {
         switch (type) {
             case TemplateType.ProjectTemplate:
@@ -40,10 +47,10 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
                 path = fileItem.fsPath;
 
                 if (fileItem.itemType === vscode.FileType.Directory) {
-                    const filename = await Quickly.ask("What would you like to call the file that is created?");
+                    filename = await Quickly.ask("What would you like to call the file that is created?");
                     if (!filename) { return; }
 
-                    path = p.join(path, filename);
+                    path = `${p.join(path, filename)}`;
                 } else {
                     path = fileItem.fsPath;
                 }
@@ -61,15 +68,25 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
         return;
     }
 
+    if (filename?.length === 0 && type === TemplateType.ItemTemplate && p.extname(path).length === 0) {
+        const filename = await Quickly.ask("What would you like to call the file that is created?");
+        if (!filename) { return; }
+
+        path = `${p.join(path, filename)}`;
+    }
+
     // load latest configuration
     ExtensionConfiguration.updateConfiguration(cs.cds.configuration.templates._namespace);
 
     // create project
     this.createFromFilesystem(path, type, template).then(
-        (template) => {
-            if (template) {
+        (context) => {
+            if (template && !context.userCanceled) {
                 logger.info(`Command: ${cs.cds.templates.createFromTemplate} Template ${template.displayName} created in workspace: ${path}`);
                 Quickly.inform(`Created ${template.type === TemplateType.ProjectTemplate ? "project" : "item"} from template '${template.displayName}'`);
+            } else if (context.userCanceled) {
+                logger.info(`Command: ${cs.cds.templates.createFromTemplate} Template ${template.displayName} execution canceled`);
+                Quickly.inform(`Canceled ${template.type === TemplateType.ProjectTemplate ? "project" : "item"} creation from template '${template.displayName}'`);
             }
         },
         (reason: any) => {

@@ -19,8 +19,7 @@ sidebar_label: "TemplateDirective"
 ### Properties
 
 * [name](_components_templates_types_.templatedirective.md#name)
-* [usePlaceholders](_components_templates_types_.templatedirective.md#useplaceholders)
-* [usePlaceholdersInFilename](_components_templates_types_.templatedirective.md#useplaceholdersinfilename)
+* [processFile](_components_templates_types_.templatedirective.md#processfile)
 
 ## Constructors
 
@@ -28,7 +27,7 @@ sidebar_label: "TemplateDirective"
 
 \+ **new TemplateDirective**(`name?`: string): *[TemplateDirective](_components_templates_types_.templatedirective.md)*
 
-Defined in src/components/Templates/Types.ts:114
+Defined in src/components/Templates/Types.ts:121
 
 **Parameters:**
 
@@ -44,20 +43,12 @@ Name | Type |
 
 • **name**: *string*
 
-Defined in src/components/Templates/Types.ts:121
+Defined in src/components/Templates/Types.ts:127
 
 ___
 
-###  usePlaceholders
+###  processFile
 
-• **usePlaceholders**: *boolean*
+• **processFile**: *boolean*
 
-Defined in src/components/Templates/Types.ts:122
-
-___
-
-###  usePlaceholdersInFilename
-
-• **usePlaceholdersInFilename**: *boolean*
-
-Defined in src/components/Templates/Types.ts:123
+Defined in src/components/Templates/Types.ts:128

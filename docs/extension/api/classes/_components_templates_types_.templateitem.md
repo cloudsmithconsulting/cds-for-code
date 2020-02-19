@@ -25,26 +25,22 @@ sidebar_label: "TemplateItem"
 * [location](_components_templates_types_.templateitem.md#optional-location)
 * [name](_components_templates_types_.templateitem.md#optional-name)
 * [outputPath](_components_templates_types_.templateitem.md#optional-outputpath)
-* [placeholders](_components_templates_types_.templateitem.md#optional-placeholders)
 * [publisher](_components_templates_types_.templateitem.md#optional-publisher)
 * [type](_components_templates_types_.templateitem.md#optional-type)
 
 ### Methods
 
 * [apply](_components_templates_types_.templateitem.md#apply)
-* [load](_components_templates_types_.templateitem.md#load)
-* [save](_components_templates_types_.templateitem.md#save)
 * [from](_components_templates_types_.templateitem.md#static-from)
-* [read](_components_templates_types_.templateitem.md#static-read)
-* [write](_components_templates_types_.templateitem.md#static-write)
+* [merge](_components_templates_types_.templateitem.md#static-merge)
 
 ## Constructors
 
 ###  constructor
 
-\+ **new TemplateItem**(`type?`: [TemplateType](../enums/_components_templates_types_.templatetype.md), `name?`: string, `displayName?`: string, `description?`: string, `publisher?`: string, `location?`: string, `outputPath?`: string, `categories?`: string[], `placeholders?`: [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[], `directives?`: [TemplateDirective](_components_templates_types_.templatedirective.md)[]): *[TemplateItem](_components_templates_types_.templateitem.md)*
+\+ **new TemplateItem**(`type?`: [TemplateType](../enums/_components_templates_types_.templatetype.md), `name?`: string, `displayName?`: string, `description?`: string, `publisher?`: string, `location?`: string, `outputPath?`: string, `categories?`: string[], `directives?`: [TemplateDirective](_components_templates_types_.templatedirective.md)[]): *[TemplateItem](_components_templates_types_.templateitem.md)*
 
-Defined in src/components/Templates/Types.ts:9
+Defined in src/components/Templates/Types.ts:5
 
 **Parameters:**
 
@@ -58,7 +54,6 @@ Name | Type |
 `location?` | string |
 `outputPath?` | string |
 `categories?` | string[] |
-`placeholders?` | [TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[] |
 `directives?` | [TemplateDirective](_components_templates_types_.templatedirective.md)[] |
 
 **Returns:** *[TemplateItem](_components_templates_types_.templateitem.md)*
@@ -69,7 +64,7 @@ Name | Type |
 
 • **categories**? : *string[]*
 
-Defined in src/components/Templates/Types.ts:18
+Defined in src/components/Templates/Types.ts:14
 
 ___
 
@@ -77,7 +72,7 @@ ___
 
 • **description**? : *string*
 
-Defined in src/components/Templates/Types.ts:14
+Defined in src/components/Templates/Types.ts:10
 
 ___
 
@@ -85,7 +80,7 @@ ___
 
 • **directives**? : *[TemplateDirective](_components_templates_types_.templatedirective.md)[]*
 
-Defined in src/components/Templates/Types.ts:20
+Defined in src/components/Templates/Types.ts:15
 
 ___
 
@@ -93,7 +88,7 @@ ___
 
 • **displayName**? : *string*
 
-Defined in src/components/Templates/Types.ts:13
+Defined in src/components/Templates/Types.ts:9
 
 ___
 
@@ -101,7 +96,7 @@ ___
 
 • **location**? : *string*
 
-Defined in src/components/Templates/Types.ts:16
+Defined in src/components/Templates/Types.ts:12
 
 ___
 
@@ -109,7 +104,7 @@ ___
 
 • **name**? : *string*
 
-Defined in src/components/Templates/Types.ts:12
+Defined in src/components/Templates/Types.ts:8
 
 ___
 
@@ -117,15 +112,7 @@ ___
 
 • **outputPath**? : *string*
 
-Defined in src/components/Templates/Types.ts:17
-
-___
-
-### `Optional` placeholders
-
-• **placeholders**? : *[TemplatePlaceholder](_components_templates_types_.templateplaceholder.md)[]*
-
-Defined in src/components/Templates/Types.ts:19
+Defined in src/components/Templates/Types.ts:13
 
 ___
 
@@ -133,7 +120,7 @@ ___
 
 • **publisher**? : *string*
 
-Defined in src/components/Templates/Types.ts:15
+Defined in src/components/Templates/Types.ts:11
 
 ___
 
@@ -141,56 +128,24 @@ ___
 
 • **type**? : *[TemplateType](../enums/_components_templates_types_.templatetype.md)*
 
-Defined in src/components/Templates/Types.ts:11
+Defined in src/components/Templates/Types.ts:7
 
 ## Methods
 
 ###  apply
 
-▸ **apply**(`placeholders`: [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string›, `object?`: any): *Promise‹string | Buffer›*
+▸ **apply**(`outputPath`: string, ...`object`: any): *Promise‹void›*
 
-Defined in src/components/Templates/Types.ts:40
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`placeholders` | [Dictionary](_core_types_dictionary_.dictionary.md)‹string, string› |
-`object?` | any |
-
-**Returns:** *Promise‹string | Buffer›*
-
-___
-
-###  load
-
-▸ **load**(`filename?`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
-
-Defined in src/components/Templates/Types.ts:60
+Defined in src/components/Templates/Types.ts:62
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`filename?` | string |
+`outputPath` | string |
+`...object` | any |
 
-**Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
-
-___
-
-###  save
-
-▸ **save**(`filename?`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
-
-Defined in src/components/Templates/Types.ts:64
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`filename?` | string |
-
-**Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
+**Returns:** *Promise‹void›*
 
 ___
 
@@ -198,7 +153,7 @@ ___
 
 ▸ **from**(`from`: [TemplateItem](_components_templates_types_.templateitem.md)): *[TemplateItem](_components_templates_types_.templateitem.md)*
 
-Defined in src/components/Templates/Types.ts:26
+Defined in src/components/Templates/Types.ts:20
 
 **Parameters:**
 
@@ -210,33 +165,17 @@ Name | Type |
 
 ___
 
-### `Static` read
+### `Static` merge
 
-▸ **read**(`filename`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
+▸ **merge**(`to`: [TemplateItem](_components_templates_types_.templateitem.md), `from`: [TemplateItem](_components_templates_types_.templateitem.md)): *[TemplateItem](_components_templates_types_.templateitem.md)*
 
-Defined in src/components/Templates/Types.ts:68
-
-**Parameters:**
-
-Name | Type | Default |
------- | ------ | ------ |
-`filename` | string | "template.json" |
-
-**Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
-
-___
-
-### `Static` write
-
-▸ **write**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `filename`: string): *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
-
-Defined in src/components/Templates/Types.ts:87
+Defined in src/components/Templates/Types.ts:33
 
 **Parameters:**
 
-Name | Type | Default |
------- | ------ | ------ |
-`template` | [TemplateItem](_components_templates_types_.templateitem.md) | - |
-`filename` | string | "template.json" |
+Name | Type |
+------ | ------ |
+`to` | [TemplateItem](_components_templates_types_.templateitem.md) |
+`from` | [TemplateItem](_components_templates_types_.templateitem.md) |
 
-**Returns:** *Promise‹[TemplateItem](_components_templates_types_.templateitem.md)›*
+**Returns:** *[TemplateItem](_components_templates_types_.templateitem.md)*

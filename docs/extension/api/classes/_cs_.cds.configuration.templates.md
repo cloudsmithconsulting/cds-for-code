@@ -15,11 +15,9 @@ sidebar_label: "templates"
 ### Properties
 
 * [_namespace](_cs_.cds.configuration.templates.md#static-_namespace)
-* [placeholderRegExp](_cs_.cds.configuration.templates.md#static-placeholderregexp)
-* [placeholders](_cs_.cds.configuration.templates.md#static-placeholders)
+* [templateParameters](_cs_.cds.configuration.templates.md#static-templateparameters)
 * [templatesDirectory](_cs_.cds.configuration.templates.md#static-templatesdirectory)
 * [treeViewGroupPreference](_cs_.cds.configuration.templates.md#static-treeviewgrouppreference)
-* [usePlaceholders](_cs_.cds.configuration.templates.md#static-useplaceholders)
 
 ## Properties
 
@@ -27,23 +25,15 @@ sidebar_label: "templates"
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.templates"
 
-Defined in src/cs.ts:134
+Defined in src/cs.ts:140
 
 ___
 
-### `Static` placeholderRegExp
+### `Static` templateParameters
 
-▪ **placeholderRegExp**: *string* = `${templates._namespace}.placeholderRegExp`
+▪ **templateParameters**: *string* = `${templates._namespace}.templateParameters`
 
-Defined in src/cs.ts:136
-
-___
-
-### `Static` placeholders
-
-▪ **placeholders**: *string* = `${templates._namespace}.placeholders`
-
-Defined in src/cs.ts:135
+Defined in src/cs.ts:141
 
 ___
 
@@ -51,7 +41,7 @@ ___
 
 ▪ **templatesDirectory**: *string* = `${templates._namespace}.templatesDirectory`
 
-Defined in src/cs.ts:137
+Defined in src/cs.ts:142
 
 ___
 
@@ -59,12 +49,4 @@ ___
 
 ▪ **treeViewGroupPreference**: *string* = `${templates._namespace}.treeViewGroupPreference`
 
-Defined in src/cs.ts:138
-
-___
-
-### `Static` usePlaceholders
-
-▪ **usePlaceholders**: *string* = `${templates._namespace}.usePlaceholders`
-
-Defined in src/cs.ts:139
+Defined in src/cs.ts:143

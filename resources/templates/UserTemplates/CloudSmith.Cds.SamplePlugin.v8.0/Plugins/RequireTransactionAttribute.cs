@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace #{Namespace}.Plugins
+namespace {{=$this.parameters.Namespace}}.Plugins
 {
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class RequireTransactionAttribute : DynamicsPluginAttribute
