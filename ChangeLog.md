@@ -12,6 +12,15 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 
 ## v0.8 Early Preview - December 2019 - January 2020
 
+### v0.8.13 (February 21, 2020)
+
+- Feature: Code Generation: Fix button styling on UX ([#649](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/649/))
+- Feature: Icons: Proper icon resolution with iconify for UX ([#650](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/650/))
+- Feature: Confirm delete of plugin steps and plugin step images ([#655](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/655/))
+- Feature: Plugin step and step image dialog should refresh treeview on exit ([#656](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/656/))
+- Bugfix: Webviews showing templating tokens in content ([#645](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/645/))
+- Bugfix: Cloned objects stopped respecting excluded properties ([#652](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/652/))
+
 ### v0.8.12 (February 13, 2020)
 
 - Bugfix: Users received &quot;Authentication for this request failed.&quot; error when accessing non-US environments (reported on GitHub) ([GitHub Issue #10](https://github.com/cloudsmithconsulting/cds-for-code/issues/10) | [#636](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/636/))
