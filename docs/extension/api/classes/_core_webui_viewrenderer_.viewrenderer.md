@@ -271,15 +271,15 @@ ___
 
 ###  render
 
-▸ **render**(`htmlParial`: string, `useCsp?`: boolean): *string*
+▸ **render**(`htmlPartial`: string, `useCsp?`: boolean): *string*
 
-Defined in src/core/webui/ViewRenderer.ts:96
+Defined in src/core/webui/ViewRenderer.ts:98
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`htmlParial` | string |
+`htmlPartial` | string |
 `useCsp?` | boolean |
 
 **Returns:** *string*

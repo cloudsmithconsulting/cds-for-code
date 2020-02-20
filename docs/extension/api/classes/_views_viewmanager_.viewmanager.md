@@ -28,7 +28,7 @@ sidebar_label: "ViewManager"
 
 ▸ **editConnection**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](_core_webui_view_.view.md)›*
 
-Defined in src/views/ViewManager.ts:19
+Defined in src/views/ViewManager.ts:20
 
 **Parameters:**
 
@@ -44,7 +44,7 @@ ___
 
 ▸ **openConnection**(): *Promise‹[View](_core_webui_view_.view.md)›*
 
-Defined in src/views/ViewManager.ts:14
+Defined in src/views/ViewManager.ts:15
 
 **Returns:** *Promise‹[View](_core_webui_view_.view.md)›*
 
@@ -54,7 +54,7 @@ ___
 
 ▸ **openJsonInspector**(`item`: any): *Promise‹any›*
 
-Defined in src/views/ViewManager.ts:34
+Defined in src/views/ViewManager.ts:35
 
 **Parameters:**
 
@@ -70,7 +70,7 @@ ___
 
 ▸ **openNewWorkspaceWelcome**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](_core_webui_view_.view.md)›*
 
-Defined in src/views/ViewManager.ts:39
+Defined in src/views/ViewManager.ts:40
 
 **Parameters:**
 
@@ -84,17 +84,18 @@ ___
 
 ### `Static` openPluginStep
 
-▸ **openPluginStep**(`pluginAssemblyId`: string, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `step?`: any): *Promise‹[View](_core_webui_view_.view.md)›*
+▸ **openPluginStep**(`pluginAssemblyId`: string, `step?`: any, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `treeEntry?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹[View](_core_webui_view_.view.md)›*
 
-Defined in src/views/ViewManager.ts:24
+Defined in src/views/ViewManager.ts:25
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `pluginAssemblyId` | string |
-`config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
 `step?` | any |
+`config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`treeEntry?` | [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md) |
 
 **Returns:** *Promise‹[View](_core_webui_view_.view.md)›*
 
@@ -102,17 +103,18 @@ ___
 
 ### `Static` openPluginStepImage
 
-▸ **openPluginStepImage**(`sdkmessageprocessingstepid`: string, `pluginStepImage`: any, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](_core_webui_view_.view.md)›*
+▸ **openPluginStepImage**(`sdkmessageprocessingstepid`: string, `pluginStepImage?`: any, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `treeEntry?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹[View](_core_webui_view_.view.md)›*
 
-Defined in src/views/ViewManager.ts:29
+Defined in src/views/ViewManager.ts:30
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `sdkmessageprocessingstepid` | string |
-`pluginStepImage` | any |
+`pluginStepImage?` | any |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`treeEntry?` | [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md) |
 
 **Returns:** *Promise‹[View](_core_webui_view_.view.md)›*
 
@@ -122,7 +124,7 @@ ___
 
 ▸ **openSvcUtilConfiguration**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `viewModel?`: any): *Promise‹[View](_core_webui_view_.view.md)›*
 
-Defined in src/views/ViewManager.ts:44
+Defined in src/views/ViewManager.ts:45
 
 **Parameters:**
 
