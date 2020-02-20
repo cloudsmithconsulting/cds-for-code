@@ -32,6 +32,25 @@ export function clone<T extends Object>(source: T, target?: any, excludeProperti
         }
     }
 
+    if (excludeProperties?.length > 0) {
+        target = sanitize(target, excludeProperties);
+    }
+
+    return <T>target;
+}
+
+export function sanitize<T>(source: T, excludeProperties: string[]) {
+    let target: any = {};
+    for (let prop in source) {
+        if (source.hasOwnProperty(prop)) {
+            const exclude = excludeProperties.indexOf(prop) !== -1;
+            if (!exclude && isObject(source[prop])) {
+                target[prop] = sanitize(source[prop], excludeProperties);
+            } else if (!exclude) {
+                target[prop] = source[prop];
+            }
+        }
+    }
     return <T>target;
 }
 
