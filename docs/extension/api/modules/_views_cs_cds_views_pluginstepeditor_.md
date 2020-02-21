@@ -32,16 +32,17 @@ Defined in src/views/cs.cds.views.pluginStepEditor.ts:7
 
 ###  openView
 
-▸ **openView**(`pluginAssemblyId`: string, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `step?`: any): *Promise‹[View](../classes/_core_webui_view_.view.md)›*
+▸ **openView**(`pluginAssemblyId`: string, `step?`: any, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `treeEntry?`: [CdsTreeEntry](../classes/_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹[View](../classes/_core_webui_view_.view.md)›*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:12
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:13
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `pluginAssemblyId` | string |
-`config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
 `step?` | any |
+`config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`treeEntry?` | [CdsTreeEntry](../classes/_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md) |
 
 **Returns:** *Promise‹[View](../classes/_core_webui_view_.view.md)›*

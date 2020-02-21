@@ -171,7 +171,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Filter
                     else
                     {
                         // We said that we want to generate the entity, so by default we'll cache the attributes for the entity as well.
-                        if (DynamicsMetadataCache.Entities.HasBy(attributeMetadata.EntityLogicalName))
+                        if (DynamicsMetadataCache.Entities.HasBy(attributeMetadata.EntityLogicalName) && whitelistConfig.Filter == WhitelistFilter.Inclusive)
                         {
                             DynamicsMetadataCache.Attributes.AddBy(attributeMetadata);
                         }

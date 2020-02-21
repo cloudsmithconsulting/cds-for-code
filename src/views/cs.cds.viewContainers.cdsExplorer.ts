@@ -98,8 +98,8 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                 Utilities.Browser.openWindow(CdsUrlResolver.getManageWebResourceUri(item.config, undefined, item.solutionId));
             }
         }},
-        { key: "PluginType", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, item.context._pluginassemblyid_value, item.config, undefined) },
-        { key: "PluginStep", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context.sdkmessageprocessingstepid, undefined, item.config) }
+        { key: "PluginType", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, item.context._pluginassemblyid_value, undefined, item.config, item) },
+        { key: "PluginStep", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context.sdkmessageprocessingstepid, undefined, item.config, item) }
     ]);
 
     private static readonly deleteCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
@@ -133,8 +133,8 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
                 Utilities.Browser.openWindow(CdsUrlResolver.getManageWebResourceUri(item.config, item.context.webresourceid, item.solutionId));
             }
         }},
-        { key: "PluginStep", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, item.context.eventhandler_plugintype._pluginassemblyid_value, item.config, item.context) },
-        { key: "PluginStepImage", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, item.context, item.config) }
+        { key: "PluginStep", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, item.context.eventhandler_plugintype._pluginassemblyid_value, item.context, item.config, item) },
+        { key: "PluginStepImage", value: async (item) => await vscode.commands.executeCommand(cs.cds.controls.pluginStepImage.open, item.context._sdkmessageprocessingstepid_value, item.context, item.config, item) }
     ]);
 
     private static readonly folderParsers = new Dictionary<CdsExplorerEntryType, (item: any, element?: CdsTreeEntry, ...rest: any[]) => CdsTreeEntry>([
@@ -921,14 +921,14 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     }
 
     private async removePluginStep(config: CdsWebApi.Config, step: any) {
-        if (step && step.sdkmessageprocessingstepid) {
+        if (step?.sdkmessageprocessingstepid && (await Quickly.pickBoolean(`Are you sure you want to delete the plugin step named '${step.name}'?`, 'Yes', 'No'))) {
             const api = new ApiRepository(config);
             await api.removePluginStep(step);
         }
     }
 
     private async removePluginStepImage (config: CdsWebApi.Config, stepImage: any) {
-        if (stepImage && stepImage.sdkmessageprocessingstepimageid) {
+        if (stepImage?.sdkmessageprocessingstepimageid && (await Quickly.pickBoolean(`Are you sure you want to delete the plugin step image named '${stepImage.name}'?`, 'Yes', 'No'))) {
             const api = new ApiRepository(config);
             await api.removePluginStepImage(stepImage);
         }
@@ -1001,7 +1001,7 @@ class TreeEntryCache {
  * @class CdsTreeEntry
  * @extends {vscode.TreeItem}
  */
-class CdsTreeEntry extends vscode.TreeItem {
+export class CdsTreeEntry extends vscode.TreeItem {
     private static readonly canRefreshEntryTypes: CdsExplorerEntryType[] = [ "Solutions", "Solution", "Plugins", "Entities", "Entity", "OptionSets", "OptionSet", "WebResources", "Folder", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries" ];
     private static readonly canAddEntryTypes: CdsExplorerEntryType[] = [ "Applications", "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries", "PluginType", "PluginStep" ];
     private static readonly canCreateCrmSvcUtilConfigTypes: CdsExplorerEntryType[] = [ "Entities" ];

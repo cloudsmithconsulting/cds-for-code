@@ -127,7 +127,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration.Generation
 
         public static bool HasBehavior(this CodeGenerationBehaviorsCollection @this, string name)
         {
-            return @this.Count(b => b.Name == name && b.IsEnabled) > 0;
+            return @this.Count(b => String.Compare(b.Name, name, true) == 0 && b.IsEnabled) > 0;
         }
     }
 }

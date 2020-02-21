@@ -16,6 +16,7 @@ sidebar_label: "core/helpers/Object"
 * [isNull](_core_helpers_object_.md#isnull)
 * [isNullOrEmpty](_core_helpers_object_.md#isnullorempty)
 * [isObject](_core_helpers_object_.md#isobject)
+* [sanitize](_core_helpers_object_.md#sanitize)
 
 ## Functions
 
@@ -61,7 +62,7 @@ ___
 
 ▸ **createInstance**<**T**>(`context`: Object, `name`: string, ...`args`: any[]): *T*
 
-Defined in src/core/helpers/Object.ts:38
+Defined in src/core/helpers/Object.ts:57
 
 **Type parameters:**
 
@@ -124,3 +125,24 @@ Name | Type |
 `source` | any |
 
 **Returns:** *boolean*
+
+___
+
+###  sanitize
+
+▸ **sanitize**<**T**>(`source`: T, `excludeProperties`: string[]): *T*
+
+Defined in src/core/helpers/Object.ts:42
+
+**Type parameters:**
+
+▪ **T**
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`source` | T |
+`excludeProperties` | string[] |
+
+**Returns:** *T*

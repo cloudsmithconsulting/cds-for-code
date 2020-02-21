@@ -8,14 +8,15 @@ import async = require('async');
 import Dictionary from '../core/types/Dictionary';
 import ExtensionContext from '../core/ExtensionContext';
 import MetadataRepository from '../repositories/metadataRepository';
+import CdsExplorer, { CdsTreeEntry } from './cs.cds.viewContainers.cdsExplorer';
 
-export default async function openView(pluginAssemblyId:string, config?: CdsWebApi.Config, step?: any): Promise<View> {
+export default async function openView(pluginAssemblyId:string, step?: any, config?: CdsWebApi.Config, treeEntry?: CdsTreeEntry): Promise<View> {
     const view = View.show(PluginStepEditor, {
         icon: './resources/images/cloudsmith-logo-only-50px.png',
         title: 'Configure Plugin Step - Dynamics 365 CE',
         type: cs.cds.views.pluginStepEditor,
         preserveFocus: false,
-        onReady: view => view.setInitialState(pluginAssemblyId, config, step)
+        onReady: view => view.setInitialState(pluginAssemblyId, step, config, treeEntry)
     });
 
     return view;
@@ -23,6 +24,8 @@ export default async function openView(pluginAssemblyId:string, config?: CdsWebA
 
 class PluginStepEditor extends View {
     private config: CdsWebApi.Config;
+    private treeEntry: CdsTreeEntry;
+    private edit: boolean = false;
 
     construct(viewRenderer: ViewRenderer): string {
         // add script and css assets
@@ -58,6 +61,10 @@ class PluginStepEditor extends View {
         const api = new ApiRepository(this.config);
         api.upsertPluginStep(step)
             .then(() => {
+                if (this.treeEntry) {
+                    CdsExplorer.Instance.refresh(this.edit && this.treeEntry.parent ? this.treeEntry.parent : this.treeEntry);
+                }
+
                 Quickly.inform(`${step.name} was saved.`);
                 this.dispose();
             })
@@ -67,14 +74,17 @@ class PluginStepEditor extends View {
             });
     }
    
-    async setInitialState(pluginAssemblyId:string, config?: CdsWebApi.Config, step?: any) {
+    async setInitialState(pluginAssemblyId:string, step?: any, config?: CdsWebApi.Config, treeEntry?: CdsTreeEntry) {
         this.config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
         if (!this.config) { return; }
+
+        this.treeEntry = treeEntry;
 
         const api = new ApiRepository(this.config);
         const metaApi = new MetadataRepository(this.config);
 
         if (step) {
+            this.edit = true;
             step = await api.retrievePluginStep(step.sdkmessageprocessingstepid);
         }
         

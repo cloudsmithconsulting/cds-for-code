@@ -26,6 +26,8 @@ export default class WebResourceManager {
     static async createWebResourceFromUri(uri?: vscode.Uri) {
         const returnObject:any = (await vscode.commands.executeCommand(cs.cds.deployment.createWebResource, undefined, undefined, undefined, uri));
 
+        if (!returnObject) { return; }
+        
         await Quickly.openFile(returnObject.fsPath);
     
         return returnObject;    
@@ -35,6 +37,8 @@ export default class WebResourceManager {
     static async packWebResourceFromUri(uri?: vscode.Uri) {
         const returnObject:any = (await vscode.commands.executeCommand(cs.cds.deployment.packWebResource, undefined, undefined, undefined, uri));
         
+        if (!returnObject) { return; }
+
         await Quickly.openFile(returnObject.fsPath);
     
         return returnObject;

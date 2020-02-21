@@ -8,6 +8,7 @@ import svcUtilConfigView from "./cs.cds.views.svcUtilConfigView";
 import command from '../core/Command';
 import { View } from '../core/webui/View';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
+import { CdsTreeEntry } from './cs.cds.viewContainers.cdsExplorer';
 
 export default class ViewManager {
     @command(cs.cds.deployment.connectToCds, "Open CDS connection view")
@@ -21,13 +22,13 @@ export default class ViewManager {
     }
 
     @command(cs.cds.controls.pluginStep.open, "Open plugin step registration view")
-    static async openPluginStep(pluginAssemblyId:string, config?: CdsWebApi.Config, step?: any): Promise<View> {
-        return await pluginStepEditor.apply(this, [pluginAssemblyId, config, step]);
+    static async openPluginStep(pluginAssemblyId:string, step?: any, config?: CdsWebApi.Config, treeEntry?: CdsTreeEntry): Promise<View> {
+        return await pluginStepEditor.apply(this, [pluginAssemblyId, step, config, treeEntry]);
     }
 
     @command(cs.cds.controls.pluginStepImage.open, "Open plugin step image registration view")
-    static async openPluginStepImage(sdkmessageprocessingstepid: string, pluginStepImage: any, config?: CdsWebApi.Config): Promise<View> {
-        return await pluginStepImageEditor.apply(this, [sdkmessageprocessingstepid, pluginStepImage, config]);
+    static async openPluginStepImage(sdkmessageprocessingstepid: string, pluginStepImage?: any, config?: CdsWebApi.Config, treeEntry?: CdsTreeEntry): Promise<View> {
+        return await pluginStepImageEditor.apply(this, [sdkmessageprocessingstepid, pluginStepImage, config, treeEntry]);
     }
 
     @command(cs.cds.controls.jsonInspector.open, "Open JSON inspector view")

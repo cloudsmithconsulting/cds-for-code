@@ -144,7 +144,7 @@ export default class ScriptDownloader {
 			}
 
 			if (localFilePath.endsWith("Install-Sdk.ps1")) {
-				await ScriptDownloader.installCdsSdk();
+				ScriptDownloader.installCdsSdk();
 			}
 	
 			if (localFilePath.endsWith(".zip")) {

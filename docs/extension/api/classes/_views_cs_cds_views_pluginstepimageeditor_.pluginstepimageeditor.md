@@ -20,13 +20,15 @@ sidebar_label: "PluginStepImageEditor"
 
 ### Properties
 
-* [config](_views_cs_cds_views_pluginstepimageeditor_.pluginstepimageeditor.md#config)
+* [config](_views_cs_cds_views_pluginstepimageeditor_.pluginstepimageeditor.md#private-config)
 * [disposables](_views_cs_cds_views_pluginstepimageeditor_.pluginstepimageeditor.md#protected-disposables)
+* [edit](_views_cs_cds_views_pluginstepimageeditor_.pluginstepimageeditor.md#private-edit)
 * [onDidClose](_views_cs_cds_views_pluginstepimageeditor_.pluginstepimageeditor.md#ondidclose)
 * [onDidReceiveMessage](_views_cs_cds_views_pluginstepimageeditor_.pluginstepimageeditor.md#ondidreceivemessage)
 * [onReady](_views_cs_cds_views_pluginstepimageeditor_.pluginstepimageeditor.md#onready)
 * [options](_views_cs_cds_views_pluginstepimageeditor_.pluginstepimageeditor.md#options)
 * [renderer](_views_cs_cds_views_pluginstepimageeditor_.pluginstepimageeditor.md#protected-renderer)
+* [treeEntry](_views_cs_cds_views_pluginstepimageeditor_.pluginstepimageeditor.md#private-treeentry)
 * [openViews](_views_cs_cds_views_pluginstepimageeditor_.pluginstepimageeditor.md#static-openviews)
 
 ### Accessors
@@ -65,11 +67,11 @@ Name | Type |
 
 ## Properties
 
-###  config
+### `Private` config
 
 • **config**: *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
-Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:25
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:26
 
 ___
 
@@ -80,6 +82,14 @@ ___
 *Inherited from [View](_core_webui_view_.view.md).[disposables](_core_webui_view_.view.md#protected-disposables)*
 
 Defined in src/core/webui/View.ts:91
+
+___
+
+### `Private` edit
+
+• **edit**: *boolean* = false
+
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:28
 
 ___
 
@@ -133,6 +143,14 @@ Defined in src/core/webui/View.ts:92
 
 ___
 
+### `Private` treeEntry
+
+• **treeEntry**: *[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)*
+
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:27
+
+___
+
 ### `Static` openViews
 
 ▪ **openViews**: *object*
@@ -155,7 +173,7 @@ Track the currently panel. Only allow a single panel to exist at a time.
 
 *Overrides [View](_core_webui_view_.view.md).[commands](_core_webui_view_.view.md#commands)*
 
-Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:42
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:45
 
 **Returns:** *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, Function›*
 
@@ -197,7 +215,7 @@ ___
 
 *Overrides [View](_core_webui_view_.view.md).[construct](_core_webui_view_.view.md#abstract-construct)*
 
-Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:27
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:30
 
 **Parameters:**
 
@@ -243,7 +261,7 @@ ___
 
 ▸ **save**(`pluginStepImage`: any): *void*
 
-Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:48
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:51
 
 **Parameters:**
 
@@ -257,17 +275,18 @@ ___
 
 ###  setInitialState
 
-▸ **setInitialState**(`sdkmessageprocessingstepid`: string, `pluginStepImage`: any, `config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹void›*
+▸ **setInitialState**(`sdkmessageprocessingstepid`: string, `pluginStepImage?`: any, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `treeEntry?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:62
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:69
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `sdkmessageprocessingstepid` | string |
-`pluginStepImage` | any |
-`config` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`pluginStepImage?` | any |
+`config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`treeEntry?` | [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md) |
 
 **Returns:** *Promise‹void›*
 

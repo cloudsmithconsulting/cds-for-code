@@ -20,6 +20,7 @@ sidebar_label: "ObjectUtility"
 * [isNull](_core_utilities_.objectutility.md#isnull)
 * [isNullOrEmpty](_core_utilities_.objectutility.md#isnullorempty)
 * [isObject](_core_utilities_.objectutility.md#isobject)
+* [sanitize](_core_utilities_.objectutility.md#sanitize)
 
 ## Methods
 
@@ -128,3 +129,24 @@ Name | Type |
 `source` | any |
 
 **Returns:** *boolean*
+
+___
+
+###  sanitize
+
+▸ **sanitize**<**T**>(`source`: T, `excludeProperties`: string[]): *T*
+
+Defined in src/core/Utilities.ts:43
+
+**Type parameters:**
+
+▪ **T**
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`source` | T |
+`excludeProperties` | string[] |
+
+**Returns:** *T*
