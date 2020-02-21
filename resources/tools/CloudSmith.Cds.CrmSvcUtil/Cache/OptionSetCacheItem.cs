@@ -8,7 +8,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Cache
     {
         public OptionSetCacheItem()
         {
-            Key = new Func<string>(() => { return $"{EntityLogicalName}.{LogicalName}"; });
+            Key = new Func<string>(() => { return EntityLogicalName + (!string.IsNullOrEmpty(EntityLogicalName) ? "." : "") + LogicalName; });
             ParseKey = new Func<string, string, string>((entity, optionSet) => { EntityLogicalName = entity; LogicalName = optionSet; return Key(); });
             ParseMetadata = new Action<OptionSetMetadataBase>(m =>
             {

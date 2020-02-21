@@ -20,6 +20,7 @@ feedback, spot bugs and log issues so that we could deliver a better quality exp
 
 - Brandon Kelly
 - Ira Mellor
+- Scott Farriss
 - Gregory Moncayo
 - Jonas Rapp
 - Nikita Polyakov

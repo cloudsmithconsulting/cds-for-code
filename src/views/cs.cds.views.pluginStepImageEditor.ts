@@ -8,21 +8,24 @@ import Dictionary from '../core/types/Dictionary';
 import Quickly from '../core/Quickly';
 import ExtensionContext from '../core/ExtensionContext';
 import MetadataRepository from '../repositories/metadataRepository';
+import CdsExplorer, { CdsTreeEntry } from './cs.cds.viewContainers.cdsExplorer';
 
-export default async function openView(sdkmessageprocessingstepid: string, pluginStepImage: any, config?: CdsWebApi.Config): Promise<View> {
+export default async function openView(sdkmessageprocessingstepid: string, pluginStepImage?: any, config?: CdsWebApi.Config, treeEntry?: CdsTreeEntry): Promise<View> {
     const view = View.show(PluginStepImageEditor, {
         icon: './resources/images/cloudsmith-logo-only-50px.png',
         title: 'Configure Plugin Step Image - Dynamics 365 CE',
         type: cs.cds.views.pluginStepImageEditor,
         preserveFocus: false,
-        onReady: view => view.setInitialState(sdkmessageprocessingstepid, pluginStepImage, config)
+        onReady: view => view.setInitialState(sdkmessageprocessingstepid, pluginStepImage, config, treeEntry)
     });
 
     return view;
 }
 
 class PluginStepImageEditor extends View {
-    config: CdsWebApi.Config;
+    private config: CdsWebApi.Config;
+    private treeEntry: CdsTreeEntry;
+    private edit: boolean = false;
 
     construct(viewRenderer: ViewRenderer): string {
         // add script and css assets
@@ -50,6 +53,10 @@ class PluginStepImageEditor extends View {
         
         api.upsertPluginStepImage(pluginStepImage)
             .then(() => {
+                if (this.treeEntry) {
+                    CdsExplorer.Instance.refresh(this.edit && this.treeEntry.parent ? this.treeEntry.parent : this.treeEntry);
+                }
+
                 Quickly.inform(`${pluginStepImage.name} was saved.`);
                 this.dispose();
             })
@@ -59,12 +66,18 @@ class PluginStepImageEditor extends View {
             });
     }
    
-    async setInitialState(sdkmessageprocessingstepid: string, pluginStepImage: any, config: CdsWebApi.Config) {
+    async setInitialState(sdkmessageprocessingstepid: string, pluginStepImage?: any, config?: CdsWebApi.Config, treeEntry?: CdsTreeEntry) {
         this.config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
         if (!this.config) { return; }
 
+        this.treeEntry = treeEntry;
+
         const api = new ApiRepository(config);
         const metaApi = new MetadataRepository(config);
+
+        if (pluginStepImage) {
+            this.edit = true;
+        }
 
         const step = await api.retrievePluginStep(sdkmessageprocessingstepid);
         const metadataId = await metaApi.retrieveEntityMetadataId(step.sdkmessagefilterid.primaryobjecttypecode);

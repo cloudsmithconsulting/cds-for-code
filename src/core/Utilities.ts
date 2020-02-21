@@ -40,6 +40,7 @@ export interface ObjectUtility {
    asQuerystring(source:any): string;
    clone<T>(source: T, target?: any, excludeProperties?: string[]): T;
    createInstance<T>(context: Object, name: string, ...args: any[]) : T;
+   sanitize<T>(source: T, excludeProperties: string[]): T;
 }
 
 export interface RandomUtility {

@@ -12,7 +12,6 @@ namespace CloudSmith.Cds.CrmSvcUtil.Cache
             ParseMetadata = new Action<SdkMessage>(m =>
             {
                 Metadata = m;
-                IsPrivate = m.IsPrivate;
                 MessageName = m.Name;
             });
         }
@@ -24,7 +23,6 @@ namespace CloudSmith.Cds.CrmSvcUtil.Cache
         public SdkMessage Metadata { get; private set; }
 
         public string MessageName { get; set; }
-        public bool IsPrivate { get; set; }
         public string GeneratedTypeName { get; set; }
     }
 }

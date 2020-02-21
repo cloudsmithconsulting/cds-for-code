@@ -5,6 +5,7 @@ using System.Linq;
 using CloudSmith.Cds.CrmSvcUtil.Cache;
 using CloudSmith.Cds.CrmSvcUtil.Configuration;
 using CloudSmith.Cds.CrmSvcUtil.Configuration.Generation;
+using Microsoft.Crm.Services.Utility;
 using Microsoft.Xrm.Sdk.Metadata;
 
 namespace CloudSmith.Cds.CrmSvcUtil.Generation
@@ -15,11 +16,18 @@ namespace CloudSmith.Cds.CrmSvcUtil.Generation
         public OptionSetEnumCustomizationService() : this(ServiceExtensionsConfigurationSection.Create()) { }
         public OptionSetEnumCustomizationService(IServiceExtensionsConfiguration configuration) : base(configuration) { }
 
+        private static IServiceProvider serviceProvider;
+
         /// <summary>
         /// Remove the unnecessary classes that we generated for entities. 
         /// </summary>
         public override void CustomizeCodeDom(CodeCompileUnit codeUnit, IServiceProvider services)
         {
+            if (serviceProvider == null)
+            {
+                serviceProvider = services;
+            }
+
             if (!Configuration.CodeGeneration.Behaviors.HasBehavior("TranslateOptionSetsAsEnums"))
                 return;
 
@@ -43,9 +51,15 @@ namespace CloudSmith.Cds.CrmSvcUtil.Generation
                         {
                             if (member is CodeMemberProperty)
                             {
+                                var codeProperty = member as CodeMemberProperty;
                                 var attributeMetadata = entity.Attributes.FirstOrDefault(a => a.GeneratedTypeName == member.Name);
 
-                                TransformOptionSets(member, entity, attributeMetadata);
+                                if (attributeMetadata != null 
+                                    && member.Name.ToLower() != "statecode" 
+                                    && codeProperty.Type.BaseType == "Microsoft.Xrm.Sdk.OptionSetValue")
+                                {
+                                    TransformOptionSets(codeProperty, entity, attributeMetadata);
+                                }
                             }
                         }
                     }
@@ -58,32 +72,48 @@ namespace CloudSmith.Cds.CrmSvcUtil.Generation
             return DynamicsMetadataCache.Entities.FirstOrDefault(e => e.Value?.GeneratedTypeName == name).Value;
         }
 
-        private static void TransformOptionSets(CodeTypeMember member, EntityCacheItem entity, AttributeCacheItem attribute)
+        private static void TransformOptionSets(CodeMemberProperty member, EntityCacheItem entity, AttributeCacheItem attribute)
         {
-            var codeProperty = (CodeMemberProperty)member;
-
-            if (member.Name.ToLower() == "statecode" || codeProperty.Type.BaseType != "Microsoft.Xrm.Sdk.OptionSetValue") return;
-
-            OptionSetCacheItem optionSet = null;
             AttributeMetadata attributeMetadata = attribute.Metadata;
 
             if (entity != null && attributeMetadata != null)
             {
                 if (attributeMetadata is EnumAttributeMetadata)
                 {
-                    FixEnums(codeProperty, (EnumAttributeMetadata)attributeMetadata, optionSet);
+                    string typeName;
+                    EnumAttributeMetadata enumMetadata = attributeMetadata as EnumAttributeMetadata;
+                    OptionSetCacheItem optionSet = DynamicsMetadataCache.OptionSets.GetBy(entity.LogicalName, enumMetadata.OptionSet.Name);
+
+                    if (optionSet == null)
+                    {
+                        optionSet = DynamicsMetadataCache.OptionSets.GetBy("*", enumMetadata.OptionSet.Name);
+                    }
+
+                    if (optionSet != null)
+                    {
+                        typeName = optionSet.GeneratedTypeName;
+                    }
+                    else 
+                    {
+                        var namingService = (INamingService)serviceProvider.GetService(typeof(INamingService));
+
+                        typeName = namingService.GetNameForOptionSet(entity.Metadata, enumMetadata.OptionSet, serviceProvider);
+                    }
+
+                    FixEnums(member, enumMetadata, typeName);
                 }
                 else
                 {
-                    codeProperty.Type = new CodeTypeReference("int?");
+                    member.Type = new CodeTypeReference("int?");
                 }
             }
         }
 
-        private static void FixEnums(CodeMemberProperty codeProperty, EnumAttributeMetadata listAttribute, OptionSetCacheItem optionSet)
+        private static void FixEnums(CodeMemberProperty codeProperty, EnumAttributeMetadata listAttribute, string typeName)
         {
             //TODO: refator this method to also work in VB or F#
-            codeProperty.Type = new CodeTypeReference(optionSet.GeneratedTypeName + "?");
+            codeProperty.Type = new CodeTypeReference(typeName.EndsWith("?") ? typeName : typeName + "?");
+
             if (codeProperty.HasSet)
             {
                 if (codeProperty.SetStatements[1].GetType() == typeof(CodeConditionStatement))
@@ -113,7 +143,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Generation
                     string.Format(
                         "var ret = this.GetAttributeValue<Microsoft.Xrm.Sdk.OptionSetValue>(\"{1}\");" + Environment.NewLine +
                         "\t\t\t\treturn (ret!=null ? ({0}?)ret.Value : ({0}?)null);",
-                        optionSet.GeneratedTypeName, listAttribute.LogicalName)
+                        typeName, listAttribute.LogicalName)
                     ));
             }
         }

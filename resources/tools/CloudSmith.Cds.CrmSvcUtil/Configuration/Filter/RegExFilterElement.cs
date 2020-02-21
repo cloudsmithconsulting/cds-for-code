@@ -39,6 +39,6 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration.Filter
             set => this["ignoreCase"] = value;
         }
 
-        public FilterMember Filter { get; private set; }
+        public FilterMember Filter { get; set; }
     }
 }

@@ -54,7 +54,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration.Filter
         internal bool HasSolutionFilters => Solutions.Count(s => !string.IsNullOrEmpty(s.SolutionName)) > 0;
         internal bool HasCustomizationFilter => Customizations?.CustomizationStrategy != CustomizationStrategy.Default;
 
-        [ConfigurationProperty("Entities")]
+        [ConfigurationProperty("Entities", IsRequired = false)]
         [ConfigurationCollection(typeof(EntityListElementCollection),
           AddItemName = "add",
           ClearItemsName = "clear",
@@ -65,7 +65,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration.Filter
             set => base["Entities"] = value;
         }
 
-        [ConfigurationProperty("Attributes")]
+        [ConfigurationProperty("Attributes", IsRequired = false)]
         [ConfigurationCollection(typeof(AttributeListElementCollection),
           AddItemName = "add",
           ClearItemsName = "clear",
@@ -76,7 +76,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration.Filter
             set => base["Attributes"] = value;
         }
 
-        [ConfigurationProperty("OptionSets")]
+        [ConfigurationProperty("OptionSets", IsRequired = false)]
         [ConfigurationCollection(typeof(OptionSetListElementCollection),
           AddItemName = "add",
           ClearItemsName = "clear",
@@ -87,7 +87,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration.Filter
             set => base["OptionSets"] = value;
         }
 
-        [ConfigurationProperty("Filters")]
+        [ConfigurationProperty("Filters", IsRequired = false)]
         [ConfigurationCollection(typeof(FilterListElementCollection))]
         public FilterListElementCollection Filters
         {
@@ -95,7 +95,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration.Filter
             set => base["Filters"] = value;
         }
 
-        [ConfigurationProperty("Solutions")]
+        [ConfigurationProperty("Solutions", IsRequired = false)]
         [ConfigurationCollection(typeof(SolutionFilterElementCollection),
           AddItemName = "add",
           ClearItemsName = "clear",
@@ -106,7 +106,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration.Filter
             set => base["Solutions"] = value;
         }
 
-        [ConfigurationProperty("Customizations")]
+        [ConfigurationProperty("Customizations", IsRequired = false)]
         public CustomizationFilterElement Customizations
         {
             get => (CustomizationFilterElement)base["Customizations"];

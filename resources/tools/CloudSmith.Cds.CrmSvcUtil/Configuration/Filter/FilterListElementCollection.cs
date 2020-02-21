@@ -15,6 +15,11 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration.Filter
             { "optionSet", typeof(AllowsEntityRegExElement) }
         };
 
+        protected override void OnElementCreated(string elementName, RegExFilterElement element)
+        {
+            element.Filter = elementName == "entity" ? FilterMember.Entity : elementName == "attribute" ? FilterMember.Attribute : elementName == "optionSet" ? FilterMember.OptionSet : element.Filter;
+        }
+
         /// <inheritdoc />
         protected override object GetElementKey(RegExFilterElement element)
         {

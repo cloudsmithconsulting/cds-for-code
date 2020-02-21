@@ -20,16 +20,17 @@ sidebar_label: "views/cs.cds.views.pluginStepImageEditor"
 
 ###  openView
 
-▸ **openView**(`sdkmessageprocessingstepid`: string, `pluginStepImage`: any, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](../classes/_core_webui_view_.view.md)›*
+▸ **openView**(`sdkmessageprocessingstepid`: string, `pluginStepImage?`: any, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `treeEntry?`: [CdsTreeEntry](../classes/_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹[View](../classes/_core_webui_view_.view.md)›*
 
-Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:12
+Defined in src/views/cs.cds.views.pluginStepImageEditor.ts:13
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `sdkmessageprocessingstepid` | string |
-`pluginStepImage` | any |
+`pluginStepImage?` | any |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`treeEntry?` | [CdsTreeEntry](../classes/_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md) |
 
 **Returns:** *Promise‹[View](../classes/_core_webui_view_.view.md)›*

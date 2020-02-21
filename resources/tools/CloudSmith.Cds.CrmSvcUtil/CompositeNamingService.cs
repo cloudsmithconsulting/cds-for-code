@@ -30,23 +30,26 @@ namespace CloudSmith.Cds.CrmSvcUtil
         public override string GetNameForAttribute(EntityMetadata entityMetadata, AttributeMetadata attributeMetadata, IServiceProvider services)
         {
             string returnValue = string.Empty;
+            string defaultValue = base.GetNameForAttribute(entityMetadata, attributeMetadata, services);
 
             foreach (var namer in _namers)
             {
                 Trace.Debug($"Executing naming rule {nameof(GetNameForAttribute)} using {namer.GetType().FullName}");
 
                 returnValue = namer.GetNameForAttribute(entityMetadata, attributeMetadata, services);
-
-                if (!string.IsNullOrEmpty(returnValue))
-                {
-                    var cacheItem = DynamicsMetadataCache.Attributes.GetOrParse(attributeMetadata);
-
-                    if (cacheItem != null)
-                        cacheItem.GeneratedTypeName = returnValue;
-
-                    DynamicsMetadataCache.Attributes.Set(cacheItem);
-                }
             }
+
+            if (string.IsNullOrEmpty(returnValue))
+            {
+                returnValue = defaultValue;
+            }
+
+            var cacheItem = DynamicsMetadataCache.Attributes.GetOrParse(attributeMetadata);
+
+            if (cacheItem != null)
+                cacheItem.GeneratedTypeName = returnValue;
+
+            DynamicsMetadataCache.Attributes.Set(cacheItem);
 
             return returnValue;
         }
@@ -54,23 +57,26 @@ namespace CloudSmith.Cds.CrmSvcUtil
         public override string GetNameForEntity(EntityMetadata entityMetadata, IServiceProvider services)
         {
             string returnValue = string.Empty;
+            string defaultValue = base.GetNameForEntity(entityMetadata, services);
 
             foreach (var namer in _namers)
             {
                 Trace.Debug($"Executing naming rule {nameof(GetNameForEntity)} using {namer.GetType().FullName}");
 
                 returnValue = namer.GetNameForEntity(entityMetadata, services);
-
-                if (!string.IsNullOrEmpty(returnValue))
-                {
-                    var cacheItem = DynamicsMetadataCache.Entities.GetOrParse(entityMetadata);
-
-                    if (cacheItem != null)
-                        cacheItem.GeneratedTypeName = returnValue;
-
-                    DynamicsMetadataCache.Entities.Set(cacheItem);
-                }
             }
+
+            if (string.IsNullOrEmpty(returnValue))
+            {
+                returnValue = defaultValue;
+            }
+
+            var cacheItem = DynamicsMetadataCache.Entities.GetOrParse(entityMetadata);
+
+            if (cacheItem != null)
+                cacheItem.GeneratedTypeName = returnValue;
+
+            DynamicsMetadataCache.Entities.Set(cacheItem);
 
             return returnValue;
         }
@@ -78,23 +84,26 @@ namespace CloudSmith.Cds.CrmSvcUtil
         public override string GetNameForEntitySet(EntityMetadata entityMetadata, IServiceProvider services)
         {
             string returnValue = string.Empty;
+            string defaultValue = base.GetNameForEntitySet(entityMetadata, services);
 
             foreach (var namer in _namers)
             {
                 Trace.Debug($"Executing naming rule {nameof(GetNameForEntity)} using {namer.GetType().FullName}");
 
                 returnValue = namer.GetNameForEntity(entityMetadata, services);
-
-                if (!string.IsNullOrEmpty(returnValue))
-                {
-                    var cacheItem = DynamicsMetadataCache.Entities.GetOrParse(entityMetadata);
-
-                    if (cacheItem != null)
-                        cacheItem.GeneratedSetName = returnValue;
-
-                    DynamicsMetadataCache.Entities.Set(cacheItem);
-                }
             }
+
+            if (string.IsNullOrEmpty(returnValue))
+            {
+                returnValue = defaultValue;
+            }
+
+            var cacheItem = DynamicsMetadataCache.Entities.GetOrParse(entityMetadata);
+
+            if (cacheItem != null)
+                cacheItem.GeneratedSetName = returnValue;
+
+            DynamicsMetadataCache.Entities.Set(cacheItem);
 
             return returnValue;
         }
@@ -109,17 +118,19 @@ namespace CloudSmith.Cds.CrmSvcUtil
                 Trace.Debug($"Executing naming rule {nameof(GetNameForMessagePair)} using {namer.GetType().FullName}");
 
                 returnValue = namer.GetNameForMessagePair(messagePair, services);
-
-                if (!string.IsNullOrEmpty(returnValue))
-                {
-                    var cacheItem = DynamicsMetadataCache.SdkMessagePairs.GetOrParse(messagePair);
-
-                    if (cacheItem != null)
-                        cacheItem.GeneratedTypeName = returnValue;
-
-                    DynamicsMetadataCache.SdkMessagePairs.Set(cacheItem);
-                }
             }
+
+            if (string.IsNullOrEmpty(returnValue))
+            {
+                returnValue = defaultValue;
+            }
+
+            var cacheItem = DynamicsMetadataCache.SdkMessagePairs.GetOrParse(messagePair);
+
+            if (cacheItem != null)
+                cacheItem.GeneratedTypeName = returnValue;
+
+            DynamicsMetadataCache.SdkMessagePairs.Set(cacheItem);
 
             return returnValue;
         }
@@ -134,17 +145,19 @@ namespace CloudSmith.Cds.CrmSvcUtil
                 Trace.Debug($"Executing naming rule {nameof(GetNameForOption)} using {namer.GetType().FullName}");
 
                 returnValue = namer.GetNameForOption(optionSetMetadata, optionMetadata, services);
-
-                if (!string.IsNullOrEmpty(returnValue))
-                {
-                    var cacheItem = DynamicsMetadataCache.Options.GetOrParse(optionMetadata);
-
-                    if (cacheItem != null)
-                        cacheItem.GeneratedTypeName = returnValue;
-
-                    DynamicsMetadataCache.Options.Set(cacheItem);
-                }
             }
+
+            if (string.IsNullOrEmpty(returnValue))
+            {
+                returnValue = defaultValue;
+            }
+
+            var cacheItem = DynamicsMetadataCache.Options.GetOrParse(optionMetadata);
+
+            if (cacheItem != null)
+                cacheItem.GeneratedTypeName = returnValue;
+
+            DynamicsMetadataCache.Options.Set(cacheItem);
 
             return returnValue;
         }
@@ -159,17 +172,19 @@ namespace CloudSmith.Cds.CrmSvcUtil
                 Trace.Debug($"Executing naming rule {nameof(GetNameForOptionSet)} using {namer.GetType().FullName}");
 
                 returnValue = namer.GetNameForOptionSet(entityMetadata, optionSetMetadata, services);
-
-                if (!string.IsNullOrEmpty(returnValue))
-                {
-                    var cacheItem = DynamicsMetadataCache.OptionSets.GetOrParse(optionSetMetadata);
-
-                    if (cacheItem != null)
-                        cacheItem.GeneratedTypeName = returnValue;
-
-                    DynamicsMetadataCache.OptionSets.Set(cacheItem);
-                }
             }
+
+            if (string.IsNullOrEmpty(returnValue))
+            {
+                returnValue = defaultValue;
+            }
+
+            var cacheItem = DynamicsMetadataCache.OptionSets.GetOrParse(optionSetMetadata);
+
+            if (cacheItem != null)
+                cacheItem.GeneratedTypeName = returnValue;
+
+            DynamicsMetadataCache.OptionSets.Set(cacheItem);
 
             return returnValue;
         }
@@ -184,17 +199,19 @@ namespace CloudSmith.Cds.CrmSvcUtil
                 Trace.Debug($"Executing naming rule {nameof(GetNameForRelationship)} using {namer.GetType().FullName}");
 
                 returnValue = namer.GetNameForRelationship(entityMetadata, relationshipMetadata, reflexiveRole, services);
-
-                if (!string.IsNullOrEmpty(returnValue))
-                {
-                    var cacheItem = DynamicsMetadataCache.Relationships.GetOrParse(relationshipMetadata);
-
-                    if (cacheItem != null)
-                        cacheItem.GeneratedTypeName = returnValue;
-
-                    DynamicsMetadataCache.Relationships.Set(cacheItem);
-                }
             }
+
+            if (string.IsNullOrEmpty(returnValue))
+            {
+                returnValue = defaultValue;
+            }
+
+            var cacheItem = DynamicsMetadataCache.Relationships.GetOrParse(relationshipMetadata);
+
+            if (cacheItem != null)
+                cacheItem.GeneratedTypeName = returnValue;
+
+            DynamicsMetadataCache.Relationships.Set(cacheItem);
 
             return string.IsNullOrEmpty(returnValue) ? defaultValue : returnValue;
         }
@@ -209,17 +226,19 @@ namespace CloudSmith.Cds.CrmSvcUtil
                 Trace.Debug($"Executing naming rule {nameof(GetNameForRequestField)} using {namer.GetType().FullName}");
 
                 returnValue = namer.GetNameForRequestField(request, requestField, services);
-
-                if (!string.IsNullOrEmpty(returnValue))
-                {
-                    var cacheItem = DynamicsMetadataCache.SdkMessagePairs.GetOrParse(request.MessagePair);
-
-                    if (cacheItem != null)
-                        cacheItem.GeneratedRequestTypeName = returnValue;
-
-                    DynamicsMetadataCache.SdkMessagePairs.Set(cacheItem);
-                }
             }
+
+            if (string.IsNullOrEmpty(returnValue))
+            {
+                returnValue = defaultValue;
+            }
+
+            var cacheItem = DynamicsMetadataCache.SdkMessagePairs.GetOrParse(request.MessagePair);
+
+            if (cacheItem != null)
+                cacheItem.GeneratedRequestTypeName = returnValue;
+
+            DynamicsMetadataCache.SdkMessagePairs.Set(cacheItem);
 
             return string.IsNullOrEmpty(returnValue) ? defaultValue : returnValue;
         }
