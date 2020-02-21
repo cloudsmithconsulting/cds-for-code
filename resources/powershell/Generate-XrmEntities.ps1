@@ -129,7 +129,7 @@ if ($GenerateActions)
 $CrmSvcUtil = (Join-Path $ToolsPath -ChildPath "CrmSvcUtil.exe")
 
 if ($Interactive) {
-	$Arguments = "/nologo /url:'$Url' /interactivelogin $Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
+	$Arguments = "/nologo /url:""$Url"" /interactivelogin $Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
 } else {
 	if ($ConnectionString -eq "") {
 		$bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password);
@@ -143,9 +143,9 @@ if ($Interactive) {
 			[Runtime.InteropServices.Marshal]::FreeBSTR($bstr);
 		}
 
-		$Arguments = "/nologo /url:'$Url' /username:$Username /password:$UnsecurePassword $Domain$Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
+		$Arguments = "/nologo /url:""$Url"" /username:""$Username"" /password:""$UnsecurePassword"" $Domain$Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
 	} else {
-		$Arguments = "/nologo /url:'$Url' /connectionstring:'$ConnectionString' $Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
+		$Arguments = "/nologo /url:""$Url"" /connectionstring:""$ConnectionString"" $Namespace$ServiceContextName$GenerateActionsString/out:$FullPath"
 	}
 }
 
