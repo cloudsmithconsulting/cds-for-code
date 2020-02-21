@@ -18,7 +18,7 @@ export default function buildFunctionParameters(parameters:any): string {
                 continue;
             }
 
-            if (typeof value === "string") {
+            if (typeof value === "string" && !value.startsWith("Microsoft.Dynamics.CRM")) {
                 value = "'" + value + "'";
             }
             //fix #45
