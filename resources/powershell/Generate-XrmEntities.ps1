@@ -61,7 +61,7 @@ Param
 	$Password,
 
 	[string] 
-	[parameter(Mandatory = $false, ParameterSetName = "NoConnectionString", HelpMessage = " Domain to authenticate against when connecting to the server")]
+	[parameter(Mandatory = $false, ParameterSetName = "NoConnectionString", HelpMessage = "Domain to authenticate against when connecting to the server")]
 	$Domain = "",
 
 	[string] 

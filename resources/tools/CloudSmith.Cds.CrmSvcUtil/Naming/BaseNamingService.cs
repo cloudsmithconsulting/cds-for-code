@@ -4,6 +4,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Metadata;
 using System;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace CloudSmith.Cds.CrmSvcUtil.Naming
 {
@@ -52,7 +53,12 @@ namespace CloudSmith.Cds.CrmSvcUtil.Naming
 
         public virtual string GetNameForOption(OptionSetMetadataBase optionSetMetadata, OptionMetadata optionMetadata, IServiceProvider services)
         {
-            return DefaultService.GetNameForOption(optionSetMetadata, optionMetadata, services);
+            var returnValue = DefaultService.GetNameForOption(optionSetMetadata, optionMetadata, services);
+
+            Regex regex = new Regex("^\\d");
+            bool isMatch = regex.IsMatch(returnValue);
+
+            return isMatch ? $"_{returnValue}" : returnValue;
         }
 
         public virtual string GetNameForOptionSet(EntityMetadata entityMetadata, OptionSetMetadataBase optionSetMetadata, IServiceProvider services)
