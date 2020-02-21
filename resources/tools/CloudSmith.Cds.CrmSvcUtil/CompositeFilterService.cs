@@ -58,6 +58,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
 
         public override bool GenerateAttribute(AttributeMetadata attributeMetadata, IServiceProvider services)
         {
+            bool baseResponse = base.GenerateAttribute(attributeMetadata, services);
             bool whitelist, blacklist = false;
 
             whitelist = _whitelistFilters.Any(filter => filter.GenerateAttribute(attributeMetadata, services));
@@ -68,6 +69,9 @@ namespace CloudSmith.Cds.CrmSvcUtil
             }
             else
             {
+                if (!baseResponse)
+                    return false;
+
                 if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive && !DynamicsMetadataCache.Entities.HasBy(attributeMetadata.EntityLogicalName))
                     return false;
 
@@ -84,6 +88,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
 
         public override bool GenerateEntity(EntityMetadata entityMetadata, IServiceProvider services)
         {
+            bool baseResponse = base.GenerateEntity(entityMetadata, services);
             bool whitelist, blacklist = false;
 
             whitelist = _whitelistFilters.Any(filter => filter.GenerateEntity(entityMetadata, services));
@@ -94,6 +99,9 @@ namespace CloudSmith.Cds.CrmSvcUtil
             }
             else
             {
+                if (!baseResponse)
+                    return false;
+
                 if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive)
                     return false;
 
@@ -110,12 +118,16 @@ namespace CloudSmith.Cds.CrmSvcUtil
 
         public override bool GenerateOption(OptionMetadata optionMetadata, IServiceProvider services)
         {
+            bool baseResponse = base.GenerateOption(optionMetadata, services);
             bool whitelist, blacklist = false;
 
             whitelist = _whitelistFilters.Any(filter => filter.GenerateOption(optionMetadata, services));
 
             if (!whitelist)
             {
+                if (!baseResponse)
+                    return false;
+
                 blacklist = _blacklistFilters.All(filter => filter.GenerateOption(optionMetadata, services));
             }
 
@@ -124,6 +136,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
 
         public override bool GenerateOptionSet(OptionSetMetadataBase optionSetMetadata, IServiceProvider services)
         {
+            bool baseResponse = base.GenerateOptionSet(optionSetMetadata, services);
             bool whitelist, blacklist = false;
 
             whitelist = _whitelistFilters.Any(filter => filter.GenerateOptionSet(optionSetMetadata, services));
@@ -134,6 +147,9 @@ namespace CloudSmith.Cds.CrmSvcUtil
             }
             else
             {
+                if (!baseResponse)
+                    return false;
+
                 if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive)
                     return false;
 
@@ -150,6 +166,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
 
         public override bool GenerateRelationship(RelationshipMetadataBase relationshipMetadata, EntityMetadata otherEntityMetadata, IServiceProvider services)
         {
+            bool baseResponse = base.GenerateRelationship(relationshipMetadata, otherEntityMetadata, services);
             bool whitelist, blacklist = false;
 
             whitelist = _whitelistFilters.Any(filter => filter.GenerateRelationship(relationshipMetadata, otherEntityMetadata, services));
@@ -160,6 +177,9 @@ namespace CloudSmith.Cds.CrmSvcUtil
             }
             else
             {
+                if (!baseResponse)
+                    return false;
+
                 if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive)
                     return false;
 
@@ -176,6 +196,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
 
         public override bool GenerateSdkMessage(SdkMessage sdkMessage, IServiceProvider services)
         {
+            bool baseResponse = base.GenerateSdkMessage(sdkMessage, services);
             bool whitelist, blacklist = false;
 
             whitelist = _whitelistFilters.Any(filter => filter.GenerateSdkMessage(sdkMessage, services));
@@ -186,6 +207,9 @@ namespace CloudSmith.Cds.CrmSvcUtil
             }
             else
             {
+                if (!baseResponse)
+                    return false;
+
                 if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive)
                     return false;
 
@@ -202,6 +226,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
 
         public override bool GenerateSdkMessagePair(SdkMessagePair sdkMessagePair, IServiceProvider services)
         {
+            bool baseResponse = base.GenerateSdkMessagePair(sdkMessagePair, services);
             bool whitelist, blacklist = false;
 
             whitelist = _whitelistFilters.Any(filter => filter.GenerateSdkMessagePair(sdkMessagePair, services));
@@ -212,6 +237,9 @@ namespace CloudSmith.Cds.CrmSvcUtil
             }
             else
             {
+                if (!baseResponse)
+                    return false;
+
                 if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive)
                     return false;
 
@@ -228,12 +256,16 @@ namespace CloudSmith.Cds.CrmSvcUtil
 
         public override bool GenerateServiceContext(IServiceProvider services)
         {
+            bool baseResponse = base.GenerateServiceContext(services);
             bool whitelist, blacklist = false;
 
             whitelist = _whitelistFilters.Any(filter => filter.GenerateServiceContext(services));
 
             if (!whitelist)
             {
+                if (!baseResponse)
+                    return false;
+
                 blacklist = _blacklistFilters.All(filter => filter.GenerateServiceContext(services));
             }
 
