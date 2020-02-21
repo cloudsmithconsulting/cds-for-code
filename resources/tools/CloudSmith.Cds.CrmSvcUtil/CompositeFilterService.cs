@@ -68,10 +68,10 @@ namespace CloudSmith.Cds.CrmSvcUtil
             }
             else
             {
-                if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive)
+                if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive && !DynamicsMetadataCache.Entities.HasBy(attributeMetadata.EntityLogicalName))
                     return false;
 
-                blacklist = _blacklistFilters.Any(filter => filter.GenerateAttribute(attributeMetadata, services));
+                blacklist = _blacklistFilters.All(filter => filter.GenerateAttribute(attributeMetadata, services));
 
                 if (!blacklist)
                 {
@@ -97,7 +97,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
                 if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive)
                     return false;
 
-                blacklist = _blacklistFilters.Any(filter => filter.GenerateEntity(entityMetadata, services));
+                blacklist = _blacklistFilters.All(filter => filter.GenerateEntity(entityMetadata, services));
 
                 if (!blacklist)
                 {
@@ -116,7 +116,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
 
             if (!whitelist)
             {
-                blacklist = _blacklistFilters.Any(filter => filter.GenerateOption(optionMetadata, services));
+                blacklist = _blacklistFilters.All(filter => filter.GenerateOption(optionMetadata, services));
             }
 
             return whitelist || blacklist;
@@ -137,7 +137,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
                 if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive)
                     return false;
 
-                blacklist = _blacklistFilters.Any(filter => filter.GenerateOptionSet(optionSetMetadata, services));
+                blacklist = _blacklistFilters.All(filter => filter.GenerateOptionSet(optionSetMetadata, services));
 
                 if (!blacklist)
                 {
@@ -163,7 +163,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
                 if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive)
                     return false;
 
-                blacklist = _blacklistFilters.Any(filter => filter.GenerateRelationship(relationshipMetadata, otherEntityMetadata, services));
+                blacklist = _blacklistFilters.All(filter => filter.GenerateRelationship(relationshipMetadata, otherEntityMetadata, services));
 
                 if (!blacklist)
                 {
@@ -189,7 +189,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
                 if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive)
                     return false;
 
-                blacklist = _blacklistFilters.Any(filter => filter.GenerateSdkMessage(sdkMessage, services));
+                blacklist = _blacklistFilters.All(filter => filter.GenerateSdkMessage(sdkMessage, services));
 
                 if (!blacklist)
                 {
@@ -215,7 +215,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
                 if (Configuration.Filtering.HasWhitelist && Configuration.Filtering.Whitelist.Filter == WhitelistFilter.Exclusive)
                     return false;
 
-                blacklist = _blacklistFilters.Any(filter => filter.GenerateSdkMessagePair(sdkMessagePair, services));
+                blacklist = _blacklistFilters.All(filter => filter.GenerateSdkMessagePair(sdkMessagePair, services));
 
                 if (!blacklist)
                 {
@@ -234,7 +234,7 @@ namespace CloudSmith.Cds.CrmSvcUtil
 
             if (!whitelist)
             {
-                blacklist = _blacklistFilters.Any(filter => filter.GenerateServiceContext(services));
+                blacklist = _blacklistFilters.All(filter => filter.GenerateServiceContext(services));
             }
 
             return whitelist || blacklist;
