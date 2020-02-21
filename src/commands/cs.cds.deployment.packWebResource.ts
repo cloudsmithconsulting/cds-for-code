@@ -40,7 +40,7 @@ export default async function run(this: WebResourceManager, config?:CdsWebApi.Co
         solution = await api.retrieveSolution(map.solutionId);
     }
 
-    solution = solution || await Quickly.pickCdsSolution(config, "Would you like to deply this web resource into a solution?");
+    solution = solution || await Quickly.pickCdsSolution(config, "Would you like to deploy this web resource into a solution?");
 
     if (!webResource) {
         const result:any = await this.createWebResource(config, solution ? solution.solutionid : undefined, webResource, fileUri, undefined, false);

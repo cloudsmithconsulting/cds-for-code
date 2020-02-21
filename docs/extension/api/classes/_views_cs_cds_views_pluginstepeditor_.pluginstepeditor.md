@@ -22,11 +22,13 @@ sidebar_label: "PluginStepEditor"
 
 * [config](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#private-config)
 * [disposables](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#protected-disposables)
+* [edit](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#private-edit)
 * [onDidClose](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#ondidclose)
 * [onDidReceiveMessage](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#ondidreceivemessage)
 * [onReady](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#onready)
 * [options](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#options)
 * [renderer](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#protected-renderer)
+* [treeEntry](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#private-treeentry)
 * [openViews](_views_cs_cds_views_pluginstepeditor_.pluginstepeditor.md#static-openviews)
 
 ### Accessors
@@ -70,7 +72,7 @@ Name | Type |
 
 • **config**: *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:25
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:26
 
 ___
 
@@ -81,6 +83,14 @@ ___
 *Inherited from [View](_core_webui_view_.view.md).[disposables](_core_webui_view_.view.md#protected-disposables)*
 
 Defined in src/core/webui/View.ts:91
+
+___
+
+### `Private` edit
+
+• **edit**: *boolean* = false
+
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:28
 
 ___
 
@@ -134,6 +144,14 @@ Defined in src/core/webui/View.ts:92
 
 ___
 
+### `Private` treeEntry
+
+• **treeEntry**: *[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)*
+
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:27
+
+___
+
 ### `Static` openViews
 
 ▪ **openViews**: *object*
@@ -156,7 +174,7 @@ Track the currently panel. Only allow a single panel to exist at a time.
 
 *Overrides [View](_core_webui_view_.view.md).[commands](_core_webui_view_.view.md#commands)*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:42
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:45
 
 **Returns:** *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, Function›*
 
@@ -198,7 +216,7 @@ ___
 
 *Overrides [View](_core_webui_view_.view.md).[construct](_core_webui_view_.view.md#abstract-construct)*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:27
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:30
 
 **Parameters:**
 
@@ -244,7 +262,7 @@ ___
 
 ▸ **retrieveAttributes**(`logicalName`: string): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:49
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:52
 
 **Parameters:**
 
@@ -260,7 +278,7 @@ ___
 
 ▸ **save**(`step`: any): *void*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:57
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:60
 
 **Parameters:**
 
@@ -274,17 +292,18 @@ ___
 
 ###  setInitialState
 
-▸ **setInitialState**(`pluginAssemblyId`: string, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `step?`: any): *Promise‹void›*
+▸ **setInitialState**(`pluginAssemblyId`: string, `step?`: any, `config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `treeEntry?`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.pluginStepEditor.ts:70
+Defined in src/views/cs.cds.views.pluginStepEditor.ts:77
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `pluginAssemblyId` | string |
-`config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
 `step?` | any |
+`config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`treeEntry?` | [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md) |
 
 **Returns:** *Promise‹void›*
 

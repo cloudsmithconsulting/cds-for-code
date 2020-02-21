@@ -24,7 +24,7 @@ sidebar_label: "RandomUtility"
 
 ▸ **randomString**(`length`: number, `chars?`: string): *string*
 
-Defined in src/core/Utilities.ts:48
+Defined in src/core/Utilities.ts:49
 
 **Parameters:**
 
@@ -41,7 +41,7 @@ ___
 
 ▸ **randomStringBase64**(`length`: number): *string*
 
-Defined in src/core/Utilities.ts:47
+Defined in src/core/Utilities.ts:48
 
 **Parameters:**
 
@@ -57,7 +57,7 @@ ___
 
 ▸ **randomStringHex**(`length`: number): *string*
 
-Defined in src/core/Utilities.ts:46
+Defined in src/core/Utilities.ts:47
 
 **Parameters:**
 
