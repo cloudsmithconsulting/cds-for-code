@@ -28,27 +28,54 @@ export default class ScriptDownloader {
 			FileSystem.makeFolderSync(ExtensionContext.Instance.globalStoragePath);
 		}
 
+		// When debugging, we can deploy tools and scripts from the local source.
 		if (ExtensionContext.isDebugging) {
 			const extensionPath = vscode.extensions.getExtension(cs.cds.extension.productId).extensionPath;
-			const sourcePath = path.join(extensionPath, "resources/powershell/");
-			const destinationPath = path.join(ExtensionContext.Instance.globalStoragePath, "Scripts/");
+			const install = async (source, destination) => {
+				if (FileSystem.exists(source)) {
+					if (FileSystem.exists(destination)) {
+						await FileSystem.deleteFolder(destination);
+					}
 
-			if (FileSystem.exists(sourcePath)) {
-				FileSystem.makeFolderSync(destinationPath);				
-				FileSystem.copyFolder(sourcePath, destinationPath);
-			}
+					FileSystem.makeFolderSync(destination);				
+					FileSystem.copyFolder(source, destination);
+				}
+			};
 
+			let sourcePath = path.join(extensionPath, "resources/powershell/");
+			let destinationPath = path.join(ExtensionContext.Instance.globalStoragePath, "Scripts/");
+
+			await install(sourcePath, destinationPath);
 			await this.installCdsSdk();
-			
+
+			sourcePath = path.join(extensionPath, "resources/tools/CloudSmith.Cds.CrmSvcUtil/bin/Debug");
+			destinationPath = path.join(ExtensionContext.Instance.globalStoragePath, "Tools/CloudSmith.Cds.CrmSvcUtil");
+
+			await install(sourcePath, destinationPath);
+
+			sourcePath = path.join(extensionPath, "resources/tools/CloudSmith.Tools.AssemblyScanner/bin/Debug/netcoreapp3.0");
+			destinationPath = path.join(ExtensionContext.Instance.globalStoragePath, "Tools/CloudSmith.Tools.AssemblyScanner");
+
+			await install(sourcePath, destinationPath);
+
 			return;
 		}
-
+		
 		const version: string = vscode.extensions.getExtension(cs.cds.extension.productId).packageJSON.version;
 		const remoteFolderPath: string = `${Utilities.String.withTrailingSlash(ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.tools.updateSource, "https://cloudsmithprodstorage.blob.core.windows.net/cds-for-code/"))}version-${version}/dist/`;
 		const updateChannel: string = ExtensionConfiguration.getConfigurationValueOrDefault(cs.cds.configuration.tools.updateChannel, "stable");
 		const manifestFile = path.join(ExtensionContext.Instance.globalStoragePath, "manifest.json");
-		const alreadyHasManifest: boolean = FileSystem.exists(manifestFile);
+		let alreadyHasManifest: boolean = FileSystem.exists(manifestFile);
 		
+		if (alreadyHasManifest) {
+			const manifestContents = JSON.parse(FileSystem.readFileSync(manifestFile));
+
+			if (manifestContents.version !== version) {
+				await FileSystem.deleteItem(manifestFile);
+				alreadyHasManifest = false;
+			}
+		}
+
 		if (!alreadyHasManifest) {
 			const manifestRemotePath = remoteFolderPath + 'manifest.json';
 			// first see if we can connect to the remote path
