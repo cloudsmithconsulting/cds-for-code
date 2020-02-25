@@ -115,7 +115,7 @@ export default async function run(this: SolutionManager, config?: CdsWebApi.Conf
                             logger.log(`Command: ${cs.cds.deployment.registerPluginAssembly} Plugin ${file}: Opening step window`);
 
                             if (!pluginAssembly) {
-                                vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, assemblyId, config, undefined);
+                                vscode.commands.executeCommand(cs.cds.controls.pluginStep.open, assemblyId, undefined, config, undefined);
                             }
                         }).then(() => {
                             logger.log(`Command: ${cs.cds.deployment.registerPluginAssembly} Plugin ${file}: Registration complete`);

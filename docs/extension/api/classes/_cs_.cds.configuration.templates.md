@@ -33,6 +33,14 @@ ___
 
 ▪ **templateParameters**: *string* = `${templates._namespace}.templateParameters`
 
+Defined in src/cs.ts:142
+
+___
+
+### `Static` placeholders
+
+▪ **placeholders**: *string* = `${templates._namespace}.placeholders`
+
 Defined in src/cs.ts:141
 
 ___
@@ -41,7 +49,7 @@ ___
 
 ▪ **templatesDirectory**: *string* = `${templates._namespace}.templatesDirectory`
 
-Defined in src/cs.ts:142
+Defined in src/cs.ts:143
 
 ___
 
@@ -49,4 +57,12 @@ ___
 
 ▪ **treeViewGroupPreference**: *string* = `${templates._namespace}.treeViewGroupPreference`
 
-Defined in src/cs.ts:143
+Defined in src/cs.ts:144
+
+___
+
+### `Static` usePlaceholders
+
+▪ **usePlaceholders**: *string* = `${templates._namespace}.usePlaceholders`
+
+Defined in src/cs.ts:145

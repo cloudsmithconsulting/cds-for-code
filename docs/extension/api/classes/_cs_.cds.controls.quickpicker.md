@@ -24,7 +24,7 @@ sidebar_label: "quickPicker"
 
 ▪ **_namespace**: *string* = "cs.cds.controls.quickPicker"
 
-Defined in src/cs.ts:232
+Defined in src/cs.ts:234
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 ▪ **cancel**: *string* = `search.action.focusActiveEditor`
 
-Defined in src/cs.ts:233
+Defined in src/cs.ts:235
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 ▪ **quit**: *string* = `workbench.action.quit`
 
-Defined in src/cs.ts:234
+Defined in src/cs.ts:236

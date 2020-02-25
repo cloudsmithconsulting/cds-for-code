@@ -8,7 +8,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration.Filter
         public AllowsEntityRegExElement(string expression) : base(FilterMember.Entity, expression) { }
         public AllowsEntityRegExElement(string expression, bool ignoreCase) : base(FilterMember.Entity, expression, ignoreCase) { }
 
-        [ConfigurationProperty("entity", IsRequired = true)]
+        [ConfigurationProperty("entity", IsRequired = false)]
         public string Entity
         {
             get => (string)this["entity"];

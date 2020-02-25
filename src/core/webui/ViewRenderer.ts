@@ -30,7 +30,7 @@ export class ViewRenderer {
 	}
     
     private insertScriptAt(index: number, scriptName: string) {
-		this._scripts.insert(0, scriptName, this.getFileUri('resources', 'scripts', scriptName));
+		this._scripts.insert(index, scriptName, this.getFileUri('resources', 'scripts', scriptName));
 	}
     
     addFrameworkScript(scriptName: string) {
@@ -76,7 +76,9 @@ export class ViewRenderer {
     renderFile(webviewFileName: string, useCsp?: boolean): string {
 		const pathOnDisk = path.join(ExtensionContext.Instance.extensionPath, 'resources', 'webviews', webviewFileName);
 		const fileHtml = FileSystem.readFileSync(pathOnDisk).toString();
-    
+	
+		_.templateSettings.interpolate = /#{([\s\S]+?)}/g;
+
 		const compiled = _.template(fileHtml);
 		const viewModel = {
 			viewTitle: this.view.options.title,
@@ -93,13 +95,13 @@ export class ViewRenderer {
         return this.render(compiled(viewModel), useCsp);
 	}
     
-    render(htmlParial: string, useCsp?: boolean): string {
+    render(htmlPartial: string, useCsp?: boolean): string {
 		// add some default scripts
 		this.insertScriptAt(0, 'main.js');
     
         // these are framework scripts hosted out of node_modules
 		this.insertFrameworkScript('lodash/lodash.min.js');
-		this.insertFrameworkScript('@iconify/iconify/dist/iconify.min.js');
+		this.insertScriptAt(0, 'iconify.min.js');
 		this.insertFrameworkScript('mustache/mustache.min.js');
 		this.insertFrameworkScript('jquery/dist/jquery.min.js');
     
@@ -145,7 +147,7 @@ export class ViewRenderer {
 </head>
 <body>
 	<div class="main-container">
-		${htmlParial}
+		${htmlPartial}
 	</div>
 	${scriptHtml}
 </body>

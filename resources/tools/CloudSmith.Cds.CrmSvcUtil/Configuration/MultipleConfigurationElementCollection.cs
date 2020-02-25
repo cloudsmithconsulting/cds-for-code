@@ -21,17 +21,28 @@ namespace CloudSmith.Cds.CrmSvcUtil.Configuration
         }
 
         protected abstract Dictionary<string, Type> ElementNameMappings { get; }
-
         public override ConfigurationElementCollectionType CollectionType => ConfigurationElementCollectionType.BasicMap;
+
+        protected virtual void OnElementCreated(string elementName, T element) 
+        {
+        }
 
         protected override ConfigurationElement CreateNewElement()
         {
+            T returnElement;
+
             if (!string.IsNullOrEmpty(_elementName) && ElementNameMappings[_elementName] != null)
             {
-                return (ConfigurationElement)Activator.CreateInstance(ElementNameMappings[_elementName]);
+                returnElement = (T)Activator.CreateInstance(ElementNameMappings[_elementName]);
+            } 
+            else
+            {
+                returnElement = new T();
             }
 
-            return new T();
+            OnElementCreated(_elementName, returnElement);
+
+            return returnElement;
         }
 
         protected override object GetElementKey(ConfigurationElement element)

@@ -23,7 +23,7 @@ sidebar_label: "svcUtilConfig"
 
 ▪ **_namespace**: *string* = "cs.cds.controls.svcUtilConfig"
 
-Defined in src/cs.ts:239
+Defined in src/cs.ts:241
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 ▪ **open**: *string* = `${svcUtilConfig._namespace}.open`
 
-Defined in src/cs.ts:240
+Defined in src/cs.ts:242
