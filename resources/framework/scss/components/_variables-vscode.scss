@@ -184,7 +184,7 @@ $input-disabled-solid-color: #949494 !default;
 $input-disabled-border: 1px dotted $input-disabled-color !default;
 $input-invalid-border: 1px solid $input-error-color !default;
 $input-icon-size: 2rem;
-$placeholder-text-color: lighten($input-border-color, 20%) !default;
+$placeholder-text-color: vscode-color("input", "placeholderForeground") !default;
 
 // Radio Buttons
 $radio-fill-color: $secondary-color !default;

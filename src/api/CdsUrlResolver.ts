@@ -652,6 +652,6 @@ export default class CdsUrlResolver {
     private static getAppBaseUrl(config: CdsWebApi.Config) {
         return !this.hasPowerAppsExperience(config)
             ? Utilities.String.withTrailingSlash(config.appUrl)
-            : `https://make.preview.powerapps.com/environments/${config.environmentId}/`;
+            : `https://make.powerapps.com/environments/${config.environmentId}/`;
     }
 }

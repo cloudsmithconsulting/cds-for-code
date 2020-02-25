@@ -32,7 +32,7 @@ sidebar_label: "WebResourceManager"
 
 ▸ **compareWebResource**(`defaultUri?`: Uri): *Promise‹void›*
 
-Defined in src/components/Solutions/WebResourceManager.ts:49
+Defined in src/components/Solutions/WebResourceManager.ts:53
 
 **Parameters:**
 
@@ -48,7 +48,7 @@ ___
 
 ▸ **createWebResource**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solutionId?`: string, `webResource?`: any, `fileUri?`: Uri, `defaultName`: string, `inform`: boolean): *Promise‹any›*
 
-Defined in src/components/Solutions/WebResourceManager.ts:44
+Defined in src/components/Solutions/WebResourceManager.ts:48
 
 **Parameters:**
 
@@ -69,7 +69,7 @@ ___
 
 ▸ **getSolutionMapping**(`fsPath?`: string, `orgId?`: string, `solutionId?`: string): *Promise‹[SolutionWorkspaceMapping](_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md)›*
 
-Defined in src/components/Solutions/WebResourceManager.ts:63
+Defined in src/components/Solutions/WebResourceManager.ts:67
 
 **Parameters:**
 
@@ -87,7 +87,7 @@ ___
 
 ▸ **getWebResourceDetails**(`fsPath`: string | undefined): *Promise‹any›*
 
-Defined in src/components/Solutions/WebResourceManager.ts:89
+Defined in src/components/Solutions/WebResourceManager.ts:93
 
 **Parameters:**
 
@@ -103,7 +103,7 @@ ___
 
 ▸ **getWebResourceType**(`extension`: string): *number | undefined*
 
-Defined in src/components/Solutions/WebResourceManager.ts:76
+Defined in src/components/Solutions/WebResourceManager.ts:80
 
 **Parameters:**
 
@@ -119,7 +119,7 @@ ___
 
 ▸ **packWebResource**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution?`: any, `webResource?`: any, `fileUri?`: Uri, `inform`: boolean): *Promise‹void›*
 
-Defined in src/components/Solutions/WebResourceManager.ts:54
+Defined in src/components/Solutions/WebResourceManager.ts:58
 
 **Parameters:**
 
@@ -139,7 +139,7 @@ ___
 
 ▸ **unpackWebResource**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `webResource?`: any, `fileUri?`: Uri, `autoOpen`: boolean): *Promise‹void›*
 
-Defined in src/components/Solutions/WebResourceManager.ts:59
+Defined in src/components/Solutions/WebResourceManager.ts:63
 
 **Parameters:**
 
@@ -158,7 +158,7 @@ ___
 
 ▸ **upsertWebResource**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `webResource`: any, `solution?`: any): *Promise‹any›*
 
-Defined in src/components/Solutions/WebResourceManager.ts:117
+Defined in src/components/Solutions/WebResourceManager.ts:121
 
 **Parameters:**
 
@@ -176,7 +176,7 @@ ___
 
 ▸ **writeDataXmlFile**(`map`: [SolutionWorkspaceMapping](_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md), `webResource`: any, `fsPath`: string, `updateCustomizationsFile`: boolean): *Promise‹void›*
 
-Defined in src/components/Solutions/WebResourceManager.ts:139
+Defined in src/components/Solutions/WebResourceManager.ts:143
 
 **Parameters:**
 
@@ -211,7 +211,7 @@ ___
 
 ▸ **packWebResourceFromUri**(`uri?`: Uri): *Promise‹any›*
 
-Defined in src/components/Solutions/WebResourceManager.ts:35
+Defined in src/components/Solutions/WebResourceManager.ts:37
 
 **Parameters:**
 
