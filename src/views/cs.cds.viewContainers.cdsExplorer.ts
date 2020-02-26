@@ -375,7 +375,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
     @command(cs.cds.controls.cdsExplorer.inspectEntry, "Inspect")
     async inspect(item?: CdsTreeEntry) {
-        return await vscode.commands.executeCommand(cs.cds.controls.jsonInspector.open, item.context);
+        return await vscode.commands.executeCommand(cs.cds.controls.jsonInspector.open, item.config, item.itemType, item.context);
     }
 
     @command(cs.cds.controls.cdsExplorer.moveSolution, "Move or re-map solution")

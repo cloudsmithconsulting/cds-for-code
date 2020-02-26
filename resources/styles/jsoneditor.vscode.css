@@ -99,3 +99,7 @@ div.jsoneditor-navigation-bar {
   border: 1px solid var(--vscode-dropdown-border) !important;
   color: var(--vscode-editor-foreground) !important;
 }
+
+a.jsoneditor-url {
+  color: var(--vscode-textLink-foreground) !important;
+}

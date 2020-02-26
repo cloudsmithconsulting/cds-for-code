@@ -20,6 +20,7 @@ sidebar_label: "JsonObjectView"
 
 ### Properties
 
+* [config](_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md#private-config)
 * [disposables](_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md#protected-disposables)
 * [onDidClose](_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md#ondidclose)
 * [onDidReceiveMessage](_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md#ondidreceivemessage)
@@ -32,6 +33,8 @@ sidebar_label: "JsonObjectView"
 
 * [commands](_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md#commands)
 * [cspSource](_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md#cspsource)
+* [entityIdentifers](_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md#entityidentifers)
+* [queries](_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md#queries)
 
 ### Methods
 
@@ -62,6 +65,14 @@ Name | Type |
 **Returns:** *[JsonObjectView](_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md)*
 
 ## Properties
+
+### `Private` config
+
+• **config**: *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
+
+Defined in src/views/cs.cds.views.jsonInspectorView.ts:27
+
+___
 
 ### `Protected` disposables
 
@@ -145,7 +156,7 @@ Track the currently panel. Only allow a single panel to exist at a time.
 
 *Overrides [View](_core_webui_view_.view.md).[commands](_core_webui_view_.view.md#commands)*
 
-Defined in src/views/cs.cds.views.jsonInspectorView.ts:39
+Defined in src/views/cs.cds.views.jsonInspectorView.ts:45
 
 **Returns:** *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, Function›*
 
@@ -160,6 +171,26 @@ ___
 Defined in src/core/webui/View.ts:148
 
 **Returns:** *string*
+
+___
+
+###  entityIdentifers
+
+• **get entityIdentifers**(): *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, string›*
+
+Defined in src/views/cs.cds.views.jsonInspectorView.ts:114
+
+**Returns:** *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, string›*
+
+___
+
+###  queries
+
+• **get queries**(): *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, Function›*
+
+Defined in src/views/cs.cds.views.jsonInspectorView.ts:49
+
+**Returns:** *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, Function›*
 
 ## Methods
 
@@ -187,7 +218,7 @@ ___
 
 *Overrides [View](_core_webui_view_.view.md).[construct](_core_webui_view_.view.md#abstract-construct)*
 
-Defined in src/views/cs.cds.views.jsonInspectorView.ts:23
+Defined in src/views/cs.cds.views.jsonInspectorView.ts:29
 
 **Parameters:**
 
@@ -231,17 +262,19 @@ ___
 
 ###  setInitialState
 
-▸ **setInitialState**(`item?`: any): *void*
+▸ **setInitialState**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `itemType`: string, `item`: any): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.jsonInspectorView.ts:43
+Defined in src/views/cs.cds.views.jsonInspectorView.ts:129
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`item?` | any |
+`config` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`itemType` | string |
+`item` | any |
 
-**Returns:** *void*
+**Returns:** *Promise‹void›*
 
 ___
 

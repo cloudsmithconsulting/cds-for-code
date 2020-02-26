@@ -53,6 +53,10 @@ export default class MetadataRepository {
             .then(response => response.orderBy(o => o["Name"]).toArray());
     }
 
+    retrieveOptionSet(optionSetKey: string, select?: string[]): Promise<any> {
+        return this.webapi.retrieveGlobalOptionSet(optionSetKey, undefined, select);
+    }
+
     retrieveForms(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["systemforms"]) : Promise<any[]> {
         let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "systemforms",
@@ -64,6 +68,10 @@ export default class MetadataRepository {
         return this.webapi.retrieveRequest(request)
             .then(systemFormResponse => ApiHelper.filterSolutionComponents(this.webapi, systemFormResponse, solutionId, CdsSolutions.SolutionComponent.Form, f => f["formid"]))
             .then(response => response.toArray());
+    }
+
+    retrieveForm(formid: string, select?: string[]): Promise<any> {
+        return this.webapi.retrieve(formid, "systemforms", select);
     }
 
     retrieveDashboards(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["systemforms"]) : Promise<any[]> {
@@ -92,6 +100,10 @@ export default class MetadataRepository {
             .then(response => response.toArray());
     }
 
+    retrieveView(savedqueryid: string, select?: string[]): Promise<any> {
+        return this.webapi.retrieve(savedqueryid, "savedqueries", select);
+    }
+
     retrieveCharts(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["savedqueryvisualizations"]) : Promise<any[]> {
         let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "savedqueryvisualizations",
@@ -103,6 +115,10 @@ export default class MetadataRepository {
         return this.webapi.retrieveRequest(request)
             .then(savedQueryResponse => ApiHelper.filterSolutionComponents(this.webapi, savedQueryResponse, solutionId, CdsSolutions.SolutionComponent.SavedQueryVisualization, q => q["savedqueryvisualizationid"]))
             .then(response => response.toArray());
+    }
+
+    retrieveChart(savedqueryvisualizationid: string, select?: string[]): Promise<any> {
+        return this.webapi.retrieve(savedqueryvisualizationid, "savedqueryvisualizations", select);
     }
 
     retrieveKeys(entityKey:string) : Promise<any[]> {

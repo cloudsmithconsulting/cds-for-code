@@ -2,7 +2,7 @@
 // It cannot access the main VS Code APIs directly.
 (function () {
     const vscode = CloudSmith.getHost();
-    var editor = null;
+    let editor = null;
 
     // Handle messages sent from the extension to the webview
     window.addEventListener("message", event => {
@@ -27,6 +27,7 @@
 
     function inspect(item) {
         // create the editor
+        document.getElementById("container").innerHTML = "";
         const container = document.getElementById("container");
         const options = {
             //modes: ['text', 'tree']

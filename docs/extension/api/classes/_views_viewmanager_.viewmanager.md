@@ -52,7 +52,7 @@ ___
 
 ### `Static` openJsonInspector
 
-▸ **openJsonInspector**(`item`: any): *Promise‹any›*
+▸ **openJsonInspector**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `itemType`: string, `item`: any): *Promise‹any›*
 
 Defined in src/views/ViewManager.ts:35
 
@@ -60,6 +60,8 @@ Defined in src/views/ViewManager.ts:35
 
 Name | Type |
 ------ | ------ |
+`config` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`itemType` | string |
 `item` | any |
 
 **Returns:** *Promise‹any›*
