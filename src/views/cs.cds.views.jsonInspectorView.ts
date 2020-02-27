@@ -130,9 +130,10 @@ class JsonObjectView extends View {
         this.config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
         if (!this.config) { return; }
 
-        const query = this.queries[itemType];
-        if (query) {
-            item = await query(item[this.entityIdentifers[itemType]]);
+        const query = this.queries.get(itemType);
+        const id = item[this.entityIdentifers.get(itemType)];
+        if (query && id?.length > 0) {
+            item = await query(id);
         }
 
         if (item) {
