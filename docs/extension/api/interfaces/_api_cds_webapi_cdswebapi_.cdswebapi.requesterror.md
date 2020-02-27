@@ -39,7 +39,7 @@ ___
 
 • **code**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:256
+Defined in src/api/cds-webapi/CdsWebApi.ts:258
 
 This code is not related to the http status code and is frequently empty
 
@@ -49,7 +49,7 @@ ___
 
 • **innererror**? : *object*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:264
+Defined in src/api/cds-webapi/CdsWebApi.ts:266
 
 Details about an error
 
@@ -69,7 +69,7 @@ ___
 
 *Overrides [AuthenticationError](../classes/_core_security_authentication_.authenticationerror.md).[message](../classes/_core_security_authentication_.authenticationerror.md#message)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:258
+Defined in src/api/cds-webapi/CdsWebApi.ts:260
 
 A message describing the error
 
@@ -101,7 +101,7 @@ ___
 
 • **status**? : *number*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:260
+Defined in src/api/cds-webapi/CdsWebApi.ts:262
 
 HTTP status code
 
@@ -111,6 +111,6 @@ ___
 
 • **statusText**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:262
+Defined in src/api/cds-webapi/CdsWebApi.ts:264
 
 HTTP status text. Frequently empty

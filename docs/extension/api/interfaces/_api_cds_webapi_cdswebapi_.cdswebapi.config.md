@@ -59,7 +59,7 @@ Configuration object for DynamicsWebApi
 
 • **appUrl**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:218
+Defined in src/api/cds-webapi/CdsWebApi.ts:220
 
 A string representing the Url to use when attempting a web operation against this org
 
@@ -69,7 +69,7 @@ ___
 
 • **credentials**: *[ICredential](_core_security_types_.icredential.md)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:226
+Defined in src/api/cds-webapi/CdsWebApi.ts:228
 
 The credentials to use when connecting to the API endpoint
 
@@ -79,7 +79,7 @@ ___
 
 • **discoveryUrl**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:222
+Defined in src/api/cds-webapi/CdsWebApi.ts:224
 
 A string representation of a URL that can discovery this instance.
 
@@ -89,7 +89,7 @@ ___
 
 • **environmentId**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:230
+Defined in src/api/cds-webapi/CdsWebApi.ts:232
 
 The CDS Environment ID of the organization
 
@@ -99,7 +99,7 @@ ___
 
 • **id**: *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:212
+Defined in src/api/cds-webapi/CdsWebApi.ts:214
 
 the unique ID of the configuration
 
@@ -109,7 +109,7 @@ ___
 
 • **impersonate**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:234
+Defined in src/api/cds-webapi/CdsWebApi.ts:236
 
 A String representing a URL to Web API(webApiVersion not required if webApiUrl specified)[not used inside of CRM]
 
@@ -119,7 +119,7 @@ ___
 
 • **includeAnnotations**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:238
+Defined in src/api/cds-webapi/CdsWebApi.ts:240
 
 Sets Prefer header with value "odata.include-annotations=" and the specified annotation.Annotations provide additional information about lookups, options sets and other complex attribute types.
 
@@ -129,7 +129,7 @@ ___
 
 • **maxPageSize**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:240
+Defined in src/api/cds-webapi/CdsWebApi.ts:242
 
 Sets the odata.maxpagesize preference value to request the number of entities returned in the response.
 
@@ -139,7 +139,7 @@ ___
 
 • **name**: *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:214
+Defined in src/api/cds-webapi/CdsWebApi.ts:216
 
 The name of the connection
 
@@ -149,7 +149,7 @@ ___
 
 • **onTokenRefresh**? : *function*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:236
+Defined in src/api/cds-webapi/CdsWebApi.ts:238
 
 A function that is called when a security token needs to be refreshed.
 
@@ -169,7 +169,7 @@ ___
 
 • **orgId**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:228
+Defined in src/api/cds-webapi/CdsWebApi.ts:230
 
 The ID of the organization
 
@@ -179,7 +179,7 @@ ___
 
 • **orgName**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:232
+Defined in src/api/cds-webapi/CdsWebApi.ts:234
 
 The name of the organization
 
@@ -189,7 +189,7 @@ ___
 
 • **returnRepresentation**? : *boolean*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:242
+Defined in src/api/cds-webapi/CdsWebApi.ts:244
 
 Sets Prefer header request with value "return=representation".Use this property to return just created or updated entity in a single request.
 
@@ -199,7 +199,7 @@ ___
 
 • **timeout**? : *number*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:246
+Defined in src/api/cds-webapi/CdsWebApi.ts:248
 
 Sets a number of milliseconds before a request times out
 
@@ -209,7 +209,7 @@ ___
 
 • **type**: *[ConfigType](../enums/_api_cds_webapi_cdswebapi_.cdswebapi.configtype.md)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:216
+Defined in src/api/cds-webapi/CdsWebApi.ts:218
 
 The type of connection/configuration this relates to
 
@@ -219,7 +219,7 @@ ___
 
 • **useEntityNames**? : *boolean*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:244
+Defined in src/api/cds-webapi/CdsWebApi.ts:246
 
 Indicates whether to use Entity Logical Names instead of Collection Logical Names.
 
@@ -229,7 +229,7 @@ ___
 
 • **webApiUrl**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:220
+Defined in src/api/cds-webapi/CdsWebApi.ts:222
 
 A String representing the URL prefix to use when attempting a web API operation against this org
 
@@ -239,6 +239,6 @@ ___
 
 • **webApiVersion**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:224
+Defined in src/api/cds-webapi/CdsWebApi.ts:226
 
 The version of Web API to use, for example: "8.1"

@@ -94,7 +94,7 @@ sidebar_label: "WebApiClient"
 
 \+ **new WebApiClient**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *[WebApiClient](_api_cds_webapi_cdswebapi_.cdswebapi.webapiclient.md)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:289
+Defined in src/api/cds-webapi/CdsWebApi.ts:293
 
 Constructor.
 
@@ -126,7 +126,7 @@ Name | Type |
 
 • **_internalConfig**: *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:286
+Defined in src/api/cds-webapi/CdsWebApi.ts:288
 
 ___
 
@@ -134,15 +134,16 @@ ___
 
 • **_isBatch**: *boolean*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:287
+Defined in src/api/cds-webapi/CdsWebApi.ts:289
 
 ___
 
 ### `Static` defaultTimeout
 
-▪ **defaultTimeout**: *number* = 30 * 1000
+▪ **defaultTimeout**: *number* = ExtensionConfiguration.getConfigurationValueOrDefault(
+                cs.cds.configuration.connection.defaultTimeout, 30) * 1000
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:289
+Defined in src/api/cds-webapi/CdsWebApi.ts:291
 
 ## Accessors
 
@@ -150,7 +151,7 @@ Defined in src/api/cds-webapi/CdsWebApi.ts:289
 
 • **get config**(): *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:324
+Defined in src/api/cds-webapi/CdsWebApi.ts:328
 
 Sets DynamicsWebApi configuration parameters.
 
@@ -158,7 +159,7 @@ Sets DynamicsWebApi configuration parameters.
 
 • **set config**(`value`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *void*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:335
+Defined in src/api/cds-webapi/CdsWebApi.ts:339
 
 Sets DynamicsWebApi configuration parameters.
 
@@ -179,7 +180,7 @@ Name | Type | Description |
 
 ▸ **_executeAction**(`actionName`: string, `requestObject`: any, `collection?`: string, `id?`: string, `impersonateUserId?`: string, `isUnbound`: boolean): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1444
+Defined in src/api/cds-webapi/CdsWebApi.ts:1448
 
 **Parameters:**
 
@@ -200,7 +201,7 @@ ___
 
 ▸ **_executeFetchXml**(`collection`: string, `fetchXml`: string, `includeAnnotations?`: string, `pageNumber?`: number, `pagingCookie?`: string, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1462
+Defined in src/api/cds-webapi/CdsWebApi.ts:1466
 
 **Parameters:**
 
@@ -221,7 +222,7 @@ ___
 
 ▸ **_executeFetchXmlAll**(`collection`: string, `fetchXml`: string, `includeAnnotations?`: string, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1490
+Defined in src/api/cds-webapi/CdsWebApi.ts:1494
 
 **Parameters:**
 
@@ -240,7 +241,7 @@ ___
 
 ▸ **_executeFunction**(`functionName`: string, `parameters`: any, `collection?`: string, `id?`: string, `impersonateUserId?`: string, `isUnbound`: boolean): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1511
+Defined in src/api/cds-webapi/CdsWebApi.ts:1515
 
 **Parameters:**
 
@@ -261,7 +262,7 @@ ___
 
 ▸ **_makeDiscoveryRequest**(`request`: any): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1527
+Defined in src/api/cds-webapi/CdsWebApi.ts:1531
 
 **Parameters:**
 
@@ -277,7 +278,7 @@ ___
 
 ▸ **_makeRequest**(`method`: string, `request`: any, `functionName`: string, `responseParams?`: any): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1533
+Defined in src/api/cds-webapi/CdsWebApi.ts:1537
 
 **Parameters:**
 
@@ -296,7 +297,7 @@ ___
 
 ▸ **_retrieveAllRequest**(`request`: any, `oDataLink?`: string, `records?`: any[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1553
+Defined in src/api/cds-webapi/CdsWebApi.ts:1557
 
 **Parameters:**
 
@@ -314,7 +315,7 @@ ___
 
 ▸ **_retrieveMultipleRequest**(`request`: any, `oDataLink`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1541
+Defined in src/api/cds-webapi/CdsWebApi.ts:1545
 
 **Parameters:**
 
@@ -331,7 +332,7 @@ ___
 
 ▸ **associate**(`collection`: string, `primaryKey`: string, `relationshipName`: string, `relatedCollection`: string, `relatedKey`: string, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:917
+Defined in src/api/cds-webapi/CdsWebApi.ts:921
 
 Associate for a collection-valued navigation property. (1:N or N:N)
 
@@ -354,7 +355,7 @@ ___
 
 ▸ **associateSingleValued**(`collection`: string, `key`: string, `singleValuedNavigationPropertyName`: string, `relatedCollection`: string, `relatedKey`: string, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:967
+Defined in src/api/cds-webapi/CdsWebApi.ts:971
 
 Associate for a single-valued navigation property. (1:N)
 
@@ -377,7 +378,7 @@ ___
 
 ▸ **count**(`collection`: string, `filter?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:764
+Defined in src/api/cds-webapi/CdsWebApi.ts:768
 
 Sends an asynchronous request to count records. IMPORTANT! The count value does not represent the total number of entities in the system. It is limited by the maximum number of entities that can be returned. Returns: Number
 
@@ -396,7 +397,7 @@ ___
 
 ▸ **countAll**(`collection`: string, `filter?`: string, `select?`: string[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:791
+Defined in src/api/cds-webapi/CdsWebApi.ts:795
 
 Sends an asynchronous request to count records. Returns: Number
 
@@ -416,7 +417,7 @@ ___
 
 ▸ **create**(`object`: Object, `collection`: string, `prefer?`: string | string[], `select?`: string[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:470
+Defined in src/api/cds-webapi/CdsWebApi.ts:474
 
 Sends an asynchronous request to create a new record.
 
@@ -449,7 +450,7 @@ ___
 
 ▸ **createAttribute**(`entityKey`: string, `attributeDefinition`: any): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1130
+Defined in src/api/cds-webapi/CdsWebApi.ts:1134
 
 Sends an asynchronous request to create an attribute.
 
@@ -468,7 +469,7 @@ ___
 
 ▸ **createEntity**(`entityDefinition`: any): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1057
+Defined in src/api/cds-webapi/CdsWebApi.ts:1061
 
 Sends an asynchronous request to create an entity definition.
 
@@ -486,7 +487,7 @@ ___
 
 ▸ **createGlobalOptionSet**(`globalOptionSetDefinition`: any): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1330
+Defined in src/api/cds-webapi/CdsWebApi.ts:1334
 
 Sends an asynchronous request to create a Global Option Set definition
 
@@ -504,7 +505,7 @@ ___
 
 ▸ **createRelationship**(`relationshipDefinition`: any): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1238
+Defined in src/api/cds-webapi/CdsWebApi.ts:1242
 
 Sends an asynchronous request to create a relationship definition.
 
@@ -522,7 +523,7 @@ ___
 
 ▸ **createRequest**(`request`: [CreateRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.createrequest.md)): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:442
+Defined in src/api/cds-webapi/CdsWebApi.ts:446
 
 Sends an asynchronous request to create a new record.
 
@@ -558,7 +559,7 @@ ___
 
 ▸ **deleteGlobalOptionSet**(`globalOptionSetKey`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1366
+Defined in src/api/cds-webapi/CdsWebApi.ts:1370
 
 Sends an asynchronous request to delete a Global Option Set.
 
@@ -576,7 +577,7 @@ ___
 
 ▸ **deleteRecord**(`key`: string, `collection`: string, `propertyName?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:632
+Defined in src/api/cds-webapi/CdsWebApi.ts:636
 
 Sends an asynchronous request to delete a record.
 
@@ -596,7 +597,7 @@ ___
 
 ▸ **deleteRelationship**(`metadataId`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1276
+Defined in src/api/cds-webapi/CdsWebApi.ts:1280
 
 Sends an asynchronous request to delete a relationship definition.
 
@@ -614,7 +615,7 @@ ___
 
 ▸ **deleteRequest**(`request`: [DeleteRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.deleterequest.md)): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:604
+Defined in src/api/cds-webapi/CdsWebApi.ts:608
 
 Sends an asynchronous request to delete a record.
 
@@ -632,7 +633,7 @@ ___
 
 ▸ **disassociate**(`collection`: string, `primaryKey`: string, `relationshipName`: string, `relatedKey`: string, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:943
+Defined in src/api/cds-webapi/CdsWebApi.ts:947
 
 Disassociate for a collection-valued navigation property.
 
@@ -654,7 +655,7 @@ ___
 
 ▸ **disassociateSingleValued**(`collection`: string, `key`: string, `singleValuedNavigationPropertyName`: string, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:991
+Defined in src/api/cds-webapi/CdsWebApi.ts:995
 
 Removes a reference to an entity for a single-valued navigation property. (1:N)
 
@@ -675,7 +676,7 @@ ___
 
 ▸ **discover**(`filter?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:413
+Defined in src/api/cds-webapi/CdsWebApi.ts:417
 
 Sends an asynchronous request to the discovery service looking for CRM instances.
 
@@ -698,7 +699,7 @@ ___
 
 ▸ **executeBatch**(): *Promise‹any[]›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1424
+Defined in src/api/cds-webapi/CdsWebApi.ts:1428
 
 Executes a batch request. Please call DynamicsWebApi.startBatch() first to start a batch request.
 
@@ -710,7 +711,7 @@ ___
 
 ▸ **executeBoundAction**(`id`: string, `collection`: string, `actionName`: string, `requestObject?`: any, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1048
+Defined in src/api/cds-webapi/CdsWebApi.ts:1052
 
 Executes a bound Web API action (bound to a particular entity record)
 
@@ -732,7 +733,7 @@ ___
 
 ▸ **executeBoundFunction**(`id`: string, `collection`: string, `functionName`: string, `parameters?`: any, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1024
+Defined in src/api/cds-webapi/CdsWebApi.ts:1028
 
 Executes a bound function
 
@@ -754,7 +755,7 @@ ___
 
 ▸ **executeFetchXml**(`collection`: string, `fetchXml`: string, `includeAnnotations?`: string, `pageNumber?`: number, `pagingCookie?`: string, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:867
+Defined in src/api/cds-webapi/CdsWebApi.ts:871
 
 Sends an asynchronous request to count records. Returns: DWA.Types.FetchXmlResponse
 
@@ -777,7 +778,7 @@ ___
 
 ▸ **executeFetchXmlAll**(`collection`: string, `fetchXml`: string, `includeAnnotations?`: string, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:892
+Defined in src/api/cds-webapi/CdsWebApi.ts:896
 
 Sends an asynchronous request to execute FetchXml to retrieve all records.
 
@@ -798,7 +799,7 @@ ___
 
 ▸ **executeUnboundAction**(`actionName`: string, `requestObject?`: any, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1035
+Defined in src/api/cds-webapi/CdsWebApi.ts:1039
 
 Executes an unbound Web API action (not bound to a particular entity record)
 
@@ -818,7 +819,7 @@ ___
 
 ▸ **executeUnboundFunction**(`functionName`: string, `parameters?`: any, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1011
+Defined in src/api/cds-webapi/CdsWebApi.ts:1015
 
 Executes an unbound function (not bound to a particular entity record)
 
@@ -838,7 +839,7 @@ ___
 
 ▸ **fetch**(`query`: [Query](../interfaces/_api_cds_webapi_fetchquery_.query.md), `includeAnnotations?`: string, `pageNumber?`: number, `pagingCookie?`: string, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:880
+Defined in src/api/cds-webapi/CdsWebApi.ts:884
 
 Sends an asynchronous request to count records. Returns: DWA.Types.FetchXmlResponse
 
@@ -860,7 +861,7 @@ ___
 
 ▸ **fetchAll**(`query`: [Query](../interfaces/_api_cds_webapi_fetchquery_.query.md), `includeAnnotations?`: string, `impersonateUserId?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:903
+Defined in src/api/cds-webapi/CdsWebApi.ts:907
 
 Sends an asynchronous request to execute FetchXml to retrieve all records.
 
@@ -880,7 +881,7 @@ ___
 
 ▸ **retrieve**(`key`: string, `collection`: string, `select?`: string[], `expand?`: [Expand](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.expand.md)[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:670
+Defined in src/api/cds-webapi/CdsWebApi.ts:674
 
 Sends an asynchronous request to retrieve a record.
 
@@ -901,7 +902,7 @@ ___
 
 ▸ **retrieveAll**(`collection`: string, `select?`: string[], `filter?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:828
+Defined in src/api/cds-webapi/CdsWebApi.ts:832
 
 Sends an asynchronous request to retrieve all records.
 
@@ -921,7 +922,7 @@ ___
 
 ▸ **retrieveAllRequest**(`request`: [RetrieveMultipleRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.retrievemultiplerequest.md)): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:853
+Defined in src/api/cds-webapi/CdsWebApi.ts:857
 
 Sends an asynchronous request to retrieve all records.
 
@@ -939,7 +940,7 @@ ___
 
 ▸ **retrieveAttribute**(`entityKey`: string, `attributeKey`: string, `attributeType?`: string, `select?`: string[], `expand?`: [Expand](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.expand.md)[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1212
+Defined in src/api/cds-webapi/CdsWebApi.ts:1216
 
 Sends an asynchronous request to retrieve a specific attribute metadata for a specified entity definition.
 
@@ -961,7 +962,7 @@ ___
 
 ▸ **retrieveAttributes**(`entityKey`: string, `attributeType?`: string, `select?`: string[], `filter?`: string, `expand?`: [Expand](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.expand.md)[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1183
+Defined in src/api/cds-webapi/CdsWebApi.ts:1187
 
 Sends an asynchronous request to retrieve attribute metadata for a specified entity definition.
 
@@ -983,7 +984,7 @@ ___
 
 ▸ **retrieveEntities**(`select?`: string[], `filter?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1114
+Defined in src/api/cds-webapi/CdsWebApi.ts:1118
 
 Sends an asynchronous request to retrieve entity definitions.
 
@@ -1002,7 +1003,7 @@ ___
 
 ▸ **retrieveEntity**(`entityKey`: string, `select?`: string[], `expand?`: [Expand](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.expand.md)[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1095
+Defined in src/api/cds-webapi/CdsWebApi.ts:1099
 
 Sends an asynchronous request to retrieve a specific entity definition.
 
@@ -1022,7 +1023,7 @@ ___
 
 ▸ **retrieveGlobalOptionSet**(`globalOptionSetKey`: string, `castType?`: string, `select?`: string[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1384
+Defined in src/api/cds-webapi/CdsWebApi.ts:1388
 
 Sends an asynchronous request to retrieve Global Option Set definitions.
 
@@ -1042,7 +1043,7 @@ ___
 
 ▸ **retrieveGlobalOptionSets**(`castType?`: string, `select?`: string[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1403
+Defined in src/api/cds-webapi/CdsWebApi.ts:1407
 
 Sends an asynchronous request to retrieve Global Option Set definitions.
 
@@ -1061,7 +1062,7 @@ ___
 
 ▸ **retrieveMultiple**(`collection`: string, `select?`: string[], `filter?`: string, `oDataLink?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:813
+Defined in src/api/cds-webapi/CdsWebApi.ts:817
 
 Sends an asynchronous request to retrieve records.
 
@@ -1082,7 +1083,7 @@ ___
 
 ▸ **retrieveMultipleRequest**(`request`: [RetrieveMultipleRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.retrievemultiplerequest.md), `oDataLink?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:844
+Defined in src/api/cds-webapi/CdsWebApi.ts:848
 
 Sends an asynchronous request to retrieve records.
 
@@ -1101,7 +1102,7 @@ ___
 
 ▸ **retrieveRelationship**(`metadataId`: string, `relationshipType?`: string, `select?`: string[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1312
+Defined in src/api/cds-webapi/CdsWebApi.ts:1316
 
 Sends an asynchronous request to retrieve a specific relationship definition.
 
@@ -1121,7 +1122,7 @@ ___
 
 ▸ **retrieveRelationships**(`relationshipType?`: string, `select?`: string[], `filter?`: string): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1294
+Defined in src/api/cds-webapi/CdsWebApi.ts:1298
 
 Sends an asynchronous request to retrieve relationship definitions.
 
@@ -1141,7 +1142,7 @@ ___
 
 ▸ **retrieveRequest**(`request`: [RetrieveRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.retrieverequest.md)): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:653
+Defined in src/api/cds-webapi/CdsWebApi.ts:657
 
 Sends an asynchronous request to retrieve a record.
 
@@ -1159,7 +1160,7 @@ ___
 
 ▸ **startBatch**(): *void*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1417
+Defined in src/api/cds-webapi/CdsWebApi.ts:1421
 
 Starts a batch request.
 
@@ -1171,7 +1172,7 @@ ___
 
 ▸ **update**(`key`: string, `collection`: string, `object`: Object, `prefer?`: string | string[], `select?`: string[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:533
+Defined in src/api/cds-webapi/CdsWebApi.ts:537
 
 Sends an asynchronous request to update a record.
 
@@ -1193,7 +1194,7 @@ ___
 
 ▸ **updateAttribute**(`entityKey`: string, `attributeDefinition`: any, `attributeType?`: string, `mergeLabels?`: boolean): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1152
+Defined in src/api/cds-webapi/CdsWebApi.ts:1156
 
 Sends an asynchronous request to update an attribute.
 
@@ -1214,7 +1215,7 @@ ___
 
 ▸ **updateEntity**(`entityDefinition`: any, `mergeLabels?`: boolean): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1074
+Defined in src/api/cds-webapi/CdsWebApi.ts:1078
 
 Sends an asynchronous request to update an entity definition.
 
@@ -1233,7 +1234,7 @@ ___
 
 ▸ **updateGlobalOptionSet**(`globalOptionSetDefinition`: any, `mergeLabels?`: boolean): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1347
+Defined in src/api/cds-webapi/CdsWebApi.ts:1351
 
 Sends an asynchronous request to update a Global Option Set.
 
@@ -1252,7 +1253,7 @@ ___
 
 ▸ **updateRelationship**(`relationshipDefinition`: any, `relationshipType?`: string, `mergeLabels?`: boolean): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1256
+Defined in src/api/cds-webapi/CdsWebApi.ts:1260
 
 Sends an asynchronous request to update a relationship definition.
 
@@ -1272,7 +1273,7 @@ ___
 
 ▸ **updateRequest**(`request`: [UpdateRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.updaterequest.md)): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:497
+Defined in src/api/cds-webapi/CdsWebApi.ts:501
 
 Sends an asynchronous request to update a record.
 
@@ -1290,7 +1291,7 @@ ___
 
 ▸ **updateSingleProperty**(`key`: string, `collection`: string, `keyValuePair`: Object, `prefer?`: string | string[], `select?`: string[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:567
+Defined in src/api/cds-webapi/CdsWebApi.ts:571
 
 Sends an asynchronous request to update a single value in the record.
 
@@ -1312,7 +1313,7 @@ ___
 
 ▸ **upsert**(`key`: string, `collection`: string, `object`: Object, `prefer?`: string | string[], `select?`: string[]): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:732
+Defined in src/api/cds-webapi/CdsWebApi.ts:736
 
 Sends an asynchronous request to upsert a record.
 
@@ -1334,7 +1335,7 @@ ___
 
 ▸ **upsertRequest**(`request`: [UpsertRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.upsertrequest.md)): *Promise‹any›*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:698
+Defined in src/api/cds-webapi/CdsWebApi.ts:702
 
 Sends an asynchronous request to upsert a record.
 
@@ -1352,7 +1353,7 @@ ___
 
 ▸ **from**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *[WebApiClient](_api_cds_webapi_cdswebapi_.cdswebapi.webapiclient.md)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:1440
+Defined in src/api/cds-webapi/CdsWebApi.ts:1444
 
 Creates a new instance of DynamicsWebApi
 

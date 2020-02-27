@@ -7,6 +7,8 @@ import * as Parameters from '../../core/helpers/Parameters';
 import * as Request from './odata/sendRequest';
 import { Query } from "./FetchQuery";
 import FetchQueryResolver from "./FetchQueryResolver";
+import ExtensionConfiguration from "../../core/ExtensionConfiguration";
+import * as cs from "../../cs";
 
 //string es6 polyfill
 if (!String.prototype.endsWith || !String.prototype.startsWith) {
@@ -286,7 +288,9 @@ export namespace CdsWebApi {
         private _internalConfig: CdsWebApi.Config;
         private _isBatch: boolean;
 
-        static defaultTimeout: number = 30 * 1000;
+        static defaultTimeout: number = 
+            ExtensionConfiguration.getConfigurationValueOrDefault(
+                cs.cds.configuration.connection.defaultTimeout, 30) * 1000;
 
         /**
          * Constructor.
