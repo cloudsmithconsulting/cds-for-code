@@ -43,7 +43,7 @@ sidebar_label: "CdsWebApi"
 
 Ƭ **UserRequest**: *[CreateRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.createrequest.md) | [UpdateRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.updaterequest.md) | [UpsertRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.upsertrequest.md) | [DeleteRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.deleterequest.md) | [RetrieveMultipleRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.retrievemultiplerequest.md) | [RetrieveRequest](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.retrieverequest.md)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:49
+Defined in src/api/cds-webapi/CdsWebApi.ts:51
 
 Dynamics Web Api Request
 

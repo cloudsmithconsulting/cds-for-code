@@ -26,7 +26,7 @@ sidebar_label: "Expand"
 
 • **filter**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:55
+Defined in src/api/cds-webapi/CdsWebApi.ts:57
 
 Use the $filter system query option to set criteria for which entities will be returned.
 
@@ -36,7 +36,7 @@ ___
 
 • **orderBy**? : *string[]*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:59
+Defined in src/api/cds-webapi/CdsWebApi.ts:61
 
 An Array(of Strings) representing the order in which items are returned using the $orderby system query option.Use the asc or desc suffix to specify ascending or descending order respectively.The default is ascending if the suffix isn't applied.
 
@@ -46,7 +46,7 @@ ___
 
 • **property**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:61
+Defined in src/api/cds-webapi/CdsWebApi.ts:63
 
 A name of a single-valued navigation property which needs to be expanded.
 
@@ -56,7 +56,7 @@ ___
 
 • **select**? : *string[]*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:53
+Defined in src/api/cds-webapi/CdsWebApi.ts:55
 
 An Array(of Strings) representing the $select OData System Query Option to control which attributes will be returned.
 
@@ -66,6 +66,6 @@ ___
 
 • **top**? : *number*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:57
+Defined in src/api/cds-webapi/CdsWebApi.ts:59
 
 Limit the number of results returned by using the $top system query option.Do not use $top with $count!

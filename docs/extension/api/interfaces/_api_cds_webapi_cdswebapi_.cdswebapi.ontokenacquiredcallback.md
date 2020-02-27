@@ -16,7 +16,7 @@ Callback with an acquired token called by DynamicsWebApi; "token" argument can b
 
 ▸ (`token`: any): *void*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:250
+Defined in src/api/cds-webapi/CdsWebApi.ts:252
 
 Callback with an acquired token called by DynamicsWebApi; "token" argument can be a string or an object with a property {accessToken: <token>}
 

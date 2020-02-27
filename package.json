@@ -101,6 +101,16 @@
 			"type": "object",
 			"title": "CDS for Code",
 			"properties": {
+				"cs.cds.configuration.connection.defaultTimeout": {
+					"type": "number",
+					"default": 30,
+					"description": "The default timeout in seconds for connections to CDS (requires reload)"
+				},
+				"cs.cds.configuration.connection.importExportTimeout": {
+					"type": "number",
+					"default": 120,
+					"description": "The default timeout in seconds for import/export operations (requires reload)"
+				},
 				"cs.cds.configuration.web.usePowerAppsUi": {
 					"type": "boolean",
 					"default": true,

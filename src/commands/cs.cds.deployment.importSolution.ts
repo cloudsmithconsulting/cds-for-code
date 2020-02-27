@@ -7,6 +7,7 @@ import ExtensionContext from "../core/ExtensionContext";
 import logger from "../core/framework/Logger";
 import ApiRepository from "../repositories/apiRepository";
 import SolutionManager from "../components/Solutions/SolutionManager";
+import ExtensionConfiguration from "../core/ExtensionConfiguration";
 
 export type ImportSolutionOptions = {
     OverwriteUnmanagedCustomizations: boolean,
@@ -36,7 +37,8 @@ export default async function run(this: SolutionManager, config?: CdsWebApi.Conf
 		return; 
 	}
 
-    config.timeout = 120 * 1000;
+    config.timeout = ExtensionConfiguration.getConfigurationValueOrDefault(
+        cs.cds.configuration.connection.importExportTimeout, 120) * 1000;
     const api = new ApiRepository(config);
 
     options = options || {
