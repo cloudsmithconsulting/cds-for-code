@@ -14,7 +14,7 @@ All notable changes to the "cds-for-code" extension will be documented in this f
 
 ### v0.8.14 (February 27, 2020)
 
-- Feature: Add settings for CDS Explorer timeout and import/export timeout ([#644](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/644/))
+- Feature: Add settings for CDS Explorer timeout and import/export timeout ([#664](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/664/))
 - Bugfix: Script downloader should check for new manifest JSON ([#660](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/660/))
 - Bugfix: Libraries should auto copy when in development mode ([#661](https://dev.azure.com/cloudsmith-consulting/CloudSmith/_workitems/edit/661/))
 
