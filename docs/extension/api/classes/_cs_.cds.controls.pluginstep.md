@@ -23,7 +23,7 @@ sidebar_label: "pluginStep"
 
 ▪ **_namespace**: *string* = "cs.cds.controls.pluginStep"
 
-Defined in src/cs.ts:220
+Defined in src/cs.ts:225
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 ▪ **open**: *string* = `${pluginStep._namespace}.open`
 
-Defined in src/cs.ts:221
+Defined in src/cs.ts:226

@@ -30,7 +30,7 @@ sidebar_label: "Request"
 
 • **async**? : *boolean*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:66
+Defined in src/api/cds-webapi/CdsWebApi.ts:68
 
 XHR requests only! Indicates whether the requests should be made synchronously or asynchronously.Default value is 'true'(asynchronously).
 
@@ -40,7 +40,7 @@ ___
 
 • **collection**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:68
+Defined in src/api/cds-webapi/CdsWebApi.ts:70
 
 The name of the Entity Collection or Entity Logical name.
 
@@ -50,7 +50,7 @@ ___
 
 • **impersonate**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:70
+Defined in src/api/cds-webapi/CdsWebApi.ts:72
 
 Impersonates the user.A String representing the GUID value for the Dynamics 365 system user id.
 
@@ -60,7 +60,7 @@ ___
 
 • **noCache**? : *boolean*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:72
+Defined in src/api/cds-webapi/CdsWebApi.ts:74
 
 If set to 'true', DynamicsWebApi adds a request header 'Cache-Control: no-cache'.Default value is 'false'.
 
@@ -70,6 +70,6 @@ ___
 
 • **token**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:74
+Defined in src/api/cds-webapi/CdsWebApi.ts:76
 
 Authorization Token. If set, onTokenRefresh will not be called.

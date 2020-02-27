@@ -22,7 +22,7 @@ sidebar_label: "Utility"
 
 • **getCollectionName**: *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:282
+Defined in src/api/cds-webapi/CdsWebApi.ts:284
 
 Searches for a collection name by provided entity name in a cached entity metadata.
 The returned collection name can be null.

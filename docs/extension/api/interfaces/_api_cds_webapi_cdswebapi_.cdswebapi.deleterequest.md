@@ -34,7 +34,7 @@ sidebar_label: "DeleteRequest"
 
 *Inherited from [Request](_api_cds_webapi_cdswebapi_.cdswebapi.request.md).[async](_api_cds_webapi_cdswebapi_.cdswebapi.request.md#optional-async)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:66
+Defined in src/api/cds-webapi/CdsWebApi.ts:68
 
 XHR requests only! Indicates whether the requests should be made synchronously or asynchronously.Default value is 'true'(asynchronously).
 
@@ -46,7 +46,7 @@ ___
 
 *Inherited from [Request](_api_cds_webapi_cdswebapi_.cdswebapi.request.md).[collection](_api_cds_webapi_cdswebapi_.cdswebapi.request.md#optional-collection)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:68
+Defined in src/api/cds-webapi/CdsWebApi.ts:70
 
 The name of the Entity Collection or Entity Logical name.
 
@@ -56,7 +56,7 @@ ___
 
 • **contentId**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:142
+Defined in src/api/cds-webapi/CdsWebApi.ts:144
 
 BATCH REQUESTS ONLY! Sets Content-ID header or references request in a Change Set.
 
@@ -68,7 +68,7 @@ ___
 
 *Inherited from [CRUDRequest](_api_cds_webapi_cdswebapi_.cdswebapi.crudrequest.md).[id](_api_cds_webapi_cdswebapi_.cdswebapi.crudrequest.md#optional-id)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:79
+Defined in src/api/cds-webapi/CdsWebApi.ts:81
 
 DEPRECATED Use "key" instead. A String representing the Primary Key(GUID) of the record.
 
@@ -78,7 +78,7 @@ ___
 
 • **ifmatch**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:140
+Defined in src/api/cds-webapi/CdsWebApi.ts:142
 
 Sets If-Match header value that enables to use conditional retrieval or optimistic concurrency in applicable requests.
 
@@ -90,7 +90,7 @@ ___
 
 *Inherited from [Request](_api_cds_webapi_cdswebapi_.cdswebapi.request.md).[impersonate](_api_cds_webapi_cdswebapi_.cdswebapi.request.md#optional-impersonate)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:70
+Defined in src/api/cds-webapi/CdsWebApi.ts:72
 
 Impersonates the user.A String representing the GUID value for the Dynamics 365 system user id.
 
@@ -102,7 +102,7 @@ ___
 
 *Inherited from [CRUDRequest](_api_cds_webapi_cdswebapi_.cdswebapi.crudrequest.md).[key](_api_cds_webapi_cdswebapi_.cdswebapi.crudrequest.md#optional-key)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:81
+Defined in src/api/cds-webapi/CdsWebApi.ts:83
 
 A String representing collection record's Primary Key (GUID) or Alternate Key(s).
 
@@ -114,7 +114,7 @@ ___
 
 *Inherited from [Request](_api_cds_webapi_cdswebapi_.cdswebapi.request.md).[noCache](_api_cds_webapi_cdswebapi_.cdswebapi.request.md#optional-nocache)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:72
+Defined in src/api/cds-webapi/CdsWebApi.ts:74
 
 If set to 'true', DynamicsWebApi adds a request header 'Cache-Control: no-cache'.Default value is 'false'.
 
@@ -126,6 +126,6 @@ ___
 
 *Inherited from [Request](_api_cds_webapi_cdswebapi_.cdswebapi.request.md).[token](_api_cds_webapi_cdswebapi_.cdswebapi.request.md#optional-token)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:74
+Defined in src/api/cds-webapi/CdsWebApi.ts:76
 
 Authorization Token. If set, onTokenRefresh will not be called.
