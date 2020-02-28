@@ -2,7 +2,7 @@
   "profiles": {
     "AssemblyScanner": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Dev\\Trash\\SamplePlugin\\bin\\Debug\\net452\\SamplePlugin.dll\""
+      "commandLineArgs": "\"C:\\Dev\\Trash\\SamplePlugin\\bin\\Debug\\net462\\SamplePlugin.dll\""
     }
   }
 }
