@@ -58,6 +58,16 @@ export default class ScriptDownloader {
 
 			await install(sourcePath, destinationPath);
 
+			sourcePath = path.join(extensionPath, "resources/templates/BuiltInTemplates");
+			destinationPath = await TemplateManager.getTemplatesFolder(true);
+
+			await install(sourcePath, destinationPath);
+
+			sourcePath = path.join(extensionPath, "resources/templates/UserTemplates");
+			destinationPath = await TemplateManager.getTemplatesFolder(false);
+
+			await install(sourcePath, destinationPath);
+
 			return;
 		}
 		
