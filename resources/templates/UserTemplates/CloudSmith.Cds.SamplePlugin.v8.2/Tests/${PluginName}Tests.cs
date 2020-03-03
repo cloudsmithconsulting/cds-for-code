@@ -1,5 +1,4 @@
-﻿using {{=$this.parameters.Namespace}};
-using FakeXrmEasy;
+﻿using FakeXrmEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 using System;

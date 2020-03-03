@@ -1,0 +1,10 @@
+{{#def.template({
+    "type": "Item Template",
+    "name": "CloudSmith.Cds.DataGenerationTests",
+    "displayName": "Dynamics CRM data generation tests using MSTest and Bogus",
+    "publisher": "CloudSmith Consulting LLC",
+    "categories": ["Dynamics", "Data Generation"]
+})}}
+{{#def.ui.prompt('Namespace', 'Please enter the Namespace')}}
+{{#def.run.dotnet('add package Bogus')}}
+{{#def.run.dotnet('build')}}
