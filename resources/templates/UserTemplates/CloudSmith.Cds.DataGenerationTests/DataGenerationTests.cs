@@ -20,7 +20,7 @@ namespace {{=$this.parameters.Namespace}}
         // classes below this example
 
         [TestMethod]
-        public void GenerateRandomAccounts()
+        public void GenerateRandomAccountsUsingBaseEntity()
         {
             const int accountsToGenerate = 10;
 
