@@ -30,20 +30,20 @@ namespace {{=$this.parameters.Namespace}}
             for (int i = 1; i <= accountsToGenerate; i++)
             {
                 accounts.Add(new Entity("account", new KeyAttributeCollection() {
-                    { "Name", faker.Company.CompanyName() },
-                    { "EMailAddress1", faker.Internet.Email() },
-                    { "CreditOnHold", faker.Random.Bool() },
-                    { "LastOnHoldTime", faker.Date.Between(DateTime.Now.AddYears(-1), DateTime.Now) },
-                    { "Address1_Line1", faker.Address.StreetAddress() },
-                    { "Address1_City", faker.Address.City() },
-                    { "Address1_StateOrProvince", faker.Address.StateAbbr() },
-                    { "Address1_PostalCode", faker.Address.ZipCode() },
-                    { "Address1_Telephone1", faker.Phone.PhoneNumber() },
-                    { "NumberOfEmployees", faker.Random.Number(1, 50000) },
-                    { "Revenue", new Money(faker.Random.Number(100000, 100000000)) },
-                    { "Telephone1", faker.Phone.PhoneNumber() },
-                    { "WebSiteURL", faker.Internet.Url() },
-                    { "TickerSymbol", faker.Hacker.Abbreviation() }
+                    { "name", faker.Company.CompanyName() },
+                    { "emailaddress1", faker.Internet.Email() },
+                    { "creditonhold", faker.Random.Bool() },
+                    { "lastonholdtime", faker.Date.Between(DateTime.Now.AddYears(-1), DateTime.Now) },
+                    { "address1_line1", faker.Address.StreetAddress() },
+                    { "address1_city", faker.Address.City() },
+                    { "address1_stateorprovince", faker.Address.StateAbbr() },
+                    { "address1_postalcode", faker.Address.ZipCode() },
+                    { "address1_telephone1", faker.Phone.PhoneNumber() },
+                    { "numberofemployees", faker.Random.Number(1, 50000) },
+                    { "revenue", new Money(faker.Random.Number(100000, 100000000)) },
+                    { "telephone1", faker.Phone.PhoneNumber() },
+                    { "websiteurl", faker.Internet.Url() },
+                    { "tickersymbol", faker.Hacker.Abbreviation() }
                 }));
 
             }
