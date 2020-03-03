@@ -6,5 +6,7 @@
     "categories": ["Dynamics", "Data Generation"]
 })}}
 {{#def.ui.prompt('Namespace', 'Please enter the Namespace')}}
+{{#def.ui.select('SdkVersion', 'Please select the target SDK version', ['8.0.2.1', '8.1.0.2', '8.2.0.2', '9.0.2.23'])}}
+{{#def.run.dotnet('add package Microsoft.CrmSdk.CoreAssemblies --version \{\{=$this.parameters.SdkVersion\}\}')}}
 {{#def.run.dotnet('add package Bogus')}}
 {{#def.run.dotnet('build')}}

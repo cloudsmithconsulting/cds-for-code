@@ -68,7 +68,7 @@ ___
 
 ▸ **showTerminal**(`folder`: string, `name?`: string, `preserveFocus`: boolean): *Promise‹[Terminal](_components_terminal_secureterminal_.terminal.md)›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:786
+Defined in src/components/Terminal/SecureTerminal.ts:784
 
 **Parameters:**
 

@@ -15,6 +15,7 @@ sidebar_label: "TemplateEngine"
 ### Properties
 
 * [fileNameRegex](_components_templates_templateengine_.templateengine.md#static-private-filenameregex)
+* [templateDefs](_components_templates_templateengine_.templateengine.md#static-private-templatedefs)
 
 ### Methods
 
@@ -35,13 +36,21 @@ sidebar_label: "TemplateEngine"
 
 Defined in src/components/Templates/TemplateEngine.ts:15
 
+___
+
+### `Static` `Private` templateDefs
+
+▪ **templateDefs**: *any*
+
+Defined in src/components/Templates/TemplateEngine.ts:31
+
 ## Methods
 
 ### `Static` analyzeTemplate
 
 ▸ **analyzeTemplate**(`templatePath`: string, `outputPath?`: string): *Promise‹[TemplateAnalysis](_components_templates_types_.templateanalysis.md)›*
 
-Defined in src/components/Templates/TemplateEngine.ts:79
+Defined in src/components/Templates/TemplateEngine.ts:80
 
 **Parameters:**
 
@@ -58,7 +67,7 @@ ___
 
 ▸ **buildTemplateContext**(`templateAnalysis`: [TemplateAnalysis](_components_templates_types_.templateanalysis.md), ...`object`: any): *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
 
-Defined in src/components/Templates/TemplateEngine.ts:265
+Defined in src/components/Templates/TemplateEngine.ts:272
 
 **Parameters:**
 
@@ -75,7 +84,7 @@ ___
 
 ▸ **executeCommands**(`templateContext`: [TemplateContext](_components_templates_types_.templatecontext.md), `stage`: [TemplateCommandExecutionStage](../enums/_components_templates_types_.templatecommandexecutionstage.md)): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateEngine.ts:227
+Defined in src/components/Templates/TemplateEngine.ts:230
 
 **Parameters:**
 
@@ -92,7 +101,7 @@ ___
 
 ▸ **executeTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `outputPath`: string, ...`object`: any): *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
 
-Defined in src/components/Templates/TemplateEngine.ts:32
+Defined in src/components/Templates/TemplateEngine.ts:33
 
 **Parameters:**
 
