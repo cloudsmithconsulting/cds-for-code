@@ -28,7 +28,7 @@ sidebar_label: "TerminalManager"
 
 ▪ **terminals**: *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, [Terminal](_components_terminal_secureterminal_.terminal.md)›* = new Dictionary<string, Terminal>()
 
-Defined in src/components/Terminal/SecureTerminal.ts:772
+Defined in src/components/Terminal/SecureTerminal.ts:782
 
 ## Methods
 
@@ -36,7 +36,7 @@ Defined in src/components/Terminal/SecureTerminal.ts:772
 
 ▸ **activate**(`context`: [ExtensionContext](_core_extensioncontext_.extensioncontext.md)): *Promise‹void›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:775
+Defined in src/components/Terminal/SecureTerminal.ts:785
 
 **Parameters:**
 
@@ -52,7 +52,7 @@ ___
 
 ▸ **clearTerminal**(`terminal`: [Terminal](_components_terminal_secureterminal_.terminal.md)): *Promise‹void›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:812
+Defined in src/components/Terminal/SecureTerminal.ts:824
 
 **Parameters:**
 
@@ -68,7 +68,7 @@ ___
 
 ▸ **showTerminal**(`folder`: string, `name?`: string, `preserveFocus`: boolean): *Promise‹[Terminal](_components_terminal_secureterminal_.terminal.md)›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:784
+Defined in src/components/Terminal/SecureTerminal.ts:794
 
 **Parameters:**
 

@@ -79,7 +79,6 @@ sidebar_label: "Globals"
 * ["components/WebDownloaders/ScriptDownloader"](modules/_components_webdownloaders_scriptdownloader_.md)
 * ["components/WebDownloaders/Types"](modules/_components_webdownloaders_types_.md)
 * ["core/Command"](modules/_core_command_.md)
-* ["core/CommandBuilder"](modules/_core_commandbuilder_.md)
 * ["core/Extension"](modules/_core_extension_.md)
 * ["core/ExtensionConfiguration"](modules/_core_extensionconfiguration_.md)
 * ["core/ExtensionContext"](modules/_core_extensioncontext_.md)

@@ -34,7 +34,7 @@ sidebar_label: "Masker"
 
 ▪ **hiddenReplacementByte**: *number* = 0
 
-Defined in src/components/Terminal/SecureTerminal.ts:206
+Defined in src/components/Terminal/SecureTerminal.ts:205
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 ▪ **hiddenSeperator**: *string* = String.fromCharCode(Masker.hiddenSeperatorByte)
 
-Defined in src/components/Terminal/SecureTerminal.ts:211
+Defined in src/components/Terminal/SecureTerminal.ts:210
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 ▪ **hiddenSeperatorByte**: *number* = 30
 
-Defined in src/components/Terminal/SecureTerminal.ts:208
+Defined in src/components/Terminal/SecureTerminal.ts:207
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 ▪ **maskReplacementByte**: *number* = 42
 
-Defined in src/components/Terminal/SecureTerminal.ts:207
+Defined in src/components/Terminal/SecureTerminal.ts:206
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 ▪ **maskSeperator**: *string* = String.fromCharCode(Masker.maskSeperatorByte)
 
-Defined in src/components/Terminal/SecureTerminal.ts:210
+Defined in src/components/Terminal/SecureTerminal.ts:209
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 ▪ **maskSeperatorByte**: *number* = 29
 
-Defined in src/components/Terminal/SecureTerminal.ts:209
+Defined in src/components/Terminal/SecureTerminal.ts:208
 
 ## Methods
 
@@ -82,7 +82,7 @@ Defined in src/components/Terminal/SecureTerminal.ts:209
 
 ▸ **maskBytes**(`bytes`: Uint8Array, `includeHidden`: boolean): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:217
+Defined in src/components/Terminal/SecureTerminal.ts:216
 
 **Parameters:**
 
@@ -99,7 +99,7 @@ ___
 
 ▸ **maskText**(`text`: string, `includeHidden?`: boolean): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:213
+Defined in src/components/Terminal/SecureTerminal.ts:212
 
 **Parameters:**
 
@@ -116,7 +116,7 @@ ___
 
 ▸ **unencodeBytes**(`bytes`: Uint8Array): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:260
+Defined in src/components/Terminal/SecureTerminal.ts:259
 
 **Parameters:**
 
@@ -132,7 +132,7 @@ ___
 
 ▸ **unencodeText**(`text`: string): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:256
+Defined in src/components/Terminal/SecureTerminal.ts:255
 
 **Parameters:**
 

@@ -57,7 +57,7 @@ sidebar_label: "TerminalCommand"
 
 \+ **new TerminalCommand**(`command?`: string, `output?`: string, `error?`: string): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:28
+Defined in src/components/Terminal/SecureTerminal.ts:27
 
 **Parameters:**
 
@@ -75,7 +75,7 @@ Name | Type |
 
 • **_command**: *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:19
+Defined in src/components/Terminal/SecureTerminal.ts:18
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 • **_error**: *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:23
+Defined in src/components/Terminal/SecureTerminal.ts:22
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 • **_hideFlag**: *boolean* = false
 
-Defined in src/components/Terminal/SecureTerminal.ts:24
+Defined in src/components/Terminal/SecureTerminal.ts:23
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 • **_maskFlag**: *boolean* = false
 
-Defined in src/components/Terminal/SecureTerminal.ts:25
+Defined in src/components/Terminal/SecureTerminal.ts:24
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 • **_masker**: *[Masker](_components_terminal_secureterminal_.masker.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:20
+Defined in src/components/Terminal/SecureTerminal.ts:19
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 • **_onLineCompleted**: *EventEmitter‹object›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:21
+Defined in src/components/Terminal/SecureTerminal.ts:20
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 • **_output**: *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:22
+Defined in src/components/Terminal/SecureTerminal.ts:21
 
 ___
 
@@ -131,7 +131,7 @@ ___
 
 • **onLineCompleted**: *Event‹object›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:27
+Defined in src/components/Terminal/SecureTerminal.ts:26
 
 ___
 
@@ -140,7 +140,7 @@ ___
 ▪ **lineSeperator**: *string* = "
 "
 
-Defined in src/components/Terminal/SecureTerminal.ts:28
+Defined in src/components/Terminal/SecureTerminal.ts:27
 
 ## Accessors
 
@@ -148,7 +148,7 @@ Defined in src/components/Terminal/SecureTerminal.ts:28
 
 • **get command**(): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:40
+Defined in src/components/Terminal/SecureTerminal.ts:39
 
 **Returns:** *string*
 
@@ -158,13 +158,13 @@ ___
 
 • **get error**(): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:51
+Defined in src/components/Terminal/SecureTerminal.ts:50
 
 **Returns:** *string*
 
 • **set error**(`value`: string): *void*
 
-Defined in src/components/Terminal/SecureTerminal.ts:54
+Defined in src/components/Terminal/SecureTerminal.ts:53
 
 **Parameters:**
 
@@ -180,7 +180,7 @@ ___
 
 • **get hasHiddenText**(): *boolean*
 
-Defined in src/components/Terminal/SecureTerminal.ts:62
+Defined in src/components/Terminal/SecureTerminal.ts:61
 
 **Returns:** *boolean*
 
@@ -190,7 +190,7 @@ ___
 
 • **get hidden**(): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:58
+Defined in src/components/Terminal/SecureTerminal.ts:57
 
 **Returns:** *string*
 
@@ -200,7 +200,7 @@ ___
 
 • **get masked**(): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:66
+Defined in src/components/Terminal/SecureTerminal.ts:65
 
 **Returns:** *string*
 
@@ -210,13 +210,13 @@ ___
 
 • **get output**(): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:44
+Defined in src/components/Terminal/SecureTerminal.ts:43
 
 **Returns:** *string*
 
 • **set output**(`value`: string): *void*
 
-Defined in src/components/Terminal/SecureTerminal.ts:47
+Defined in src/components/Terminal/SecureTerminal.ts:46
 
 **Parameters:**
 
@@ -232,7 +232,7 @@ ___
 
 • **get raw**(): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:70
+Defined in src/components/Terminal/SecureTerminal.ts:69
 
 **Returns:** *string*
 
@@ -242,7 +242,7 @@ Defined in src/components/Terminal/SecureTerminal.ts:70
 
 ▸ **backspace**(): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:74
+Defined in src/components/Terminal/SecureTerminal.ts:73
 
 **Returns:** *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
@@ -252,7 +252,7 @@ ___
 
 ▸ **clear**(): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:90
+Defined in src/components/Terminal/SecureTerminal.ts:89
 
 **Returns:** *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
@@ -262,7 +262,7 @@ ___
 
 ▸ **credential**<**T**>(`key`: string | T, `store`: [ICredentialStore](../interfaces/_core_security_types_.icredentialstore.md), `textFunction`: function): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:169
+Defined in src/components/Terminal/SecureTerminal.ts:168
 
 **Type parameters:**
 
@@ -292,7 +292,7 @@ ___
 
 ▸ **enter**(): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:141
+Defined in src/components/Terminal/SecureTerminal.ts:140
 
 **Returns:** *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
@@ -302,7 +302,7 @@ ___
 
 ▸ **hide**(`text`: string): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:185
+Defined in src/components/Terminal/SecureTerminal.ts:184
 
 **Parameters:**
 
@@ -318,7 +318,7 @@ ___
 
 ▸ **if**(`expression`: function, `action`: function, `otherwise?`: function): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:115
+Defined in src/components/Terminal/SecureTerminal.ts:114
 
 **Parameters:**
 
@@ -354,7 +354,7 @@ ___
 
 ▸ **join**(): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:196
+Defined in src/components/Terminal/SecureTerminal.ts:195
 
 **Returns:** *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
@@ -364,7 +364,7 @@ ___
 
 ▸ **line**(`text`: string): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:98
+Defined in src/components/Terminal/SecureTerminal.ts:97
 
 **Parameters:**
 
@@ -380,7 +380,7 @@ ___
 
 ▸ **sensitive**(`text`: string): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:158
+Defined in src/components/Terminal/SecureTerminal.ts:157
 
 **Parameters:**
 
@@ -396,7 +396,7 @@ ___
 
 ▸ **text**(`text`: string): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:125
+Defined in src/components/Terminal/SecureTerminal.ts:124
 
 **Parameters:**
 

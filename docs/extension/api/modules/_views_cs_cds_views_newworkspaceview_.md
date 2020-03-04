@@ -27,7 +27,7 @@ sidebar_label: "views/cs.cds.views.newWorkspaceView"
 
 • **_initialized**: *boolean* = false
 
-Defined in src/views/cs.cds.views.newWorkspaceView.ts:12
+Defined in src/views/cs.cds.views.newWorkspaceView.ts:11
 
 ## Functions
 
@@ -35,7 +35,7 @@ Defined in src/views/cs.cds.views.newWorkspaceView.ts:12
 
 ▸ **openView**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹[View](../classes/_core_webui_view_.view.md)›*
 
-Defined in src/views/cs.cds.views.newWorkspaceView.ts:26
+Defined in src/views/cs.cds.views.newWorkspaceView.ts:25
 
 **Parameters:**
 
@@ -51,6 +51,6 @@ ___
 
 ▸ **showWelcomeExperience**(): *Promise‹void›*
 
-Defined in src/views/cs.cds.views.newWorkspaceView.ts:14
+Defined in src/views/cs.cds.views.newWorkspaceView.ts:13
 
 **Returns:** *Promise‹void›*
