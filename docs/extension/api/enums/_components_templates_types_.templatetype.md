@@ -19,7 +19,7 @@ sidebar_label: "TemplateType"
 
 • **ItemTemplate**: = "Item Template"
 
-Defined in src/components/Templates/Types.ts:134
+Defined in src/components/Templates/Types.ts:136
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 • **ProjectTemplate**: = "Project Template"
 
-Defined in src/components/Templates/Types.ts:133
+Defined in src/components/Templates/Types.ts:135
