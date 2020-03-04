@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <WebResource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <WebResourceId>{{{=$this.parameters.webresource.webresourceid}}}</WebResourceId>
-  <Name>{{=$this.parameters.webresource.name}}</Name>
-  <DisplayName>{{=$this.parameters.webresource.displayname}}</DisplayName>
-  <Description>{{=$this.parameters.webresource.description}}</Description>
-  <WebResourceType>{{=$this.parameters.webresource.webresourcetype}}</WebResourceType>
-  <IntroducedVersion>{{=$this.parameters.webresource.introducedversion}}</IntroducedVersion>
-  <IsEnabledForMobileClient>{{=$this.parameters.webresource.isenabledformobileclient ? "1" : "0"}}</IsEnabledForMobileClient>
-  <IsAvailableForMobileOffline>{{=$this.parameters.webresource.isavailableformobileoffline ? "1" : "0"}}</IsAvailableForMobileOffline>
+  <WebResourceId>{<%=$this.parameters.webresource.webresourceid%>}</WebResourceId>
+  <Name><%=$this.parameters.webresource.name%></Name>
+  <DisplayName><%=$this.parameters.webresource.displayname%></DisplayName>
+  <Description><%=$this.parameters.webresource.description%></Description>
+  <WebResourceType><%=$this.parameters.webresource.webresourcetype%></WebResourceType>
+  <IntroducedVersion><%=$this.parameters.webresource.introducedversion%></IntroducedVersion>
+  <IsEnabledForMobileClient><%=$this.parameters.webresource.isenabledformobileclient ? "1" : "0"%></IsEnabledForMobileClient>
+  <IsAvailableForMobileOffline><%=$this.parameters.webresource.isavailableformobileoffline ? "1" : "0"%></IsAvailableForMobileOffline>
   <DependencyXml>&lt;Dependencies&gt;&lt;Dependency componentType="WebResource"/&gt;&lt;/Dependencies&gt;</DependencyXml>
-  <IsCustomizable>{{=$this.parameters.webresource.iscustomizable.Value ? "1" : "0"}}</IsCustomizable>
-  <CanBeDeleted>{{=$this.parameters.webresource.canbedeleted.Value ? "1" : "0"}}</CanBeDeleted>
-  <IsHidden>{{=$this.parameters.webresource.ishidden.Value ? "1" : "0"}}</IsHidden>
-  <FileName>{{=$this.parameters.resolver.resolvefilename($this.parameters.webresource)}}</FileName>
+  <IsCustomizable><%=$this.parameters.webresource.iscustomizable.Value ? "1" : "0"%></IsCustomizable>
+  <CanBeDeleted><%=$this.parameters.webresource.canbedeleted.Value ? "1" : "0"%></CanBeDeleted>
+  <IsHidden><%=$this.parameters.webresource.ishidden.Value ? "1" : "0"%></IsHidden>
+  <FileName><%=$this.parameters.resolver.resolvefilename($this.parameters.webresource)%></FileName>
 </WebResource>

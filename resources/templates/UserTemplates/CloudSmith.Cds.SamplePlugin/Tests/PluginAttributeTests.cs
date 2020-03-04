@@ -1,11 +1,11 @@
-﻿using {{=$this.parameters.Namespace}}.Plugins;
+﻿using <%=$this.parameters.Namespace%>.Plugins;
 using System;
 using System.Diagnostics;
 using FakeXrmEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
 
-namespace {{=$this.parameters.Namespace}}.Tests
+namespace <%=$this.parameters.Namespace%>.Tests
 {
     [TestClass]
     public class PluginAttributeTests

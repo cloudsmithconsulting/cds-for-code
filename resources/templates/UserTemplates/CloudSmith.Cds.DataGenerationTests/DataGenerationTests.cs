@@ -5,7 +5,7 @@ using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 
-namespace {{=$this.parameters.Namespace}}
+namespace <%=$this.parameters.Namespace%>
 {
     [TestClass]
     public class DataGenerationTests

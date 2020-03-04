@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import IContributor from '../../core/CommandBuilder';
 import * as cs from '../../cs';
 import * as fs from 'fs';
 import * as eol from 'eol';
@@ -554,14 +553,21 @@ export class Terminal implements vscode.Terminal {
 						this._onDidOpen.fire();
 					},
 					close: () => {
-						this._process.stdin.end();
-						//this._process.dispose();
-						this._process = null;
-						this._inputCommand.clear();
+						if (this._process) {
+							this._process.stdin.end();
+							this._process = null;
+						}
+
+						this._inputCommand?.clear();
 						this._outputBuffer.onDidFlush = null;
 						this._errorBuffer.onDidFlush = null;
-						this._outputBuffer.flush();
-						this._errorBuffer.flush();
+						this._outputBuffer?.flush();
+						this._errorBuffer?.flush();
+
+						if (this._terminal) {
+							this._terminal.dispose();
+							this._terminal = null;
+						}
 
 						this._onDidClose.fire();
 					},
@@ -661,10 +667,14 @@ export class Terminal implements vscode.Terminal {
 
 	show(preserveFocus?: boolean): void {
 		if (!this._terminal && this._options) {
-			this.create(this._options);
-		} 
+			const handle = this.create(this._options);
 
-		this._terminal.show(preserveFocus);
+			if (handle) {
+				handle.then(() => this._terminal.show(preserveFocus));
+			}
+		} else {
+			this._terminal.show(preserveFocus);
+		}
 	}
 
 	hide(): void {
@@ -791,7 +801,9 @@ export default class TerminalManager {
 		if (!TerminalManager.terminals.containsKey(name)) {
 			const terminal = new Terminal({name, shellPath: "powershell.exe", cwd: folder });
 
-			terminal.show(preserveFocus);
+			terminal.onDidOpen(() => {
+				terminal.show(preserveFocus);
+			});
 
 			terminal.onDidClose(() => {
 				TerminalManager.terminals.remove(name);

@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    {{? $this.parameters.SdkVersion === '9.0.2.23'}}
+    <%? $this.parameters.SdkVersion === '9.0.2.23'%>
     <TargetFramework>net472</TargetFramework>
-    {{??}}
+    <%??%>
     <TargetFramework>net462</TargetFramework>
-    {{?}}
+    <%?%>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>{{=$this.parameters.Namespace}}.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile><%=$this.parameters.Namespace%>.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="{{=$this.parameters.SdkVersion}}" />
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="<%=$this.parameters.SdkVersion%>" />
   </ItemGroup>
 
 </Project>

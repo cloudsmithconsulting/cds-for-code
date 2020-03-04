@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace {{=$this.parameters.Namespace}}.Plugins
+namespace <%=$this.parameters.Namespace%>.Plugins
 {
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class RequireInitiatingUserAttribute : DynamicsPluginAttribute
