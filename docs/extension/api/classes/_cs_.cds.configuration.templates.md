@@ -49,7 +49,11 @@ ___
 
 ▪ **templatesDirectory**: *string* = `${templates._namespace}.templatesDirectory`
 
+<<<<<<< HEAD
 Defined in src/cs.ts:143
+=======
+Defined in src/cs.ts:142
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 ___
 
@@ -57,6 +61,7 @@ ___
 
 ▪ **treeViewGroupPreference**: *string* = `${templates._namespace}.treeViewGroupPreference`
 
+<<<<<<< HEAD
 Defined in src/cs.ts:144
 
 ___
@@ -66,3 +71,6 @@ ___
 ▪ **usePlaceholders**: *string* = `${templates._namespace}.usePlaceholders`
 
 Defined in src/cs.ts:145
+=======
+Defined in src/cs.ts:143
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768

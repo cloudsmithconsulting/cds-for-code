@@ -23,7 +23,11 @@ sidebar_label: "newWorkspace"
 
 ▪ **_namespace**: *string* = "cs.cds.controls.newWorkspace"
 
+<<<<<<< HEAD
 Defined in src/cs.ts:216
+=======
+Defined in src/cs.ts:214
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 ___
 
@@ -31,4 +35,8 @@ ___
 
 ▪ **open**: *string* = `${newWorkspace._namespace}.open`
 
+<<<<<<< HEAD
 Defined in src/cs.ts:217
+=======
+Defined in src/cs.ts:215
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
