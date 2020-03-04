@@ -292,7 +292,7 @@ export default class TemplateEngine {
                     break;
                 case 'select': {
                     result.parameters[key] = result.parameters[key] || await Quickly.pick(interactive.message, ...interactive.items)
-                        .then(item => item.label);
+                        .then(item => item?.label || undefined);
                     if (!result.parameters[key]) { result.userCanceled = true; }
                 }
                     break;
