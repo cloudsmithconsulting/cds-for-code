@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-2019'
 
 variables:
-- group: CDS-release
+- group: CDS-development
 
 steps:
 - task: NodeTool@0
