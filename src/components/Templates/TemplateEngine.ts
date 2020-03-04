@@ -17,16 +17,23 @@ import MetadataRepository from '../../repositories/metadataRepository';
 
 export default class TemplateEngine {
     private static readonly fileNameRegex = /\$\{([\s\S]+?)\}/g;
+    // evaluate: <% %>
+    // interpolate: <%= %>
+    // encode: <%! %>
+    // use: <%# %>
+    // define: <%## #%>
+    // conditional: <%? %>
+    // iterate: <%~ %>
     private static readonly dotSettings: doT.TemplateSettings = {
-        evaluate: /\{\{([\s\S]+?)\}\}\n?/g,
-        interpolate: /\{\{=([\s\S]+?)\}\}/g,
-        encode: /\{\{!([\s\S]+?)\}\}\n?/g,
-        use: /.*?\{\{#([\s\S]+?)\}\}\n?/g,
+        evaluate: /\<\%([\s\S]+?)\%\>\n?/g,
+        interpolate: /\<\%=([\s\S]+?)\%\>/g,
+        encode: /\<\%!([\s\S]+?)\%\>\n?/g,
+        use: /.*?\<\%#([\s\S]+?)\%\>\n?/g,
         useParams: /(^|[^\w$])def(?:\.|\[[\'\"])([\w$\.]+)(?:[\'\"]\])?\s*\:\s*([\w$\.]+|\"[^\"]+\"|\'[^\']+\'|\{[^\}]+\})/g,
-        define: /.*?\{\{##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\}\}\n?/g,
+        define: /.*?\<\%##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\%\>\n?/g,
         defineParams: /^\s*([\w$]+):([\s\S]+)/,
-        conditional: /\{\{\?(\?)?\s*([\s\S]*?)\s*\}\}\n?/g,
-        iterate: /\{\{~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\}\})\n?/g,
+        conditional: /\<\%\?(\?)?\s*([\s\S]*?)\s*\%\>\n?/g,
+        iterate: /\<\%~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\%\>)\n?/g,
         varname: '$this',
         strip: false,
         append: true,

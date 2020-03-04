@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { View } from '../core/webui/View';
 import { ViewRenderer } from "../core/webui/ViewRenderer";
 import * as cs from '../cs';
-import IContributor from '../core/CommandBuilder';
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import DiscoveryRepository from '../repositories/discoveryRepository';
 import Dictionary from '../core/types/Dictionary';
