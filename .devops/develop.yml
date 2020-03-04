@@ -1,0 +1,53 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- develop
+
+pool:
+  vmImage: 'windows-2019'
+
+variables:
+- group: CDS-release
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install
+  displayName: 'Install node packages (dependencies)'
+
+- script: |
+    npm version $(package.version) --allow-same-version --no-git-tag-version
+  displayName: 'Update package version to $(package.version)'
+
+- script: |
+    npm run vscode:package
+  displayName: 'Create extension package'
+
+- task: CopyFiles@2
+  displayName: 'Copy files to artifacts staging directory'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: |
+      dist/**
+      docs/**
+      **/*.vsix
+      **/*.nupkg
+      package.json
+      LICENSE
+      CHANGELOG.md
+      README.md
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish to Azure blob storage'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'extension'
+    publishLocation: 'Container'
