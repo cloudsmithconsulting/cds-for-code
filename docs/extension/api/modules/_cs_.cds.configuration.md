@@ -10,6 +10,7 @@ sidebar_label: "configuration"
 
 ### Classes
 
+* [connection](../classes/_cs_.cds.configuration.connection.md)
 * [explorer](../classes/_cs_.cds.configuration.explorer.md)
 * [globalState](../classes/_cs_.cds.configuration.globalstate.md)
 * [iconThemes](../classes/_cs_.cds.configuration.iconthemes.md)

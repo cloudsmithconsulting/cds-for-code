@@ -145,6 +145,10 @@ export default class ApiRepository {
             .then(response => response.value);
     }
 
+    async retrieveProcess(workflowId: string, select?: string[]): Promise<any> {
+        return this.webapi.retrieve(workflowId, "workflows", select);
+    }
+
     async retrieveProcessTemplates(processType: CdsSolutions.ProcessType, entityName: string, solutionId?: string, select: string[] = ApiRepository.defaultSelections["workflows"]) : Promise<any[]> {
         // documentation of the attributes for workflow: https://docs.microsoft.com/en-us/dynamics365/customer-engagement/web-api/workflow?view=dynamics-ce-odata-9        
         const request:CdsWebApi.RetrieveMultipleRequest = {

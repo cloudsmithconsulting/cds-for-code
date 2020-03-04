@@ -40,7 +40,8 @@ export default async function run(this: SolutionManager, config?: CdsWebApi.Conf
     if (DotNetProjectManager.fileIsProject(file)) {
         await vscode.commands.executeCommand(cs.cds.deployment.dotNetBuild, file, undefined, "!")
             .then(() => FileSystem.walk(path.dirname(file.fsPath), item => {
-                return item.endsWith(path.basename(file.fsPath, path.extname(file.fsPath)) + ".dll" );
+                return item.indexOf('\\obj\\') === -1
+                    && item.endsWith(path.basename(file.fsPath, path.extname(file.fsPath)) + ".dll" );
             }))
             .then(async results => { 
                 if (results.length === 0) {
@@ -56,6 +57,8 @@ export default async function run(this: SolutionManager, config?: CdsWebApi.Conf
                 }
             });
     }
+
+    if (!file || !file.fsPath.endsWith('.dll')) { return; }
 
     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
     if (!config) { 

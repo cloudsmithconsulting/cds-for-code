@@ -1,0 +1,17 @@
+{{#def.template({
+    "type": "Project Template",
+    "name": "CloudSmith.Cds.SamplePlugin",
+    "displayName": "Dynamics CRM Plugin with validation and tests",
+    "publisher": "CloudSmith Consulting LLC",
+    "outputPath": "${Namespace}",
+    "categories": ["Dynamics", "Plugins"],
+    "directives": [{
+        "name": "${Namespace}.snk",
+        "processFile": false
+    }]
+})}}
+{{#def.ui.select('SdkVersion', 'Please select the target SDK version', ['9.0.2.23', '8.2.0.2'])}}
+{{#def.ui.prompt('Namespace', 'Please enter the Namespace')}}
+{{#def.ui.prompt('PluginName', 'Please enter the PluginName')}}
+{{#def.run.dotnet('build')}}
+{{#def.run.dotnet('test')}}

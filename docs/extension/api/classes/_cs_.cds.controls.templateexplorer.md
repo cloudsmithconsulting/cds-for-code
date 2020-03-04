@@ -31,11 +31,7 @@ sidebar_label: "templateExplorer"
 
 ▪ **_namespace**: *string* = "cs.cds.controls.templateExplorer"
 
-<<<<<<< HEAD
-Defined in src/cs.ts:247
-=======
-Defined in src/cs.ts:245
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:250
 
 ___
 
@@ -43,11 +39,7 @@ ___
 
 ▪ **addEntry**: *string* = `${templateExplorer._namespace}.addEntry`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:248
-=======
-Defined in src/cs.ts:246
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:251
 
 ___
 
@@ -55,11 +47,7 @@ ___
 
 ▪ **clickEntry**: *string* = `${templateExplorer._namespace}.clickEntry`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:249
-=======
-Defined in src/cs.ts:247
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:252
 
 ___
 
@@ -67,11 +55,7 @@ ___
 
 ▪ **createInWorkspace**: *string* = `${templateExplorer._namespace}.createInWorkspace`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:250
-=======
-Defined in src/cs.ts:248
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:253
 
 ___
 
@@ -79,11 +63,7 @@ ___
 
 ▪ **deleteEntry**: *string* = `${templateExplorer._namespace}.deleteEntry`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:251
-=======
-Defined in src/cs.ts:249
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:254
 
 ___
 
@@ -91,11 +71,7 @@ ___
 
 ▪ **editEntry**: *string* = `${templateExplorer._namespace}.editEntry`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:252
-=======
-Defined in src/cs.ts:250
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:255
 
 ___
 
@@ -103,11 +79,7 @@ ___
 
 ▪ **exportEntry**: *string* = `${templateExplorer._namespace}.exportEntry`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:253
-=======
-Defined in src/cs.ts:251
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:256
 
 ___
 
@@ -115,11 +87,7 @@ ___
 
 ▪ **importEntry**: *string* = `${templateExplorer._namespace}.importEntry`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:254
-=======
-Defined in src/cs.ts:252
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:257
 
 ___
 
@@ -127,11 +95,7 @@ ___
 
 ▪ **openEntry**: *string* = `${templateExplorer._namespace}.openEntry`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:255
-=======
-Defined in src/cs.ts:253
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:258
 
 ___
 
@@ -139,8 +103,4 @@ ___
 
 ▪ **refreshEntry**: *string* = `${templateExplorer._namespace}.refreshEntry`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:256
-=======
-Defined in src/cs.ts:254
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:259

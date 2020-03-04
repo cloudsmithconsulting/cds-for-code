@@ -108,6 +108,11 @@ export namespace cds {
     }
 
     export namespace configuration {
+        export class connection {
+            static readonly _namespace: string = "cs.cds.configuration.connection";
+            static readonly defaultTimeout: string = `${connection._namespace}.defaultTimeout`;
+            static readonly importExportTimeout: string = `${connection._namespace}.importExportTimeout`;
+        }
         // tslint:disable-next-line: class-name
         export class web {
             static readonly _namespace: string = "cs.cds.configuration.web";

@@ -11,6 +11,7 @@ sidebar_label: "Globals"
 ### External modules
 
 * ["api/CdsConnectionString"](modules/_api_cdsconnectionstring_.md)
+* ["api/CdsRepository"](modules/_api_cdsrepository_.md)
 * ["api/CdsSolutions"](modules/_api_cdssolutions_.md)
 * ["api/CdsUrlResolver"](modules/_api_cdsurlresolver_.md)
 * ["api/CdsUtilities"](modules/_api_cdsutilities_.md)
@@ -120,6 +121,7 @@ sidebar_label: "Globals"
 * ["cs"](modules/_cs_.md)
 * ["extension"](modules/_extension_.md)
 * ["repositories/ApiHelper"](modules/_repositories_apihelper_.md)
+* ["repositories/DataApiRepository"](modules/_repositories_dataapirepository_.md)
 * ["repositories/apiRepository"](modules/_repositories_apirepository_.md)
 * ["repositories/discoveryRepository"](modules/_repositories_discoveryrepository_.md)
 * ["repositories/metadataRepository"](modules/_repositories_metadatarepository_.md)

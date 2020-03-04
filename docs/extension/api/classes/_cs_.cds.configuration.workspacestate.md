@@ -23,11 +23,7 @@ sidebar_label: "workspaceState"
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.workspaceState"
 
-<<<<<<< HEAD
-Defined in src/cs.ts:158
-=======
-Defined in src/cs.ts:156
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:161
 
 ___
 
@@ -35,8 +31,4 @@ ___
 
 ▪ **solutionMap**: *string* = `${workspaceState._namespace}.solutionMap`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:159
-=======
-Defined in src/cs.ts:157
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:162

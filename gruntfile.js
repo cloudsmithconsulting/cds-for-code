@@ -220,25 +220,15 @@ module.exports = function (grunt) {
                 src: [ 'resources/templates/BuiltInTemplates/**'], 
                 dest: 'dist/templates/SystemTemplates.zip'
             },
-            'CloudSmith.Cds.SamplePlugin.v8.0': {
-                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v8.0',
-                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v8.0/**'], 
-                dest: 'dist/templates/CloudSmith.Cds.SamplePlugin.v8.0.zip'
+            'CloudSmith.Cds.DataGenerationTests': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.DataGenerationTests',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.DataGenerationTests/**'], 
+                dest: 'dist/templates/CloudSmith.Cds.DataGenerationTests.zip'
             },
-            'CloudSmith.Cds.SamplePlugin.v8.1': {
-                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v8.1',
-                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v8.1/**'], 
-                dest: 'dist/templates/CloudSmith.Cds.SamplePlugin.v8.1.zip'
-            },
-            'CloudSmith.Cds.SamplePlugin.v8.2': {
-                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v8.2',
-                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v8.2/**'], 
-                dest: 'dist/templates/CloudSmith.Cds.SamplePlugin.v8.2.zip'
-            },
-            'CloudSmith.Cds.SamplePlugin.v9.0': {
-                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v9.0',
-                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin.v9.0/**'], 
-                dest: 'dist/templates/CloudSmith.Cds.SamplePlugin.v9.0.zip'
+            'CloudSmith.Cds.SamplePlugin': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin/**'], 
+                dest: 'dist/templates/CloudSmith.Cds.SamplePlugin.zip'
             },
             'CloudSmith.Cds.CrmSvcUtil': {
                 cwd: 'resources/tools/CloudSmith.Cds.CrmSvcUtil/bin/Release',
@@ -571,8 +561,7 @@ module.exports = function (grunt) {
     grunt.registerTask('sass_compile', [ 'sass:dev', 'sass:release', 'sass:release_min', 'postcss:dev', 'notify:sass_compile' ]);
 
     grunt.registerTask('templates_compile', 
-        [ 'zip:SystemTemplates', 'zip:CloudSmith.Cds.SamplePlugin.v8.0', 'zip:CloudSmith.Cds.SamplePlugin.v8.1', 
-          'zip:CloudSmith.Cds.SamplePlugin.v8.2', 'zip:CloudSmith.Cds.SamplePlugin.v9.0', 'notify:templates_compile' ]);
+        [ 'zip:SystemTemplates', 'zip:CloudSmith.Cds.DataGenerationTests', 'zip:CloudSmith.Cds.SamplePlugin', 'notify:templates_compile' ]);
           
     grunt.registerTask('tools_compile', 
         [ 'shell:crmsvcutil_restore', 'shell:crmsvcutil_build_debug', 'shell:assemblyscanner_restore', 'shell:assemblyscanner_build_debug' ]);

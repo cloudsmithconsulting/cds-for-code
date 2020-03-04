@@ -28,6 +28,7 @@ export default class TemplateEngine {
         append: true,
         selfcontained: false
     };
+    private static templateDefs: any;
 
     static async executeTemplate(template: TemplateItem, outputPath: string, ...object: any): Promise<TemplateContext> {  
         let templatePath;
@@ -159,6 +160,8 @@ export default class TemplateEngine {
             }
         };
 
+        TemplateEngine.templateDefs = templateDefs;
+
         let defFileIndex = allTemplatePaths.findIndex(f => f.toLowerCase().endsWith('\\template.def'));
         defFileIndex = (defFileIndex === -1) ? allTemplatePaths.findIndex(f => f.endsWith('.def')) : defFileIndex;
         while (defFileIndex > 0) {
@@ -232,6 +235,10 @@ export default class TemplateEngine {
             const rootPath = FileSystem.stats(templateContext.outputPath).isDirectory()
                 ? templateContext.outputPath
                 : path.dirname(templateContext.outputPath);
+
+            if (TemplateEngine.templateDefs) {
+                command.commandArgs = doT.template(command.commandArgs, this.dotSettings, TemplateEngine.templateDefs)(templateContext);
+            }
             
             switch (command.type) {
                 case 'dotnet': {
@@ -285,7 +292,7 @@ export default class TemplateEngine {
                     break;
                 case 'select': {
                     result.parameters[key] = result.parameters[key] || await Quickly.pick(interactive.message, ...interactive.items)
-                        .then(item => item.label);
+                        .then(item => item?.label || undefined);
                     if (!result.parameters[key]) { result.userCanceled = true; }
                 }
                     break;

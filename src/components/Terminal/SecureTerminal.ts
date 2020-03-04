@@ -401,7 +401,7 @@ export class Terminal implements vscode.Terminal {
 
 		if (this._process) {
 			this._process.stdin.end();
-			this._process.dispose();
+			//this._process.dispose();
 		}
 	}
 
@@ -555,7 +555,7 @@ export class Terminal implements vscode.Terminal {
 					},
 					close: () => {
 						this._process.stdin.end();
-						this._process.dispose();
+						//this._process.dispose();
 						this._process = null;
 						this._inputCommand.clear();
 						this._outputBuffer.onDidFlush = null;
@@ -773,13 +773,11 @@ export default class TerminalManager {
 
 	@extensionActivate(cs.cds.extension.productId)
 	static async activate(context: ExtensionContext) {
-		setTimeout(async () => {
-			const folder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 
-				? vscode.workspace.workspaceFolders[0].uri.fsPath 
-				: ExtensionContext.Instance.extensionPath;
+		const folder = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 
+			? vscode.workspace.workspaceFolders[0].uri.fsPath 
+			: ExtensionContext.Instance.extensionPath;
 
-			await TerminalManager.showTerminal(folder);
-		}, 2500);
+		await TerminalManager.showTerminal(folder);
 	}
 
 	@command(cs.cds.extension.createTerminal, "Create Terminal")
@@ -793,11 +791,13 @@ export default class TerminalManager {
 		if (!TerminalManager.terminals.containsKey(name)) {
 			const terminal = new Terminal({name, shellPath: "powershell.exe", cwd: folder });
 
+			terminal.show(preserveFocus);
+
 			terminal.onDidClose(() => {
+				TerminalManager.terminals.remove(name);
 				terminal.dispose();
 			});
 
-			terminal.show(preserveFocus);
 			TerminalManager.terminals.add(name, terminal);
 		} else {
 			TerminalManager.terminals[name].show(preserveFocus);

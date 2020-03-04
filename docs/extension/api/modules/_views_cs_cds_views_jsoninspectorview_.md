@@ -20,14 +20,16 @@ sidebar_label: "views/cs.cds.views.jsonInspectorView"
 
 ###  openView
 
-▸ **openView**(`item`: any): *Promise‹void›*
+▸ **openView**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `itemType`: string, `item`: any): *Promise‹[JsonObjectView](../classes/_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md)‹››*
 
-Defined in src/views/cs.cds.views.jsonInspectorView.ts:7
+Defined in src/views/cs.cds.views.jsonInspectorView.ts:12
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
+`config` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`itemType` | string |
 `item` | any |
 
-**Returns:** *Promise‹void›*
+**Returns:** *Promise‹[JsonObjectView](../classes/_views_cs_cds_views_jsoninspectorview_.jsonobjectview.md)‹››*

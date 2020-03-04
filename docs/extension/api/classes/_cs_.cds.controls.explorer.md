@@ -39,11 +39,7 @@ sidebar_label: "explorer"
 
 ▪ **_namespace**: *string* = "cs.cds.controls.explorer"
 
-<<<<<<< HEAD
-Defined in src/cs.ts:188
-=======
-Defined in src/cs.ts:186
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:191
 
 ___
 
@@ -51,11 +47,7 @@ ___
 
 ▪ **craeteWebResource**: *string* = `${explorer._namespace}.createWebResource`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:192
-=======
-Defined in src/cs.ts:190
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:195
 
 ___
 
@@ -63,11 +55,7 @@ ___
 
 ▪ **createCrmSvcUtilConfig**: *string* = `${explorer._namespace}.createCrmSvcUtilConfig`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:189
-=======
-Defined in src/cs.ts:187
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:192
 
 ___
 
@@ -75,11 +63,7 @@ ___
 
 ▪ **createFromItemTemplate**: *string* = `${explorer._namespace}.createFromItemTemplate`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:190
-=======
-Defined in src/cs.ts:188
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:193
 
 ___
 
@@ -87,11 +71,7 @@ ___
 
 ▪ **createFromProjectTemplate**: *string* = `${explorer._namespace}.createFromProjectTemplate`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:191
-=======
-Defined in src/cs.ts:189
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:194
 
 ___
 
@@ -99,11 +79,7 @@ ___
 
 ▪ **dotNetBuild**: *string* = `${explorer._namespace}.dotNetBuild`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:193
-=======
-Defined in src/cs.ts:191
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:196
 
 ___
 
@@ -111,11 +87,7 @@ ___
 
 ▪ **dotNetTest**: *string* = `${explorer._namespace}.dotNetTest`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:194
-=======
-Defined in src/cs.ts:192
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:197
 
 ___
 
@@ -123,11 +95,7 @@ ___
 
 ▪ **editCrmSvcUtilConfig**: *string* = `${explorer._namespace}.editCrmSvcUtilConfig`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:195
-=======
-Defined in src/cs.ts:193
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:198
 
 ___
 
@@ -135,11 +103,7 @@ ___
 
 ▪ **generateEntityCodeToFile**: *string* = `${explorer._namespace}.generateEntityCodeToFile`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:197
-=======
-Defined in src/cs.ts:195
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:200
 
 ___
 
@@ -147,11 +111,7 @@ ___
 
 ▪ **generateEntityCodeToFolder**: *string* = `${explorer._namespace}.generateEntityCodeToFolder`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:196
-=======
-Defined in src/cs.ts:194
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:199
 
 ___
 
@@ -159,11 +119,7 @@ ___
 
 ▪ **generateEntityCodeUsingConfig**: *string* = `${explorer._namespace}.generateEntityCodeUsingConfig`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:198
-=======
-Defined in src/cs.ts:196
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:201
 
 ___
 
@@ -171,11 +127,7 @@ ___
 
 ▪ **importSolution**: *string* = `${explorer._namespace}.importSolution`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:199
-=======
-Defined in src/cs.ts:197
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:202
 
 ___
 
@@ -183,11 +135,7 @@ ___
 
 ▪ **packSolutionFromFolder**: *string* = `${explorer._namespace}.packSolutionFromFolder`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:200
-=======
-Defined in src/cs.ts:198
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:203
 
 ___
 
@@ -195,11 +143,7 @@ ___
 
 ▪ **packWebResource**: *string* = `${explorer._namespace}.packWebResource`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:201
-=======
-Defined in src/cs.ts:199
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:204
 
 ___
 
@@ -207,11 +151,7 @@ ___
 
 ▪ **registerPluginFile**: *string* = `${explorer._namespace}.registerPluginFile`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:204
-=======
-Defined in src/cs.ts:202
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:207
 
 ___
 
@@ -219,11 +159,7 @@ ___
 
 ▪ **saveTemplateFile**: *string* = `${explorer._namespace}.saveTemplateFile`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:202
-=======
-Defined in src/cs.ts:200
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:205
 
 ___
 
@@ -231,11 +167,7 @@ ___
 
 ▪ **saveTemplateFolder**: *string* = `${explorer._namespace}.saveTemplateFolder`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:203
-=======
-Defined in src/cs.ts:201
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:206
 
 ___
 
@@ -243,8 +175,4 @@ ___
 
 ▪ **unpackSolutionToFolder**: *string* = `${explorer._namespace}.unpackSolutionToFolder`
 
-<<<<<<< HEAD
-Defined in src/cs.ts:205
-=======
-Defined in src/cs.ts:203
->>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
+Defined in src/cs.ts:208

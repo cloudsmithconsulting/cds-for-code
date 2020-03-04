@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    {{? $this.parameters.SdkVersion === '9.0.2.23'}}
+    <TargetFramework>net472</TargetFramework>
+    {{??}}
+    <TargetFramework>net462</TargetFramework>
+    {{?}}
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    {{? $this.parameters.SdkVersion === '9.0.2.23'}}
+    <PackageReference Include="FakeXrmEasy.9" Version="1.57.0" />
+    {{??}}
+    <PackageReference Include="FakeXrmEasy.365" Version="1.57.0" />
+    {{?}}
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="{{=$this.parameters.SdkVersion}}" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="coverlet.collector" Version="1.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\{{=$this.parameters.Namespace}}.csproj" />
+  </ItemGroup>
+
+</Project>

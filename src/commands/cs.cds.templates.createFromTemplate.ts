@@ -68,7 +68,7 @@ export default async function run(this: TemplateManager, destinationUri?: vscode
         return;
     }
 
-    if (filename?.length === 0 && type === TemplateType.ItemTemplate && p.extname(path).length === 0) {
+    if (!filename && type === TemplateType.ItemTemplate && p.extname(path).length === 0) {
         const filename = await Quickly.ask("What would you like to call the file that is created?");
         if (!filename) { return; }
 

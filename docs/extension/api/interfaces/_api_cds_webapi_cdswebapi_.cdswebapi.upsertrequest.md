@@ -44,7 +44,7 @@ sidebar_label: "UpsertRequest"
 
 *Inherited from [Request](_api_cds_webapi_cdswebapi_.cdswebapi.request.md).[async](_api_cds_webapi_cdswebapi_.cdswebapi.request.md#optional-async)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:66
+Defined in src/api/cds-webapi/CdsWebApi.ts:68
 
 XHR requests only! Indicates whether the requests should be made synchronously or asynchronously.Default value is 'true'(asynchronously).
 
@@ -56,7 +56,7 @@ ___
 
 *Inherited from [Request](_api_cds_webapi_cdswebapi_.cdswebapi.request.md).[collection](_api_cds_webapi_cdswebapi_.cdswebapi.request.md#optional-collection)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:68
+Defined in src/api/cds-webapi/CdsWebApi.ts:70
 
 The name of the Entity Collection or Entity Logical name.
 
@@ -68,7 +68,7 @@ ___
 
 *Inherited from [UpdateRequestBase](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md).[contentId](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md#optional-contentid)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:119
+Defined in src/api/cds-webapi/CdsWebApi.ts:121
 
 BATCH REQUESTS ONLY! Sets Content-ID header or references request in a Change Set.
 
@@ -80,7 +80,7 @@ ___
 
 *Inherited from [UpdateRequestBase](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md).[duplicateDetection](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md#optional-duplicatedetection)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:105
+Defined in src/api/cds-webapi/CdsWebApi.ts:107
 
 v.1.3.4+ Web API v9+ only! Boolean that enables duplicate detection.
 
@@ -92,7 +92,7 @@ ___
 
 *Inherited from [UpdateRequestBase](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md).[entity](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md#optional-entity)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:107
+Defined in src/api/cds-webapi/CdsWebApi.ts:109
 
 A JavaScript object with properties corresponding to the logical name of entity attributes(exceptions are lookups and single-valued navigation properties).
 
@@ -104,7 +104,7 @@ ___
 
 *Inherited from [UpdateRequestBase](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md).[expand](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md#optional-expand)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:109
+Defined in src/api/cds-webapi/CdsWebApi.ts:111
 
 An array of Expand Objects(described below the table) representing the $expand OData System Query Option value to control which related records are also returned.
 
@@ -116,7 +116,7 @@ ___
 
 *Inherited from [CRUDRequest](_api_cds_webapi_cdswebapi_.cdswebapi.crudrequest.md).[id](_api_cds_webapi_cdswebapi_.cdswebapi.crudrequest.md#optional-id)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:79
+Defined in src/api/cds-webapi/CdsWebApi.ts:81
 
 DEPRECATED Use "key" instead. A String representing the Primary Key(GUID) of the record.
 
@@ -128,7 +128,7 @@ ___
 
 *Inherited from [UpdateRequestBase](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md).[ifmatch](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md#optional-ifmatch)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:111
+Defined in src/api/cds-webapi/CdsWebApi.ts:113
 
 Sets If-Match header value that enables to use conditional retrieval or optimistic concurrency in applicable requests.
 
@@ -138,7 +138,7 @@ ___
 
 • **ifnonematch**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:129
+Defined in src/api/cds-webapi/CdsWebApi.ts:131
 
 Sets If-None-Match header value that enables to use conditional retrieval in applicable requests.
 
@@ -150,7 +150,7 @@ ___
 
 *Inherited from [Request](_api_cds_webapi_cdswebapi_.cdswebapi.request.md).[impersonate](_api_cds_webapi_cdswebapi_.cdswebapi.request.md#optional-impersonate)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:70
+Defined in src/api/cds-webapi/CdsWebApi.ts:72
 
 Impersonates the user.A String representing the GUID value for the Dynamics 365 system user id.
 
@@ -162,7 +162,7 @@ ___
 
 *Inherited from [UpdateRequestBase](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md).[includeAnnotations](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md#optional-includeannotations)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:113
+Defined in src/api/cds-webapi/CdsWebApi.ts:115
 
 Sets Prefer header with value "odata.include-annotations=" and the specified annotation.Annotations provide additional information about lookups, options sets and other complex attribute types.
 
@@ -174,7 +174,7 @@ ___
 
 *Inherited from [CRUDRequest](_api_cds_webapi_cdswebapi_.cdswebapi.crudrequest.md).[key](_api_cds_webapi_cdswebapi_.cdswebapi.crudrequest.md#optional-key)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:81
+Defined in src/api/cds-webapi/CdsWebApi.ts:83
 
 A String representing collection record's Primary Key (GUID) or Alternate Key(s).
 
@@ -184,7 +184,7 @@ ___
 
 • **metadataAttributeType**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:131
+Defined in src/api/cds-webapi/CdsWebApi.ts:133
 
 v.1.4.3 + Casts the AttributeMetadata to a specific type. (Used in requests to Attribute Metadata).
 
@@ -194,7 +194,7 @@ ___
 
 • **navigationProperty**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:133
+Defined in src/api/cds-webapi/CdsWebApi.ts:135
 
 A String representing the name of a single - valued navigation property.Useful when needed to retrieve information about a related record in a single request.
 
@@ -204,7 +204,7 @@ ___
 
 • **navigationPropertyKey**? : *string*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:135
+Defined in src/api/cds-webapi/CdsWebApi.ts:137
 
 v.1.4.3 + A String representing navigation property's Primary Key (GUID) or Alternate Key(s). (For example, to retrieve Attribute Metadata).
 
@@ -216,7 +216,7 @@ ___
 
 *Inherited from [Request](_api_cds_webapi_cdswebapi_.cdswebapi.request.md).[noCache](_api_cds_webapi_cdswebapi_.cdswebapi.request.md#optional-nocache)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:72
+Defined in src/api/cds-webapi/CdsWebApi.ts:74
 
 If set to 'true', DynamicsWebApi adds a request header 'Cache-Control: no-cache'.Default value is 'false'.
 
@@ -228,7 +228,7 @@ ___
 
 *Inherited from [UpdateRequestBase](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md).[returnRepresentation](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md#optional-returnrepresentation)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:115
+Defined in src/api/cds-webapi/CdsWebApi.ts:117
 
 Sets Prefer header request with value "return=representation".Use this property to return just created or updated entity in a single request.
 
@@ -240,7 +240,7 @@ ___
 
 *Inherited from [UpdateRequestBase](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md).[select](_api_cds_webapi_cdswebapi_.cdswebapi.updaterequestbase.md#optional-select)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:117
+Defined in src/api/cds-webapi/CdsWebApi.ts:119
 
 An Array(of Strings) representing the $select OData System Query Option to control which attributes will be returned.
 
@@ -252,6 +252,6 @@ ___
 
 *Inherited from [Request](_api_cds_webapi_cdswebapi_.cdswebapi.request.md).[token](_api_cds_webapi_cdswebapi_.cdswebapi.request.md#optional-token)*
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:74
+Defined in src/api/cds-webapi/CdsWebApi.ts:76
 
 Authorization Token. If set, onTokenRefresh will not be called.

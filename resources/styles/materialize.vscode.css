@@ -7796,19 +7796,19 @@ label {
    ========================================================================== */
 /* Style Placeholders */
 ::-webkit-input-placeholder {
-  color: #d1d1d1;
+  color: var(--vscode-input-placeholderForeground);
 }
 ::-moz-placeholder {
-  color: #d1d1d1;
+  color: var(--vscode-input-placeholderForeground);
 }
 :-ms-input-placeholder {
-  color: #d1d1d1;
+  color: var(--vscode-input-placeholderForeground);
 }
 ::-ms-input-placeholder {
-  color: #d1d1d1;
+  color: var(--vscode-input-placeholderForeground);
 }
 ::placeholder {
-  color: #d1d1d1;
+  color: var(--vscode-input-placeholderForeground);
 }
 
 /* Text inputs */

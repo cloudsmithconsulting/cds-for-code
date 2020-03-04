@@ -32,8 +32,8 @@ export default class ViewManager {
     }
 
     @command(cs.cds.controls.jsonInspector.open, "Open JSON inspector view")
-    static async openJsonInspector(item: any) {
-        return await jsonInspectorView.apply(this, [item]);
+    static async openJsonInspector(config: CdsWebApi.Config, itemType: string, item: any) {
+        return await jsonInspectorView.apply(this, [config, itemType, item]);
     }
 
     @command(cs.cds.controls.newWorkspace.open, "Open New Workspace view")

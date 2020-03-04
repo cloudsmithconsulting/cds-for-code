@@ -28,6 +28,7 @@
 
 - [C# for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
 - [.Net Core 3.0](https://dotnet.microsoft.com/download/dotnet-core/3.0)
+- [.Net 4.8 Developer Pack](https://dotnet.microsoft.com/download/dotnet-framework/net48)
 - [CRM SDK](https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/download-tools-nuget) (automatically downloaded for you by the CDS for Code extension)
 
 ## Developing plugins
@@ -65,7 +66,7 @@ Next locate the MyPluginSample.csproj file and replace it's contents with the fo
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>

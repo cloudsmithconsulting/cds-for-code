@@ -21,7 +21,7 @@ sidebar_label: "ConfigType"
 
 • **AzureAdAuth**: = 3
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:194
+Defined in src/api/cds-webapi/CdsWebApi.ts:196
 
 ___
 
@@ -29,7 +29,7 @@ ___
 
 • **IFD**: = 4
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:195
+Defined in src/api/cds-webapi/CdsWebApi.ts:197
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 • **OnPremises**: = 1
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:192
+Defined in src/api/cds-webapi/CdsWebApi.ts:194
 
 ___
 
@@ -45,4 +45,4 @@ ___
 
 • **Online**: = 2
 
-Defined in src/api/cds-webapi/CdsWebApi.ts:193
+Defined in src/api/cds-webapi/CdsWebApi.ts:195
