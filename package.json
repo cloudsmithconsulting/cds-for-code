@@ -11,7 +11,7 @@
 	"bugs": {
 		"url": "https://github.com/cloudsmithconsulting/cds-for-code/issues"
 	},
-	"version": "0.8.13",
+	"version": "0.9.0",
 	"preview": true,
 	"engines": {
 		"vscode": "^1.41.0"
@@ -54,6 +54,7 @@
 		"onCommand:cs.cds.controls.explorer.saveTemplateFolder",
 		"onCommand:cs.cds.controls.explorer.unpackSolutionToFolder",
 		"onCommand:cs.cds.controls.svcUtilConfig.open",
+		"onCommand:cs.cds.data.getFaker",
 		"onCommand:cs.cds.deployment.addSolutionComponent",
 		"onCommand:cs.cds.deployment.compareWebResource",
 		"onCommand:cs.cds.deployment.connectToCds",
@@ -428,6 +429,11 @@
 			{
 				"command": "cs.cds.deployment.addSolutionComponent",
 				"title": "Add component to a CDS solution",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.data.getFaker",
+				"title": "Generate data for one or more CDS entities",
 				"category": "CDS for Code"
 			},
 			{

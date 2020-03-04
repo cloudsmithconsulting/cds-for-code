@@ -25,7 +25,11 @@ sidebar_label: "tools"
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.tools"
 
+<<<<<<< HEAD
+Defined in src/cs.ts:150
+=======
 Defined in src/cs.ts:148
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 ___
 
@@ -33,7 +37,11 @@ ___
 
 ▪ **sdkInstallPath**: *string* = `${tools._namespace}.sdkInstallPath`
 
+<<<<<<< HEAD
+Defined in src/cs.ts:151
+=======
 Defined in src/cs.ts:149
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 ___
 
@@ -41,7 +49,11 @@ ___
 
 ▪ **updateChannel**: *string* = `${tools._namespace}.updateChannel`
 
+<<<<<<< HEAD
+Defined in src/cs.ts:153
+=======
 Defined in src/cs.ts:151
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 ___
 
@@ -49,4 +61,8 @@ ___
 
 ▪ **updateSource**: *string* = `${tools._namespace}.updateSource`
 
+<<<<<<< HEAD
+Defined in src/cs.ts:152
+=======
 Defined in src/cs.ts:150
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768

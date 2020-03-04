@@ -16,7 +16,8 @@ namespace CloudSmith.Cds.CrmSvcUtil.Generation
         public OptionSetEnumCustomizationService() : this(ServiceExtensionsConfigurationSection.Create()) { }
         public OptionSetEnumCustomizationService(IServiceExtensionsConfiguration configuration) : base(configuration) { }
 
-        private static IServiceProvider serviceProvider;
+        private IServiceProvider serviceProvider;
+        private Dictionary<string, EnumAttributeMetadata> addedEnums = new Dictionary<string, EnumAttributeMetadata>();
 
         /// <summary>
         /// Remove the unnecessary classes that we generated for entities. 
@@ -64,15 +65,30 @@ namespace CloudSmith.Cds.CrmSvcUtil.Generation
                         }
                     }
                 }
+
+                var namingService = (INamingService)serviceProvider.GetService(typeof(INamingService));
+
+                foreach (var newEnum in this.addedEnums)
+                {
+                    var newEnumType = new CodeTypeDeclaration(newEnum.Key) { IsEnum = true };
+                    
+                    foreach (var newEnumOption in newEnum.Value.OptionSet.Options)
+                    {
+                        var name = namingService.GetNameForOption(((OptionSetMetadataBase)newEnum.Value.OptionSet), newEnumOption, services);
+                        newEnumType.Members.Add(new CodeMemberField(typeof(int), name));
+                    }
+
+                    codeUnit.Namespaces[i].Types.Add(newEnumType);
+                }
             }
         }
 
-        private static EntityCacheItem GetSchemaEntity(string name)
+        private EntityCacheItem GetSchemaEntity(string name)
         {
             return DynamicsMetadataCache.Entities.FirstOrDefault(e => e.Value?.GeneratedTypeName == name).Value;
         }
 
-        private static void TransformOptionSets(CodeMemberProperty member, EntityCacheItem entity, AttributeCacheItem attribute)
+        private void TransformOptionSets(CodeMemberProperty member, EntityCacheItem entity, AttributeCacheItem attribute)
         {
             AttributeMetadata attributeMetadata = attribute.Metadata;
 
@@ -100,6 +116,11 @@ namespace CloudSmith.Cds.CrmSvcUtil.Generation
                         typeName = namingService.GetNameForOptionSet(entity.Metadata, enumMetadata.OptionSet, serviceProvider);
                     }
 
+                    if (!this.addedEnums.ContainsKey(typeName))
+                    {
+                        this.addedEnums.Add(typeName, enumMetadata);
+                    }
+
                     FixEnums(member, enumMetadata, typeName);
                 }
                 else
@@ -109,7 +130,7 @@ namespace CloudSmith.Cds.CrmSvcUtil.Generation
             }
         }
 
-        private static void FixEnums(CodeMemberProperty codeProperty, EnumAttributeMetadata listAttribute, string typeName)
+        private void FixEnums(CodeMemberProperty codeProperty, EnumAttributeMetadata listAttribute, string typeName)
         {
             //TODO: refator this method to also work in VB or F#
             codeProperty.Type = new CodeTypeReference(typeName.EndsWith("?") ? typeName : typeName + "?");

@@ -32,7 +32,11 @@ sidebar_label: "WebResourceManager"
 
 ▸ **compareWebResource**(`defaultUri?`: Uri): *Promise‹void›*
 
+<<<<<<< HEAD
+Defined in src/components/Solutions/WebResourceManager.ts:54
+=======
 Defined in src/components/Solutions/WebResourceManager.ts:49
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 **Parameters:**
 
@@ -48,7 +52,11 @@ ___
 
 ▸ **createWebResource**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solutionId?`: string, `webResource?`: any, `fileUri?`: Uri, `defaultName`: string, `inform`: boolean): *Promise‹any›*
 
+<<<<<<< HEAD
+Defined in src/components/Solutions/WebResourceManager.ts:49
+=======
 Defined in src/components/Solutions/WebResourceManager.ts:44
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 **Parameters:**
 
@@ -69,7 +77,11 @@ ___
 
 ▸ **getSolutionMapping**(`fsPath?`: string, `orgId?`: string, `solutionId?`: string): *Promise‹[SolutionWorkspaceMapping](_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md)›*
 
+<<<<<<< HEAD
+Defined in src/components/Solutions/WebResourceManager.ts:68
+=======
 Defined in src/components/Solutions/WebResourceManager.ts:63
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 **Parameters:**
 
@@ -87,7 +99,11 @@ ___
 
 ▸ **getWebResourceDetails**(`fsPath`: string | undefined): *Promise‹any›*
 
+<<<<<<< HEAD
+Defined in src/components/Solutions/WebResourceManager.ts:94
+=======
 Defined in src/components/Solutions/WebResourceManager.ts:89
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 **Parameters:**
 
@@ -103,7 +119,11 @@ ___
 
 ▸ **getWebResourceType**(`extension`: string): *number | undefined*
 
+<<<<<<< HEAD
+Defined in src/components/Solutions/WebResourceManager.ts:81
+=======
 Defined in src/components/Solutions/WebResourceManager.ts:76
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 **Parameters:**
 
@@ -119,7 +139,11 @@ ___
 
 ▸ **packWebResource**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution?`: any, `webResource?`: any, `fileUri?`: Uri, `inform`: boolean): *Promise‹void›*
 
+<<<<<<< HEAD
+Defined in src/components/Solutions/WebResourceManager.ts:59
+=======
 Defined in src/components/Solutions/WebResourceManager.ts:54
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 **Parameters:**
 
@@ -139,7 +163,11 @@ ___
 
 ▸ **unpackWebResource**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `webResource?`: any, `fileUri?`: Uri, `autoOpen`: boolean): *Promise‹void›*
 
+<<<<<<< HEAD
+Defined in src/components/Solutions/WebResourceManager.ts:64
+=======
 Defined in src/components/Solutions/WebResourceManager.ts:59
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 **Parameters:**
 
@@ -158,7 +186,11 @@ ___
 
 ▸ **upsertWebResource**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `webResource`: any, `solution?`: any): *Promise‹any›*
 
+<<<<<<< HEAD
+Defined in src/components/Solutions/WebResourceManager.ts:122
+=======
 Defined in src/components/Solutions/WebResourceManager.ts:117
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 **Parameters:**
 
@@ -176,7 +208,11 @@ ___
 
 ▸ **writeDataXmlFile**(`map`: [SolutionWorkspaceMapping](_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md), `webResource`: any, `fsPath`: string, `updateCustomizationsFile`: boolean): *Promise‹void›*
 
+<<<<<<< HEAD
+Defined in src/components/Solutions/WebResourceManager.ts:144
+=======
 Defined in src/components/Solutions/WebResourceManager.ts:139
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 **Parameters:**
 
@@ -211,7 +247,11 @@ ___
 
 ▸ **packWebResourceFromUri**(`uri?`: Uri): *Promise‹any›*
 
+<<<<<<< HEAD
+Defined in src/components/Solutions/WebResourceManager.ts:38
+=======
 Defined in src/components/Solutions/WebResourceManager.ts:35
+>>>>>>> 251aa2ef2dd928dcd81b0d8df7d2282c145bc768
 
 **Parameters:**
 
