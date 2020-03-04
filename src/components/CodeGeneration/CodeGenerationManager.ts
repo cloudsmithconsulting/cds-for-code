@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import * as cs from '../../cs';
+import getFaker from "../../commands/cs.cds.data.getFaker";
 import generateEntities from "../../commands/cs.cds.powerShell.generateEntities";
 import createCrmSvcUtilConfig from "../../commands/cs.cds.deployment.createCrmSvcUtilConfig";
 import command from '../../core/Command';
@@ -8,6 +9,11 @@ import saveCrmSvcUtilConfig from "../../commands/cs.cds.deployment.saveCrmSvcUti
 import { CdsWebApi } from '../../api/cds-webapi/CdsWebApi';
 
 export default class CodeGenerationManager {
+    @command(cs.cds.data.getFaker, "Get entity generation faker")
+    async getFaker(config?: CdsWebApi.Config, entity?: any) {
+        return await getFaker.apply(this, [ config, entity ]);
+    }
+
     @command(cs.cds.controls.explorer.generateEntityCodeToFile, "Generate entity code to a file")
     async generateEntityCodeToFile(file?: vscode.Uri) {
         return await vscode.commands.executeCommand(cs.cds.powerShell.generateEntities, undefined, path.dirname(file.fsPath), path.basename(file.fsPath), undefined);
@@ -40,17 +46,17 @@ export default class CodeGenerationManager {
 
     @command(cs.cds.powerShell.generateEntities, "Generate entity code using CrmSvcUtil")
     async generateEntities(config?: CdsWebApi.Config, folder?: string, outputFileName?: string, namespace?: string, configFile?: vscode.Uri) {
-        generateEntities.apply(this, [ config, folder, outputFileName, namespace, configFile ]);
+        return await generateEntities.apply(this, [ config, folder, outputFileName, namespace, configFile ]);
     }
 
     @command(cs.cds.deployment.createCrmSvcUtilConfig, "Create or edit CrmSvcUtil.exe.config")
     async createCrmSvcUtilConfig(config?: CdsWebApi.Config, file?: vscode.Uri) {
-        createCrmSvcUtilConfig.apply(this, [config, file]);
+        return await createCrmSvcUtilConfig.apply(this, [config, file]);
     }
 
     @command(cs.cds.deployment.saveCrmSvcUtilConfig, "Save CrmSvcUtil.exe.config")
     async saveCrmSvcUtilConfig(config: any, file?: vscode.Uri) {
-        saveCrmSvcUtilConfig.apply(this, [config, file]);
+        return await saveCrmSvcUtilConfig.apply(this, [config, file]);
     }
 
     parseXml(xml: any): any {

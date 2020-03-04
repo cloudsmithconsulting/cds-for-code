@@ -22,6 +22,7 @@ sidebar_label: "CodeGenerationManager"
 * [generateEntityCodeToFile](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#generateentitycodetofile)
 * [generateEntityCodeToFolder](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#generateentitycodetofolder)
 * [generateEntityCodeUsingConfig](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#generateentitycodeusingconfig)
+* [getFaker](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#getfaker)
 * [parseXml](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#parsexml)
 * [saveConfig](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#saveconfig)
 * [saveCrmSvcUtilConfig](_components_codegeneration_codegenerationmanager_.codegenerationmanager.md#savecrmsvcutilconfig)
@@ -30,9 +31,9 @@ sidebar_label: "CodeGenerationManager"
 
 ###  createCrmSvcUtilConfig
 
-▸ **createCrmSvcUtilConfig**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `file?`: Uri): *Promise‹void›*
+▸ **createCrmSvcUtilConfig**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `file?`: Uri): *Promise‹any›*
 
-Defined in src/components/CodeGeneration/CodeGenerationManager.ts:47
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:53
 
 **Parameters:**
 
@@ -41,7 +42,7 @@ Name | Type |
 `config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
 `file?` | Uri |
 
-**Returns:** *Promise‹void›*
+**Returns:** *Promise‹any›*
 
 ___
 
@@ -49,7 +50,7 @@ ___
 
 ▸ **createCrmSvcUtilConfigFromConfig**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *Promise‹unknown›*
 
-Defined in src/components/CodeGeneration/CodeGenerationManager.ts:37
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:43
 
 **Parameters:**
 
@@ -65,7 +66,7 @@ ___
 
 ▸ **createCrmSvcUtilConfigToFile**(`defaultUri?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/CodeGeneration/CodeGenerationManager.ts:27
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:33
 
 **Parameters:**
 
@@ -81,7 +82,7 @@ ___
 
 ▸ **editCrmSvcUtilConfigToFile**(`defaultUri?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/CodeGeneration/CodeGenerationManager.ts:32
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:38
 
 **Parameters:**
 
@@ -95,9 +96,9 @@ ___
 
 ###  generateEntities
 
-▸ **generateEntities**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `outputFileName?`: string, `namespace?`: string, `configFile?`: Uri): *Promise‹void›*
+▸ **generateEntities**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `folder?`: string, `outputFileName?`: string, `namespace?`: string, `configFile?`: Uri): *Promise‹any›*
 
-Defined in src/components/CodeGeneration/CodeGenerationManager.ts:42
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:48
 
 **Parameters:**
 
@@ -109,7 +110,7 @@ Name | Type |
 `namespace?` | string |
 `configFile?` | Uri |
 
-**Returns:** *Promise‹void›*
+**Returns:** *Promise‹any›*
 
 ___
 
@@ -117,7 +118,7 @@ ___
 
 ▸ **generateEntityCodeToFile**(`file?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/CodeGeneration/CodeGenerationManager.ts:12
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:18
 
 **Parameters:**
 
@@ -133,7 +134,7 @@ ___
 
 ▸ **generateEntityCodeToFolder**(`folder?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/CodeGeneration/CodeGenerationManager.ts:22
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:28
 
 **Parameters:**
 
@@ -149,7 +150,7 @@ ___
 
 ▸ **generateEntityCodeUsingConfig**(`configFile?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/CodeGeneration/CodeGenerationManager.ts:17
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:23
 
 **Parameters:**
 
@@ -161,11 +162,28 @@ Name | Type |
 
 ___
 
+###  getFaker
+
+▸ **getFaker**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entity?`: any): *Promise‹any›*
+
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:13
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`config?` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`entity?` | any |
+
+**Returns:** *Promise‹any›*
+
+___
+
 ###  parseXml
 
 ▸ **parseXml**(`xml`: any): *any*
 
-Defined in src/components/CodeGeneration/CodeGenerationManager.ts:56
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:62
 
 **Parameters:**
 
@@ -181,7 +199,7 @@ ___
 
 ▸ **saveConfig**(`config`: any, `xml`: any): *any*
 
-Defined in src/components/CodeGeneration/CodeGenerationManager.ts:171
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:177
 
 **Parameters:**
 
@@ -196,9 +214,9 @@ ___
 
 ###  saveCrmSvcUtilConfig
 
-▸ **saveCrmSvcUtilConfig**(`config`: any, `file?`: Uri): *Promise‹void›*
+▸ **saveCrmSvcUtilConfig**(`config`: any, `file?`: Uri): *Promise‹any›*
 
-Defined in src/components/CodeGeneration/CodeGenerationManager.ts:52
+Defined in src/components/CodeGeneration/CodeGenerationManager.ts:58
 
 **Parameters:**
 
@@ -207,4 +225,4 @@ Name | Type |
 `config` | any |
 `file?` | Uri |
 
-**Returns:** *Promise‹void›*
+**Returns:** *Promise‹any›*

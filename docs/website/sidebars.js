@@ -2,6 +2,7 @@ module.exports = {
   "docs": {
     "Modules": [
       "modules/_api_cdsconnectionstring_",
+      "modules/_api_cdsrepository_",
       "modules/_api_cdssolutions_",
       "modules/_api_cdssolutions_.cdssolutions",
       "modules/_api_cdsurlresolver_",
@@ -117,6 +118,7 @@ module.exports = {
       "modules/_cs_.cds.theme",
       "modules/_extension_",
       "modules/_repositories_apihelper_",
+      "modules/_repositories_dataapirepository_",
       "modules/_repositories_apirepository_",
       "modules/_repositories_discoveryrepository_",
       "modules/_repositories_metadatarepository_",
@@ -141,6 +143,7 @@ module.exports = {
     ],
     "Classes": [
       "classes/_api_cdsconnectionstring_.cdsconnectionstring",
+      "classes/_api_cdsrepository_.cdsrepository",
       "classes/_api_cdssolutions_.cdssolutions.codemappings",
       "classes/_api_cdsurlresolver_.cdsurlresolver",
       "classes/_api_cds_webapi_cdswebapi_.cdswebapi.webapiclient",
@@ -247,6 +250,7 @@ module.exports = {
       "classes/_cs_.cds.viewcontainers",
       "classes/_cs_.cds.views",
       "classes/_repositories_apihelper_.apihelper",
+      "classes/_repositories_dataapirepository_.dataapirepository",
       "classes/_repositories_apirepository_.apirepository",
       "classes/_repositories_discoveryrepository_.discoveryrepository",
       "classes/_repositories_metadatarepository_.metadatarepository",
@@ -293,6 +297,7 @@ module.exports = {
       "classes/_cs_.cds.viewcontainers",
       "classes/_cs_.cds.views",
       "classes/_api_cdsconnectionstring_.cdsconnectionstring",
+      "classes/_api_cdsrepository_.cdsrepository",
       "classes/_api_cdsurlresolver_.cdsurlresolver",
       "classes/_api_cds_webapi_fetchquery_.fetchqueryprovider",
       "classes/_api_cds_webapi_fetchqueryresolver_.fetchqueryresolver",
@@ -370,6 +375,7 @@ module.exports = {
       "classes/_core_webui_view_.view",
       "classes/_core_webui_viewrenderer_.viewrenderer",
       "classes/_repositories_apihelper_.apihelper",
+      "classes/_repositories_dataapirepository_.dataapirepository",
       "classes/_repositories_apirepository_.apirepository",
       "classes/_repositories_discoveryrepository_.discoveryrepository",
       "classes/_repositories_metadatarepository_.metadatarepository",

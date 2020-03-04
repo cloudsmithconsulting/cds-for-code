@@ -57,7 +57,7 @@ Defined in src/api/cds-webapi/odata/sendRequest.ts:119
 
 ▸ **_getCollectionName**(`entityName`: string, `config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `resolve?`: function, `reject?`: function): *void*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:382
+Defined in src/api/cds-webapi/odata/sendRequest.ts:386
 
 **Parameters:**
 
@@ -129,7 +129,7 @@ ___
 
 ▸ **_isEntityNameException**(`entityName`: string): *boolean*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:374
+Defined in src/api/cds-webapi/odata/sendRequest.ts:378
 
 **Parameters:**
 
@@ -182,7 +182,7 @@ ___
 
 ▸ **makeDiscoveryRequest**(`request`: any, `config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `resolve?`: function, `reject?`: function): *void*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:410
+Defined in src/api/cds-webapi/odata/sendRequest.ts:414
 
 **Parameters:**
 
@@ -218,7 +218,7 @@ ___
 
 ▸ **makeRequest**(`method`: string, `request`: any, `functionName`: string, `config`: any, `responseParams?`: any, `resolve?`: function, `reject?`: function): *void*
 
-Defined in src/api/cds-webapi/odata/sendRequest.ts:430
+Defined in src/api/cds-webapi/odata/sendRequest.ts:434
 
 **Parameters:**
 

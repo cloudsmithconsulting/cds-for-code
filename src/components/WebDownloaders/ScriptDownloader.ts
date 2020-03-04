@@ -81,6 +81,8 @@ export default class ScriptDownloader {
 			const manifestContents = JSON.parse(FileSystem.readFileSync(manifestFile));
 
 			if (manifestContents.version !== version) {
+				logger.info(`Command: ${cs.cds.extension.downloadRequiredScripts} Manifest ${manifestFile} was found but specifies version ${manifestContents.version}, which does not match the extension version ${version}.  The file will be deleted and downloaded again.`);
+
 				await FileSystem.deleteItem(manifestFile);
 				alreadyHasManifest = false;
 			}

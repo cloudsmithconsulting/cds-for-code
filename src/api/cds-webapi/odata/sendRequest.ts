@@ -325,8 +325,12 @@ function _getEntityNames(entityName: string, config: CdsWebApi.Config, successCa
 
     //try using Xrm.Utility.getEntityMetadata first (because D365 caches metadata)
     if (!Utility.isNull(xrmUtility) && typeof xrmUtility.getEntityMetadata === "function") {
-        xrmUtility.getEntityMetadata(entityName).then(response => {
-            if (successCallback) { successCallback(response.EntitySetName); }
+        xrmUtility.getEntityMetadata(entityName, []).then(response => {
+            if (!response) { 
+                successCallback(entityName); 
+            } else {
+                successCallback(response.EntitySetName);
+            }
         }, errorCallback);
     }
     else {
