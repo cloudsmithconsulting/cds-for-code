@@ -1,12 +1,12 @@
-{{#def.template({
+<%#def.template({
     "type": "Item Template",
     "name": "CloudSmith.Cds.DataGenerationTests",
     "displayName": "Dynamics CRM data generation tests using MSTest and Bogus",
     "publisher": "CloudSmith Consulting LLC",
     "categories": ["Dynamics", "Data Generation"]
-})}}
-{{#def.ui.prompt('Namespace', 'Please enter the Namespace')}}
-{{#def.ui.select('SdkVersion', 'Please select the target SDK version', ['9.0.2.23', '8.2.0.2'])}}
-{{#def.run.dotnet('add package Microsoft.CrmSdk.CoreAssemblies --version \{\{=$this.parameters.SdkVersion\}\}')}}
-{{#def.run.dotnet('add package Bogus')}}
-{{#def.run.dotnet('build')}}
+})%>
+<%#def.ui.prompt('Namespace', 'Please enter the Namespace')%>
+<%#def.ui.select('SdkVersion', 'Please select the target SDK version', ['9.0.2.23', '8.2.0.2'])%>
+<%#def.run.dotnet('add package Microsoft.CrmSdk.CoreAssemblies --version \{\{=$this.parameters.SdkVersion\}\}')%>
+<%#def.run.dotnet('add package Bogus')%>
+<%#def.run.dotnet('build')%>

@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 
-namespace {{=$this.parameters.Namespace}}.Plugins
+namespace <%=$this.parameters.Namespace%>.Plugins
 {
     /// <summary>
     /// Base class for a Dynamics plugin.

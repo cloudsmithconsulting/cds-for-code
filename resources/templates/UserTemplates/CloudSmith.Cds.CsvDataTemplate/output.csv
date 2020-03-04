@@ -1,7 +1,7 @@
-{{ $this.parameters['Generator'].attributes.forEach((a, i) => { }}"{{=a.LogicalName}}"{{ if (i !== $this.parameters['Generator'].attributes.length - 1) {}},{{} }); const records = $this.parameters['Generator'].generate($this.parameters['Count']);
+<% $this.parameters['Generator'].attributes.forEach((a, i) => { %>"<%=a.LogicalName%>"<% if (i !== $this.parameters['Generator'].attributes.length - 1) { %>,<% } }); const records = $this.parameters['Generator'].generate($this.parameters['Count']);
 
 records.forEach(r => {
     const keys = Object.keys(r);
 
-    keys.forEach((k, i) => { }}"{{=r[k]}}"{{ if (i !== keys.length - 1) {}},{{}; }); }}
-{{}); }}
+    keys.forEach((k, i) => { %>"<%=r[k]%>"<% if (i !== keys.length - 1) { %>,<% }; }); %>
+<%}); %>

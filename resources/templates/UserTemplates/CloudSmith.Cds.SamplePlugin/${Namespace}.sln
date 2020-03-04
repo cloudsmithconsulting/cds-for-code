@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "{{=$this.parameters.Namespace}}", "Core\{{=$this.parameters.Namespace}}.csproj", "{7172E720-22D8-4196-8A6D-6F7610D15B3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "<%=$this.parameters.Namespace%>", "Core\<%=$this.parameters.Namespace%>.csproj", "{7172E720-22D8-4196-8A6D-6F7610D15B3F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "{{=$this.parameters.Namespace}}.Tests", "Tests\{{=$this.parameters.Namespace}}.Tests.csproj", "{D5198111-01B9-48D1-9B72-F345C31A5C25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "<%=$this.parameters.Namespace%>.Tests", "Tests\<%=$this.parameters.Namespace%>.Tests.csproj", "{D5198111-01B9-48D1-9B72-F345C31A5C25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
