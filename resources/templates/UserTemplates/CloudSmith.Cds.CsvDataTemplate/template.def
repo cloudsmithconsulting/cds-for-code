@@ -1,0 +1,9 @@
+{{#def.template({
+    "type": "Item Template",
+    "name": "CloudSmith.Cds.CsvDataTemplate",
+    "displayName": "CDS data generation into CSV files",
+    "publisher": "CloudSmith Consulting LLC",
+    "categories": ["CDS", "WebApi", "Data Generation"]
+})}}
+{{#def.ui.prompt('Count', 'How many records would you like to generate?')}}
+{{#def.data.cdsFake('Generator')}}

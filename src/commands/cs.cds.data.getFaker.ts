@@ -11,7 +11,14 @@ import MetadataRepository from '../repositories/metadataRepository';
 import DataApiRepository from '../repositories/DataApiRepository';
 import Dictionary from '../core/types/Dictionary';
 
-export type GeneratorDefinition<T> = { name: string, rule: string, generate: (into?: any) => T };
+export type GeneratorDefinition<T> = { attribute: any, name: string, rule: string, generate: (into?: any) => T };
+export type CdsEntityFaker = { 
+	attributes: any[],
+	entity: any, 
+	generators: { [key: string]: GeneratorDefinition<any> },
+	generate: (count: number) => any[],
+	generateAttribute: (name: string) => any
+};
 
 const cache = {
 	customers: [],
@@ -55,7 +62,7 @@ const doubleAttributeTranslations = new Dictionary<string, { rule: string, gener
 
 const generators = {
 	"Boolean": async (attribute: any): Promise<GeneratorDefinition<boolean>> => { 
-		return { name: attribute.LogicalName, rule: 'Boolean', generate: () => faker.random.boolean() }; 
+		return { attribute, name: attribute.LogicalName, rule: 'Boolean', generate: () => faker.random.boolean() }; 
 	},
 	"Customer": async (attribute: any, api: DataApiRepository): Promise<GeneratorDefinition<string>> => {
 		if (cache.customers?.length === 0) {
@@ -64,13 +71,13 @@ const generators = {
 
 		const customer = cache.customers[Math.floor(Math.random() * cache.customers.length)];
 
-		 return { name: `${attribute.LogicalName}_${customer.collection.substring(0, customer.collection.length - 1)}@odata.bind`, rule: 'Customer', generate: () => `/${customer.collection}/${Utilities.Guid.trimGuid(customer.id)}` }; 
+		 return { attribute, name: `${attribute.LogicalName}_${customer.collection.substring(0, customer.collection.length - 1)}@odata.bind`, rule: 'Customer', generate: () => `/${customer.collection}/${Utilities.Guid.trimGuid(customer.id)}` }; 
 	},
 	"DateTime": async (attribute: any): Promise<GeneratorDefinition<Date>> => {
-		return { name: attribute.LogicalName, rule: 'Date/Time', generate: () => faker.date.between(attribute.MinSupportedValue || '1/1/1900', attribute.MaxSupportedValue || new Date()) };
+		return { attribute, name: attribute.LogicalName, rule: 'Date/Time', generate: () => faker.date.between(attribute.MinSupportedValue || '1/1/1900', attribute.MaxSupportedValue || new Date()) };
 	}, 
 	"Decimal": async (attribute: any): Promise<GeneratorDefinition<number>> => {
-		return { name: attribute.LogicalName, rule: 'Decimal', generate: () => faker.random.number({ min: attribute.MinValue || 0, max: attribute.MaxValue || 100000000000, precision: attribute.Precision || faker.random.number({ min: 0, max: 9, precision: 0 }) }) };
+		return { attribute, name: attribute.LogicalName, rule: 'Decimal', generate: () => faker.random.number({ min: attribute.MinValue || 0, max: attribute.MaxValue || 100000000000, precision: attribute.Precision || faker.random.number({ min: 0, max: 9, precision: 0 }) }) };
 	},
 	"Double": async (attribute: any): Promise<GeneratorDefinition<number>> => {
 		const attributeName = attribute.LogicalName.toLowerCase();
@@ -79,14 +86,14 @@ const generators = {
 		doubleAttributeTranslations.keys.forEach(k => { if (!matchingKey && attributeName.indexOf(k) !== -1) { matchingKey = k; } });
 
 		if (matchingKey) {
-			return { name: attribute.LogicalName, rule: doubleAttributeTranslations[matchingKey].rule, generate: () => doubleAttributeTranslations[matchingKey].generator(attribute) };
+			return { attribute, name: attribute.LogicalName, rule: doubleAttributeTranslations[matchingKey].rule, generate: () => doubleAttributeTranslations[matchingKey].generator(attribute) };
 		} else {
-			return { name: attribute.LogicalName, rule: 'Double', generate: () => faker.random.number({ min: attribute.MinValue || 0, max: attribute.MaxValue || Number.MAX_SAFE_INTEGER, precision: attribute.Precision || faker.random.number({ min: 0, max: 9, precision: 0 }) }) };
+			return { attribute, name: attribute.LogicalName, rule: 'Double', generate: () => faker.random.number({ min: attribute.MinValue || 0, max: attribute.MaxValue || Number.MAX_SAFE_INTEGER, precision: attribute.Precision || faker.random.number({ min: 0, max: 9, precision: 0 }) }) };
 		}
 
 	},
 	"Integer": async (attribute: any): Promise<GeneratorDefinition<number>> => {
-		return { name: attribute.LogicalName, rule: 'Integer', generate: () => faker.random.number({ min: attribute.MinValue || 0, max: attribute.MaxValue || Number.MAX_SAFE_INTEGER, precision: attribute.Precision || 0 }) };
+		return { attribute, name: attribute.LogicalName, rule: 'Integer', generate: () => faker.random.number({ min: attribute.MinValue || 0, max: attribute.MaxValue || Number.MAX_SAFE_INTEGER, precision: attribute.Precision || 0 }) };
 	},
 	"Lookup": async (attribute: any, api: DataApiRepository): Promise<GeneratorDefinition<any>> => {
 		for (let i = 0; i < attribute.Targets.length; i++) {
@@ -98,7 +105,7 @@ const generators = {
 				cache.lookups.set(target, value);
 			}
 	
-			return { name: `${attribute.LogicalName}@odata.bind`, rule: 'Lookup', generate: () => {
+			return { attribute, name: `${attribute.LogicalName}@odata.bind`, rule: 'Lookup', generate: () => {
 				const possibleValues = cache.lookups.get(target).length;
 
 				if (possibleValues === 0) {
@@ -114,10 +121,10 @@ const generators = {
 		}
 	},
 	"Memo": async (attribute: any): Promise<GeneratorDefinition<string>> => {
-		return { name: attribute.LogicalName, rule: 'Memo', generate: () => faker.random.words(faker.random.number(100)) };
+		return { attribute, name: attribute.LogicalName, rule: 'Memo', generate: () => faker.random.words(faker.random.number(100)) };
 	},
 	"Money": async (attribute: any): Promise<GeneratorDefinition<number>> => {
-		return { name: attribute.LogicalName, rule: 'Money', generate: () => faker.random.number({ min: attribute.MinValue || 0, max: attribute.MaxValue || 100000000, precision: attribute.Precision || 2 }) };
+		return { attribute, name: attribute.LogicalName, rule: 'Money', generate: () => faker.random.number({ min: attribute.MinValue || 0, max: attribute.MaxValue || 100000000, precision: attribute.Precision || 2 }) };
 	},
 	"Owner": async (attribute: any, api: DataApiRepository): Promise<GeneratorDefinition<string>> => {
 		if (cache.users?.length === 0) {
@@ -126,25 +133,25 @@ const generators = {
 
 		const user = cache.users[Math.floor(Math.random() * cache.users.length)];
 
-		return { name: `${attribute.LogicalName}_${user.collection.substring(0, user.collection.length - 1)}@odata.bind`, rule: 'Owner', generate: () => `/${user.collection}/${Utilities.Guid.trimGuid(user.id)}` }; 
+		return { attribute, name: `${attribute.LogicalName}_${user.collection.substring(0, user.collection.length - 1)}@odata.bind`, rule: 'Owner', generate: () => `/${user.collection}/${Utilities.Guid.trimGuid(user.id)}` }; 
 	},
 	"PartyList": async (attribute: any, api: DataApiRepository): Promise<GeneratorDefinition<any>> => {
 		if (cache.parties?.length === 0) {
 			cache.parties = await api.getPartyListMembers();
 		}
 
-		return { name: attribute.LogicalName, rule: 'PartyList', generate: () => cache.parties[Math.round(Math.random() * cache.parties.length)] };
+		return { attribute, name: attribute.LogicalName, rule: 'PartyList', generate: () => cache.parties[Math.round(Math.random() * cache.parties.length)] };
 	},
 	"Picklist": async (attribute: any): Promise<GeneratorDefinition<number>> => {
 		const optionSet = attribute.OptionSet || attribute.GlobalOptionSet;
 
-		return { name: attribute.LogicalName, rule: 'Picklist', generate: () => (optionSet.Options[Math.floor(Math.random() * optionSet.Options.length)]).Value };
+		return { attribute, name: attribute.LogicalName, rule: 'Picklist', generate: () => (optionSet.Options[Math.floor(Math.random() * optionSet.Options.length)]).Value };
 	}, 
 	"State": async (attribute: any): Promise<GeneratorDefinition<number>> => {
-		return { name: attribute.LogicalName, rule: 'State', generate: () => 0 };
+		return { attribute, name: attribute.LogicalName, rule: 'State', generate: () => 0 };
 	}, 	
 	"Status": async (attribute: any): Promise<GeneratorDefinition<number>> => {
-		return { name: attribute.LogicalName, rule: 'Status', generate: () => 1 };
+		return { attribute, name: attribute.LogicalName, rule: 'Status', generate: () => 1 };
 	}, 	
 	"String": async (attribute: any): Promise<GeneratorDefinition<string>> => {
 		const type = attribute.Format;
@@ -191,17 +198,17 @@ const generators = {
 				rule = "Version Number";
 				break;
 		}
-		return { name: attribute.LogicalName, rule, generate };
+		return { attribute, name: attribute.LogicalName, rule, generate };
 	}, 	
 	"Uniqueidentifier": async (attribute: any): Promise<GeneratorDefinition<string>> => {
-		return { name: attribute.LogicalName, rule: "Unique Identiifer", generate: () => Utilities.Guid.newGuid() };
+		return { attribute, name: attribute.LogicalName, rule: "Unique Identiifer", generate: () => Utilities.Guid.newGuid() };
 	},
 	"BigInt": async (attribute: any): Promise<GeneratorDefinition<BigInt>> => {
-		return { name: attribute.LogicalName, rule: "BigInt", generate: () => BigInt(faker.random.number(Number.MAX_SAFE_INTEGER)) };
+		return { attribute, name: attribute.LogicalName, rule: "BigInt", generate: () => BigInt(faker.random.number(Number.MAX_SAFE_INTEGER)) };
 	}
 };
 
-export default async function run(config?: CdsWebApi.Config, entity?: any) : Promise<any> {
+export default async function run(config?: CdsWebApi.Config, entity?: any) : Promise<CdsEntityFaker> {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
 		logger.warn(`Command: ${cs.cds.data.getFaker} Organization not chosen, command cancelled`);
@@ -222,10 +229,18 @@ export default async function run(config?: CdsWebApi.Config, entity?: any) : Pro
 	const metadataApi = new MetadataRepository(config);
 	const dataApi = new DataApiRepository(config);
 	const attributes = await metadataApi.retrieveAttributes(entity.MetadataId, []);
-	const returnFake: any = {
-		attributes,
+	const returnFake: CdsEntityFaker = {
+		attributes: attributes.sort((a, b) => a.ColumnNumber - b.ColumnNumber),
 		generators: {},
 		entity,
+		generateAttribute: function (name: string) {
+			try {
+				return (this.generators[name])?.generate();
+			} 
+			catch (error) {
+				logger.warn(`Command: ${cs.cds.data.getFaker} Could not generate ${this.entity.LogicalName}.${name} using '${this.generators[name]?.rule}' generator: ${error.message}`);
+			}
+		},
 		generate: function (count: number) {
 			if (count && count > 0) {
 				const returnArray = [];
@@ -237,7 +252,7 @@ export default async function run(config?: CdsWebApi.Config, entity?: any) : Pro
 
 					Object.keys(this.generators).forEach(k => {
 						if (typeof(this.generators[k].generate) === 'function') {
-							const attribute = this.attributes.find(a => a.LogicalName === k);
+							const attribute = this.generators[k].attribute;
 							let ignoreAttribute: boolean = false;
 							ignoredAttributes.forEach(a => { if (!ignoreAttribute && attribute.LogicalName.indexOf(a) !== -1) { ignoreAttribute = true; } });
 			
