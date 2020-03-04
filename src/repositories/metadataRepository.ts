@@ -34,10 +34,14 @@ export default class MetadataRepository {
         return this.webapi.retrieveEntity(entityKey, select);
     }
 
-    retrieveEntityByLogicalName(logicalName: string, select: string[] = MetadataRepository.defaultSelections["EntityDefinitions"]) : Promise<any> {
+    retrieveEntityByLogicalName(entityKey: string, select: string[] = MetadataRepository.defaultSelections["EntityDefinitions"]) : Promise<any> {
         if (select.length === 0) { select = undefined; }
 
-        return this.webapi.retrieveEntity(`LogicalName='${logicalName}'`, select);
+        if (entityKey?.indexOf('LogicalName') === -1) {
+            entityKey = `LogicalName='${entityKey}'`;
+        }
+
+        return this.webapi.retrieveEntity(entityKey, select);
     }
 
     retrieveEntities(solutionId?: string, select: string[] = MetadataRepository.defaultSelections["EntityDefinitions"]) : Promise<any[]> {
@@ -53,6 +57,24 @@ export default class MetadataRepository {
 
         return this.webapi.retrieveAttributes(entityKey, undefined, select, 'AttributeOf eq null')
             .then(response => new TS.Linq.Enumerator(response.value).orderBy(a => a["LogicalName"]).toArray());
+    }
+
+    retrieveAttributeMetadata(entityKey: string, attributeKey: string, attributeType: string, select: string[] = MetadataRepository.defaultSelections["AttributeDefinitions"], expand?: CdsWebApi.Expand[]) : Promise<any[]> {
+        if (select.length === 0) { select = undefined; }
+
+        if (entityKey?.indexOf('LogicalName') === -1) {
+            entityKey = `LogicalName='${entityKey}'`;
+        }
+
+        if (attributeKey?.indexOf('LogicalName') === -1) {
+            attributeKey = `LogicalName='${attributeKey}'`;
+        }
+
+        if (attributeType?.indexOf('Microsoft.Dynamics.CRM.') === -1) {
+            attributeType = `Microsoft.Dynamics.CRM.${attributeType}AttributeMetadata`;
+        }
+
+        return this.webapi.retrieveAttribute(entityKey, attributeKey, attributeType, select, expand);
     }
 
     retrieveOptionSets(solutionId?: string, select?: string[]): Promise<any[]> {
