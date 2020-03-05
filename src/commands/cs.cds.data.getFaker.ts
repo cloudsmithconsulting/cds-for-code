@@ -24,7 +24,8 @@ const cache = {
 	customers: [],
 	lookups: new Map<string, any[]>(),
 	users: [],
-	parties: []
+	parties: [],
+	picklists: new Map<string, any[]>()
 };
 
 const ignoredAttributes = [
@@ -228,7 +229,7 @@ export default async function run(config?: CdsWebApi.Config, entity?: any) : Pro
 
 	const metadataApi = new MetadataRepository(config);
 	const dataApi = new DataApiRepository(config);
-	const attributes = await metadataApi.retrieveAttributes(entity.MetadataId, []);
+	const attributes = await metadataApi.retrieveAttributes(entity.MetadataId, undefined, []);
 	const returnFake: CdsEntityFaker = {
 		attributes: attributes.sort((a, b) => a.ColumnNumber - b.ColumnNumber),
 		generators: {},
@@ -303,9 +304,17 @@ export default async function run(config?: CdsWebApi.Config, entity?: any) : Pro
 
 				break;
 			case "Picklist":
-				const metadata = await metadataApi.retrieveAttributeMetadata(entity.LogicalName, a.LogicalName, a.AttributeType, [], [ { property: 'GlobalOptionSet', select: [ 'Options' ] }, { property: 'OptionSet', select: [ 'Options' ] } ]);
+				if (!cache.picklists[entity.LogicalName]) {
+					cache.picklists[entity.LogicalName] = await metadataApi.retrieveAttributes(
+						entity.LogicalName, 
+						a.AttributeType, 
+						[], 
+						[ { property: 'GlobalOptionSet', select: [ 'Options' ] }, { property: 'OptionSet', select: [ 'Options' ] } ]
+					);
+				}
 
-				returnFake.generators[a.LogicalName] = await generator(metadata);
+				const picklist = cache.picklists[entity.LogicalName].find(i => i.LogicalName === a.LogicalName);
+				returnFake.generators[a.LogicalName] = await generator(picklist);
 
 				break;
 			default:

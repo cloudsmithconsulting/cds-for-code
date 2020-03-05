@@ -601,7 +601,7 @@
 			"configuration": "./src/Components/Templates/dotjs.conifg.json"
 		}],
 		"grammars": [{
-			"language": "doTjs",
+			"language": "dotjs",
 			"scopeName": "text.html.dotjs",
 			"path": "./src/Components/Templates/dotjs.tmLanguage"
 		}],
