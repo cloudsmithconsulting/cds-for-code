@@ -16,6 +16,7 @@ sidebar_label: "data"
 
 * [_namespace](_cs_.cds.data.md#static-_namespace)
 * [getFaker](_cs_.cds.data.md#static-getfaker)
+* [insertFakeData](_cs_.cds.data.md#static-insertfakedata)
 
 ## Properties
 
@@ -32,3 +33,11 @@ ___
 ▪ **getFaker**: *string* = `${data._namespace}.getFaker`
 
 Defined in src/cs.ts:8
+
+___
+
+### `Static` insertFakeData
+
+▪ **insertFakeData**: *string* = `${data._namespace}.insertFakeData`
+
+Defined in src/cs.ts:9

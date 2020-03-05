@@ -41,7 +41,7 @@ sidebar_label: "TreeEntryCache"
 
 \+ **new TreeEntryCache**(): *[TreeEntryCache](_views_cs_cds_viewcontainers_cdsexplorer_.treeentrycache.md)*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:947
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:959
 
 **Returns:** *[TreeEntryCache](_views_cs_cds_viewcontainers_cdsexplorer_.treeentrycache.md)*
 
@@ -51,7 +51,7 @@ Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:947
 
 • **_items**: *[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)[]* = []
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:947
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:959
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 • **solutionMap**: *[SolutionMap](_components_solutions_solutionmap_.solutionmap.md)*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:981
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:993
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 ▪ **_instance**: *[TreeEntryCache](_views_cs_cds_viewcontainers_cdsexplorer_.treeentrycache.md)*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:945
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:957
 
 ## Accessors
 
@@ -75,7 +75,7 @@ Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:945
 
 • **get items**(): *Enumerator‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:977
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:989
 
 **Returns:** *Enumerator‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)›*
 
@@ -85,7 +85,7 @@ ___
 
 • **get Instance**(): *[TreeEntryCache](_views_cs_cds_viewcontainers_cdsexplorer_.treeentrycache.md)*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:957
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:969
 
 **Returns:** *[TreeEntryCache](_views_cs_cds_viewcontainers_cdsexplorer_.treeentrycache.md)*
 
@@ -95,7 +95,7 @@ Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:957
 
 ▸ **add**(`entry`: [CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)): *void*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:965
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:977
 
 **Parameters:**
 
@@ -111,7 +111,7 @@ ___
 
 ▸ **clear**(): *void*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:969
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:981
 
 **Returns:** *void*
 
@@ -121,7 +121,7 @@ ___
 
 ▸ **clearMap**(): *void*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:973
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:985
 
 **Returns:** *void*
 
@@ -131,7 +131,7 @@ ___
 
 ▸ **remove**(`path?`: string): *void*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:983
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:995
 
 **Parameters:**
 
@@ -147,7 +147,7 @@ ___
 
 ▸ **under**(`path`: string): *Enumerator‹[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)›*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:993
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1005
 
 **Parameters:**
 

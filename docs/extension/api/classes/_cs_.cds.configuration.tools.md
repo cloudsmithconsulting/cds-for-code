@@ -25,7 +25,7 @@ sidebar_label: "tools"
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.tools"
 
-Defined in src/cs.ts:153
+Defined in src/cs.ts:155
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 ▪ **sdkInstallPath**: *string* = `${tools._namespace}.sdkInstallPath`
 
-Defined in src/cs.ts:154
+Defined in src/cs.ts:156
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 ▪ **updateChannel**: *string* = `${tools._namespace}.updateChannel`
 
-Defined in src/cs.ts:156
+Defined in src/cs.ts:158
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 ▪ **updateSource**: *string* = `${tools._namespace}.updateSource`
 
-Defined in src/cs.ts:155
+Defined in src/cs.ts:157

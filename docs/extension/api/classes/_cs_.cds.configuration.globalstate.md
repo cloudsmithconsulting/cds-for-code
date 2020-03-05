@@ -24,7 +24,7 @@ sidebar_label: "globalState"
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.globalState"
 
-Defined in src/cs.ts:131
+Defined in src/cs.ts:133
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 ▪ **dynamicsConnections**: *string* = `${globalState._namespace}:dynamicsConnections`
 
-Defined in src/cs.ts:132
+Defined in src/cs.ts:134
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 ▪ **powerShellScriptVersion**: *string* = `${globalState._namespace}:powerShellScriptVersion`
 
-Defined in src/cs.ts:133
+Defined in src/cs.ts:135
