@@ -10,6 +10,7 @@ import { CdsSolutions } from '../api/CdsSolutions';
 import MetadataRepository from '../repositories/metadataRepository';
 import DataApiRepository from '../repositories/DataApiRepository';
 import Dictionary from '../core/types/Dictionary';
+import { select } from 'async';
 
 export type GeneratorDefinition<T> = { attribute: any, name: string, rule: string, generate: (into?: any) => T };
 export type CdsEntityFaker = { 
@@ -31,7 +32,8 @@ const cache = {
 const ignoredAttributes = [
 	"_composite",
 	"versionnumber",
-	"ownerid"
+	"ownerid",
+	"msdyn_billingaccount"
 ];
 
 const stringAttributeTranslations = new Dictionary<string, { rule: string, generator: (attribute: any) => string }>([
@@ -209,7 +211,7 @@ const generators = {
 	}
 };
 
-export default async function run(config?: CdsWebApi.Config, entity?: any) : Promise<CdsEntityFaker> {
+export default async function run(config?: CdsWebApi.Config, entity?: any, selectedAttributes?: string[]) : Promise<CdsEntityFaker> {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
 		logger.warn(`Command: ${cs.cds.data.getFaker} Organization not chosen, command cancelled`);
@@ -227,9 +229,19 @@ export default async function run(config?: CdsWebApi.Config, entity?: any) : Pro
 		entity = pickResponse.component;
 	}
 
+	if (!selectedAttributes) {
+		const picked = await Quickly.pickCdsEntityComponents(config, entity, CdsSolutions.SolutionComponent.Attribute, undefined, "Choose attributes to fake (press ESC for all)");
+
+		if (picked) {
+			selectedAttributes = picked.map(i => i.component.LogicalName);
+		}
+	}
+
 	const metadataApi = new MetadataRepository(config);
 	const dataApi = new DataApiRepository(config);
-	const attributes = await metadataApi.retrieveAttributes(entity.MetadataId, undefined, []);
+	const attributes = (await metadataApi.retrieveAttributes(entity.MetadataId, undefined, []))
+		.filter(a => !selectedAttributes || selectedAttributes.indexOf(a.LogicalName) !== -1);	
+
 	const returnFake: CdsEntityFaker = {
 		attributes: attributes.sort((a, b) => a.ColumnNumber - b.ColumnNumber),
 		generators: {},

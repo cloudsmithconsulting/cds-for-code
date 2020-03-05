@@ -243,6 +243,11 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.cds.controls.cdsExplorer.insertFakeData",
+				"title": "Add Fake Data",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
 				"title": "Add to solution",
 				"category": "UserInterface"
@@ -440,7 +445,12 @@
 			},
 			{
 				"command": "cs.cds.data.getFaker",
-				"title": "Generate data for one or more CDS entities",
+				"title": "Gets an instance of a Faker class that can generate data",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.data.insertFakeData",
+				"title": "Generate data for a CDS entity",
 				"category": "CDS for Code"
 			},
 			{
@@ -624,6 +634,10 @@
 		},
 		"menus": {
 			"commandPalette": [{
+					"command": "cs.cds.data.getFaker",
+					"when": "false"
+				},
+				{
 					"command": "cs.cds.controls.explorer.createCrmSvcUtilConfig",
 					"when": "false"
 				},
@@ -725,6 +739,10 @@
 				},
 				{
 					"command": "cs.cds.controls.cdsExplorer.exportSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.insertFakeData",
 					"when": "false"
 				},
 				{
@@ -947,6 +965,11 @@
 					"command": "cs.cds.controls.cdsExplorer.openInEditor",
 					"group": "group@5",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.insertFakeData",
+					"group": "insert@2",
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canInsertData)(.*)$/"
 				},
 				{
 					"command": "cs.cds.controls.cdsExplorer.exportSolution",
