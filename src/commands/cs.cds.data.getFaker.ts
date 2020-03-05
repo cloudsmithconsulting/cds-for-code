@@ -10,6 +10,7 @@ import { CdsSolutions } from '../api/CdsSolutions';
 import MetadataRepository from '../repositories/metadataRepository';
 import DataApiRepository from '../repositories/DataApiRepository';
 import Dictionary from '../core/types/Dictionary';
+import { select } from 'async';
 
 export type GeneratorDefinition<T> = { attribute: any, name: string, rule: string, generate: (into?: any) => T };
 export type CdsEntityFaker = { 
@@ -24,13 +25,15 @@ const cache = {
 	customers: [],
 	lookups: new Map<string, any[]>(),
 	users: [],
-	parties: []
+	parties: [],
+	picklists: new Map<string, any[]>()
 };
 
 const ignoredAttributes = [
 	"_composite",
 	"versionnumber",
-	"ownerid"
+	"ownerid",
+	"msdyn_billingaccount"
 ];
 
 const stringAttributeTranslations = new Dictionary<string, { rule: string, generator: (attribute: any) => string }>([
@@ -208,7 +211,7 @@ const generators = {
 	}
 };
 
-export default async function run(config?: CdsWebApi.Config, entity?: any) : Promise<CdsEntityFaker> {
+export default async function run(config?: CdsWebApi.Config, entity?: any, selectedAttributes?: string[]) : Promise<CdsEntityFaker> {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
 		logger.warn(`Command: ${cs.cds.data.getFaker} Organization not chosen, command cancelled`);
@@ -226,9 +229,19 @@ export default async function run(config?: CdsWebApi.Config, entity?: any) : Pro
 		entity = pickResponse.component;
 	}
 
+	if (!selectedAttributes) {
+		const picked = await Quickly.pickCdsEntityComponents(config, entity, CdsSolutions.SolutionComponent.Attribute, undefined, "Choose attributes to fake (press ESC for all)");
+
+		if (picked) {
+			selectedAttributes = picked.map(i => i.component.LogicalName);
+		}
+	}
+
 	const metadataApi = new MetadataRepository(config);
 	const dataApi = new DataApiRepository(config);
-	const attributes = await metadataApi.retrieveAttributes(entity.MetadataId, []);
+	const attributes = (await metadataApi.retrieveAttributes(entity.MetadataId, undefined, []))
+		.filter(a => !selectedAttributes || selectedAttributes.indexOf(a.LogicalName) !== -1);	
+
 	const returnFake: CdsEntityFaker = {
 		attributes: attributes.sort((a, b) => a.ColumnNumber - b.ColumnNumber),
 		generators: {},
@@ -303,9 +316,17 @@ export default async function run(config?: CdsWebApi.Config, entity?: any) : Pro
 
 				break;
 			case "Picklist":
-				const metadata = await metadataApi.retrieveAttributeMetadata(entity.LogicalName, a.LogicalName, a.AttributeType, [], [ { property: 'GlobalOptionSet', select: [ 'Options' ] }, { property: 'OptionSet', select: [ 'Options' ] } ]);
+				if (!cache.picklists[entity.LogicalName]) {
+					cache.picklists[entity.LogicalName] = await metadataApi.retrieveAttributes(
+						entity.LogicalName, 
+						a.AttributeType, 
+						[], 
+						[ { property: 'GlobalOptionSet', select: [ 'Options' ] }, { property: 'OptionSet', select: [ 'Options' ] } ]
+					);
+				}
 
-				returnFake.generators[a.LogicalName] = await generator(metadata);
+				const picklist = cache.picklists[entity.LogicalName].find(i => i.LogicalName === a.LogicalName);
+				returnFake.generators[a.LogicalName] = await generator(picklist);
 
 				break;
 			default:

@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import * as cs from '../../cs';
-import getFaker from "../../commands/cs.cds.data.getFaker";
 import generateEntities from "../../commands/cs.cds.powerShell.generateEntities";
 import createCrmSvcUtilConfig from "../../commands/cs.cds.deployment.createCrmSvcUtilConfig";
 import command from '../../core/Command';
@@ -9,11 +8,6 @@ import saveCrmSvcUtilConfig from "../../commands/cs.cds.deployment.saveCrmSvcUti
 import { CdsWebApi } from '../../api/cds-webapi/CdsWebApi';
 
 export default class CodeGenerationManager {
-    @command(cs.cds.data.getFaker, "Get entity generation faker")
-    async getFaker(config?: CdsWebApi.Config, entity?: any) {
-        return await getFaker.apply(this, [ config, entity ]);
-    }
-
     @command(cs.cds.controls.explorer.generateEntityCodeToFile, "Generate entity code to a file")
     async generateEntityCodeToFile(file?: vscode.Uri) {
         return await vscode.commands.executeCommand(cs.cds.powerShell.generateEntities, undefined, path.dirname(file.fsPath), path.basename(file.fsPath), undefined);

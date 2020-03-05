@@ -491,6 +491,26 @@ export default class Quickly {
         }
     }
 
+    //TODO: fix this and the below method, it's missing implementation.
+    static async pickCdsEntityComponents(config: CdsWebApi.Config, entity: any, componentType: CdsSolutions.SolutionComponent, filterExpression?: string, placeHolder?: string): Promise<{ componentId: string, component: any }[]> {
+        const options: QuickPickOption[] = [];
+        const metadataApi = new MetadataRepository(config);
+
+        switch (componentType) {
+            case CdsSolutions.SolutionComponent.Attribute:
+                await metadataApi.retrieveAttributes(entity.MetadataId)
+                    .then(entities => entities.forEach(a => options.push(new QuickPickOption(a["LogicalName"], undefined, undefined, { componentId: a["MetadataId"], component: a }))));
+
+                break;
+        }
+
+        if (options && options.length > 0) {
+            return await this.pickAny(placeHolder, ...options).then(p => p.map(i => (<{ componentId: string, component: any}>i.context)));
+        }
+
+        return null;
+    }
+
     static async pickCdsSolutionComponent(config:CdsWebApi.Config, solution:any, componentType:CdsSolutions.SolutionComponent, filterExpression?:string, placeHolder?:string): Promise<{ componentId:string, component:any }> {
         const options: QuickPickOption[] = [];
         const metadataApi = new MetadataRepository(config);

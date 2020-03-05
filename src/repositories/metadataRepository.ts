@@ -16,7 +16,7 @@ export default class MetadataRepository {
     }
 
     static readonly defaultSelections = new Dictionary<string, string[]>([
-        { key: 'EntityDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'IsIntersect', 'PrimaryIdAttribute', 'PrimaryNameAttribute' ] },
+        { key: 'EntityDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'EntitySetName', 'IsIntersect', 'PrimaryIdAttribute', 'PrimaryNameAttribute' ] },
         { key: 'AttributeDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'AttributeOf', 'AttributeType', 'AttributeTypeName' ] },
         { key: 'systemforms', value: [ 'formid', 'objecttypecode', 'type', 'formactivationstate', 'name', 'description' ] },
         { key: 'savedqueries', value: [ 'savedqueryid', 'returnedtypecode', 'statecode', 'name', 'description' ] },
@@ -52,10 +52,18 @@ export default class MetadataRepository {
             .then(response => response ? response.orderBy(e => e["LogicalName"]).toArray() : []);
     }
 
-    retrieveAttributes(entityKey: string, select: string[] = MetadataRepository.defaultSelections["AttributeDefinitions"]) : Promise<any[]> {
+    retrieveAttributes(entityKey: string, attributeType?: string, select: string[] = MetadataRepository.defaultSelections["AttributeDefinitions"], expand?: CdsWebApi.Expand[]) : Promise<any[]> {
         if (select.length === 0) { select = undefined; }
 
-        return this.webapi.retrieveAttributes(entityKey, undefined, select, 'AttributeOf eq null')
+        if (entityKey?.indexOf('LogicalName') === -1) {
+            entityKey = `LogicalName='${entityKey}'`;
+        }
+
+        if (attributeType?.indexOf('Microsoft.Dynamics.CRM.') === -1) {
+            attributeType = `Microsoft.Dynamics.CRM.${attributeType}AttributeMetadata`;
+        }
+
+        return this.webapi.retrieveAttributes(entityKey, attributeType, select, 'AttributeOf eq null', expand)
             .then(response => new TS.Linq.Enumerator(response.value).orderBy(a => a["LogicalName"]).toArray());
     }
 

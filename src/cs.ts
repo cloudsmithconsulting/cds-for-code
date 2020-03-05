@@ -6,6 +6,7 @@ export namespace cds {
     export class data {
         static readonly _namespace: string = "cs.cds.data";
         static readonly getFaker: string = `${data._namespace}.getFaker`;
+        static readonly insertFakeData: string = `${data._namespace}.insertFakeData`;
     }
 
     /**
@@ -108,6 +109,7 @@ export namespace cds {
     }
 
     export namespace configuration {
+        // tslint:disable-next-line: class-name
         export class connection {
             static readonly _namespace: string = "cs.cds.configuration.connection";
             static readonly defaultTimeout: string = `${connection._namespace}.defaultTimeout`;
@@ -176,7 +178,8 @@ export namespace cds {
             static readonly editConnection: string = `${cdsExplorer._namespace}.editConnection`;
             static readonly editEntry: string = `${cdsExplorer._namespace}.editEntry`;
             static readonly exportSolution: string = `${cdsExplorer._namespace}.exportSolution`;
-            static readonly inspectEntry: string = `${cdsExplorer._namespace}.inspectEntry`;
+            static readonly insertFakeData: string = `${cdsExplorer._namespace}.insertFakeData`;
+            static readonly inspectEntry: string = `${cdsExplorer._namespace}.inspectEntry`;            
             static readonly moveSolution: string = `${cdsExplorer._namespace}.moveSolution`;
             static readonly openInApp: string = `${cdsExplorer._namespace}.openInApp`;
             static readonly openInBrowser: string = `${cdsExplorer._namespace}.openInBrowser`;
