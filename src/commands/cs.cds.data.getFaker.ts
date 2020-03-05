@@ -30,6 +30,10 @@ const cache = {
 };
 
 const ignoredAttributes = [
+	"createdon",
+	"modifiedon",
+	"processid",
+	"stageid",
 	"_composite",
 	"versionnumber",
 	"ownerid",
@@ -42,7 +46,10 @@ const stringAttributeTranslations = new Dictionary<string, { rule: string, gener
 	{ key: "_city", value: { rule: 'Address City', generator: attribute => faker.address.city() } },
 	{ key: "_stateorprovince", value: { rule: 'Address State or Province', generator: attribute => faker.address.stateAbbr() } },
 	{ key: "_postalcode", value: { rule: 'Address Postal Code', generator: attribute => faker.address.zipCode() } },
+	{ key: "_county", value: { rule: 'Address County', generator: attribute => faker.address.county() } },
+	{ key: "_country", value: { rule: 'Address Country', generator: attribute => faker.address.country() } },
 	{ key: "companyname", value: { rule: 'Company Name', generator: attribute => faker.company.companyName() } },
+	{ key: "company", value: { rule: 'Company Name', generator: attribute => faker.company.companyName() } },
 	{ key: "emailaddress", value: { rule: 'Email Address', generator: attribute => faker.internet.email() } },
 	{ key: "url", value: { rule: 'URL', generator: attribute => faker.internet.url() } },
 	{ key: "phone", value: { rule: 'Phone Number', generator: attribute => faker.phone.phoneNumber() } },
@@ -77,7 +84,18 @@ const generators = {
 		 return { attribute, name: `${attribute.LogicalName}_${customer.collection.substring(0, customer.collection.length - 1)}@odata.bind`, rule: 'Customer', generate: () => `/${customer.collection}/${Utilities.Guid.trimGuid(customer.id)}` }; 
 	},
 	"DateTime": async (attribute: any): Promise<GeneratorDefinition<Date>> => {
-		return { attribute, name: attribute.LogicalName, rule: 'Date/Time', generate: () => faker.date.between(attribute.MinSupportedValue || '1/1/1900', attribute.MaxSupportedValue || new Date()) };
+		return { 
+			attribute, 
+			name: attribute.LogicalName, 
+			rule: 'Date/Time', 
+			generate: () => { 
+				let theDate = faker.date.between(attribute.MinSupportedValue || '1/1/1900', attribute.MaxSupportedValue || new Date());
+				if (attribute.Format === "DateOnly") {
+					theDate = new Date(theDate.getFullYear(), theDate.getMonth(), theDate.getDate());
+				}
+				return theDate;
+			}
+		};
 	}, 
 	"Decimal": async (attribute: any): Promise<GeneratorDefinition<number>> => {
 		return { attribute, name: attribute.LogicalName, rule: 'Decimal', generate: () => faker.random.number({ min: attribute.MinValue || 0, max: attribute.MaxValue || 100000000000, precision: attribute.Precision || faker.random.number({ min: 0, max: 9, precision: 0 }) }) };
@@ -175,13 +193,13 @@ const generators = {
 					generate = () => stringAttributeTranslations[matchingKey].generator(attribute);
 					rule = stringAttributeTranslations[matchingKey].rule;
 				} else {
-					generate = () => faker.lorem.text();
+					generate = () => faker.lorem.text().substr(0, (<number>attribute.MaxLength) || 1);
 					rule = "Text";
 				}
 
 				break;
 			case "TextArea":
-				generate = () => faker.lorem.paragraph();
+				generate = () => faker.lorem.paragraph().substr(0, (<number>attribute.MaxLength) || 1);
 				rule = "Text (Multiple lines)";
 				break;
 			case "Url":
@@ -307,32 +325,36 @@ export default async function run(config?: CdsWebApi.Config, entity?: any, selec
 			continue;
 		}
 
-		switch (a.AttributeType) {
-			case "Customer":
-			case "Lookup":
-			case "Owner":
-			case "PartyList":
-				returnFake.generators[a.LogicalName] = await generator(a, dataApi);
-
-				break;
-			case "Picklist":
-				if (!cache.picklists[entity.LogicalName]) {
-					cache.picklists[entity.LogicalName] = await metadataApi.retrieveAttributes(
-						entity.LogicalName, 
-						a.AttributeType, 
-						[], 
-						[ { property: 'GlobalOptionSet', select: [ 'Options' ] }, { property: 'OptionSet', select: [ 'Options' ] } ]
-					);
-				}
-
-				const picklist = cache.picklists[entity.LogicalName].find(i => i.LogicalName === a.LogicalName);
-				returnFake.generators[a.LogicalName] = await generator(picklist);
-
-				break;
-			default:
-				returnFake.generators[a.LogicalName] = await generator(a);
-
-				break;
+		try {
+			switch (a.AttributeType) {
+				case "Customer":
+				case "Lookup":
+				case "Owner":
+				case "PartyList":
+					returnFake.generators[a.LogicalName] = await generator(a, dataApi);
+	
+					break;
+				case "Picklist":
+					if (!cache.picklists[entity.LogicalName]) {
+						cache.picklists[entity.LogicalName] = await metadataApi.retrieveAttributes(
+							entity.LogicalName, 
+							a.AttributeType, 
+							[], 
+							[ { property: 'GlobalOptionSet', select: [ 'Options' ] }, { property: 'OptionSet', select: [ 'Options' ] } ]
+						);
+					}
+	
+					const picklist = cache.picklists[entity.LogicalName].find(i => i.LogicalName === a.LogicalName);
+					returnFake.generators[a.LogicalName] = await generator(picklist);
+	
+					break;
+				default:
+					returnFake.generators[a.LogicalName] = await generator(a);
+	
+					break;
+			}	
+		} catch (error) {
+			throw error;
 		}
 	}
 

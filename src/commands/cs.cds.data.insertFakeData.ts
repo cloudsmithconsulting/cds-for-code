@@ -28,7 +28,7 @@ export default async function run(this: DataGenerationManager, config?: CdsWebAp
 	}
 
     if (!selectedAttributes) {
-		const picked = await Quickly.pickCdsEntityComponents(config, entity, CdsSolutions.SolutionComponent.Attribute, undefined, "Choose attributes to fake (press ESC for all)");
+		const picked = await Quickly.pickCdsEntityComponents(config, entity, CdsSolutions.SolutionComponent.Attribute, undefined, "Choose attributes to fake");
 
 		if (picked) {
 			selectedAttributes = picked.map(i => i.component.LogicalName);
@@ -52,7 +52,9 @@ export default async function run(this: DataGenerationManager, config?: CdsWebAp
         logger.log(`Command: ${cs.cds.data.insertFakeData} Generated ${current}/${count} ${entity.EntitySetName} ${result}`);
 
         callback(result);
-    });
+    }, (err) => {
+		logger.error(`Command: ${cs.cds.data.insertFakeData} encountered an error generating data for ${entity.EntitySetName}`);
+	});
 
     return returnList;
 }

@@ -11,6 +11,7 @@ sidebar_label: "core/helpers/String"
 ### Functions
 
 * [dateAsFilename](_core_helpers_string_.md#dateasfilename)
+* [isIsoDateString](_core_helpers_string_.md#isisodatestring)
 * [noSlashes](_core_helpers_string_.md#noslashes)
 * [noTrailingSlash](_core_helpers_string_.md#notrailingslash)
 * [parseUtcDate](_core_helpers_string_.md#parseutcdate)
@@ -24,9 +25,25 @@ sidebar_label: "core/helpers/String"
 
 ▸ **dateAsFilename**(): *string*
 
-Defined in src/core/helpers/String.ts:17
+Defined in src/core/helpers/String.ts:21
 
 **Returns:** *string*
+
+___
+
+###  isIsoDateString
+
+▸ **isIsoDateString**(`date`: string): *boolean*
+
+Defined in src/core/helpers/String.ts:17
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`date` | string |
+
+**Returns:** *boolean*
 
 ___
 
@@ -34,7 +51,7 @@ ___
 
 ▸ **noSlashes**(`string`: string): *string*
 
-Defined in src/core/helpers/String.ts:37
+Defined in src/core/helpers/String.ts:41
 
 **Parameters:**
 
@@ -50,7 +67,7 @@ ___
 
 ▸ **noTrailingSlash**(`string`: string): *string*
 
-Defined in src/core/helpers/String.ts:29
+Defined in src/core/helpers/String.ts:33
 
 **Parameters:**
 
@@ -82,7 +99,7 @@ ___
 
 ▸ **plural**(`value`: string): *string*
 
-Defined in src/core/helpers/String.ts:49
+Defined in src/core/helpers/String.ts:53
 
 **Parameters:**
 
@@ -98,7 +115,7 @@ ___
 
 ▸ **powerShellSafe**(`value`: string, `delimiter`: string): *string*
 
-Defined in src/core/helpers/String.ts:41
+Defined in src/core/helpers/String.ts:45
 
 **Parameters:**
 
@@ -115,7 +132,7 @@ ___
 
 ▸ **withTrailingSlash**(`path`: string | undefined): *string*
 
-Defined in src/core/helpers/String.ts:21
+Defined in src/core/helpers/String.ts:25
 
 **Parameters:**
 

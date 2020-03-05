@@ -51,6 +51,7 @@ export interface RandomUtility {
 
 export interface StringUtility {
    parseUtcDate(date: string): Date;
+   isIsoDateString(date: string): boolean;
    dateAsFilename(): string;
    withTrailingSlash(path: string | undefined): string;
    noTrailingSlash(string: string): string;

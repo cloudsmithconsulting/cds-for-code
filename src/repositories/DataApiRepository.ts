@@ -75,17 +75,17 @@ export default class DataApiRepository extends CdsRepository {
         if (count > 5000) { count = 5000; }
         
         const accounts = await this.webapi.retrieveAllRequest({ collection: "accounts", select: [ "accountid", "name" ], top: count });
-        const contacts = await this.webapi.retrieveAllRequest({ collection: "contacts", select: [ "contactid", "name" ], top: count });
+        const contacts = await this.webapi.retrieveAllRequest({ collection: "contacts", select: [ "contactid", "fullname" ], top: count });
 
         let returnArray = [];
         
         for (let i = 0; i < count; i++) {
             if (Math.round(Math.random()) === 0) {
-                const account = accounts[Math.floor(Math.random() * accounts.length)];
+                const account = accounts.value[Math.floor(Math.random() * accounts.value.length)];
                 returnArray.push({ id: account.accountid, collection: "accounts", name: account.name });
             } else {
-                const contact = contacts[Math.floor(Math.random() * contacts.length)];
-                returnArray.push({ id: contact.contactid, collection: "contacts", name: contact.name });
+                const contact = contacts.value[Math.floor(Math.random() * contacts.value.length)];
+                returnArray.push({ id: contact.contactid, collection: "contacts", name: contact.fullname });
             }
         }
 

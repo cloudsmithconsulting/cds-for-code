@@ -380,14 +380,25 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
     @command(cs.cds.controls.cdsExplorer.insertFakeData, "Insert Fake Data")
     async insertFakeData(item?: CdsTreeEntry) {
-        let count = Number.parseInt(await Quickly.ask(`How many ${item.context.EntitySetName} would you like to add?`));
+        let countEntry = await Quickly.ask(`How many ${item.context.EntitySetName} would you like to add?`);
+        if (!countEntry) { 
+            logger.warn(`Command: ${cs.cds.data.insertFakeData} Count not chosen, command cancelled`);
+            return; 
+        }
 
-        if (Number.isNaN(count)) {
+        let count = 0;
+        try {
+            count = Number.parseInt(countEntry);
+        } catch {
+            // the count is zero, not parsed
+        }
+
+        if (count === 0) {
             logger.warn(`Command: ${cs.cds.controls.cdsExplorer.insertFakeData} Count entered was invalid, resetting to default.`);
             count = undefined;
         }
 
-        return await vscode.commands.executeCommand(cs.cds.data.insertFakeData, item.config, item.context, count);
+        return await vscode.commands.executeCommand(cs.cds.data.insertFakeData, item.config, item.context, undefined, count);
     }
 
     @command(cs.cds.controls.cdsExplorer.moveSolution, "Move or re-map solution")
