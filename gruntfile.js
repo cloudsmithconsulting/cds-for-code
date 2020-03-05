@@ -225,6 +225,11 @@ module.exports = function (grunt) {
                 src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.DataGenerationTests/**'], 
                 dest: 'dist/templates/CloudSmith.Cds.DataGenerationTests.zip'
             },
+            'CloudSmith.Cds.InteractiveBrowserTests': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.InteractiveBrowserTests',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.InteractiveBrowserTests/**'], 
+                dest: 'dist/templates/CloudSmith.Cds.InteractiveBrowserTests.zip'
+            },
             'CloudSmith.Cds.SamplePlugin': {
                 cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin',
                 src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin/**'], 
@@ -561,7 +566,8 @@ module.exports = function (grunt) {
     grunt.registerTask('sass_compile', [ 'sass:dev', 'sass:release', 'sass:release_min', 'postcss:dev', 'notify:sass_compile' ]);
 
     grunt.registerTask('templates_compile', 
-        [ 'zip:SystemTemplates', 'zip:CloudSmith.Cds.DataGenerationTests', 'zip:CloudSmith.Cds.SamplePlugin', 'notify:templates_compile' ]);
+        [ 'zip:SystemTemplates', 'zip:CloudSmith.Cds.DataGenerationTests', 'zip:CloudSmith.Cds.InteractiveBrowserTests', 
+          'zip:CloudSmith.Cds.SamplePlugin', 'notify:templates_compile' ]);
           
     grunt.registerTask('tools_compile', 
         [ 'shell:crmsvcutil_restore', 'shell:crmsvcutil_build_debug', 'shell:assemblyscanner_restore', 'shell:assemblyscanner_build_debug' ]);

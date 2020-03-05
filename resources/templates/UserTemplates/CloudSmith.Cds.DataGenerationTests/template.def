@@ -3,7 +3,7 @@
     "name": "CloudSmith.Cds.DataGenerationTests",
     "displayName": "Dynamics CRM data generation tests using MSTest and Bogus",
     "publisher": "CloudSmith Consulting LLC",
-    "categories": ["Dynamics", "Data Generation"]
+    "categories": ["Dynamics", "Data Generation", "Tests"]
 })%>
 <%#def.ui.prompt('Namespace', 'Please enter the Namespace')%>
 <%#def.ui.select('SdkVersion', 'Please select the target SDK version', ['9.0.2.23', '8.2.0.2'])%>

@@ -13,11 +13,13 @@ namespace <%=$this.parameters.Namespace%>
         //TODO: update this connection string with your username and password where it says {username} and {password} below.
         private static readonly string _connectionString = "AuthType=AD;ServiceUri=http://crmserver/test;Domain=contoso.local;UserName={username};Password={password}";
 
-        // For more information on Bogus, see: https://github.com/bchavez/Bogus
-        // Here is a sample for generating accounts using the generic Entity class
-        // For a more powerful experience, consider using CrmSvcUtil to generate classes
-        // to use for faking. You can see examples of generating data using the generated
-        // classes below this example
+        /*
+        For more information on Bogus, see: https://github.com/bchavez/Bogus
+        Here is a sample for generating accounts using the generic Entity class
+        For a more powerful experience, consider using CrmSvcUtil to generate classes
+        to use for faking. You can see examples of generating data using the generated
+        classes below this example
+        */
 
         [TestMethod]
         public void GenerateRandomAccountsUsingBaseEntity()
