@@ -87,17 +87,15 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"colors": [
-			{
-				"id": "cs.cds.theme.colors.icons",
-				"description": "Color for icons that are downloaded from iconify.design",
-				"defaults": {
-					"dark": "#C0C0C0",
-					"light": "#404040",
-					"highContrast": "#FFFFFF"
-				}
+		"colors": [{
+			"id": "cs.cds.theme.colors.icons",
+			"description": "Color for icons that are downloaded from iconify.design",
+			"defaults": {
+				"dark": "#C0C0C0",
+				"light": "#404040",
+				"highContrast": "#FFFFFF"
 			}
-		],
+		}],
 		"configuration": {
 			"type": "object",
 			"title": "CDS for Code",
@@ -188,8 +186,7 @@
 				}
 			}
 		},
-		"commands": [
-			{
+		"commands": [{
 				"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 				"title": "Refresh",
 				"icon": {
@@ -597,32 +594,36 @@
 				"category": "CDS for Code"
 			}
 		],
+		"languages": [{
+			"id": "dotjs",
+			"aliases": ["doT", "doTjs"],
+			"extensions": [".dot", ".def"],
+			"configuration": "./src/Components/Templates/dotjs.conifg.json"
+		}],
+		"grammars": [{
+			"language": "doTjs",
+			"scopeName": "text.html.dotjs",
+			"path": "./src/Components/Templates/dotjs.tmLanguage"
+		}],
 		"viewsContainers": {
-			"activitybar": [
-				{
-					"id": "cdsExplorer",
-					"title": "CDS for Code",
-					"icon": "resources/images/dynamics.png"
-				}
-			]
+			"activitybar": [{
+				"id": "cdsExplorer",
+				"title": "CDS for Code",
+				"icon": "resources/images/dynamics.png"
+			}]
 		},
 		"views": {
-			"cdsExplorer": [
-				{
-					"id": "cs.cds.viewContainers.cdsExplorer",
-					"name": "CDS Explorer"
-				}
-			],
-			"explorer": [
-				{
-					"id": "cs.cds.viewContainers.templateExplorer",
-					"name": "Template Explorer"
-				}
-			]
+			"cdsExplorer": [{
+				"id": "cs.cds.viewContainers.cdsExplorer",
+				"name": "CDS Explorer"
+			}],
+			"explorer": [{
+				"id": "cs.cds.viewContainers.templateExplorer",
+				"name": "Template Explorer"
+			}]
 		},
 		"menus": {
-			"commandPalette": [
-				{
+			"commandPalette": [{
 					"command": "cs.cds.controls.explorer.createCrmSvcUtilConfig",
 					"when": "false"
 				},
@@ -795,8 +796,7 @@
 					"when": "false"
 				}
 			],
-			"explorer/context": [
-				{
+			"explorer/context": [{
 					"command": "cs.cds.controls.explorer.createFromItemTemplate",
 					"when": "explorerResourceIsFolder",
 					"group": "navigation@1"
@@ -882,8 +882,7 @@
 					"group": "zzz_azuretools_deploy@4"
 				}
 			],
-			"view/title": [
-				{
+			"view/title": [{
 					"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 					"group": "navigation",
 					"when": "view == cs.cds.viewContainers.cdsExplorer"
@@ -904,8 +903,7 @@
 					"when": "view == cs.cds.viewContainers.templateExplorer"
 				}
 			],
-			"view/item/context": [
-				{
+			"view/item/context": [{
 					"command": "cs.cds.controls.cdsExplorer.addEntry",
 					"group": "inline",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
