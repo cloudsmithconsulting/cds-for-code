@@ -40,13 +40,13 @@ export default class DataApiRepository extends CdsRepository {
             const randomSeed = Math.round(Math.random() * 30);
 
             if (randomSeed <= 10) {
-                const account = accounts[Math.floor(Math.random() * accounts.length)];
+                const account = accounts.value[Math.floor(Math.random() * accounts.value.length)];
                 returnArray.push({ id: account.accountid, entityType: "Account", name: account.name });
             } else if (randomSeed <= 20) {
-                const contact = contacts[Math.floor(Math.random() * contacts.length)];
+                const contact = contacts.value[Math.floor(Math.random() * contacts.value.length)];
                 returnArray.push({ id: contact.contactid, entityType: "Contact", name: contact.name });
             } else {
-                const user = users[Math.floor(Math.random() * users.length)];
+                const user = users.value[Math.floor(Math.random() * users.value.length)];
                 returnArray.push({ id: user.systemuserid, entityType: "SystemUser", name: user.fullname });
             }
         }
