@@ -1,6 +1,6 @@
+import * as vscode from 'vscode';
 import * as faker from 'faker';
 import * as cs from "../cs";
-import * as vscode from 'vscode';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import logger from "../core/framework/Logger";
 import Quickly from '../core/Quickly';
@@ -10,7 +10,6 @@ import { CdsSolutions } from '../api/CdsSolutions';
 import MetadataRepository from '../repositories/metadataRepository';
 import DataApiRepository from '../repositories/DataApiRepository';
 import Dictionary from '../core/types/Dictionary';
-import { select } from 'async';
 
 export type GeneratorDefinition<T> = { attribute: any, name: string, rule: string, generate: (into?: any) => T };
 export type CdsEntityFaker = { 
@@ -30,14 +29,15 @@ const cache = {
 };
 
 const ignoredAttributes = [
+	"_composite",
 	"createdon",
 	"modifiedon",
+	"msdyn_billingaccount",
+	"ownerid",
 	"processid",
 	"stageid",
-	"_composite",
-	"versionnumber",
-	"ownerid",
-	"msdyn_billingaccount"
+	"traverdespath",
+	"versionnumber"
 ];
 
 const stringAttributeTranslations = new Dictionary<string, { rule: string, generator: (attribute: any) => string }>([
@@ -81,7 +81,7 @@ const generators = {
 
 		const customer = cache.customers[Math.floor(Math.random() * cache.customers.length)];
 
-		 return { attribute, name: `${attribute.LogicalName}_${customer.collection.substring(0, customer.collection.length - 1)}@odata.bind`, rule: 'Customer', generate: () => `/${customer.collection}/${Utilities.Guid.trimGuid(customer.id)}` }; 
+		 return { attribute, name: `${attribute.LogicalName}_${customer.collection.substring(0, customer.collection.length - 1)}@odata.bind`, rule: 'Customer', generate: () => `${customer.collection}(${Utilities.Guid.trimGuid(customer.id)})` }; 
 	},
 	"DateTime": async (attribute: any): Promise<GeneratorDefinition<Date>> => {
 		return { 
@@ -136,7 +136,7 @@ const generators = {
 				const randomValue = cache.lookups.get(target)[faker.random.number(possibleValues) - 1];
 	
 				if (randomValue) {
-					return `/${randomValue.collection}/${Utilities.Guid.trimGuid(randomValue.id)}`;
+					return `${randomValue.collection}(${Utilities.Guid.trimGuid(randomValue.id)})`;
 				}
 			} };
 		}
@@ -154,7 +154,7 @@ const generators = {
 
 		const user = cache.users[Math.floor(Math.random() * cache.users.length)];
 
-		return { attribute, name: `${attribute.LogicalName}_${user.collection.substring(0, user.collection.length - 1)}@odata.bind`, rule: 'Owner', generate: () => `/${user.collection}/${Utilities.Guid.trimGuid(user.id)}` }; 
+		return { attribute, name: `${attribute.LogicalName}_${user.collection.substring(0, user.collection.length - 1)}@odata.bind`, rule: 'Owner', generate: () => `${user.collection}(${Utilities.Guid.trimGuid(user.id)})` }; 
 	},
 	"PartyList": async (attribute: any, api: DataApiRepository): Promise<GeneratorDefinition<any>> => {
 		if (cache.parties?.length === 0) {

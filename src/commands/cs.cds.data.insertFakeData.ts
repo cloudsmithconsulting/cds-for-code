@@ -46,13 +46,18 @@ export default async function run(this: DataGenerationManager, config?: CdsWebAp
     let current: number = 1;
 
     await async.each(entities, async (e, callback) => {
-        const result = await api.create(e, faker.entity.EntitySetName);
-        returnList.push(result);
+		try {
+			const result = await api.create(e, faker.entity.EntitySetName);
+			returnList.push(result);
 
-        logger.log(`Command: ${cs.cds.data.insertFakeData} Generated ${current}/${count} ${entity.EntitySetName} ${result}`);
-
-        callback(result);
+			logger.log(`Command: ${cs.cds.data.insertFakeData} Generated ${current}/${count} ${entity.EntitySetName} ${result}`);	
+			callback();
+		} catch (err) {
+			err['fake'] = JSON.stringify(e);
+			callback(err);
+		}
     }, (err) => {
+		logger.log(`Command: ${cs.cds.data.insertFakeData} error generating ${entity.EntitySetName}[${err['fake']}]`);
 		logger.error(`Command: ${cs.cds.data.insertFakeData} encountered an error generating data for ${entity.EntitySetName}`);
 	});
 
