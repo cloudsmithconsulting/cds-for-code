@@ -47,6 +47,12 @@ export default class CdsUrlResolver {
         return CdsSolutions.CodeMappings.SolutionComponents.getKey(solutionComponent);
     }
 
+    static getDocsUri(logicalName: string) {
+        let uriString = `https://docs.microsoft.com/en-us/dynamics365/customer-engagement/web-api/${logicalName}`;
+        uriString = this.addPowerAppsSource(uriString);
+        return uriString;
+    }
+
     /**
      * Gets the URI to manage a Model App
      *

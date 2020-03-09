@@ -36,7 +36,8 @@ const ignoredAttributes = [
 	"ownerid",
 	"processid",
 	"stageid",
-	"traverdespath",
+	"subscriptionid",
+	"traversedpath",
 	"versionnumber"
 ];
 
@@ -52,9 +53,9 @@ const stringAttributeTranslations = new Dictionary<string, { rule: string, gener
 	{ key: "company", value: { rule: 'Company Name', generator: attribute => faker.company.companyName() } },
 	{ key: "emailaddress", value: { rule: 'Email Address', generator: attribute => faker.internet.email() } },
 	{ key: "url", value: { rule: 'URL', generator: attribute => faker.internet.url() } },
-	{ key: "phone", value: { rule: 'Phone Number', generator: attribute => faker.phone.phoneNumber() } },
-	{ key: "fax", value: { rule: 'Fax Number', generator: attribute => faker.phone.phoneNumber() } },
-	{ key: "pager", value: { rule: 'Pager Number', generator: attribute => faker.phone.phoneNumber() } },
+	{ key: "phone", value: { rule: 'Phone Number', generator: attribute => faker.phone.phoneNumber().substring(0, (<number>attribute.MaxLength) || 1) } },
+	{ key: "fax", value: { rule: 'Fax Number', generator: attribute => faker.phone.phoneNumber().substring(0, (<number>attribute.MaxLength) || 1) } },
+	{ key: "pager", value: { rule: 'Pager Number', generator: attribute => faker.phone.phoneNumber().substring(0, (<number>attribute.MaxLength) || 1) } },
 	{ key: "salutation", value: { rule: 'Salutation', generator: attribute => faker.name.prefix() } },
 	{ key: "suffix", value: { rule: 'Suffix', generator: attribute => faker.name.suffix() } },
 	{ key: "firstname", value: { rule: 'First Name', generator: attribute => faker.name.firstName() } },
@@ -193,13 +194,13 @@ const generators = {
 					generate = () => stringAttributeTranslations[matchingKey].generator(attribute);
 					rule = stringAttributeTranslations[matchingKey].rule;
 				} else {
-					generate = () => faker.lorem.text().substr(0, (<number>attribute.MaxLength) || 1);
+					generate = () => faker.lorem.text().substring(0, (<number>attribute.MaxLength) || 1);
 					rule = "Text";
 				}
 
 				break;
 			case "TextArea":
-				generate = () => faker.lorem.paragraph().substr(0, (<number>attribute.MaxLength) || 1);
+				generate = () => faker.lorem.paragraph().substring(0, (<number>attribute.MaxLength) || 1);
 				rule = "Text (Multiple lines)";
 				break;
 			case "Url":

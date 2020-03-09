@@ -35,30 +35,30 @@ export default async function run(this: DataGenerationManager, config?: CdsWebAp
 		}
 	}
 
-    const returnList = [];
     const faker: CdsEntityFaker = await vscode.commands.executeCommand(cs.cds.data.getFaker, config, entity, selectedAttributes);
 
     logger.log(`Command: ${cs.cds.data.insertFakeData} Generating ${count} ${entity.EntitySetName}`);
 
     const entities = faker.generate(count);
-    const api = new CdsWebApi.WebApiClient(config);
-
-    let current: number = 1;
+	const api = new CdsWebApi.WebApiClient(config);
+	const returnList = [];
 
     await async.each(entities, async (e, callback) => {
 		try {
 			const result = await api.create(e, faker.entity.EntitySetName);
 			returnList.push(result);
 
-			logger.log(`Command: ${cs.cds.data.insertFakeData} Generated ${current}/${count} ${entity.EntitySetName} ${result}`);	
+			logger.log(`Command: ${cs.cds.data.insertFakeData} Generated ${returnList.length}/${count}`);	
 			callback();
 		} catch (err) {
 			err['fake'] = JSON.stringify(e);
 			callback(err);
 		}
     }, (err) => {
+		if (!err) { return; }
 		logger.log(`Command: ${cs.cds.data.insertFakeData} error generating ${entity.EntitySetName}[${err['fake']}]`);
 		logger.error(`Command: ${cs.cds.data.insertFakeData} encountered an error generating data for ${entity.EntitySetName}`);
+		logger.error(`Command: ${cs.cds.data.insertFakeData} error was ${err.message}`);
 	});
 
     return returnList;

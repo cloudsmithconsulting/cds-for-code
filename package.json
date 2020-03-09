@@ -248,6 +248,11 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.cds.controls.cdsExplorer.viewApiDocs",
+				"title": "View API Docs",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
 				"title": "Add to solution",
 				"category": "UserInterface"
@@ -746,6 +751,10 @@
 					"when": "false"
 				},
 				{
+					"command": "cs.cds.controls.cdsExplorer.viewApiDocs",
+					"when": "false"
+				},
+				{
 					"command": "cs.cds.controls.cdsExplorer.inspectEntry",
 					"when": "false"
 				},
@@ -970,6 +979,11 @@
 					"command": "cs.cds.controls.cdsExplorer.insertFakeData",
 					"group": "insert@2",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canInsertData)(.*)$/"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.viewApiDocs",
+					"group": "insert@2",
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canViewApiDocs)(.*)$/"
 				},
 				{
 					"command": "cs.cds.controls.cdsExplorer.exportSolution",

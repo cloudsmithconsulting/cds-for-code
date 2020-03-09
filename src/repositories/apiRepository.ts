@@ -462,7 +462,7 @@ export default class ApiRepository {
         const request: CdsWebApi.RetrieveMultipleRequest = {
             collection: "systemusers",
             select: select,
-            filter: "fullname ne 'INTEGRATION'",
+            filter: "fullname ne 'INTEGRATION' and (accessmode eq 0 or accessmode eq 1)",
             orderBy: [ "fullname" ]
         };
 

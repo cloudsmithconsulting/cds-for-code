@@ -58,7 +58,12 @@ export default class DataApiRepository extends CdsRepository {
         if (count < 1) { count = 1; }
         if (count > 5000) { count = 5000; }
 
-        const users = await this.webapi.retrieveAllRequest({ collection: "systemusers", select: [ "systemuserid", "fullname" ], top: count });
+        const users = await this.webapi.retrieveAllRequest({ 
+            collection: "systemusers", 
+            select: [ "systemuserid", "fullname" ], 
+            filter: "fullname ne 'INTEGRATION' and (accessmode eq 0 or accessmode eq 1)",
+            top: count 
+        });
 
         let returnArray = [];
 
