@@ -205,7 +205,7 @@ ___
 
 ▸ **export**(`item?`: [TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:107
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:95
 
 **Parameters:**
 
@@ -221,7 +221,7 @@ ___
 
 ▸ **getChildren**(`element?`: [TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)): *Promise‹[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)[]›*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:116
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:104
 
 **Parameters:**
 
@@ -237,7 +237,7 @@ ___
 
 ▸ **getRootEntries**(): *[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)[]*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:190
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:178
 
 **Returns:** *[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)[]*
 
@@ -247,7 +247,7 @@ ___
 
 ▸ **getTreeItem**(`element`: [TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)): *TreeItem*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:112
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:100
 
 **Parameters:**
 
@@ -263,7 +263,7 @@ ___
 
 ▸ **import**(`item?`: [TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:169
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:157
 
 **Parameters:**
 
@@ -279,7 +279,7 @@ ___
 
 ▸ **open**(`item?`: [TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)): *Promise‹void›*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:175
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:163
 
 **Parameters:**
 
@@ -295,7 +295,7 @@ ___
 
 ▸ **refresh**(`item?`: [TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)): *void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:180
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:168
 
 **Parameters:**
 

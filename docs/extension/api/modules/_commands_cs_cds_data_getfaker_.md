@@ -34,7 +34,7 @@ sidebar_label: "commands/cs.cds.data.getFaker"
 
 Ƭ **CdsEntityFaker**: *object*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:16
+Defined in src/commands/cs.cds.data.getFaker.ts:15
 
 #### Type declaration:
 
@@ -58,7 +58,7 @@ ___
 
 Ƭ **GeneratorDefinition**: *object*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:15
+Defined in src/commands/cs.cds.data.getFaker.ts:14
 
 #### Type declaration:
 
@@ -81,24 +81,26 @@ Defined in src/commands/cs.cds.data.getFaker.ts:15
 	{ key: "_longitude", value: { rule: 'Longitude', generator: attribute => faker.address.longitude() } },
 ])
 
-Defined in src/commands/cs.cds.data.getFaker.ts:68
+Defined in src/commands/cs.cds.data.getFaker.ts:69
 
 ___
 
 ### `Const` ignoredAttributes
 
 • **ignoredAttributes**: *string[]* = [
+	"_composite",
 	"createdon",
 	"modifiedon",
+	"msdyn_billingaccount",
+	"ownerid",
 	"processid",
 	"stageid",
-	"_composite",
-	"versionnumber",
-	"ownerid",
-	"msdyn_billingaccount"
+	"subscriptionid",
+	"traversedpath",
+	"versionnumber"
 ]
 
-Defined in src/commands/cs.cds.data.getFaker.ts:32
+Defined in src/commands/cs.cds.data.getFaker.ts:31
 
 ___
 
@@ -116,9 +118,9 @@ ___
 	{ key: "company", value: { rule: 'Company Name', generator: attribute => faker.company.companyName() } },
 	{ key: "emailaddress", value: { rule: 'Email Address', generator: attribute => faker.internet.email() } },
 	{ key: "url", value: { rule: 'URL', generator: attribute => faker.internet.url() } },
-	{ key: "phone", value: { rule: 'Phone Number', generator: attribute => faker.phone.phoneNumber() } },
-	{ key: "fax", value: { rule: 'Fax Number', generator: attribute => faker.phone.phoneNumber() } },
-	{ key: "pager", value: { rule: 'Pager Number', generator: attribute => faker.phone.phoneNumber() } },
+	{ key: "phone", value: { rule: 'Phone Number', generator: attribute => faker.phone.phoneNumber().substring(0, (<number>attribute.MaxLength) || 1) } },
+	{ key: "fax", value: { rule: 'Fax Number', generator: attribute => faker.phone.phoneNumber().substring(0, (<number>attribute.MaxLength) || 1) } },
+	{ key: "pager", value: { rule: 'Pager Number', generator: attribute => faker.phone.phoneNumber().substring(0, (<number>attribute.MaxLength) || 1) } },
 	{ key: "salutation", value: { rule: 'Salutation', generator: attribute => faker.name.prefix() } },
 	{ key: "suffix", value: { rule: 'Suffix', generator: attribute => faker.name.suffix() } },
 	{ key: "firstname", value: { rule: 'First Name', generator: attribute => faker.name.firstName() } },
@@ -129,7 +131,7 @@ ___
 	{ key: "number", value: { rule: 'Alphanumeric', generator: attribute => faker.random.alphaNumeric(Math.floor(Math.random() * (attribute.MaxLength || 1))) } }
 ])
 
-Defined in src/commands/cs.cds.data.getFaker.ts:43
+Defined in src/commands/cs.cds.data.getFaker.ts:44
 
 ## Functions
 
@@ -137,7 +139,7 @@ Defined in src/commands/cs.cds.data.getFaker.ts:43
 
 ▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entity?`: any, `selectedAttributes?`: string[]): *Promise‹[CdsEntityFaker](_commands_cs_cds_data_getfaker_.md#cdsentityfaker)›*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:232
+Defined in src/commands/cs.cds.data.getFaker.ts:233
 
 **Parameters:**
 
@@ -155,37 +157,37 @@ Name | Type |
 
 ### ▪ **cache**: *object*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:24
+Defined in src/commands/cs.cds.data.getFaker.ts:23
 
 ###  customers
 
 • **customers**: *undefined[]* = []
 
-Defined in src/commands/cs.cds.data.getFaker.ts:25
+Defined in src/commands/cs.cds.data.getFaker.ts:24
 
 ###  lookups
 
 • **lookups**: *Map‹string, any[]›* = new Map<string, any[]>()
 
-Defined in src/commands/cs.cds.data.getFaker.ts:26
+Defined in src/commands/cs.cds.data.getFaker.ts:25
 
 ###  parties
 
 • **parties**: *undefined[]* = []
 
-Defined in src/commands/cs.cds.data.getFaker.ts:28
+Defined in src/commands/cs.cds.data.getFaker.ts:27
 
 ###  picklists
 
 • **picklists**: *Map‹string, any[]›* = new Map<string, any[]>()
 
-Defined in src/commands/cs.cds.data.getFaker.ts:29
+Defined in src/commands/cs.cds.data.getFaker.ts:28
 
 ###  users
 
 • **users**: *undefined[]* = []
 
-Defined in src/commands/cs.cds.data.getFaker.ts:27
+Defined in src/commands/cs.cds.data.getFaker.ts:26
 
 ___
 
@@ -193,13 +195,13 @@ ___
 
 ### ▪ **generators**: *object*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:73
+Defined in src/commands/cs.cds.data.getFaker.ts:74
 
 ###  BigInt
 
 ▸ **BigInt**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹BigInt››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:227
+Defined in src/commands/cs.cds.data.getFaker.ts:228
 
 **Parameters:**
 
@@ -213,7 +215,7 @@ Name | Type |
 
 ▸ **Boolean**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹boolean››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:74
+Defined in src/commands/cs.cds.data.getFaker.ts:75
 
 **Parameters:**
 
@@ -227,7 +229,7 @@ Name | Type |
 
 ▸ **Customer**(`attribute`: any, `api`: [DataApiRepository](../classes/_repositories_dataapirepository_.dataapirepository.md)): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹string››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:77
+Defined in src/commands/cs.cds.data.getFaker.ts:78
 
 **Parameters:**
 
@@ -242,7 +244,7 @@ Name | Type |
 
 ▸ **DateTime**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹Date››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:86
+Defined in src/commands/cs.cds.data.getFaker.ts:87
 
 **Parameters:**
 
@@ -256,7 +258,7 @@ Name | Type |
 
 ▸ **Decimal**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:100
+Defined in src/commands/cs.cds.data.getFaker.ts:101
 
 **Parameters:**
 
@@ -270,7 +272,7 @@ Name | Type |
 
 ▸ **Double**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:103
+Defined in src/commands/cs.cds.data.getFaker.ts:104
 
 **Parameters:**
 
@@ -284,7 +286,7 @@ Name | Type |
 
 ▸ **Integer**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:116
+Defined in src/commands/cs.cds.data.getFaker.ts:117
 
 **Parameters:**
 
@@ -298,7 +300,7 @@ Name | Type |
 
 ▸ **Lookup**(`attribute`: any, `api`: [DataApiRepository](../classes/_repositories_dataapirepository_.dataapirepository.md)): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹any››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:119
+Defined in src/commands/cs.cds.data.getFaker.ts:120
 
 **Parameters:**
 
@@ -313,7 +315,7 @@ Name | Type |
 
 ▸ **Memo**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹string››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:144
+Defined in src/commands/cs.cds.data.getFaker.ts:145
 
 **Parameters:**
 
@@ -327,7 +329,7 @@ Name | Type |
 
 ▸ **Money**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:147
+Defined in src/commands/cs.cds.data.getFaker.ts:148
 
 **Parameters:**
 
@@ -341,7 +343,7 @@ Name | Type |
 
 ▸ **Owner**(`attribute`: any, `api`: [DataApiRepository](../classes/_repositories_dataapirepository_.dataapirepository.md)): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹string››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:150
+Defined in src/commands/cs.cds.data.getFaker.ts:151
 
 **Parameters:**
 
@@ -356,7 +358,7 @@ Name | Type |
 
 ▸ **PartyList**(`attribute`: any, `api`: [DataApiRepository](../classes/_repositories_dataapirepository_.dataapirepository.md)): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹any››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:159
+Defined in src/commands/cs.cds.data.getFaker.ts:160
 
 **Parameters:**
 
@@ -371,7 +373,7 @@ Name | Type |
 
 ▸ **Picklist**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:166
+Defined in src/commands/cs.cds.data.getFaker.ts:167
 
 **Parameters:**
 
@@ -385,7 +387,7 @@ Name | Type |
 
 ▸ **State**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:171
+Defined in src/commands/cs.cds.data.getFaker.ts:172
 
 **Parameters:**
 
@@ -399,7 +401,7 @@ Name | Type |
 
 ▸ **Status**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:174
+Defined in src/commands/cs.cds.data.getFaker.ts:175
 
 **Parameters:**
 
@@ -413,7 +415,7 @@ Name | Type |
 
 ▸ **String**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹string››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:177
+Defined in src/commands/cs.cds.data.getFaker.ts:178
 
 **Parameters:**
 
@@ -427,7 +429,7 @@ Name | Type |
 
 ▸ **Uniqueidentifier**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹string››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:224
+Defined in src/commands/cs.cds.data.getFaker.ts:225
 
 **Parameters:**
 

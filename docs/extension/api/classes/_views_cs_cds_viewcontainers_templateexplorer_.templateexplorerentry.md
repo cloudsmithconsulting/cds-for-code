@@ -59,7 +59,7 @@ sidebar_label: "TemplateExplorerEntry"
 
 *Overrides void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:250
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:238
 
 **Parameters:**
 
@@ -105,7 +105,7 @@ ___
 
 • **context**? : *any*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:259
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:247
 
 ___
 
@@ -156,7 +156,7 @@ ___
 
 *Overrides void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:255
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:243
 
 ___
 
@@ -164,7 +164,7 @@ ___
 
 • **itemType**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:254
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:242
 
 ___
 
@@ -199,7 +199,7 @@ ___
 
 • **subtext**? : *string*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:257
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:245
 
 ___
 
@@ -207,7 +207,7 @@ ___
 
 ▪ **canAddEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "Folder" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:244
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:232
 
 ___
 
@@ -215,7 +215,7 @@ ___
 
 ▪ **canCreateInWorkspaceTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "ProjectTemplate", "ItemTemplate" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:249
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:237
 
 ___
 
@@ -223,7 +223,7 @@ ___
 
 ▪ **canDeleteEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "ProjectTemplate", "ItemTemplate" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:247
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:235
 
 ___
 
@@ -231,7 +231,7 @@ ___
 
 ▪ **canEditEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "ProjectTemplate", "ItemTemplate" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:246
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:234
 
 ___
 
@@ -239,7 +239,7 @@ ___
 
 ▪ **canExportEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "ProjectTemplate", "ItemTemplate" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:250
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:238
 
 ___
 
@@ -247,7 +247,7 @@ ___
 
 ▪ **canImportEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "Folder" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:245
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:233
 
 ___
 
@@ -255,7 +255,7 @@ ___
 
 ▪ **canOpenEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "ProjectTemplate", "ItemTemplate" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:248
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:236
 
 ___
 
@@ -263,7 +263,7 @@ ___
 
 ▪ **canRefreshEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "Folder" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:243
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:231
 
 ## Accessors
 
@@ -271,7 +271,7 @@ Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:243
 
 • **get capabilities**(): *string[]*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:313
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:301
 
 **Returns:** *string[]*
 
@@ -283,7 +283,7 @@ ___
 
 *Overrides void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:294
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:282
 
 **Returns:** *string*
 
@@ -293,7 +293,7 @@ ___
 
 • **get parent**(): *[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:298
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:286
 
 **Returns:** *[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)*
 
@@ -305,7 +305,7 @@ ___
 
 *Overrides void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:290
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:278
 
 **Returns:** *string*
 
@@ -315,7 +315,7 @@ Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:290
 
 ▸ **addCapability**(`returnList`: string[], `capabilityName`: string, `constrain`: [TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[], `additionalCheck?`: function): *void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:344
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:332
 
 **Parameters:**
 
@@ -337,7 +337,7 @@ ___
 
 ▸ **createChildItem**(`itemType`: [TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype), `id`: string, `label`: string, `subtext?`: string, `collapsibleState`: TreeItemCollapsibleState, `context?`: any): *[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:340
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:328
 
 Creates a child item underneath the current tree entry with the specified properties.
 
