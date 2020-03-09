@@ -380,7 +380,7 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
 
     @command(cs.cds.controls.cdsExplorer.viewApiDocs, "View Api Docs")
     async viewApiDocs(item?: CdsTreeEntry) {
-        const url = CdsUrlResolver.getDocsUri(item.label.toLowerCase());
+        const url = CdsUrlResolver.getDocsUri(item.context.LogicalName.toLowerCase());
         Utilities.Browser.openWindow(url);
     }
 
