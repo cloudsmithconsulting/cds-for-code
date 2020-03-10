@@ -24,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="<%=$this.parameters.ShortName%>.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="PkgFolder\Content\en-us\EndHtml\CSS\common.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

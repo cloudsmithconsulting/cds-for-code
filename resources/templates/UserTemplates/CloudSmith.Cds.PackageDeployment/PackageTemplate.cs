@@ -9,16 +9,18 @@ using Microsoft.Xrm.Tooling.PackageDeployment;
 using Microsoft.Xrm.Tooling.PackageDeployment.CrmPackageExtentionBase;
 
 /// <summary>
+/// This is a template directly generated using the Microsoft Dynamics CRM SDK Templates from here:
+/// https://marketplace.visualstudio.com/items?itemName=DynamicsCRMPG.MicrosoftDynamicsCRMSDKTemplates
 /// You can read more about creating package deployments here:
 /// https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/create-packages-package-deployer
 /// 
 /// If you add items to the PkgFolder and you are not using Visual Studio and the properties window,
-/// remember to edit the CrmPackageDeployment.csproj file to include the XML to copy files to the 
+/// remember to edit the <%=$this.parameters.ShortName%>.csproj file to include the XML to copy files to the 
 /// output directory of the executable.
 /// 
 /// This is the class for entering custom code to be executed during package deployment
 /// </summary>
-namespace CrmPackageDeployment
+namespace <%=$this.parameters.ShortName%>
 {
     /// <summary>
     /// Import package starter frame. 
