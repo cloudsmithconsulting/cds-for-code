@@ -37,7 +37,6 @@ const ignoredAttributes = [
 	"processid",
 	"stageid",
 	"subscriptionid",
-	"traversedpath",
 	"versionnumber"
 ];
 
@@ -291,10 +290,11 @@ export default async function run(config?: CdsWebApi.Config, entity?: any, selec
 							if (!ignoreAttribute
 								&& attribute 
 								&& attribute.IsValidForCreate 
+								&& (attribute.IsSearchable || attribute.IsValidForForm || attribute.IsValidForGrid)
 								&& attribute.RequiredLevel.Value 
 								&& (attribute.RequiredLevel.Value !== "None" || faker.random.boolean())) {
 								try {
-									const defined = (this.generators[k]).generate(returnObject);
+									const defined = (this.generators[k])?.generate(returnObject);
 
 									if (defined) {
 										returnObject[this.generators[k].name] = defined;

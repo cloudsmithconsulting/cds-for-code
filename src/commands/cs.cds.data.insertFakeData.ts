@@ -28,7 +28,11 @@ export default async function run(this: DataGenerationManager, config?: CdsWebAp
 	}
 
     if (!selectedAttributes) {
-		const picked = await Quickly.pickCdsEntityComponents(config, entity, CdsSolutions.SolutionComponent.Attribute, undefined, "Choose attributes to fake");
+		const picked = await Quickly.pickCdsEntityComponents(config, 
+			entity, 
+			CdsSolutions.SolutionComponent.Attribute, 
+			(a) => a.IsValidForCreate && (a.IsSearchable || a.IsValidForForm || a.IsValidForGrid), 
+			"Choose attributes to fake");
 
 		if (picked) {
 			selectedAttributes = picked.map(i => i.component.LogicalName);
