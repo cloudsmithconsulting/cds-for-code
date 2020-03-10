@@ -1,7 +1,7 @@
 <%#def.template({
     "type": "Project Template",
     "name": "CloudSmith.Cds.SamplePlugin",
-    "displayName": "Dynamics CRM Plugin with validation and tests",
+    "displayName": "Dynamics CRM plugin project with validation and tests",
     "publisher": "CloudSmith Consulting LLC",
     "outputPath": "${Namespace}",
     "categories": ["Dynamics", "Plugins"],
