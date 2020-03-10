@@ -33,6 +33,7 @@ sidebar_label: "cdsExplorer"
 * [refreshEntry](_cs_.cds.controls.cdsexplorer.md#static-refreshentry)
 * [removeEntryFromSolution](_cs_.cds.controls.cdsexplorer.md#static-removeentryfromsolution)
 * [unpackSolution](_cs_.cds.controls.cdsexplorer.md#static-unpacksolution)
+* [viewApiDocs](_cs_.cds.controls.cdsexplorer.md#static-viewapidocs)
 
 ## Properties
 
@@ -128,7 +129,7 @@ ___
 
 ▪ **inspectEntry**: *string* = `${cdsExplorer._namespace}.inspectEntry`
 
-Defined in src/cs.ts:182
+Defined in src/cs.ts:183
 
 ___
 
@@ -136,7 +137,7 @@ ___
 
 ▪ **moveSolution**: *string* = `${cdsExplorer._namespace}.moveSolution`
 
-Defined in src/cs.ts:183
+Defined in src/cs.ts:184
 
 ___
 
@@ -144,7 +145,7 @@ ___
 
 ▪ **openInApp**: *string* = `${cdsExplorer._namespace}.openInApp`
 
-Defined in src/cs.ts:184
+Defined in src/cs.ts:185
 
 ___
 
@@ -152,7 +153,7 @@ ___
 
 ▪ **openInBrowser**: *string* = `${cdsExplorer._namespace}.openInBrowser`
 
-Defined in src/cs.ts:185
+Defined in src/cs.ts:186
 
 ___
 
@@ -160,7 +161,7 @@ ___
 
 ▪ **openInEditor**: *string* = `${cdsExplorer._namespace}.openInEditor`
 
-Defined in src/cs.ts:186
+Defined in src/cs.ts:187
 
 ___
 
@@ -168,7 +169,7 @@ ___
 
 ▪ **refreshEntry**: *string* = `${cdsExplorer._namespace}.refreshEntry`
 
-Defined in src/cs.ts:187
+Defined in src/cs.ts:188
 
 ___
 
@@ -176,7 +177,7 @@ ___
 
 ▪ **removeEntryFromSolution**: *string* = `${cdsExplorer._namespace}.removeEntryFromSolution`
 
-Defined in src/cs.ts:188
+Defined in src/cs.ts:189
 
 ___
 
@@ -184,4 +185,12 @@ ___
 
 ▪ **unpackSolution**: *string* = `${cdsExplorer._namespace}.unpackSolution`
 
-Defined in src/cs.ts:189
+Defined in src/cs.ts:190
+
+___
+
+### `Static` viewApiDocs
+
+▪ **viewApiDocs**: *string* = `${cdsExplorer._namespace}.viewApiDocs`
+
+Defined in src/cs.ts:182

@@ -24,4 +24,4 @@ sidebar_label: "views/cs.cds.viewContainers.templateExplorer"
 
 Ƭ **TemplateExplorerEntryType**: *"ProjectTemplate" | "ItemTemplate" | "Folder"*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:351
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:339

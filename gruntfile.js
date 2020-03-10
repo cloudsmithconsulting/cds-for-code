@@ -220,6 +220,11 @@ module.exports = function (grunt) {
                 src: [ 'resources/templates/BuiltInTemplates/**'], 
                 dest: 'dist/templates/SystemTemplates.zip'
             },
+            'CloudSmith.Cds.CsvDataTemplate': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.CsvDataTemplate',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.CsvDataTemplate/**'], 
+                dest: 'dist/templates/CloudSmith.Cds.CsvDataTemplate.zip'
+            },
             'CloudSmith.Cds.DataGenerationTests': {
                 cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.DataGenerationTests',
                 src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.DataGenerationTests/**'], 
@@ -229,6 +234,11 @@ module.exports = function (grunt) {
                 cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.InteractiveBrowserTests',
                 src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.InteractiveBrowserTests/**'], 
                 dest: 'dist/templates/CloudSmith.Cds.InteractiveBrowserTests.zip'
+            },
+            'CloudSmith.Cds.JsonDataTemplate': {
+                cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.JsonDataTemplate',
+                src: [ 'resources/templates/UserTemplates/CloudSmith.Cds.JsonDataTemplate/**'], 
+                dest: 'dist/templates/CloudSmith.Cds.JsonDataTemplate.zip'
             },
             'CloudSmith.Cds.SamplePlugin': {
                 cwd: 'resources/templates/UserTemplates/CloudSmith.Cds.SamplePlugin',
@@ -566,8 +576,8 @@ module.exports = function (grunt) {
     grunt.registerTask('sass_compile', [ 'sass:dev', 'sass:release', 'sass:release_min', 'postcss:dev', 'notify:sass_compile' ]);
 
     grunt.registerTask('templates_compile', 
-        [ 'zip:SystemTemplates', 'zip:CloudSmith.Cds.DataGenerationTests', 'zip:CloudSmith.Cds.InteractiveBrowserTests', 
-          'zip:CloudSmith.Cds.SamplePlugin', 'notify:templates_compile' ]);
+        [ 'zip:SystemTemplates', 'zip:CloudSmith.Cds.CsvDataTemplate', 'zip:CloudSmith.Cds.DataGenerationTests', 'zip:CloudSmith.Cds.InteractiveBrowserTests', 
+          'zip:CloudSmith.Cds.JsonDataTemplate', 'zip:CloudSmith.Cds.SamplePlugin', 'notify:templates_compile' ]);
           
     grunt.registerTask('tools_compile', 
         [ 'shell:crmsvcutil_restore', 'shell:crmsvcutil_build_debug', 'shell:assemblyscanner_restore', 'shell:assemblyscanner_build_debug' ]);

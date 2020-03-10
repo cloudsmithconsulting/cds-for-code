@@ -179,6 +179,7 @@ export namespace cds {
             static readonly editEntry: string = `${cdsExplorer._namespace}.editEntry`;
             static readonly exportSolution: string = `${cdsExplorer._namespace}.exportSolution`;
             static readonly insertFakeData: string = `${cdsExplorer._namespace}.insertFakeData`;
+            static readonly viewApiDocs: string = `${cdsExplorer._namespace}.viewApiDocs`;
             static readonly inspectEntry: string = `${cdsExplorer._namespace}.inspectEntry`;            
             static readonly moveSolution: string = `${cdsExplorer._namespace}.moveSolution`;
             static readonly openInApp: string = `${cdsExplorer._namespace}.openInApp`;

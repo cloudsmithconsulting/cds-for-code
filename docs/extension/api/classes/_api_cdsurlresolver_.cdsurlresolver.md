@@ -25,6 +25,7 @@ A class for resolving URLs to CDS
 * [crmGuid](_api_cdsurlresolver_.cdsurlresolver.md#static-private-crmguid)
 * [escapeOptions](_api_cdsurlresolver_.cdsurlresolver.md#static-private-escapeoptions)
 * [getAppBaseUrl](_api_cdsurlresolver_.cdsurlresolver.md#static-private-getappbaseurl)
+* [getDocsUri](_api_cdsurlresolver_.cdsurlresolver.md#static-getdocsuri)
 * [getManageAppUri](_api_cdsurlresolver_.cdsurlresolver.md#static-getmanageappuri)
 * [getManageAttributeUri](_api_cdsurlresolver_.cdsurlresolver.md#static-getmanageattributeuri)
 * [getManageBusinessProcessUri](_api_cdsurlresolver_.cdsurlresolver.md#static-getmanagebusinessprocessuri)
@@ -55,7 +56,7 @@ A class for resolving URLs to CDS
 
 ▸ **addPowerAppsSource**(`uriString`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:621
+Defined in src/api/CdsUrlResolver.ts:627
 
 Adds the source query string parameter to a powerapps URI
 
@@ -77,7 +78,7 @@ ___
 
 ▸ **addSolutionToUri**(`uriString`: string, `solutionId?`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:599
+Defined in src/api/CdsUrlResolver.ts:605
 
 Adds the solution id to the URI
 
@@ -100,7 +101,7 @@ ___
 
 ▸ **crmGuid**(`value`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:569
+Defined in src/api/CdsUrlResolver.ts:575
 
 URL encodes a GUID for passing to web URI
 
@@ -122,7 +123,7 @@ ___
 
 ▸ **escapeOptions**(`options`: any): *string*
 
-Defined in src/api/CdsUrlResolver.ts:582
+Defined in src/api/CdsUrlResolver.ts:588
 
 Escapes the options and returns a query string
 
@@ -144,7 +145,7 @@ ___
 
 ▸ **getAppBaseUrl**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *string*
 
-Defined in src/api/CdsUrlResolver.ts:652
+Defined in src/api/CdsUrlResolver.ts:658
 
 Gets the app base URL
 
@@ -162,11 +163,27 @@ Name | Type |
 
 ___
 
+### `Static` getDocsUri
+
+▸ **getDocsUri**(`logicalName`: string): *string*
+
+Defined in src/api/CdsUrlResolver.ts:50
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`logicalName` | string |
+
+**Returns:** *string*
+
+___
+
 ### `Static` getManageAppUri
 
 ▸ **getManageAppUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `app?`: any, `solution?`: any): *string*
 
-Defined in src/api/CdsUrlResolver.ts:60
+Defined in src/api/CdsUrlResolver.ts:66
 
 Gets the URI to manage a Model App
 
@@ -190,7 +207,7 @@ ___
 
 ▸ **getManageAttributeUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entityId`: string, `attributeId?`: string, `solutionId?`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:163
+Defined in src/api/CdsUrlResolver.ts:169
 
 Gets the URI to manage the attribute
 
@@ -215,7 +232,7 @@ ___
 
 ▸ **getManageBusinessProcessUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `processType`: [ProcessType](../enums/_api_cdssolutions_.cdssolutions.processtype.md), `processId?`: string, `solutionId?`: string, `entityTypeCode?`: number): *string*
 
-Defined in src/api/CdsUrlResolver.ts:468
+Defined in src/api/CdsUrlResolver.ts:474
 
 Gets the URI for managing business processes
 
@@ -241,7 +258,7 @@ ___
 
 ▸ **getManageEntityChartUrl**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entityTypeCode?`: string, `chartId?`: string, `solutionId?`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:397
+Defined in src/api/CdsUrlResolver.ts:403
 
 Gets the URL for managing the entity chart
 
@@ -266,7 +283,7 @@ ___
 
 ▸ **getManageEntityDashboardUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entityTypeCode?`: string, `layoutType?`: [InteractiveDashboardLayout](../enums/_api_cdssolutions_.cdssolutions.interactivedashboardlayout.md), `dashboardType?`: string, `dashboardId?`: string, `solutionId?`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:360
+Defined in src/api/CdsUrlResolver.ts:366
 
 Gets the URI for managing the entity dashboard
 
@@ -293,7 +310,7 @@ ___
 
 ▸ **getManageEntityFormUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entityTypeCode`: string, `formType`: [DynamicsForm](../enums/_api_cdssolutions_.cdssolutions.dynamicsform.md), `formId?`: string, `solutionId?`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:234
+Defined in src/api/CdsUrlResolver.ts:240
 
 Gets the URI for managing the entity form
 
@@ -319,7 +336,7 @@ ___
 
 ▸ **getManageEntityKeyUrl**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entityId?`: string, `keyId?`: string, `solutionId?`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:423
+Defined in src/api/CdsUrlResolver.ts:429
 
 Gets the URL for managing the entity keys
 
@@ -344,7 +361,7 @@ ___
 
 ▸ **getManageEntityRelationshipUrl**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entityId?`: string, `relationshipId?`: string, `solutionId?`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:444
+Defined in src/api/CdsUrlResolver.ts:450
 
 Gets the URL for managing entity relationships
 
@@ -369,7 +386,7 @@ ___
 
 ▸ **getManageEntityUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entity?`: any, `solution?`: any): *string*
 
-Defined in src/api/CdsUrlResolver.ts:126
+Defined in src/api/CdsUrlResolver.ts:132
 
 Gets the URI to manage the entity
 
@@ -393,7 +410,7 @@ ___
 
 ▸ **getManageEntityViewUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entityId`: string, `entityTypeCode?`: string, `viewId?`: string, `solutionId?`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:307
+Defined in src/api/CdsUrlResolver.ts:313
 
 Gets the URI for managing the entity view
 
@@ -419,7 +436,7 @@ ___
 
 ▸ **getManageOptionSetUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entityId?`: string, `entityTypeCode?`: string, `optionSetId?`: string, `solutionId?`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:542
+Defined in src/api/CdsUrlResolver.ts:548
 
 Gets the URI for managing the option set
 
@@ -445,7 +462,7 @@ ___
 
 ▸ **getManageSolutionUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution?`: any): *string*
 
-Defined in src/api/CdsUrlResolver.ts:100
+Defined in src/api/CdsUrlResolver.ts:106
 
 Gets the URI to manage the solution
 
@@ -468,7 +485,7 @@ ___
 
 ▸ **getManageWebResourceUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `webResourceId?`: string, `solutionId?`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:520
+Defined in src/api/CdsUrlResolver.ts:526
 
 Gets the URI for managing the web resource
 
@@ -492,7 +509,7 @@ ___
 
 ▸ **getOpenAppUsingBrowserUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `app`: any): *string*
 
-Defined in src/api/CdsUrlResolver.ts:86
+Defined in src/api/CdsUrlResolver.ts:92
 
 Gets the URI for opening the app in the user's browser
 
@@ -515,7 +532,7 @@ ___
 
 ▸ **getOpenEntityDashboardUsingAppUrl**(`dashboardId`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:341
+Defined in src/api/CdsUrlResolver.ts:347
 
 Gets the URL for opening the entity dasboard in the dynamics client app
 
@@ -537,7 +554,7 @@ ___
 
 ▸ **getOpenEntityFormUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entityLogicalName`: string, `formId?`: string, `showNavigationBar`: boolean, `showCommandBar`: boolean): *string*
 
-Defined in src/api/CdsUrlResolver.ts:204
+Defined in src/api/CdsUrlResolver.ts:210
 
 Gets the URI for opening the entity form
 
@@ -563,7 +580,7 @@ ___
 
 ▸ **getOpenEntityUsingAppUrl**(`entityLogicalName`: string, `entityId?`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:182
+Defined in src/api/CdsUrlResolver.ts:188
 
 Gets the URL for opening the entity in the dynamics client app
 
@@ -586,7 +603,7 @@ ___
 
 ▸ **getOpenEntityViewUri**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entityLogicalName`: string, `viewId`: string, `showNavigationBar`: boolean, `showCommandBar`: boolean): *string*
 
-Defined in src/api/CdsUrlResolver.ts:281
+Defined in src/api/CdsUrlResolver.ts:287
 
 Gets the URI for opening the entity view
 
@@ -612,7 +629,7 @@ ___
 
 ▸ **getOpenEntityViewUsingAppUrl**(`entityLogicalName`: string, `viewId?`: string): *string*
 
-Defined in src/api/CdsUrlResolver.ts:259
+Defined in src/api/CdsUrlResolver.ts:265
 
 Gets the URL for opening an entity view in the dynamics client app
 
@@ -635,7 +652,7 @@ ___
 
 ▸ **hasPowerAppsExperience**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)): *boolean*
 
-Defined in src/api/CdsUrlResolver.ts:638
+Defined in src/api/CdsUrlResolver.ts:644
 
 Determines if the config supports the power apps experience
 

@@ -1,6 +1,6 @@
+import * as vscode from 'vscode';
 import * as faker from 'faker';
 import * as cs from "../cs";
-import * as vscode from 'vscode';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import logger from "../core/framework/Logger";
 import Quickly from '../core/Quickly';
@@ -10,7 +10,6 @@ import { CdsSolutions } from '../api/CdsSolutions';
 import MetadataRepository from '../repositories/metadataRepository';
 import DataApiRepository from '../repositories/DataApiRepository';
 import Dictionary from '../core/types/Dictionary';
-import { select } from 'async';
 
 export type GeneratorDefinition<T> = { attribute: any, name: string, rule: string, generate: (into?: any) => T };
 export type CdsEntityFaker = { 
@@ -30,14 +29,16 @@ const cache = {
 };
 
 const ignoredAttributes = [
+	"_composite",
 	"createdon",
 	"modifiedon",
+	"msdyn_billingaccount",
+	"ownerid",
 	"processid",
 	"stageid",
-	"_composite",
-	"versionnumber",
-	"ownerid",
-	"msdyn_billingaccount"
+	"subscriptionid",
+	"traversedpath",
+	"versionnumber"
 ];
 
 const stringAttributeTranslations = new Dictionary<string, { rule: string, generator: (attribute: any) => string }>([
@@ -52,9 +53,9 @@ const stringAttributeTranslations = new Dictionary<string, { rule: string, gener
 	{ key: "company", value: { rule: 'Company Name', generator: attribute => faker.company.companyName() } },
 	{ key: "emailaddress", value: { rule: 'Email Address', generator: attribute => faker.internet.email() } },
 	{ key: "url", value: { rule: 'URL', generator: attribute => faker.internet.url() } },
-	{ key: "phone", value: { rule: 'Phone Number', generator: attribute => faker.phone.phoneNumber() } },
-	{ key: "fax", value: { rule: 'Fax Number', generator: attribute => faker.phone.phoneNumber() } },
-	{ key: "pager", value: { rule: 'Pager Number', generator: attribute => faker.phone.phoneNumber() } },
+	{ key: "phone", value: { rule: 'Phone Number', generator: attribute => faker.phone.phoneNumber().substring(0, (<number>attribute.MaxLength) || 1) } },
+	{ key: "fax", value: { rule: 'Fax Number', generator: attribute => faker.phone.phoneNumber().substring(0, (<number>attribute.MaxLength) || 1) } },
+	{ key: "pager", value: { rule: 'Pager Number', generator: attribute => faker.phone.phoneNumber().substring(0, (<number>attribute.MaxLength) || 1) } },
 	{ key: "salutation", value: { rule: 'Salutation', generator: attribute => faker.name.prefix() } },
 	{ key: "suffix", value: { rule: 'Suffix', generator: attribute => faker.name.suffix() } },
 	{ key: "firstname", value: { rule: 'First Name', generator: attribute => faker.name.firstName() } },
@@ -81,7 +82,7 @@ const generators = {
 
 		const customer = cache.customers[Math.floor(Math.random() * cache.customers.length)];
 
-		 return { attribute, name: `${attribute.LogicalName}_${customer.collection.substring(0, customer.collection.length - 1)}@odata.bind`, rule: 'Customer', generate: () => `/${customer.collection}/${Utilities.Guid.trimGuid(customer.id)}` }; 
+		 return { attribute, name: `${attribute.LogicalName}_${customer.collection.substring(0, customer.collection.length - 1)}@odata.bind`, rule: 'Customer', generate: () => `${customer.collection}(${Utilities.Guid.trimGuid(customer.id)})` }; 
 	},
 	"DateTime": async (attribute: any): Promise<GeneratorDefinition<Date>> => {
 		return { 
@@ -136,7 +137,7 @@ const generators = {
 				const randomValue = cache.lookups.get(target)[faker.random.number(possibleValues) - 1];
 	
 				if (randomValue) {
-					return `/${randomValue.collection}/${Utilities.Guid.trimGuid(randomValue.id)}`;
+					return `${randomValue.collection}(${Utilities.Guid.trimGuid(randomValue.id)})`;
 				}
 			} };
 		}
@@ -154,7 +155,7 @@ const generators = {
 
 		const user = cache.users[Math.floor(Math.random() * cache.users.length)];
 
-		return { attribute, name: `${attribute.LogicalName}_${user.collection.substring(0, user.collection.length - 1)}@odata.bind`, rule: 'Owner', generate: () => `/${user.collection}/${Utilities.Guid.trimGuid(user.id)}` }; 
+		return { attribute, name: `${attribute.LogicalName}_${user.collection.substring(0, user.collection.length - 1)}@odata.bind`, rule: 'Owner', generate: () => `${user.collection}(${Utilities.Guid.trimGuid(user.id)})` }; 
 	},
 	"PartyList": async (attribute: any, api: DataApiRepository): Promise<GeneratorDefinition<any>> => {
 		if (cache.parties?.length === 0) {
@@ -193,13 +194,13 @@ const generators = {
 					generate = () => stringAttributeTranslations[matchingKey].generator(attribute);
 					rule = stringAttributeTranslations[matchingKey].rule;
 				} else {
-					generate = () => faker.lorem.text().substr(0, (<number>attribute.MaxLength) || 1);
+					generate = () => faker.lorem.text().substring(0, (<number>attribute.MaxLength) || 1);
 					rule = "Text";
 				}
 
 				break;
 			case "TextArea":
-				generate = () => faker.lorem.paragraph().substr(0, (<number>attribute.MaxLength) || 1);
+				generate = () => faker.lorem.paragraph().substring(0, (<number>attribute.MaxLength) || 1);
 				rule = "Text (Multiple lines)";
 				break;
 			case "Url":
