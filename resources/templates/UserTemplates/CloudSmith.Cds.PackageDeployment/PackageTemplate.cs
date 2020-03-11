@@ -33,7 +33,33 @@ namespace <%=$this.parameters.ShortName%>
         /// </summary>
         public override void InitializeCustomExtension()
         {
-            // Do nothing. 
+            // Log runtime settings
+            if (RuntimeSettings != null)
+            {
+                PackageLog.Log($"Runtime settings populated, count = {RuntimeSettings.Count}");
+
+                foreach (var setting in RuntimeSettings)
+                {
+                    PackageLog.Log($"Key = {setting.Key} | Value = {setting.Value}");
+                }
+
+                // This lets the administrator use the command line or the Import-CrmPackage 
+                // cmdlet to specify whether to skip the safety checks while running the Package 
+                // Deployer tool to import the package.
+                // More information: https://docs.microsoft.com/en-us/previous-versions/dynamicscrm-2016/administering-dynamics-365/dn647420(v=crm.8)?redirectedfrom=MSDN
+                if (RuntimeSettings.ContainsKey("SkipChecks"))
+                {
+                    bool skipChecks = false;
+                    if (bool.TryParse((string)RuntimeSettings["SkipChecks"], out skipChecks))
+                    {
+                        OverrideDataImportSafetyChecks = true;
+                    }
+                }
+            }
+            else
+            {
+                PackageLog.Log("Runtime settings NOT populated");
+            }
         }
 
         /// <summary>

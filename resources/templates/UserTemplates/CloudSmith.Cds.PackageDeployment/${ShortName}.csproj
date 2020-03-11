@@ -8,10 +8,12 @@
     <PackageReference Include="System.ComponentModel.Composition" Version="4.7.0" />
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.23" />
     <PackageReference Include="Microsoft.CrmSdk.Deployment" Version="9.0.2.23" />
-    <PackageReference Include="Microsoft.CrmSdk.UII.CommonAssemblies" Version="9.0.0.8" />
+    <PackageReference Include="Microsoft.CrmSdk.UII.CommonAssemblies" Version="9.0.0.10" />
     <PackageReference Include="Microsoft.CrmSdk.Workflow" Version="9.0.2.23" />
     <PackageReference Include="Microsoft.CrmSdk.XrmTooling.CoreAssembly" Version="9.1.0.38" />
     <PackageReference Include="Microsoft.CrmSdk.XrmTooling.PackageDeployment" Version="9.1.0.25" />
+    <PackageReference Include="Microsoft.CrmSdk.XrmTooling.PackageDeployment.PowerShell" Version="9.0.2.12" />
+    <PackageReference Include="Microsoft.CrmSdk.XrmTooling.PackageDeployment.Wpf" Version="9.1.0.24" />
     <PackageReference Include="Microsoft.IdentityModel" Version="7.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.7" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.21" />
@@ -24,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="<%=$this.parameters.ShortName%>.dll.config">
+    <Content Include="DeploymentOne.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="PkgFolder\Content\en-us\EndHtml\CSS\common.css">
