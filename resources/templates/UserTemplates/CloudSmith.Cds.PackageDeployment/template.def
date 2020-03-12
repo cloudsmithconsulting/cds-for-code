@@ -4,7 +4,14 @@
     "displayName": "Dynamics CRM package deployment project template",
     "publisher": "CloudSmith Consulting LLC",
     "outputPath": "${ShortName}",
-    "categories": ["Dynamics", "Deployment"]
+    "categories": ["Dynamics", "Deployment"],
+    "directives": [{
+        "name": "${ShortName}.snk",
+        "processFile": false
+    },{
+        "name": "ImportConfig.xml",
+        "processFile": false
+    }]
 })%>
 <%#def.ui.prompt('ShortName', 'Please enter the Package Short Name')%>
 <%#def.ui.prompt('LongName', 'Please enter the Package Long Name')%>
