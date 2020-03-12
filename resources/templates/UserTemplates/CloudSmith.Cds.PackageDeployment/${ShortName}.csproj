@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile><%=$this.parameters.ShortName%>.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
