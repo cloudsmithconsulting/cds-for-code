@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile><%=$this.parameters.ShortName%>.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,8 +14,6 @@
     <PackageReference Include="Microsoft.CrmSdk.Workflow" Version="9.0.2.23" />
     <PackageReference Include="Microsoft.CrmSdk.XrmTooling.CoreAssembly" Version="9.1.0.38" />
     <PackageReference Include="Microsoft.CrmSdk.XrmTooling.PackageDeployment" Version="9.1.0.25" />
-    <PackageReference Include="Microsoft.CrmSdk.XrmTooling.PackageDeployment.PowerShell" Version="9.0.2.12" />
-    <PackageReference Include="Microsoft.CrmSdk.XrmTooling.PackageDeployment.Wpf" Version="9.1.0.24" />
     <PackageReference Include="Microsoft.IdentityModel" Version="7.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.7" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.21" />
