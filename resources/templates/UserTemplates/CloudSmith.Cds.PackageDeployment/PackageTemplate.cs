@@ -115,7 +115,7 @@ namespace <%=$this.parameters.ShortName%>
         /// <returns></returns>
         public override string GetNameOfImport(bool plural)
         {
-            return "CdsPackageDeploy";
+            return "<%=$this.parameters.ShortName%>";
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace <%=$this.parameters.ShortName%>
         /// </summary>
         public override string GetImportPackageDescriptionText
         {
-            get { return "Will deploy my package"; }
+            get { return "<%=$this.parameters.Description%>"; }
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace <%=$this.parameters.ShortName%>
         /// </summary>
         public override string GetLongNameOfImport
         {
-            get { return "Deployment package for CDS"; }
+            get { return "<%=$this.parameters.LongName%>"; }
         }
 
 
