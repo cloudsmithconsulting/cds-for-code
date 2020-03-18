@@ -4,6 +4,8 @@ import * as cs from '../cs';
 import ApiHelper from "./ApiHelper";
 import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import CdsRepository from '../api/CdsRepository';
+import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
+import { CWA } from '../api/cds-webapi/CWA';
 
 export default class DataApiRepository extends CdsRepository {
     async getLookupValues(collection: string, count: number = 25): Promise<any[]> {
@@ -95,5 +97,12 @@ export default class DataApiRepository extends CdsRepository {
         }
 
         return returnArray;
+    }
+
+    async createImportJob(importJob: any, importFile: any): Promise<any> {
+        const importid = await this.webapi.create(importJob, "imports");
+        importFile['importid@odata.bind'] = `imports('${importid}')`;
+        
+        return this.webapi.create(importFile, "importfiles", CWA.Prefer.ReturnRepresentation);
     }
 }

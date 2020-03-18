@@ -5,7 +5,9 @@ export namespace cds {
     // tslint:disable-next-line: class-name
     export class data {
         static readonly _namespace: string = "cs.cds.data";
+        static readonly createDataMap: string = `${data._namespace}.createDataMap`;
         static readonly getFaker: string = `${data._namespace}.getFaker`;
+        static readonly insertCsvData: string = `${data._namespace}.insertCsvData`;
         static readonly insertFakeData: string = `${data._namespace}.insertFakeData`;
     }
 
