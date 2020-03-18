@@ -2,5 +2,5 @@
 <% const records = $this.parameters['Generator'].generate($this.parameters['Count']); 
 records.forEach(r => {
     const keys = Object.keys(r);
-    keys.forEach((k, i) => { %>"<%=r[k]%>"<% if (i !== keys.length - 1) { %>,<% }; }); %>
+    keys.forEach((k, i) => { %>"<%=r[k] ? r[k].toString() : ""%>"<% if (i !== keys.length - 1) { %>,<% }; }); %>
 <%}); %>
