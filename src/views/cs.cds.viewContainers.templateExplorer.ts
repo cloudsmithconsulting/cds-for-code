@@ -175,6 +175,11 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<Templat
         }
     }
 
+    @command(cs.cds.controls.templateExplorer.viewCompiled, "View compiled template function")
+    async viewCompiled(item?: TemplateExplorerEntry) : Promise<void> {
+        return await vscode.commands.executeCommand(cs.cds.templates.viewCompiledTemplate, item.context);
+    }
+
 	private getRootEntries(): TemplateExplorerEntry[] {
         return [
             new TemplateExplorerEntry(undefined, "Folder", "/ProjectTemplates", "Project Templates", undefined, vscode.TreeItemCollapsibleState.Collapsed, TemplateType.ProjectTemplate),
@@ -236,6 +241,8 @@ export class TemplateExplorerEntry extends vscode.TreeItem {
     private static readonly canOpenEntryTypes:TemplateExplorerEntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
     private static readonly canCreateInWorkspaceTypes:TemplateExplorerEntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
     private static readonly canExportEntryTypes:TemplateExplorerEntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+    private static readonly canViewCompiledTypes:TemplateExplorerEntryType[] = [ "ProjectTemplate", "ItemTemplate" ];
+
 
     constructor(
         parentItem: TemplateExplorerEntry,
@@ -309,6 +316,7 @@ export class TemplateExplorerEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canCreateInWorkspace", TemplateExplorerEntry.canCreateInWorkspaceTypes);
         this.addCapability(returnValue, "canImportItem", TemplateExplorerEntry.canImportEntryTypes);
         this.addCapability(returnValue, "canExportItem", TemplateExplorerEntry.canExportEntryTypes);
+        this.addCapability(returnValue, "canViewCompiled", TemplateExplorerEntry.canViewCompiledTypes);
 
         return returnValue;
     }

@@ -83,7 +83,8 @@
 		"onCommand:cs.cds.templates.exportTemplate",
 		"onCommand:cs.cds.templates.importTemplate",
 		"onCommand:cs.cds.templates.openTemplateFolder",
-		"onCommand:cs.cds.templates.saveTemplate"
+		"onCommand:cs.cds.templates.saveTemplate",
+		"onCommand:cs.cds.templates.viewCompiledTemplate"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -444,6 +445,11 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.cds.controls.templateExplorer.viewCompiled",
+				"title": "View compiled template function",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.cds.deployment.addSolutionComponent",
 				"title": "Add component to a CDS solution",
 				"category": "CDS for Code"
@@ -606,6 +612,11 @@
 			{
 				"command": "cs.cds.templates.saveTemplate",
 				"title": "Save workspace items as a template in the template catalog",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.templates.viewCompiledTemplate",
+				"title": "View the compiled template funciton(s) of a template",
 				"category": "CDS for Code"
 			}
 		],
@@ -812,6 +823,10 @@
 				},
 				{
 					"command": "cs.cds.controls.templateExplorer.importEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.templateExplorer.viewCompiled",
 					"when": "false"
 				},
 				{
@@ -1049,6 +1064,11 @@
 					"command": "cs.cds.controls.templateExplorer.importEntry",
 					"group": "group@4",
 					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canImportItem)(.*)$/"
+				},
+				{
+					"command": "cs.cds.controls.templateExplorer.viewCompiled",
+					"group": "group@4",
+					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canViewCompiled)(.*)$/"
 				}
 			]
 		}

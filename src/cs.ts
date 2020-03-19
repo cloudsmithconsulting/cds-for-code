@@ -88,6 +88,7 @@ export namespace cds {
         static readonly importTemplate: string = `${templates._namespace}.importTemplate`;
         static readonly openTemplateFolder: string = `${templates._namespace}.openTemplateFolder`;
         static readonly saveTemplate: string = `${templates._namespace}.saveTemplate`;
+        static readonly viewCompiledTemplate: string = `${templates._namespace}.viewCompiledTemplate`;
     }
 
     // tslint:disable-next-line: class-name
@@ -261,6 +262,7 @@ export namespace cds {
             static readonly importEntry: string = `${templateExplorer._namespace}.importEntry`;
             static readonly openEntry: string = `${templateExplorer._namespace}.openEntry`;
             static readonly refreshEntry: string = `${templateExplorer._namespace}.refreshEntry`;
+            static readonly viewCompiled: string = `${templateExplorer._namespace}.viewCompiled`;
         }
     }
 
