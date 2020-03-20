@@ -1,16 +1,10 @@
-import * as vscode from 'vscode';
-import * as path from 'path';
-import * as cs from '../cs';
-import ApiHelper from "./ApiHelper";
-import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import CdsRepository from '../api/CdsRepository';
-import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import { CWA } from '../api/cds-webapi/CWA';
 import moment = require('moment');
 import { Utilities } from '../core/Utilities';
 
 const defaultTimeout: number = 30;
-const defaultCheckInterval: number = 1250;
+const defaultCheckInterval: number = 2500;
 
 export default class DataApiRepository extends CdsRepository {
     async getLookupValues(collection: string, count: number = 25): Promise<any[]> {

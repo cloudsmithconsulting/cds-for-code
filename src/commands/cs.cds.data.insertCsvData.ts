@@ -5,12 +5,9 @@ import * as path from 'path';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import logger from "../core/framework/Logger";
 import Quickly from '../core/Quickly';
-import { Utilities } from '../core/Utilities';
 import ExtensionContext from '../core/ExtensionContext';
 import { CdsSolutions } from '../api/CdsSolutions';
-import MetadataRepository from '../repositories/metadataRepository';
 import DataApiRepository from '../repositories/DataApiRepository';
-import Dictionary from '../core/types/Dictionary';
 import DataGenerationManager from '../components/DataGeneration/DataGenerationManager';
 
 const fieldDelimiters = new Map<number, string>([
@@ -59,14 +56,17 @@ export default async function run(this: DataGenerationManager, config: CdsWebApi
 	const stringDelimiter = (await Quickly.pick("What is the string delimiter?", ...Array.from(stringDelimiters.values()))).label;
 	const enableduplicatedetection = await Quickly.pickBoolean("Enable duplicate detection during import?", "Yes", "No");
 	let importjob = {
-		isimport: true,
 		modecode: 0,
 		name: `${path.basename(fileUri.fsPath)} CSV import`
 	};
 
 	const importFile = {
+		name: `${path.basename(fileUri.fsPath)}`,
 		content: FileSystem.readFileSync(fileUri.fsPath),
 		datadelimitercode: getKey(stringDelimiters, stringDelimiter),
+		usesystemmap: true,
+		source: path.basename(fileUri.fsPath),
+		sourceentityname: entity.LogicalName,
 		enableduplicatedetection: enableduplicatedetection,
 		fielddelimitercode: getKey(fieldDelimiters, fieldDelimiter),
 		filetypecode: 0,
