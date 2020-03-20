@@ -10,6 +10,7 @@ import { TextEncoder } from 'util';
 
 export interface AsyncUtility {
    forEach<T>(array: T[], callback: (item: T, index?: number, array?: T[]) => Promise<void>);
+   sleep(timeout: number): Promise<void>;
 }
 
 export interface BrowserUtility { 

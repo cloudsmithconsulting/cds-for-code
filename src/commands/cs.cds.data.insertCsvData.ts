@@ -58,7 +58,7 @@ export default async function run(this: DataGenerationManager, config: CdsWebApi
 	const fieldDelimiter = (await Quickly.pick("What is the field delimiter", ...Array.from(fieldDelimiters.values()))).label;
 	const stringDelimiter = (await Quickly.pick("What is the string delimiter?", ...Array.from(stringDelimiters.values()))).label;
 	const enableduplicatedetection = await Quickly.pickBoolean("Enable duplicate detection during import?", "Yes", "No");
-	const importjob = {
+	let importjob = {
 		isimport: true,
 		modecode: 0,
 		name: `${path.basename(fileUri.fsPath)} CSV import`
@@ -77,7 +77,11 @@ export default async function run(this: DataGenerationManager, config: CdsWebApi
 	};
 
 	const dataRepository = new DataApiRepository(config);
-	const returnFile = await dataRepository.createImportJob(importjob, importFile);
+	const importId = await dataRepository.createImportJob(importjob, importFile);
+	
+	importjob = await dataRepository.parseImportJob(importId);
+	importjob = await dataRepository.transformImportJob(importId);
+	importjob = await dataRepository.importRecordsFromImportJob(importId);
 
-	return returnFile.importfileid;
+	return importId;
 }

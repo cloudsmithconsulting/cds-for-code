@@ -6,6 +6,11 @@ import ExtensionConfiguration from '../core/ExtensionConfiguration';
 import CdsRepository from '../api/CdsRepository';
 import { CdsWebApi } from '../api/cds-webapi/CdsWebApi';
 import { CWA } from '../api/cds-webapi/CWA';
+import moment = require('moment');
+import { Utilities } from '../core/Utilities';
+
+const defaultTimeout: number = 30;
+const defaultCheckInterval: number = 1250;
 
 export default class DataApiRepository extends CdsRepository {
     async getLookupValues(collection: string, count: number = 25): Promise<any[]> {
@@ -99,10 +104,56 @@ export default class DataApiRepository extends CdsRepository {
         return returnArray;
     }
 
-    async createImportJob(importJob: any, importFile: any): Promise<any> {
-        const importid = await this.webapi.create(importJob, "imports");
-        importFile['importid@odata.bind'] = `imports('${importid}')`;
-        
-        return this.webapi.create(importFile, "importfiles", CWA.Prefer.ReturnRepresentation);
+    async createImportJob(importJob: any, importFile: any): Promise<string> {
+        importJob = await this.webapi.create(importJob, "imports", CWA.Prefer.ReturnRepresentation);
+        const importId = importJob.importid;
+
+        importFile['importid@odata.bind'] = `imports(${importId})`;
+        importFile = await this.webapi.create(importFile, "importfiles", CWA.Prefer.ReturnRepresentation);
+
+        //return importId;
+        return importId;
+    }
+
+    async parseImportJob(importId: string, timeout: number = defaultTimeout): Promise<any> {
+        const startTime = moment.now();
+        const endTime = startTime + (timeout * 1000);
+        let asyncStatus = await this.webapi.executeBoundAction(importId, "imports", "Microsoft.Dynamics.CRM.ParseImport");
+
+        while (asyncStatus?.statecode !== 3 || moment.now() < endTime) {
+            asyncStatus = await this.webapi.retrieve(asyncStatus.asyncoperationid, "asyncoperations");
+
+            await Utilities.Async.sleep(defaultCheckInterval);
+        }
+
+        return await this.webapi.retrieve(importId, "imports");
+    }
+
+    async transformImportJob(importId: string, timeout: number = defaultTimeout): Promise<any> {
+        const startTime = moment.now();
+        const endTime = startTime + (timeout * 1000);
+        let asyncStatus = await this.webapi.executeUnboundAction("TransformImport", { ImportId: importId });
+
+        while (asyncStatus?.statecode !== 3 || moment.now() < endTime) {
+            asyncStatus = await this.webapi.retrieve(asyncStatus.asyncoperationid, "asyncoperations");
+
+            await Utilities.Async.sleep(defaultCheckInterval);
+        }
+
+        return await this.webapi.retrieve(importId, "imports");
+    }
+
+    async importRecordsFromImportJob(importId: string, timeout: number = defaultTimeout): Promise<any> {
+        const startTime = moment.now();
+        const endTime = startTime + (timeout * 1000);
+        let asyncStatus = await this.webapi.executeBoundAction(importId, "imports", "Microsoft.Dynamics.CRM.ImportRecordsImport");
+
+        while (asyncStatus?.statecode !== 3 || moment.now() < endTime) {
+            asyncStatus = await this.webapi.retrieve(asyncStatus.asyncoperationid, "asyncoperations");
+
+            await Utilities.Async.sleep(defaultCheckInterval);
+        }
+
+        return await this.webapi.retrieve(importId, "imports");
     }
 }
