@@ -26,6 +26,7 @@ export namespace cds {
         static readonly createWebResource: string = `${deployment._namespace}.createWebResource`;
         static readonly dotNetBuild: string = `${deployment._namespace}.dotNetBuild`;
         static readonly dotNetTest: string = `${deployment._namespace}.dotNetTest`;
+        static readonly buildAndRunDynamicsPackage: string = `${deployment._namespace}.buildAndRunDynamicsPackage`;
         static readonly exportSolution: string = `${deployment._namespace}.exportSolution`;
         static readonly importSolution: string = `${deployment._namespace}.importSolution`;
         static readonly packWebResource: string = `${deployment._namespace}.packWebResource`;
@@ -200,6 +201,8 @@ export namespace cds {
             static readonly craeteWebResource: string = `${explorer._namespace}.createWebResource`;
             static readonly dotNetBuild: string = `${explorer._namespace}.dotNetBuild`;
             static readonly dotNetTest: string = `${explorer._namespace}.dotNetTest`;
+            static readonly buildDynamicsPackage: string = `${explorer._namespace}.buildDynamicsPackage`;
+            static readonly runDynamicsPackage: string = `${explorer._namespace}.runDynamicsPackage`;
             static readonly editCrmSvcUtilConfig: string = `${explorer._namespace}.editCrmSvcUtilConfig`;
             static readonly generateEntityCodeToFolder: string = `${explorer._namespace}.generateEntityCodeToFolder`;
             static readonly generateEntityCodeToFile: string = `${explorer._namespace}.generateEntityCodeToFile`;
