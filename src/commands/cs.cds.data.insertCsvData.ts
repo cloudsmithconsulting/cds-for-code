@@ -78,10 +78,27 @@ export default async function run(this: DataGenerationManager, config: CdsWebApi
 
 	const dataRepository = new DataApiRepository(config);
 	const importId = await dataRepository.createImportJob(importjob, importFile);
-	
-	importjob = await dataRepository.parseImportJob(importId);
-	importjob = await dataRepository.transformImportJob(importId);
-	importjob = await dataRepository.importRecordsFromImportJob(importId);
+	let status: string = 'Parsing';
+
+	try {
+		logger.log(`Command: ${cs.cds.data.insertCsvData} Running parse operation for ${importId}`);
+		importjob = await dataRepository.parseImportJob(importId);
+
+		logger.log(`Command: ${cs.cds.data.insertCsvData} Running transform operation for ${importId}`);
+		status = 'Transforming';
+		importjob = await dataRepository.transformImportJob(importId);
+
+		logger.log(`Command: ${cs.cds.data.insertCsvData} Running import operation for ${importId}`);
+		status = 'Importing';
+		importjob = await dataRepository.importRecordsFromImportJob(importId);
+	} catch (error) {
+		logger.error(`Command: ${cs.cds.data.insertCsvData} encountered error during ${status}: ${error.message}`);
+		Quickly.error(`Errors occurred while ${status}: ${error.message}`);
+
+		return;
+	}
+
+	Quickly.inform(`Import of ${path.basename(fileUri.fsPath)} completed successfully`);
 
 	return importId;
 }
