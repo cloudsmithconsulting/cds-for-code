@@ -81,7 +81,7 @@ Defined in src/commands/cs.cds.data.getFaker.ts:14
 	{ key: "_longitude", value: { rule: 'Longitude', generator: attribute => faker.address.longitude() } },
 ])
 
-Defined in src/commands/cs.cds.data.getFaker.ts:69
+Defined in src/commands/cs.cds.data.getFaker.ts:68
 
 ___
 
@@ -96,7 +96,6 @@ ___
 	"processid",
 	"stageid",
 	"subscriptionid",
-	"traversedpath",
 	"versionnumber"
 ]
 
@@ -131,7 +130,7 @@ ___
 	{ key: "number", value: { rule: 'Alphanumeric', generator: attribute => faker.random.alphaNumeric(Math.floor(Math.random() * (attribute.MaxLength || 1))) } }
 ])
 
-Defined in src/commands/cs.cds.data.getFaker.ts:44
+Defined in src/commands/cs.cds.data.getFaker.ts:43
 
 ## Functions
 
@@ -139,7 +138,7 @@ Defined in src/commands/cs.cds.data.getFaker.ts:44
 
 ▸ **run**(`config?`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entity?`: any, `selectedAttributes?`: string[]): *Promise‹[CdsEntityFaker](_commands_cs_cds_data_getfaker_.md#cdsentityfaker)›*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:233
+Defined in src/commands/cs.cds.data.getFaker.ts:232
 
 **Parameters:**
 
@@ -195,13 +194,13 @@ ___
 
 ### ▪ **generators**: *object*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:74
+Defined in src/commands/cs.cds.data.getFaker.ts:73
 
 ###  BigInt
 
 ▸ **BigInt**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹BigInt››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:228
+Defined in src/commands/cs.cds.data.getFaker.ts:227
 
 **Parameters:**
 
@@ -215,7 +214,7 @@ Name | Type |
 
 ▸ **Boolean**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹boolean››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:75
+Defined in src/commands/cs.cds.data.getFaker.ts:74
 
 **Parameters:**
 
@@ -229,7 +228,7 @@ Name | Type |
 
 ▸ **Customer**(`attribute`: any, `api`: [DataApiRepository](../classes/_repositories_dataapirepository_.dataapirepository.md)): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹string››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:78
+Defined in src/commands/cs.cds.data.getFaker.ts:77
 
 **Parameters:**
 
@@ -244,7 +243,7 @@ Name | Type |
 
 ▸ **DateTime**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹Date››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:87
+Defined in src/commands/cs.cds.data.getFaker.ts:86
 
 **Parameters:**
 
@@ -258,7 +257,7 @@ Name | Type |
 
 ▸ **Decimal**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:101
+Defined in src/commands/cs.cds.data.getFaker.ts:100
 
 **Parameters:**
 
@@ -272,7 +271,7 @@ Name | Type |
 
 ▸ **Double**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:104
+Defined in src/commands/cs.cds.data.getFaker.ts:103
 
 **Parameters:**
 
@@ -286,7 +285,7 @@ Name | Type |
 
 ▸ **Integer**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:117
+Defined in src/commands/cs.cds.data.getFaker.ts:116
 
 **Parameters:**
 
@@ -300,7 +299,7 @@ Name | Type |
 
 ▸ **Lookup**(`attribute`: any, `api`: [DataApiRepository](../classes/_repositories_dataapirepository_.dataapirepository.md)): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹any››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:120
+Defined in src/commands/cs.cds.data.getFaker.ts:119
 
 **Parameters:**
 
@@ -315,7 +314,7 @@ Name | Type |
 
 ▸ **Memo**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹string››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:145
+Defined in src/commands/cs.cds.data.getFaker.ts:144
 
 **Parameters:**
 
@@ -329,7 +328,7 @@ Name | Type |
 
 ▸ **Money**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:148
+Defined in src/commands/cs.cds.data.getFaker.ts:147
 
 **Parameters:**
 
@@ -343,7 +342,7 @@ Name | Type |
 
 ▸ **Owner**(`attribute`: any, `api`: [DataApiRepository](../classes/_repositories_dataapirepository_.dataapirepository.md)): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹string››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:151
+Defined in src/commands/cs.cds.data.getFaker.ts:150
 
 **Parameters:**
 
@@ -358,7 +357,7 @@ Name | Type |
 
 ▸ **PartyList**(`attribute`: any, `api`: [DataApiRepository](../classes/_repositories_dataapirepository_.dataapirepository.md)): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹any››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:160
+Defined in src/commands/cs.cds.data.getFaker.ts:159
 
 **Parameters:**
 
@@ -373,7 +372,7 @@ Name | Type |
 
 ▸ **Picklist**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:167
+Defined in src/commands/cs.cds.data.getFaker.ts:166
 
 **Parameters:**
 
@@ -387,7 +386,7 @@ Name | Type |
 
 ▸ **State**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:172
+Defined in src/commands/cs.cds.data.getFaker.ts:171
 
 **Parameters:**
 
@@ -401,7 +400,7 @@ Name | Type |
 
 ▸ **Status**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹number››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:175
+Defined in src/commands/cs.cds.data.getFaker.ts:174
 
 **Parameters:**
 
@@ -415,7 +414,7 @@ Name | Type |
 
 ▸ **String**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹string››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:178
+Defined in src/commands/cs.cds.data.getFaker.ts:177
 
 **Parameters:**
 
@@ -429,7 +428,7 @@ Name | Type |
 
 ▸ **Uniqueidentifier**(`attribute`: any): *Promise‹[GeneratorDefinition](_commands_cs_cds_data_getfaker_.md#generatordefinition)‹string››*
 
-Defined in src/commands/cs.cds.data.getFaker.ts:225
+Defined in src/commands/cs.cds.data.getFaker.ts:224
 
 **Parameters:**
 

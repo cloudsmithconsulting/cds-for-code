@@ -28,10 +28,14 @@ sidebar_label: "DataApiRepository"
 
 ### Methods
 
+* [createImportJob](_repositories_dataapirepository_.dataapirepository.md#createimportjob)
 * [getLookupValues](_repositories_dataapirepository_.dataapirepository.md#getlookupvalues)
 * [getPartyListMembers](_repositories_dataapirepository_.dataapirepository.md#getpartylistmembers)
 * [getSampleCustomers](_repositories_dataapirepository_.dataapirepository.md#getsamplecustomers)
 * [getSystemUsers](_repositories_dataapirepository_.dataapirepository.md#getsystemusers)
+* [importRecordsFromImportJob](_repositories_dataapirepository_.dataapirepository.md#importrecordsfromimportjob)
+* [parseImportJob](_repositories_dataapirepository_.dataapirepository.md#parseimportjob)
+* [transformImportJob](_repositories_dataapirepository_.dataapirepository.md#transformimportjob)
 
 ## Constructors
 
@@ -75,11 +79,28 @@ Defined in src/api/CdsRepository.ts:10
 
 ## Methods
 
+###  createImportJob
+
+▸ **createImportJob**(`importJob`: any, `importFile`: any): *Promise‹string›*
+
+Defined in src/repositories/DataApiRepository.ts:101
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`importJob` | any |
+`importFile` | any |
+
+**Returns:** *Promise‹string›*
+
+___
+
 ###  getLookupValues
 
 ▸ **getLookupValues**(`collection`: string, `count`: number): *Promise‹any[]›*
 
-Defined in src/repositories/DataApiRepository.ts:9
+Defined in src/repositories/DataApiRepository.ts:10
 
 **Parameters:**
 
@@ -96,7 +117,7 @@ ___
 
 ▸ **getPartyListMembers**(`count`: number): *Promise‹any[]›*
 
-Defined in src/repositories/DataApiRepository.ts:29
+Defined in src/repositories/DataApiRepository.ts:30
 
 **Parameters:**
 
@@ -112,7 +133,7 @@ ___
 
 ▸ **getSampleCustomers**(`count`: number): *Promise‹any[]›*
 
-Defined in src/repositories/DataApiRepository.ts:78
+Defined in src/repositories/DataApiRepository.ts:79
 
 **Parameters:**
 
@@ -128,7 +149,7 @@ ___
 
 ▸ **getSystemUsers**(`count`: number): *Promise‹any[]›*
 
-Defined in src/repositories/DataApiRepository.ts:57
+Defined in src/repositories/DataApiRepository.ts:58
 
 **Parameters:**
 
@@ -137,3 +158,54 @@ Name | Type | Default |
 `count` | number | 25 |
 
 **Returns:** *Promise‹any[]›*
+
+___
+
+###  importRecordsFromImportJob
+
+▸ **importRecordsFromImportJob**(`importId`: string, `timeout`: number): *Promise‹any›*
+
+Defined in src/repositories/DataApiRepository.ts:140
+
+**Parameters:**
+
+Name | Type | Default |
+------ | ------ | ------ |
+`importId` | string | - |
+`timeout` | number | defaultTimeout |
+
+**Returns:** *Promise‹any›*
+
+___
+
+###  parseImportJob
+
+▸ **parseImportJob**(`importId`: string, `timeout`: number): *Promise‹any›*
+
+Defined in src/repositories/DataApiRepository.ts:112
+
+**Parameters:**
+
+Name | Type | Default |
+------ | ------ | ------ |
+`importId` | string | - |
+`timeout` | number | defaultTimeout |
+
+**Returns:** *Promise‹any›*
+
+___
+
+###  transformImportJob
+
+▸ **transformImportJob**(`importId`: string, `timeout`: number): *Promise‹any›*
+
+Defined in src/repositories/DataApiRepository.ts:126
+
+**Parameters:**
+
+Name | Type | Default |
+------ | ------ | ------ |
+`importId` | string | - |
+`timeout` | number | defaultTimeout |
+
+**Returns:** *Promise‹any›*

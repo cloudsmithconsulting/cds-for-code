@@ -11,6 +11,7 @@ sidebar_label: "core/helpers/Async"
 ### Functions
 
 * [forEach](_core_helpers_async_.md#foreach)
+* [sleep](_core_helpers_async_.md#sleep)
 
 ## Functions
 
@@ -39,5 +40,21 @@ Name | Type |
 `item` | T |
 `index?` | number |
 `array?` | T[] |
+
+**Returns:** *Promise‹void›*
+
+___
+
+###  sleep
+
+▸ **sleep**(`timeout`: number): *Promise‹void›*
+
+Defined in src/core/helpers/Async.ts:10
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`timeout` | number |
 
 **Returns:** *Promise‹void›*

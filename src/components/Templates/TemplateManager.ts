@@ -6,7 +6,7 @@ import * as os from 'os';
 import * as FileSystem from '../../core/io/FileSystem';
 import * as EnvironmentVariables from '../../core/framework/EnvironmentVariables';
 import * as _ from 'lodash';
-import { TemplateItem, TemplateType, TemplateFilesystemItem, TemplateContext } from './Types';
+import { TemplateItem, TemplateType, TemplateFilesystemItem, TemplateContext, TemplateAnalysis } from './Types';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
 import Quickly from '../../core/Quickly';
 import { TemplateCatalog } from './TemplateCatalog';
@@ -22,6 +22,7 @@ import exportTemplate from '../../commands/cs.cds.templates.exportTemplate';
 import importTemplate from '../../commands/cs.cds.templates.importTemplate';
 import openTemplateFolder from '../../commands/cs.cds.templates.openTemplateFolder';
 import saveTemplate from '../../commands/cs.cds.templates.saveTemplate';
+import viewCompiledTemplate from '../../commands/cs.cds.templates.viewCompiledTemplate';
 
 /**
  * Main class to handle the logic of the Project Templates
@@ -71,6 +72,11 @@ export default class TemplateManager {
     @command(cs.cds.templates.exportTemplate, "Export template")
     async exportTemplate(template: TemplateItem, destinationUri:vscode.Uri): Promise<void> {
         return await exportTemplate.apply(this, [template, destinationUri]);
+    }
+
+    @command(cs.cds.templates.viewCompiledTemplate, "View compiled template function")
+    async viewCompiledTemplate(template: TemplateItem): Promise<void> {
+        return await viewCompiledTemplate.apply(this, [template]);
     }
 
     @command(cs.cds.templates.importTemplate, "Import template")
@@ -211,6 +217,12 @@ export default class TemplateManager {
             let fileContents = `${missingDef}\r\n${FileSystem.readFileSync(file)}`;
             FileSystem.writeFileSync(file, fileContents);
         }
+    }
+
+    static async getTemplateAnalysis(template: TemplateItem) : Promise<TemplateAnalysis> {
+        const folder = await this.getTemplateFolder(template, false);
+        const analysis = await TemplateEngine.analyzeTemplate(folder);
+        return analysis;
     }
 
     static async exportTemplate(template: TemplateItem, archive: string, systemTemplate:boolean = false): Promise<void> {

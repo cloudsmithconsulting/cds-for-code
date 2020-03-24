@@ -44,6 +44,8 @@
 		"onCommand:cs.cds.controls.explorer.createFromProjectTemplate",
 		"onCommand:cs.cds.controls.explorer.dotNetBuild",
 		"onCommand:cs.cds.controls.explorer.dotNetTest",
+		"onCommand:cs.cds.controls.explorer.buildDynamicsPackage",
+		"onCommand:cs.cds.controls.explorer.runDynamicsPackage",
 		"onCommand:cs.cds.controls.explorer.editCrmSvcUtilConfig",
 		"onCommand:cs.cds.controls.explorer.generateEntityCodeToFolder",
 		"onCommand:cs.cds.controls.explorer.generateEntityCodeToFile",
@@ -53,6 +55,7 @@
 		"onCommand:cs.cds.controls.explorer.saveTemplateFile",
 		"onCommand:cs.cds.controls.explorer.saveTemplateFolder",
 		"onCommand:cs.cds.controls.explorer.unpackSolutionToFolder",
+		"onCommand:cs.cds.controls.explorer.importCsvToEntity",
 		"onCommand:cs.cds.controls.svcUtilConfig.open",
 		"onCommand:cs.cds.data.getFaker",
 		"onCommand:cs.cds.deployment.addSolutionComponent",
@@ -62,6 +65,7 @@
 		"onCommand:cs.cds.deployment.createProcess",
 		"onCommand:cs.cds.deployment.dotNetBuild",
 		"onCommand:cs.cds.deployment.dotNetTest",
+		"onCommand:cs.cds.deployment.buildAndRunDynamicsPackage",
 		"onCommand:cs.cds.deployment.exportSolution",
 		"onCommand:cs.cds.deployment.importSolution",
 		"onCommand:cs.cds.deployment.packWebResource",
@@ -83,7 +87,8 @@
 		"onCommand:cs.cds.templates.exportTemplate",
 		"onCommand:cs.cds.templates.importTemplate",
 		"onCommand:cs.cds.templates.openTemplateFolder",
-		"onCommand:cs.cds.templates.saveTemplate"
+		"onCommand:cs.cds.templates.saveTemplate",
+		"onCommand:cs.cds.templates.viewCompiledTemplate"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -326,6 +331,21 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.cds.controls.explorer.buildDynamicsPackage",
+				"title": "Build as dynamics package deployment",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.cds.controls.explorer.runDynamicsPackage",
+				"title": "Build and run as dynamics package deployment",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.cds.controls.explorer.importCsvToEntity",
+				"title": "Import CSV file to entity",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.cds.controls.explorer.editCrmSvcUtilConfig",
 				"title": "Edit CrmSvcUtil Configuration",
 				"category": "UserInterface"
@@ -452,6 +472,11 @@
 				"category": "CDS for Code"
 			},
 			{
+				"command": "cs.cds.controls.templateExplorer.viewCompiled",
+				"title": "View compiled template function",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.cds.data.getFaker",
 				"title": "Gets an instance of a Faker class that can generate data",
 				"category": "CDS for Code"
@@ -504,6 +529,11 @@
 			{
 				"command": "cs.cds.deployment.dotNetTest",
 				"title": "Build and Test a .Net Core project in the current workspace",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.deployment.buildAndRunDynamicsPackage",
+				"title": "Build/Run project using package deployer",
 				"category": "CDS for Code"
 			},
 			{
@@ -620,6 +650,11 @@
 				"command": "cs.cds.templates.saveTemplate",
 				"title": "Save workspace items as a template in the template catalog",
 				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.templates.viewCompiledTemplate",
+				"title": "View the compiled template funciton(s) of a template",
+				"category": "CDS for Code"
 			}
 		],
 		"languages": [
@@ -690,6 +725,22 @@
 				},
 				{
 					"command": "cs.cds.controls.cdsExplorer.editConnection",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.buildDynamicsPackage",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.runDynamicsPackage",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.importCsvToEntity",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.editCrmSvcUtilConfig",
 					"when": "false"
 				},
 				{
@@ -841,6 +892,10 @@
 					"when": "false"
 				},
 				{
+					"command": "cs.cds.controls.templateExplorer.viewCompiled",
+					"when": "false"
+				},
+				{
 					"command": "cs.cds.controls.templateExplorer.openEntry",
 					"when": "false"
 				},
@@ -899,9 +954,19 @@
 					"group": "build@2"
 				},
 				{
+					"command": "cs.cds.controls.explorer.buildDynamicsPackage",
+					"when": "explorerResourceIsFolder == true || resourceExtname == .csproj || resourceExtname == .vbproj",
+					"group": "build@3"
+				},
+				{
+					"command": "cs.cds.controls.explorer.runDynamicsPackage",
+					"when": "explorerResourceIsFolder == true || resourceExtname == .csproj || resourceExtname == .vbproj",
+					"group": "build@4"
+				},
+				{
 					"command": "cs.cds.controls.explorer.importSolution",
 					"when": "resourceExtname == .zip",
-					"group": "build@3"
+					"group": "build@5"
 				},
 				{
 					"command": "cs.cds.controls.explorer.editCrmSvcUtilConfig",
@@ -922,6 +987,11 @@
 					"command": "cs.cds.controls.explorer.generateEntityCodeToFolder",
 					"when": "explorerResourceIsFolder",
 					"group": "generateCode@2"
+				},
+				{
+					"command": "cs.cds.controls.explorer.importCsvToEntity",
+					"when": "explorerResourceIsFolder != true && resourceExtname == .csv",
+					"group": "zzz_azuretools_deploy@999"
 				},
 				{
 					"command": "cs.cds.controls.explorer.packSolutionFromFolder",
@@ -1086,6 +1156,11 @@
 					"command": "cs.cds.controls.templateExplorer.importEntry",
 					"group": "group@4",
 					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canImportItem)(.*)$/"
+				},
+				{
+					"command": "cs.cds.controls.templateExplorer.viewCompiled",
+					"group": "group@4",
+					"when": "view == cs.cds.viewContainers.templateExplorer && viewItem =~ /^(.*)(canViewCompiled)(.*)$/"
 				}
 			]
 		}

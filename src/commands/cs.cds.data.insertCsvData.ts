@@ -11,23 +11,23 @@ import DataApiRepository from '../repositories/DataApiRepository';
 import DataGenerationManager from '../components/DataGeneration/DataGenerationManager';
 
 const fieldDelimiters = new Map<number, string>([
-	[ 1, `:` ],
 	[ 2, `,` ],
 	[ 3, `<tab>` ],
+	[ 1, `:` ],
 	[ 4, `;` ]
 ]);
 
 const stringDelimiters = new Map<number, string>([
 	[ 1, `"` ],
-	[ 2, `<none>` ],
-	[ 3, `'` ]
+	[ 3, `'` ],
+	[ 2, `<none>` ]
 ]);
 
 function getKey(map: Map<unknown,unknown>, val: unknown) {
 	return [...map].find(([key, value]) => val === value)[0];
 }
 
-export default async function run(this: DataGenerationManager, config: CdsWebApi.Config, entity: any, fileUri: vscode.Uri): Promise<string> {
+export default async function run(this: DataGenerationManager, config?: CdsWebApi.Config, entity?: any, fileUri?: vscode.Uri): Promise<string> {
 	config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, "Choose a CDS Organization", true);
 	if (!config) { 
 		logger.warn(`Command: ${cs.cds.data.insertCsvData} Organization not chosen, command cancelled`);

@@ -46,6 +46,7 @@ sidebar_label: "TemplateExplorer"
 * [import](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorer.md#import)
 * [open](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorer.md#open)
 * [refresh](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorer.md#refresh)
+* [viewCompiled](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorer.md#viewcompiled)
 
 ## Constructors
 
@@ -237,7 +238,7 @@ ___
 
 ▸ **getRootEntries**(): *[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)[]*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:178
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:183
 
 **Returns:** *[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)[]*
 
@@ -304,3 +305,19 @@ Name | Type |
 `item?` | [TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md) |
 
 **Returns:** *void*
+
+___
+
+###  viewCompiled
+
+▸ **viewCompiled**(`item?`: [TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)): *Promise‹void›*
+
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:179
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`item?` | [TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md) |
+
+**Returns:** *Promise‹void›*

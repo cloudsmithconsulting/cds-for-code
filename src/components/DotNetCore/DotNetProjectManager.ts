@@ -4,6 +4,7 @@ import * as FileSystem from '../../core/io/FileSystem';
 import Xml from '../../core/io/Xml';
 import dotNetBuild from "../../commands/cs.cds.deployment.dotNetBuild";
 import dotNetTest  from "../../commands/cs.cds.deployment.dotNetTest";
+import buildAndRunDynamicsPackage  from "../../commands/cs.cds.deployment.buildAndRunDynamicsPackage";
 import command from '../../core/Command';
 import logger from '../../core/framework/Logger';
 
@@ -26,6 +27,21 @@ export default class VisualStudioProjectCommands {
     @command(cs.cds.deployment.dotNetTest, "Run dotnet test")
     static async dotNetTest(file?: vscode.Uri, logFile?: string): Promise<any> {
         return await dotNetTest.apply(this, [file, logFile]);
+    }
+
+    @command(cs.cds.deployment.buildAndRunDynamicsPackage, "Build/Run dynamics package using package deployer")
+    static async buildAndRunDynamicsPackage(file?: vscode.Uri, runPackage?: boolean): Promise<any> {
+        return await buildAndRunDynamicsPackage.apply(this, [file, runPackage]);
+    }
+
+    @command(cs.cds.controls.explorer.buildDynamicsPackage, "Builds a dynamics package with package deployer")
+    static async buildDynamicsPackageFromFileExplorer(file?: vscode.Uri) {
+        return await vscode.commands.executeCommand(cs.cds.deployment.buildAndRunDynamicsPackage, file, false);
+    }
+
+    @command(cs.cds.controls.explorer.runDynamicsPackage, "Runs a dynamics package with package deployer")
+    static async runDynamicsPackageFromFileExplorer(file?: vscode.Uri) {
+        return await vscode.commands.executeCommand(cs.cds.deployment.buildAndRunDynamicsPackage, file, true);
     }
 
     static projectFileTypes:string[] = [".csproj", ".vbproj"];

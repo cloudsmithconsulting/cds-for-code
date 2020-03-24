@@ -28,7 +28,7 @@ sidebar_label: "ObjectUtility"
 
 ▸ **asQuerystring**(`source`: any): *string*
 
-Defined in src/core/Utilities.ts:40
+Defined in src/core/Utilities.ts:41
 
 **Parameters:**
 
@@ -44,7 +44,7 @@ ___
 
 ▸ **clone**<**T**>(`source`: T, `target?`: any, `excludeProperties?`: string[]): *T*
 
-Defined in src/core/Utilities.ts:41
+Defined in src/core/Utilities.ts:42
 
 **Type parameters:**
 
@@ -66,7 +66,7 @@ ___
 
 ▸ **createInstance**<**T**>(`context`: Object, `name`: string, ...`args`: any[]): *T*
 
-Defined in src/core/Utilities.ts:42
+Defined in src/core/Utilities.ts:43
 
 **Type parameters:**
 
@@ -88,7 +88,7 @@ ___
 
 ▸ **isNull**(`source`: any): *boolean*
 
-Defined in src/core/Utilities.ts:38
+Defined in src/core/Utilities.ts:39
 
 **Parameters:**
 
@@ -104,7 +104,7 @@ ___
 
 ▸ **isNullOrEmpty**(`source`: any): *boolean*
 
-Defined in src/core/Utilities.ts:37
+Defined in src/core/Utilities.ts:38
 
 **Parameters:**
 
@@ -120,7 +120,7 @@ ___
 
 ▸ **isObject**(`source`: any): *boolean*
 
-Defined in src/core/Utilities.ts:39
+Defined in src/core/Utilities.ts:40
 
 **Parameters:**
 
@@ -136,7 +136,7 @@ ___
 
 ▸ **sanitize**<**T**>(`source`: T, `excludeProperties`: string[]): *T*
 
-Defined in src/core/Utilities.ts:43
+Defined in src/core/Utilities.ts:44
 
 **Type parameters:**
 

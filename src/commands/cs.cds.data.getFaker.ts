@@ -37,7 +37,6 @@ const ignoredAttributes = [
 	"processid",
 	"stageid",
 	"subscriptionid",
-	"traversedpath",
 	"versionnumber"
 ];
 
@@ -249,7 +248,11 @@ export default async function run(config?: CdsWebApi.Config, entity?: any, selec
 	}
 
 	if (!selectedAttributes) {
-		const picked = await Quickly.pickCdsEntityComponents(config, entity, CdsSolutions.SolutionComponent.Attribute, undefined, "Choose attributes to fake (press ESC for all)");
+		const picked = await Quickly.pickCdsEntityComponents(config, 
+			entity, 
+			CdsSolutions.SolutionComponent.Attribute, 
+			(a) => a.IsValidForCreate && (a.IsSearchable || a.IsValidForForm || a.IsValidForGrid || a.IsPrimaryId || a.IsPrimaryName),
+			"Choose attributes to fake (press ESC for all)");
 
 		if (picked) {
 			selectedAttributes = picked.map(i => i.component.LogicalName);
@@ -291,14 +294,12 @@ export default async function run(config?: CdsWebApi.Config, entity?: any, selec
 							if (!ignoreAttribute
 								&& attribute 
 								&& attribute.IsValidForCreate 
-								&& attribute.RequiredLevel.Value 
-								&& (attribute.RequiredLevel.Value !== "None" || faker.random.boolean())) {
+								&& (attribute.IsSearchable || attribute.IsValidForForm || attribute.IsValidForGrid || attribute.IsPrimaryId || attribute.IsPrimaryName)) {
 								try {
-									const defined = (this.generators[k]).generate(returnObject);
+									const isDefined = attribute.RequiredLevel.Value && (attribute.RequiredLevel.Value !== "None" || faker.random.boolean());
+									const defined = isDefined ? (this.generators[k])?.generate(returnObject) : null;
 
-									if (defined) {
-										returnObject[this.generators[k].name] = defined;
-									}
+									returnObject[this.generators[k].name] = defined;
 								} 
 								catch (error) {
 									logger.warn(`Command: ${cs.cds.data.getFaker} Could not generate ${this.entity.LogicalName}.${attribute.LogicalName} using '${this.generators[k].rule}' generator: ${error.message}`);

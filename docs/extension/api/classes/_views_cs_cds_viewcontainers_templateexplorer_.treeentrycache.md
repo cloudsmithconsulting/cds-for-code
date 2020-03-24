@@ -39,7 +39,7 @@ sidebar_label: "TreeEntryCache"
 
 \+ **new TreeEntryCache**(): *[TreeEntryCache](_views_cs_cds_viewcontainers_templateexplorer_.treeentrycache.md)*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:189
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:194
 
 **Returns:** *[TreeEntryCache](_views_cs_cds_viewcontainers_templateexplorer_.treeentrycache.md)*
 
@@ -49,7 +49,7 @@ Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:189
 
 • **_items**: *[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)[]* = []
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:189
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:194
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 ▪ **_instance**: *[TreeEntryCache](_views_cs_cds_viewcontainers_templateexplorer_.treeentrycache.md)*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:187
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:192
 
 ## Accessors
 
@@ -65,7 +65,7 @@ Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:187
 
 • **get items**(): *Enumerator‹[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)›*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:211
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:216
 
 **Returns:** *Enumerator‹[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)›*
 
@@ -75,7 +75,7 @@ ___
 
 • **get Instance**(): *[TreeEntryCache](_views_cs_cds_viewcontainers_templateexplorer_.treeentrycache.md)*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:194
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:199
 
 **Returns:** *[TreeEntryCache](_views_cs_cds_viewcontainers_templateexplorer_.treeentrycache.md)*
 
@@ -85,7 +85,7 @@ Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:194
 
 ▸ **add**(`entry`: [TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)): *void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:203
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:208
 
 **Parameters:**
 
@@ -101,7 +101,7 @@ ___
 
 ▸ **clear**(): *void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:207
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:212
 
 **Returns:** *void*
 
@@ -111,7 +111,7 @@ ___
 
 ▸ **remove**(`path?`: string): *void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:215
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:220
 
 **Parameters:**
 
@@ -127,7 +127,7 @@ ___
 
 ▸ **under**(`path`: string): *Enumerator‹[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)›*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:225
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:230
 
 **Parameters:**
 

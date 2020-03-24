@@ -15,6 +15,7 @@ sidebar_label: "AsyncUtility"
 ### Methods
 
 * [forEach](_core_utilities_.asyncutility.md#foreach)
+* [sleep](_core_utilities_.asyncutility.md#sleep)
 
 ## Methods
 
@@ -45,3 +46,19 @@ Name | Type |
 `array?` | T[] |
 
 **Returns:** *any*
+
+___
+
+###  sleep
+
+▸ **sleep**(`timeout`: number): *Promise‹void›*
+
+Defined in src/core/Utilities.ts:13
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`timeout` | number |
+
+**Returns:** *Promise‹void›*

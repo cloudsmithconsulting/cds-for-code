@@ -28,6 +28,7 @@ export namespace cds {
         static readonly createWebResource: string = `${deployment._namespace}.createWebResource`;
         static readonly dotNetBuild: string = `${deployment._namespace}.dotNetBuild`;
         static readonly dotNetTest: string = `${deployment._namespace}.dotNetTest`;
+        static readonly buildAndRunDynamicsPackage: string = `${deployment._namespace}.buildAndRunDynamicsPackage`;
         static readonly exportSolution: string = `${deployment._namespace}.exportSolution`;
         static readonly importSolution: string = `${deployment._namespace}.importSolution`;
         static readonly packWebResource: string = `${deployment._namespace}.packWebResource`;
@@ -90,6 +91,7 @@ export namespace cds {
         static readonly importTemplate: string = `${templates._namespace}.importTemplate`;
         static readonly openTemplateFolder: string = `${templates._namespace}.openTemplateFolder`;
         static readonly saveTemplate: string = `${templates._namespace}.saveTemplate`;
+        static readonly viewCompiledTemplate: string = `${templates._namespace}.viewCompiledTemplate`;
     }
 
     // tslint:disable-next-line: class-name
@@ -201,6 +203,8 @@ export namespace cds {
             static readonly craeteWebResource: string = `${explorer._namespace}.createWebResource`;
             static readonly dotNetBuild: string = `${explorer._namespace}.dotNetBuild`;
             static readonly dotNetTest: string = `${explorer._namespace}.dotNetTest`;
+            static readonly buildDynamicsPackage: string = `${explorer._namespace}.buildDynamicsPackage`;
+            static readonly runDynamicsPackage: string = `${explorer._namespace}.runDynamicsPackage`;
             static readonly editCrmSvcUtilConfig: string = `${explorer._namespace}.editCrmSvcUtilConfig`;
             static readonly generateEntityCodeToFolder: string = `${explorer._namespace}.generateEntityCodeToFolder`;
             static readonly generateEntityCodeToFile: string = `${explorer._namespace}.generateEntityCodeToFile`;
@@ -212,6 +216,7 @@ export namespace cds {
             static readonly saveTemplateFolder: string = `${explorer._namespace}.saveTemplateFolder`;
             static readonly registerPluginFile: string = `${explorer._namespace}.registerPluginFile`;
             static readonly unpackSolutionToFolder: string = `${explorer._namespace}.unpackSolutionToFolder`;
+            static readonly importCsvToEntity: string = `${explorer._namespace}.importCsvToEntity`;
         }
 
         // tslint:disable-next-line: class-name
@@ -263,6 +268,7 @@ export namespace cds {
             static readonly importEntry: string = `${templateExplorer._namespace}.importEntry`;
             static readonly openEntry: string = `${templateExplorer._namespace}.openEntry`;
             static readonly refreshEntry: string = `${templateExplorer._namespace}.refreshEntry`;
+            static readonly viewCompiled: string = `${templateExplorer._namespace}.viewCompiled`;
         }
     }
 
