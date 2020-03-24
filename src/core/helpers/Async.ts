@@ -6,3 +6,7 @@ export async function forEach<T>(array: T[], callback: (item: T, index?: number,
         await callback(array[index], index, array);
     }
 }
+
+export async function sleep(timeout: number): Promise<void> {
+    setTimeout(function() { Promise.resolve(); }, timeout);
+}

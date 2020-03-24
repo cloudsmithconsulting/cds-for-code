@@ -91,15 +91,17 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"colors": [{
-			"id": "cs.cds.theme.colors.icons",
-			"description": "Color for icons that are downloaded from iconify.design",
-			"defaults": {
-				"dark": "#C0C0C0",
-				"light": "#404040",
-				"highContrast": "#FFFFFF"
+		"colors": [
+			{
+				"id": "cs.cds.theme.colors.icons",
+				"description": "Color for icons that are downloaded from iconify.design",
+				"defaults": {
+					"dark": "#C0C0C0",
+					"light": "#404040",
+					"highContrast": "#FFFFFF"
+				}
 			}
-		}],
+		],
 		"configuration": {
 			"type": "object",
 			"title": "CDS for Code",
@@ -190,7 +192,8 @@
 				}
 			}
 		},
-		"commands": [{
+		"commands": [
+			{
 				"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 				"title": "Refresh",
 				"icon": {
@@ -458,14 +461,14 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.cds.data.createDataMap",
+				"title": "Create CSV data import map a CDS entity",
+				"category": "CDS for Code"
+			},
+			{
 				"command": "cs.cds.controls.templateExplorer.viewCompiled",
 				"title": "View compiled template function",
 				"category": "UserInterface"
-			},
-			{
-				"command": "cs.cds.deployment.addSolutionComponent",
-				"title": "Add component to a CDS solution",
-				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.cds.data.getFaker",
@@ -473,8 +476,18 @@
 				"category": "CDS for Code"
 			},
 			{
+				"command": "cs.cds.data.insertCsvData",
+				"title": "Import CSV data for a CDS entity",
+				"category": "CDS for Code"
+			},
+			{
 				"command": "cs.cds.data.insertFakeData",
 				"title": "Generate data for a CDS entity",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.deployment.addSolutionComponent",
+				"title": "Add component to a CDS solution",
 				"category": "CDS for Code"
 			},
 			{
@@ -638,119 +651,52 @@
 				"category": "CDS for Code"
 			}
 		],
-		"languages": [{
-			"id": "dotjs",
-			"aliases": ["doT", "doTjs"],
-			"extensions": [".dot", ".def"],
-			"configuration": "./src/Components/Templates/dotjs.conifg.json"
-		}],
-		"grammars": [{
-			"language": "dotjs",
-			"scopeName": "text.html.dotjs",
-			"path": "./src/Components/Templates/dotjs.tmLanguage"
-		}],
+		"languages": [
+			{
+				"id": "dotjs",
+				"aliases": [
+					"doT",
+					"doTjs"
+				],
+				"extensions": [
+					".dot",
+					".def"
+				],
+				"configuration": "./src/Components/Templates/dotjs.conifg.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "dotjs",
+				"scopeName": "text.html.dotjs",
+				"path": "./src/Components/Templates/dotjs.tmLanguage"
+			}
+		],
 		"viewsContainers": {
-			"activitybar": [{
-				"id": "cdsExplorer",
-				"title": "CDS for Code",
-				"icon": "resources/images/dynamics.png"
-			}]
+			"activitybar": [
+				{
+					"id": "cdsExplorer",
+					"title": "CDS for Code",
+					"icon": "resources/images/dynamics.png"
+				}
+			]
 		},
 		"views": {
-			"cdsExplorer": [{
-				"id": "cs.cds.viewContainers.cdsExplorer",
-				"name": "CDS Explorer"
-			}],
-			"explorer": [{
-				"id": "cs.cds.viewContainers.templateExplorer",
-				"name": "Template Explorer"
-			}]
+			"cdsExplorer": [
+				{
+					"id": "cs.cds.viewContainers.cdsExplorer",
+					"name": "CDS Explorer"
+				}
+			],
+			"explorer": [
+				{
+					"id": "cs.cds.viewContainers.templateExplorer",
+					"name": "Template Explorer"
+				}
+			]
 		},
 		"menus": {
-			"commandPalette": [{
-					"command": "cs.cds.data.getFaker",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.createCrmSvcUtilConfig",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.createFromItemTemplate",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.createFromProjectTemplate",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.createWebResource",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.dotNetBuild",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.dotNetTest",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.buildDynamicsPackage",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.runDynamicsPackage",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.editCrmSvcUtilConfig",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.generateEntityCodeToFolder",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.generateEntityCodeToFile",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.generateEntityCodeUsingConfig",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.importSolution",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.packSolutionFromFolder",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.packWebResource",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.saveTemplateFile",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.saveTemplateFolder",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.registerPluginFile",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.explorer.unpackSolutionToFolder",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.newWorkspace.open",
-					"when": "false"
-				},
+			"commandPalette": [
 				{
 					"command": "cs.cds.controls.cdsExplorer.addEntry",
 					"when": "false"
@@ -773,6 +719,18 @@
 				},
 				{
 					"command": "cs.cds.controls.cdsExplorer.editConnection",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.buildDynamicsPackage",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.runDynamicsPackage",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.editCrmSvcUtilConfig",
 					"when": "false"
 				},
 				{
@@ -824,6 +782,78 @@
 					"when": "false"
 				},
 				{
+					"command": "cs.cds.controls.explorer.createCrmSvcUtilConfig",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.createFromItemTemplate",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.createFromProjectTemplate",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.createWebResource",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.dotNetBuild",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.dotNetTest",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.editCrmSvcUtilConfig",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.generateEntityCodeToFolder",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.generateEntityCodeToFile",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.generateEntityCodeUsingConfig",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.importSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.packSolutionFromFolder",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.packWebResource",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.saveTemplateFile",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.saveTemplateFolder",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.registerPluginFile",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.explorer.unpackSolutionToFolder",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.newWorkspace.open",
+					"when": "false"
+				},
+				{
 					"command": "cs.cds.controls.templateExplorer.addEntry",
 					"when": "false"
 				},
@@ -862,9 +892,18 @@
 				{
 					"command": "cs.cds.controls.templateExplorer.refreshEntry",
 					"when": "false"
+				},
+				{
+					"command": "cs.cds.data.createDataMap",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.data.getFaker",
+					"when": "false"
 				}
 			],
-			"explorer/context": [{
+			"explorer/context": [
+				{
 					"command": "cs.cds.controls.explorer.createFromItemTemplate",
 					"when": "explorerResourceIsFolder",
 					"group": "navigation@1"
@@ -960,7 +999,8 @@
 					"group": "zzz_azuretools_deploy@4"
 				}
 			],
-			"view/title": [{
+			"view/title": [
+				{
 					"command": "cs.cds.controls.cdsExplorer.refreshEntry",
 					"group": "navigation",
 					"when": "view == cs.cds.viewContainers.cdsExplorer"
@@ -981,7 +1021,8 @@
 					"when": "view == cs.cds.viewContainers.templateExplorer"
 				}
 			],
-			"view/item/context": [{
+			"view/item/context": [
+				{
 					"command": "cs.cds.controls.cdsExplorer.addEntry",
 					"group": "inline",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canAddItem)(.*)$/"
@@ -1154,7 +1195,7 @@
 		"babelify": "^10.0.0",
 		"browserify": "^16.5.0",
 		"glob": "^7.1.6",
-		"grunt": "^1.0.4",
+		"grunt": "^1.1.0",
 		"grunt-babel": "^8.0.0",
 		"grunt-banner": "^0.6.0",
 		"grunt-browserify": "^5.3.0",
