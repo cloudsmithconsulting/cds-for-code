@@ -42,7 +42,7 @@ export default async function run(this: VisualStudioProjectCommands, file?:vscod
     const buildOutputLocation = match[0].replace(/\>\s/, '');
     const classLibName = path.basename(buildOutputLocation);
 
-    const outputPath = path.dirname(buildOutputLocation).replace(/bin(.+)/, "bin\\package");
+    const outputPath = path.dirname(buildOutputLocation).replace(/bin(.+)/, "bin\\PackageDeployment");
 
     if (!FileSystem.exists(outputPath)) {
         FileSystem.makeFolderSync(outputPath);
