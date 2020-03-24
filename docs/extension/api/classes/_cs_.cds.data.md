@@ -15,7 +15,9 @@ sidebar_label: "data"
 ### Properties
 
 * [_namespace](_cs_.cds.data.md#static-_namespace)
+* [createDataMap](_cs_.cds.data.md#static-createdatamap)
 * [getFaker](_cs_.cds.data.md#static-getfaker)
+* [insertCsvData](_cs_.cds.data.md#static-insertcsvdata)
 * [insertFakeData](_cs_.cds.data.md#static-insertfakedata)
 
 ## Properties
@@ -28,11 +30,27 @@ Defined in src/cs.ts:7
 
 ___
 
+### `Static` createDataMap
+
+▪ **createDataMap**: *string* = `${data._namespace}.createDataMap`
+
+Defined in src/cs.ts:8
+
+___
+
 ### `Static` getFaker
 
 ▪ **getFaker**: *string* = `${data._namespace}.getFaker`
 
-Defined in src/cs.ts:8
+Defined in src/cs.ts:9
+
+___
+
+### `Static` insertCsvData
+
+▪ **insertCsvData**: *string* = `${data._namespace}.insertCsvData`
+
+Defined in src/cs.ts:10
 
 ___
 
@@ -40,4 +58,4 @@ ___
 
 ▪ **insertFakeData**: *string* = `${data._namespace}.insertFakeData`
 
-Defined in src/cs.ts:9
+Defined in src/cs.ts:11

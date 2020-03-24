@@ -29,7 +29,7 @@ sidebar_label: "StringUtility"
 
 ▸ **dateAsFilename**(): *string*
 
-Defined in src/core/Utilities.ts:55
+Defined in src/core/Utilities.ts:56
 
 **Returns:** *string*
 
@@ -39,7 +39,7 @@ ___
 
 ▸ **isIsoDateString**(`date`: string): *boolean*
 
-Defined in src/core/Utilities.ts:54
+Defined in src/core/Utilities.ts:55
 
 **Parameters:**
 
@@ -55,7 +55,7 @@ ___
 
 ▸ **noSlashes**(`string`: string): *string*
 
-Defined in src/core/Utilities.ts:58
+Defined in src/core/Utilities.ts:59
 
 **Parameters:**
 
@@ -71,7 +71,7 @@ ___
 
 ▸ **noTrailingSlash**(`string`: string): *string*
 
-Defined in src/core/Utilities.ts:57
+Defined in src/core/Utilities.ts:58
 
 **Parameters:**
 
@@ -87,7 +87,7 @@ ___
 
 ▸ **parseUtcDate**(`date`: string): *Date*
 
-Defined in src/core/Utilities.ts:53
+Defined in src/core/Utilities.ts:54
 
 **Parameters:**
 
@@ -103,7 +103,7 @@ ___
 
 ▸ **plural**(`value`: string): *string*
 
-Defined in src/core/Utilities.ts:60
+Defined in src/core/Utilities.ts:61
 
 **Parameters:**
 
@@ -119,7 +119,7 @@ ___
 
 ▸ **powerShellSafe**(`value`: string, `delimiter`: string): *string*
 
-Defined in src/core/Utilities.ts:59
+Defined in src/core/Utilities.ts:60
 
 **Parameters:**
 
@@ -136,7 +136,7 @@ ___
 
 ▸ **withTrailingSlash**(`path`: string | undefined): *string*
 
-Defined in src/core/Utilities.ts:56
+Defined in src/core/Utilities.ts:57
 
 **Parameters:**
 

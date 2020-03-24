@@ -24,6 +24,7 @@ sidebar_label: "templateExplorer"
 * [importEntry](_cs_.cds.controls.templateexplorer.md#static-importentry)
 * [openEntry](_cs_.cds.controls.templateexplorer.md#static-openentry)
 * [refreshEntry](_cs_.cds.controls.templateexplorer.md#static-refreshentry)
+* [viewCompiled](_cs_.cds.controls.templateexplorer.md#static-viewcompiled)
 
 ## Properties
 
@@ -31,7 +32,7 @@ sidebar_label: "templateExplorer"
 
 ▪ **_namespace**: *string* = "cs.cds.controls.templateExplorer"
 
-Defined in src/cs.ts:254
+Defined in src/cs.ts:261
 
 ___
 
@@ -39,7 +40,7 @@ ___
 
 ▪ **addEntry**: *string* = `${templateExplorer._namespace}.addEntry`
 
-Defined in src/cs.ts:255
+Defined in src/cs.ts:262
 
 ___
 
@@ -47,7 +48,7 @@ ___
 
 ▪ **clickEntry**: *string* = `${templateExplorer._namespace}.clickEntry`
 
-Defined in src/cs.ts:256
+Defined in src/cs.ts:263
 
 ___
 
@@ -55,7 +56,7 @@ ___
 
 ▪ **createInWorkspace**: *string* = `${templateExplorer._namespace}.createInWorkspace`
 
-Defined in src/cs.ts:257
+Defined in src/cs.ts:264
 
 ___
 
@@ -63,7 +64,7 @@ ___
 
 ▪ **deleteEntry**: *string* = `${templateExplorer._namespace}.deleteEntry`
 
-Defined in src/cs.ts:258
+Defined in src/cs.ts:265
 
 ___
 
@@ -71,7 +72,7 @@ ___
 
 ▪ **editEntry**: *string* = `${templateExplorer._namespace}.editEntry`
 
-Defined in src/cs.ts:259
+Defined in src/cs.ts:266
 
 ___
 
@@ -79,7 +80,7 @@ ___
 
 ▪ **exportEntry**: *string* = `${templateExplorer._namespace}.exportEntry`
 
-Defined in src/cs.ts:260
+Defined in src/cs.ts:267
 
 ___
 
@@ -87,7 +88,7 @@ ___
 
 ▪ **importEntry**: *string* = `${templateExplorer._namespace}.importEntry`
 
-Defined in src/cs.ts:261
+Defined in src/cs.ts:268
 
 ___
 
@@ -95,7 +96,7 @@ ___
 
 ▪ **openEntry**: *string* = `${templateExplorer._namespace}.openEntry`
 
-Defined in src/cs.ts:262
+Defined in src/cs.ts:269
 
 ___
 
@@ -103,4 +104,12 @@ ___
 
 ▪ **refreshEntry**: *string* = `${templateExplorer._namespace}.refreshEntry`
 
-Defined in src/cs.ts:263
+Defined in src/cs.ts:270
+
+___
+
+### `Static` viewCompiled
+
+▪ **viewCompiled**: *string* = `${templateExplorer._namespace}.viewCompiled`
+
+Defined in src/cs.ts:271

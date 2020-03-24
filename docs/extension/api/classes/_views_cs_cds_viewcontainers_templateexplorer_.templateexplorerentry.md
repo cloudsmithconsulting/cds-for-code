@@ -38,6 +38,7 @@ sidebar_label: "TemplateExplorerEntry"
 * [canImportEntryTypes](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md#static-private-canimportentrytypes)
 * [canOpenEntryTypes](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md#static-private-canopenentrytypes)
 * [canRefreshEntryTypes](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md#static-private-canrefreshentrytypes)
+* [canViewCompiledTypes](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md#static-private-canviewcompiledtypes)
 
 ### Accessors
 
@@ -59,7 +60,7 @@ sidebar_label: "TemplateExplorerEntry"
 
 *Overrides void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:238
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:244
 
 **Parameters:**
 
@@ -105,7 +106,7 @@ ___
 
 • **context**? : *any*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:247
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:254
 
 ___
 
@@ -156,7 +157,7 @@ ___
 
 *Overrides void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:243
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:250
 
 ___
 
@@ -164,7 +165,7 @@ ___
 
 • **itemType**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:242
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:249
 
 ___
 
@@ -199,7 +200,7 @@ ___
 
 • **subtext**? : *string*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:245
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:252
 
 ___
 
@@ -207,7 +208,7 @@ ___
 
 ▪ **canAddEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "Folder" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:232
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:237
 
 ___
 
@@ -215,7 +216,7 @@ ___
 
 ▪ **canCreateInWorkspaceTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "ProjectTemplate", "ItemTemplate" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:237
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:242
 
 ___
 
@@ -223,7 +224,7 @@ ___
 
 ▪ **canDeleteEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "ProjectTemplate", "ItemTemplate" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:235
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:240
 
 ___
 
@@ -231,7 +232,7 @@ ___
 
 ▪ **canEditEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "ProjectTemplate", "ItemTemplate" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:234
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:239
 
 ___
 
@@ -239,7 +240,7 @@ ___
 
 ▪ **canExportEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "ProjectTemplate", "ItemTemplate" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:238
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:243
 
 ___
 
@@ -247,7 +248,7 @@ ___
 
 ▪ **canImportEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "Folder" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:233
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:238
 
 ___
 
@@ -255,7 +256,7 @@ ___
 
 ▪ **canOpenEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "ProjectTemplate", "ItemTemplate" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:236
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:241
 
 ___
 
@@ -263,7 +264,15 @@ ___
 
 ▪ **canRefreshEntryTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "Folder" ]
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:231
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:236
+
+___
+
+### `Static` `Private` canViewCompiledTypes
+
+▪ **canViewCompiledTypes**: *[TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[]* = [ "ProjectTemplate", "ItemTemplate" ]
+
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:244
 
 ## Accessors
 
@@ -271,7 +280,7 @@ Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:231
 
 • **get capabilities**(): *string[]*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:301
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:308
 
 **Returns:** *string[]*
 
@@ -283,7 +292,7 @@ ___
 
 *Overrides void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:282
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:289
 
 **Returns:** *string*
 
@@ -293,7 +302,7 @@ ___
 
 • **get parent**(): *[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:286
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:293
 
 **Returns:** *[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)*
 
@@ -305,7 +314,7 @@ ___
 
 *Overrides void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:278
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:285
 
 **Returns:** *string*
 
@@ -315,7 +324,7 @@ Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:278
 
 ▸ **addCapability**(`returnList`: string[], `capabilityName`: string, `constrain`: [TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype)[], `additionalCheck?`: function): *void*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:332
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:340
 
 **Parameters:**
 
@@ -337,7 +346,7 @@ ___
 
 ▸ **createChildItem**(`itemType`: [TemplateExplorerEntryType](../modules/_views_cs_cds_viewcontainers_templateexplorer_.md#templateexplorerentrytype), `id`: string, `label`: string, `subtext?`: string, `collapsibleState`: TreeItemCollapsibleState, `context?`: any): *[TemplateExplorerEntry](_views_cs_cds_viewcontainers_templateexplorer_.templateexplorerentry.md)*
 
-Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:328
+Defined in src/views/cs.cds.viewContainers.templateExplorer.ts:336
 
 Creates a child item underneath the current tree entry with the specified properties.
 

@@ -31,7 +31,7 @@ sidebar_label: "EncodingUtility"
 
 • **utf8encoder**: *TextEncoder*
 
-Defined in src/core/Utilities.ts:20
+Defined in src/core/Utilities.ts:21
 
 ## Methods
 
@@ -39,7 +39,7 @@ Defined in src/core/Utilities.ts:20
 
 ▸ **base64ToBytes**(`str`: string): *Uint8Array*
 
-Defined in src/core/Utilities.ts:24
+Defined in src/core/Utilities.ts:25
 
 **Parameters:**
 
@@ -55,7 +55,7 @@ ___
 
 ▸ **base64ToString**(`str`: string): *string*
 
-Defined in src/core/Utilities.ts:25
+Defined in src/core/Utilities.ts:26
 
 **Parameters:**
 
@@ -71,7 +71,7 @@ ___
 
 ▸ **bytesToBase64**(`bytes`: Uint8Array): *string*
 
-Defined in src/core/Utilities.ts:23
+Defined in src/core/Utilities.ts:24
 
 **Parameters:**
 
@@ -87,7 +87,7 @@ ___
 
 ▸ **bytesToHex**(`byteArray`: Uint8Array): *string*
 
-Defined in src/core/Utilities.ts:26
+Defined in src/core/Utilities.ts:27
 
 **Parameters:**
 
@@ -103,7 +103,7 @@ ___
 
 ▸ **hexToBytes**(`hexString`: string): *Uint8Array*
 
-Defined in src/core/Utilities.ts:27
+Defined in src/core/Utilities.ts:28
 
 **Parameters:**
 
@@ -119,7 +119,7 @@ ___
 
 ▸ **stringToBase64**(`string`: string): *string*
 
-Defined in src/core/Utilities.ts:22
+Defined in src/core/Utilities.ts:23
 
 **Parameters:**
 
