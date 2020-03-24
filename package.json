@@ -55,6 +55,7 @@
 		"onCommand:cs.cds.controls.explorer.saveTemplateFile",
 		"onCommand:cs.cds.controls.explorer.saveTemplateFolder",
 		"onCommand:cs.cds.controls.explorer.unpackSolutionToFolder",
+		"onCommand:cs.cds.controls.explorer.importCsvToEntity",
 		"onCommand:cs.cds.controls.svcUtilConfig.open",
 		"onCommand:cs.cds.data.getFaker",
 		"onCommand:cs.cds.deployment.addSolutionComponent",
@@ -337,6 +338,11 @@
 			{
 				"command": "cs.cds.controls.explorer.runDynamicsPackage",
 				"title": "Build and run as dynamics package deployment",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.cds.controls.explorer.importCsvToEntity",
+				"title": "Import CSV file to entity",
 				"category": "UserInterface"
 			},
 			{
@@ -730,6 +736,10 @@
 					"when": "false"
 				},
 				{
+					"command": "cs.cds.controls.explorer.importCsvToEntity",
+					"when": "false"
+				},
+				{
 					"command": "cs.cds.controls.explorer.editCrmSvcUtilConfig",
 					"when": "false"
 				},
@@ -977,6 +987,11 @@
 					"command": "cs.cds.controls.explorer.generateEntityCodeToFolder",
 					"when": "explorerResourceIsFolder",
 					"group": "generateCode@2"
+				},
+				{
+					"command": "cs.cds.controls.explorer.importCsvToEntity",
+					"when": "explorerResourceIsFolder != true && resourceExtname == .csv",
+					"group": "zzz_azuretools_deploy@999"
 				},
 				{
 					"command": "cs.cds.controls.explorer.packSolutionFromFolder",

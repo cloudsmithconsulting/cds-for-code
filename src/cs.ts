@@ -216,6 +216,7 @@ export namespace cds {
             static readonly saveTemplateFolder: string = `${explorer._namespace}.saveTemplateFolder`;
             static readonly registerPluginFile: string = `${explorer._namespace}.registerPluginFile`;
             static readonly unpackSolutionToFolder: string = `${explorer._namespace}.unpackSolutionToFolder`;
+            static readonly importCsvToEntity: string = `${explorer._namespace}.importCsvToEntity`;
         }
 
         // tslint:disable-next-line: class-name
