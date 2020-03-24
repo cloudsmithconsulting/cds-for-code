@@ -145,7 +145,7 @@ Track the currently panel. Only allow a single panel to exist at a time.
 
 *Overrides [View](_core_webui_view_.view.md).[commands](_core_webui_view_.view.md#commands)*
 
-Defined in src/views/cs.cds.views.newWorkspaceView.ts:54
+Defined in src/views/cs.cds.views.newWorkspaceView.ts:53
 
 **Returns:** *[Dictionary](_core_types_dictionary_.dictionary.md)‹string, Function›*
 
@@ -187,7 +187,7 @@ ___
 
 *Overrides [View](_core_webui_view_.view.md).[construct](_core_webui_view_.view.md#abstract-construct)*
 
-Defined in src/views/cs.cds.views.newWorkspaceView.ts:39
+Defined in src/views/cs.cds.views.newWorkspaceView.ts:38
 
 **Parameters:**
 
@@ -233,7 +233,7 @@ ___
 
 ▸ **setInitialState**(): *void*
 
-Defined in src/views/cs.cds.views.newWorkspaceView.ts:61
+Defined in src/views/cs.cds.views.newWorkspaceView.ts:60
 
 **Returns:** *void*
 

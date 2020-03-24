@@ -42,7 +42,7 @@ sidebar_label: "QuickPickOption"
 
 \+ **new QuickPickOption**(`label`: string, `command?`: string, `description?`: string, `context?`: any, `alwaysShow?`: boolean): *[QuickPickOption](_core_quickly_.quickpickoption.md)*
 
-Defined in src/core/Quickly.ts:567
+Defined in src/core/Quickly.ts:587
 
 **Parameters:**
 
@@ -62,7 +62,7 @@ Name | Type |
 
 • **alwaysShow**? : *boolean*
 
-Defined in src/core/Quickly.ts:582
+Defined in src/core/Quickly.ts:602
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 • **command**? : *string*
 
-Defined in src/core/Quickly.ts:577
+Defined in src/core/Quickly.ts:597
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 • **context**? : *any*
 
-Defined in src/core/Quickly.ts:579
+Defined in src/core/Quickly.ts:599
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 • **description**? : *string*
 
-Defined in src/core/Quickly.ts:578
+Defined in src/core/Quickly.ts:598
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 • **detail**? : *string*
 
-Defined in src/core/Quickly.ts:580
+Defined in src/core/Quickly.ts:600
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 • **label**: *string*
 
-Defined in src/core/Quickly.ts:576
+Defined in src/core/Quickly.ts:596
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 • **picked**? : *boolean*
 
-Defined in src/core/Quickly.ts:581
+Defined in src/core/Quickly.ts:601
 
 ___
 
@@ -118,7 +118,7 @@ ___
 
 ▪ **cancel**: *[QuickPickOption](_core_quickly_.quickpickoption.md)‹›* = new QuickPickOption('Cancel', cs.cds.controls.quickPicker.cancel, 'ESC')
 
-Defined in src/core/Quickly.ts:592
+Defined in src/core/Quickly.ts:612
 
 ___
 
@@ -126,7 +126,7 @@ ___
 
 ▪ **quit**: *[QuickPickOption](_core_quickly_.quickpickoption.md)‹›* = new QuickPickOption('Close Window', cs.cds.controls.quickPicker.quit)
 
-Defined in src/core/Quickly.ts:593
+Defined in src/core/Quickly.ts:613
 
 ## Methods
 
@@ -134,7 +134,7 @@ Defined in src/core/Quickly.ts:593
 
 ▸ **invokeCommand**<**T**>(...`rest`: any[]): *Thenable‹T›*
 
-Defined in src/core/Quickly.ts:584
+Defined in src/core/Quickly.ts:604
 
 **Type parameters:**
 

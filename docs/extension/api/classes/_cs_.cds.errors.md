@@ -24,7 +24,7 @@ sidebar_label: "errors"
 
 ▪ **_namespace**: *string* = "cs.cds.errors"
 
-Defined in src/cs.ts:42
+Defined in src/cs.ts:43
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 ▪ **userCancelledAction**: *string* = `${errors._namespace}.userCancelledAction`
 
-Defined in src/cs.ts:43
+Defined in src/cs.ts:44
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 ▪ **webApiResponseError**: *string* = `${errors._namespace}.webApiResponseError`
 
-Defined in src/cs.ts:44
+Defined in src/cs.ts:45

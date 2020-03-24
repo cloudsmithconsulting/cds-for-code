@@ -17,6 +17,7 @@ import TerminalManager from './components/Terminal/SecureTerminal';
 import ViewManager from './views/ViewManager';
 import CdsExplorer from './views/cs.cds.viewContainers.cdsExplorer';
 import TemplateExplorer from './views/cs.cds.viewContainers.templateExplorer';
+import DataGenerationManager from './components/DataGeneration/DataGenerationManager';
 
 let extensionContext: ExtensionContext;
 
@@ -26,7 +27,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	[
 		IconDownloader, ScriptDownloader, CodeGenerationManager, SolutionMap, WebResourceManager, SolutionManager, 
 		VisualStudioProjectCommands, TemplateManager, ViewManager, Telemetry, CdsExplorer, TemplateExplorer,
-		TerminalManager
+		TerminalManager, DataGenerationManager
 	];
 
 	extensionContext = new ExtensionContext(context);

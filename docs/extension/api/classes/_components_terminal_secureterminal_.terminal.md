@@ -86,7 +86,7 @@ sidebar_label: "Terminal"
 
 \+ **new Terminal**(`options?`: TerminalOptions): *[Terminal](_components_terminal_secureterminal_.terminal.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:384
+Defined in src/components/Terminal/SecureTerminal.ts:383
 
 **Parameters:**
 
@@ -102,7 +102,7 @@ Name | Type |
 
 • **_commandBuffer**: *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)[]* = []
 
-Defined in src/components/Terminal/SecureTerminal.ts:368
+Defined in src/components/Terminal/SecureTerminal.ts:367
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 • **_cursorPosition**: *number* = 0
 
-Defined in src/components/Terminal/SecureTerminal.ts:372
+Defined in src/components/Terminal/SecureTerminal.ts:371
 
 ___
 
@@ -118,7 +118,7 @@ ___
 
 • **_errorBuffer**: *[MaskedBuffer](_components_terminal_secureterminal_.maskedbuffer.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:371
+Defined in src/components/Terminal/SecureTerminal.ts:370
 
 ___
 
@@ -126,7 +126,7 @@ ___
 
 • **_inputCommand**: *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:369
+Defined in src/components/Terminal/SecureTerminal.ts:368
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 • **_isAlreadyInitialized**: *boolean* = false
 
-Defined in src/components/Terminal/SecureTerminal.ts:374
+Defined in src/components/Terminal/SecureTerminal.ts:373
 
 ___
 
@@ -142,7 +142,7 @@ ___
 
 • **_onDidClose**: *EventEmitter‹void›* = new vscode.EventEmitter<void>()
 
-Defined in src/components/Terminal/SecureTerminal.ts:359
+Defined in src/components/Terminal/SecureTerminal.ts:358
 
 ___
 
@@ -150,7 +150,7 @@ ___
 
 • **_onDidError**: *EventEmitter‹[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)›* = new vscode.EventEmitter<TerminalCommand>()
 
-Defined in src/components/Terminal/SecureTerminal.ts:362
+Defined in src/components/Terminal/SecureTerminal.ts:361
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 • **_onDidOpen**: *EventEmitter‹void›* = new vscode.EventEmitter<void>()
 
-Defined in src/components/Terminal/SecureTerminal.ts:358
+Defined in src/components/Terminal/SecureTerminal.ts:357
 
 ___
 
@@ -166,7 +166,7 @@ ___
 
 • **_onDidReceiveInput**: *EventEmitter‹string›* = new vscode.EventEmitter<string>()
 
-Defined in src/components/Terminal/SecureTerminal.ts:360
+Defined in src/components/Terminal/SecureTerminal.ts:359
 
 ___
 
@@ -174,7 +174,7 @@ ___
 
 • **_onDidRunCommand**: *EventEmitter‹[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)›* = new vscode.EventEmitter<TerminalCommand>()
 
-Defined in src/components/Terminal/SecureTerminal.ts:361
+Defined in src/components/Terminal/SecureTerminal.ts:360
 
 ___
 
@@ -182,7 +182,7 @@ ___
 
 • **_onDidWrite**: *EventEmitter‹string›* = new vscode.EventEmitter<string>()
 
-Defined in src/components/Terminal/SecureTerminal.ts:357
+Defined in src/components/Terminal/SecureTerminal.ts:356
 
 ___
 
@@ -190,7 +190,7 @@ ___
 
 • **_options**: *TerminalOptions*
 
-Defined in src/components/Terminal/SecureTerminal.ts:364
+Defined in src/components/Terminal/SecureTerminal.ts:363
 
 ___
 
@@ -198,7 +198,7 @@ ___
 
 • **_outputBuffer**: *[MaskedBuffer](_components_terminal_secureterminal_.maskedbuffer.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:370
+Defined in src/components/Terminal/SecureTerminal.ts:369
 
 ___
 
@@ -206,7 +206,7 @@ ___
 
 • **_path**: *string* = ""
 
-Defined in src/components/Terminal/SecureTerminal.ts:365
+Defined in src/components/Terminal/SecureTerminal.ts:364
 
 ___
 
@@ -214,7 +214,7 @@ ___
 
 • **_process**: *any*
 
-Defined in src/components/Terminal/SecureTerminal.ts:367
+Defined in src/components/Terminal/SecureTerminal.ts:366
 
 ___
 
@@ -222,7 +222,7 @@ ___
 
 • **_promiseInfo**: *[PromiseInfo](_core_types_promiseinfo_.promiseinfo.md)‹[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:373
+Defined in src/components/Terminal/SecureTerminal.ts:372
 
 ___
 
@@ -230,7 +230,7 @@ ___
 
 • **_prompt**: *string* = ""
 
-Defined in src/components/Terminal/SecureTerminal.ts:366
+Defined in src/components/Terminal/SecureTerminal.ts:365
 
 ___
 
@@ -238,7 +238,7 @@ ___
 
 • **_terminal**: *Terminal*
 
-Defined in src/components/Terminal/SecureTerminal.ts:363
+Defined in src/components/Terminal/SecureTerminal.ts:362
 
 ___
 
@@ -246,7 +246,7 @@ ___
 
 • **onDidClose**: *Event‹void›* = this._onDidClose.event
 
-Defined in src/components/Terminal/SecureTerminal.ts:378
+Defined in src/components/Terminal/SecureTerminal.ts:377
 
 ___
 
@@ -254,7 +254,7 @@ ___
 
 • **onDidError**: *Event‹[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)›* = this._onDidError.event
 
-Defined in src/components/Terminal/SecureTerminal.ts:381
+Defined in src/components/Terminal/SecureTerminal.ts:380
 
 ___
 
@@ -262,7 +262,7 @@ ___
 
 • **onDidOpen**: *Event‹void›* = this._onDidOpen.event
 
-Defined in src/components/Terminal/SecureTerminal.ts:377
+Defined in src/components/Terminal/SecureTerminal.ts:376
 
 ___
 
@@ -270,7 +270,7 @@ ___
 
 • **onDidReceiveInput**: *Event‹string›* = this._onDidReceiveInput.event
 
-Defined in src/components/Terminal/SecureTerminal.ts:379
+Defined in src/components/Terminal/SecureTerminal.ts:378
 
 ___
 
@@ -278,7 +278,7 @@ ___
 
 • **onDidRunCommand**: *Event‹[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)›* = this._onDidRunCommand.event
 
-Defined in src/components/Terminal/SecureTerminal.ts:380
+Defined in src/components/Terminal/SecureTerminal.ts:379
 
 ___
 
@@ -286,7 +286,7 @@ ___
 
 • **onDidWrite**: *Event‹string›* = this._onDidWrite.event
 
-Defined in src/components/Terminal/SecureTerminal.ts:376
+Defined in src/components/Terminal/SecureTerminal.ts:375
 
 ___
 
@@ -294,7 +294,7 @@ ___
 
 ▪ **defaultTerminalName**: *string* = "CloudSmith Terminal"
 
-Defined in src/components/Terminal/SecureTerminal.ts:383
+Defined in src/components/Terminal/SecureTerminal.ts:382
 
 ___
 
@@ -302,7 +302,7 @@ ___
 
 ▪ **maximumCommandBufferSize**: *number* = 20
 
-Defined in src/components/Terminal/SecureTerminal.ts:384
+Defined in src/components/Terminal/SecureTerminal.ts:383
 
 ## Accessors
 
@@ -310,7 +310,7 @@ Defined in src/components/Terminal/SecureTerminal.ts:384
 
 • **get commandBuffer**(): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)[]*
 
-Defined in src/components/Terminal/SecureTerminal.ts:408
+Defined in src/components/Terminal/SecureTerminal.ts:407
 
 **Returns:** *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)[]*
 
@@ -320,7 +320,7 @@ ___
 
 • **get cursorPosition**(): *number*
 
-Defined in src/components/Terminal/SecureTerminal.ts:445
+Defined in src/components/Terminal/SecureTerminal.ts:444
 
 **Returns:** *number*
 
@@ -330,7 +330,7 @@ ___
 
 • **get name**(): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:412
+Defined in src/components/Terminal/SecureTerminal.ts:411
 
 **Returns:** *string*
 
@@ -340,7 +340,7 @@ ___
 
 • **get path**(): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:416
+Defined in src/components/Terminal/SecureTerminal.ts:415
 
 **Returns:** *string*
 
@@ -350,7 +350,7 @@ ___
 
 • **get process**(): *any*
 
-Defined in src/components/Terminal/SecureTerminal.ts:429
+Defined in src/components/Terminal/SecureTerminal.ts:428
 
 **Returns:** *any*
 
@@ -360,7 +360,7 @@ ___
 
 • **get processId**(): *Thenable‹number›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:437
+Defined in src/components/Terminal/SecureTerminal.ts:436
 
 **Returns:** *Thenable‹number›*
 
@@ -370,7 +370,7 @@ ___
 
 • **get prompt**(): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:441
+Defined in src/components/Terminal/SecureTerminal.ts:440
 
 **Returns:** *string*
 
@@ -380,7 +380,7 @@ Defined in src/components/Terminal/SecureTerminal.ts:441
 
 ▸ **backspace**(`howMany`: number): *void*
 
-Defined in src/components/Terminal/SecureTerminal.ts:449
+Defined in src/components/Terminal/SecureTerminal.ts:448
 
 **Parameters:**
 
@@ -396,7 +396,7 @@ ___
 
 ▸ **clear**(): *[Terminal](_components_terminal_secureterminal_.terminal.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:612
+Defined in src/components/Terminal/SecureTerminal.ts:618
 
 **Returns:** *[Terminal](_components_terminal_secureterminal_.terminal.md)*
 
@@ -406,7 +406,7 @@ ___
 
 ▸ **clearCommand**(): *void*
 
-Defined in src/components/Terminal/SecureTerminal.ts:464
+Defined in src/components/Terminal/SecureTerminal.ts:463
 
 **Returns:** *void*
 
@@ -416,7 +416,7 @@ ___
 
 ▸ **color**(`color`: number): *[Terminal](_components_terminal_secureterminal_.terminal.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:647
+Defined in src/components/Terminal/SecureTerminal.ts:653
 
 **Parameters:**
 
@@ -432,7 +432,7 @@ ___
 
 ▸ **create**(`options?`: TerminalOptions): *void | Promise‹[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:477
+Defined in src/components/Terminal/SecureTerminal.ts:476
 
 **Parameters:**
 
@@ -448,7 +448,7 @@ ___
 
 ▸ **createChildProcess**(`options`: TerminalOptions, `spawnOptions`: SpawnOptions): *void*
 
-Defined in src/components/Terminal/SecureTerminal.ts:676
+Defined in src/components/Terminal/SecureTerminal.ts:686
 
 **Parameters:**
 
@@ -465,7 +465,7 @@ ___
 
 ▸ **createInputCommand**(`command?`: [TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)): *[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:700
+Defined in src/components/Terminal/SecureTerminal.ts:710
 
 **Parameters:**
 
@@ -481,7 +481,7 @@ ___
 
 ▸ **dispose**(): *void*
 
-Defined in src/components/Terminal/SecureTerminal.ts:397
+Defined in src/components/Terminal/SecureTerminal.ts:396
 
 **Returns:** *void*
 
@@ -491,7 +491,7 @@ ___
 
 ▸ **hide**(): *void*
 
-Defined in src/components/Terminal/SecureTerminal.ts:670
+Defined in src/components/Terminal/SecureTerminal.ts:680
 
 **Returns:** *void*
 
@@ -501,7 +501,7 @@ ___
 
 ▸ **nocolor**(): *[Terminal](_components_terminal_secureterminal_.terminal.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:656
+Defined in src/components/Terminal/SecureTerminal.ts:662
 
 **Returns:** *[Terminal](_components_terminal_secureterminal_.terminal.md)*
 
@@ -511,7 +511,7 @@ ___
 
 ▸ **resolveIncomingCommand**(`outputBuffer`: string, `errorBuffer`: string): *void*
 
-Defined in src/components/Terminal/SecureTerminal.ts:714
+Defined in src/components/Terminal/SecureTerminal.ts:724
 
 **Parameters:**
 
@@ -528,7 +528,7 @@ ___
 
 ▸ **run**(`command`: [TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)): *Promise‹[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:624
+Defined in src/components/Terminal/SecureTerminal.ts:630
 
 **Parameters:**
 
@@ -544,7 +544,7 @@ ___
 
 ▸ **sendText**(`text`: string, `addNewLine?`: boolean): *[Terminal](_components_terminal_secureterminal_.terminal.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:637
+Defined in src/components/Terminal/SecureTerminal.ts:643
 
 **Parameters:**
 
@@ -561,7 +561,7 @@ ___
 
 ▸ **setPath**(`value`: string): *Promise‹[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:420
+Defined in src/components/Terminal/SecureTerminal.ts:419
 
 **Parameters:**
 
@@ -577,7 +577,7 @@ ___
 
 ▸ **show**(`preserveFocus?`: boolean): *void*
 
-Defined in src/components/Terminal/SecureTerminal.ts:662
+Defined in src/components/Terminal/SecureTerminal.ts:668
 
 **Parameters:**
 
@@ -593,7 +593,7 @@ ___
 
 ▸ **showComandBuffer**(): *Promise‹[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:468
+Defined in src/components/Terminal/SecureTerminal.ts:467
 
 **Returns:** *Promise‹[TerminalCommand](_components_terminal_secureterminal_.terminalcommand.md)›*
 
@@ -603,7 +603,7 @@ ___
 
 ▸ **write**(`value`: string): *void*
 
-Defined in src/components/Terminal/SecureTerminal.ts:757
+Defined in src/components/Terminal/SecureTerminal.ts:767
 
 **Parameters:**
 
@@ -619,7 +619,7 @@ ___
 
 ▸ **writeColor**(`color`: number, `value`: string): *void*
 
-Defined in src/components/Terminal/SecureTerminal.ts:763
+Defined in src/components/Terminal/SecureTerminal.ts:773
 
 **Parameters:**
 

@@ -21,13 +21,17 @@ sidebar_label: "TemplateContext"
 * [sourcePath](_components_templates_types_.templatecontext.md#sourcepath)
 * [userCanceled](_components_templates_types_.templatecontext.md#usercanceled)
 
+### Methods
+
+* [write](_components_templates_types_.templatecontext.md#write)
+
 ## Properties
 
 ###  commands
 
 • **commands**: *[TemplateCommand](../interfaces/_components_templates_types_.templatecommand.md)[]* = []
 
-Defined in src/components/Templates/Types.ts:109
+Defined in src/components/Templates/Types.ts:108
 
 ___
 
@@ -35,7 +39,7 @@ ___
 
 • **executionContext**: *any*
 
-Defined in src/components/Templates/Types.ts:111
+Defined in src/components/Templates/Types.ts:110
 
 ___
 
@@ -43,7 +47,7 @@ ___
 
 • **outputPath**: *string*
 
-Defined in src/components/Templates/Types.ts:108
+Defined in src/components/Templates/Types.ts:107
 
 ___
 
@@ -51,7 +55,7 @@ ___
 
 • **parameters**: *object*
 
-Defined in src/components/Templates/Types.ts:110
+Defined in src/components/Templates/Types.ts:109
 
 #### Type declaration:
 
@@ -63,7 +67,7 @@ ___
 
 • **sourcePath**: *string*
 
-Defined in src/components/Templates/Types.ts:107
+Defined in src/components/Templates/Types.ts:106
 
 ___
 
@@ -71,4 +75,20 @@ ___
 
 • **userCanceled**: *boolean* = false
 
-Defined in src/components/Templates/Types.ts:106
+Defined in src/components/Templates/Types.ts:105
+
+## Methods
+
+###  write
+
+▸ **write**(`value`: string): *void*
+
+Defined in src/components/Templates/Types.ts:111
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`value` | string |
+
+**Returns:** *void*

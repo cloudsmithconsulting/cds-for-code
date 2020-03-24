@@ -70,8 +70,7 @@ export class TemplateItem {
 export interface Interactive {
     type: string;
     message: string;
-    items?: string[];
-    connection?: string;
+    options?: any;
 }
 
 export enum TemplateCommandExecutionStage {
@@ -109,6 +108,9 @@ export class TemplateContext {
     commands: TemplateCommand[] = [];
     parameters: { [name: string] : any } = {};
     executionContext: any = {};
+    write (value: string): void {
+        console.log(value);
+    }
 }
 
 export class TemplateFilesystemItem {

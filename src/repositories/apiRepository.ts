@@ -52,7 +52,7 @@ export default class ApiRepository {
     retrieveSolution(solutionId:string) : Promise<any> {
         return this.webapi.retrieveRequest({ 
             collection: "solutions", 
-            id: solutionId,
+            key: solutionId,
             expand: [ { property: "publisherid", select: ["publisherid", "friendlyname", "uniquename", "customizationprefix"] } ]
         });
     }
@@ -462,7 +462,7 @@ export default class ApiRepository {
         const request: CdsWebApi.RetrieveMultipleRequest = {
             collection: "systemusers",
             select: select,
-            filter: "fullname ne 'INTEGRATION'",
+            filter: "fullname ne 'INTEGRATION' and (accessmode eq 0 or accessmode eq 1)",
             orderBy: [ "fullname" ]
         };
 

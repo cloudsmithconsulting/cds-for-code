@@ -16,7 +16,7 @@ export default class MetadataRepository {
     }
 
     static readonly defaultSelections = new Dictionary<string, string[]>([
-        { key: 'EntityDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'IsIntersect', 'PrimaryIdAttribute', 'PrimaryNameAttribute' ] },
+        { key: 'EntityDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'EntitySetName', 'IsIntersect', 'PrimaryIdAttribute', 'PrimaryNameAttribute' ] },
         { key: 'AttributeDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'AttributeOf', 'AttributeType', 'AttributeTypeName' ] },
         { key: 'systemforms', value: [ 'formid', 'objecttypecode', 'type', 'formactivationstate', 'name', 'description' ] },
         { key: 'savedqueries', value: [ 'savedqueryid', 'returnedtypecode', 'statecode', 'name', 'description' ] },
@@ -29,13 +29,13 @@ export default class MetadataRepository {
     }
 
     retrieveEntityByKey(entityKey: string, select: string[] = MetadataRepository.defaultSelections["EntityDefinitions"]) : Promise<any> {
-        if (select.length === 0) { select = undefined; }
+        if (select?.length === 0) { select = undefined; }
 
         return this.webapi.retrieveEntity(entityKey, select);
     }
 
     retrieveEntityByLogicalName(entityKey: string, select: string[] = MetadataRepository.defaultSelections["EntityDefinitions"]) : Promise<any> {
-        if (select.length === 0) { select = undefined; }
+        if (select?.length === 0) { select = undefined; }
 
         if (entityKey?.indexOf('LogicalName') === -1) {
             entityKey = `LogicalName='${entityKey}'`;
@@ -45,22 +45,30 @@ export default class MetadataRepository {
     }
 
     retrieveEntities(solutionId?: string, select: string[] = MetadataRepository.defaultSelections["EntityDefinitions"]) : Promise<any[]> {
-        if (select.length === 0) { select = undefined; }
+        if (select?.length === 0) { select = undefined; }
 
         return this.webapi.retrieveEntities(select, "IsIntersect eq false")
             .then(entitiesResponse => ApiHelper.filterSolutionComponents(this.webapi, entitiesResponse, solutionId, CdsSolutions.SolutionComponent.Entity, e => e["MetadataId"]))
             .then(response => response ? response.orderBy(e => e["LogicalName"]).toArray() : []);
     }
 
-    retrieveAttributes(entityKey: string, select: string[] = MetadataRepository.defaultSelections["AttributeDefinitions"]) : Promise<any[]> {
-        if (select.length === 0) { select = undefined; }
+    retrieveAttributes(entityKey: string, attributeType?: string, select: string[] = MetadataRepository.defaultSelections["AttributeDefinitions"], expand?: CdsWebApi.Expand[]) : Promise<any[]> {
+        if (select?.length === 0) { select = undefined; }
 
-        return this.webapi.retrieveAttributes(entityKey, undefined, select, 'AttributeOf eq null')
+        if (entityKey?.indexOf('LogicalName') === -1) {
+            entityKey = `LogicalName='${entityKey}'`;
+        }
+
+        if (attributeType?.indexOf('Microsoft.Dynamics.CRM.') === -1) {
+            attributeType = `Microsoft.Dynamics.CRM.${attributeType}AttributeMetadata`;
+        }
+
+        return this.webapi.retrieveAttributes(entityKey, attributeType, select, 'AttributeOf eq null', expand)
             .then(response => new TS.Linq.Enumerator(response.value).orderBy(a => a["LogicalName"]).toArray());
     }
 
     retrieveAttributeMetadata(entityKey: string, attributeKey: string, attributeType: string, select: string[] = MetadataRepository.defaultSelections["AttributeDefinitions"], expand?: CdsWebApi.Expand[]) : Promise<any[]> {
-        if (select.length === 0) { select = undefined; }
+        if (select?.length === 0) { select = undefined; }
 
         if (entityKey?.indexOf('LogicalName') === -1) {
             entityKey = `LogicalName='${entityKey}'`;
@@ -78,7 +86,7 @@ export default class MetadataRepository {
     }
 
     retrieveOptionSets(solutionId?: string, select?: string[]): Promise<any[]> {
-        if (select.length === 0) { select = undefined; }
+        if (select?.length === 0) { select = undefined; }
 
         return this.webapi.retrieveGlobalOptionSets(undefined, select)
             .then(optionSetResponse => ApiHelper.filterSolutionComponents(this.webapi, optionSetResponse, solutionId, CdsSolutions.SolutionComponent.OptionSet, o => o["MetadataId"]))
@@ -90,7 +98,7 @@ export default class MetadataRepository {
     }
 
     retrieveForms(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["systemforms"]) : Promise<any[]> {
-        if (select.length === 0) { select = undefined; }
+        if (select?.length === 0) { select = undefined; }
 
         let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "systemforms",
@@ -109,7 +117,7 @@ export default class MetadataRepository {
     }
 
     retrieveDashboards(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["systemforms"]) : Promise<any[]> {
-        if (select.length === 0) { select = undefined; }
+        if (select?.length === 0) { select = undefined; }
 
         let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "systemforms",
@@ -124,7 +132,7 @@ export default class MetadataRepository {
     }
 
     retrieveViews(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["savedqueries"]) : Promise<any[]> {
-        if (select.length === 0) { select = undefined; }
+        if (select?.length === 0) { select = undefined; }
 
         let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "savedqueries",
@@ -143,7 +151,7 @@ export default class MetadataRepository {
     }
 
     retrieveCharts(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["savedqueryvisualizations"]) : Promise<any[]> {
-        if (select.length === 0) { select = undefined; }
+        if (select?.length === 0) { select = undefined; }
 
         let request:CdsWebApi.RetrieveMultipleRequest = {
             collection: "savedqueryvisualizations",

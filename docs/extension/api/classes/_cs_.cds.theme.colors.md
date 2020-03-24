@@ -23,7 +23,7 @@ sidebar_label: "colors"
 
 ▪ **_namespace**: *string* = "cs.cds.theme.colors"
 
-Defined in src/cs.ts:267
+Defined in src/cs.ts:271
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 ▪ **icons**: *string* = `${colors._namespace}.icons`
 
-Defined in src/cs.ts:268
+Defined in src/cs.ts:272

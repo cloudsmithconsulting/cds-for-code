@@ -43,6 +43,7 @@ Represents an entry that is dispalbed in the CdsexplorerView
 * [canDeleteEntryTypes](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md#static-private-candeleteentrytypes)
 * [canEditEntryTypes](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md#static-private-caneditentrytypes)
 * [canExportSolutionTypes](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md#static-private-canexportsolutiontypes)
+* [canInsertDataTypes](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md#static-private-caninsertdatatypes)
 * [canInspectEntryTypes](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md#static-private-caninspectentrytypes)
 * [canMoveSolutionEntryTypes](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md#static-private-canmovesolutionentrytypes)
 * [canOpenInAppEntryTypes](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md#static-private-canopeninappentrytypes)
@@ -51,6 +52,7 @@ Represents an entry that is dispalbed in the CdsexplorerView
 * [canRefreshEntryTypes](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md#static-private-canrefreshentrytypes)
 * [canRemoveFromSolutionEntryTypes](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md#static-private-canremovefromsolutionentrytypes)
 * [canUnpackSolutionEntryTypes](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md#static-private-canunpacksolutionentrytypes)
+* [canViewApiDocsDataTypes](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md#static-private-canviewapidocsdatatypes)
 
 ### Accessors
 
@@ -78,7 +80,7 @@ Represents an entry that is dispalbed in the CdsexplorerView
 
 *Overrides void*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1018
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1049
 
 Creates an instance of CdsTreeEntry.
 
@@ -128,7 +130,7 @@ ___
 
 • **configId**: *string*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1083
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1114
 
 Represents the identifier for the connection that created the tree entry.  This can be used
 to lookup the configuration for the connection from the CdsExplorerView.connections property.
@@ -143,7 +145,7 @@ ___
 
 • **context**? : *any*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1038
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1069
 
 ___
 
@@ -194,7 +196,7 @@ ___
 
 *Overrides void*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1034
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1065
 
 The identifier of the item (can be segmented by "/")
 
@@ -204,7 +206,7 @@ ___
 
 • **itemType**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1033
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1064
 
 The item type
 
@@ -241,7 +243,7 @@ ___
 
 • **subtext**? : *string*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1036
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1067
 
 ___
 
@@ -249,7 +251,7 @@ ___
 
 ▪ **canAddEntryTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Applications", "Solutions", "Plugins", "Entities", "OptionSets", "WebResources", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries", "PluginType", "PluginStep" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1006
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1035
 
 ___
 
@@ -257,7 +259,7 @@ ___
 
 ▪ **canAddToSolutionEntryTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart", "Dashboard" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1017
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1048
 
 ___
 
@@ -265,7 +267,7 @@ ___
 
 ▪ **canCreateCrmSvcUtilConfigTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Entities" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1007
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1036
 
 ___
 
@@ -273,7 +275,7 @@ ___
 
 ▪ **canDeleteEntryTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Connection", "PluginStep", "PluginStepImage" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1009
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1038
 
 ___
 
@@ -281,7 +283,7 @@ ___
 
 ▪ **canEditEntryTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Connection", "Application", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep", "PluginStepImage" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1008
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1037
 
 ___
 
@@ -289,7 +291,15 @@ ___
 
 ▪ **canExportSolutionTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Solution" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1010
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1039
+
+___
+
+### `Static` `Private` canInsertDataTypes
+
+▪ **canInsertDataTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Entity" ]
+
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1040
 
 ___
 
@@ -297,7 +307,7 @@ ___
 
 ▪ **canInspectEntryTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1011
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1042
 
 ___
 
@@ -305,7 +315,7 @@ ___
 
 ▪ **canMoveSolutionEntryTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Solution" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1013
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1044
 
 ___
 
@@ -313,7 +323,7 @@ ___
 
 ▪ **canOpenInAppEntryTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "View", "Entity", "Dashboard" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1014
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1045
 
 ___
 
@@ -321,7 +331,7 @@ ___
 
 ▪ **canOpenInBrowserEntryTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Application", "Form", "View", "Entity", "Dashboard" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1015
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1046
 
 ___
 
@@ -329,7 +339,7 @@ ___
 
 ▪ **canOpenInEditorEntryTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Form", "View", "Chart", "Dashboard" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1016
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1047
 
 ___
 
@@ -337,7 +347,7 @@ ___
 
 ▪ **canRefreshEntryTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Solutions", "Solution", "Plugins", "Entities", "Entity", "OptionSets", "OptionSet", "WebResources", "Folder", "Processes", "Attributes", "Forms", "Views", "Charts", "Dashboards", "Keys", "Relationships", "Entries" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1005
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1034
 
 ___
 
@@ -345,7 +355,7 @@ ___
 
 ▪ **canRemoveFromSolutionEntryTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Plugin", "Entity", "OptionSet", "WebResource", "Process", "Form", "View", "Chart", "Dashboard" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1018
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1049
 
 ___
 
@@ -353,7 +363,15 @@ ___
 
 ▪ **canUnpackSolutionEntryTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Solution" ]
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1012
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1043
+
+___
+
+### `Static` `Private` canViewApiDocsDataTypes
+
+▪ **canViewApiDocsDataTypes**: *[CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[]* = [ "Entity" ]
+
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1041
 
 ## Accessors
 
@@ -361,7 +379,7 @@ Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1012
 
 • **get capabilities**(): *string[]*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1281
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1312
 
 Gets an array of the capabilities of this tree item.  Used in conjunction with the "when" clause from package.json
 to indicate which icons/commands are available for a given tree item.
@@ -380,7 +398,7 @@ ___
 
 • **get config**(): *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1115
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1146
 
 Gets a reference to the configuration used to create the tree entry.  This is the object
 returned when using the configId.
@@ -401,7 +419,7 @@ ___
 
 *Overrides void*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1103
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1134
 
 Gets the description (subtext) on the tree entry.
 
@@ -419,7 +437,7 @@ ___
 
 • **get folder**(): *string*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1172
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1203
 
 Gets the folder associated with the tree item, if applicable.  Used when nesting
 resources by folder.
@@ -438,7 +456,7 @@ ___
 
 • **get parent**(): *[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md) | undefined*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1149
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1180
 
 Gets the parent tree item (if any).
 
@@ -456,7 +474,7 @@ ___
 
 • **get solution**(): *any*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1211
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1242
 
 Gets the solution associated with the tree item, if applicable.
 
@@ -474,7 +492,7 @@ ___
 
 • **get solutionId**(): *string*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1191
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1222
 
 Gets the solution ID associated with the tree item, if applicable.
 
@@ -492,7 +510,7 @@ ___
 
 • **get solutionIdPath**(): *string*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1238
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1269
 
 Gets the solution path segment of the tree item's identifier.
 
@@ -510,7 +528,7 @@ ___
 
 • **get solutionMapping**(): *[SolutionWorkspaceMapping](_components_solutions_solutionworkspacemapping_.solutionworkspacemapping.md)*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1259
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1290
 
 Gets the mapping of the current solution for the currently loaded workspace, if applicable.
 
@@ -530,7 +548,7 @@ ___
 
 *Overrides void*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1092
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1123
 
 Gets the tooltip text on the tree entry.
 
@@ -548,7 +566,7 @@ Gets the tooltip text on the tree entry.
 
 ▸ **addCapability**(`returnList`: string[], `capabilityName`: string, `constrain`: [CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype)[], `additionalCheck?`: function): *void*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1318
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1351
 
 **Parameters:**
 
@@ -570,7 +588,7 @@ ___
 
 ▸ **createChildItem**(`itemType`: [CdsExplorerEntryType](../modules/_views_cs_cds_viewcontainers_cdsexplorer_.md#cdsexplorerentrytype), `id`: string, `label`: string, `subtext?`: string, `collapsibleState`: TreeItemCollapsibleState, `context?`: any): *[CdsTreeEntry](_views_cs_cds_viewcontainers_cdsexplorer_.cdstreeentry.md)*
 
-Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1314
+Defined in src/views/cs.cds.viewContainers.cdsExplorer.ts:1347
 
 Creates a child item underneath the current tree entry with the specified properties.
 

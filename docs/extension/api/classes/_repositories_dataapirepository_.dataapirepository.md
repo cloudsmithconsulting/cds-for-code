@@ -112,7 +112,7 @@ ___
 
 ▸ **getSampleCustomers**(`count`: number): *Promise‹any[]›*
 
-Defined in src/repositories/DataApiRepository.ts:73
+Defined in src/repositories/DataApiRepository.ts:78
 
 **Parameters:**
 

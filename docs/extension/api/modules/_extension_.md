@@ -23,7 +23,7 @@ sidebar_label: "extension"
 
 • **extensionContext**: *[ExtensionContext](../classes/_core_extensioncontext_.extensioncontext.md)*
 
-Defined in src/extension.ts:21
+Defined in src/extension.ts:22
 
 ## Functions
 
@@ -31,7 +31,7 @@ Defined in src/extension.ts:21
 
 ▸ **activate**(`context`: ExtensionContext): *Promise‹object[]›*
 
-Defined in src/extension.ts:23
+Defined in src/extension.ts:24
 
 **Parameters:**
 
@@ -47,6 +47,6 @@ ___
 
 ▸ **deactivate**(): *void*
 
-Defined in src/extension.ts:39
+Defined in src/extension.ts:40
 
 **Returns:** *void*

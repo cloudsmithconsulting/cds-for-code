@@ -1,0 +1,9 @@
+<%#def.template({
+    "type": "Item Template",
+    "name": "CloudSmith.Cds.JsonDataTemplate",
+    "displayName": "CDS data generation into JSON files",
+    "publisher": "CloudSmith Consulting LLC",
+    "categories": ["CDS", "WebApi", "Data Generation"]
+})%>
+<%#def.ui.prompt('Count', 'How many records would you like to generate?')%>
+<%#def.data.cdsFake('Generator')%>

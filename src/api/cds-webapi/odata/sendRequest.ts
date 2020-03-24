@@ -12,6 +12,7 @@ import Quickly from '../../../core/Quickly';
 import { isatty } from 'tty';
 import logger from '../../../core/framework/Logger';
 import { Utilities } from '../../../core/Utilities';
+import moment = require('moment');
 
 let _entityNames;
 
@@ -94,6 +95,12 @@ function stringifyData(data: any, config: any) {
                             value = config.webApiUrl + value.replace(/^\//, '');
                         }
                     }
+                }
+            }
+            else if (Utilities.String.isIsoDateString(value)) {
+                const theDate = new Date(value);
+                if (theDate.getHours() === 0 && theDate.getMinutes() === 0 && theDate.getSeconds() === 0) {
+                    value = moment(theDate).format('YYYY-MM-DD');
                 }
             }
             else

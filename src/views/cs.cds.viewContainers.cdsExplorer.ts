@@ -378,6 +378,35 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
         return await vscode.commands.executeCommand(cs.cds.controls.jsonInspector.open, item.config, item.itemType, item.context);
     }
 
+    @command(cs.cds.controls.cdsExplorer.viewApiDocs, "View Api Docs")
+    async viewApiDocs(item?: CdsTreeEntry) {
+        const url = CdsUrlResolver.getDocsUri(item.context.LogicalName.toLowerCase());
+        Utilities.Browser.openWindow(url);
+    }
+
+    @command(cs.cds.controls.cdsExplorer.insertFakeData, "Insert Fake Data")
+    async insertFakeData(item?: CdsTreeEntry) {
+        let countEntry = await Quickly.ask(`How many ${item.context.EntitySetName} would you like to add?`);
+        if (!countEntry) { 
+            logger.warn(`Command: ${cs.cds.data.insertFakeData} Count not chosen, command cancelled`);
+            return; 
+        }
+
+        let count = 0;
+        try {
+            count = Number.parseInt(countEntry);
+        } catch {
+            // the count is zero, not parsed
+        }
+
+        if (count === 0) {
+            logger.warn(`Command: ${cs.cds.controls.cdsExplorer.insertFakeData} Count entered was invalid, resetting to default.`);
+            count = undefined;
+        }
+
+        return await vscode.commands.executeCommand(cs.cds.data.insertFakeData, item.config, item.context, undefined, count);
+    }
+
     @command(cs.cds.controls.cdsExplorer.moveSolution, "Move or re-map solution")
     async moveSolution(item?: CdsTreeEntry) {
         return await vscode.commands.executeCommand(cs.cds.deployment.updateSolutionMapping, item.solutionMapping, item.config)
@@ -1008,6 +1037,8 @@ export class CdsTreeEntry extends vscode.TreeItem {
     private static readonly canEditEntryTypes: CdsExplorerEntryType[] = [ "Connection", "Application", "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep", "PluginStepImage" ];
     private static readonly canDeleteEntryTypes: CdsExplorerEntryType[] = [ "Connection", "PluginStep", "PluginStepImage" ];
     private static readonly canExportSolutionTypes: CdsExplorerEntryType[] = [ "Solution" ];
+    private static readonly canInsertDataTypes: CdsExplorerEntryType[] = [ "Entity" ];
+    private static readonly canViewApiDocsDataTypes: CdsExplorerEntryType[] = [ "Entity" ];
     private static readonly canInspectEntryTypes: CdsExplorerEntryType[] = [ "Solution", "Entity", "OptionSet", "WebResource", "Process", "Attribute", "Form", "View", "Chart", "Dashboard", "Key", "OneToManyRelationship", "ManyToOneRelationship", "ManyToManyRelationship", "Entry", "PluginStep" ];
     private static readonly canUnpackSolutionEntryTypes: CdsExplorerEntryType[] = [ "Solution" ];
     private static readonly canMoveSolutionEntryTypes: CdsExplorerEntryType[] = [ "Solution" ];
@@ -1287,6 +1318,8 @@ export class CdsTreeEntry extends vscode.TreeItem {
         this.addCapability(returnValue, "canEditItem", CdsTreeEntry.canEditEntryTypes);
         this.addCapability(returnValue, "canDeleteItem", CdsTreeEntry.canDeleteEntryTypes);
         this.addCapability(returnValue, "canExportSolution", CdsTreeEntry.canExportSolutionTypes, () => this.context && !this.context.ismanaged);
+        this.addCapability(returnValue, "canInsertData", CdsTreeEntry.canInsertDataTypes);
+        this.addCapability(returnValue, "canViewApiDocs", CdsTreeEntry.canViewApiDocsDataTypes);
         this.addCapability(returnValue, "canInspectItem", CdsTreeEntry.canInspectEntryTypes);
         this.addCapability(returnValue, "canUnpackSolution", CdsTreeEntry.canUnpackSolutionEntryTypes, () => this.context && !this.context.ismanaged);
         this.addCapability(returnValue, "canAddToSolution", CdsTreeEntry.canAddToSolutionEntryTypes, () => !this.solutionId);

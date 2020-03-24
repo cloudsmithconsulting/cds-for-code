@@ -14,6 +14,10 @@ export function parseUtcDate(date: string): Date {
     return new Date(date);        
 }
 
+export function isIsoDateString(date: string): boolean {
+    return /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+)|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d)|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d)/.test(date);
+}
+
 export function dateAsFilename(): string {
     return moment().format("YYYY-MM-DD-hh-mm-ss");
 }

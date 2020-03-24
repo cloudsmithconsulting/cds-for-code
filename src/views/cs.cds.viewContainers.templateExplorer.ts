@@ -75,30 +75,18 @@ export default class TemplateExplorer implements vscode.TreeDataProvider<Templat
     	if (!item) {
             await vscode.commands.executeCommand(cs.cds.templates.editTemplateCatalog);
         } else if (item.context) {
-            let file;
             let folder = await TemplateManager.getTemplatesFolder();
     
-            if (item.context.type === TemplateType.ItemTemplate) {
-                if (path.isAbsolute(item.context.location)) {
-                    file = item.context.location;
-                    folder = path.dirname(file);
-                } else {
-                    file = path.join(folder, item.context.location);
-                }
-    
-                await Quickly.openFile(file);
+            if (path.isAbsolute(item.context.location)) {
+                folder = item.context.location;
             } else {
-                if (path.isAbsolute(item.context.location)) {
-                    folder = item.context.location;
-                } else {
-                    folder = path.join(folder, item.context.location);
-                }
-    
-                const existingFolder = vscode.workspace.workspaceFolders.find(f => f.uri.fsPath === folder);
-    
-                if (!existingFolder && await Quickly.pickBoolean("Would you like to open this project template in a new workspace folder?", "Yes", "No")) {
-                    vscode.workspace.updateWorkspaceFolders(0, 0, { uri: vscode.Uri.file(folder), name: item.context.name });
-                }
+                folder = path.join(folder, item.context.location);
+            }
+
+            const existingFolder = vscode.workspace.workspaceFolders.find(f => f.uri.fsPath === folder);
+
+            if (!existingFolder && await Quickly.pickBoolean("Would you like to open this project template in a new workspace folder?", "Yes", "No")) {
+                vscode.workspace.updateWorkspaceFolders(0, 0, { uri: vscode.Uri.file(folder), name: item.context.name });
             }
         }
     }

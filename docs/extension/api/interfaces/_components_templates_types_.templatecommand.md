@@ -25,7 +25,7 @@ sidebar_label: "TemplateCommand"
 
 • **commandArgs**: *string*
 
-Defined in src/components/Templates/Types.ts:84
+Defined in src/components/Templates/Types.ts:83
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 • **output**? : *string*
 
-Defined in src/components/Templates/Types.ts:86
+Defined in src/components/Templates/Types.ts:85
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 • **stage**: *[TemplateCommandExecutionStage](../enums/_components_templates_types_.templatecommandexecutionstage.md)*
 
-Defined in src/components/Templates/Types.ts:85
+Defined in src/components/Templates/Types.ts:84
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 • **type**: *string*
 
-Defined in src/components/Templates/Types.ts:83
+Defined in src/components/Templates/Types.ts:82

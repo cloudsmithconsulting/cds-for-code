@@ -27,6 +27,7 @@ sidebar_label: "Quickly"
 * [pickAnyFolder](_core_quickly_.quickly.md#static-pickanyfolder)
 * [pickAnyOrNew](_core_quickly_.quickly.md#static-pickanyornew)
 * [pickBoolean](_core_quickly_.quickly.md#static-pickboolean)
+* [pickCdsEntityComponents](_core_quickly_.quickly.md#static-pickcdsentitycomponents)
 * [pickCdsOrganization](_core_quickly_.quickly.md#static-pickcdsorganization)
 * [pickCdsSolution](_core_quickly_.quickly.md#static-pickcdssolution)
 * [pickCdsSolutionComponent](_core_quickly_.quickly.md#static-pickcdssolutioncomponent)
@@ -69,7 +70,7 @@ ___
 
 ▸ **askToRetry**(`errorMessage`: string, `retryFunction`: Function, `tryAgainMessage`: string, `closeMessage`: string, ...`parameters`: any): *Promise‹any›*
 
-Defined in src/core/Quickly.ts:548
+Defined in src/core/Quickly.ts:568
 
 **Parameters:**
 
@@ -165,7 +166,7 @@ ___
 
 ▸ **openContent**(`content`: string | Buffer, `language`: string): *Promise‹void›*
 
-Defined in src/core/Quickly.ts:540
+Defined in src/core/Quickly.ts:560
 
 **Parameters:**
 
@@ -182,7 +183,7 @@ ___
 
 ▸ **openFile**(`filename`: string): *Promise‹void›*
 
-Defined in src/core/Quickly.ts:534
+Defined in src/core/Quickly.ts:554
 
 **Parameters:**
 
@@ -328,6 +329,26 @@ Name | Type | Default | Description |
 
 ___
 
+### `Static` pickCdsEntityComponents
+
+▸ **pickCdsEntityComponents**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entity`: any, `componentType`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md), `filterExpression?`: string, `placeHolder?`: string): *Promise‹object[]›*
+
+Defined in src/core/Quickly.ts:495
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`config` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
+`entity` | any |
+`componentType` | [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md) |
+`filterExpression?` | string |
+`placeHolder?` | string |
+
+**Returns:** *Promise‹object[]›*
+
+___
+
 ### `Static` pickCdsOrganization
 
 ▸ **pickCdsOrganization**(`context`: ExtensionContext, `placeHolder?`: string, `ignoreFocusOut`: boolean): *Promise‹[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)›*
@@ -368,7 +389,7 @@ ___
 
 ▸ **pickCdsSolutionComponent**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution`: any, `componentType`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md), `filterExpression?`: string, `placeHolder?`: string): *Promise‹object›*
 
-Defined in src/core/Quickly.ts:494
+Defined in src/core/Quickly.ts:514
 
 **Parameters:**
 

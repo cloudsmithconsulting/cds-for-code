@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>fileTypes</key>
+    <array>
+        <string>dotjs</string>
+    </array>
+    <key>foldingStartMarker</key>
+    <string>(?x)
+        (&lt;(?i:head|body|table|thead|tbody|tfoot|tr|div|select|fieldset|style|script|ul|ol|form|dl)\b.*?&gt;
+        |&lt;!--(?!.*--&gt;)
+        |\{\s*($|\?&gt;\s*$|//|/\*(.*\*/\s*$|(?!.*?\*/)))
+        )</string>
+    <key>foldingStopMarker</key>
+    <string>(?x)
+        (&lt;/(?i:head|body|table|thead|tbody|tfoot|tr|div|select|fieldset|style|script|ul|ol|form|dl)&gt;
+        |^\s*--&gt;
+        |(^|\s)\}
+        )</string>
+    <key>name</key>
+    <string>HTML with dotjs</string>
+    <key>patterns</key>
+    <array>
+        <dict>
+            <key>begin</key>
+            <string>\<\%[\^\=\?~]*[^\#]</string>
+            <key>end</key>
+            <string>\%\></string>
+            <key>name</key>
+            <string>source.js.embedded.html</string>
+            <key>patterns</key>
+            <array>
+                <dict>
+                    <key>include</key>
+                    <string>source.js</string>
+                </dict>
+            </array>
+        </dict>
+        <dict>
+            <key>include</key>
+            <string>text.html</string>
+        </dict>
+        <dict>
+            <key>include</key>
+            <string>text.html.basic</string>
+        </dict>
+    </array>
+    <key>scopeName</key>
+    <string>text.html.dotjs</string>
+</dict>
+</plist>

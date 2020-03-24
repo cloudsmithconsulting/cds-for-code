@@ -25,7 +25,7 @@ sidebar_label: "templates"
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.templates"
 
-Defined in src/cs.ts:145
+Defined in src/cs.ts:147
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 ▪ **templateParameters**: *string* = `${templates._namespace}.templateParameters`
 
-Defined in src/cs.ts:146
+Defined in src/cs.ts:148
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 ▪ **templatesDirectory**: *string* = `${templates._namespace}.templatesDirectory`
 
-Defined in src/cs.ts:147
+Defined in src/cs.ts:149
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 ▪ **treeViewGroupPreference**: *string* = `${templates._namespace}.treeViewGroupPreference`
 
-Defined in src/cs.ts:148
+Defined in src/cs.ts:150

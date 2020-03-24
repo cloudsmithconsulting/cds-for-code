@@ -24,7 +24,7 @@ sidebar_label: "connection"
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.connection"
 
-Defined in src/cs.ts:112
+Defined in src/cs.ts:114
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 ▪ **defaultTimeout**: *string* = `${connection._namespace}.defaultTimeout`
 
-Defined in src/cs.ts:113
+Defined in src/cs.ts:115
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 ▪ **importExportTimeout**: *string* = `${connection._namespace}.importExportTimeout`
 
-Defined in src/cs.ts:114
+Defined in src/cs.ts:116

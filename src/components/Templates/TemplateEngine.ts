@@ -10,19 +10,30 @@ import Quickly from '../../core/Quickly';
 import ExtensionContext from '../../core/ExtensionContext';
 import TerminalManager, { TerminalCommand } from '../Terminal/SecureTerminal';
 import ExtensionConfiguration from '../../core/ExtensionConfiguration';
+import { CdsSolutions } from '../../api/CdsSolutions';
+import ApiRepository from '../../repositories/apiRepository';
+import DiscoveryRepository from '../../repositories/discoveryRepository';
+import MetadataRepository from '../../repositories/metadataRepository';
 
 export default class TemplateEngine {
     private static readonly fileNameRegex = /\$\{([\s\S]+?)\}/g;
+    // evaluate: <% %>
+    // interpolate: <%= %>
+    // encode: <%! %>
+    // use: <%# %>
+    // define: <%## #%>
+    // conditional: <%? %>
+    // iterate: <%~ %>
     private static readonly dotSettings: doT.TemplateSettings = {
-        evaluate: /\{\{([\s\S]+?)\}\}\n?/g,
-        interpolate: /\{\{=([\s\S]+?)\}\}/g,
-        encode: /\{\{!([\s\S]+?)\}\}\n?/g,
-        use: /.*?\{\{#([\s\S]+?)\}\}\n?/g,
+        evaluate: /\<\%([\s\S]+?)\%\>\n?/g,
+        interpolate: /\<\%=([\s\S]+?)\%\>/g,
+        encode: /\<\%!([\s\S]+?)\%\>\n?/g,
+        use: /.*?\<\%#([\s\S]+?)\%\>\n?/g,
         useParams: /(^|[^\w$])def(?:\.|\[[\'\"])([\w$\.]+)(?:[\'\"]\])?\s*\:\s*([\w$\.]+|\"[^\"]+\"|\'[^\']+\'|\{[^\}]+\})/g,
-        define: /.*?\{\{##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\}\}\n?/g,
+        define: /.*?\<\%##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\%\>\n?/g,
         defineParams: /^\s*([\w$]+):([\s\S]+)/,
-        conditional: /\{\{\?(\?)?\s*([\s\S]*?)\s*\}\}\n?/g,
-        iterate: /\{\{~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\}\})\n?/g,
+        conditional: /\<\%\?(\?)?\s*([\s\S]*?)\s*\%\>\n?/g,
+        iterate: /\<\%~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\%\>)\n?/g,
         varname: '$this',
         strip: false,
         append: true,
@@ -93,6 +104,39 @@ export default class TemplateEngine {
                 template = TemplateItem.merge(template, item);
                 return '';
             },
+            data: {
+                cdsEntity(name: string, connection: string, solution: string, entity: string) {
+                    interactives[name] = {
+                        type: 'cdsEntity',
+                        message: null,
+                        options: { connection, solution, entity }
+                    };
+                    return '';
+                },
+                cdsSolution(name: string, connection: string, solution: string) {
+                    interactives[name] = {
+                        type: 'cdsSolution',
+                        message: null,
+                        options: [ connection, solution ]
+                    };
+                    return '';
+                },
+                cdsConnection(name: string, connectionName: string) {
+                    interactives[name] = {
+                        type: 'cdsConnection',
+                        message: null,
+                        options: { connection: connectionName }
+                    };
+                    return '';
+                },
+                cdsFake(name: string, connection?: string, entity?: string) {
+                    interactives[name] = {
+                        type: 'cdsFake',
+                        message: null,
+                        options: { connection, entity }
+                    };
+                }
+            },
             ui: {
                 prompt(name: string, message: string) {
                     interactives[name] = {
@@ -105,7 +149,7 @@ export default class TemplateEngine {
                     interactives[name] = {
                         type: 'select',
                         message,
-                        items
+                        options: { items }
                     };
                     return '';
                 },
@@ -116,11 +160,19 @@ export default class TemplateEngine {
                     };
                     return '';
                 },
+                cdsEntity(name: string, message: string, connection: string, solution: string) {
+                    interactives[name] = {
+                        type: 'cdsEntity',
+                        message: message,
+                        options: { connection, solution }
+                    };
+                    return '';
+                },
                 cdsSolution(name: string, message: string, connection: string) {
                     interactives[name] = {
                         type: 'cdsSolution',
                         message: message,
-                        connection: connection
+                        options: [ connection ]
                     };
                     return '';
                 },
@@ -291,7 +343,7 @@ export default class TemplateEngine {
                 }
                     break;
                 case 'select': {
-                    result.parameters[key] = result.parameters[key] || await Quickly.pick(interactive.message, ...interactive.items)
+                    result.parameters[key] = result.parameters[key] || await Quickly.pick(interactive.message, ...interactive.options?.items)
                         .then(item => item?.label || undefined);
                     if (!result.parameters[key]) { result.userCanceled = true; }
                 }
@@ -304,19 +356,54 @@ export default class TemplateEngine {
                 }
                     break;
                 case 'cdsConnection': {
-                    const config = await Quickly.pickCdsOrganization(ExtensionContext.Instance, interactive.message, true);
-                    result.parameters[key] = config;
+                    let config;
+
+                    if (!interactive.message) {
+                        config = (await DiscoveryRepository.getOrgConnections(ExtensionContext.Instance, true))
+                            .find(c => c.name === interactive.options?.connection);
+                    }
+
+                    result.parameters[key] = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, interactive.message || "Choose a CDS organization", true);
                     if (!result.parameters[key]) { result.userCanceled = true; }
                 }
                     break;
                 case 'cdsSolution': {
-                    let config = interactive.connection ? result[interactive.connection] : undefined;
+                    let config = interactive.options?.connection ? result[interactive.options?.connection] : undefined;
                     config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, `Pick CDS Organization that contains ${key}`, true);
-                    result.parameters[key] = result.parameters[key] || await Quickly.pickCdsSolution(config, interactive.message, true);
+
+                    if (!interactive.message) {
+                        const api = new ApiRepository(config);
+                        result.parameters[key] = await api.retrieveSolution(`Uniquename='${interactive.options?.solution}'`);
+                    }
+
+                    result.parameters[key] = result.parameters[key] || await Quickly.pickCdsSolution(config, interactive.message, true);                    
                     if (!result.parameters[key]) { result.userCanceled = true; }
                 }
                     break;
+                case 'cdsEntity': {
+                    let config = interactive.options?.connection ? result[interactive.options?.connection] : undefined;
+                    config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, `Pick CDS Organization that contains ${key}`, true);
+
+                    if (!interactive.message) {
+                        const api = new MetadataRepository(config);
+                        result.parameters[key] = await api.retrieveEntityByLogicalName(interactive.options?.entity);
+                    }
+
+                    let solution = interactive.options?.solution ? result[interactive.options?.solution] : undefined;
+                    
+                    result.parameters[key] = result.parameters[key] || (await Quickly.pickCdsSolutionComponent(config, solution, CdsSolutions.SolutionComponent.Entity, undefined, interactive.message)).component;
+                    if (!result.parameters[key]) { result.userCanceled = true; }
+                }
+                    break;
+                case "cdsFake": { 
+                    let config = interactive.options?.connection ? result[interactive.options?.connection] : undefined;
+                    let entity = interactive.options?.entity ? result[interactive.options?.entity] : undefined;
+
+                    result.parameters[key] = await vscode.commands.executeCommand(cs.cds.data.getFaker, config, entity);
+                }
+                    break;
             }
+
             item = iterator.next();
         }
 

@@ -10,6 +10,7 @@ import { TextEncoder } from 'util';
 
 export interface AsyncUtility {
    forEach<T>(array: T[], callback: (item: T, index?: number, array?: T[]) => Promise<void>);
+   sleep(timeout: number): Promise<void>;
 }
 
 export interface BrowserUtility { 
@@ -51,6 +52,7 @@ export interface RandomUtility {
 
 export interface StringUtility {
    parseUtcDate(date: string): Date;
+   isIsoDateString(date: string): boolean;
    dateAsFilename(): string;
    withTrailingSlash(path: string | undefined): string;
    noTrailingSlash(string: string): string;

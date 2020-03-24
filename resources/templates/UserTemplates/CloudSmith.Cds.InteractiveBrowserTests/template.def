@@ -1,0 +1,12 @@
+<%#def.template({
+    "type": "Item Template",
+    "name": "CloudSmith.Cds.InteractiveBrowserTests",
+    "displayName": "Dynamics CRM interactive browser tests using MSTest",
+    "publisher": "CloudSmith Consulting LLC",
+    "categories": ["Dynamics", "Automated Tests", "Tests"]
+})%>
+<%#def.ui.prompt('Namespace', 'Please enter the Namespace')%>
+<%#def.run.dotnet('add package Dynamics365.UIAutomation.Api')%>
+<%#def.run.dotnet('add package Selenium.Chrome.WebDriver')%>
+<%#def.run.dotnet('add package Selenium.WebDriver.IEDriver')%>
+<%#def.run.dotnet('build')%>

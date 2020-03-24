@@ -34,7 +34,7 @@ sidebar_label: "TemplateEngine"
 
 ▪ **fileNameRegex**: *RegExp‹›* = /\$\{([\s\S]+?)\}/g
 
-Defined in src/components/Templates/TemplateEngine.ts:15
+Defined in src/components/Templates/TemplateEngine.ts:19
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 ▪ **templateDefs**: *any*
 
-Defined in src/components/Templates/TemplateEngine.ts:31
+Defined in src/components/Templates/TemplateEngine.ts:42
 
 ## Methods
 
@@ -50,7 +50,7 @@ Defined in src/components/Templates/TemplateEngine.ts:31
 
 ▸ **analyzeTemplate**(`templatePath`: string, `outputPath?`: string): *Promise‹[TemplateAnalysis](_components_templates_types_.templateanalysis.md)›*
 
-Defined in src/components/Templates/TemplateEngine.ts:80
+Defined in src/components/Templates/TemplateEngine.ts:91
 
 **Parameters:**
 
@@ -67,7 +67,7 @@ ___
 
 ▸ **buildTemplateContext**(`templateAnalysis`: [TemplateAnalysis](_components_templates_types_.templateanalysis.md), ...`object`: any): *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
 
-Defined in src/components/Templates/TemplateEngine.ts:272
+Defined in src/components/Templates/TemplateEngine.ts:324
 
 **Parameters:**
 
@@ -84,7 +84,7 @@ ___
 
 ▸ **executeCommands**(`templateContext`: [TemplateContext](_components_templates_types_.templatecontext.md), `stage`: [TemplateCommandExecutionStage](../enums/_components_templates_types_.templatecommandexecutionstage.md)): *Promise‹void›*
 
-Defined in src/components/Templates/TemplateEngine.ts:230
+Defined in src/components/Templates/TemplateEngine.ts:282
 
 **Parameters:**
 
@@ -101,7 +101,7 @@ ___
 
 ▸ **executeTemplate**(`template`: [TemplateItem](_components_templates_types_.templateitem.md), `outputPath`: string, ...`object`: any): *Promise‹[TemplateContext](_components_templates_types_.templatecontext.md)›*
 
-Defined in src/components/Templates/TemplateEngine.ts:33
+Defined in src/components/Templates/TemplateEngine.ts:44
 
 **Parameters:**
 
@@ -119,82 +119,82 @@ Name | Type |
 
 ### ▪ **dotSettings**: *object*
 
-Defined in src/components/Templates/TemplateEngine.ts:16
+Defined in src/components/Templates/TemplateEngine.ts:27
 
 ###  append
 
 • **append**: *true* = true
 
-Defined in src/components/Templates/TemplateEngine.ts:28
+Defined in src/components/Templates/TemplateEngine.ts:39
 
 ###  conditional
 
-• **conditional**: *RegExp‹›* = /\{\{\?(\?)?\s*([\s\S]*?)\s*\}\}\n?/g
+• **conditional**: *RegExp‹›* = /\<\%\?(\?)?\s*([\s\S]*?)\s*\%\>\n?/g
 
-Defined in src/components/Templates/TemplateEngine.ts:24
+Defined in src/components/Templates/TemplateEngine.ts:35
 
 ###  define
 
-• **define**: *RegExp‹›* = /.*?\{\{##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\}\}\n?/g
+• **define**: *RegExp‹›* = /.*?\<\%##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\%\>\n?/g
 
-Defined in src/components/Templates/TemplateEngine.ts:22
+Defined in src/components/Templates/TemplateEngine.ts:33
 
 ###  defineParams
 
 • **defineParams**: *RegExp‹›* = /^\s*([\w$]+):([\s\S]+)/
 
-Defined in src/components/Templates/TemplateEngine.ts:23
+Defined in src/components/Templates/TemplateEngine.ts:34
 
 ###  encode
 
-• **encode**: *RegExp‹›* = /\{\{!([\s\S]+?)\}\}\n?/g
+• **encode**: *RegExp‹›* = /\<\%!([\s\S]+?)\%\>\n?/g
 
-Defined in src/components/Templates/TemplateEngine.ts:19
+Defined in src/components/Templates/TemplateEngine.ts:30
 
 ###  evaluate
 
-• **evaluate**: *RegExp‹›* = /\{\{([\s\S]+?)\}\}\n?/g
+• **evaluate**: *RegExp‹›* = /\<\%([\s\S]+?)\%\>\n?/g
 
-Defined in src/components/Templates/TemplateEngine.ts:17
+Defined in src/components/Templates/TemplateEngine.ts:28
 
 ###  interpolate
 
-• **interpolate**: *RegExp‹›* = /\{\{=([\s\S]+?)\}\}/g
+• **interpolate**: *RegExp‹›* = /\<\%=([\s\S]+?)\%\>/g
 
-Defined in src/components/Templates/TemplateEngine.ts:18
+Defined in src/components/Templates/TemplateEngine.ts:29
 
 ###  iterate
 
-• **iterate**: *RegExp‹›* = /\{\{~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\}\})\n?/g
+• **iterate**: *RegExp‹›* = /\<\%~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\%\>)\n?/g
 
-Defined in src/components/Templates/TemplateEngine.ts:25
+Defined in src/components/Templates/TemplateEngine.ts:36
 
 ###  selfcontained
 
 • **selfcontained**: *false* = false
 
-Defined in src/components/Templates/TemplateEngine.ts:29
+Defined in src/components/Templates/TemplateEngine.ts:40
 
 ###  strip
 
 • **strip**: *false* = false
 
-Defined in src/components/Templates/TemplateEngine.ts:27
+Defined in src/components/Templates/TemplateEngine.ts:38
 
 ###  use
 
-• **use**: *RegExp‹›* = /.*?\{\{#([\s\S]+?)\}\}\n?/g
+• **use**: *RegExp‹›* = /.*?\<\%#([\s\S]+?)\%\>\n?/g
 
-Defined in src/components/Templates/TemplateEngine.ts:20
+Defined in src/components/Templates/TemplateEngine.ts:31
 
 ###  useParams
 
 • **useParams**: *RegExp‹›* = /(^|[^\w$])def(?:\.|\[[\'\"])([\w$\.]+)(?:[\'\"]\])?\s*\:\s*([\w$\.]+|\"[^\"]+\"|\'[^\']+\'|\{[^\}]+\})/g
 
-Defined in src/components/Templates/TemplateEngine.ts:21
+Defined in src/components/Templates/TemplateEngine.ts:32
 
 ###  varname
 
 • **varname**: *string* = "$this"
 
-Defined in src/components/Templates/TemplateEngine.ts:26
+Defined in src/components/Templates/TemplateEngine.ts:37

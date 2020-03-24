@@ -246,6 +246,16 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.cds.controls.cdsExplorer.insertFakeData",
+				"title": "Add Fake Data",
+				"category": "UserInterface"
+			},
+			{
+				"command": "cs.cds.controls.cdsExplorer.viewApiDocs",
+				"title": "View API Docs",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
 				"title": "Add to solution",
 				"category": "UserInterface"
@@ -437,13 +447,28 @@
 				"category": "UserInterface"
 			},
 			{
-				"command": "cs.cds.deployment.addSolutionComponent",
-				"title": "Add component to a CDS solution",
+				"command": "cs.cds.data.createDataMap",
+				"title": "Create CSV data import map a CDS entity",
 				"category": "CDS for Code"
 			},
 			{
 				"command": "cs.cds.data.getFaker",
-				"title": "Generate data for one or more CDS entities",
+				"title": "Gets an instance of a Faker class that can generate data",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.data.insertCsvData",
+				"title": "Import CSV data for a CDS entity",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.data.insertFakeData",
+				"title": "Generate data for a CDS entity",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.deployment.addSolutionComponent",
+				"title": "Add component to a CDS solution",
 				"category": "CDS for Code"
 			},
 			{
@@ -597,6 +622,27 @@
 				"category": "CDS for Code"
 			}
 		],
+		"languages": [
+			{
+				"id": "dotjs",
+				"aliases": [
+					"doT",
+					"doTjs"
+				],
+				"extensions": [
+					".dot",
+					".def"
+				],
+				"configuration": "./src/Components/Templates/dotjs.conifg.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "dotjs",
+				"scopeName": "text.html.dotjs",
+				"path": "./src/Components/Templates/dotjs.tmLanguage"
+			}
+		],
 		"viewsContainers": {
 			"activitybar": [
 				{
@@ -622,6 +668,78 @@
 		},
 		"menus": {
 			"commandPalette": [
+				{
+					"command": "cs.cds.controls.cdsExplorer.addEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.clickEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.createCrmSvcUtilConfig",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.deleteEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.editConnection",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.editEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.exportSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.insertFakeData",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.viewApiDocs",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.inspectEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.moveSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.openInApp",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.openInBrowser",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.openInEditor",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.refreshEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.removeEntryFromSolution",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.unpackSolution",
+					"when": "false"
+				},
 				{
 					"command": "cs.cds.controls.explorer.createCrmSvcUtilConfig",
 					"when": "false"
@@ -695,70 +813,6 @@
 					"when": "false"
 				},
 				{
-					"command": "cs.cds.controls.cdsExplorer.addEntry",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.addEntryToSolution",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.clickEntry",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.createCrmSvcUtilConfig",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.deleteEntry",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.editConnection",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.editEntry",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.exportSolution",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.inspectEntry",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.moveSolution",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.openInApp",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.openInBrowser",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.openInEditor",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.refreshEntry",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.removeEntryFromSolution",
-					"when": "false"
-				},
-				{
-					"command": "cs.cds.controls.cdsExplorer.unpackSolution",
-					"when": "false"
-				},
-				{
 					"command": "cs.cds.controls.templateExplorer.addEntry",
 					"when": "false"
 				},
@@ -792,6 +846,14 @@
 				},
 				{
 					"command": "cs.cds.controls.templateExplorer.refreshEntry",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.data.createDataMap",
+					"when": "false"
+				},
+				{
+					"command": "cs.cds.data.getFaker",
 					"when": "false"
 				}
 			],
@@ -951,6 +1013,16 @@
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canOpenInEditor)(.*)$/"
 				},
 				{
+					"command": "cs.cds.controls.cdsExplorer.insertFakeData",
+					"group": "insert@2",
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canInsertData)(.*)$/"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.viewApiDocs",
+					"group": "insert@2",
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canViewApiDocs)(.*)$/"
+				},
+				{
 					"command": "cs.cds.controls.cdsExplorer.exportSolution",
 					"group": "deployment@1",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canExportSolution)(.*)$/"
@@ -1063,7 +1135,7 @@
 		"babelify": "^10.0.0",
 		"browserify": "^16.5.0",
 		"glob": "^7.1.6",
-		"grunt": "^1.0.4",
+		"grunt": "^1.1.0",
 		"grunt-babel": "^8.0.0",
 		"grunt-banner": "^0.6.0",
 		"grunt-browserify": "^5.3.0",

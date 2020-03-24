@@ -44,7 +44,7 @@ sidebar_label: "MaskedBuffer"
 
 \+ **new MaskedBuffer**(`autoFlush`: boolean): *[MaskedBuffer](_components_terminal_secureterminal_.maskedbuffer.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:293
+Defined in src/components/Terminal/SecureTerminal.ts:292
 
 **Parameters:**
 
@@ -60,7 +60,7 @@ Name | Type | Default |
 
 • **_autoFlush**: *boolean*
 
-Defined in src/components/Terminal/SecureTerminal.ts:286
+Defined in src/components/Terminal/SecureTerminal.ts:285
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 • **_masker**: *[Masker](_components_terminal_secureterminal_.masker.md)*
 
-Defined in src/components/Terminal/SecureTerminal.ts:287
+Defined in src/components/Terminal/SecureTerminal.ts:286
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 • **_onDidFlush**: *EventEmitter‹object›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:288
+Defined in src/components/Terminal/SecureTerminal.ts:287
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 • **_rawBuffer**: *string[]*
 
-Defined in src/components/Terminal/SecureTerminal.ts:289
+Defined in src/components/Terminal/SecureTerminal.ts:288
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 • **_timeout**: *Timeout*
 
-Defined in src/components/Terminal/SecureTerminal.ts:290
+Defined in src/components/Terminal/SecureTerminal.ts:289
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 • **onDidFlush**: *Event‹object›*
 
-Defined in src/components/Terminal/SecureTerminal.ts:293
+Defined in src/components/Terminal/SecureTerminal.ts:292
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 ▪ **autoFlushDelay**: *number* = 400
 
-Defined in src/components/Terminal/SecureTerminal.ts:292
+Defined in src/components/Terminal/SecureTerminal.ts:291
 
 ## Accessors
 
@@ -116,7 +116,7 @@ Defined in src/components/Terminal/SecureTerminal.ts:292
 
 • **get autoFlush**(): *boolean*
 
-Defined in src/components/Terminal/SecureTerminal.ts:304
+Defined in src/components/Terminal/SecureTerminal.ts:303
 
 **Returns:** *boolean*
 
@@ -126,7 +126,7 @@ ___
 
 • **get length**(): *number*
 
-Defined in src/components/Terminal/SecureTerminal.ts:308
+Defined in src/components/Terminal/SecureTerminal.ts:307
 
 **Returns:** *number*
 
@@ -136,7 +136,7 @@ Defined in src/components/Terminal/SecureTerminal.ts:308
 
 ▸ **flush**(): *object*
 
-Defined in src/components/Terminal/SecureTerminal.ts:312
+Defined in src/components/Terminal/SecureTerminal.ts:311
 
 **Returns:** *object*
 
@@ -150,7 +150,7 @@ ___
 
 ▸ **push**(`bytes`: Uint8Array): *void*
 
-Defined in src/components/Terminal/SecureTerminal.ts:333
+Defined in src/components/Terminal/SecureTerminal.ts:332
 
 **Parameters:**
 
@@ -166,7 +166,7 @@ ___
 
 ▸ **toMaskedString**(): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:347
+Defined in src/components/Terminal/SecureTerminal.ts:346
 
 **Returns:** *string*
 
@@ -176,6 +176,6 @@ ___
 
 ▸ **toString**(): *string*
 
-Defined in src/components/Terminal/SecureTerminal.ts:351
+Defined in src/components/Terminal/SecureTerminal.ts:350
 
 **Returns:** *string*

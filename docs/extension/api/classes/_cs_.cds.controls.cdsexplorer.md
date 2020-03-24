@@ -24,6 +24,7 @@ sidebar_label: "cdsExplorer"
 * [editConnection](_cs_.cds.controls.cdsexplorer.md#static-editconnection)
 * [editEntry](_cs_.cds.controls.cdsexplorer.md#static-editentry)
 * [exportSolution](_cs_.cds.controls.cdsexplorer.md#static-exportsolution)
+* [insertFakeData](_cs_.cds.controls.cdsexplorer.md#static-insertfakedata)
 * [inspectEntry](_cs_.cds.controls.cdsexplorer.md#static-inspectentry)
 * [moveSolution](_cs_.cds.controls.cdsexplorer.md#static-movesolution)
 * [openInApp](_cs_.cds.controls.cdsexplorer.md#static-openinapp)
@@ -32,6 +33,7 @@ sidebar_label: "cdsExplorer"
 * [refreshEntry](_cs_.cds.controls.cdsexplorer.md#static-refreshentry)
 * [removeEntryFromSolution](_cs_.cds.controls.cdsexplorer.md#static-removeentryfromsolution)
 * [unpackSolution](_cs_.cds.controls.cdsexplorer.md#static-unpacksolution)
+* [viewApiDocs](_cs_.cds.controls.cdsexplorer.md#static-viewapidocs)
 
 ## Properties
 
@@ -39,7 +41,7 @@ sidebar_label: "cdsExplorer"
 
 ▪ **_namespace**: *string* = "cs.cds.controls.cdsExplorer"
 
-Defined in src/cs.ts:169
+Defined in src/cs.ts:171
 
 ___
 
@@ -47,7 +49,7 @@ ___
 
 ▪ **addConnection**: *string* = `${cdsExplorer._namespace}.addConnection`
 
-Defined in src/cs.ts:170
+Defined in src/cs.ts:172
 
 ___
 
@@ -55,7 +57,7 @@ ___
 
 ▪ **addEntry**: *string* = `${cdsExplorer._namespace}.addEntry`
 
-Defined in src/cs.ts:171
+Defined in src/cs.ts:173
 
 ___
 
@@ -63,7 +65,7 @@ ___
 
 ▪ **addEntryToSolution**: *string* = `${cdsExplorer._namespace}.addEntryToSolution`
 
-Defined in src/cs.ts:172
+Defined in src/cs.ts:174
 
 ___
 
@@ -71,7 +73,7 @@ ___
 
 ▪ **clickEntry**: *string* = `${cdsExplorer._namespace}.clickEntry`
 
-Defined in src/cs.ts:173
+Defined in src/cs.ts:175
 
 ___
 
@@ -79,7 +81,7 @@ ___
 
 ▪ **createCrmSvcUtilConfig**: *string* = `${cdsExplorer._namespace}.createCrmSvcUtilConfig`
 
-Defined in src/cs.ts:174
+Defined in src/cs.ts:176
 
 ___
 
@@ -87,7 +89,7 @@ ___
 
 ▪ **deleteEntry**: *string* = `${cdsExplorer._namespace}.deleteEntry`
 
-Defined in src/cs.ts:175
+Defined in src/cs.ts:177
 
 ___
 
@@ -95,7 +97,7 @@ ___
 
 ▪ **editConnection**: *string* = `${cdsExplorer._namespace}.editConnection`
 
-Defined in src/cs.ts:176
+Defined in src/cs.ts:178
 
 ___
 
@@ -103,7 +105,7 @@ ___
 
 ▪ **editEntry**: *string* = `${cdsExplorer._namespace}.editEntry`
 
-Defined in src/cs.ts:177
+Defined in src/cs.ts:179
 
 ___
 
@@ -111,7 +113,15 @@ ___
 
 ▪ **exportSolution**: *string* = `${cdsExplorer._namespace}.exportSolution`
 
-Defined in src/cs.ts:178
+Defined in src/cs.ts:180
+
+___
+
+### `Static` insertFakeData
+
+▪ **insertFakeData**: *string* = `${cdsExplorer._namespace}.insertFakeData`
+
+Defined in src/cs.ts:181
 
 ___
 
@@ -119,7 +129,7 @@ ___
 
 ▪ **inspectEntry**: *string* = `${cdsExplorer._namespace}.inspectEntry`
 
-Defined in src/cs.ts:179
+Defined in src/cs.ts:183
 
 ___
 
@@ -127,7 +137,7 @@ ___
 
 ▪ **moveSolution**: *string* = `${cdsExplorer._namespace}.moveSolution`
 
-Defined in src/cs.ts:180
+Defined in src/cs.ts:184
 
 ___
 
@@ -135,7 +145,7 @@ ___
 
 ▪ **openInApp**: *string* = `${cdsExplorer._namespace}.openInApp`
 
-Defined in src/cs.ts:181
+Defined in src/cs.ts:185
 
 ___
 
@@ -143,7 +153,7 @@ ___
 
 ▪ **openInBrowser**: *string* = `${cdsExplorer._namespace}.openInBrowser`
 
-Defined in src/cs.ts:182
+Defined in src/cs.ts:186
 
 ___
 
@@ -151,7 +161,7 @@ ___
 
 ▪ **openInEditor**: *string* = `${cdsExplorer._namespace}.openInEditor`
 
-Defined in src/cs.ts:183
+Defined in src/cs.ts:187
 
 ___
 
@@ -159,7 +169,7 @@ ___
 
 ▪ **refreshEntry**: *string* = `${cdsExplorer._namespace}.refreshEntry`
 
-Defined in src/cs.ts:184
+Defined in src/cs.ts:188
 
 ___
 
@@ -167,7 +177,7 @@ ___
 
 ▪ **removeEntryFromSolution**: *string* = `${cdsExplorer._namespace}.removeEntryFromSolution`
 
-Defined in src/cs.ts:185
+Defined in src/cs.ts:189
 
 ___
 
@@ -175,4 +185,12 @@ ___
 
 ▪ **unpackSolution**: *string* = `${cdsExplorer._namespace}.unpackSolution`
 
-Defined in src/cs.ts:186
+Defined in src/cs.ts:190
+
+___
+
+### `Static` viewApiDocs
+
+▪ **viewApiDocs**: *string* = `${cdsExplorer._namespace}.viewApiDocs`
+
+Defined in src/cs.ts:182
