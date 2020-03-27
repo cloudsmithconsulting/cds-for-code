@@ -192,10 +192,10 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     ]);
 
     private static readonly openInEditorCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
-        { key: "Form", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`Form loaded in editor`)) },
-        { key: "Dashboard", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.formxml }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`Dashboard loaded in editor`)) },
-        { key: "View", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.layoutxml }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`View loaded in editor`)) },
-        { key: "Chart", value: async (item) => await vscode.workspace.openTextDocument({ language:"xml", content:item.context.presentationdescription }).then(d => vscode.window.showTextDocument(d)).then(e => logger.log(`Chart loaded in editor`)) }
+        { key: "Form", value: async (item) => await Quickly.openContent(item.context.formxml, "xml").then(() => logger.log(`Form loaded in editor`)) },
+        { key: "Dashboard", value: async (item) => Quickly.openContent(item.context.formxml, "xml").then(() => logger.log(`Dashboard loaded in editor`)) },
+        { key: "View", value: async (item) => await Quickly.openContent(item.context.layoutxml, "xml").then(() => logger.log(`View loaded in editor`)) },
+        { key: "Chart", value: async (item) => await Quickly.openContent(item.context.presentationdescription, "xml").then(() => logger.log(`Chart loaded in editor`)) }
     ]);
 
     private static readonly parsers = new Dictionary<CdsExplorerEntryType, (item: any, element?: CdsTreeEntry, ...rest: any[]) => CdsTreeEntry>([

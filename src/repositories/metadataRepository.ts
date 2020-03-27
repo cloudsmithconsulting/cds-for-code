@@ -18,9 +18,9 @@ export default class MetadataRepository {
     static readonly defaultSelections = new Dictionary<string, string[]>([
         { key: 'EntityDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'EntitySetName', 'IsIntersect', 'PrimaryIdAttribute', 'PrimaryNameAttribute' ] },
         { key: 'AttributeDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'AttributeOf', 'AttributeType', 'AttributeTypeName' ] },
-        { key: 'systemforms', value: [ 'formid', 'objecttypecode', 'type', 'formactivationstate', 'name', 'description' ] },
-        { key: 'savedqueries', value: [ 'savedqueryid', 'returnedtypecode', 'statecode', 'name', 'description' ] },
-        { key: 'savedqueryvisualizations', value: [ 'savedqueryvisualizationid', 'primaryentitytypecode', 'name', 'description' ] },
+        { key: 'systemforms', value: [ 'formid', 'objecttypecode', 'type', 'formactivationstate', 'name', 'description', 'formxml' ] },
+        { key: 'savedqueries', value: [ 'savedqueryid', 'returnedtypecode', 'statecode', 'name', 'description', 'layoutxml' ] },
+        { key: 'savedqueryvisualizations', value: [ 'savedqueryvisualizationid', 'primaryentitytypecode', 'name', 'description', 'presentationdescription' ] },
     ]);
 
     retrieveEntityMetadataId(logicalName: string) : Promise<string> {
