@@ -18,9 +18,9 @@ export default class MetadataRepository {
     static readonly defaultSelections = new Dictionary<string, string[]>([
         { key: 'EntityDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'EntitySetName', 'IsIntersect', 'PrimaryIdAttribute', 'PrimaryNameAttribute' ] },
         { key: 'AttributeDefinitions', value: [ 'MetadataId', 'LogicalName', 'DisplayName', 'AttributeOf', 'AttributeType', 'AttributeTypeName' ] },
-        { key: 'systemforms', value: [ 'formid', 'objecttypecode', 'type', 'formactivationstate', 'name', 'description', 'formxml' ] },
-        { key: 'savedqueries', value: [ 'savedqueryid', 'returnedtypecode', 'statecode', 'name', 'description', 'layoutxml' ] },
-        { key: 'savedqueryvisualizations', value: [ 'savedqueryvisualizationid', 'primaryentitytypecode', 'name', 'description', 'presentationdescription' ] },
+        { key: 'systemforms', value: [ 'formid', 'objecttypecode', 'type', 'formactivationstate', 'name', 'description' ] },
+        { key: 'savedqueries', value: [ 'savedqueryid', 'returnedtypecode', 'statecode', 'name', 'description' ] },
+        { key: 'savedqueryvisualizations', value: [ 'savedqueryvisualizationid', 'primaryentitytypecode', 'name', 'description' ] },
     ]);
 
     retrieveEntityMetadataId(logicalName: string) : Promise<string> {
@@ -129,6 +129,10 @@ export default class MetadataRepository {
         return this.webapi.retrieveRequest(request)
             .then(systemFormResponse => ApiHelper.filterSolutionComponents(this.webapi, systemFormResponse, solutionId, CdsSolutions.SolutionComponent.SystemForm, f => f["formid"]))
             .then(response => response.toArray());
+    }
+
+    retrieveDashboard(formid: string, select?: string[]): Promise<any> {
+        return this.retrieveForm(formid, select);
     }
 
     retrieveViews(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["savedqueries"]) : Promise<any[]> {

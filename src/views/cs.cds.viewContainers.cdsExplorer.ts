@@ -192,10 +192,10 @@ export default class CdsExplorer implements vscode.TreeDataProvider<CdsTreeEntry
     ]);
 
     private static readonly openInEditorCommands = new Dictionary<CdsExplorerEntryType, (item?: CdsTreeEntry) => Promise<void>>([
-        { key: "Form", value: async (item) => await Quickly.openContent(item.context.formxml, "xml").then(() => logger.log(`Form loaded in editor`)) },
-        { key: "Dashboard", value: async (item) => Quickly.openContent(item.context.formxml, "xml").then(() => logger.log(`Dashboard loaded in editor`)) },
-        { key: "View", value: async (item) => await Quickly.openContent(item.context.layoutxml, "xml").then(() => logger.log(`View loaded in editor`)) },
-        { key: "Chart", value: async (item) => await Quickly.openContent(item.context.presentationdescription, "xml").then(() => logger.log(`Chart loaded in editor`)) }
+        { key: "Form", value: async (item) => new MetadataRepository(item.config).retrieveForm(item.context.formid).then(async form => await Quickly.openContent(form.formxml, "xml").then(() => logger.log(`Form loaded in editor`))) },
+        { key: "Dashboard", value: async (item) => new MetadataRepository(item.config).retrieveDashboard(item.context.formid).then(async form => Quickly.openContent(form.formxml, "xml").then(() => logger.log(`Dashboard loaded in editor`))) },
+        { key: "View", value: async (item) => new MetadataRepository(item.config).retrieveView(item.context.savedqueryid).then(async view => await Quickly.openContent(view.layoutxml, "xml").then(() => logger.log(`View loaded in editor`))) },
+        { key: "Chart", value: async (item) => new MetadataRepository(item.config).retrieveChart(item.context.savedqueryvisualizationid).then(async chart => await Quickly.openContent(chart.presentationdescription, "xml").then(() => logger.log(`Chart loaded in editor`))) }
     ]);
 
     private static readonly parsers = new Dictionary<CdsExplorerEntryType, (item: any, element?: CdsTreeEntry, ...rest: any[]) => CdsTreeEntry>([
