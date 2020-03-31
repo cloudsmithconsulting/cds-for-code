@@ -22,7 +22,7 @@ sidebar_label: "BrowserUtility"
 
 ▸ **openWindow**(`uri`: Uri | string): *Promise‹void›*
 
-Defined in src/core/Utilities.ts:16
+Defined in src/core/Utilities.ts:17
 
 **Parameters:**
 

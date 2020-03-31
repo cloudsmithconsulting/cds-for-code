@@ -27,7 +27,7 @@ sidebar_label: "WorkspaceFileItem"
 
 \+ **new WorkspaceFileItem**(`fsPath`: string, `itemType`: FileType): *[WorkspaceFileItem](_core_quickly_.workspacefileitem.md)*
 
-Defined in src/core/Quickly.ts:616
+Defined in src/core/Quickly.ts:617
 
 **Parameters:**
 
@@ -44,7 +44,7 @@ Name | Type |
 
 • **fsPath**: *string*
 
-Defined in src/core/Quickly.ts:622
+Defined in src/core/Quickly.ts:623
 
 ___
 
@@ -52,4 +52,4 @@ ___
 
 • **itemType**: *FileType*
 
-Defined in src/core/Quickly.ts:623
+Defined in src/core/Quickly.ts:624

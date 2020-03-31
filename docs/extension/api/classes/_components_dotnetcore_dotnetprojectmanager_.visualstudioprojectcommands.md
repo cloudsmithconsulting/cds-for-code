@@ -18,11 +18,14 @@ sidebar_label: "VisualStudioProjectCommands"
 
 ### Methods
 
+* [buildAndRunDynamicsPackage](_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md#static-buildandrundynamicspackage)
+* [buildDynamicsPackageFromFileExplorer](_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md#static-builddynamicspackagefromfileexplorer)
 * [dotNetBuild](_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md#static-dotnetbuild)
 * [dotNetBuildFromExplorer](_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md#static-dotnetbuildfromexplorer)
 * [dotNetTest](_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md#static-dotnettest)
 * [dotNetTestFromFileExplorer](_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md#static-dotnettestfromfileexplorer)
 * [fileIsProject](_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md#static-fileisproject)
+* [runDynamicsPackageFromFileExplorer](_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md#static-rundynamicspackagefromfileexplorer)
 * [updateVersionNumber](_components_dotnetcore_dotnetprojectmanager_.visualstudioprojectcommands.md#static-updateversionnumber)
 
 ## Properties
@@ -31,15 +34,48 @@ sidebar_label: "VisualStudioProjectCommands"
 
 ▪ **projectFileTypes**: *string[]* = [".csproj", ".vbproj"]
 
-Defined in src/components/DotNetCore/DotNetProjectManager.ts:31
+Defined in src/components/DotNetCore/DotNetProjectManager.ts:47
 
 ## Methods
+
+### `Static` buildAndRunDynamicsPackage
+
+▸ **buildAndRunDynamicsPackage**(`file?`: Uri, `runPackage?`: boolean): *Promise‹any›*
+
+Defined in src/components/DotNetCore/DotNetProjectManager.ts:33
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`file?` | Uri |
+`runPackage?` | boolean |
+
+**Returns:** *Promise‹any›*
+
+___
+
+### `Static` buildDynamicsPackageFromFileExplorer
+
+▸ **buildDynamicsPackageFromFileExplorer**(`file?`: Uri): *Promise‹unknown›*
+
+Defined in src/components/DotNetCore/DotNetProjectManager.ts:38
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`file?` | Uri |
+
+**Returns:** *Promise‹unknown›*
+
+___
 
 ### `Static` dotNetBuild
 
 ▸ **dotNetBuild**(`file?`: Uri, `updateVersionBuild`: boolean, `logFile?`: string): *Promise‹any›*
 
-Defined in src/components/DotNetCore/DotNetProjectManager.ts:17
+Defined in src/components/DotNetCore/DotNetProjectManager.ts:18
 
 **Parameters:**
 
@@ -57,7 +93,7 @@ ___
 
 ▸ **dotNetBuildFromExplorer**(`file?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/DotNetCore/DotNetProjectManager.ts:12
+Defined in src/components/DotNetCore/DotNetProjectManager.ts:13
 
 **Parameters:**
 
@@ -73,7 +109,7 @@ ___
 
 ▸ **dotNetTest**(`file?`: Uri, `logFile?`: string): *Promise‹any›*
 
-Defined in src/components/DotNetCore/DotNetProjectManager.ts:27
+Defined in src/components/DotNetCore/DotNetProjectManager.ts:28
 
 **Parameters:**
 
@@ -90,7 +126,7 @@ ___
 
 ▸ **dotNetTestFromFileExplorer**(`file?`: Uri): *Promise‹unknown›*
 
-Defined in src/components/DotNetCore/DotNetProjectManager.ts:22
+Defined in src/components/DotNetCore/DotNetProjectManager.ts:23
 
 **Parameters:**
 
@@ -106,7 +142,7 @@ ___
 
 ▸ **fileIsProject**(`file`: Uri): *boolean*
 
-Defined in src/components/DotNetCore/DotNetProjectManager.ts:33
+Defined in src/components/DotNetCore/DotNetProjectManager.ts:49
 
 **Parameters:**
 
@@ -118,11 +154,27 @@ Name | Type |
 
 ___
 
+### `Static` runDynamicsPackageFromFileExplorer
+
+▸ **runDynamicsPackageFromFileExplorer**(`file?`: Uri): *Promise‹unknown›*
+
+Defined in src/components/DotNetCore/DotNetProjectManager.ts:43
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`file?` | Uri |
+
+**Returns:** *Promise‹unknown›*
+
+___
+
 ### `Static` updateVersionNumber
 
 ▸ **updateVersionNumber**(`file`: Uri, `increment`: function): *Promise‹void›*
 
-Defined in src/components/DotNetCore/DotNetProjectManager.ts:43
+Defined in src/components/DotNetCore/DotNetProjectManager.ts:59
 
 **Parameters:**
 

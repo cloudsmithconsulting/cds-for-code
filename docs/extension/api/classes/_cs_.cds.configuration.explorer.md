@@ -24,7 +24,7 @@ sidebar_label: "explorer"
 
 ▪ **_namespace**: *string* = "cs.cds.configuration.explorer"
 
-Defined in src/cs.ts:126
+Defined in src/cs.ts:130
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 ▪ **showDefaultSolution**: *string* = `${explorer._namespace}.showDefaultSolution`
 
-Defined in src/cs.ts:127
+Defined in src/cs.ts:131
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 ▪ **showWelcomeExperience**: *string* = `${explorer._namespace}.showWelcomeExperience`
 
-Defined in src/cs.ts:128
+Defined in src/cs.ts:132

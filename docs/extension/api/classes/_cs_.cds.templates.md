@@ -22,6 +22,7 @@ sidebar_label: "templates"
 * [importTemplate](_cs_.cds.templates.md#static-importtemplate)
 * [openTemplateFolder](_cs_.cds.templates.md#static-opentemplatefolder)
 * [saveTemplate](_cs_.cds.templates.md#static-savetemplate)
+* [viewCompiledTemplate](_cs_.cds.templates.md#static-viewcompiledtemplate)
 
 ## Properties
 
@@ -29,7 +30,7 @@ sidebar_label: "templates"
 
 ▪ **_namespace**: *string* = "cs.cds.templates"
 
-Defined in src/cs.ts:83
+Defined in src/cs.ts:86
 
 ___
 
@@ -37,7 +38,7 @@ ___
 
 ▪ **createFromTemplate**: *string* = `${templates._namespace}.createFromTemplate`
 
-Defined in src/cs.ts:84
+Defined in src/cs.ts:87
 
 ___
 
@@ -45,7 +46,7 @@ ___
 
 ▪ **deleteTemplate**: *string* = `${templates._namespace}.deleteTemplate`
 
-Defined in src/cs.ts:85
+Defined in src/cs.ts:88
 
 ___
 
@@ -53,7 +54,7 @@ ___
 
 ▪ **editTemplateCatalog**: *string* = `${templates._namespace}.editTemplateCatalog`
 
-Defined in src/cs.ts:86
+Defined in src/cs.ts:89
 
 ___
 
@@ -61,7 +62,7 @@ ___
 
 ▪ **exportTemplate**: *string* = `${templates._namespace}.exportTemplate`
 
-Defined in src/cs.ts:87
+Defined in src/cs.ts:90
 
 ___
 
@@ -69,7 +70,7 @@ ___
 
 ▪ **importTemplate**: *string* = `${templates._namespace}.importTemplate`
 
-Defined in src/cs.ts:88
+Defined in src/cs.ts:91
 
 ___
 
@@ -77,7 +78,7 @@ ___
 
 ▪ **openTemplateFolder**: *string* = `${templates._namespace}.openTemplateFolder`
 
-Defined in src/cs.ts:89
+Defined in src/cs.ts:92
 
 ___
 
@@ -85,4 +86,12 @@ ___
 
 ▪ **saveTemplate**: *string* = `${templates._namespace}.saveTemplate`
 
-Defined in src/cs.ts:90
+Defined in src/cs.ts:93
+
+___
+
+### `Static` viewCompiledTemplate
+
+▪ **viewCompiledTemplate**: *string* = `${templates._namespace}.viewCompiledTemplate`
+
+Defined in src/cs.ts:94

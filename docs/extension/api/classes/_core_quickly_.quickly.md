@@ -70,7 +70,7 @@ ___
 
 ▸ **askToRetry**(`errorMessage`: string, `retryFunction`: Function, `tryAgainMessage`: string, `closeMessage`: string, ...`parameters`: any): *Promise‹any›*
 
-Defined in src/core/Quickly.ts:568
+Defined in src/core/Quickly.ts:569
 
 **Parameters:**
 
@@ -166,7 +166,7 @@ ___
 
 ▸ **openContent**(`content`: string | Buffer, `language`: string): *Promise‹void›*
 
-Defined in src/core/Quickly.ts:560
+Defined in src/core/Quickly.ts:561
 
 **Parameters:**
 
@@ -183,7 +183,7 @@ ___
 
 ▸ **openFile**(`filename`: string): *Promise‹void›*
 
-Defined in src/core/Quickly.ts:554
+Defined in src/core/Quickly.ts:555
 
 **Parameters:**
 
@@ -331,19 +331,29 @@ ___
 
 ### `Static` pickCdsEntityComponents
 
-▸ **pickCdsEntityComponents**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entity`: any, `componentType`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md), `filterExpression?`: string, `placeHolder?`: string): *Promise‹object[]›*
+▸ **pickCdsEntityComponents**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `entity`: any, `componentType`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md), `filterExpression?`: function, `placeHolder?`: string): *Promise‹object[]›*
 
 Defined in src/core/Quickly.ts:495
 
 **Parameters:**
 
+▪ **config**: *[Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md)*
+
+▪ **entity**: *any*
+
+▪ **componentType**: *[SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md)*
+
+▪`Optional`  **filterExpression**: *function*
+
+▸ (`attribute`: any): *boolean*
+
+**Parameters:**
+
 Name | Type |
 ------ | ------ |
-`config` | [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md) |
-`entity` | any |
-`componentType` | [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md) |
-`filterExpression?` | string |
-`placeHolder?` | string |
+`attribute` | any |
+
+▪`Optional`  **placeHolder**: *string*
 
 **Returns:** *Promise‹object[]›*
 
@@ -389,7 +399,7 @@ ___
 
 ▸ **pickCdsSolutionComponent**(`config`: [Config](../interfaces/_api_cds_webapi_cdswebapi_.cdswebapi.config.md), `solution`: any, `componentType`: [SolutionComponent](../enums/_api_cdssolutions_.cdssolutions.solutioncomponent.md), `filterExpression?`: string, `placeHolder?`: string): *Promise‹object›*
 
-Defined in src/core/Quickly.ts:514
+Defined in src/core/Quickly.ts:515
 
 **Parameters:**
 
