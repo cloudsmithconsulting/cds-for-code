@@ -25,7 +25,7 @@ export default async function run(this: CodeGenerationManager, config: any, defa
 		return; 
 	}
 
-    defaultUri = defaultUri || config.options?.fsPath ? vscode.Uri.file(config.options.fsPath) : await Quickly.pickWorkspaceFile(undefined, "Choose a config file to edit", undefined, false, [ "*.config" ]).then(r => vscode.Uri.file(r));
+    defaultUri = defaultUri || config.options?.fsPath ? vscode.Uri.file(config.options.fsPath) : await Quickly.pickWorkspaceFile(undefined, "Choose a config file to edit", undefined, false, [ ".config" ]).then(r => vscode.Uri.file(r));
 	if (!defaultUri) { 
 		logger.warn(`Command: ${cs.cds.deployment.saveCrmSvcUtilConfig} Config file not chosen, command cancelled`);
 		return; 

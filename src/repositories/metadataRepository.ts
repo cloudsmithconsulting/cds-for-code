@@ -131,6 +131,10 @@ export default class MetadataRepository {
             .then(response => response.toArray());
     }
 
+    retrieveDashboard(formid: string, select?: string[]): Promise<any> {
+        return this.retrieveForm(formid, select);
+    }
+
     retrieveViews(entityLogicalName: string, solutionId?: string, select: string[] = MetadataRepository.defaultSelections["savedqueries"]) : Promise<any[]> {
         if (select?.length === 0) { select = undefined; }
 

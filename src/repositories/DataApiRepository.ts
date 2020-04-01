@@ -150,4 +150,20 @@ export default class DataApiRepository extends CdsRepository {
 
         return await this.webapi.retrieve(importId, "imports");
     }
+
+    async retrieveDataFromSavedQuery(entitySetName: string, savedQueryId: string): Promise<any> {
+        return this.webapi.retrieveRequest({
+            collection: entitySetName,
+            savedQuery: savedQueryId
+        })
+        .then(response => response.value ? response.value : []);
+    }
+
+    async retrieveEntitySetData(entitySetName: string, select?: string[]) {
+        return this.webapi.retrieveAllRequest({
+            collection: entitySetName,
+            select: select
+        })
+        .then(response => response.value ? response.value : []);
+    }
 }

@@ -9,6 +9,7 @@ export namespace cds {
         static readonly getFaker: string = `${data._namespace}.getFaker`;
         static readonly insertCsvData: string = `${data._namespace}.insertCsvData`;
         static readonly insertFakeData: string = `${data._namespace}.insertFakeData`;
+        static readonly exportDataFromEntity: string = `${data._namespace}.exportDataFromEntity`;
     }
 
     /**
@@ -192,6 +193,7 @@ export namespace cds {
             static readonly refreshEntry: string = `${cdsExplorer._namespace}.refreshEntry`;
             static readonly removeEntryFromSolution: string = `${cdsExplorer._namespace}.removeEntryFromSolution`;
             static readonly unpackSolution: string = `${cdsExplorer._namespace}.unpackSolution`;
+            static readonly exportEntityData: string = `${cdsExplorer._namespace}.exportEntityData`;
         }
 
         // tslint:disable-next-line: class-name

@@ -14,6 +14,7 @@ import { CdsSolutions } from '../../api/CdsSolutions';
 import ApiRepository from '../../repositories/apiRepository';
 import DiscoveryRepository from '../../repositories/discoveryRepository';
 import MetadataRepository from '../../repositories/metadataRepository';
+import { CdsWebApi } from '../../api/cds-webapi/CdsWebApi';
 
 export default class TemplateEngine {
     private static readonly fileNameRegex = /\$\{([\s\S]+?)\}/g;
@@ -129,6 +130,14 @@ export default class TemplateEngine {
                     };
                     return '';
                 },
+                cdsWebApi(name: string, connectionName: string) {
+                    interactives[name] = {
+                        type: 'cdsWebApi',
+                        message: null,
+                        options: { connection: connectionName }
+                    };
+                    return '';
+                },
                 cdsFake(name: string, connection?: string, entity?: string) {
                     interactives[name] = {
                         type: 'cdsFake',
@@ -171,6 +180,14 @@ export default class TemplateEngine {
                 cdsSolution(name: string, message: string, connection: string) {
                     interactives[name] = {
                         type: 'cdsSolution',
+                        message: message,
+                        options: [ connection ]
+                    };
+                    return '';
+                },
+                cdsWebApi(name: string, message: string, connection: string) {
+                    interactives[name] = {
+                        type: 'cdsWebApi',
                         message: message,
                         options: [ connection ]
                     };
@@ -364,6 +381,17 @@ export default class TemplateEngine {
                     }
 
                     result.parameters[key] = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, interactive.message || "Choose a CDS organization", true);
+                    if (!result.parameters[key]) { result.userCanceled = true; }
+                }
+                    break;
+                case 'cdsWebApi': {
+                    let config = interactive.options?.connection ? result[interactive.options?.connection] : undefined;
+                    config = config || await Quickly.pickCdsOrganization(ExtensionContext.Instance, interactive.message || `Pick CDS Organization that contains ${key}`, true);
+
+                    if (config) {
+                        result.parameters[key] = result.parameters[key] || new CdsWebApi.WebApiClient(config);                    
+                    }
+
                     if (!result.parameters[key]) { result.userCanceled = true; }
                 }
                     break;
