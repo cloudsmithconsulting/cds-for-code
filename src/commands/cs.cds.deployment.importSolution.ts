@@ -31,7 +31,7 @@ export default async function run(this: SolutionManager, config?: CdsWebApi.Conf
 		return; 
 	}
 
-    solutionFile = solutionFile || <vscode.Uri>(await Quickly.pickAnyFile(vscode.workspace?.workspaceFolders[0]?.uri, false, 'Import solution', { 'Solution files': [ '*.zip' ] } ));
+    solutionFile = solutionFile || <vscode.Uri>(await Quickly.pickAnyFile(vscode.workspace?.workspaceFolders[0]?.uri, false, 'Import solution', { 'Solution files': [ '.zip' ] } ));
 	if (!solutionFile) { 
 		logger.warn(`Command: ${cs.cds.deployment.importSolution} Solution file not chosen, command cancelled`);
 		return; 

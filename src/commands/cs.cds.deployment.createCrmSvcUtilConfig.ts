@@ -29,7 +29,7 @@ export default async function run(this: CodeGenerationManager, config?: CdsWebAp
 
 	const stats = defaultUri ? await FileSystem.stats(defaultUri.fsPath) : undefined;
 	
-    defaultUri = (stats && !stats.isDirectory() ? defaultUri : undefined) || await Quickly.pickWorkspaceFile(defaultUri, "Choose a config file to create or edit", undefined, true, [ "*.config" ]).then(r => vscode.Uri.file(r));
+    defaultUri = (stats && !stats.isDirectory() ? defaultUri : undefined) || await Quickly.pickWorkspaceFile(defaultUri, "Choose a config file to create or edit", undefined, true, [ ".config" ]).then(r => vscode.Uri.file(r));
 	if (!defaultUri) { 
 		logger.warn(`Command: ${cs.cds.deployment.createCrmSvcUtilConfig} Config file not chosen, command cancelled`);
 		return; 

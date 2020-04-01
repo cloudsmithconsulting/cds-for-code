@@ -1,0 +1,5 @@
+<% $this.parameters.headers.forEach((a, i) => { %>"<%=a%>"<% if (i !== $this.parameters.headers.length - 1) { %>,<% } });%>
+<% $this.parameters.data.forEach(r => {
+    const keys = Object.keys(r);
+    keys.forEach((k, i) => { %>"<%=r[k] ? r[k].toString() : ""%>"<% if (i !== keys.length - 1) { %>,<% }; }); %>
+<%}); %>

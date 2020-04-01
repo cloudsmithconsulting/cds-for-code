@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import * as cs from '../../cs';
-import createDataMap from "../../commands/cs.cds.data.createDataMap";
 import getFaker from "../../commands/cs.cds.data.getFaker";
 import insertCsvData from "../../commands/cs.cds.data.insertCsvData";
 import insertFakeData from "../../commands/cs.cds.data.insertFakeData";
+import exportDataFromEntity from "../../commands/cs.cds.data.exportDataFromEntity";
 import command from '../../core/Command';
 import { CdsWebApi } from '../../api/cds-webapi/CdsWebApi';
 
@@ -21,6 +21,11 @@ export default class DataGenerationManager {
     @command(cs.cds.data.insertCsvData, "Insert CSV data into an entity")
     async insertCsvData(config?: CdsWebApi.Config, entity?: any, file?: vscode.Uri) {
         return await insertCsvData.apply(this, [ config, entity, file ]);
+    }
+
+    @command(cs.cds.data.exportDataFromEntity, "Export data from view to CSV or JSON")
+    static async exportDataFromEntity(config?: CdsWebApi.Config, entity?: any, savedqueryid?: string): Promise<void> {
+        return await exportDataFromEntity.apply(this, [config, entity, savedqueryid]);
     }
 
     @command(cs.cds.controls.explorer.importCsvToEntity, "Import data from a CSV file into an entity")

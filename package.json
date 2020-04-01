@@ -58,6 +58,7 @@
 		"onCommand:cs.cds.controls.explorer.importCsvToEntity",
 		"onCommand:cs.cds.controls.svcUtilConfig.open",
 		"onCommand:cs.cds.data.getFaker",
+		"onCommand:cs.cds.data.exportDataFromView",
 		"onCommand:cs.cds.deployment.addSolutionComponent",
 		"onCommand:cs.cds.deployment.compareWebResource",
 		"onCommand:cs.cds.deployment.connectToCds",
@@ -301,6 +302,11 @@
 				"category": "UserInterface"
 			},
 			{
+				"command": "cs.cds.controls.cdsExplorer.exportEntityData",
+				"title": "Export data",
+				"category": "UserInterface"
+			},
+			{
 				"command": "cs.cds.controls.explorer.createCrmSvcUtilConfig",
 				"title": "New CrmSvcUtil Configuration",
 				"category": "UserInterface"
@@ -489,6 +495,11 @@
 			{
 				"command": "cs.cds.data.insertFakeData",
 				"title": "Generate data for a CDS entity",
+				"category": "CDS for Code"
+			},
+			{
+				"command": "cs.cds.data.exportDataFromEntity",
+				"title": "Export data from CDS entity or view",
 				"category": "CDS for Code"
 			},
 			{
@@ -792,6 +803,10 @@
 					"when": "false"
 				},
 				{
+					"command": "cs.cds.controls.cdsExplorer.exportEntityData",
+					"when": "false"
+				},
+				{
 					"command": "cs.cds.controls.explorer.createCrmSvcUtilConfig",
 					"when": "false"
 				},
@@ -1091,6 +1106,11 @@
 					"command": "cs.cds.controls.cdsExplorer.viewApiDocs",
 					"group": "insert@2",
 					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canViewApiDocs)(.*)$/"
+				},
+				{
+					"command": "cs.cds.controls.cdsExplorer.exportEntityData",
+					"group": "insert@3",
+					"when": "view == cs.cds.viewContainers.cdsExplorer && viewItem =~ /^(.*)(canExportData)(.*)$/"
 				},
 				{
 					"command": "cs.cds.controls.cdsExplorer.exportSolution",
