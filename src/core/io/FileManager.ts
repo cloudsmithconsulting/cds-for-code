@@ -205,7 +205,7 @@ export class WorkspaceFileSystemWatcher {
         if (changesToProcess && changesToProcess.length > 0) {
             changesToProcess.forEach(c => {
                 // Create into this folder means we have a corresponding create/modify pair.
-                if (c.event === "Create" && workspaceContains(c.sourceUri, "Create", "Delete")) {
+                if (c.event === "Create" && workspaceContains(c.sourceUri, "Create") && workspaceContains(c.sourceUri, "Delete")) {
                     const sourceUri = workspaceFilter(undefined, "Delete").first().sourceUri;
     
                     // If source + target = same path, it's a rename.
@@ -220,7 +220,7 @@ export class WorkspaceFileSystemWatcher {
                 }
     
                 // Delete into this folder means we have a corresponding delete/modify pair.
-                if (c.event === "Delete" && workspaceContains(c.sourceUri, "Create", "Delete")) {
+                if (c.event === "Delete" && workspaceContains(c.sourceUri, "Create") && workspaceContains(c.sourceUri, "Delete")) {
                     const targetUri = workspaceFilter(undefined, "Create").first().sourceUri;
     
                     if (targetUri.path.substr(0, targetUri.path.lastIndexOf("/")) === c.sourceUri.path.substr(0, c.sourceUri.path.lastIndexOf("/"))) {
