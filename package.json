@@ -1112,7 +1112,7 @@
 		"express": "^4.17.1",
 		"faker": "^4.1.0",
 		"httpntlm": "^1.7.6",
-		"jquery": "^3.4.1",
+		"jquery": "^3.5.0",
 		"lodash": "^4.17.15",
 		"moment": "^2.24.0",
 		"mustache": "^3.2.1",
