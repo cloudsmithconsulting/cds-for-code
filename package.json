@@ -1117,7 +1117,7 @@
 		"moment": "^2.24.0",
 		"mustache": "^3.2.1",
 		"node-archiver": "^0.3.0",
-		"node-fetch": "^2.6.0",
+		"node-fetch": "^2.6.1",
 		"node-machine-id": "^1.1.12",
 		"node-stream-zip": "^1.9.1",
 		"opn": "^6.0.0",
