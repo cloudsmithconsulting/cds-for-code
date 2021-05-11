@@ -1113,7 +1113,7 @@
 		"faker": "^4.1.0",
 		"httpntlm": "^1.7.6",
 		"jquery": "^3.5.0",
-		"lodash": "^4.17.15",
+		"lodash": "^4.17.21",
 		"moment": "^2.24.0",
 		"mustache": "^3.2.1",
 		"node-archiver": "^0.3.0",
