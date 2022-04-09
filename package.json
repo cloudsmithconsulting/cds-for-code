@@ -1114,7 +1114,7 @@
 		"httpntlm": "^1.7.6",
 		"jquery": "^3.5.0",
 		"lodash": "^4.17.15",
-		"moment": "^2.24.0",
+		"moment": "^2.29.2",
 		"mustache": "^3.2.1",
 		"node-archiver": "^0.3.0",
 		"node-fetch": "^2.6.1",
