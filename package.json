@@ -1094,7 +1094,7 @@
 		"mocha": "^7.0.1",
 		"node-sass": "^4.13.1",
 		"popper.js": "^1.16.1",
-		"postcss-loader": "^3.0.0",
+		"postcss-loader": "^7.0.2",
 		"prettier": "^1.19.1",
 		"sass-lint": "^1.13.1",
 		"tslint": "^6.0.0",
